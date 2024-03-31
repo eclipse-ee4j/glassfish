@@ -29,6 +29,7 @@ import java.net.URI;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.HttpClient10;
 import org.glassfish.main.itest.tools.HttpClient10.HttpResponse;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -85,10 +86,10 @@ public class DefaultP2RAuthTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         assertThat(ASADMIN.exec("set", SERVER_CFG_PROPERTY + "=" + orignalCfgValue), asadminOK());
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_NAME);
-        delete(warFile);
+        TestUtilities.delete(warFile);
     }
 
 
@@ -128,11 +129,5 @@ public class DefaultP2RAuthTest {
 
         HttpResponse responseGet = client.send("GET", null);
         assertThat(responseGet.responseLine, equalTo("HTTP/1.1 403 Forbidden"));
-    }
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
-        }
     }
 }

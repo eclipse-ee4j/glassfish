@@ -23,6 +23,7 @@ import java.net.URL;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.HttpClient10;
 import org.glassfish.main.itest.tools.HttpClient10.HttpResponse;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -79,11 +80,11 @@ public class HttpMethodAuthTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_SHINGWAI_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_SWCHAN_NAME);
-        delete(warFile);
+        TestUtilities.delete(warFile);
     }
 
 
@@ -143,11 +144,5 @@ public class HttpMethodAuthTest {
             () -> assertThat(responseFoo.responseLine, equalTo("HTTP/1.1 403 Forbidden")),
             () -> assertThat(responseFoo.body, stringContainsInOrder("Error report", "HTTP Status 403 - Forbidden"))
         );
-    }
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
-        }
     }
 }

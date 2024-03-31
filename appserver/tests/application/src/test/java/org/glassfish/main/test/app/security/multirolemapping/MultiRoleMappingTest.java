@@ -24,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.util.Base64;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -154,7 +155,7 @@ public class MultiRoleMappingTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
         String[] users = new String[] {USER_R1P1_NAME, USER_R1P2_NAME, USER_R1P3_NAME, USER_R1G1USER_NAME,
             USER_R2P1_NAME, USER_R2P2_NAME, USER_R2G1USER_NAME, USER_R2G2USER_NAME, USER_R2G3USER_NAME, USER_R3P1_NAME,
@@ -163,7 +164,7 @@ public class MultiRoleMappingTest {
         for (String user : users) {
             ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", user);
         }
-        delete(earFile);
+        TestUtilities.delete(earFile);
     }
 
 
@@ -255,12 +256,5 @@ public class MultiRoleMappingTest {
         String basicAuth = Base64.getEncoder().encodeToString((user + ":" + USER_PASSWORD).getBytes(UTF_8));
         connection.setRequestProperty("Authorization", "Basic " + basicAuth);
         return connection;
-    }
-
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
-        }
     }
 }

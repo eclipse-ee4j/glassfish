@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,15 @@
 
 package com.sun.enterprise.security.ssl;
 
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.auth.login.common.LoginException;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.common.ClientSecurityContext;
+import com.sun.enterprise.security.common.SecurityConstants;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
 
 import java.net.Socket;
 import java.security.Principal;
@@ -36,18 +45,7 @@ import javax.net.ssl.X509KeyManager;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-//copied code from LoginContextDriver to break dependency
-//import com.sun.enterprise.security.auth.login.common.LoginContextDriver;
-import com.sun.enterprise.security.auth.login.common.LoginException;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-import com.sun.enterprise.security.common.AppservAccessController;
-//import com.sun.enterprise.Switch;
-import com.sun.enterprise.security.common.ClientSecurityContext;
-import com.sun.enterprise.security.common.SecurityConstants;
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
+import static java.util.logging.Level.FINE;
 
 /**
  * This a J2EE specific Key Manager class that is used to select user certificates for SSL client authentication. It delegates
@@ -58,11 +56,11 @@ import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
  */
 public final class J2EEKeyManager extends X509ExtendedKeyManager {
 
-    private static final Logger _logger = SecurityLoggerInfo.getLogger();
+    private static final Logger LOG = SecurityLoggerInfo.getLogger();
 
-    private X509KeyManager x509KeyManager; // delegate
+    private final X509KeyManager x509KeyManager; // delegate
 
-    private String alias;
+    private final String alias;
 
     private Map<String, X509KeyManager> tokenName2MgrMap ;
     private boolean supportTokenAlias;
@@ -76,7 +74,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
             X509KeyManager[] mgrs = umgr.getX509KeyManagers();
             String[] tokenNames = umgr.getTokenNames();
 
-            tokenName2MgrMap = new HashMap<String, X509KeyManager>();
+            tokenName2MgrMap = new HashMap<>();
             for (int i = 0; i < mgrs.length; i++) {
                 if (tokenNames[i] != null) {
                     tokenName2MgrMap.put(tokenNames[i], mgrs[i]);
@@ -96,13 +94,15 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
         return alias;
     }
 
+
     /**
-     * Choose the client alias that will be used to select the client certificate for SSL client auth.
+     * Choose the client alias that will be used to select the client certificate for SSL client
+     * auth.
      *
-     * @param the keytype
-     * @param the certificate issuers.
-     * @param the socket used for this connection. This parameter can be null, in which case the method will return the most generic
-     * alias to use.
+     * @param keyType
+     * @param issuers certificate issuers.
+     * @param socket socket used for this connection. This parameter can be null, in which case the
+     *            method will return the most generic alias to use.
      * @return the alias.
      */
     @Override
@@ -123,9 +123,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
                         doClientLogin(SecurityConstants.CERTIFICATE, Util.getInstance().getCallbackHandler());
                         s = ctx.getSubject();
                     }
-                    Iterator itr = s.getPrivateCredentials().iterator();
-                    while (itr.hasNext()) {
-                        Object o = itr.next();
+                    for (Object o : s.getPrivateCredentials()) {
                         if (o instanceof X509CertificateCredential) {
                             X509CertificateCredential crt = (X509CertificateCredential) o;
                             clientAlias = crt.getAlias();
@@ -138,10 +136,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
             clientAlias = this.alias;
         }
 
-        if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, "Choose client Alias :{0}", clientAlias);
-        }
-
+        LOG.log(FINE, "Choose client Alias :{0}", clientAlias);
         return clientAlias;
     }
 
@@ -163,10 +158,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
             serverAlias = x509KeyManager.chooseServerAlias(keyType, issuers, socket);
         }
 
-        if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, "Choosing server alias :{0}", serverAlias);
-        }
-
+        LOG.log(FINE, "Choosing server alias :{0}", serverAlias);
         return serverAlias;
     }
 
@@ -178,7 +170,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
      */
     @Override
     public X509Certificate[] getCertificateChain(String alias) {
-        _logger.log(FINE, "Getting certificate chain");
+        LOG.log(FINE, "Getting certificate chain");
 
         X509KeyManager keyMgr = getManagerFromToken(alias);
         if (keyMgr != null) {
@@ -198,9 +190,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
      */
     @Override
     public String[] getClientAliases(String keyType, Principal[] issuers) {
-        if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, "Getting client aliases");
-        }
+        LOG.log(FINE, "Getting client aliases");
         return x509KeyManager.getClientAliases(keyType, issuers);
     }
 
@@ -213,9 +203,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
      */
     @Override
     public String[] getServerAliases(String keyType, Principal[] issuers) {
-        if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, "Getting server aliases");
-        }
+        LOG.log(FINE, "Getting server aliases");
         return x509KeyManager.getServerAliases(keyType, issuers);
     }
 
@@ -227,9 +215,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
      */
     @Override
     public PrivateKey getPrivateKey(String alias) {
-        if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, "Getting private key for alias:{0}", alias);
-        }
+        LOG.log(FINE, "Getting private key for alias: {0}", alias);
         X509KeyManager keyMgr = getManagerFromToken(alias);
         if (keyMgr != null) {
             String aliasName = alias.substring(alias.indexOf(':') + 1);
@@ -282,7 +268,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
                         lg.login();
                     } catch (javax.security.auth.login.LoginException e) {
-                        throw (LoginException) new LoginException(e.toString()).initCause(e);
+                        throw new LoginException(e.getMessage(), e);
                     }
 
                     return null;
@@ -298,7 +284,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE, subject, handler);
                         lg.login();
                     } catch (javax.security.auth.login.LoginException e) {
-                        throw (LoginException) new LoginException(e.toString()).initCause(e);
+                        throw new LoginException(e.getMessage(), e);
                     }
 
                     return null;
@@ -319,7 +305,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
                         lgc.login();
                         postClientAuth(subject, X509CertificateCredential.class);
                     } catch (javax.security.auth.login.LoginException e) {
-                        throw (LoginException) new LoginException(e.toString()).initCause(e);
+                        throw new LoginException(e.getMessage(), e);
                     }
 
                     return null;
@@ -335,7 +321,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
                         lg.login();
                         postClientAuth(subject, PasswordCredential.class);
                     } catch (javax.security.auth.login.LoginException e) {
-                        throw (LoginException) new LoginException(e.toString()).initCause(e);
+                        throw new LoginException(e.getMessage(), e);
                     }
                     return null;
                 }
@@ -358,9 +344,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
         Set credset = AppservAccessController.doPrivileged(new PrivilegedAction<Set>() {
             @Override
             public Set run() {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "LCD post login subject :{0}", fs);
-                }
+                LOG.log(Level.FINEST, "LCD post login subject :{0}", fs);
                 return fs.getPrivateCredentials(clas);
             }
         });
@@ -376,25 +360,18 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
                 });
             } catch (Exception e) {
                 // should never come here
-                _logger.log(Level.SEVERE, SecurityLoggerInfo.securityAccessControllerActionError, e);
+                LOG.log(Level.SEVERE, SecurityLoggerInfo.securityAccessControllerActionError, e);
             }
             if (obj instanceof PasswordCredential) {
                 PasswordCredential p = (PasswordCredential) obj;
                 String user = p.getUser();
-                if (_logger.isLoggable(Level.FINEST)) {
-                    String realm = p.getRealm();
-                    _logger.log(Level.FINEST, "In LCD user-pass login:{0} realm :{1}", new Object[] { user, realm });
-                }
+                LOG.log(Level.FINEST, "In LCD user-pass login:{0} realm :{1}", new Object[] {user, p.getRealm()});
                 setClientSecurityContext(user, fs);
                 return;
             } else if (obj instanceof X509CertificateCredential) {
                 X509CertificateCredential p = (X509CertificateCredential) obj;
                 String user = p.getAlias();
-                if (_logger.isLoggable(Level.FINEST)) {
-                    String realm = p.getRealm();
-                    _logger.log(Level.FINEST, "In LCD cert-login::{0} realm :{1}", new Object[] { user, realm });
-                }
-
+                LOG.log(Level.FINEST, "In LCD cert-login::{0} realm :{1}", new Object[] { user, p.getRealm() });
                 setClientSecurityContext(user, fs);
                 return;
             }

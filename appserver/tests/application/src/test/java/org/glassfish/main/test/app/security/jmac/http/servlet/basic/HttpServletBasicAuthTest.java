@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.Base64;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -75,15 +76,12 @@ public class HttpServletBasicAuthTest {
             asadminOK());
         createFileUser(FILE_REALM_NAME, USER_NAME, USER_PASSWORD, "mygroup");
 
-        JavaArchive serverAuthModule = ShrinkWrap.create(JavaArchive.class)
-                .addClass(MyHttpServletResponseWrapper.class)
-                .addClass(HttpServletTestAuthModule.class)
-                .addClass(MyPrintWriter.class);
-
-        LOG.log(INFO, serverAuthModule.toString(true));
+        JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class).addClass(MyHttpServletResponseWrapper.class)
+            .addClass(HttpServletTestAuthModule.class).addClass(MyPrintWriter.class);
+        LOG.log(INFO, loginModule.toString(true));
         serverAuthModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
-            "testLoginModule.jar");
-        serverAuthModule.as(ZipExporter.class).exportTo(serverAuthModuleFile, true);
+            AUTH_MODULE_NAME + ".jar");
+        loginModule.as(ZipExporter.class).exportTo(serverAuthModuleFile, true);
 
         assertThat(ASADMIN.exec("create-message-security-provider",
             "--classname", HttpServletTestAuthModule.class.getName(),
@@ -105,14 +103,12 @@ public class HttpServletBasicAuthTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_NAME);
         ASADMIN.exec("delete-message-security-provider", "--layer", "HttpServlet", AUTH_MODULE_NAME);
         ASADMIN.exec("delete-auth-realm", FILE_REALM_NAME);
-        delete(warFile);
-        delete(keyFile);
-        delete(serverAuthModuleFile);
+        TestUtilities.delete(warFile, keyFile, serverAuthModuleFile);
     }
 
 
@@ -135,12 +131,6 @@ public class HttpServletBasicAuthTest {
                 "Adjusted count: 230"));
         } finally {
             connection.disconnect();
-        }
-    }
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
         }
     }
 }

@@ -84,9 +84,8 @@ public class HttpServletChallengeAuthTest {
         final JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class)
             .addClass(HttpServletChallengeTestAuthModule.class);
         LOG.log(INFO, loginModule.toString(true));
-        // FIXME: When you use the same name as in HttpServletBasicAuthTest, the test will fail with HTTP500.
         loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
-            "testLoginModuleChallenge.jar");
+            AUTH_MODULE_NAME + ".jar");
         loginModule.as(ZipExporter.class).exportTo(loginModuleFile, true);
 
         assertThat(ASADMIN.exec("create-message-security-provider",

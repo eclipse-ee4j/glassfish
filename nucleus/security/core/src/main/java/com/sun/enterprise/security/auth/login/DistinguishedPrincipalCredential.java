@@ -20,7 +20,9 @@ package com.sun.enterprise.security.auth.login;
 import java.io.Serializable;
 import java.security.Principal;
 
-public class DistinguishedPrincipalCredential implements Principal, Serializable {
+import org.glassfish.security.common.UserPrincipal;
+
+public class DistinguishedPrincipalCredential implements UserPrincipal, Serializable {
 
     private static final long serialVersionUID = 1L;
 

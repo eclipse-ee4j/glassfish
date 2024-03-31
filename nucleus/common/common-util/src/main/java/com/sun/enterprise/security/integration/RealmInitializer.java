@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,11 @@ public interface RealmInitializer {
 
     void initializeRealm(Object bundledescriptor, String realmName);
 
+    /**
+     * Sets the virtual server on which the web module (with which this RealmAdapter is associated with) has been deployed.
+     *
+     * @param container The virtual server
+     */
     //TODO: FIXME, dilution parameter type from Container to Object
     void setVirtualServer(Object container);
 

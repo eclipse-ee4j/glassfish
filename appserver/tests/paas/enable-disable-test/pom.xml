@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>enable-disable-test</artifactId>
-    <version>7.0.14-SNAPSHOT</version>
+    <version>7.0.15-SNAPSHOT</version>
     <name>Enable Disable Test</name>
     <packaging>war</packaging>
     <build>

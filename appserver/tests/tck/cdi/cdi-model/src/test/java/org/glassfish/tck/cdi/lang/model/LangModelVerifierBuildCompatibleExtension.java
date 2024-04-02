@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,16 +15,24 @@
  */
 package org.glassfish.tck.cdi.lang.model;
 
-import org.jboss.cdi.lang.model.tck.LangModelVerifier;
-
 import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
 import jakarta.enterprise.inject.build.compatible.spi.ClassConfig;
+import jakarta.enterprise.inject.build.compatible.spi.Discovery;
 import jakarta.enterprise.inject.build.compatible.spi.Enhancement;
+import jakarta.enterprise.inject.build.compatible.spi.ScannedClasses;
+
+import org.jboss.cdi.lang.model.tck.LangModelVerifier;
 
 public class LangModelVerifierBuildCompatibleExtension implements BuildCompatibleExtension {
 
     public static boolean langModelVerifierBuildCompatibleExtensionCalled;
+
     public static boolean langModelVerifierBuildCompatibleExtensionPassed;
+
+    @Discovery
+    public void discovery(ScannedClasses scannedClasses) {
+        scannedClasses.add(LangModelVerifier.class.getName());
+    }
 
     @Enhancement(types = LangModelVerifier.class)
     public void configure(ClassConfig classConfig) {
@@ -33,5 +41,4 @@ public class LangModelVerifierBuildCompatibleExtension implements BuildCompatibl
         // If there's an error, the verify() method will throw an exception
         langModelVerifierBuildCompatibleExtensionPassed = true;
     }
-
 }

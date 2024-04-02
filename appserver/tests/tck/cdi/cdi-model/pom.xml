@@ -53,28 +53,14 @@
                 <artifactId>cdi-tck-lang-model</artifactId>
                 <version>${cdi.tck-4-0.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-lite-extension-translator</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-core-test-common</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-core-impl</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-lite-extension-translator</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -85,40 +71,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-test-common</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-impl</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
             <scope>test</scope>
-        </dependency>
-
-           <dependency>
-            <groupId>org.jboss.weld.module</groupId>
-            <artifactId>weld-web</artifactId>
-            <version>${weld.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-api</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>jakarta.el-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -128,13 +83,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <scope>test</scope>
-        </dependency>     
-
         <!--
             The Arquillian connector that starts GlassFish and deploys archives to it.
         -->
@@ -143,7 +91,6 @@
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>1.4</version>
         </dependency>
-
     </dependencies>
 
 
@@ -211,6 +158,9 @@
                         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                         <glassfish.enableAssertions>:org.jboss.cdi...</glassfish.enableAssertions>
                     </systemPropertyVariables>
+                    <includes>
+                        <include>CDILangModelTCKRunner.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             

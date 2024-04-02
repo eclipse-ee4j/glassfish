@@ -25,8 +25,6 @@ import org.jboss.cdi.lang.model.tck.LangModelVerifier;
 
 public class LangModelVerifierBuildCompatibleExtension implements BuildCompatibleExtension {
 
-    public static boolean langModelVerifierBuildCompatibleExtensionCalled;
-
     public static boolean langModelVerifierBuildCompatibleExtensionPassed;
 
     @Discovery
@@ -36,7 +34,6 @@ public class LangModelVerifierBuildCompatibleExtension implements BuildCompatibl
 
     @Enhancement(types = LangModelVerifier.class)
     public void configure(ClassConfig classConfig) {
-        langModelVerifierBuildCompatibleExtensionCalled = true;
         LangModelVerifier.verify(classConfig.info());
         // If there's an error, the verify() method will throw an exception
         langModelVerifierBuildCompatibleExtensionPassed = true;

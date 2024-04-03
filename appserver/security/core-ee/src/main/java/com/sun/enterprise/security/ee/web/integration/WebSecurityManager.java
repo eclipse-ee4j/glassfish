@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,8 +45,10 @@ import com.sun.enterprise.security.ee.authorize.cache.CachedPermission;
 import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCache;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory;
+import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyFactory;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.servlet.http.HttpServletRequest;
@@ -125,6 +127,20 @@ public class WebSecurityManager {
 
         initialise(appName);
 
+        webBundleDescriptor.getContextParameters()
+                           .stream()
+                           .filter(param -> param.getName().equals(PolicyConfigurationFactory.FACTORY_NAME))
+                           .findAny()
+                           .map(param -> loadFactory(webBundleDescriptor, param.getValue()))
+                           .ifPresent(clazz -> installPolicyConfigurationFactory(webBundleDescriptor, clazz));
+
+        webBundleDescriptor.getContextParameters()
+                           .stream()
+                           .filter(param -> param.getName().equals(PolicyFactory.FACTORY_NAME))
+                           .findAny()
+                           .map(param -> loadFactory(webBundleDescriptor, param.getValue()))
+                           .ifPresent(clazz -> installPolicyFactory(webBundleDescriptor, clazz));
+
         authorizationService = new AuthorizationService(
             getContextID(webBundleDescriptor),
             () -> SecurityContext.getCurrent().getSubject(),
@@ -144,8 +160,7 @@ public class WebSecurityManager {
             getSecurityRoleRefsFromBundle(webBundleDescriptor));
     }
 
-    // fix for CR 6155144
-    // used to get the policy context id. Also used by the RealmAdapter
+    // Used to get the policy context id. Also used by the RealmAdapter
     public static String getContextID(WebBundleDescriptor webBundleDescriptor) {
         return SecurityUtil.getContextID(webBundleDescriptor);
     }
@@ -360,6 +375,37 @@ public class WebSecurityManager {
         }
 
         initPermissionCache();
+    }
+
+    private Class<?> loadFactory(WebBundleDescriptor webBundleDescriptor, String factoryClassName) {
+        try {
+            return
+                webBundleDescriptor.getApplicationClassLoader()
+                                   .loadClass(factoryClassName);
+
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void installPolicyConfigurationFactory(WebBundleDescriptor webBundleDescriptor, Class<?> factoryClass) {
+        ClassLoader existing = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(webBundleDescriptor.getApplicationClassLoader());
+            AuthorizationService.installPolicyConfigurationFactory(factoryClass);
+        } finally {
+            Thread.currentThread().setContextClassLoader(existing);
+        }
+    }
+
+    private void installPolicyFactory(WebBundleDescriptor webBundleDescriptor, Class<?> factoryClass) {
+        ClassLoader existing = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(webBundleDescriptor.getApplicationClassLoader());
+            AuthorizationService.installPolicyFactory(factoryClass);
+        } finally {
+            Thread.currentThread().setContextClassLoader(existing);
+        }
     }
 
     private void initPermissionCache() {

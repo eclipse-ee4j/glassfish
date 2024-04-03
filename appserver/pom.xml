@@ -85,7 +85,7 @@
         <mojarra.version>4.1.0-M2</mojarra.version>
 
         <!-- Jakarta WebSocket -->
-        <jakarta.websocket-api.version>2.2.0-M1</jakarta.websocket-api.version>
+        <jakarta.websocket-api.version>2.2.0</jakarta.websocket-api.version>
         <tyrus.version>2.2.0-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
@@ -98,11 +98,11 @@
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
         <jakarta.security-api.version>4.0.0-M2</jakarta.security-api.version>
-        <jakarta.authorization-api.version>3.0.0-M2</jakarta.authorization-api.version>
+        <jakarta.authorization-api.version>3.0.0-M4</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
         <!-- Implementations -->
         <soteria.version>4.0.0-M2</soteria.version>
-        <exousia.version>3.0.0-M2</exousia.version>
+        <exousia.version>3.0.0-M3</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <!-- Dependencies -->
         <nimbus.version>9.38-rc3</nimbus.version>
@@ -138,7 +138,7 @@
         <yasson.version>3.0.3</yasson.version>
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
-        <jakarta.pages-api.version>4.0.0-M2</jakarta.pages-api.version>
+        <jakarta.pages-api.version>4.0.0</jakarta.pages-api.version>
         <jstl-api.version>3.0.0</jstl-api.version>
         <wasp.version>4.0.0-M1</wasp.version>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -81,6 +81,8 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     private SessionConfig sessionConfig;
     private boolean showArchivedRealPathEnabled = true;
     private JspConfigDefinitionDescriptor jspConfigDescriptor;
+
+    private ClassLoader applicationClassLoader;
 
     /**
      * An entry here, may be set to indicate additional processing.
@@ -384,6 +386,19 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
         jspConfigDescriptor = descriptor;
     }
 
+    /**
+     * @return the applicationClassLoader
+     */
+    public ClassLoader getApplicationClassLoader() {
+        return applicationClassLoader;
+    }
+
+    /**
+     * @param applicationClassLoader the applicationClassLoader to set
+     */
+    public void setApplicationClassLoader(ClassLoader applicationClassLoader) {
+        this.applicationClassLoader = applicationClassLoader;
+    }
 
     /**
      * This property can be used to indicate a special processing to an extension.

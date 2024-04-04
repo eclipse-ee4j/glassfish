@@ -89,7 +89,7 @@
         <tyrus.version>2.2.0-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.1.0-M2</jakarta.concurrent-api.version>
+        <jakarta.concurrent-api.version>3.1.0-RC2</jakarta.concurrent-api.version>
         <concurro.version>3.1.0-M3</concurro.version>
 
         <!-- Jakarta Interceptors -->
@@ -113,9 +113,9 @@
         <openmq.version>6.4.0</openmq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta.persistence-api.version>3.2.0-M2</jakarta.persistence-api.version>
+        <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
         <eclipselink.version>5.0.0-B01</eclipselink.version>
-        <eclipselink.asm.version>9.6.0</eclipselink.asm.version>
+        <eclipselink.asm.version>9.7.0</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -144,7 +144,7 @@
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.2</xmlsec.version>
-        <woodstox.version>6.6.1</woodstox.version>
+        <woodstox.version>6.6.2</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->
@@ -758,7 +758,14 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>spec-version-maven-plugin</artifactId>
-                    <version>2.1</version>
+                    <version>2.2</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-utils</artifactId>
+                            <version>4.0.0</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>

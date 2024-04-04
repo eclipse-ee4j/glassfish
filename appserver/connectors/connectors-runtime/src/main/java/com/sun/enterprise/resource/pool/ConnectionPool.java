@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -128,10 +128,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Specifies whether connections have to be validated before being given to the application. If a resource’s validation
      * fails, it is destroyed, and a new resource is created and returned.<br>
      * Default: false
-     *
-     * TODO: rename to 'connectionValidationRequired'
      */
-    protected boolean validation;
+    protected boolean connectionValidationRequired;
 
     /**
      * Represents the "prefer-validate-over-recreate property" configuration value.<br>
@@ -142,11 +140,20 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      */
     protected boolean preferValidateOverRecreate;
 
-    // hold on to the resizer task so we can cancel/reschedule it.
+    /**
+     * True if the pool is initialized
+     */
+    protected volatile boolean poolInitialized;
+
+    /**
+     * Reference to a resizer task to be able to cancel/reschedule it.
+     */
     protected Resizer resizerTask;
 
-    protected volatile boolean poolInitialized;
-    protected Timer timer;
+    /**
+     * Timer for the resizerTask. Runs every {@link #idletime} milliseconds.
+     */
+    protected Timer resizerTaskTimer;
 
     // advanced pool config properties
     /**
@@ -173,6 +180,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Represents the "validate-atmost-once-period-in-seconds" configuration, but in millis.<br>
      * Specifies the time interval within which a connection is validated at most once. Minimizes the number of validation
      * calls. A value of zero allows unlimited validation calls.<br>
+     * This value is used when {@link #connectionValidationRequired} is set to true.<br>
      * Default: 10.000ms.
      */
     protected long validateAtmostPeriodInMilliSeconds_;
@@ -185,21 +193,16 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      */
     protected int maxConnectionUsage_;
 
-    // To validate a Sun RA Pool Connection if it has not been validated
-    // in the past x sec. (x=idle-timeout)
-    // The property will be set from system property -
-    // com.sun.enterprise.connectors.ValidateAtmostEveryIdleSecs=true
     /**
-     * Represents the "validate-atmost-once-period-in-seconds" configuration.<br>
-     * Specifies the time interval within which a connection is validated at most once. Minimizes the number of validation
-     * calls. A value of zero allows unlimited validation calls.<br>
-     * Default: 0
+     * To validate a Sun RA Pool Connection if it has not been validated in the past x sec. (x=idle-timeout). The property
+     * will be set from system property: com.sun.enterprise.connectors.ValidateAtmostEveryIdleSecs=true<br>
+     * Default: false
      */
     private boolean validateAtmostEveryIdleSecs;
 
-    // TODO document
-    protected String resourceSelectionStrategyClass;
-
+    /**
+     * Listener for pool monitoring statistics.
+     */
     protected PoolLifeCycleListener poolLifeCycleListener;
 
     // Gateway used to control the concurrency within the round-trip of resource access.
@@ -208,7 +211,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     protected ConnectionLeakDetector leakDetector;
 
+    /**
+     * The datastructure containing the pooled resources.
+     */
     protected DataStructure dataStructure;
+
     protected String dataStructureType;
     protected String dataStructureParameters;
 
@@ -224,8 +231,15 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     // NOTE: This resource allocator may not be the same as the allocator passed in to getResource()
     protected ResourceAllocator allocator;
 
+    // TODO: selfManaged_ does not seem to be set to true in glassfish code. Remove it from ResourcePool interface.
+    // Glassfish 2.1 had a management-rule / self-management part, but it no longer exists in domain.xml.
+    // See for example package "selfmanagement" and logger "SELF_MANAGEMENT_LOGGER" in the codeline.
     private boolean selfManaged_;
 
+    /**
+     * Blocked state is true during connection pool recreation. Once blocked is set to true only resources from the pool can
+     * be reused which are already part of the current transaction.
+     */
     private boolean blocked;
 
     /**
@@ -257,8 +271,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         dataStructure =
             DataStructureFactory.getDataStructure(
                 dataStructureType,
-                dataStructureParameters, maxPoolSize, this,
-                resourceSelectionStrategyClass);
+                        dataStructureParameters, maxPoolSize, this);
     }
 
     protected void initializeResourceSelectionStrategy() {
@@ -285,13 +298,12 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
         failAllConnections = poolResource.isFailAllConnections();
 
-        validation = poolResource.isIsConnectionValidationRequired();
+        connectionValidationRequired = poolResource.isIsConnectionValidationRequired();
 
         validateAtmostEveryIdleSecs = poolResource.isValidateAtmostEveryIdleSecs();
         dataStructureType = poolResource.getPoolDataStructureType();
         dataStructureParameters = poolResource.getDataStructureParameters();
         poolWaitQueueClass = poolResource.getPoolWaitQueue();
-        resourceSelectionStrategyClass = poolResource.getResourceSelectionStrategyClass();
         resourceGatewayClass = poolResource.getResourceGatewayClass();
         reconfigWaitTime = poolResource.getDynamicReconfigWaitTimeout();
 
@@ -340,7 +352,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * Schedules the resizer timer task. If a task is currently scheduled, it would be canceled and a new one is scheduled.
+     * Schedules the resizer timer task. If a task is currently scheduled, it would be cancelled and a new one is scheduled.
      */
     private void scheduleResizerTask() {
         if (resizerTask != null) {
@@ -351,11 +363,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
         resizerTask = initializeResizer();
 
-        if (timer == null) {
-            timer = ConnectorRuntime.getRuntime().getTimer();
+        if (resizerTaskTimer == null) {
+            resizerTaskTimer = ConnectorRuntime.getRuntime().getTimer();
         }
 
-        timer.scheduleAtFixedRate(resizerTask, idletime, idletime);
+        resizerTaskTimer.scheduleAtFixedRate(resizerTask, idletime, idletime);
         LOG.log(FINE, "Scheduled resizer task with the idle time {0} ms", idletime);
     }
 
@@ -706,11 +718,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     protected boolean isConnectionValid(ResourceHandle resourceHandle, ResourceAllocator resourceAllocator) {
         boolean connectionValid = true;
 
-        if (validation || validateAtmostEveryIdleSecs) {
+        if (connectionValidationRequired || validateAtmostEveryIdleSecs) {
             long validationPeriod;
             // validation period is idle timeout if validateAtmostEveryIdleSecs is set to true
             // else it is validateAtmostPeriodInMilliSeconds_
-            if (validation) {
+            if (connectionValidationRequired) {
                 validationPeriod = validateAtmostPeriodInMilliSeconds_;
             } else {
                 validationPeriod = idletime;
@@ -972,7 +984,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 LOG.log(FINE,
                     () -> "Time taken to create a single resource: " + resourceHandle.getResourceSpec().getResourceId()
                         + " and adding to the pool: " + (now - startTime) + " ms.");
-                if (validation || validateAtmostEveryIdleSecs) {
+                if (connectionValidationRequired || validateAtmostEveryIdleSecs) {
                     resourceHandle.setLastValidated(now);
                 }
                 return resourceHandle;
@@ -1113,6 +1125,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             if (cleanupResource(resourceHandle)) {
                 // Only when resource handle usage count is more than maxConnUsage
                 if (maxConnectionUsage_ > 0 && resourceHandle.getUsageCount() >= maxConnectionUsage_) {
+                    // Remove the resource handle from the pool and update the monitoring data
                     performMaxConnectionUsageOperation(resourceHandle);
                 } else {
                     // Put it back to the free collection.
@@ -1246,11 +1259,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     public ResourceHandle createResource(ResourceAllocator alloc) throws PoolingException {
         // NOTE : Pool should not call this method directly, it should be called only by pool-datastructure
         ResourceHandle result = createSingleResource(alloc);
-
-        ResourceState state = new ResourceState();
-        state.setBusy(false);
-        state.setEnlisted(false);
-        result.setResourceState(state);
+        result.getResourceState().reset();
 
         if (poolLifeCycleListener != null) {
             poolLifeCycleListener.connectionCreated();
@@ -1342,7 +1351,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         sb.append(" matching=");
         sb.append((matchConnections ? "on" : "off"));
         sb.append(" validation=");
-        sb.append((validation ? "on" : "off"));
+        sb.append((connectionValidationRequired ? "on" : "off"));
         return sb.toString();
     }
 
@@ -1419,7 +1428,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             maxWaitTime = 0;
         }
 
-        validation = poolResource.isIsConnectionValidationRequired();
+        connectionValidationRequired = poolResource.isIsConnectionValidationRequired();
         failAllConnections = poolResource.isFailAllConnections();
         setAdvancedPoolConfiguration(poolResource);
 
@@ -1567,8 +1576,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             resizerTask.cancel();
         }
         resizerTask = null;
-        if (timer != null) {
-            timer.purge();
+        if (resizerTaskTimer != null) {
+            resizerTaskTimer.purge();
         }
     }
 

@@ -96,7 +96,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
             ListIterator it = l.listIterator();
             while (it.hasNext()) {
                 ResourceHandle hand = (ResourceHandle) it.next();
-                ManagedConnection toEnlist = (ManagedConnection) hand.getResource();
+                ManagedConnection toEnlist = hand.getResource();
                 if (managedConnection.equals(toEnlist)) {
                     resourceHandle = hand;
                     break;
@@ -114,7 +114,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         // The other case might or might not work
         if (resourceHandle != null && resourceHandle.getResourceState().isUnenlisted()) {
             try {
-                // Enable the suspended lazyenlistment so as to enlist the resource.
+                // Enable enlistment to be able to enlist the resource.
                 resourceHandle.setEnlistmentSuspended(false);
                 transactionManager.enlistResource(transaction, resourceHandle);
 

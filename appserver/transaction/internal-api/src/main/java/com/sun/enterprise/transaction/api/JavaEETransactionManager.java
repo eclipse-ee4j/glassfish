@@ -49,7 +49,7 @@ import org.jvnet.hk2.annotations.Contract;
 public interface JavaEETransactionManager extends TransactionManager {
 
     /**
-     * register a synchronization object with the transaction
+     * Register a synchronization object with the transaction
      * associated with the current thread
      *
      * @param sync the synchronization object
@@ -68,12 +68,9 @@ public interface JavaEETransactionManager extends TransactionManager {
     /**
      * Enlist the resource specified with the transaction
      *
-     *
      * @param tran The transaction object
-     *
      * @param h The resource handle object
-     *
-     * @return <i>true</i> if the resource was enlisted successfully; otherwise     *    false.
+     * @return <i>true</i> if the resource was enlisted successfully; otherwise false.
      *
      * @exception RollbackException Thrown to indicate that
      *    the transaction has been marked for rollback only.
@@ -94,9 +91,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * Delist the resource specified from the transaction
      *
      * @param tran The transaction object
-     *
      * @param h The resource handle object
-     *
      * @param flag One of the values of TMSUCCESS, TMSUSPEND, or TMFAIL.
      *
      * @exception IllegalStateException Thrown if the transaction in the

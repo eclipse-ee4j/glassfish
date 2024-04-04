@@ -34,8 +34,17 @@ public final class ConnectionPoolReconfigHelper {
         LogDomains.RSR_LOGGER);
 
     public enum ReconfigAction {
+        /**
+         * Recreate connection pool
+         */
         RECREATE_POOL,
+        /**
+         * Update ManagedConnectionFactory and attributes
+         */
         UPDATE_MCF_AND_ATTRIBUTES,
+        /**
+         * No operation
+         */
         NO_OP
     }
 

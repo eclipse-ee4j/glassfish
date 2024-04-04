@@ -33,6 +33,7 @@ import java.util.ListIterator;
 import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import static com.sun.logging.LogDomains.RSR_LOGGER;
 import static java.util.logging.Level.WARNING;
@@ -96,7 +97,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
             ListIterator it = l.listIterator();
             while (it.hasNext()) {
                 ResourceHandle hand = (ResourceHandle) it.next();
-                ManagedConnection toEnlist = (ManagedConnection) hand.getResource();
+                ManagedConnection toEnlist = hand.getResource();
                 if (managedConnection.equals(toEnlist)) {
                     resourceHandle = hand;
                     break;
@@ -114,7 +115,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         // The other case might or might not work
         if (resourceHandle != null && resourceHandle.getResourceState().isUnenlisted()) {
             try {
-                // Enable the suspended lazyenlistment so as to enlist the resource.
+                // Enable enlistment to be able to enlist the resource.
                 resourceHandle.setEnlistmentSuspended(false);
                 transactionManager.enlistResource(transaction, resourceHandle);
 
@@ -123,10 +124,11 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
             } catch (Exception e) {
                 // In the rare cases where enlistResource throws exception, we
                 // should return the resource to the pool
-                ConnectorRuntime.getRuntime().getPoolManager().putbackDirectToPool(resourceHandle,
-                        resourceHandle.getResourceSpec().getPoolInfo());
+                // TODO: Why not call resourceClosed instead of putbackDirectToPool?
+                PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
+                ConnectorRuntime.getRuntime().getPoolManager().putbackDirectToPool(resourceHandle, poolInfo);
 
-                LOG.log(WARNING, "poolmgr.err_enlisting_res_in_getconn", resourceHandle.getResourceSpec().getPoolInfo());
+                LOG.log(WARNING, "poolmgr.err_enlisting_res_in_getconn", poolInfo);
                 LOG.fine("rm.enlistResource threw Exception. Returning resource to pool");
 
                 // And rethrow the exception

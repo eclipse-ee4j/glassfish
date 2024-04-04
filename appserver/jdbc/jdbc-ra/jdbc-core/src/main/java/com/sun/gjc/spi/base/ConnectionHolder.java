@@ -179,6 +179,10 @@ public abstract class ConnectionHolder implements Connection {
      * @throws SQLException In case of a database error.
      */
     public void close() throws SQLException {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE, "ConnectionHolder.close() START managedConnectionImpl=" + managedConnectionImpl);
+        }
+
         if (isClosed) {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "jdbc.duplicate_close_connection", this);
@@ -191,6 +195,10 @@ public abstract class ConnectionHolder implements Connection {
             // mc might be null if this is a lazyAssociatable connection
             // and has not been associated yet or has been disassociated
             managedConnectionImpl.connectionClosed(null, this);
+        }
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE, "ConnectionHolder.close() END managedConnectionImpl=" + managedConnectionImpl);
         }
     }
 

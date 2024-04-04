@@ -18,7 +18,6 @@
 package com.sun.enterprise.transaction.jts;
 
 import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.resource.ClientSecurityInfo;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
@@ -30,6 +29,7 @@ import com.sun.enterprise.transaction.TransactionSynchronizationRegistryImpl;
 import com.sun.enterprise.transaction.UserTransactionImpl;
 import com.sun.enterprise.transaction.spi.JavaEETransactionManagerDelegate;
 
+import jakarta.resource.spi.ManagedConnection;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.InvalidTransactionException;
@@ -1036,12 +1036,12 @@ public class JavaEETransactionManagerTest {
     }
 
     static class TestResourceHandle extends ResourceHandle {
-        private final XAResource resource;
+        private final XAResource xaResource;
         private static PoolManagerImpl poolMgr = new PoolManagerImpl();
 
-        public TestResourceHandle(XAResource resource) {
-            super(null,new ResourceSpec(new SimpleJndiName("testResource"),0) ,null,null);
-            this.resource = resource;
+        public TestResourceHandle(XAResource xaResource) {
+            super(null, new ResourceSpec(new SimpleJndiName("testResource"), 0), null);
+            this.xaResource = xaResource;
         }
 
         @Override
@@ -1065,22 +1065,17 @@ public class JavaEETransactionManagerTest {
         }
 
         @Override
-        public Object getResource() {
-            return resource;
-        }
-
-        @Override
-        public XAResource getXAResource() {
-            return resource;
-        }
-
-        @Override
-        public Object getUserConnection() {
+        public ManagedConnection getResource() {
             return null;
         }
 
         @Override
-        public ClientSecurityInfo getClientSecurityInfo() {
+        public XAResource getXAResource() {
+            return xaResource;
+        }
+
+        @Override
+        public Object getUserConnection() {
             return null;
         }
 

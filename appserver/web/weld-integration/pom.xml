@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.web</groupId>
         <artifactId>web</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M4</version>
     </parent>
 
     <artifactId>weld-integration</artifactId>

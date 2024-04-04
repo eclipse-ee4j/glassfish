@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.connectors</groupId>
         <artifactId>connectors</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M4</version>
     </parent>
 
     <artifactId>work-management</artifactId>

@@ -124,11 +124,6 @@
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
                                 
-                                <jarupdate
-                                    basedir="${patches}/jakarta.enterprise.cdi-el-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.enterprise.cdi-el-api.jar"
-                                />
-                                
                                 
                                 <!-- To support Jakarta Annotations 3 -->
                                 <jarupdate

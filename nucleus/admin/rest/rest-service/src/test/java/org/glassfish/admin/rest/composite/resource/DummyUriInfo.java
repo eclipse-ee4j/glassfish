@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -312,5 +313,10 @@ public class DummyUriInfo implements UriInfo {
         public UriBuilder resolveTemplatesFromEncoded(Map<String, Object> templateValues) throws IllegalArgumentException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+    }
+
+    @Override
+    public String getMatchedResourceTemplate() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

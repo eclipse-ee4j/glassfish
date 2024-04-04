@@ -1,5 +1,32 @@
 # Eclipse GlassFish 7.x Downloads
 
+### GlassFish 7.0.14
+
+GlassFish 7.0.14 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.
+
+GlassFish 7.0.14 compiles and passes all internal tests using OpenJDK 21. Several Jakarta EE 10 TCKs passed on JDK 21 as well. The Jakarta EE 10 TCK as a whole is not JDK 21 compatible and it's not possible to run all the Jakarta EE TCK tests.
+
+This release features among others an important NPE fix for the SSHLauncher and is highly recommended for our users who make use of this launcher.
+
+The thread safety of transactions was improved, and the JDBC connection pool sizing logic was also improved, fixing an annoying bug.
+
+To maintain future quality of GlassFish, many fixes to the internal TCKs tests were done.
+
+As a new feature, command completion is now enabled in the OSGi interactive console.
+
+Download:
+
+* [Eclipse GlassFish 7.0.14, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.14.zip)
+* [Eclipse GlassFish 7.0.14, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.14.zip)
+* [Eclipse GlassFish Embedded 7.0.14, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.14/jar)
+* [Eclipse GlassFish Embedded 7.0.14, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.14/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.14 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.14)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
+
 ### GlassFish 7.0.13
 
 GlassFish 7.0.13 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.

@@ -9,6 +9,23 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## March 31, 2024 -- Eclipse GlassFish 7.0.14 Available
+
+We are very happy to bring you Eclipse GlassFish 7.0.14.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+This release features among others an important NPE fix for the SSHLauncher and is highly recommended for our users who make use of this launcher.
+
+The thread safety of transactions was improved, and the JDBC connection pool sizing logic was also improved, fixing an annoying bug.
+
+To maintain future quality of GlassFish, many fixes to the internal TCKs tests were done.
+
+As a new feature, command completion is now enabled in the OSGi interactive console.
+
+Download links are available from the [GlassFish Download page](download.md)
+
+
 ## February 29, 2024 -- Eclipse GlassFish 7.0.13 Available
 
 We are very happy to bring you Eclipse GlassFish 7.0.13. 

@@ -443,6 +443,9 @@ public class ConnectionPoolTest {
         // Clean the pool
         connectionPool.emptyPool();
         assertResourcesSize(0);
+
+        PoolStatus poolStatus = connectionPool.getPoolStatus();
+        assertEquals(0, poolStatus.getNumConnFree());
     }
 
     public static class MyConnectionPool extends ConnectionPool {

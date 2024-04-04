@@ -20,7 +20,6 @@ package com.sun.enterprise.resource.pool;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
-import com.sun.enterprise.resource.ResourceState;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 
 import jakarta.transaction.Transaction;
@@ -81,10 +80,7 @@ public class UnpooledResource extends ConnectionPool {
             this.poolSize.decrement();
             throw ex;
         }
-
-        ResourceState state = new ResourceState();
-        handle.setResourceState(state);
-        state.setEnlisted(false);
+        handle.getResourceState().reset();
         setResourceStateToBusy(handle);
         return handle;
     }

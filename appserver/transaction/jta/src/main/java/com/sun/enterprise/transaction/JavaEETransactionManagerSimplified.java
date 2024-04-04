@@ -1404,13 +1404,6 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
             } catch (Exception ex2) {
                 // Log.err.println(ex2);
             }
-        } else {
-            // destroy resource. RM Error.
-            try {
-                h.destroyResource();
-            } catch (Exception ex2) {
-                // Log.err.println(ex2);
-            }
         }
     }
 

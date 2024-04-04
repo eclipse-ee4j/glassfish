@@ -183,15 +183,16 @@ public class ResourceSpec implements Serializable {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("ResourceSpec :- ");
-        sb.append("\nconnectionPoolName : ").append(poolInfo);
-        sb.append("\nisXA_ : ").append(isXA_);
-        sb.append("\nresoureId : ").append(resourceId);
-        sb.append("\nresoureIdType : ").append(resourceIdType);
-        sb.append("\npmResource : ").append(pmResource);
-        sb.append("\nnonTxResource : ").append(nonTxResource);
-        sb.append("\nlazyEnlistable : ").append(lazyEnlistable_);
-        sb.append("\nlazyAssociatable : ").append(lazyAssociatable_);
+        StringBuffer sb = new StringBuffer("<ResourceSpec ");
+        sb.append("connectionPoolName : ").append(poolInfo);
+        sb.append(", isXA_ : ").append(isXA_);
+        sb.append(", resoureId : ").append(resourceId);
+        sb.append(", resoureIdType : ").append(resourceIdType);
+        sb.append(", pmResource : ").append(pmResource);
+        sb.append(", nonTxResource : ").append(nonTxResource);
+        sb.append(", lazyEnlistable : ").append(lazyEnlistable_);
+        sb.append(", lazyAssociatable : ").append(lazyAssociatable_);
+        sb.append("/>");
         return sb.toString();
     }
 }

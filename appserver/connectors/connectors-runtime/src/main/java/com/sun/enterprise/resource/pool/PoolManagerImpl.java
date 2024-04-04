@@ -158,7 +158,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             // we need to associate a new connection with it
             try {
                 Object connection = resourceSpec.getConnectionToAssociate();
-                ManagedConnection managedConnection = (ManagedConnection) resourceHandle.getResource();
+                ManagedConnection managedConnection = resourceHandle.getResource();
                 managedConnection.associateConnection(connection);
             } catch (ResourceException e) {
                 putbackDirectToPool(resourceHandle, resourceSpec.getPoolInfo());
@@ -172,6 +172,9 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             resourceSpec.setLazyEnlistable(false);
         }
 
+        // Overwrite the resourceSpec value in the resourceHandle.
+        // TODO: explain why this is done and why resourceAllocator in the resourceHandle is not overwritten with this
+        // resourceAllocator.
         resourceHandle.setResourceSpec(resourceSpec);
 
         try {

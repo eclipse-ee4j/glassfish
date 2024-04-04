@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -49,7 +49,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
     @Override
     protected void initializePoolDataStructure() throws PoolingException {
         dataStructure = DataStructureFactory.getDataStructure("com.sun.enterprise.resource.pool.datastructure.ListDataStructure",
-                dataStructureParameters, maxPoolSize, this, resourceSelectionStrategyClass);
+                dataStructureParameters, maxPoolSize, this);
     }
 
     /**

@@ -232,7 +232,7 @@ public class Resizer extends TimerTask {
                     // validate if the connection is one in the freeConnectionsToValidate
                     if (freeConnectionsToValidate.contains(handle.toString())) {
                         Set<ManagedConnection> connectionsToTest = new HashSet<>();
-                        connectionsToTest.add((ManagedConnection) handle.getResource());
+                        connectionsToTest.add(handle.getResource());
                         Set<ManagedConnection> invalidConnections = handler.getInvalidConnections(connectionsToTest);
                         if (invalidConnections != null && !invalidConnections.isEmpty()) {
                             invalidConnectionsCount = validateAndRemoveResource(handle, invalidConnections);

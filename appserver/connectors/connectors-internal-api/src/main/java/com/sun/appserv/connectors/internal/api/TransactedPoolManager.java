@@ -29,7 +29,11 @@ import jakarta.transaction.Transaction;
 public interface TransactedPoolManager {
 
     /**
-     * Indicate that a resource is enlisted.
+     * Indicate that a resource is enlisted.<br>
+     * Expecting this method is called from the
+     * {@link com.sun.enterprise.resource.ResourceHandle#enlistedInTransaction(Transaction)} method and not directly from a
+     * pool manager.
+     *
      * @param tran Transaction to which the resource is enlisted
      * @param res Resource that is enlisted
      * @throws IllegalStateException when unable to enlist the resource

@@ -38,6 +38,12 @@ public interface ResourcePool {
     // Modify getResource() to throw PoolingException
     ResourceHandle getResource(ResourceSpec spec, ResourceAllocator alloc, Transaction transaction) throws PoolingException, RetryableUnavailableException;
 
+    /**
+     * Indicate that the resource is not used by a bean/application anymore.
+     *
+     * @param resource The resource that is not used anymore. After the call the resource is also marked as 'not busy' /
+     * 'free'.
+     */
     void resourceClosed(ResourceHandle resource);
 
     void resourceErrorOccurred(ResourceHandle resource);
@@ -47,6 +53,14 @@ public interface ResourcePool {
     // Get status of pool
     PoolStatus getPoolStatus();
 
+    /**
+     * Called when a transaction is completed.<br>
+     * All resource handles associated to the given transaction are delisted.<br>
+     * All resource handles associated to the given transaction handed back to the connection pool.
+     *
+     * @param tran The transaction
+     * @param status The jakarta.transaction.Status value of the transaction.
+     */
     void transactionCompleted(Transaction tran, int status);
 
     void resizePool(boolean forced);

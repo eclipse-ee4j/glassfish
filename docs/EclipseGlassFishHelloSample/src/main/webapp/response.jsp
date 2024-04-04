@@ -1,7 +1,7 @@
 <%-- 
     Document   : response
     Created on : 3 avr. 2024, 02 h 14 min 47 s
-    Author     : samito
+    Author     : SOULEY Afelete Samson <samsonsouley@gmail.com>
 --%>
 
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>

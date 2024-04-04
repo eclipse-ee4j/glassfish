@@ -1,7 +1,7 @@
 <%-- 
     Document   : index
     Created on : 3 avr. 2024, 02 h 06 min 14 s
-    Author     : samito
+    Author     : SOULEY Afelete Samson <samsonsouley@gmail.com>
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

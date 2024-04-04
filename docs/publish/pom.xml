@@ -134,6 +134,27 @@
                         </configuration>
                     </execution>
                     <!--
+                        Copy the hello.war to the docs directory.
+                    -->
+                    <execution>
+                        <id>hello-war</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.docs</groupId>
+                                    <artifactId>EclipseGlassFishHelloSample</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${site.output.dir}/downloads/quickstart</outputDirectory>
+                                    <destFileName>hello.war</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--
                         Get the collection of documentation for the 5.1.0 release.
                     -->
                     <execution>

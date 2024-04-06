@@ -39,7 +39,7 @@ public class AdminGuiApplication extends ApplicationWrapper {
         super.setViewHandler(handler);
     }
 
-    public ViewHandler getDefaViewHandler() {
+    public ViewHandler getDefaultViewHandler() {
         return defaultViewHandler;
     }
 

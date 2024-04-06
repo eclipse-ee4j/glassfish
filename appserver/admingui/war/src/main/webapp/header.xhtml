@@ -1,10 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+    <h:head>
         <title>Facelet Title</title>
-    </head>
-    <body>
-        Hello from Facelets
-    </body>
+    </h:head>
+    <h:body>
+        #{headerView.title} (using standard Jakarta Faces)
+    </h:body>
 </html>

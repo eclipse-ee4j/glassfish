@@ -33,10 +33,24 @@ public class AdminGuiViewHandler extends ViewHandlerWrapper {
         super(wrapped);
         Application app = FacesContext.getCurrentInstance().getApplication();
         if (app instanceof AdminGuiApplication) {
-            defaultViewHandler = ((AdminGuiApplication) app).getDefaViewHandler();
+            defaultViewHandler = ((AdminGuiApplication) app).getDefaultViewHandler();
         } else {
             defaultViewHandler = wrapped;
         }
     }
+
+    @Override
+    public ViewHandler getWrapped() {
+        String requestServletPath = null;
+        if (FacesContext.getCurrentInstance() != null) {
+            requestServletPath = FacesContext.getCurrentInstance().getExternalContext().getRequestServletPath();
+        }
+        if (defaultViewHandler != null && requestServletPath != null && requestServletPath.startsWith("/faces")) {
+            return defaultViewHandler;
+        }
+        return super.getWrapped();
+    }
+
+
 
 }

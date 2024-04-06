@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +17,6 @@
  */
 package org.glassfish.admin.rest.utils;
 
-import static java.util.stream.Collectors.joining;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -91,6 +91,8 @@ import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
 import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
+
+import org.glassfish.admin.rest.commandrecorder.AdminCommandRecorder;
 
 /**
  * Resource utilities class. Used by resource templates, <code>TemplateListOfResource</code> and
@@ -221,7 +223,8 @@ public class ResourceUtil {
      */
     public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject, boolean managedJob) {
 
-        logCommand(commandName, parameters);
+        AdminCommandRecorder recorder = new AdminCommandRecorder();
+        recorder.logCommand(commandName, parameters, subject);
 
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
@@ -267,35 +270,6 @@ public class ResourceUtil {
                 return ar;
             }
         });
-    }
-
-    private static void logCommand(String commandName, ParameterMap parameters) {
-        if (shouldLogCommand(commandName)) {
-            final Logger logger = RestLogging.restLogger;
-            String commandLine = constructCommandLine(commandName, parameters);
-            logger.info(() -> "Executed admin command in Admin Console: " + commandLine);
-        }
-
-    }
-
-    private static String constructCommandLine(String commandName, ParameterMap parameters) {
-        final String DEFAULT_PARAM_KEY = "DEFAULT";
-        final StringBuilder commandLineBuilder = new StringBuilder();
-        final Stream<String> namedParamsStream = parameters.entrySet().stream()
-                .filter(param -> !"userpassword".equals(param.getKey()))
-                .filter(param -> !DEFAULT_PARAM_KEY.equals(param.getKey()))
-                .map(param -> "--" + param.getKey() + "=" + param.getValue().get(0));
-        final List<String> unnamedParams = parameters.get(DEFAULT_PARAM_KEY);
-        return Stream.concat(Stream.concat(Stream.of(commandName), namedParamsStream), unnamedParams != null ? unnamedParams.stream() : Stream.empty())
-                .collect(joining(" "));
-    }
-
-    private static boolean shouldLogCommand(String commandName) {
-        return Stream.of("version", "_(.*)", "list(.*)", "get(.*)", "(.*)-list-services", "uptime",
-                "enable-asadmin-recorder", "disable-asadmin-recorder", "set-asadmin-recorder-configuration",
-                "asadmin-recorder-enabled")
-                .filter(commandName::matches)
-                .findAny().isEmpty();
     }
 
     public static void addCommandLog(RestActionReporter ar, String commandName, ParameterMap parameters) {

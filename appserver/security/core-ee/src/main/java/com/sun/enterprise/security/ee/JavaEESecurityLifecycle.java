@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,7 @@ import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FAC
 import static org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory.DEFAULT_FACTORY_DEFAULT_PROVIDERS;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
-import com.sun.enterprise.security.ee.authorize.PolicyLoader;
+import com.sun.enterprise.security.ee.authorization.PolicyLoader;
 import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
 import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
@@ -58,8 +58,7 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
     @Override
     public void onInitialization() {
         initializeJakartaAuthentication();
-
-        policyLoader.loadPolicy();
+        initializeJakartaAuthorization();
     }
 
     private void initializeJakartaAuthentication() {
@@ -101,6 +100,10 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
         Security.addProvider(provider);
 
         System.setProperty("config.parser", ConfigDomainParser.class.getName());
+    }
+
+    private void initializeJakartaAuthorization() {
+        policyLoader.loadPolicy();
     }
 
 }

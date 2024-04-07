@@ -63,12 +63,12 @@ public class SecurityContainer implements Container, PostConstruct {
     private static void initRoleMapperFactory() {
         // This should never ever fail.
         try {
-            Class<?> c = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory");
-            if (c != null) {
-                Object o = c.getDeclaredConstructor().newInstance();
-                if (o != null && o instanceof SecurityRoleMapperFactory) {
-                    SecurityRoleMapperFactoryMgr.registerFactory((SecurityRoleMapperFactory) o);
-                }
+            Object o = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory")
+                            .getDeclaredConstructor()
+                            .newInstance();
+
+            if (o instanceof SecurityRoleMapperFactory securityRoleMapperFactory) {
+                SecurityRoleMapperFactoryMgr.registerFactory(securityRoleMapperFactory);
             }
         } catch (Exception cnfe) {
             LOGGER.log(Level.SEVERE, "The impossible has happened.", cnfe);

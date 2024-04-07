@@ -30,8 +30,8 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.security.ee.SecurityUtil;
-import com.sun.enterprise.security.ee.authorize.PolicyLoader;
+import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
+import com.sun.enterprise.security.ee.authorization.PolicyLoader;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
@@ -355,7 +355,7 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
                         //TODO:appName is not correct, we need the module name
                         //from the descriptor.
                         probeProvider.policyDestructionStartedEvent(contextId);
-                        SecurityUtil.removePolicy(contextId);
+                        AuthorizationUtil.removePolicy(contextId);
                         probeProvider.policyDestructionEndedEvent(contextId);
                         probeProvider.policyDestructionEvent(contextId);
                     } catch (IASSecurityException ex) {
@@ -371,7 +371,7 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
                 }
             }
             //Removing the RoleMapper
-            SecurityUtil.removeRoleMapper(dc);
+            AuthorizationUtil.removeRoleMapper(dc);
         }
 
     }

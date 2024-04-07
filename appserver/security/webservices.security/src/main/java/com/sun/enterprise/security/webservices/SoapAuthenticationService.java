@@ -62,7 +62,7 @@ import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorize.EJBPolicyContextDelegate;
+import com.sun.enterprise.security.ee.authorization.EJBPolicyContextDelegate;
 import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
 import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;

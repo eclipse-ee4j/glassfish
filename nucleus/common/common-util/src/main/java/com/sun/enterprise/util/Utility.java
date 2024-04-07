@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -544,6 +545,20 @@ public final class Utility {
             AccessController.doPrivileged(action);
         }
         return original;
+    }
+
+    public static <T> T runWithContextClassLoader(ClassLoader contextClassLoader, Supplier<T> action) {
+        ClassLoader originalClassLoader = null;
+        try {
+            if (contextClassLoader != null) {
+                originalClassLoader = setContextClassLoader(contextClassLoader);
+            }
+            return action.get();
+        } finally {
+            if (originalClassLoader != null) {
+                setContextClassLoader(originalClassLoader);
+            }
+        }
     }
 
     public static void setEnvironment() {

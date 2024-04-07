@@ -16,6 +16,8 @@
 
 package org.glassfish.admin.rest.resources.custom;
 
+import com.sun.enterprise.util.Utility;
+import jakarta.inject.Inject;
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.utils.ProxyImpl;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Properties;
 import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ServerContext;
 
 /**
  * @author Mitesh Meswani
@@ -47,6 +50,9 @@ public class ManagementProxyResource {
     @Context
     protected ServiceLocator habitat;
 
+    @Inject
+    private ServerContext serverContext;
+
     @GET
     public ActionReportResult proxyRequest() {
 
@@ -56,7 +62,12 @@ public class ManagementProxyResource {
 
         ActionReportResult result = new ActionReportResult(ar);
 
-        Properties proxiedResponse = new ManagementProxyImpl().proxyRequest(uriInfo, Util.getJerseyClient(), habitat);
+        // Jersey client is not accessible from the current context classloader, which is kernel OSGi bundle CL
+        Properties proxiedResponse = Utility.runWithContextClassLoader(serverContext.getCommonClassLoader(),
+                () -> {
+                    return new ManagementProxyImpl()
+                            .proxyRequest(uriInfo, Util.getJerseyClient(), habitat);
+                });
         ar.setExtraProperties(proxiedResponse);
         return result;
     }

@@ -21,6 +21,7 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.ssl.SSLUtils;
+import jakarta.ws.rs.ProcessingException;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -115,6 +116,8 @@ public abstract class ProxyImpl implements Proxy {
                 // TODO error to user. Can not locate server for whom data is being looked for
 
             }
+        } catch (ProcessingException ex) {
+            throw new WebApplicationException(ex, Response.Status.GONE);
         } catch (Exception ex) {
             throw new WebApplicationException(ex, Response.Status.INTERNAL_SERVER_ERROR);
         }

@@ -21,7 +21,7 @@
  * Created on April 21, 2004, 11:56 AM
  */
 
-package com.sun.enterprise.security.ee.jmac.callback;
+package com.sun.enterprise.security.ee.authentication.jakarta.callback;
 
 import java.io.IOException;
 

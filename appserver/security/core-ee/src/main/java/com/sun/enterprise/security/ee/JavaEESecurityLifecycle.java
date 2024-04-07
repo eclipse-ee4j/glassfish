@@ -21,10 +21,10 @@ import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FAC
 import static org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory.DEFAULT_FACTORY_DEFAULT_PROVIDERS;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
+import com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy;
+import com.sun.enterprise.security.ee.authentication.jakarta.ConfigDomainParser;
+import com.sun.enterprise.security.ee.authentication.jakarta.WebServicesDelegate;
 import com.sun.enterprise.security.ee.authorization.PolicyLoader;
-import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
-import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;

@@ -123,6 +123,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Default: true
      */
     protected boolean matchConnections;
+
     /**
      * Represents the "is-connection-validation-required" configuration value.<br>
      * Specifies whether connections have to be validated before being given to the application. If a resource’s validation
@@ -353,8 +354,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     /**
      * Schedules the resizer timer task. If a task is currently scheduled, it would be cancelled and a new one is scheduled.
+     * <p>
+     * package protected for unit tests
      */
-    private void scheduleResizerTask() {
+    protected void scheduleResizerTask() {
         if (resizerTask != null) {
             // cancel the current task
             resizerTask.cancel();
@@ -395,7 +398,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * marks resource as free. This method should be used instead of directly calling
+     * Marks resource as free. This method should be used instead of directly calling
      * resoureHandle.getResourceState().setBusy(false) OR getResourceState(resourceHandle).setBusy(false) as this method
      * handles stopping of connection leak tracing If connection leak tracing is enabled, takes care of stopping connection
      * leak tracing
@@ -408,7 +411,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * marks resource as busy. This method should be used instead of directly calling
+     * Marks resource as busy. This method should be used instead of directly calling
      * resoureHandle.getResourceState().setBusy(true) OR getResourceState(resourceHandle).setBusy(true) as this method
      * handles starting of connection leak tracing If connection leak tracing is enabled, takes care of starting connection
      * leak tracing
@@ -421,10 +424,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * returns resource from the pool.
+     * Returns a resource from the connection pool.
      *
      * @return a free pooled resource object matching the ResourceSpec
-     * @throws PoolingException - if any error occurrs - or the pool has reached its max size and the
+     * @throws PoolingException - if any error occurs - or the pool has reached its max size and the
      * max-connection-wait-time-in-millis has expired.
      */
     @Override
@@ -674,6 +677,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                                     }
                                 }
 
+                                // TODO: This 'if (state.isFree())' logic suggests the state can already be Busy.
+                                // Document why it can already be busy.
+                                // Is this because you can have a transaction within a transaction and reuse the same resource?
+                                // But in that case: shouldn't the state be already set to 'busy' by the previous code
+                                // in the same thread and still remain busy?
                                 if (state.isFree()) {
                                     setResourceStateToBusy(resourceHandle);
                                 }
@@ -759,6 +767,12 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * @return boolean representing the match status of the connection
      */
     protected boolean matchConnection(ResourceHandle resource, ResourceAllocator alloc) {
+        // TODO: Explain what matching is in detail.
+        // TODO: Explain that if matchConnections is disabled in the connectionpool why 'true' is still returned and not false?!
+        // Old documentation mentions: "match-connections / default: true / If true, enables connection matching. You
+        // can set to false if connections are homogeneous." Jakarta documentation:
+        // jakarta.resource.spi.ManagedConnectionFactory.matchManagedConnections(Set, Subject, ConnectionRequestInfo) mentions:
+        // "criteria used for matching is specific to a resource adapter and is not prescribed by the Connector specification."
         boolean matched = true;
         if (matchConnections) {
             matched = alloc.matchConnection(resource);
@@ -835,9 +849,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             }
 
             if (resourceFromPool != null) {
-                // Set correct state
+                // Set state to Busy
                 setResourceStateToBusy(resourceFromPool);
             } else {
+                // Set state to Busy via resizePoolAndGetNewResource call
                 resourceFromPool = resizePoolAndGetNewResource(resourceAllocator);
             }
         } finally {
@@ -905,7 +920,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             while ((handle = dataStructure.getResource()) != null) {
                 if (matchConnection(handle, alloc)) {
                     matchedResourceFromPool = handle;
+                    // TODO: ensure the state is not already isBusy here
                     setResourceStateToBusy(matchedResourceFromPool);
+
+                    // Break from the while loop and do not add the handle to the activeResources list.
                     break;
                 }
                 activeResources.add(handle);
@@ -915,6 +933,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             for (ResourceHandle activeResource : activeResources) {
                 dataStructure.returnResource(activeResource);
             }
+            // No need to clear the list, clear() call is probably here to try to help the garbage collector.
             activeResources.clear();
         }
 
@@ -1057,9 +1076,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
     }
 
-    /**
-     * this method is called to indicate that the resource is not used by a bean/application anymore
-     */
     @Override
     public void resourceClosed(ResourceHandle handle) throws IllegalStateException {
         LOG.log(FINE, "Resource was closed, processing handle: {0}", handle);
@@ -1164,6 +1180,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     public void resourceErrorOccurred(ResourceHandle resourceHandle) throws IllegalStateException {
         LOG.log(FINE, "Resource error occured: {0}", resourceHandle);
         if (failAllConnections) {
+            // TODO: leakDetector is not updated and isBusy state of this resource is not updated correctly: possible bug.
+            // leakDetector should be updated in the doFailAllConnectionsProcessing method. The resource can be updated here.
             doFailAllConnectionsProcessing();
             return;
         }
@@ -1182,7 +1200,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             throw new IllegalStateException();
         }
 
-        // mark as not busy
+        // Mark as not busy. Even if it is removed from the Pool datastructure,
+        // it is good to clean it up, at least to clean up the leakDetector.
         setResourceStateToFree(resourceHandle);
         state.touchTimestamp();
 
@@ -1213,6 +1232,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         emptyPool();
+        // TODO: leakDetector might have been used and it is not cleaned up.
+        // should call leakDetector.reset
+
         try {
             createResources(allocator, steadyPoolSize);
             LOG.log(FINE, "Successfully created new resources.");
@@ -1224,7 +1246,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * this method is called when a resource is enlisted in
+     * This method is called when a resource is enlisted in a transaction.
      *
      * @param tran Transaction
      * @param resource ResourceHandle
@@ -1235,18 +1257,28 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * this method is called when transaction tran is completed
+     * This method is called when transaction tran is completed.
      *
      * @param tran Transaction
      * @param status status of transaction
      */
     @Override
     public void transactionCompleted(Transaction tran, int status) throws IllegalStateException {
+        // transactionCompleted will update all relevant resource handles to be no longer enlisted
         List<ResourceHandle> delistedResources = poolTxHelper.transactionCompleted(tran, status, poolInfo);
+
         for (ResourceHandle resource : delistedResources) {
-            // Application might not have closed the connection.
+            // Application might not have closed the connection, free the resource only if it is not in use anymore.
             if (isResourceUnused(resource)) {
                 freeResource(resource);
+                // Resource is now returned to the pool and another thread can use it, cannot log it anymore.
+            } else {
+                // TODO: Why would the application not close a busy connection if the transaction completed and the resource handle is
+                // delisted from the transaction? Is this done to leave the resource as used in the connection pool and let it
+                // time out and be cleaned up by the timer?
+                // The poolTxHelper.transactionCompleted already altered the enlisted state to be no longer enlisted in any transaction.
+                // So this resource is no longer part of an outer transaction for example.
+                // Would expect a warning here in case the resource handle state still marked as busy.
             }
         }
     }

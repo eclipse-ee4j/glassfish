@@ -234,9 +234,8 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     @Inject
     private Provider<ResourceManager> resourceManagerProvider;
 
-    /* protected for unit test */
     @Inject
-    protected ProcessEnvironment processEnvironment;
+    private ProcessEnvironment processEnvironment;
 
     @Inject
     private DriverLoader driverLoader;

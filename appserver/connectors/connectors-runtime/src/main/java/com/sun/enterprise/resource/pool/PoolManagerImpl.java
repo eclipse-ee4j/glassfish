@@ -120,20 +120,21 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     /**
      * Create and initialize pool if not created already.
+     * <p>
+     * package default for unit test
      *
-     * @param poolInfo Name of the pool to be created
-     * @param poolType - PoolType
-     * @return ResourcePool - newly created pool
+     * @param poolInfo pool identifier of the pool to be created
+     * @param poolType the type of pool to be created
+     * @param env the jndi information to find the ConnectorConnectionPool configuration used to configure the pool
      * @throws PoolingException when unable to create/initialize pool
      */
-    private ResourcePool createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
+    void createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
         ResourcePool pool = getPool(poolInfo);
         if (pool == null) {
             pool = ResourcePoolFactoryImpl.newInstance(poolInfo, poolType, env);
             addPool(pool);
             LOG.log(INFO, "Created connection pool and added it to PoolManager: {0}", pool);
         }
-        return pool;
     }
 
     // invoked by DataSource objects to obtain a connection
@@ -241,7 +242,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         return true;
     }
 
-    private void addPool(ResourcePool pool) {
+    /* package protected for unit test */
+    protected void addPool(ResourcePool pool) {
         LOG.log(FINE, "Adding pool {0} to pooltable", pool.getPoolInfo());
         poolTable.put(pool.getPoolInfo(), pool);
     }
@@ -380,6 +382,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
                 synchronized (pool) {
+                    // TODO: why is resourceClosed called AND resourceErrorOccurred?
                     pool.resourceClosed(resourceHandle);
                     resourceHandle.setConnectionErrorOccurred();
                     pool.resourceErrorOccurred(resourceHandle);
@@ -396,6 +399,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
                 if (errorOccurred) {
+                    // TODO: this code is different from putbackBadResourceToPool logic, explain why
+                    // TODO: why is resourceHandle.setConnectionErrorOccurred(); not called?
                     pool.resourceErrorOccurred(resourceHandle);
                 } else {
                     pool.resourceClosed(resourceHandle);

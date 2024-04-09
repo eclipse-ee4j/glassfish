@@ -532,10 +532,10 @@ however, there are exceptions.
 The following {productName} administration tools are described here:
 
 * <<Administration Console>>
-* <<`asadmin` Utility>>
+* <<asadmin-utility,`asadmin` Utility>>
 * <<REST Interfaces>>
 * <<OSGi Module Management Subsystem>>
-* <<`keytool` Utility>>
+* <<keytool-utility,`keytool` Utility>>
 * <<Java Monitoring and Management Console (JConsole)>>
 
 [[administration-console]]

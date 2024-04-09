@@ -1111,12 +1111,59 @@
                                 <!--
                                    Exclude several versions that we never want to update to since they are OLDER than
                                    what we currently use.
-
-                                   Note that we actually want to specify the version per artefact, but this is currently
-                                   broken.
-                                   See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
                                 -->
-                                <ignoredVersions>3.2-b..,2.5.0-b..,5.0-jdk8-rc.,20030911,10.0-b..</ignoredVersions>
+                                <ruleSet>
+                                    <rules>
+                                        <rule>
+                                            <groupId>antlr</groupId>
+                                            <artifactId>antlr</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>20030911</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.bsc.maven</groupId>
+                                            <artifactId>maven-processor-plugin</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>5.0-jdk8(-rc.)?</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.external</groupId>
+                                            <artifactId>ant</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>3.2-b..</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>10.0-b..</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.hk2</groupId>
+                                            <artifactId>osgi-resource-locator</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>2.5.0-b..</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                    </rules>
+                                </ruleSet>
                             </configuration>
                         </execution>
                     </executions>

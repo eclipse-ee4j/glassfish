@@ -1051,7 +1051,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>5.0.0</version>
+                    <version>8.0.2</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1063,8 +1063,6 @@
                     </executions>
                     <configuration>
                         <generateGitPropertiesFile>false</generateGitPropertiesFile>
-                        <dateFormat>YYYY-MM-dd'T'HH:mm:ss'Z'</dateFormat>
-                        <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>

@@ -16,6 +16,16 @@
 
 package org.glassfish.ejb.security.application;
 
+import static java.lang.System.getSecurityManager;
+import static java.util.Collections.synchronizedMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static java.util.stream.Collectors.toSet;
+import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.convertEJBMethodPermissions;
+import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.createEnterpriseBeansRoleRefPermission;
+
 import com.sun.ejb.EjbInvocation;
 import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
@@ -23,16 +33,13 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.ee.SecurityUtil;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.ee.authorize.cache.PermissionCache;
-import com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory;
+import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
+import com.sun.enterprise.security.ee.authorization.cache.PermissionCache;
+import com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory;
 import com.sun.logging.LogDomains;
-
 import jakarta.security.jacc.EJBMethodPermission;
 import jakarta.security.jacc.PolicyContext;
-
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -52,10 +59,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
 import javax.security.auth.SubjectDomainCombiner;
-
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.api.invocation.InvocationManager;
@@ -65,16 +70,6 @@ import org.glassfish.ejb.security.factory.EJBSecurityManagerFactory;
 import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
-
-import static java.lang.System.getSecurityManager;
-import static java.util.Collections.synchronizedMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static java.util.stream.Collectors.toSet;
-import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.convertEJBMethodPermissions;
-import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.createEnterpriseBeansRoleRefPermission;
 
 /**
  * This class is used by the Enterprise Beans server to manage security. All the container object only call into this object for managing
@@ -88,8 +83,6 @@ import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.cr
 public final class EJBSecurityManager implements SecurityManager {
 
     private static final Logger _logger = LogDomains.getLogger(EJBSecurityManager.class, LogDomains.EJB_LOGGER);
-
-    private static final PolicyContextHandlerImpl pcHandlerImpl = PolicyContextHandlerImpl.getInstance();
 
     // We use two protection domain caches until we decide how to
     // set the applicationCodeSource in the protection domain of system apps.
@@ -134,7 +127,7 @@ public final class EJBSecurityManager implements SecurityManager {
         this.deploymentDescriptor = ejbDescriptor;
         this.invocationManager = invMgr;
         this.ejbSecurityManagerFactory = ejbSecurityManagerFactory;
-        roleMapperFactory = SecurityUtil.getRoleMapperFactory();
+        roleMapperFactory = AuthorizationUtil.getRoleMapperFactory();
 
         runAs = getRunAs(deploymentDescriptor);
 
@@ -176,7 +169,7 @@ public final class EJBSecurityManager implements SecurityManager {
     }
 
     public static String getContextID(EjbDescriptor ejbDescriptor) {
-        return SecurityUtil.getContextID(ejbDescriptor.getEjbBundleDescriptor());
+        return AuthorizationUtil.getContextID(ejbDescriptor.getEjbBundleDescriptor());
     }
 
     /**
@@ -195,8 +188,6 @@ public final class EJBSecurityManager implements SecurityManager {
         if (ejbInvocation.getAuth() != null) {
             return ejbInvocation.getAuth().booleanValue();
         }
-
-        pcHandlerImpl.getHandlerData().setInvocation(ejbInvocation);
 
         SecurityContext securityContext = SecurityContext.getCurrent();
 
@@ -379,7 +370,7 @@ public final class EJBSecurityManager implements SecurityManager {
         probeProvider.securityManagerDestructionEvent(ejbName);
     }
 
-    /* This method is used by SecurityUtil runMethod to run the
+    /* This method is used by AuthorizationUtil runMethod to run the
      * action as the subject encapsulated in the current
      * SecurityContext.
      */
@@ -546,31 +537,7 @@ public final class EJBSecurityManager implements SecurityManager {
 
     @Override
     public void resetPolicyContext() {
-        if (System.getSecurityManager() == null) {
-            PolicyContextHandlerImpl.getInstance().reset();
-            PolicyContext.setContextID(null);
-            return;
-        }
-
-        try {
-            AppservAccessController.doPrivileged(new PrivilegedExceptionAction<>() {
-                @Override
-                public Object run() throws Exception {
-                    PolicyContextHandlerImpl.getInstance().reset();
-                    PolicyContext.setContextID(null);
-                    return null;
-                }
-            });
-        } catch (PrivilegedActionException pae) {
-            Throwable cause = pae.getCause();
-            if (cause instanceof java.security.AccessControlException) {
-                _logger.log(SEVERE, "jacc_policy_context_security_exception", cause);
-            } else {
-                _logger.log(SEVERE, "jacc_policy_context_exception", cause);
-            }
-
-            throw new RuntimeException(cause);
-        }
+        PolicyContext.setContextID(null);
     }
 
     private SecurityContext getSecurityContext() {
@@ -582,7 +549,7 @@ public final class EJBSecurityManager implements SecurityManager {
         ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
 
         if (componentInvocation == null) {
-            throw new InvocationException(); // 4646060
+            throw new InvocationException();
         }
 
         return (SecurityContext) componentInvocation.getOldSecurityContext();

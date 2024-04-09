@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,13 +13,24 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package com.sun.enterprise.security.jacc.provider;
 
-/**
- *
- * @deprecated Use <code>org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory</code>
- */
-@Deprecated(forRemoval = true)
-public class SimplePolicyConfigurationFactory extends org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory {
+package com.sun.enterprise.security.ee.authorization;
 
+import java.lang.reflect.Method;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.jvnet.hk2.annotations.Contract;
+
+@Contract
+public interface PolicyContextDelegate {
+
+    Object getEnterpriseBean(ComponentInvocation inv);
+
+    Object getEJbArguments(ComponentInvocation inv);
+
+    Object getSOAPMessage(ComponentInvocation inv);
+
+    void setSOAPMessage(Object message, ComponentInvocation inv);
+
+    boolean authorize(ComponentInvocation inv, Method m) throws Exception;
 }

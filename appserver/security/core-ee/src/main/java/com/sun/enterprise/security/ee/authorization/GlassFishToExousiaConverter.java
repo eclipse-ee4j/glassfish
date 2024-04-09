@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.web.integration;
+package com.sun.enterprise.security.ee.authorization;
 
 import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.CONFIDENTIAL;
 import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.NONE;
@@ -41,7 +41,7 @@ import jakarta.servlet.annotation.ServletSecurity.TransportGuarantee;
 /**
  * This class converts from GlassFish security types to Exousia security types.
  *
- * @author arjan
+ * @author Arjan Tijms
  */
 public class GlassFishToExousiaConverter {
 

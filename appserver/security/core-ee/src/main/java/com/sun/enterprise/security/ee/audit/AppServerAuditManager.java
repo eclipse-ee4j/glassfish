@@ -152,11 +152,11 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
      */
     public void ejbAsWebServiceInvocation(final String endpoint, final boolean validRequest) {
         if (auditOn) {
-            for (AuditModule am : myAuditModules()) {
+            for (AuditModule auditModule : myAuditModules()) {
                 try {
-                    am.ejbAsWebServiceInvocation(endpoint, validRequest);
+                    auditModule.ejbAsWebServiceInvocation(endpoint, validRequest);
                 } catch (Exception ex) {
-                    final String name = moduleName(am);
+                    final String name = moduleName(auditModule);
                     final String msg = _localStrings.getLocalString(AUDIT_MGR_EJB_AS_WS_INVOCATION_KEY,
                             " Audit Module {0} threw the following exception during ejb as web service invocation :", name);
                     LOG.log(Level.INFO, msg, ex);

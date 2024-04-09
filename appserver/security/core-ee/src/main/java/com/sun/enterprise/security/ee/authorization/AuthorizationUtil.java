@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee;
+package com.sun.enterprise.security.ee.authorization;
 
 import static org.glassfish.deployment.versioning.VersioningUtils.getRepositoryName;
 
@@ -24,28 +24,25 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
 import jakarta.security.jacc.PolicyConfiguration;
 import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.PolicyFactory;
 import java.util.Collection;
-import java.util.logging.Logger;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.deployment.versioning.VersioningUtils;
 
 /**
- * This utility class encloses all the calls to a ejb method in a specified subject
+ * This utility class contains several methods for working with (Jakarta) Authorization.
  *
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
-public class SecurityUtil {
+public class AuthorizationUtil {
 
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SecurityUtil.class);
-    private static final Logger _logger = LogDomains.getLogger(SecurityUtil.class, LogDomains.SECURITY_LOGGER);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AuthorizationUtil.class);
     public static final String VENDOR_PRESENT = "com.sun.enterprise.security.ee.provider.jaccvendorpresent";
 
     // set in PolicyLoader from domain.xml
@@ -100,21 +97,42 @@ public class SecurityUtil {
 
         try {
             boolean wasInService = PolicyConfigurationFactory.getPolicyConfigurationFactory().inService(contextId);
-            // find the PolicyConfig and delete it.
-            PolicyConfiguration pc = PolicyConfigurationFactory.getPolicyConfigurationFactory().getPolicyConfiguration(contextId, false);
-            pc.delete();
+
+            // Find the PolicyConfig and delete it.
+            PolicyConfiguration policyConfiguration = PolicyConfigurationFactory.getPolicyConfigurationFactory().getPolicyConfiguration(contextId, false);
+            policyConfiguration.delete();
+
             // Only do refresh policy if the deleted context was in service
             if (wasInService) {
                 PolicyFactory.getPolicyFactory().getPolicy().refresh();
             }
 
         } catch (ClassNotFoundException cnfe) {
-            String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound",
-                    "Could not find PolicyConfigurationFactory class. Check jakarta.security.jacc.PolicyConfigurationFactory.provider property");
-            throw new IASSecurityException(msg);
+            throw new IASSecurityException(localStrings.getLocalString(
+                "enterprise.security.securityutil.classnotfound",
+                "Could not find PolicyConfigurationFactory class. Check jakarta.security.jacc.PolicyConfigurationFactory.provider property"));
         } catch (PolicyContextException pce) {
             throw new IASSecurityException(pce.toString());
         }
+    }
+
+    public static SecurityRoleMapperFactory getRoleMapperFactory() {
+        SecurityRoleMapperFactory factory = SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory();
+        if (factory == null) {
+            throw new IllegalArgumentException("This application has no role mapper factory defined");
+        }
+
+        return factory;
+    }
+
+    public static void removeRoleMapper(DeploymentContext deploymentContext) {
+        OpsParams params = deploymentContext.getCommandParameters(OpsParams.class);
+        if (params.origin != OpsParams.Origin.undeploy) {
+            return;
+        }
+
+        getRoleMapperFactory().removeRoleMapper(params.name());
+
     }
 
     /**
@@ -157,25 +175,5 @@ public class SecurityUtil {
         } while (!unique);
 
         return VersioningUtils.getRepositoryName(app.getRegistrationName()) + "/" + pseudonym;
-    }
-
-    public static void removeRoleMapper(DeploymentContext dc) {
-        OpsParams params = dc.getCommandParameters(OpsParams.class);
-        if (params.origin != OpsParams.Origin.undeploy) {
-            return;
-        }
-        String appName = params.name();
-        SecurityRoleMapperFactory factory = getRoleMapperFactory();
-        factory.removeRoleMapper(appName);
-
-    }
-
-    public static SecurityRoleMapperFactory getRoleMapperFactory() {
-        SecurityRoleMapperFactory factory = SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory();
-        if (factory == null) {
-            throw new IllegalArgumentException("This application has no role mapper factory defined");
-        }
-
-        return factory;
     }
 }

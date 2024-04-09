@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.jmac;
+package com.sun.enterprise.security.ee.authentication.jakarta;
 
 import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.AUTH_LAYER;
 import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.PROVIDER_ID;
@@ -50,7 +50,7 @@ public class AuthMessagePolicy {
     public static final String WEB_BUNDLE = "WEB_BUNDLE";
 
     private static final String HANDLER_CLASS_PROPERTY = "security.jmac.config.ConfigHelper.CallbackHandler";
-    private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.ee.jmac.callback.ContainerCallbackHandler";
+    private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.ee.authentication.jakarta.callback.ContainerCallbackHandler";
 
     private static String handlerClassName;
 

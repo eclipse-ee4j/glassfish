@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.authorize;
+package com.sun.enterprise.security.ee.authorization;
 
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyConfigFactoryNotDefined;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyFactoryOverride;
@@ -105,7 +105,7 @@ public class PolicyLoader {
         // TODO: replace with standard version
         if (System.getProperty("simple.jacc.provider.JACCRoleMapper.class") == null) {
             System.setProperty("simple.jacc.provider.JACCRoleMapper.class",
-                "com.sun.enterprise.security.ee.web.integration.GlassfishRoleMapper");
+                "com.sun.enterprise.security.ee.authorization.GlassfishRoleMapper");
         }
 
         // Now install the policy provider if one was identified

@@ -17,6 +17,40 @@
 
 package com.sun.web.security;
 
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestParameterGenerator.HTTP_DIGEST;
+import static com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy.WEB_BUNDLE;
+import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.getContextID;
+import static com.sun.enterprise.util.Utility.isAllNull;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+import static java.util.Arrays.asList;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.ContainerEvent.AFTER_AUTHENTICATION;
+import static org.apache.catalina.ContainerEvent.AFTER_LOGOUT;
+import static org.apache.catalina.ContainerEvent.AFTER_POST_AUTHENTICATION;
+import static org.apache.catalina.ContainerEvent.BEFORE_AUTHENTICATION;
+import static org.apache.catalina.ContainerEvent.BEFORE_LOGOUT;
+import static org.apache.catalina.ContainerEvent.BEFORE_POST_AUTHENTICATION;
+import static org.apache.catalina.Globals.WRAPPED_REQUEST;
+import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
+import static org.apache.catalina.realm.Constants.FORM_METHOD;
+import static org.glassfish.epicyro.config.helper.HttpServletConstants.POLICY_CONTEXT;
+import static org.glassfish.epicyro.config.helper.HttpServletConstants.REGISTER_SESSION;
+
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
@@ -34,15 +68,14 @@ import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestParameterGenerator;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.HttpAlgorithmParameterImpl;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.NestedDigestAlgoParamImpl;
-import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
-import com.sun.enterprise.security.ee.jmac.callback.ServerContainerCallbackHandler;
+import com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy;
+import com.sun.enterprise.security.ee.authentication.jakarta.ConfigDomainParser;
+import com.sun.enterprise.security.ee.authentication.jakarta.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManager;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
 import com.sun.enterprise.security.integration.RealmInitializer;
 import com.sun.enterprise.util.net.NetUtils;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
@@ -55,7 +88,6 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetAddress;
@@ -79,10 +111,8 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
-
 import org.apache.catalina.Authenticator;
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
@@ -114,40 +144,6 @@ import org.glassfish.security.common.Group;
 import org.glassfish.security.common.NonceInfo;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
-import static com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestParameterGenerator.HTTP_DIGEST;
-import static com.sun.enterprise.security.ee.jmac.AuthMessagePolicy.WEB_BUNDLE;
-import static com.sun.enterprise.security.ee.web.integration.WebSecurityManager.getContextID;
-import static com.sun.enterprise.util.Utility.isAllNull;
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
-import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
-import static java.util.Arrays.asList;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.ContainerEvent.AFTER_AUTHENTICATION;
-import static org.apache.catalina.ContainerEvent.AFTER_LOGOUT;
-import static org.apache.catalina.ContainerEvent.AFTER_POST_AUTHENTICATION;
-import static org.apache.catalina.ContainerEvent.BEFORE_AUTHENTICATION;
-import static org.apache.catalina.ContainerEvent.BEFORE_LOGOUT;
-import static org.apache.catalina.ContainerEvent.BEFORE_POST_AUTHENTICATION;
-import static org.apache.catalina.Globals.WRAPPED_REQUEST;
-import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
-import static org.apache.catalina.realm.Constants.FORM_METHOD;
-import static org.glassfish.epicyro.config.helper.HttpServletConstants.POLICY_CONTEXT;
-import static org.glassfish.epicyro.config.helper.HttpServletConstants.REGISTER_SESSION;
 
 /**
  * This is the realm adapter used to authenticate users and authorize access to web resources. The authenticate method
@@ -269,7 +265,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         this.webBundleDescriptor = (WebBundleDescriptor) descriptor;
 
         realmName = findRealmName(initialRealmName);
-        contextId = WebSecurityManager.getContextID(webBundleDescriptor);
+        contextId = getContextID(webBundleDescriptor);
         moduleID = webBundleDescriptor.getModuleID();
 
         collectRunAsPrincipals();
@@ -351,7 +347,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
         int isGranted = 0;
         try {
-            isGranted = securityManager.hasUserDataPermission(httpServletRequest, uri, method);
+            isGranted = securityManager.getAuthorizationService().hasUserDataPermission(httpServletRequest, uri, method);
         } catch (IllegalArgumentException e) {
             // end the request after getting IllegalArgumentException while checking
             // user data permission
@@ -410,7 +406,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                 disableProxyCaching(request, response, disableProxyCaching, securePagesWithPragma);
                 if (ssoEnabled) {
                     HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
-                    if (!getWebSecurityManager(true).permitAll(httpServletRequest)) {
+                    if (!getWebSecurityManager(true).getAuthorizationService().permitAll(httpServletRequest)) {
                         // create a session for protected sso association
                         httpServletRequest.getSession(true);
                     }
@@ -601,7 +597,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         // currentRequest.getContextPath());
         String servletName = getCanonicalName(request);
 
-        boolean isGranted = manager.hasRoleRefPermission(servletName, role, principal);
+        boolean isGranted = manager.getAuthorizationService().hasRoleRefPermission(servletName, role, principal);
 
         LOG.log(FINE, "Checking if servlet {0} with principal {1} has role {2} isGranted: {3}",
             new Object[] {servletName, principal, role, isGranted});
@@ -650,7 +646,8 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         if (secMgr == null) {
             return false;
         }
-        return secMgr.hasRoleRefPermission(servletName, role, principal);
+
+        return secMgr.getAuthorizationService().hasRoleRefPermission(servletName, role, principal);
     }
 
     @Override
@@ -971,7 +968,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
             return false;
         }
 
-        return webSecurityManager.hasResourcePermission(httpServletRequest);
+        return webSecurityManager.getAuthorizationService().hasResourcePermission(httpServletRequest);
     }
 
     private boolean isRequestFormPage(HttpRequest request) {
@@ -1207,7 +1204,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     private BaseAuthenticationService createAuthenticationService(final ServletContext servletContext) throws IOException {
         Map<String, Object> properties = new HashMap<>();
 
-        String policyContextId = WebSecurityManager.getContextID(webBundleDescriptor);
+        String policyContextId = getContextID(webBundleDescriptor);
         if (policyContextId != null) {
            properties.put(POLICY_CONTEXT, policyContextId);
         }
@@ -1264,7 +1261,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         boolean isRequestValidated = false;
         boolean isMandatory = true;
         try {
-            isMandatory = !getWebSecurityManager(true).permitAll(httpServletRequest);
+            isMandatory = !getWebSecurityManager(true).getAuthorizationService().permitAll(httpServletRequest);
 
             // Issue - 9578 - produce user challenge if call originates from HttpRequest.authenticate
             if (isMandatory || calledFromAuthenticate) {
@@ -1721,7 +1718,9 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
      */
     protected void configureSecurity(WebBundleDescriptor webBundleDescriptor, boolean isSystem) {
         try {
-            webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext).commitPolicy();
+            webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext)
+                                     .getAuthorizationService()
+                                     .commitPolicy();
 
             String contextId = getContextID(webBundleDescriptor);
             if (isSystem && contextId.equals("__admingui/__admingui")) {
@@ -1827,7 +1826,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         }
 
         WebSecurityManager manager = getWebSecurityManager(false);
-        if (manager != null && manager.hasNoConstrainedResources()
+        if (manager != null && manager.getAuthorizationService().hasNoConstrainedResources()
                 && !isSecurityExtensionEnabled(context.getServletContext())) {
             return null;
         }

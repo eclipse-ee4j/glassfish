@@ -21,7 +21,7 @@ import com.sun.ejb.Container;
 import com.sun.ejb.ContainerFactory;
 import com.sun.ejb.containers.AbstractSingletonContainer;
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.security.ee.authorize.PolicyLoader;
+import com.sun.enterprise.security.ee.authorization.PolicyLoader;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
 import java.util.ArrayList;

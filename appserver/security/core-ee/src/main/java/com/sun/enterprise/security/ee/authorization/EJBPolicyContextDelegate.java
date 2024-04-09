@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.authorize;
+package com.sun.enterprise.security.ee.authorization;
 
 import java.lang.reflect.Method;
 
@@ -57,7 +57,7 @@ public class EJBPolicyContextDelegate implements PolicyContextDelegate {
         if (invocation instanceof EJBInvocation) {
             EJBInvocation ejbInvocation = (EJBInvocation) invocation;
             if (ejbInvocation.isAWebService()) {
-                // TODO:V3 does this violate JACC spec?, we may have to convert to SOAPMessage on demand
+                // TODO:V3 does this violate Jakarta Authorization spec?, we may have to convert to SOAPMessage on demand
                 // return eInv.getSOAPMessage();
                 return ejbInvocation.getMessage();
             }

@@ -16,24 +16,24 @@
 
 package com.sun.enterprise.security.ee;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.earType;
+import static com.sun.enterprise.deployment.util.DOLUtils.ejbType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
+import static org.glassfish.deployment.common.DeploymentUtils.isArchiveOfType;
+
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.security.SecurityLifecycle;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.logging.Logger;
-
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.security.SecurityLifecycle;
-
-import jakarta.inject.Inject;
 
 /**
  * SecuritySniffer for security related activities
@@ -44,13 +44,16 @@ public class SecuritySniffer extends GenericSniffer {
     final String[] containers = { "com.sun.enterprise.security.ee.SecurityContainer" };
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     private ServiceHandle<SecurityLifecycle> lifecycle;
 
     @SuppressWarnings("unchecked")
-    private static final Class<? extends Annotation>[] ejbAnnotations = new Class[] { jakarta.ejb.Stateless.class,
-            jakarta.ejb.Stateful.class, jakarta.ejb.MessageDriven.class, jakarta.ejb.Singleton.class };
+    private static final Class<? extends Annotation>[] ejbAnnotations = new Class[] {
+            jakarta.ejb.Stateless.class,
+            jakarta.ejb.Stateful.class,
+            jakarta.ejb.MessageDriven.class,
+            jakarta.ejb.Singleton.class };
 
     public SecuritySniffer() {
         super("security", "WEB-INF/web.xml", null);
@@ -64,14 +67,15 @@ public class SecuritySniffer extends GenericSniffer {
      */
     @Override
     public boolean handles(DeploymentContext context) {
-        ArchiveType archiveType = habitat.getService(ArchiveType.class, context.getArchiveHandler().getArchiveType());
+        ArchiveType archiveType = serviceLocator.getService(ArchiveType.class, context.getArchiveHandler().getArchiveType());
         if (archiveType != null && !supportsArchiveType(archiveType)) {
             return false;
         }
-        if (archiveType != null && (archiveType.equals(DOLUtils.warType()) || archiveType.equals(DOLUtils.earType())
-                || archiveType.equals(DOLUtils.ejbType()))) {
+
+        if (archiveType != null && (archiveType.equals(warType()) || archiveType.equals(earType()) || archiveType.equals(ejbType()))) {
             return true;
         }
+
         return handles(context.getSource());
     }
 
@@ -83,8 +87,10 @@ public class SecuritySniffer extends GenericSniffer {
      */
     @Override
     public boolean handles(ReadableArchive location) {
-        return DeploymentUtils.isArchiveOfType(location, DOLUtils.warType(), habitat)
-                || DeploymentUtils.isArchiveOfType(location, DOLUtils.earType(), habitat) || isJar(location);
+        return
+            isArchiveOfType(location, warType(), serviceLocator) ||
+            isArchiveOfType(location, earType(), serviceLocator) ||
+            isJar(location);
     }
 
     /**
@@ -102,7 +108,7 @@ public class SecuritySniffer extends GenericSniffer {
      */
     @Override
     public HK2Module[] setup(String containerHome, Logger logger) throws IOException {
-        lifecycle = habitat.getServiceHandle(SecurityLifecycle.class);
+        lifecycle = serviceLocator.getServiceHandle(SecurityLifecycle.class);
         lifecycle.getService();
         return null;
     }
@@ -145,21 +151,18 @@ public class SecuritySniffer extends GenericSniffer {
      */
     @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals("war") || archiveType.toString().equals("ejb")) {
-            return true;
-        }
-        return false;
+        return archiveType.toString().equals("war") || archiveType.toString().equals("ejb");
     }
 
     private boolean isJar(ReadableArchive location) {
         // check for ejb-jar.xml
-        boolean result = false;
         try {
-            result = location.exists("META-INF/ejb-jar.xml");
+            return location.exists("META-INF/ejb-jar.xml");
         } catch (IOException ioEx) {
             // TODO
         }
-        return result;
+
+        return false;
     }
 
 }

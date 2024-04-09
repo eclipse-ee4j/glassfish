@@ -17,6 +17,15 @@
 
 package com.sun.enterprise.security.ee;
 
+import static com.sun.enterprise.deployment.WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
+import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.getContextID;
+import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.removeRoleMapper;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
+import static org.glassfish.internal.deployment.Deployment.MODULE_LOADED;
+
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
@@ -25,20 +34,18 @@ import com.sun.enterprise.security.AppCNonceCacheMap;
 import com.sun.enterprise.security.CNonceCacheFactory;
 import com.sun.enterprise.security.EjbSecurityPolicyProbeProvider;
 import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
+import com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManager;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
 import com.sun.logging.LogDomains;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
@@ -57,14 +64,6 @@ import org.glassfish.internal.data.ModuleInfo;
 import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.HAUtil;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
-import static com.sun.enterprise.security.ee.SecurityUtil.getContextID;
-import static com.sun.enterprise.security.ee.SecurityUtil.removeRoleMapper;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
-import static org.glassfish.internal.deployment.Deployment.MODULE_LOADED;
 
 /**
  * Security Deployer which generate and clean the security policies
@@ -103,7 +102,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
     private CNonceCacheFactory cnonceCacheFactory;
     private static final String HA_CNONCE_BS_NAME = "HA-CNonceCache-Backingstore";
 
-    private EventListener listener = null;
+    private EventListener listener;
     private static WebSecurityDeployerProbeProvider websecurityProbeProvider = new WebSecurityDeployerProbeProvider();
     private static EjbSecurityPolicyProbeProvider ejbProbeProvider = new EjbSecurityPolicyProbeProvider();
 
@@ -131,11 +130,11 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                     return;
                 }
 
-                Set<WebBundleDescriptor> webBundleDescriptor = application.getBundleDescriptors(WebBundleDescriptor.class);
-                linkPolicies(application, webBundleDescriptor);
+                Set<WebBundleDescriptor> webBundleDescriptors = application.getBundleDescriptors(WebBundleDescriptor.class);
+                linkPolicies(application, webBundleDescriptors);
                 commitEjbPolicies(application);
 
-                if (webBundleDescriptor != null && !webBundleDescriptor.isEmpty()) {
+                if (!isEmpty(webBundleDescriptors)) {
                     // Register the WebSecurityComponentInvocationHandler
                     RegisteredComponentInvocationHandler handler = registeredComponentInvocationHandlerProvider.get();
                     if (handler != null) {
@@ -158,7 +157,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         eventsProvider.get().register(listener);
     }
 
-    // creates security policy if needed
+    // Creates security policy if needed
     @Override
     protected void generateArtifacts(DeploymentContext deploymentContext) throws DeploymentException {
         OpsParams params = deploymentContext.getCommandParameters(OpsParams.class);
@@ -184,7 +183,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         }
     }
 
-    // removes security policy if needed
+    // Removes security policy if needed
     @Override
     protected void cleanArtifacts(DeploymentContext deploymentContext) throws DeploymentException {
         deletePolicy(deploymentContext);
@@ -318,7 +317,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
                 WebSecurityManager manager = webSecurityManagerFactory.getManager(contextId);
                 if (manager != null) {
-                    lastInService = WebSecurityManager.linkPolicy(contextId, linkedContextId, lastInService);
+                    lastInService = GlassFishAuthorizationService.linkPolicy(contextId, linkedContextId, lastInService);
                     linkedContextId = contextId;
                 }
             }
@@ -329,7 +328,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
                 WebSecurityManager manager = webSecurityManagerFactory.getManager(contextId);
                 if (manager != null) {
-                    lastInService = WebSecurityManager.linkPolicy(contextId, linkedContextId, lastInService);
+                    lastInService = GlassFishAuthorizationService.linkPolicy(contextId, linkedContextId, lastInService);
                     linkedContextId = contextId;
                 }
             }
@@ -375,28 +374,28 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
     boolean linkViaManager(String contextId, String linkedContextId, boolean lastInService) {
         WebSecurityManager securityManager = webSecurityManagerFactory.getManager(contextId);
         if (securityManager != null) {
-            return securityManager.linkPolicy(linkedContextId, lastInService);
+            return securityManager.getAuthorizationService().linkPolicy(linkedContextId, lastInService);
         }
 
-        return WebSecurityManager.linkPolicy(contextId, linkedContextId, lastInService);
+        return GlassFishAuthorizationService.linkPolicy(contextId, linkedContextId, lastInService);
 
     }
 
     void commitViaManager(String contextId) {
         WebSecurityManager securityManager = webSecurityManagerFactory.getManager(contextId);
         if (securityManager != null) {
-            securityManager.commitPolicy();
+            securityManager.getAuthorizationService().commitPolicy();
         } else {
-            WebSecurityManager.commitPolicy(contextId);
+            GlassFishAuthorizationService.commitPolicy(contextId);
         }
     }
 
     void deleteViaManager(String contextId) {
         WebSecurityManager securityManager = webSecurityManagerFactory.getManager(contextId);
         if (securityManager != null) {
-            securityManager.deletePolicy();
+            securityManager.getAuthorizationService().deletePolicy();
         } else {
-            WebSecurityManager.deletePolicy(contextId);
+            GlassFishAuthorizationService.deletePolicy(contextId);
         }
     }
 

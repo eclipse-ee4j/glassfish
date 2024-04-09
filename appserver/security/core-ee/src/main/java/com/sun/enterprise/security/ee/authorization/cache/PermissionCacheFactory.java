@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.authorize.cache;
+package com.sun.enterprise.security.ee.authorization.cache;
 
 import java.security.CodeSource;
 import java.security.Permission;

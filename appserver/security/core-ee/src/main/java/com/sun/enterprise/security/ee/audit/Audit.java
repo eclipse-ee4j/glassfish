@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee;
+package com.sun.enterprise.security.ee.audit;
 
 import com.sun.appserv.security.AuditModule;
 import com.sun.enterprise.deployment.Application;
@@ -34,19 +34,15 @@ import com.sun.enterprise.deployment.web.SecurityRole;
 import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
 import com.sun.logging.LogDomains;
-
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.security.common.Role;
 
@@ -66,13 +62,10 @@ import org.glassfish.security.common.Role;
  *
  */
 public class Audit extends AuditModule {
+
+    private static Logger logger = LogDomains.getLogger(Audit.class, LogDomains.SECURITY_LOGGER);
     private static final String AUDIT_ON = "auditOn";
     private static boolean auditFlag;
-    private static Logger logger = LogDomains.getLogger(Audit.class, LogDomains.SECURITY_LOGGER);
-    /*
-     * private static String strPrivateAudit = null; private static String strDenied = null; private static String strOK =
-     * null; private static String strMethodName = null; private static String strSession = null;
-     */
 
     /**
      * Check auditing state.
@@ -164,7 +157,6 @@ public class Audit extends AuditModule {
      */
     @Override
     public void webServiceInvocation(String uri, String endpoint, boolean success) {
-
         if (auditFlag) {
             StringBuilder sbuf = new StringBuilder("Audit: [WebService] ");
             sbuf.append("uri: ").append(uri);
@@ -182,7 +174,6 @@ public class Audit extends AuditModule {
      */
     @Override
     public void ejbAsWebServiceInvocation(String endpoint, boolean success) {
-
         if (auditFlag) {
             StringBuilder sbuf = new StringBuilder("Audit: [EjbAsWebService] ");
             sbuf.append("endpoint : ").append(endpoint).append(", valid request =").append(success);
@@ -210,92 +201,6 @@ public class Audit extends AuditModule {
         }
     }
 
-    /**
-     * Initialize auditing. This reads the server.xml configuration to determine whether audit is turned on or off.
-     *
-     */
-    /*
-     * public static void init() { try { ConfigContext configContext =
-     * ApplicationServer.getServerContext().getConfigContext(); assert(configContext != null);
-     *
-     * Server configBean = ServerBeansFactory.getServerBean(configContext); assert(configBean != null);
-     *
-     * SecurityService securityBean = ServerBeansFactory.getSecurityServiceBean(configContext); assert(securityBean !=
-     * null);
-     *
-     * auditFlag = securityBean.isAuditEnabled();
-     *
-     * } catch (Exception e) { logger.log(Level.WARNING, "audit.badinit", e); }
-     *
-     * if (auditFlag) { logger.info("audit.enabled"); }
-     *
-     * // load i18n message bits for audit entries ResourceBundle resBundle = logger.getResourceBundle(); strPrivateAudit =
-     * resBundle.getString("audit.string_private_audit"); strDenied = " " + resBundle.getString("audit.denied"); strOK = " "
-     * + resBundle.getString("audit.ok"); strMethodName = " " + resBundle.getString("audit.methodname"); strSession = " " +
-     * resBundle.getString("audit.session"); }
-     *
-     */
-    /**
-     * Log an EJB method invocation.
-     *
-     * @param user Effective user for the invocation.
-     * @param ejb EJB name.
-     * @param method Method name.
-     * @param success True if the invocation was allowed, false if denied.
-     *
-     */
-    /*
-     * public static void ejbMethodInvocation(SecurityContext secCtx, EJBLocalRemoteObject ejbObj, Method method, boolean
-     * success) { if (!logger.isLoggable(Level.INFO)) { return; }
-     *
-     * String user = "(null)"; if (secCtx != null) { Principal p = secCtx.getCallerPrincipal(); if (p!=null) { user =
-     * p.getName(); } }
-     *
-     * String ejb = "(N/A)"; if (ejbObj != null) { ejb = ejbObj.toString(); }
-     *
-     * String meth = "(N/A)"; if (method != null) { meth = method.toString(); }
-     *
-     * StringBuffer sb = new StringBuffer(); sb.append(strPrivateAudit); // "Audit: principal="
-     *
-     * if(user != null) { sb.append(user); } else { sb.append("(null)"); }
-     *
-     * sb.append(" ejb="); sb.append(ejb); sb.append(strMethodName); // " method=" sb.append(method); if (success) {
-     * sb.append(strOK); // " OK" } else { sb.append(strDenied); // " DENIED" }
-     *
-     * logger.info(sb.toString()); }
-     *
-     */
-    /**
-     * Log a servlet invocation.
-     *
-     * @param req The HttpRequest.
-     * @param success True if the invocation was allowed, false if denied.
-     *
-     */
-
-    /*
-     * public static void webInvocation(HttpRequest req, boolean success) { /// DO NOTHING FOR NOW. //if
-     * (!logger.isLoggable(Level.INFO) || !auditFlag) { // return; //}
-     *
-     * //if (req == null) { // logger.fine("Audit: No HttpRequest available."); // return; //}
-     *
-     * //if (!(req instanceof HttpRequestBase)) { // logger.fine("Audit internal error, class: " + req.getClass()); //
-     * return; //}
-     *
-     * //HttpRequestBase reqs = (HttpRequestBase)req;
-     *
-     * //StringBuffer sb = new StringBuffer(); //sb.append(strPrivateAudit); // "Audit: principal="
-     *
-     * //String user = reqs.getRemoteUser(); //if (user != null) { // sb.append(user); //} else { // sb.append("(null)");
-     * //}
-     *
-     * //sb.append(" "); //sb.append(reqs.getMethod()); //sb.append(" "); //sb.append(reqs.getRequestURI());
-     * //sb.append(strSession); // " session=" //sb.append(reqs.getRequestedSessionId()); //if (success) { //
-     * sb.append(strOK); // " OK" //} else { // sb.append(strDenied); // " DENIED" //}
-     *
-     * //logger.info(sb.toString()); }
-     *
-     */
     /**
      * Diagnostic method. Read roles and ACLs from the given Application and dump a somewhat organized summary of what has
      * been set. This can be used to diagnose deployment or runtime deployment errors as well as to help in configuring
@@ -343,23 +248,22 @@ public class Audit extends AuditModule {
             logger.finest("- No roles present.");
             return;
         }
-        SecurityRoleMapper rmap = app.getRoleMapper();
-        if (rmap == null) {
+        SecurityRoleMapper roleMapper = app.getRoleMapper();
+        if (roleMapper == null) {
             logger.finest("- No role mappings present.");
             return;
         }
 
-        Iterator<Role> i = allRoles.iterator();
         logger.finest("--[ Configured roles and mappings ]--");
         HashMap<String, Set<String>> allRoleMap = new HashMap<>();
 
-        for (Role r : allRoles) {
-            logger.finest(" [" + r.getName() + "]");
-            allRoleMap.put(r.getName(), new HashSet<>());
+        for (Role role : allRoles) {
+            logger.finest(" [" + role.getName() + "]");
+            allRoleMap.put(role.getName(), new HashSet<>());
 
             sb = new StringBuffer();
             sb.append("  is mapped to groups: ");
-            Enumeration<? extends Principal> grps = rmap.getGroupsAssignedTo(r);
+            Enumeration<? extends Principal> grps = roleMapper.getGroupsAssignedTo(role);
             while (grps.hasMoreElements()) {
                 sb.append(grps.nextElement());
                 sb.append(" ");
@@ -368,7 +272,7 @@ public class Audit extends AuditModule {
 
             sb = new StringBuffer();
             sb.append("  is mapped to principals: ");
-            Enumeration<? extends Principal> users = rmap.getUsersAssignedTo(r);
+            Enumeration<? extends Principal> users = roleMapper.getUsersAssignedTo(role);
             while (users.hasMoreElements()) {
                 sb.append(users.nextElement());
                 sb.append(" ");

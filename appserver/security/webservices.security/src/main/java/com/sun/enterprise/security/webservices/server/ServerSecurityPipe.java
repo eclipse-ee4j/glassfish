@@ -25,7 +25,7 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
-import com.sun.enterprise.security.ee.jmac.callback.ServerContainerCallbackHandler;
+import com.sun.enterprise.security.ee.authentication.jakarta.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.webservices.LogUtils;
 import com.sun.enterprise.security.webservices.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;

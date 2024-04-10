@@ -135,7 +135,7 @@
 
         <!-- 3rd party dependencies -->
 
-        <commons-io.version>2.15.1</commons-io.version>
+        <commons-io.version>2.16.1</commons-io.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>

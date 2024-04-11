@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,33 +17,31 @@
 
 package com.sun.enterprise.resource.pool;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import com.sun.enterprise.resource.ResourceSpec;
-
 /**
  * Abstract Pool manager for unimplemented features. Throws UnsupportedOperationException when invoked.
  */
 public abstract class AbstractPoolManager implements PoolManager {
 
-    @Override
-    public void emptyResourcePool(ResourceSpec spec) {
-        throw new UnsupportedOperationException();
-    }
+// Not used in the code
+//    @Override
+//    public void emptyResourcePool(ResourceSpec spec) {
+//        throw new UnsupportedOperationException();
+//    }
 
-    @Override
-    public void killAllPools() {
-        throw new UnsupportedOperationException();
-    }
+// Not used in the code
+//    @Override
+//    public void killAllPools() {
+//        throw new UnsupportedOperationException();
+//    }
 
-    @Override
-    public void setSelfManaged(PoolInfo poolInfo, boolean flag) {
-        throw new UnsupportedOperationException();
-    }
+// Not used in the code
+//    @Override
+//    public void setSelfManaged(PoolInfo poolInfo, boolean flag) {
+//        throw new UnsupportedOperationException();
+//    }
 
-    public ConcurrentHashMap getMonitoredPoolTable() {
-        throw new UnsupportedOperationException();
-    }
+// Not used in the code
+//    public ConcurrentHashMap getMonitoredPoolTable() {
+//        throw new UnsupportedOperationException();
+//    }
 }

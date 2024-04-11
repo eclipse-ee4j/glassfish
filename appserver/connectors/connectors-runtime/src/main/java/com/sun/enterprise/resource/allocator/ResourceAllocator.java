@@ -54,6 +54,12 @@ public interface ResourceAllocator {
 
     boolean isTransactional();
 
+    /**
+     * Forces the cleanup of the ManagedConnection associated to the given resource.
+     *
+     * @param resource the resource referencing a ManagedConnection
+     * @throws PoolingException in case the cleanup failed
+     */
     void cleanup(ResourceHandle resource) throws PoolingException;
 
     boolean shareableWithinComponent();

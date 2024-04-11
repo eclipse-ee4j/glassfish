@@ -43,11 +43,11 @@ public interface DataStructure {
     void setMaxSize(int maxSize);
 
     /**
-     * creates a new resource and adds to the datastructure.
+     * Create a new resource using the given resource-allocator and add it to the datastructure.
      *
-     * @param allocator ResourceAllocator
-     * @param count Number (units) of resources to create
-     * @return int number of resources added.
+     * @param allocator the resource-allocator to be used
+     * @param count the number (units) of resources to create
+     * @return the number of resources added
      * @throws PoolingException when unable to create a resource
      */
     int addResource(ResourceAllocator allocator, int count) throws PoolingException;
@@ -93,11 +93,11 @@ public interface DataStructure {
     int getResourcesSize();
 
     /**
-     * Get all resources in the datastructure Note : do not use this for normal usages as it can potentially represent all
-     * resources (including the ones in use). This is used under special circumstances where there is a need to process all
-     * resources.
+     * Get all resources in the datastructure<br>
+     * Note: do not use this for normal usages as it can potentially represent all resources (including the ones in use).
+     * This is used under special circumstances where there is a need to process all resources.
      *
-     * @return List<ResourceHandle>
+     * @return the list of resources in the data structure.
      */
     List<ResourceHandle> getAllResources();
 }

@@ -28,7 +28,7 @@ import com.sun.enterprise.transaction.spi.TransactionalResource;
 public interface JavaEETransaction
     extends Transaction {
 
-    public  SimpleResource getExtendedEntityManagerResource(EntityManagerFactory factory);
+    public SimpleResource getExtendedEntityManagerResource(EntityManagerFactory factory);
 
     public SimpleResource getTxEntityManagerResource(EntityManagerFactory factory);
 
@@ -44,6 +44,13 @@ public interface JavaEETransaction
 
     public Set getAllParticipatingPools();
 
+    /**
+     * Returns the resources enlisted in this transaction.<br>
+     * Note: this getter is also used to delist / unenlist resources from this transaction instance.
+     *
+     * @param poolInfo the pool identifier for which the resources need to be returned
+     * @return a Set of resources associated to this transaction.
+     */
     public Set getResources(Object poolInfo);
 
     public TransactionalResource getLAOResource();

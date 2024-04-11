@@ -225,11 +225,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         return getPool(resourceSpec.getPoolInfo()).getResource(resourceSpec, resourceAllocator, transaction);
     }
 
-    /**
-     * Switch on matching in the pool.
-     *
-     * @param poolInfo Name of the pool
-     */
     @Override
     public boolean switchOnMatching(PoolInfo poolInfo) {
         ResourcePool pool = getPool(poolInfo);
@@ -276,7 +271,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
     }
 
-    // called by EJB Transaction Manager
     @Override
     public void transactionCompleted(Transaction transaction, int status) throws IllegalStateException {
         Set<PoolInfo> pools = ((JavaEETransaction) transaction).getAllParticipatingPools();
@@ -313,10 +307,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
     }
 
-    /**
-     * This method gets called by the LazyEnlistableConnectionManagerImpl when a connection needs enlistment, i.e on use of
-     * a Statement etc.
-     */
     @Override
     public void lazyEnlist(ManagedConnection mc) throws ResourceException {
         lazyEnlistableResourceManager.lazyEnlist(mc);
@@ -365,17 +355,35 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     @Override
     public void resourceErrorOccurred(ResourceHandle resource) {
+        // TODO: Why is delistResource not called like done in resourceAbortOccurred and in resourceClosed?
+        // Shouldn't delistResource be called with TMFAIL ?
+        // Added example in unit test PoolManagerImplTest that shows the delist is not called.
+
+        // TODO: Why is resourceHandle.setConnectionErrorOccurred() not performed?
+        // Added example in unit test PoolManagerImplTest that shows connection error is not updated
+
         putbackResourceToPool(resource, true);
     }
 
     @Override
     public void resourceAbortOccurred(ResourceHandle resource) {
+        // TODO: Why is TMSUCCESS used and not TMFAIL? Document the meaning of Abort.
+        // <p>
+        // com.sun.gjc.spi.ManagedConnectionImpl.transactionCompleted()
+        // performs: badConnectionEventListener.connectionAbortOccurred -> jdbc.markedForRemoval_conAborted
+        // <p>
+        // com.sun.gjc.spi.jdbc40.ConnectionHolder40.abort(Executor) documents: "Abort operation to mark the connection
+        // internally as a bad connection for removal and to close the connection. This ensures that at the end of the
+        // transaction, the connection is destroyed. A running thread holding a connection will run to completion before the
+        // connection is destroyed"
         getResourceManager(resource.getResourceSpec()).delistResource(resource, TMSUCCESS);
+
+        // TODO: Why is resourceHandle.setConnectionErrorOccurred() not performed?
+        // Added example in unit test PoolManagerImplTest that shows connection error is not updated
         putbackResourceToPool(resource, true);
     }
 
-    @Override
-    public void putbackBadResourceToPool(ResourceHandle resourceHandle) {
+    private void putbackBadResourceToPool(ResourceHandle resourceHandle) {
         // Notify pool
         PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
         if (poolInfo != null) {

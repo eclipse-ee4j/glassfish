@@ -714,7 +714,7 @@ public class ManagedConnectionImpl
      * the connection handle and sends a CONNECTION_CLOSED event to all the
      * registered event listeners.
      *
-     * @param e Exception that may have occured while closing the connection handle
+     * @param e Exception that may have occurred while closing the connection handle
      * @param connHolder30Object <code>ConnectionHolder30</code> that has been
      * closed
      * @throws SQLException in case closing the sql connection got out of

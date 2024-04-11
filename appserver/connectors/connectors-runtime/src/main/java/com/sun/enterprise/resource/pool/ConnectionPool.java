@@ -379,12 +379,12 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * add a resource with status busy and not enlisted
+     * Add a resource to the pool with status busy and not enlisted.
      *
-     * @param alloc ResourceAllocator
+     * @param alloc the ResourceAllocator to be used
      * @throws PoolingException when unable to add a resource
      */
-    public void addResource(ResourceAllocator alloc) throws PoolingException {
+    private void addResource(ResourceAllocator alloc) throws PoolingException {
         int numResCreated = dataStructure.addResource(alloc, 1);
         if (numResCreated > 0) {
             for (int i = 0; i < numResCreated; i++) {
@@ -568,7 +568,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Overridden in AssocWithThreadResourcePool to fetch the resource cached in the ThreadLocal In ConnectionPool this
      * simply returns null.
      *
-     * @param spec ResourceSpec
+     * @param spec the ResourceSpec used to locate the correct resource pool
      * @param alloc ResourceAllocator to create a resource
      * @param tran Transaction
      * @return ResourceHandle resource from ThreadLocal
@@ -613,7 +613,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      *
      * @param transaction Current Transaction
      * @param resourceAllocator ResourceAllocator
-     * @param resourceSpec ResourceSpec
+     * @param resourceSpec the ResourceSpec used to locate the correct resource pool
      * @return result ResourceHandle
      */
     private ResourceHandle getResourceFromTransaction(Transaction transaction, ResourceAllocator resourceAllocator, ResourceSpec resourceSpec) {
@@ -706,7 +706,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     /**
      * To provide an unenlisted, valid, matched resource from pool.
      *
-     * @param resourceSpec ResourceSpec
+     * @param resourceSpec the ResourceSpec used to locate the correct resource pool
      * @param resourceAllocator ResourceAllocator
      * @param transaction Transaction
      * @return ResourceHandle resource from pool
@@ -793,6 +793,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * return a new resource. returns null if the pool new resources cannot be created. <br>
      *
      * @param resourceAllocator ResourceAllocator
+     * @param resourceSpec the ResourceSpec used to locate the correct resource pool
      * @return ResourceHandle resource from pool
      * @throws PoolingException if unable to create a new resource
      */
@@ -941,7 +942,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * Try to purge resources by size <= quantity <br>
+     * Try to purge resources by size <= quantity
      *
      * @param quantity maximum no. of resources to remove. <br>
      * @return resourceCount No. of resources actually removed. <br>
@@ -970,14 +971,16 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * replacement is required since the steadypoolsize might equal maxpoolsize and in that case if we were not to remove a
      * resource from the pool, our resource would be above maxPoolSize
      *
-     * @param resourceAllocator ResourceAllocator to create resource
-     * @param resourceSpec ResourceSpec
+     * @param resourceAllocator the resource allocator to be used to create the new resource
+     * @param resourceSpec the ResourceSpec used to locate the correct resource pool
      * @return newly created resource
      * @throws PoolingException when unable to create a resource
      */
     protected ResourceHandle createSingleResourceAndAdjustPool(ResourceAllocator resourceAllocator, ResourceSpec resourceSpec) throws PoolingException {
+        // TODO document in getResource when a return value can be null
         ResourceHandle handle = dataStructure.getResource();
         if (handle != null) {
+            // TODO document why it is removed / add unit test to show the behavior described in the javadoc of the method
             dataStructure.removeResource(handle);
         }
 
@@ -986,9 +989,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     /**
      * Method to be used to create resource, instead of calling ResourceAllocator.createConfigBean(). This method handles
-     * the connection creation retrial in case of failure
+     * the connection creation retry in case of failure.
      *
-     * @param resourceAllocator ResourceAllocator
+     * @param resourceAllocator the resource allocator to be used to create the new resource
      * @return ResourceHandle newly created resource
      * @throws PoolingException when unable create a resource
      */
@@ -1023,9 +1026,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * Create specified number of resources.
+     * Create specified number of resources using the given resource allocater.
      *
-     * @param alloc ResourceAllocator
+     * @param alloc the resource allocator to be used to create the new resource
      * @param size number of resources to create.
      * @throws PoolingException When unable to create a resource
      */
@@ -1162,16 +1165,22 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     }
 
-    protected boolean cleanupResource(ResourceHandle handle) {
+    /**
+     * Asks the resource allocator to cleanup the resource
+     *
+     * @param resource the resource to be cleaned up
+     * @return true if cleanup was successful, otherwise false
+     */
+    protected boolean cleanupResource(ResourceHandle resource) {
         boolean cleanupSuccessful = true;
         // cleanup resource
         try {
-            ResourceAllocator alloc = handle.getResourceAllocator();
-            alloc.cleanup(handle);
+            ResourceAllocator alloc = resource.getResourceAllocator();
+            alloc.cleanup(resource);
         } catch (PoolingException ex) {
             LOG.log(WARNING, "Cleanup of a resource from pool [" + poolInfo.getName() + "] failed.", ex);
             cleanupSuccessful = false;
-            resourceErrorOccurred(handle);
+            resourceErrorOccurred(resource);
         }
         return cleanupSuccessful;
     }
@@ -1245,12 +1254,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         scheduleResizerTask();
     }
 
-    /**
-     * This method is called when a resource is enlisted in a transaction.
-     *
-     * @param tran Transaction
-     * @param resource ResourceHandle
-     */
     @Override
     public void resourceEnlisted(Transaction tran, ResourceHandle resource) throws IllegalStateException {
         poolTxHelper.resourceEnlisted(tran, resource);
@@ -1346,6 +1349,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
     }
 
+    // TODO: this method name should be createAndGetNewResource, but it is only used once, to it could be removed
     private ResourceHandle getNewResource(ResourceAllocator alloc) throws PoolingException {
         addResource(alloc);
         return dataStructure.getResource();
@@ -1364,6 +1368,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     @Override
     public void emptyFreeConnectionsInPool() {
         LOG.log(FINE, "Emptying free connections in the pool {0}", poolInfo.getName());
+
+        // TODO this is not completely thread safe, between getResource and removeResource
+        // the dataStructure can be altered by other threads
         ResourceHandle h;
         while ((h = dataStructure.getResource()) != null) {
             dataStructure.removeResource(h);
@@ -1408,11 +1415,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         return reconfigWaitTime;
     }
 
-    /**
-     * Reinitialize connections established in the connection pool and bring the pool to steady pool size.
-     *
-     * @throws com.sun.appserv.connectors.internal.api.PoolingException
-     */
     @Override
     public synchronized boolean flushConnectionPool() throws PoolingException {
         LOG.log(FINE, "Flushing Connection Pool {0}", poolInfo);
@@ -1430,13 +1432,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         return true;
     }
 
-    /**
-     * Reconfigure the Pool's properties. The reconfigConnectorConnectionPool method in the ConnectorRuntime will use this
-     * method (through PoolManager) if it needs to just change pool properties and not recreate the pool
-     *
-     * @param poolResource - the ConnectorConnectionPool JavaBean that holds the new pool properties
-     * @throws PoolingException if the pool resizing fails
-     */
     @Override
     public synchronized void reconfigurePool(ConnectorConnectionPool poolResource) throws PoolingException {
         int _idleTime = Integer.parseInt(poolResource.getIdleTimeoutInSeconds()) * 1000;
@@ -1564,8 +1559,13 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         scheduleResizerTask();
     }
 
-    /*
-     * Increase the number of steady resources in the pool if we detect that the steadyPoolSize has been increased
+    /**
+     * Increase the number of steady resources in the pool if we detect that the steadyPoolSize has been increased.<br>
+     * Note: if the newSteadyPoolSize is smaller than the current pool size, no changes are made directly. The resizer task
+     * is updated in all cases and will resize the pool in the future.
+     *
+     * @param newSteadyPoolSize The new steady pool size
+     * @throws PoolingException when unable to add new resources to the pool
      */
     private void increaseSteadyPoolSize(int newSteadyPoolSize) throws PoolingException {
         cancelResizerTask();
@@ -1575,27 +1575,16 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         scheduleResizerTask();
     }
 
-    /**
-     * @param alloc ResourceAllocator
-     * @throws PoolingException when unable to create a resource
-     */
+    // TODO is this private method needed? Why not call addResource directly?
     private void createResourceAndAddToPool(ResourceAllocator alloc) throws PoolingException {
         addResource(alloc);
     }
 
-    /**
-     * Switch on matching of connections in the pool.
-     */
     @Override
     public void switchOnMatching() {
         matchConnections = true;
     }
 
-    /**
-     * query the name of this pool. Required by monitoring
-     *
-     * @return the name of this pool
-     */
     @Override
     public final PoolInfo getPoolInfo() {
         return poolInfo;
@@ -1707,12 +1696,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         notifyWaitingThreads();
     }
 
-    /**
-     * Get Connection Pool status by computing the free/used values of the connections in the pool. Computations are based
-     * on whether the pool is initialized or not when this method is invoked.
-     *
-     * @return PoolStatus object
-     */
     @Override
     public PoolStatus getPoolStatus() {
         PoolStatus poolStatus = new PoolStatus(this.poolInfo);

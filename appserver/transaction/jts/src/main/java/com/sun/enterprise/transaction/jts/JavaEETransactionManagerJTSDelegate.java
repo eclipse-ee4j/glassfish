@@ -102,6 +102,9 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
 
     private Logger logger;
 
+    /**
+     * use-last-agent-optimization
+     */
     private boolean lao = true;
 
     private volatile TransactionManager transactionManagerImpl;

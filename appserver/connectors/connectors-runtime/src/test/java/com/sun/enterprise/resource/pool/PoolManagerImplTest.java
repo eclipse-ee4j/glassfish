@@ -28,8 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ClientSecurityInfo;
@@ -39,15 +41,20 @@ import com.sun.enterprise.resource.allocator.ConnectorAllocator;
 import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
 import com.sun.enterprise.resource.allocator.NoTxConnectorAllocator;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
+import com.sun.enterprise.resource.pool.mock.JavaEETransactionManagerMock;
 import com.sun.enterprise.resource.pool.mock.JavaEETransactionMock;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.spi.TransactionalResource;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.invocation.InvocationManager;
@@ -63,7 +70,6 @@ public class PoolManagerImplTest {
 
     // Mocked instances
     private GlassfishNamingManager glassfishNamingManager;
-    private JavaEETransactionManager javaEETransactionManager;
     private ManagedConnection managedConnection;
     private ManagedConnectionFactory managedConnectionFactory;
 
@@ -72,14 +78,12 @@ public class PoolManagerImplTest {
     private PoolManagerImpl poolManagerImpl = new MyPoolManagerImpl();
     private PoolInfo poolInfo = getPoolInfo();
     private JavaEETransaction javaEETransaction = new MyJavaEETransaction();
+    private MyJavaEETransactionManager javaEETransactionManager = new MyJavaEETransactionManager();
+    private PoolType poolType;
 
     @BeforeEach
     public void createAndPopulateMocks() throws Exception {
         List<Object> mocks = new ArrayList<>();
-
-        // Mock JavaEETransactionManager
-        javaEETransactionManager = createNiceMock(JavaEETransactionManager.class);
-        mocks.add(javaEETransactionManager);
 
         // Mock GlassfishNamingManager
         glassfishNamingManager = createNiceMock(GlassfishNamingManager.class);
@@ -115,10 +119,11 @@ public class PoolManagerImplTest {
      */
     @Test
     void getResourceTest() throws Exception {
-        poolManagerImpl.createEmptyConnectionPool(poolInfo, PoolType.STANDARD_POOL, new Hashtable<>());
+        // Create Standard pool
+        poolType = PoolType.STANDARD_POOL;
+        poolManagerImpl.createEmptyConnectionPool(poolInfo, poolType, new Hashtable<>());
 
-        ResourceSpec resourceSpec = new ResourceSpec(new SimpleJndiName("myResourceSpec"), ResourceSpec.JNDI_NAME);
-        resourceSpec.setPoolInfo(poolInfo);
+        ResourceSpec resourceSpec = createTestResourceSpec(poolInfo);
 
         // Test getting a single resource, this will return a 'userConnection' / 'connection handle' object representing the
         // physical connection, e.g. a database connection.
@@ -156,12 +161,15 @@ public class PoolManagerImplTest {
     }
 
     /**
-     * Test to show the getResourceFromPool behavior in relation to the ResourceHandle enlisted and busy states, while using
-     * the LocalTxConnectorAllocator.
+     * Test to show the getResourceFromPool and resourceClosed behavior in relation to the ResourceHandle enlisted and busy
+     * states, while using the LocalTxConnectorAllocator.
      */
     @Test
-    public void getResourceFromPoolTest() throws Exception {
-        poolManagerImpl.createEmptyConnectionPool(poolInfo, PoolType.STANDARD_POOL, new Hashtable<>());
+    public void resourceClosedTest() throws Exception {
+        // Create Standard pool
+        poolType = PoolType.STANDARD_POOL;
+        poolManagerImpl.createEmptyConnectionPool(poolInfo, poolType, new Hashtable<>());
+
         assertPoolStatusNumberOfConnectionsUsed(0);
         assertPoolStatusNumberOfConnectionsFree(0);
 
@@ -174,44 +182,48 @@ public class PoolManagerImplTest {
         ResourceHandle resource = poolManagerImpl.getResourceFromPool(resourceSpec, localTxAllocator, clientSecurityInfo, javaEETransaction);
         assertNotNull(resource);
         assertTrue(resource.getUserConnection() instanceof MyDatabaseConnection);
-        // The resource is not (yet) enlisted in a transaction
-        assertFalse(resource.isEnlisted());
-        // Expecting all getResource from pool calls to mark the resource as busy
-        // ConnectionPool: getResourceFromPool / getUnenlistedResource / prefetch calls.
-        assertTrue(resource.getResourceState().isBusy());
 
-        // Enlist the resource in the transaction
-        resource.enlistedInTransaction(javaEETransaction);
-        assertTrue(resource.isEnlisted());
-        assertTrue(resource.getResourceState().isBusy());
+        // State should be marked busy directly after a getResource call
+        // The resource is not (yet) enlisted in a transaction
+        assertResourceIsBusy(resource);
+        assertResourceIsNotEnlisted(resource);
 
         // One resource from the pool should be added to the pool and should be occupied
         assertPoolStatusNumberOfConnectionsUsed(1);
         assertPoolStatusNumberOfConnectionsFree(0);
 
+        // Enlist the resource in the transaction
+        assertResourceIsNotPartOfTransaction(javaEETransaction, resource);
+        resource.enlistedInTransaction(javaEETransaction);
+        assertResourceIsBusy(resource);
+        assertResourceIsEnlisted(resource);
+        assertResourceIsPartOfTransaction(javaEETransaction, resource);
+
         // Return the resource to the pool
-        poolManagerImpl.putbackResourceToPool(resource, false);
+        poolManagerImpl.resourceClosed(resource);
+        // NOTE: in a multi threaded test the resource cannot be tested after this point!
 
         // When resource is returned to the pool the state is no longer busy
-        assertFalse(resource.getResourceState().isBusy());
-
-        // Resource is still enlisted, because it is still part of a transaction
-        assertTrue(resource.isEnlisted());
+        // But the resource is still enlisted in the transaction
+        assertResourceIsNotBusy(resource);
+        assertResourceIsEnlisted(resource);
+        assertResourceHasNoConnectionErrorOccured(resource);
+        assertResourceIsPartOfTransaction(javaEETransaction, resource);
 
         // Resource is still in use
         assertPoolStatusNumberOfConnectionsUsed(1);
         assertPoolStatusNumberOfConnectionsFree(0);
 
-        // Stop the transaction to get the resource delisted / unenlisted
+        // Stop the transaction to get the resource delisted / unenlisted from the transaction
         // Mimic com.sun.enterprise.transaction.JavaEETransactionImpl.commit() call
         poolManagerImpl.transactionCompleted(javaEETransaction, jakarta.transaction.Status.STATUS_COMMITTED);
 
-        // Resource must be delisted / unenlisted by the transactionCompleted logic
-        // (warning for next assert: in multi-threaded tests resource can be used instantly by another thread!)
-        assertFalse(resource.isEnlisted());
-        // Resource is returned to the pool, resource should be freed
-        // (warning for next assert: in multi-threaded tests resource can be used instantly by another thread!)
-        assertFalse(resource.getResourceState().isBusy());
+        // State should remain not busy
+        // And the resource no longer enlisted in the transaction
+        assertResourceIsNotBusy(resource);
+        assertResourceIsNotEnlisted(resource);
+        assertResourceHasNoConnectionErrorOccured(resource);
+        assertResourceIsNotPartOfTransaction(javaEETransaction, resource);
 
         // Connection should no longer be in use
         assertPoolStatusNumberOfConnectionsUsed(0);
@@ -222,6 +234,133 @@ public class PoolManagerImplTest {
         assertNull(poolManagerImpl.getPoolStatus(poolInfo));
     }
 
+    /**
+     * Test to show the getResourceFromPool and resourceErrorOccurred behavior in relation to the ResourceHandle enlisted
+     * and busy states, while using the LocalTxConnectorAllocator.
+     */
+    @Test
+    public void resourceErrorOccurredTest() throws Exception {
+        resourceErrorOrAbortedOccurredTest(false);
+    }
+
+    /**
+     * Test to show the getResourceFromPool and resourceAbortOccurred behavior in relation to the ResourceHandle enlisted
+     * and busy states, while using the LocalTxConnectorAllocator.
+     */
+    @Test
+    public void resourceAbortOccurredTest() throws Exception {
+        resourceErrorOrAbortedOccurredTest(true);
+    }
+
+    private void resourceErrorOrAbortedOccurredTest(boolean resourceAbortedOccured) throws Exception {
+        // Create Standard pool
+        poolType = PoolType.STANDARD_POOL;
+        poolManagerImpl.createEmptyConnectionPool(poolInfo, poolType, new Hashtable<>());
+
+        assertPoolStatusNumberOfConnectionsUsed(0);
+        assertPoolStatusNumberOfConnectionsFree(0);
+
+        ResourceSpec resourceSpec = new ResourceSpec(new SimpleJndiName("myResourceSpec"), ResourceSpec.JNDI_NAME);
+        resourceSpec.setPoolInfo(poolInfo);
+
+        // Test using the Local transaction allocator
+        ResourceAllocator localTxAllocator = new LocalTxConnectorAllocator(null, managedConnectionFactory, resourceSpec, null,
+                null, null, null, false);
+        ResourceHandle resource = poolManagerImpl.getResourceFromPool(resourceSpec, localTxAllocator, clientSecurityInfo, javaEETransaction);
+        assertNotNull(resource);
+        assertTrue(resource.getUserConnection() instanceof MyDatabaseConnection);
+
+        // State should be marked busy directly after a getResource call
+        // The resource is not (yet) enlisted in a transaction
+        assertResourceIsBusy(resource);
+        assertResourceIsNotEnlisted(resource);
+
+        // One resource from the pool should be added to the pool and should be occupied
+        assertPoolStatusNumberOfConnectionsUsed(1);
+        assertPoolStatusNumberOfConnectionsFree(0);
+
+        // Enlist the resource in the transaction
+        assertResourceIsNotPartOfTransaction(javaEETransaction, resource);
+        resource.enlistedInTransaction(javaEETransaction);
+        assertResourceIsBusy(resource);
+        assertResourceIsEnlisted(resource);
+        assertResourceIsPartOfTransaction(javaEETransaction, resource);
+
+        if (resourceAbortedOccured) {
+            // Return the resource to the pool using resourceAbortOccurred
+            poolManagerImpl.resourceAbortOccurred(resource);
+            // Related transaction delist should be called for the resource
+            assertTrue(javaEETransactionManager.isDelistIsCalled(resource));
+
+            // TODO: connection error occurred flag on the resource is only set via badConnectionClosed
+            // why isn't it also called for resourceAbortedOccured? Bug?!
+            assertResourceHasNoConnectionErrorOccured(resource);
+        } else {
+            // Return the resource to the pool using resourceErrorOccurred
+            poolManagerImpl.resourceErrorOccurred(resource);
+            // Related transaction delist should be called for the resource, shouldn't it?
+            // resourceErrorOccurred does not seem to remove the resource from the transaction, possible bug?
+            // TODO: should be assertTrue
+            assertFalse(javaEETransactionManager.isDelistIsCalled(resource));
+
+            // TODO: connection error occurred flag on the resource is only set via badConnectionClosed
+            // why isn't it also called for resourceErrorOccurred? Bug?!
+            assertResourceHasNoConnectionErrorOccured(resource);
+        }
+        // NOTE: in a multi threaded test the resource cannot be tested after this point!
+
+        // When resource is returned to the pool the state is no longer busy
+        // But the resource is still enlisted in the transaction
+        assertResourceIsNotBusy(resource);
+        assertResourceIsEnlisted(resource);
+        assertResourceIsPartOfTransaction(javaEETransaction, resource);
+
+        // In case of putbackResourceToPool we would expect: Resource is still in use
+        // assertPoolStatusNumberOfConnectionsUsed(1);
+        // In case of putbackBadResourceToPool the resource is no longer listed as in use
+        assertPoolStatusNumberOfConnectionsUsed(0);
+        // And the bad resource should not have been returned to the free pool
+        assertPoolStatusNumberOfConnectionsFree(0);
+
+        // Stop the transaction to get the resource delisted / unenlisted from the transaction
+        // Mimic com.sun.enterprise.transaction.JavaEETransactionImpl.commit() call
+        poolManagerImpl.transactionCompleted(javaEETransaction, jakarta.transaction.Status.STATUS_MARKED_ROLLBACK);
+
+        // State should remain not busy
+        // And the resource no longer enlisted in the transaction
+        assertResourceIsNotBusy(resource);
+        assertResourceIsNotEnlisted(resource);
+        assertResourceIsNotPartOfTransaction(javaEETransaction, resource);
+
+        // Connection should no longer be in use, and number of connections free should remain at 0
+        assertPoolStatusNumberOfConnectionsUsed(0);
+        assertPoolStatusNumberOfConnectionsFree(0);
+
+        // Kill the pool
+        poolManagerImpl.killPool(poolInfo);
+        assertNull(poolManagerImpl.getPoolStatus(poolInfo));
+
+    }
+
+    private void assertResourceIsBusy(ResourceHandle resource) {
+        assertTrue(resource.getResourceState().isBusy());
+    }
+
+    private void assertResourceIsNotBusy(ResourceHandle resource) {
+        assertFalse(resource.getResourceState().isBusy());
+    }
+
+    private void assertResourceIsEnlisted(ResourceHandle resource) {
+        assertTrue(resource.isEnlisted());
+    }
+
+    private void assertResourceIsNotEnlisted(ResourceHandle resource) {
+        assertFalse(resource.isEnlisted());
+    }
+    private void assertResourceHasNoConnectionErrorOccured(ResourceHandle resource) {
+        assertFalse(resource.hasConnectionErrorOccurred());
+    }
+
     private void assertPoolStatusNumberOfConnectionsUsed(int expectedNumber) {
         PoolStatus poolStatus = poolManagerImpl.getPoolStatus(poolInfo);
         assertEquals(expectedNumber, poolStatus.getNumConnUsed());
@@ -230,6 +369,38 @@ public class PoolManagerImplTest {
     private void assertPoolStatusNumberOfConnectionsFree(int expectedNumber) {
         PoolStatus poolStatus = poolManagerImpl.getPoolStatus(poolInfo);
         assertEquals(expectedNumber, poolStatus.getNumConnFree());
+    }
+
+    private static ResourceSpec createTestResourceSpec(PoolInfo thePoolInfo) {
+        ResourceSpec resourceSpec = new ResourceSpec(new SimpleJndiName("myResourceSpec"), ResourceSpec.JNDI_NAME);
+        resourceSpec.setPoolInfo(thePoolInfo);
+        return resourceSpec;
+    }
+
+    private void assertResourceIsPartOfTransaction(JavaEETransaction transaction, ResourceHandle expectedResource) {
+        for (Object resource : transaction.getResources(poolInfo)) {
+            if (resource instanceof ResourceHandle) {
+                ResourceHandle foundResource = (ResourceHandle) resource;
+                if (foundResource.equals(expectedResource)) {
+                    return;
+                }
+            }
+        }
+        fail();
+    }
+
+    private void assertResourceIsNotPartOfTransaction(JavaEETransaction transaction, ResourceHandle expectedResource) {
+        Set resources = transaction.getResources(poolInfo);
+        if (resources != null) {
+            for (Object resource : resources) {
+                if (resource instanceof ResourceHandle) {
+                    ResourceHandle foundResource = (ResourceHandle) resource;
+                    if (foundResource.equals(expectedResource)) {
+                        fail();
+                    }
+                }
+            }
+        }
     }
 
     private class MyDatabaseConnection {
@@ -268,9 +439,40 @@ public class PoolManagerImplTest {
         public PoolManager getPoolManager() {
             return poolManagerImpl;
         }
+
+        @Override
+        public PoolType getPoolType(PoolInfo poolInfo) throws ConnectorRuntimeException {
+            // Overriden to avoid ResourceNamingService jndi lookup calls in unit test
+            return poolType;
+        }
     }
 
-    // We cannot depend on the real JavaEETransactionImpl due to dependency limitations, create our own
+    // We cannot depend on the real JavaEETransactionManagerSimplified implementation due to dependency limitations
+    private class MyJavaEETransactionManager extends JavaEETransactionManagerMock {
+
+        Map<TransactionalResource, Boolean> delistIsCalled = new HashMap<>();
+
+        @Override
+        public Transaction getTransaction() throws SystemException {
+            // Assuming only 1 transaction used in each unit test, return it
+            return javaEETransaction;
+        }
+
+        @Override
+        public boolean delistResource(Transaction tran, TransactionalResource resource, int flag) throws IllegalStateException, SystemException {
+            // Store state for unit test validation
+            delistIsCalled.put(resource, Boolean.TRUE);
+
+            // Return delist success
+            return true;
+        }
+
+        public boolean isDelistIsCalled(TransactionalResource resource) {
+            return delistIsCalled.getOrDefault(resource, Boolean.FALSE);
+        }
+    }
+
+    // We cannot depend on the real JavaEETransactionImpl due to dependency limitations
     private class MyJavaEETransaction extends JavaEETransactionMock {
 
         private HashMap<Object, Set> resourceTable = new HashMap<>();

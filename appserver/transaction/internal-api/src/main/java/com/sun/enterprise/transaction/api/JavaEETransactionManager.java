@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -93,6 +93,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param tran The transaction object
      * @param h The resource handle object
      * @param flag One of the values of TMSUCCESS, TMSUSPEND, or TMFAIL.
+     * @return <i>true</i> if the resource was delisted successfully; otherwise false.
      *
      * @exception IllegalStateException Thrown if the transaction in the
      *    target object is inactive.

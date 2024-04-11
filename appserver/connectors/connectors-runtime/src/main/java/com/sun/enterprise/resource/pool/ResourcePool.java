@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,11 +46,28 @@ public interface ResourcePool {
      */
     void resourceClosed(ResourceHandle resource);
 
+    /**
+     * Updates the resource to be marked as not busy / free, remove the resource from the connection pool and inform any
+     * waiting threads that a resource has become available.
+     *
+     * @param resource the resource that will be removed from the connection pool
+     */
     void resourceErrorOccurred(ResourceHandle resource);
 
+    /**
+     * This method is called when a resource is enlisted in a transaction.
+     *
+     * @param tran the Transaction to enlist the resource in
+     * @param resource the ResourceHandle that will be enlisted in the given transaction
+     */
     void resourceEnlisted(Transaction tran, ResourceHandle resource);
 
-    // Get status of pool
+    /**
+     * Get the Pool status by computing the free/used values of the connections in the pool. Computations are based on
+     * whether the pool is initialized or not when this method is invoked.
+     *
+     * @return the PoolStatus object
+     */
     PoolStatus getPoolStatus();
 
     /**
@@ -63,20 +80,43 @@ public interface ResourcePool {
      */
     void transactionCompleted(Transaction tran, int status);
 
+    /**
+     * Resize the pool by removing idle and invalid resources.<br>
+     * Only when forced is true the pool size is scaled down with the pool resize quantity.
+     *
+     * @param forced when force is true, scale down the pool with the pool resize quantity.
+     */
     void resizePool(boolean forced);
 
-    // forcefully destroy all connections in the pool even if
-    // connections have transactions in progress
+    /**
+     * Forcefully destroy all connections in the pool even if connections have transactions in progress
+     */
     void emptyPool();
 
-    // reconfig the pool's properties
+    /**
+     * Reconfigure the Pool's properties. The reconfigConnectorConnectionPool method in the ConnectorRuntime will use this
+     * method (through PoolManager) if it needs to just change pool properties and not recreate the pool
+     *
+     * @param poolResource - the ConnectorConnectionPool JavaBean that holds the new pool properties
+     * @throws PoolingException if the pool resizing fails
+     */
     void reconfigurePool(ConnectorConnectionPool ccp) throws PoolingException;
 
-    // cancel the resizer task in the pool
+    /**
+     * Cancel the resizer task in the pool if it exists.
+     */
     void cancelResizerTask();
 
+    /**
+     * Switch on matching of connections in the pool.
+     */
     void switchOnMatching();
 
+    /**
+     * Get the PoolInfo unique identifier of this pool.
+     *
+     * @return the PoolInfo unique identifier of this pool
+     */
     PoolInfo getPoolInfo();
 
     void emptyFreeConnectionsInPool();
@@ -131,22 +171,23 @@ public interface ResourcePool {
     void setSelfManaged(boolean selfManaged);
 
     /**
-     * set pool life cycle listener
+     * Set the pool life cycle listener
      *
-     * @param listener
+     * @param listener the new PoolLifeCycleListener
      */
     void setPoolLifeCycleListener(PoolLifeCycleListener listener);
 
     /**
-     * remove pool life cycle listener
+     * Remove the pool life cycle listener
      */
     void removePoolLifeCycleListener();
 
     /**
-     * Flush Connection pool by reinitializing the connections established in the pool.
+     * Flush Connection pool by removing all resources established in the connection pool and bring the pool to steady pool
+     * size.
      *
      * @return boolean indicating whether flush operation was successful or not
-     * @throws com.sun.appserv.connectors.internal.api.PoolingException
+     * @throws PoolingException in case the pool was not initialized
      */
     boolean flushConnectionPool() throws PoolingException;
 
@@ -174,7 +215,7 @@ public interface ResourcePool {
     /**
      * returns the reconfig-wait-time
      *
-     * @return long
+     * @return the reconfig-wait-time
      */
     long getReconfigWaitTime();
 }

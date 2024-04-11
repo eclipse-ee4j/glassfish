@@ -37,7 +37,7 @@ install_glassfish() {
 
 install_jacoco() {
   mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy \
-  -Dartifact=org.jacoco:org.jacoco.agent:0.8.8:jar:runtime \
+  -Dartifact=org.jacoco:org.jacoco.agent:0.8.12:jar:runtime \
   -Dmdep.stripVersion=true \
   -Dmdep.stripClassifier=true \
   -DoutputDirectory=${WORKSPACE}/bundles \

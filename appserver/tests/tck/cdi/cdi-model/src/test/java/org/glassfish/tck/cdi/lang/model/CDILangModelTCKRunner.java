@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,28 +15,29 @@
  */
 package org.glassfish.tck.cdi.lang.model;
 
-import static org.glassfish.tck.cdi.lang.model.LangModelVerifierBuildCompatibleExtension.langModelVerifierBuildCompatibleExtensionPassed;
-import static org.jboss.shrinkwrap.api.BeanDiscoveryMode.ALL;
-import static org.junit.Assert.assertTrue;
+import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.cdi.lang.model.tck.LangModelVerifier;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.impl.BeansXml;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
-import jakarta.enterprise.inject.spi.Extension;
+import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.tck.cdi.lang.model.LangModelVerifierBuildCompatibleExtension.langModelVerifierBuildCompatibleExtensionPassed;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class CDILangModelTCKRunner {
 
+    private static final System.Logger LOG = System.getLogger(CDILangModelTCKRunner.class.getName());
+
     @Deployment
     public static WebArchive deploy() {
-        WebArchive archive= ShrinkWrap.create(WebArchive.class)
+        WebArchive archive = ShrinkWrap.create(WebArchive.class)
 
                 // The package we are testing
                 .addPackage(LangModelVerifier.class.getPackage())
@@ -45,17 +46,11 @@ public class CDILangModelTCKRunner {
                 .addClass(LangModelVerifierBuildCompatibleExtension.class)
                 .addAsServiceProvider(BuildCompatibleExtension.class, LangModelVerifierBuildCompatibleExtension.class)
 
-                // The cleanup extension that vetoes all classes that we're testing, since they are only
-                // meant for the lang model verifier and shouldn't be processed afterwards.
-                .addClass(CleanupExtension.class)
-                .addAsServiceProvider(Extension.class, CleanupExtension.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
-                .addAsWebInfResource(new BeansXml(ALL), "beans.xml");
-
-        System.out.println(archive.toString(true));
+        LOG.log(INFO, archive.toString(true));
 
         return archive;
-
     }
 
     @Test

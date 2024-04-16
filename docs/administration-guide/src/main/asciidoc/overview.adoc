@@ -627,7 +627,7 @@ Administration Console loading.
 2. Change the value of the `server.admin-service.property.adminConsoleStartup` property to `default`.
 You can change this value either by setting a configuration property or by editing a file.
 * To change this value by setting a configuration property, set the configuration property
-`server.admin-service.property.adminConsoleStartup` to a value `default`.
+`server.admin-service.property.adminConsoleStartup` to the value `default`.
 +
 [source]
 ----

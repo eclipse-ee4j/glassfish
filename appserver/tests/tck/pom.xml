@@ -57,6 +57,7 @@
         <module>validation</module>
         <module>jwt</module>
         <module>websocket</module>
+        <module>jsonp</module>
     </modules>
 
     <build>

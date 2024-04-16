@@ -605,7 +605,7 @@ startup options.
 Available startup options are:
 
 `default`::
-The Administration Console loads on demand the first access it. This is a default option.
+The Administration Console loads on demand when its first accessed. This is the default option.
 `always`::
 The Administration Console loads during Eclipse Glassfish server startup.
 `never`::

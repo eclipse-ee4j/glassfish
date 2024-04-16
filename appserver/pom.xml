@@ -89,7 +89,7 @@
         <tyrus.version>2.2.0-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.1.0-RC2</jakarta.concurrent-api.version>
+        <jakarta.concurrent-api.version>3.1.0</jakarta.concurrent-api.version>
         <concurro.version>3.1.0-M3</concurro.version>
 
         <!-- Jakarta Interceptors -->
@@ -98,7 +98,7 @@
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
         <jakarta.security-api.version>4.0.0-M2</jakarta.security-api.version>
-        <jakarta.authorization-api.version>3.0.0-M4</jakarta.authorization-api.version>
+        <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
         <!-- Implementations -->
         <soteria.version>4.0.0-M3</soteria.version>
@@ -763,7 +763,7 @@
                         <dependency>
                             <groupId>org.codehaus.plexus</groupId>
                             <artifactId>plexus-utils</artifactId>
-                            <version>4.0.0</version>
+                            <version>4.0.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>

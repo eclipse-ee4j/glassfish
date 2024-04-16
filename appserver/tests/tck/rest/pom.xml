@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ Usage:
 
 Run full TCK:
 
-mvn clean clean
+mvn clean install
 
 
 Run all tests in test class
@@ -65,7 +65,7 @@ mvn clean install -Dgroups=security
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <tck.version>3.1.1</tck.version>
+        <tck.version>3.1.5</tck.version>
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>

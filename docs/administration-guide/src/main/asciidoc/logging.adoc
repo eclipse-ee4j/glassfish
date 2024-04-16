@@ -371,7 +371,7 @@ The `GlassFishLogHandler` can roll the output log file under following condition
 
 The last two conditions are exclusive, the date change has higher priority.
 
-The <<`flushFrequency`>> parameter affects how many log records will be formatted
+The `flushFrequency` parameter affects how many log records will be formatted
 into the log file before the file is rolled out even after the file size exceeded it's configured
 limit.
 
@@ -415,7 +415,7 @@ The handler configuration properties:
 
 * `encoding` - output character encoding. Default is null which means it will use the system default.
 * `formatter` - a formatter class to be used for formatting log records as strings.
-Default value is <<`org.glassfish.main.jul.formatter.OneLineFormatter`>>
+Default value is <<OneLineFormatter,`org.glassfish.main.jul.formatter.OneLineFormatter`>>
 * `formatter.*` - can be used for custom settings of the formatter.
 This works only for <<ODLLogFormatter>>, <<UniformLogFormatter>> and <<OneLineFormatter>>.
 * `level` - Level used to filter log records. Less important log records will be ignored.
@@ -448,7 +448,7 @@ but it will ignore incoming records. Default is `true`.
 * `encoding` - output character encoding used to send data to the Syslog service.
 Default is `UTF-8`.
 * `formatter` - a formatter class to be used for formatting log records as strings.
-Default value is <<`java.util.logging.SimpleFormatter`>>
+Default value is <<SimpleFormatter,`java.util.logging.SimpleFormatter`>>
 * `host` - a host name or IP address used of the UDP endpoint.
 Default is an autodetected name of the local host.
 * `level` - Level used to filter log records. Less important log records will be ignored.

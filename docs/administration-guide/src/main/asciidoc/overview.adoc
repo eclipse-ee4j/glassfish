@@ -686,6 +686,8 @@ asadmin> set server.admin-service.property.adminConsoleStartup=never
 For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 
+##### Help pages in the Administration Console
+
 You can display the help material for a page in the Administration
 Console by clicking the Help button on the page. The initial help page
 describes the functions and fields of the page itself. Associated task

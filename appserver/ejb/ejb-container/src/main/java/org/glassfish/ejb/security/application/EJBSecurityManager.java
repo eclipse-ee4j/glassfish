@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,6 +66,7 @@ import org.glassfish.ejb.security.factory.EJBSecurityManagerFactory;
 import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
+import org.glassfish.security.common.Role;
 
 import static java.lang.System.getSecurityManager;
 import static java.util.Collections.synchronizedMap;
@@ -170,7 +172,7 @@ public final class EJBSecurityManager implements SecurityManager {
             ejbDescriptor.getEjbBundleDescriptor()
                          .getRoles()
                          .stream()
-                         .map(e -> e.getName())
+                         .map(Role::getName)
                          .collect(toSet()),
 
             getSecurityRoleRefsFromBundle(ejbDescriptor)));
@@ -210,7 +212,7 @@ public final class EJBSecurityManager implements SecurityManager {
                 ejbInvocation.method,
                 securityContext.getPrincipalSet());
         } catch (Throwable t) {
-            _logger.log(SEVERE, "jacc_policy_context_exception", t);
+            _logger.log(SEVERE, "Unexpected exception manipulating policy context", t);
             authorized = false;
         }
 
@@ -564,14 +566,8 @@ public final class EJBSecurityManager implements SecurityManager {
                 }
             });
         } catch (PrivilegedActionException pae) {
-            Throwable cause = pae.getCause();
-            if (cause instanceof java.security.AccessControlException) {
-                _logger.log(SEVERE, "jacc_policy_context_security_exception", cause);
-            } else {
-                _logger.log(SEVERE, "jacc_policy_context_exception", cause);
-            }
-
-            throw new RuntimeException(cause);
+            _logger.log(SEVERE, "Unexpected exception manipulating policy context", pae);
+            throw new RuntimeException(pae);
         }
     }
 

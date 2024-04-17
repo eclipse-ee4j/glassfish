@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,15 +44,19 @@ import org.glassfish.internal.api.Globals;
  */
 public class GlassfishRoleMapper implements AuthorizationRoleMapper {
 
-    private static final Logger defaultLogger = Logger.getLogger(GlassfishRoleMapper.class.getName());
-    private final Logger logger;
+    private static final Logger logger = Logger.getLogger(GlassfishRoleMapper.class.getName());
 
+    public GlassfishRoleMapper() {
+       // No-arg constructor for Exousia 2.1.2 and newer
+    }
+
+    /**
+     * @param logger
+     * @deprecated Used by reflection in SimplePolicyConfiguration in older Exousia versions.
+     */
+    @Deprecated
     public GlassfishRoleMapper(Logger logger) {
-        if (logger == null) {
-            this.logger = defaultLogger;
-        } else {
-            this.logger = logger;
-        }
+        // We ignore provided logger and we use our own.
     }
 
     private SecurityRoleMapper getInternalMapper(String contextId) {
@@ -155,9 +160,7 @@ public class GlassfishRoleMapper implements AuthorizationRoleMapper {
         Set<String> roleNames = getDeclaredRoles(securityRoleMapper);
 
         HashSet<String> roles = new HashSet<>();
-        Iterator<String> it = roleNames.iterator();
-        while (it.hasNext()) {
-            String roleName = it.next();
+        for (String roleName : roleNames) {
             Set<Principal> principalsInRole = getPrincipalsInRole(securityRoleMapper, roleName);
             if (principalsInRole != null) {
                 for (Principal p : principals) {

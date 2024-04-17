@@ -74,7 +74,7 @@
           <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy"></property>
         </jacc-provider>
         <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="simple" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory"></jacc-provider>
-        <audit-module classname="com.sun.enterprise.security.ee.Audit" name="default">
+        <audit-module classname="com.sun.enterprise.security.ee.audit.Audit" name="default">
           <property name="auditOn" value="false"></property>
         </audit-module>
         <message-security-config auth-layer="SOAP">

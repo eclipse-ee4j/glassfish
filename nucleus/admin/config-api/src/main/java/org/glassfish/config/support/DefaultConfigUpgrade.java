@@ -739,7 +739,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     /* Cursor should be already be at audit-module START_ELEMENT in the template.
      * Create AuditModle config object.
      * from template:
-     * <audit-module classname="com.sun.enterprise.security.ee.Audit" name="default">
+     * <audit-module classname="com.sun.enterprise.security.ee.audit.Audit" name="default">
      *      <property name="auditOn" value="false"/>
      * </audit-module>
      */

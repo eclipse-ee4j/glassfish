@@ -18,8 +18,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -32,36 +33,7 @@
     <artifactId>servlet</artifactId>
     <packaging>war</packaging>
     <name>Simple embedded servlet project</name>
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1.1</version>
-          <executions>
-              <execution>
-                  <phase>test</phase>
-                  <goals>
-                      <goal>exec</goal>
-                  </goals>
-              </execution>
-          </executions>
-          <configuration>
-              <executable>java</executable>
-              <arguments>
-                  <!--argument>-Xdebug</argument>
-                  <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9009</argument-->
-                  <argument>-classpath</argument>
-                  <classpath/>
-                  <argument>org.glassfish.tests.embedded.web.servlet.ServletMain</argument>
-              </arguments>
-              <classpathScope>test</classpathScope>
-              <includeProjectDependencies>true</includeProjectDependencies>
-          </configuration>
-      </plugin>
-        </plugins>
-    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
@@ -69,20 +41,38 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-shell</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>internal-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.29</version>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.tests.embedded</groupId>
-            <artifactId>utils</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.70.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

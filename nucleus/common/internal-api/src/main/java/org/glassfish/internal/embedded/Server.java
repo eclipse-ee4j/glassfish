@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,27 @@
 
 package org.glassfish.internal.embedded;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.container.Sniffer;
-import org.glassfish.embeddable.*;
+import org.glassfish.embeddable.BootstrapProperties;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -159,12 +169,12 @@ public class Server {
 
     }
 
-    private final static Map<String, Server> servers = new HashMap<String, Server>();
+    private final static Map<String, Server> servers = new HashMap<>();
 
     private final String serverName;
     private final ServiceHandle<EmbeddedFileSystem> fileSystem;
     private final ServiceLocator habitat;
-    private final List<Container> containers = new ArrayList<Container>();
+    private final List<Container> containers = new ArrayList<>();
     private final GlassFish glassfish;
     private static GlassFishRuntime glassfishRuntime;
 
@@ -241,7 +251,7 @@ public class Server {
      * @return list of the instanciated embedded instances.
      */
     public static List<String> getServerNames() {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.addAll(servers.keySet());
         return names;
     }
@@ -307,9 +317,10 @@ public class Server {
 
         containers.add(new Container(new EmbeddedContainer() {
 
-            final List<Container> delegates = new ArrayList<Container>();
-            final ArrayList<Sniffer> sniffers = new ArrayList<Sniffer>();
+            final List<Container> delegates = new ArrayList<>();
+            final ArrayList<Sniffer> sniffers = new ArrayList<>();
 
+            @Override
             public List<Sniffer> getSniffers() {
                 synchronized(sniffers) {
                     if (sniffers.isEmpty()) {
@@ -330,6 +341,7 @@ public class Server {
                 return sniffers;
             }
 
+            @Override
             public void bind(Port port, String protocol)  {
                 for (Container delegate : delegates) {
                     delegate.container.bind(port, protocol);
@@ -343,8 +355,9 @@ public class Server {
                 } else {
                     return new Container(new EmbeddedContainer() {
 
+                        @Override
                         public List<Sniffer> getSniffers() {
-                            List<Sniffer> sniffers = new ArrayList<Sniffer>();
+                            List<Sniffer> sniffers = new ArrayList<>();
                             Sniffer s = habitat.getService(Sniffer.class, type.toString());
                             if (s!=null) {
                                 sniffers.add(s);
@@ -352,14 +365,17 @@ public class Server {
                             return sniffers;
                         }
 
+                        @Override
                         public void bind(Port port, String protocol) {
 
                         }
 
+                        @Override
                         public void start() throws LifecycleException {
 
                         }
 
+                        @Override
                         public void stop() throws LifecycleException {
 
                         }
@@ -368,6 +384,7 @@ public class Server {
                 }
             }
 
+            @Override
             public void start() throws LifecycleException {
                 for (Container c : delegates) {
                     if (!c.started) {
@@ -377,6 +394,7 @@ public class Server {
                 }
             }
 
+            @Override
             public void stop() throws LifecycleException {
                 for (Container c : delegates) {
                     if (c.started) {
@@ -402,14 +420,14 @@ public class Server {
      * creating the container from that configuration and finally adding the
      * container instance to the list of managed containers
      *
-     * @param info the configuration for the container
+     * @param info the configuration for the container. Must not be null.
      * @param <T> type of the container
      * @return instance of the container <T>
      * @throws IllegalStateException if the container is already started.
      */
     public synchronized <T extends EmbeddedContainer> T addContainer(ContainerBuilder<T> info) {
         T container = info.create(this);
-        if (container!=null && containers.add(new Container(container))) {
+        if (container != null && containers.add(new Container(container))) {
             return container;
         }
         return null;
@@ -423,7 +441,7 @@ public class Server {
      * @return the containers list
      */
     public Collection<EmbeddedContainer> getContainers() {
-        ArrayList<EmbeddedContainer> copy = new ArrayList<EmbeddedContainer>();
+        ArrayList<EmbeddedContainer> copy = new ArrayList<>();
         for (Container c : containers) {
             copy.add(c.container);
         }

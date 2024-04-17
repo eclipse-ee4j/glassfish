@@ -1,7 +1,12 @@
-package test;
+package org.glassfish.tests.embedded.web.servlet;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,23 +24,16 @@ package test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
 
 @WebServlet(urlPatterns={"/hello"})
 public class HelloWorld extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
-
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         PrintWriter pw = res.getWriter();
-        try {
-            pw.println("Hello World !<br>");
-          } catch(Exception e) {
-            e.printStackTrace();
-        }
+        pw.println("Hello World !<br>");
     }
 }
 

@@ -108,7 +108,7 @@ public class ConfigCdiExtension implements Extension {
         LOGGER.fine("ConfigCdiExtension instantiated");
     }
 
-    private void harvestConfigPropertyInjectionPointsFromEnabledBean(@Observes ProcessBean<?> event) {
+    public void harvestConfigPropertyInjectionPointsFromEnabledBean(@Observes ProcessBean<?> event) {
         Bean<?> bean = event.getBean();
         Set<InjectionPoint> beanInjectionPoints = bean.getInjectionPoints();
         if (beanInjectionPoints != null) {
@@ -126,7 +126,7 @@ public class ConfigCdiExtension implements Extension {
         }
     }
 
-    private void processAnnotatedType(@Observes @WithAnnotations(ConfigProperties.class) ProcessAnnotatedType<?> event) {
+    public void processAnnotatedType(@Observes @WithAnnotations(ConfigProperties.class) ProcessAnnotatedType<?> event) {
         AnnotatedType<?> annotatedType = event.getAnnotatedType();
         ConfigProperties configProperties = annotatedType.getAnnotation(ConfigProperties.class);
         if (configProperties == null) {
@@ -134,13 +134,13 @@ public class ConfigCdiExtension implements Extension {
             return;
         }
 
-        configBeans.put(annotatedType.getJavaClass(), ConfigBeanDescriptor.create(annotatedType, configProperties));
+        configBeans.put(annotatedType.getJavaClass(), ConfigBeanDescriptor.create(annotatedType.getJavaClass(), configProperties));
 
         // We must veto this annotated type, as we need to create a custom bean to create an instance
         event.veto();
     }
 
-    private <X> void harvestConfigPropertyInjectionPointsFromEnabledObserverMethod(@Observes ProcessObserverMethod<?, X> event,
+    public <X> void harvestConfigPropertyInjectionPointsFromEnabledObserverMethod(@Observes ProcessObserverMethod<?, X> event,
                                                                                    BeanManager beanManager) {
         // Synthetic events won't have an annotated method
         if (event instanceof ProcessSyntheticObserverMethod) {

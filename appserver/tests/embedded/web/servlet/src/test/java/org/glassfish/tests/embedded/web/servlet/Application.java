@@ -32,24 +32,25 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.archive.ScatteredArchive;
+import org.glassfish.tests.utils.ServerUtils;
 
 
 public class Application implements Closeable {
 
+    private static final int HTTP_PORT = ServerUtils.getFreePort();
+
     private final GlassFish glassfish;
-    private final int port;
     private final String name;
 
-    private Application(final GlassFish glassfish, final int port, final String name) {
+    private Application(final GlassFish glassfish, final String name) {
         this.glassfish = glassfish;
-        this.port = port;
         this.name = name;
     }
 
 
     public URL getEndpoint() {
         try {
-            return new URI("http://localhost:" + port + "/" + name + "/hello").toURL();
+            return new URI("http://localhost:" + HTTP_PORT + "/" + name + "/hello").toURL();
         } catch (MalformedURLException | URISyntaxException e) {
             throw new IllegalStateException(e);
         }
@@ -71,7 +72,7 @@ public class Application implements Closeable {
 
     public static Application start() throws IOException, GlassFishException {
         GlassFishProperties props = new GlassFishProperties();
-        props.setPort("http-listener", 8882);
+        props.setPort("http-listener", HTTP_PORT);
         GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish(props);
         glassfish.start();
 
@@ -81,6 +82,6 @@ public class Application implements Closeable {
         System.out.println("War content: \n" + war);
 
         final String name = glassfish.getDeployer().deploy(war.toURI());
-        return new Application(glassfish, 8882, name);
+        return new Application(glassfish, name);
     }
 }

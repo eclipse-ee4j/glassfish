@@ -35,7 +35,7 @@ instead of the Administration Console interface.
 The following topics are addressed here:
 
 * <<Path to the `asadmin` Utility>>
-* <<`asadmin` Utility Syntax>>
+* <<asadmin-utility-syntax,`asadmin` Utility Syntax>>
 * <<To Run an `asadmin` Utility Subcommand in Single Mode>>
 * xref:#to-display-help-information-for-the-asadmin-utility-or-a-subcommand[To Display Help Information for the `asadmin` Utility or a
 Subcommand]

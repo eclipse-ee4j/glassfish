@@ -131,7 +131,7 @@
 
         <!-- 3rd party dependencies -->
 
-        <commons-io.version>2.16.0</commons-io.version>
+        <commons-io.version>2.16.1</commons-io.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
@@ -487,7 +487,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.0</version>
+                <version>5.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -844,6 +844,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
+                        <rerunFailingTestsCount>3</rerunFailingTestsCount>
                         <environmentVariables>
                             <LANG>en</LANG>
                         </environmentVariables>
@@ -867,6 +868,7 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
+                        <rerunFailingTestsCount>3</rerunFailingTestsCount>
                         <environmentVariables>
                             <LANG>en</LANG>
                         </environmentVariables>
@@ -1051,7 +1053,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>5.0.0</version>
+                    <version>8.0.2</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1063,8 +1065,6 @@
                     </executions>
                     <configuration>
                         <generateGitPropertiesFile>false</generateGitPropertiesFile>
-                        <dateFormat>YYYY-MM-dd'T'HH:mm:ss'Z'</dateFormat>
-                        <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>

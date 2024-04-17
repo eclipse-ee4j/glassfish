@@ -2032,17 +2032,6 @@ instead of <code>http</code>) is used. Some browsers do not display pages on sec
 connections by default and must be configured to permit secure protocols
 (SSL and TLS).</p>
 </div>
-<div class="paragraph">
-<p>For Microsoft Windows, an alternate way to start the Eclipse GlassFish
-Administration Console is by using the Start menu.</p>
-</div>
-<div class="paragraph">
-<p>You can display the help material for a page in the Administration
-Console by clicking the Help button on the page. The initial help page
-describes the functions and fields of the page itself. Associated task
-instructions can be accessed on additional pages by clicking a link in
-the See Also list.</p>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2082,6 +2071,150 @@ Security</a>" in Eclipse GlassFish Security Guide.</p>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>You can change the Administration Console startup behavior using the
+startup options.</p>
+</div>
+<div class="paragraph">
+<p>Available startup options are:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>default</code></dt>
+<dd>
+<p>The Administration Console loads on demand when its first accessed. This is the default option.</p>
+</dd>
+<dt class="hdlist1"><code>always</code></dt>
+<dd>
+<p>The Administration Console loads during Eclipse Glassfish server startup.</p>
+</dd>
+<dt class="hdlist1"><code>never</code></dt>
+<dd>
+<p>Prevents the Administration Console from loading thereby prohibiting it.</p>
+</dd>
+</dl>
+</div>
+<div class="sect4">
+<h5 id="to-enable-the-adminstration-console-on-demand-loading"><a class="anchor" href="#to-enable-the-adminstration-console-on-demand-loading"></a>To Enable the Administration Console On Demand Loading</h5>
+<div class="paragraph">
+<p>This is a default option.</p>
+</div>
+<div class="paragraph">
+<p>Enabling on demand loading of the Administration Console involves changing the value of the
+property <code>server.admin-service.property.adminConsoleStartup</code>. This property controls the
+Administration Console loading.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p>Change the value of the <code>server.admin-service.property.adminConsoleStartup</code> property to <code>default</code>.
+You can change this value either by setting a configuration property or by editing a file.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change this value by setting a configuration property, set the configuration property
+<code>server.admin-service.property.adminConsoleStartup</code> to the value <code>default</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.admin-service.property.adminConsoleStartup=default</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Restart the DAS.
+For instructions, see <a href="#to-restart-a-domain">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-enable-the-administration-console-loading-at-server-startup"><a class="anchor" href="#to-enable-the-administration-console-loading-at-server-startup"></a>To Enable the Administration Console Loading At Server Startup</h5>
+<div class="paragraph">
+<p>Enabling the Administration Console loading at Eclipse Glassfish server startup involves changing
+the value of the property <code>server.admin-service.property.adminConsoleStartup</code>. This property
+controls the Administration Console loading.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p>Change the value of the <code>server.admin-service.property.adminConsoleStartup</code> property to <code>always</code>.
+You can change this value either by setting a configuration property or by editing a file.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change this value by setting a configuration property, set the configuration property
+<code>server.admin-service.property.adminConsoleStartup</code> to a value <code>always</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.admin-service.property.adminConsoleStartup=always</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Restart the DAS.
+For instructions, see <a href="#to-restart-a-domain">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-disable-the-administration-console-loading"><a class="anchor" href="#to-disable-the-administration-console-loading"></a>To Disable the Administration Console Loading</h5>
+<div class="paragraph">
+<p>Disabling the Administration Console loading involves changing the value of the property
+<code>server.admin-service.property.adminConsoleStartup</code>. This property controls the Administration
+Console loading.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p>Change the value of the <code>server.admin-service.property.adminConsoleStartup</code> property to <code>never</code>.
+You can change this value either by setting a configuration property or by editing the file.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change this value by setting a configuration property, set the configuration property
+<code>server.admin-service.property.adminConsoleStartup</code> to a value <code>never</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.admin-service.property.adminConsoleStartup=never</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Restart the DAS.
+For instructions, see <a href="#to-restart-a-domain">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="help-pages-in-the-administration-console"><a class="anchor" href="#help-pages-in-the-administration-console"></a>Help pages in the Administration Console</h5>
+<div class="paragraph">
+<p>You can display the help material for a page in the Administration
+Console by clicking the Help button on the page. The initial help page
+describes the functions and fields of the page itself. Associated task
+instructions can be accessed on additional pages by clicking a link in
+the See Also list.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -32409,7 +32542,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-04-17 11:24:33 UTC
+Last updated 2024-04-17 13:46:48 UTC
 </div>
 </div>
 </body>

@@ -177,15 +177,15 @@
                                 <tck-setting key="web.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
                                 <tck-setting key="webServerHost" value="localhost"/>
-                                
+
                                 <tck-setting key="impl.vi" value="glassfish"/>
                                 <tck-setting key="websocket.api" value="${web.home}/modules/jakarta.websocket-api.jar${pathsep}${web.home}/modules/jakarta.websocket-client-api.jar${pathsep}${web.home}/modules/jakarta.servlet-api.jar${pathsep}${web.home}/modules/jakarta.enterprise.cdi-api.jar"/>
 
                                 <tck-setting key="report.dir" value="${tck.home}/websocketreport/websocket"/>
                                 <tck-setting key="work.dir" value="${tck.home}/websocketwork/websocket"/>
-                                
+
                                 <tck-setting key="ws_wait" value="50000000" if:set="glassfish.suspend"/>
-                                
+
                                 <replace file="${tck.home}/bin/ts.jte">
                                   <replacetoken><![CDATA[-XX\\\:MaxPermSize=512m:]]></replacetoken>
                                   <replacevalue><![CDATA[]]></replacevalue>
@@ -195,45 +195,51 @@
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="delete-domain"/>
                                         <arg value="domain1" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="create-domain"/>
                                         <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
                                         <arg value="--user=admin" />
                                         <arg value="--nopassword" />
                                         <arg value="domain1" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
 
                                     <if>
                                         <isset property="jacoco.version" />
                                         <then>
-                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                                 <arg value="create-jvm-options" />
                                                 <arg value="--port=${port.admin}" />
                                                 <arg value="&quot;-javaagent\:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=${jacoco.includes}&quot;" />
+                                                <env key="AS_JAVA" value="${java.home}"/>
                                             </exec>
                                         </then>
                                     </if>
-                                    
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="create-jvm-options" />
                                         <arg value="--port=${port.admin}" />
                                         <arg value="&quot;-Djava.security.manager&quot;" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
-                                    
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="stop-domain"/>
                                         <arg value="domain1"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                 </limit>
-                                
+
                                 <concat destfile="${glassfish.home}/glassfish/domains/domain1/config/server.policy" append="true">
-                                      <filelist dir="${tck.home}/bin" files="server_policy.append"/>
-                                </concat>   
-                               
+                                    <filelist dir="${tck.home}/bin" files="server_policy.append"/>
+                                </concat>
+
                                 <mkdir dir="${tck.home}/websocketreport"/>
                                 <mkdir dir="${tck.home}/websocketreport/websocket"/>
 
@@ -248,14 +254,14 @@
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9010"/>]]></replacevalue>
                                 </replace>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" unless:set="tck.suspend" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9010"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacevalue>
                                 </replace>
-                                
-                                
+
+
                             </target>
                         </configuration>
                         <goals>
@@ -274,37 +280,44 @@
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                 <limit maxwait="60">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                 </limit>
-                                
+
                                 <!-- Deploy single test -->
                                 <sequential if:set="run.test" >
                                     <dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
                                     <echo>Deploying from ${test.dir}</echo>
-                                    
-                                    <exec executable="${ant.home}/bin/ant" dir="${test.dir}">
+
+                                    <exec executable="${ant.home}/bin/ant" dir="${test.dir}" failonerror="true">
                                         <arg value="deploy"  />
+                                        <env key="AS_JAVA" value="${java.home}"/>
+                                        <env key="JAVA_HOME" value="${java.home}"/>
                                     </exec>
                                 </sequential>
-                                
+
                                 <!-- Deploy all tests -->
                                 <sequential unless:set="run.test" >
-                                    <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
+                                    <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" failonerror="true">
                                         <arg value="deploy.all"  />
+                                        <env key="AS_JAVA" value="${java.home}"/>
+                                        <env key="JAVA_HOME" value="${java.home}"/>
                                     </exec>
                                 </sequential>
-                                
+
                                 <!-- Restart GlassFish in debug mode if so requested -->
                                 <sequential if:set="glassfish.suspend">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="stop-domain" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                     <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
                                         <arg value="--suspend" if:set="glassfish.suspend"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                 </sequential>
                             </target>
@@ -322,13 +335,20 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                         
+
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
                                     <arg value="runclient.nobinaryfinder" if:set="run.test" />
                                     <arg value="run.all" unless:set="run.test" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                    <env key="JAVA_HOME" value="${java.home}"/>
                                     <env key="LC_ALL" value="C" />
+                                </exec>
+
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <arg value="stop-domain" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
                                 </exec>
 
                                 <if>
@@ -338,20 +358,7 @@
                                     <then>
                                         <echo message="Running tests failed." />
                                         <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
-                                        <echo message="${contents}" />
-                                    </then>
-                                </if>
-
-                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="stop-domain" />
-                                </exec>
-                                
-                                <if>
-                                    <not>
-                                        <equals arg1="${testResult}" arg2="0" />
-                                    </not>
-                                    <then>
-                                        <fail/>
+                                        <fail status="${testResult}" message="${contents}" />
                                     </then>
                                 </if>
                             </target>

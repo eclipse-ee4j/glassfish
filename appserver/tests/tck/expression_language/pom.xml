@@ -264,6 +264,8 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                                         <arg value="run.all" unless:set="run.test"/>
                                         <arg value="runclient" if:set="run.test" />
                                         <arg value="-Dkeywords=all" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
+                                        <env key="JAVA_HOME" value="${java.home}"/>
                                         <env key="LC_ALL" value="C" />
                                     </exec>
 
@@ -272,7 +274,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                                             <equals arg1="${testResult}" arg2="0" />
                                         </not>
                                         <then>
-                                            <echo message="Running tests failed." />
+                                            <fail status="${testResult}" message="Running tests failed." />
                                         </then>
                                     </if>
                                 </sequential>

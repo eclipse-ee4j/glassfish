@@ -213,7 +213,7 @@
                                         <arg value="delete-domain"/>
                                         <arg value="domain1" />
                                     </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <env key="AS_JAVA" value="${java.home}"/>
                                         <arg value="create-domain"/>
                                         <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
@@ -221,7 +221,7 @@
                                         <arg value="--nopassword" />
                                         <arg value="domain1" />
                                     </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <env key="AS_JAVA" value="${java.home}"/>
                                         <arg value="start-domain"/>
                                     </exec>
@@ -229,7 +229,7 @@
                                     <if>
                                         <isset property="jacoco.version" />
                                         <then>
-                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                                 <env key="AS_JAVA" value="${java.home}"/>
                                                 <arg value="create-jvm-options" />
                                                 <arg value="--port=${port.admin}" />
@@ -237,7 +237,7 @@
                                             </exec>
                                         </then>
                                     </if>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <env key="AS_JAVA" value="${java.home}"/>
                                         <arg value="stop-domain"/>
                                         <arg value="domain1"/>

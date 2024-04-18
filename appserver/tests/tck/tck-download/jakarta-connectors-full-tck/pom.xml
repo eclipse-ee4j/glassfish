@@ -36,7 +36,7 @@ reserved.
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
 
-        <tck.test.platform.url>https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.2.zip</tck.test.platform.url>
+        <tck.test.platform.url>https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.4.zip</tck.test.platform.url>
         <tck.test.platform.src.url>https://github.com/jakartaee/platform-tck/archive/refs/heads/10.0.x.zip</tck.test.platform.src.url>
 
         <tck.test.connectors.file>jakarta-connectors-tck-2.1.0.zip</tck.test.connectors.file>

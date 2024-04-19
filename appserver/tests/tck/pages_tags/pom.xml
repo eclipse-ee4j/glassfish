@@ -185,8 +185,8 @@
                                 <tck-setting key="impl.vi.deploy.dir" value="${webServerHome}/domains/domain1/autodeploy"/>
                                 <tck-setting key="impl.deploy.timeout.multiplier" value="30"/>
 
-                                <tck-setting key="jspservlet.classes" value="${webServerHome}/modules/jakarta.servlet-api.jar${pathsep}${webServerHome}/modules/wasp.jar${pathsep}${webServerHome}/modules/jakarta.servlet.jsp-api.jar"/>
-                                <tck-setting key="jstl.classes" value="${webServerHome}/modules/wasp.jar"/>
+                                <tck-setting key="jspservlet.classes" value="${webServerHome}/modules/jakarta.servlet-api.jar${pathsep}${webServerHome}/modules/jakarta.servlet.jsp-api.jar${pathsep}${webServerHome}/modules/jakarta.el-api.jar" />
+                                <tck-setting key="jstl.classes" value="${webServerHome}/modules/wasp.jar${pathsep}${webServerHome}/modules/jakarta.servlet.jsp.jstl-api.jar"/>
 
                                 <tck-setting key="jstl.db.server" value="localhost"/>
                                 <tck-setting key="jstl.db.port" value="1527"/>

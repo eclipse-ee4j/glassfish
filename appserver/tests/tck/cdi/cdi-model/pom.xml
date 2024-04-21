@@ -28,33 +28,7 @@
     <artifactId>glassfish-external-tck-cdi-model</artifactId>
 
     <name>CDI TCK Model runner 4.0 for Weld (GlassFish)</name>
-    <description>Aggregates dependencies and runs the CDI TCK (both standalone and on GlassFish)</description>
-
-    <properties>
-        <maven.compiler.release>11</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <cdi.tck-4-0.version>4.0.13</cdi.tck-4-0.version>
-
-        <!-- This matches the htmlunit version in TCK -->
-        <htmlunit.version>2.50.0</htmlunit.version>
-        <excluded.groups>se</excluded.groups>
-
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>jakarta.enterprise</groupId>
-                <artifactId>cdi-tck-lang-model</artifactId>
-                <version>${cdi.tck-4-0.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <description>Aggregates dependencies and runs the CDI TCK on GlassFish</description>
 
     <dependencies>
         <dependency>
@@ -66,13 +40,13 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.7.0.Final</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
+            <version>${cdi.tck-4-0.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -93,8 +67,7 @@
         </dependency>
     </dependencies>
 
-
-       <build>
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

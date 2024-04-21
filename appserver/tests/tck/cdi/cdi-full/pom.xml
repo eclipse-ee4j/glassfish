@@ -220,6 +220,7 @@
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>1.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -306,7 +307,7 @@
                      </execution>
 
                      <!-- Install a jar with a few amount of test classes, for which some of the tests are looking -->
-                     <execution>
+                    <execution>
                         <id>install-cdi-tck-ext-lib</id>
                         <phase>pre-integration-test</phase>
                         <goals>

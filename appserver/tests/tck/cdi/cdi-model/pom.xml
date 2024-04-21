@@ -63,6 +63,7 @@
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>1.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

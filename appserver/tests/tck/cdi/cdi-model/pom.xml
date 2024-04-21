@@ -160,7 +160,7 @@
     
     <profiles>
         <profile>
-            <id>javaee-full</id>
+            <id>full</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -169,7 +169,7 @@
             </properties>
         </profile>
         <profile>
-            <id>webprofile</id>
+            <id>web</id>
             <properties>
                 <glassfish-artifact-id>web</glassfish-artifact-id>
             </properties>

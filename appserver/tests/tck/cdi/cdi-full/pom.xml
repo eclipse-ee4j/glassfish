@@ -28,7 +28,7 @@
     <artifactId>glassfish-external-tck-cdi</artifactId>
 
     <name>CDI TCK Full runner 4.0 for Weld (GlassFish)</name>
-    <description>Aggregates dependencies and runs the CDI TCK (both standalone and on GlassFish)</description>
+    <description>Aggregates dependencies and runs the CDI TCK on GlassFish</description>
 
     <dependencies>
 
@@ -398,115 +398,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>cdi-signature-test</id>
-            <!-- API jars from the GlassFish distribution -->
-            <dependencies>
-                <dependency>
-                    <groupId>jakarta.annotation</groupId>
-                    <artifactId>jakarta.annotation-api</artifactId>
-                    <scope>system</scope>
-                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.annotation-api.jar</systemPath>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>jakarta.el-api</artifactId>
-                    <scope>system</scope>
-                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.el-api.jar</systemPath>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.interceptor</groupId>
-                    <artifactId>jakarta.interceptor-api</artifactId>
-                    <scope>system</scope>
-                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.interceptor-api.jar</systemPath>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject-api</artifactId>
-                    <scope>system</scope>
-                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.inject-api.jar</systemPath>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.enterprise</groupId>
-                    <artifactId>jakarta.enterprise.lang-model</artifactId>
-                    <scope>system</scope>
-                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.lang-model.jar</systemPath>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.enterprise</groupId>
-                    <artifactId>jakarta.enterprise.cdi-api</artifactId>
-                    <scope>system</scope>
-                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.cdi-api.jar</systemPath>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>unpack-jars-sigtest</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>unpack-dependencies</goal>
-                                </goals>
-                                <configuration>
-                                    <overWriteReleases>true</overWriteReleases>
-                                    <outputDirectory>target/cdi-sigtest-classes</outputDirectory>
-                                    <includeScope>system</includeScope>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>copy-cdi-sigtest</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <!-- Signature test file for CDI -->
-                                        <artifactItem>
-                                            <groupId>jakarta.enterprise</groupId>
-                                            <artifactId>cdi-tck-core-impl</artifactId>
-                                            <version>${cdi.tck-4-0.version}</version>
-                                            <type>sig</type>
-                                            <classifier>sigtest-jdk11</classifier>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
-                                            <destFileName>cdi-tck-core-impl-sigtest-jdk11.sig</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.netbeans.tools</groupId>
-                        <artifactId>sigtest-maven-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sigtest</id>
-                                <phase>process-test-sources</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <sigfile>target/sigtest/cdi-tck-core-impl-sigtest-jdk11.sig</sigfile>
-                            <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
-                            <classes>target/cdi-sigtest-classes</classes>
-                            <report>target/cdi-sig-report.txt</report>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        
         <profile>
             <id>full</id>
             <activation>

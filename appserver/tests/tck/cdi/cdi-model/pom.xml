@@ -28,7 +28,7 @@
     <artifactId>glassfish-external-tck-cdi-model</artifactId>
 
     <name>CDI TCK Model runner 4.0 for Weld (GlassFish)</name>
-    <description>Aggregates dependencies and runs the CDI TCK on GlassFish</description>
+    <description>Aggregates dependencies and runs the CDI Lang Model TCK on GlassFish</description>
 
     <dependencies>
         <dependency>
@@ -137,8 +137,7 @@
                     </includes>
                 </configuration>
             </plugin>
-            
-            
+
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <executions>

@@ -577,15 +577,6 @@ instead of `http`) is used. Some browsers do not display pages on secure
 connections by default and must be configured to permit secure protocols
 (SSL and TLS).
 
-For Microsoft Windows, an alternate way to start the {productName}
-Administration Console is by using the Start menu.
-
-You can display the help material for a page in the Administration
-Console by clicking the Help button on the page. The initial help page
-describes the functions and fields of the page itself. Associated task
-instructions can be accessed on additional pages by clicking a link in
-the See Also list.
-
 
 [NOTE]
 ====
@@ -606,6 +597,102 @@ remote request is accepted as such.
 To enable secure admin, see "xref:security-guide.adoc#managing-administrative-security[Managing Administrative
 Security]" in {productName} Security Guide.
 ====
+
+
+You can change the Administration Console startup behavior using the
+startup options.
+
+Available startup options are:
+
+`default`::
+The Administration Console loads on demand when its first accessed. This is the default option.
+`always`::
+The Administration Console loads during Eclipse Glassfish server startup.
+`never`::
+Prevents the Administration Console from loading thereby prohibiting it.
+
+
+[[to-enable-the-adminstration-console-on-demand-loading]]
+
+===== To Enable the Administration Console On Demand Loading
+
+This is a default option.
+
+Enabling on demand loading of the Administration Console involves changing the value of the
+property `server.admin-service.property.adminConsoleStartup`. This property controls the
+Administration Console loading.
+
+1. Ensure that the DAS is running.
++
+2. Change the value of the `server.admin-service.property.adminConsoleStartup` property to `default`.
+You can change this value either by setting a configuration property or by editing a file.
+* To change this value by setting a configuration property, set the configuration property
+`server.admin-service.property.adminConsoleStartup` to the value `default`.
++
+[source]
+----
+asadmin> set server.admin-service.property.adminConsoleStartup=default
+----
+
+3. Restart the DAS.
+For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
+
+
+[[to-enable-the-administration-console-loading-at-server-startup]]
+
+===== To Enable the Administration Console Loading At Server Startup
+
+Enabling the Administration Console loading at Eclipse Glassfish server startup involves changing
+the value of the property `server.admin-service.property.adminConsoleStartup`. This property
+controls the Administration Console loading.
+
+1. Ensure that the DAS is running.
++
+2. Change the value of the `server.admin-service.property.adminConsoleStartup` property to `always`.
+You can change this value either by setting a configuration property or by editing a file.
+* To change this value by setting a configuration property, set the configuration property
+`server.admin-service.property.adminConsoleStartup` to a value `always`.
++
+[source]
+----
+asadmin> set server.admin-service.property.adminConsoleStartup=always
+----
+
+3. Restart the DAS.
+For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
+
+
+[[to-disable-the-administration-console-loading]]
+
+===== To Disable the Administration Console Loading
+
+Disabling the Administration Console loading involves changing the value of the property
+`server.admin-service.property.adminConsoleStartup`. This property controls the Administration
+Console loading.
+
+1. Ensure that the DAS is running.
++
+2. Change the value of the `server.admin-service.property.adminConsoleStartup` property to `never`.
+You can change this value either by setting a configuration property or by editing the file.
+* To change this value by setting a configuration property, set the configuration property
+`server.admin-service.property.adminConsoleStartup` to a value `never`.
++
+[source]
+----
+asadmin> set server.admin-service.property.adminConsoleStartup=never
+----
+
+3. Restart the DAS.
+For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
+
+
+##### Help pages in the Administration Console
+
+You can display the help material for a page in the Administration
+Console by clicking the Help button on the page. The initial help page
+describes the functions and fields of the page itself. Associated task
+instructions can be accessed on additional pages by clicking a link in
+the See Also list.
 
 
 [[asadmin-utility]]

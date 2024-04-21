@@ -36,7 +36,7 @@ Run full TCK, debugging client TCK
 mvn clean install -Dsuspend-tck
 
 
-Run full TCK with security manager (deprecated in principal, but still needed for EE 10 to pass) 
+Run full TCK with security manager (deprecated in principal, but still needed for EE 10 to pass)
 
 mvn clean install -Dglassfish.security.manager
 
@@ -222,7 +222,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="work\.dir=.*"
                                     replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
-                                    
+
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="work\.dir=.*"
                                     replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
@@ -234,50 +234,56 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
 
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                         <arg value="delete-domain"/>
                                         <arg value="domain1" />
                                     </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="create-domain"/>
                                         <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
                                         <arg value="--user=admin" />
                                         <arg value="--nopassword" />
                                         <arg value="domain1" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
-                                    
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" if:set="glassfish.security.manager">
+
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" if:set="glassfish.security.manager" failonerror="true">
                                         <arg value="create-jvm-options" />
                                         <arg value="--port=${port.admin}" />
                                         <arg value="&quot;-Djava.security.manager&quot;" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
 
                                     <if>
                                         <isset property="jacoco.version" />
                                         <then>
-                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                                 <arg value="create-jvm-options" />
                                                 <arg value="--port=${port.admin}" />
                                                 <arg value="&quot;-javaagent\:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=${jacoco.includes}&quot;" />
+                                                <env key="AS_JAVA" value="${java.home}"/>
                                             </exec>
                                         </then>
                                     </if>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="stop-domain"/>
                                         <arg value="domain1"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                 </limit>
                                 <mkdir dir="${tck.home}/jacctckreport"/>
                                 <mkdir dir="${tck.home}/jacctckreport/jacctck"/>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
@@ -301,28 +307,35 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                 <limit maxwait="20">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                 </limit>
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
                                     <arg value="config.vi" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                    <env key="JAVA_HOME" value="${java.home}"/>
                                     <env key="tck.home" value="${tck.home}"/>
                                 </exec>
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
                                     <arg value="enable.jacc"  />
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                    <env key="JAVA_HOME" value="${java.home}"/>
                                     <env key="tck.home" value="${tck.home}"/>
                                 </exec>
-                                
+
                                 <!-- Restart GlassFish in debug mode if so requested -->
                                 <sequential if:set="glassfish.suspend">
-	                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-	                                    <arg value="stop-domain" />
-	                                </exec>
-	                                <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
+                                        <arg value="stop-domain" />
+                                        <env key="AS_JAVA" value="${java.home}"/>
+                                    </exec>
+                                    <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
                                         <arg value="--suspend" if:set="glassfish.suspend"/>
+                                        <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
                                 </sequential>
                             </target>
@@ -347,6 +360,13 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                                     <arg value="run.all" unless:set="run.test"/>
                                     <arg value="runclient" if:set="run.test" />
                                     <env key="LC_ALL" value="C" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                    <env key="JAVA_HOME" value="${java.home}"/>
+                                </exec>
+
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <arg value="stop-domain" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
                                 </exec>
 
                                 <if>
@@ -356,13 +376,10 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                                     <then>
                                         <echo message="Running tests failed." />
                                         <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
-                                        <echo message="${contents}" />
+                                        <fail status="${testResult}" message="${contents}" />
                                     </then>
                                 </if>
 
-                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="stop-domain" />
-                                </exec>
                             </target>
                         </configuration>
                     </execution>

@@ -35,21 +35,21 @@ reserved.
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        
-        <tck.test.platform.url>https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.2.zip</tck.test.platform.url>
+
+        <tck.test.platform.url>https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.4.zip</tck.test.platform.url>
         <tck.test.platform.src.url>https://github.com/jakartaee/platform-tck/archive/refs/heads/10.0.x.zip</tck.test.platform.src.url>
-        
+
         <tck.test.connectors.file>jakarta-connectors-tck-2.1.0.zip</tck.test.connectors.file>
         <tck.test.connectors.url>https://download.eclipse.org/jakartaee/connectors/2.1/${tck.test.connectors.file}</tck.test.connectors.url>
-        
+
         <tck.test.connectors.full.file>jakarta-connectors-full-tck-2.1.0.zip</tck.test.connectors.full.file>
-        
+
         <tck.home>${project.build.directory}/platform-tck-10.0.x</tck.home>
     </properties>
 
     <build>
         <plugins>
-            
+
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
@@ -65,7 +65,7 @@ reserved.
                             <url>${tck.test.platform.url}</url>
                         </configuration>
                     </execution>
-                    
+
                     <!-- Download source platform TCK - around 70mb -->
                     <execution>
                         <id>download-ee-tck-src</id>
@@ -77,7 +77,7 @@ reserved.
                             <url>${tck.test.platform.src.url}</url>
                         </configuration>
                     </execution>
-                    
+
                     <execution>
                         <id>download-connectors-tck</id>
                         <phase>generate-resources</phase>
@@ -88,7 +88,7 @@ reserved.
                             <url>${tck.test.connectors.url}</url>
                         </configuration>
                     </execution>
-                    
+
                     <execution>
                         <id>download-ant</id>
                         <phase>generate-resources</phase>
@@ -150,7 +150,7 @@ reserved.
                                         <include name="lib/**" />
                                     </fileset>
                                 </copy>
-                                
+
                                 <copy
                                     todir="${project.build.directory}/platform-tck-10.0.x">
                                     <fileset
@@ -170,9 +170,11 @@ reserved.
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/release/tools">
                                     <arg value="connector" />
                                     <env key="deliverabledir" value="connector" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                    <env key="JAVA_HOME" value="${java.home}"/>
                                     <env key="LC_ALL" value="C" />
                                 </exec>
-                                
+
                                 <move todir="${project.build.directory}">
                                     <fileset dir="${tck.home}/release/CONNECTOR_BUILD/latest">
                                         <include name="connectors-tck-2.1.0*.zip" />

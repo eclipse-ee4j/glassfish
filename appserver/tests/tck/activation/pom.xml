@@ -148,11 +148,11 @@
 
 
                                 <!-- Change configuration -->
-                                
+
                                 <tck-setting key="TS_HOME" value="${tck.home}"/>
                                 <tck-setting key="JAVA_HOME" value="${java.home}"/>
                                 <tck-setting key="JARPATH" value="${glassfish.home}/glassfish/modules"/>
-                                
+
                                 <replace file="${tck.home}/build.xml">
                                   <replacetoken><![CDATA[<sysproperty key="testDebug" value="${tests.debug}"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<sysproperty key="testDebug" value="${tests.debug}"/>
@@ -172,12 +172,14 @@
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                         
+
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}" resultproperty="testResult">
                                     <arg value="run" />
                                     <arg value="run.pluggability" />
                                     <arg value="-DfailOnError=true" />
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                    <env key="JAVA_HOME" value="${java.home}"/>
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 
@@ -191,7 +193,7 @@
                                         <echo message="${contents}" />
                                     </then>
                                 </if>
-                                
+
                                 <if>
                                     <not>
                                         <equals arg1="${testResult}" arg2="0" />

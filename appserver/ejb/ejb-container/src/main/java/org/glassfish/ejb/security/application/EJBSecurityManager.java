@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -70,6 +71,7 @@ import org.glassfish.ejb.security.factory.EJBSecurityManagerFactory;
 import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
+import org.glassfish.security.common.Role;
 
 /**
  * This class is used by the Enterprise Beans server to manage security. All the container object only call into this object for managing
@@ -161,7 +163,7 @@ public final class EJBSecurityManager implements SecurityManager {
             ejbDescriptor.getEjbBundleDescriptor()
                          .getRoles()
                          .stream()
-                         .map(e -> e.getName())
+                         .map(Role::getName)
                          .collect(toSet()),
 
             getSecurityRoleRefsFromBundle(ejbDescriptor)));
@@ -199,7 +201,7 @@ public final class EJBSecurityManager implements SecurityManager {
                 ejbInvocation.method,
                 securityContext.getPrincipalSet());
         } catch (Throwable t) {
-            _logger.log(SEVERE, "jacc_policy_context_exception", t);
+            _logger.log(SEVERE, "Unexpected exception manipulating policy context", t);
             authorized = false;
         }
 

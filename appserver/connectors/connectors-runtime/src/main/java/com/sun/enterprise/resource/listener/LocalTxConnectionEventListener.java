@@ -17,20 +17,23 @@
 
 package com.sun.enterprise.resource.listener;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.pool.PoolManager;
-
+import com.sun.logging.LogDomains;
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ManagedConnection;
-
-import java.util.IdentityHashMap;
-import java.util.Map;
 
 /**
  * @author Binod P.G
  */
 public class LocalTxConnectionEventListener extends ConnectionEventListener {
+
+    private static final Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
 
     /**
      * A shortcut to the singleton PoolManager instance. Field could also be removed.
@@ -56,14 +59,33 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
 
     public LocalTxConnectionEventListener(ResourceHandle resource) {
         this.resource = resource;
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "LocalTxConnectionEventListener constructor, resource=" + resource + ", this=" + this);
+        }
     }
 
     @Override
     public synchronized void connectionClosed(ConnectionEvent evt) {
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "LocalTxConnectionEventListener.connectionClosed START, resource=" + resource + ", this=" + this);
+            for (Object key : associatedHandles.keySet()) {
+                ResourceHandle associatedHandle = associatedHandles.get(key);
+                logger.log(Level.FINE,
+                        "LocalTxConnectionEventListener.connectionClosed associatedHandles: key=" + key + ", handle=" + associatedHandle);
+                logger.log(Level.FINE,
+                        "LocalTxConnectionEventListener.connectionClosed associatedHandles: resource=" + associatedHandle.getResource());
+            }
+        }
+
         Object connectionHandle = evt.getConnectionHandle();
         ResourceHandle handle = associatedHandles.getOrDefault(connectionHandle, resource);
         // ManagedConnection instance is still valid and put back in the pool: do not remove the event listener.
         poolManager.resourceClosed(handle);
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "LocalTxConnectionEventListener.connectionClosed END, resource=" + resource + ", handle=" + handle + ", this=" + this);
+        }
     }
 
     @Override
@@ -117,6 +139,9 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * @param resourceHandle the original Handle
      */
     public synchronized void associateHandle(Object userHandle, ResourceHandle resourceHandle) {
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "LocalTxConnectionEventListener associateHandle, userHandle=" + userHandle + ", resourceHandle=" + resourceHandle + ", this=" + this);
+        }
         associatedHandles.put(userHandle, resourceHandle);
     }
 
@@ -128,6 +153,9 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * can also indicate that the map previously associated null with userHandle.
      */
     public synchronized ResourceHandle removeAssociation(Object userHandle) {
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "LocalTxConnectionEventListener removeAssociation, userHandle=" + userHandle + ", this=" + this);
+        }
         return associatedHandles.remove(userHandle);
     }
 
@@ -136,6 +164,8 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * @return The clone of the associatedHandles map.
      */
     public synchronized Map<Object, ResourceHandle> getAssociatedHandlesAndClearMap() {
+        logger.log(Level.FINE, "LocalTxConnectionEventListener getAssociatedHandlesAndClearMap, this=" + this);
+
         // Clone the associatedHandles, because we will clear the list in this method
         IdentityHashMap<Object, ResourceHandle> result = (IdentityHashMap<Object, ResourceHandle>) associatedHandles.clone();
 

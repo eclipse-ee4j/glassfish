@@ -1099,6 +1099,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
         if (state.isUnenlisted() || (poolTxHelper.isNonXAResource(handle) && poolTxHelper.isLocalTransactionInProgress()
                 && poolTxHelper.isLocalResourceEligibleForReuse(handle))) {
+            // Note: the call to isLocalResourceEligibleForReuse can change the enlisted state of the 
+            // handle to false if the resource is eligible for reuse.
             freeUnenlistedResource(handle);
         }
 
@@ -1139,6 +1141,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     protected void freeResource(ResourceHandle resourceHandle) {
+        LOG.log(FINE, "freeResource handle: {0}", resourceHandle);
         try {
             getResourceFromPoolAndFreeResourceMethodsLock.lock();
             if (cleanupResource(resourceHandle)) {
@@ -1162,7 +1165,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         } finally {
             getResourceFromPoolAndFreeResourceMethodsLock.unlock();
         }
-
     }
 
     /**

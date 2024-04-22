@@ -17,15 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-<<<<<<< Upstream, based on origin/master
-import com.sun.enterprise.resource.ResourceSpec;
-
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-=======
->>>>>>> f4ffa0b Part 3 for issue #24900 More documentation and more unit test coverage.
 /**
  * Abstract Pool manager for unimplemented features. Throws UnsupportedOperationException when invoked.
  */

@@ -48,8 +48,6 @@ public interface TransactionalResource {
 
     public boolean isShareable();
 
-    public void destroyResource();
-
     /**
      * @return the String that can identify this resource
      */

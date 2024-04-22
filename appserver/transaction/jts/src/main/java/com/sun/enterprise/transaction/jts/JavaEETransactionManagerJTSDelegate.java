@@ -143,7 +143,7 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
     @Override
     public void commitDistributedTransaction() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
             SecurityException, IllegalStateException, SystemException {
-        logger.log(FINE, "TM: commit");
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.commitDistributedTransaction START");
 
         validateTransactionManager();
         TransactionManager transactionManager = transactionManagerLocal.get();
@@ -175,6 +175,7 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
                 javaEETMS.setTransactionCompeting(false);
             }
         }
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.commitDistributedTransaction END");
     }
 
     /**
@@ -182,7 +183,7 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
      */
     @Override
     public void rollbackDistributedTransaction() throws IllegalStateException, SecurityException, SystemException {
-        logger.log(FINE, "TM: rollback");
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.rollbackDistributedTransaction START");
         validateTransactionManager();
 
         TransactionManager transactionManager = transactionManagerLocal.get();
@@ -204,6 +205,7 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
         } finally {
             javaEETMS.monitorTxCompleted(obj, false);
         }
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.rollbackDistributedTransaction END");
     }
 
     @Override
@@ -219,7 +221,8 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
         }
 
         if (logger.isLoggable(FINE)) {
-            logger.log(FINE, "TM: status: " + JavaEETransactionManagerSimplified.getStatusAsString(status));
+            logger.log(FINE, "JavaEETransactionManagerJTSDelegate.getStatus, status="
+                    + JavaEETransactionManagerSimplified.getStatusAsString(status));
         }
 
         return status;
@@ -229,10 +232,15 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
     public Transaction getTransaction() throws SystemException {
         JavaEETransaction javaEETransaction = javaEETransactionManager.getCurrentTransaction();
         if (logger.isLoggable(FINE)) {
-            logger.log(FINE, "TM: getTransaction: tx=" + javaEETransaction + ", tm=" + transactionManagerLocal.get());
+            logger.log(FINE, "JavaEETransactionManagerJTSDelegate.getTransaction START: tx=" + javaEETransaction
+                    + ", tm=" + transactionManagerLocal.get());
         }
 
         if (javaEETransaction != null) {
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, "JavaEETransactionManagerJTSDelegate: getTransaction END (1): tx=" + javaEETransaction
+                        + ", tm=" + transactionManagerLocal.get());
+            }
             return javaEETransaction;
         }
 
@@ -244,13 +252,18 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
         }
 
         if (jtsTx == null) {
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, "JavaEETransactionManagerJTSDelegate.getTransaction END (2): tx=" + javaEETransaction
+                        + ", tm=" + transactionManagerLocal.get());
+            }
             return null;
         }
 
         // Check if this JTS Transaction was previously active in this JVM (possible for distributed loopbacks).
         javaEETransaction = (JavaEETransaction) globalTransactions.get(jtsTx);
         if (logger.isLoggable(FINE)) {
-            logger.log(FINE, "TM: getTransaction: tx=" + javaEETransaction + ", jtsTx=" + jtsTx);
+            logger.log(FINE, "JavaEETransactionManagerJTSDelegate.getTransaction: tx=" + javaEETransaction + ", jtsTx="
+                    + jtsTx);
         }
 
         if (javaEETransaction == null) {
@@ -259,6 +272,11 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
         }
 
         javaEETransactionManager.setCurrentTransaction(javaEETransaction); // associate tx with thread
+
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "JavaEETransactionManagerJTSDelegate.getTransaction END (3): tx=" + javaEETransaction
+                    + ", tm=" + transactionManagerLocal.get());
+        }
         return javaEETransaction;
     }
 
@@ -316,10 +334,12 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
 
     @Override
     public void setRollbackOnlyDistributedTransaction() throws IllegalStateException, SystemException {
-        logger.log(FINE, "TM: setRollbackOnly");
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.setRollbackOnlyDistributedTransaction START");
 
         validateTransactionManager();
         transactionManagerLocal.get().setRollbackOnly();
+
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.setRollbackOnlyDistributedTransaction END");
     }
 
     @Override
@@ -342,12 +362,14 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
 
     @Override
     public void resume(Transaction tx) throws InvalidTransactionException, IllegalStateException, SystemException {
-        logger.log(FINE, "TM: resume");
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.resume START, tx=" + tx);
 
         if (transactionManagerImpl != null) {
             setTransactionManager();
             transactionManagerLocal.get().resume(tx);
         }
+
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate.resume END, tx=" + tx);
     }
 
     @Override
@@ -423,7 +445,7 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
     }
 
     private Transaction suspendXA() throws SystemException {
-        logger.log(FINE, "TM: suspend");
+        logger.log(FINE, "JavaEETransactionManagerJTSDelegate: suspendXA");
 
         validateTransactionManager();
         return transactionManagerLocal.get().suspend();
@@ -437,7 +459,8 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
 
     private void setTransactionManager() {
         if (logger.isLoggable(FINE)) {
-            logger.log(FINE, "TM: setTransactionManager: tm=" + transactionManagerLocal.get());
+            logger.log(FINE,
+                    "JavaEETransactionManagerJTSDelegate: setTransactionManager: tm=" + transactionManagerLocal.get());
         }
 
         if (transactionManagerImpl == null) {
@@ -501,7 +524,7 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
                 if (value != null && "false".equals(value)) {
                     setUseLAO(false);
                     if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, "TM: LAO is disabled");
+                        logger.log(FINE, "JavaEETransactionManagerJTSDelegate: LAO is disabled");
                     }
                 }
 
@@ -522,7 +545,8 @@ public class JavaEETransactionManagerJTSDelegate implements JavaEETransactionMan
                     if (Boolean.parseBoolean(transactionService.getPropertyValue("delegated-recovery"))) {
                         // Register GMS notification callback
                         if (logger.isLoggable(FINE)) {
-                            logger.log(FINE, "TM: Registering for GMS notification callback");
+                            logger.log(FINE,
+                                    "JavaEETransactionManagerJTSDelegate: Registering for GMS notification callback");
                         }
 
                         int waitTime = 60;

@@ -646,7 +646,7 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
         // START OF IASRI 4660742
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE,
-                    "--In JavaEETransactionImpl.registerSynchronization, jtsTx=" + jtsTx + " nonXAResource=" + nonXAResource);
+                    "--In JavaEETransactionImpl.registerSynchronization START, jtsTx=" + jtsTx + ", nonXAResource=" + nonXAResource + ", sync=" + sync);
         }
         // END OF IASRI 4660742
 
@@ -655,6 +655,11 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
             jtsTx.registerSynchronization(sync);
         else
             syncs.add(sync);
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE,
+                    "--In JavaEETransactionImpl.registerSynchronization END, jtsTx=" + jtsTx + ", nonXAResource=" + nonXAResource + ", sync=" + sync);
+        }
     }
 
     public void setRollbackOnly() throws IllegalStateException, SystemException {

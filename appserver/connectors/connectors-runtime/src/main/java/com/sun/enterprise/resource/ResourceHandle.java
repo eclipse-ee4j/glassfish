@@ -359,7 +359,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "<ResourceHandle id=" + id + ", state=" + state + "/>";
     }
 
     public void setConnectionErrorOccurred() {

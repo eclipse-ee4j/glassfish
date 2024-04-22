@@ -62,4 +62,9 @@ public class PoolStatus {
     public PoolStatus(PoolInfo poolInfo) {
         this.poolInfo = poolInfo;
     }
+
+    @Override
+    public String toString() {
+        return "PoolStatus [poolInfo=" + poolInfo + ", numConnFree=" + numConnFree + ", numConnUsed=" + numConnUsed + "]";
+    }
 }

@@ -81,6 +81,9 @@ public class UnpooledResource extends ConnectionPool {
             throw ex;
         }
         handle.getResourceState().reset();
+
+        // TODO: document that all get(Unenlisted)Resource methods must return state busy resource
+        // TODO: rename variables, they currently have 2 or 3 names by default: handle, resource and resourceHandle
         setResourceStateToBusy(handle);
         return handle;
     }

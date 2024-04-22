@@ -30,7 +30,7 @@
     <packaging>pom</packaging>
 
     <name>CDI TCK Parent runner 4.0 for Weld (GlassFish)</name>
-    <description>Aggregates the three separate TCK runs for CDI Full, CDI Lang Model and TCK Signature</description>
+    <description>Aggregates the three separate TCK runs for CDI Full, CDI Lang Model and CDI Signature</description>
 
     <modules>
         <module>cdi-full</module>

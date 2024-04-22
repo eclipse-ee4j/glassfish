@@ -72,7 +72,6 @@
                             <artifactId>jakarta-restful-ws-tck</artifactId>
                             <version>${tck.rest.rest.version}</version>
                             <packaging>jar</packaging>
-                            <createChecksum>true</createChecksum>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>

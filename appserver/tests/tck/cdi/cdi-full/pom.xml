@@ -396,6 +396,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <reportsDirectories>${project.build.directory}/failsafe-reports/junitreports</reportsDirectories>
                     <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
                     <outputName>test-report</outputName>
                 </configuration>

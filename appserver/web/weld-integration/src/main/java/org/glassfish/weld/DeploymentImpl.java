@@ -321,8 +321,9 @@ public class DeploymentImpl implements CDI11Deployment {
      * @param beanClass The beanClass to get the BeanDeploymentArchive for.
      *
      * @return If the beanClass is in the archive represented by the BeanDeploymentArchive then return that BeanDeploymentArchive.
-     * Otherwise if the class loader of the beanClass matches the module class loader of any of the root BeanDeploymentArchives
-     * then return that root BeanDeploymentArchive.
+     * If the class is represented by more than one, than perform matching by classloader of the bean class
+     * to return the appropriate one. Otherwise if the class loader of the beanClass matches the module class
+     * loader of any of the root BeanDeploymentArchives then return that root BeanDeploymentArchive.
      * Otherwise return null.
      */
     @Override
@@ -331,16 +332,17 @@ public class DeploymentImpl implements CDI11Deployment {
             return null;
         }
 
+        ClassLoader classLoader = beanClass.getClassLoader();
+
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
             BeanDeploymentArchiveImpl beanDeploymentArchiveImpl = (BeanDeploymentArchiveImpl) beanDeploymentArchive;
-            if (beanDeploymentArchiveImpl.getKnownClasses().contains(beanClass.getName())) {
+            if (beanDeploymentArchiveImpl.getKnownClasses().contains(beanClass.getName()) &&
+                beanDeploymentArchiveImpl.getModuleClassLoaderForBDA().equals(classLoader)) {
                 return beanDeploymentArchive;
             }
         }
 
         // Find a root BeanDeploymentArchive
-        ClassLoader classLoader = beanClass.getClassLoader();
-
         RootBeanDeploymentArchive rootBda = findRootBda(classLoader, ejbRootBdas);
         if (rootBda == null) {
             rootBda = findRootBda(classLoader, warRootBdas);

@@ -266,7 +266,7 @@ public class ConnectionPoolTest {
                 null, null, null, false);
 
         // Keep track of resources and number of tasks executed
-        final Set<ResourceHandle> usedResouceHandles = Collections.synchronizedSet(new HashSet<>());
+        final Set<ResourceHandle> usedResourceHandles = Collections.synchronizedSet(new HashSet<>());
         AtomicInteger numberOfThreadsFinished = new AtomicInteger();
 
         // Make sure there are no resources in the pool before we start processing tasks
@@ -284,7 +284,7 @@ public class ConnectionPoolTest {
 
                 // Keep track of unique resources, we want to validate if resources are being reused
                 // which is the basic usage of the pool.
-                boolean isNewlyAdded = usedResouceHandles.add(resource);
+                boolean isNewlyAdded = usedResourceHandles.add(resource);
                 if (isNewlyAdded) {
                     // Adding should only be ok for the first 'maxConnectionPoolSize' number of tasks that start
                     LOG.log(Level.FINE, "Adding resource: {0}", resource);
@@ -309,22 +309,23 @@ public class ConnectionPoolTest {
         }
         runTheTasks(tasks);
 
-        // Pool should be filled to maximum pool size. Resources can be idle for "idle-timeout-in-seconds" (which is 789
-        // seconds) before they can be removed from the pool.
-        assertResourcesSize(maxConnectionPoolSize);
+        // Pool should be filled up to the maximum pool size. Resources can be idle for "idle-timeout-in-seconds" (which is 789
+        // seconds) before they can be removed from the pool. We cannot check against "maxConnectionPoolSize" value, on some
+        // systems the pool is never used to the maximum and we do not want to increase the taskCount to avoid long during unit tests.
+        assertResourcesSize(usedResourceHandles.size());
 
         cleanupConnectionPool();
 
-        // Just another proof that all 1000 threads finished.
+        // Just another proof that all threads finished.
         assertEquals(taskCount, numberOfThreadsFinished.get());
 
         // No new resources are being used, check the remaining ones for the state.
-        for (ResourceHandle resource : usedResouceHandles) {
+        for (ResourceHandle resource : usedResourceHandles) {
             assertResourceIsNotBusy(resource);
         }
 
         // Validate there are no more resources created, than the maximum pool size, because they should be reused
-        assertTrue(usedResouceHandles.size() <= maxConnectionPoolSize, "failed, size=" + usedResouceHandles.size());
+        assertTrue(usedResourceHandles.size() <= maxConnectionPoolSize, "failed, size=" + usedResourceHandles.size());
     }
 
     /**

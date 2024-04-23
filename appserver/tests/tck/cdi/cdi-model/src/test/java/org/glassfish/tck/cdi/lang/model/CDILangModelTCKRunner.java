@@ -18,19 +18,19 @@ package org.glassfish.tck.cdi.lang.model;
 import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
 
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.cdi.lang.model.tck.LangModelVerifier;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.tck.cdi.lang.model.LangModelVerifierBuildCompatibleExtension.langModelVerifierBuildCompatibleExtensionPassed;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(Arquillian.class)
+@ExtendWith(ArquillianExtension.class)
 public class CDILangModelTCKRunner {
 
     private static final System.Logger LOG = System.getLogger(CDILangModelTCKRunner.class.getName());

@@ -335,7 +335,7 @@
                 <version>${jakarta.annotation-api.version}</version>
             </dependency>
 
-            
+
 
             <!-- GlassFish Components -->
 
@@ -844,7 +844,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
-                        <rerunFailingTestsCount>3</rerunFailingTestsCount>
                         <environmentVariables>
                             <LANG>en</LANG>
                         </environmentVariables>
@@ -868,7 +867,6 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
-                        <rerunFailingTestsCount>3</rerunFailingTestsCount>
                         <environmentVariables>
                             <LANG>en</LANG>
                         </environmentVariables>

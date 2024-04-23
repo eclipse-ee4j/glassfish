@@ -140,7 +140,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <finalName>${project.build.finalName}</finalName>
-                        <glassfish.home>${session.executionRootDirectory}/target/glassfish7</glassfish.home>
+                        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.suspend>${suspend}</glassfish.suspend>
                     </systemPropertyVariables>

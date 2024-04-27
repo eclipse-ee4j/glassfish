@@ -41,6 +41,9 @@
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+        <glassfish.artifact.id>glassfish</glassfish.artifact.id>
+
+        <skip.surefire.report>true</skip.surefire.report>
     </properties>
 
     <dependencyManagement>
@@ -107,7 +110,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
-                                    <artifactId>${glassfish-artifact-id}</artifactId>
+                                    <artifactId>${glassfish.artifact.id}</artifactId>
                                     <version>${glassfish.version}</version>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
@@ -149,6 +152,7 @@
                 <configuration>
                     <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
                     <outputName>test-report</outputName>
+                    <skipSurefireReport>${skip.surefire.report}</skipSurefireReport>
                 </configuration>
             </plugin>
         </plugins>
@@ -156,19 +160,18 @@
 
     <profiles>
         <profile>
-            <id>full</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
-            </properties>
-        </profile>
-
-        <profile>
             <id>web</id>
             <properties>
-                <glassfish-artifact-id>web</glassfish-artifact-id>
+                <glassfish.artifact.id>web</glassfish.artifact.id>
+            </properties>
+        </profile>
+        <profile>
+            <id>report</id>
+            <activation>
+                <jdk>[11,18)</jdk>
+            </activation>
+            <properties>
+                <skip.surefire.report>false</skip.surefire.report>
             </properties>
         </profile>
     </profiles>

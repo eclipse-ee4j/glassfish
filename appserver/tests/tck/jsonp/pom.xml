@@ -150,13 +150,17 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+                    <linkXRef>false</linkXRef>
                     <outputName>test-report</outputName>
                     <skipSurefireReport>${skip.surefire.report}</skipSurefireReport>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+    </reporting>
 
     <profiles>
         <profile>

@@ -88,9 +88,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.7</version>
+            <version>2.2</version>
         </dependency>
     </dependencies>
 

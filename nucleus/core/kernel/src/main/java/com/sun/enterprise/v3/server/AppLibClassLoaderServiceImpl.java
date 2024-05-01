@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.v3.server;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -25,9 +26,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -78,7 +77,7 @@ public class AppLibClassLoaderServiceImpl {
         }
 
         final ClassLoader commonCL = commonCLS.getCommonClassLoader();
-        PrivilegedAction<DelegatingClassLoader> action = () -> new DelegatingClassLoader(commonCL);
+        PrivilegedAction<DelegatingClassLoader> action = () -> new AppLibClassLoader(commonCL);
         DelegatingClassLoader applibCL = AccessController.doPrivileged(action);
 
         // order of classfinders is important here :
@@ -119,6 +118,22 @@ public class AppLibClassLoaderServiceImpl {
         });
         addDelegates(libURIs, appLibClassFinder);
         return (DelegatingClassLoader.ClassFinder)appLibClassFinder;
+    }
+
+    private static class AppLibClassLoader extends DelegatingClassLoader implements Closeable {
+
+        public AppLibClassLoader(ClassLoader parent) {
+            super(parent);
+        }
+
+        @Override
+        public void close() throws IOException {
+            for (ClassFinder classFinder : getDelegates()) {
+                if (classFinder instanceof URLClassFinder) {
+                    ((GlassfishUrlClassLoader) classFinder).close();
+                }
+            }
+        }
     }
 
     private static class URLClassFinder extends GlassfishUrlClassLoader

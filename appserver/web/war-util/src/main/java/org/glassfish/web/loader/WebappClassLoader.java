@@ -24,6 +24,7 @@ import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FilePermission;
 import java.io.IOException;
@@ -1188,6 +1189,17 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     public void preDestroy() {
         LOG.log(TRACE, "preDestroy()");
+
+        // Close deployment time libraries.
+        ClassLoader parent = getParent();
+        if (parent instanceof Closeable) {
+            try {
+                ((Closeable) parent).close();
+            } catch (IOException e) {
+                LOG.log(ERROR, "There were issues with closing deploy time libraries", e);
+            }
+        }
+
         try {
             close();
         } catch (Exception e) {

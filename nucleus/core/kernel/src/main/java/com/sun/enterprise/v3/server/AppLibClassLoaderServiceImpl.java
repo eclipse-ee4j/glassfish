@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,8 +64,6 @@ public class AppLibClassLoaderServiceImpl {
     @Inject
     CommonClassLoaderServiceImpl commonCLS;
 
-    private final Map<URI, DelegatingClassLoader.ClassFinder> classFinderRegistry = new HashMap<>();
-
     /**
      * @see org.glassfish.internal.api.ClassLoaderHierarchy#getAppLibClassLoader(String, List<URI>)
      */
@@ -102,14 +100,8 @@ public class AppLibClassLoaderServiceImpl {
 
         ClassLoader commonCL = commonCLS.getCommonClassLoader();
         for (URI libURI : libURIs) {
-            synchronized (this) {
-                DelegatingClassLoader.ClassFinder libCF = classFinderRegistry.get(libURI);
-                if (libCF == null) {
-                    libCF = new URLClassFinder(new URL[]{libURI.toURL()}, commonCL);
-                    classFinderRegistry.put(libURI, libCF);
-                }
-                holder.addDelegate(libCF);
-            }
+            DelegatingClassLoader.ClassFinder libCF = new URLClassFinder(new URL[]{libURI.toURL()}, commonCL);
+            holder.addDelegate(libCF);
         }
     }
 

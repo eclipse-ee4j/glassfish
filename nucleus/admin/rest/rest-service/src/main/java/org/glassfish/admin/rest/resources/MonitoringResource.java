@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -162,7 +162,10 @@ public class MonitoringResource {
                 if (isRunningOnDAS) { //Attempt to forward to instance if running on Das
                     //TODO validate that firstPathElement corresponds to a valid server name
 
-                    // Jersey client is not accessible from the current context classloader, which is kernel OSGi bundle CL
+                    /* Jersey client is not accessible from the current context classloader,
+                        which is kernel OSGi bundle CL. We need to run it within the common classloader as
+                        the context classloader
+                    */
                     Properties proxiedResponse = Utility.runWithContextClassLoader(serverContext.getCommonClassLoader(),
                             () -> {
                                 return new MonitoringProxyImpl()

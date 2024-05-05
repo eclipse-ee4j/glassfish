@@ -67,6 +67,8 @@ import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
+import org.glassfish.api.deployment.OpsParams;
+
 /**
  * Implementation of the ArchiveHandler for war files.
  *
@@ -125,7 +127,8 @@ public class WarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(parent);
+        String appName = context.getCommandParameters(OpsParams.class).name();
+        PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(parent, appName);
         WebappClassLoader cloader = AccessController.doPrivileged(action);
         try {
             WebDirContext webDirContext = new WebDirContext();

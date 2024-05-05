@@ -166,6 +166,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     /** The list of not found resources to avoid slow repeated searches. */
     private final Set<String> notFoundResources = ConcurrentHashMap.newKeySet();
 
+    /* Name of the application this class loader is for */
+    private String webappName;
 
     /** Associated directory context giving access to the resources in this webapp. */
     private DirContext jndiResources;
@@ -267,7 +269,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * but no defined repositories.
      */
     public WebappClassLoader(ClassLoader parent) {
+        this(parent, "unknown");
+    }
+
+    public WebappClassLoader(ClassLoader parent, String webappName) {
         super(new URL[0], parent);
+        this.webappName = webappName;
         this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
         if (SECURITY_MANAGER != null) {
@@ -1131,7 +1138,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         if (status == LifeCycleStatus.CLOSED) {
             return;
         }
-        LOG.log(INFO, "close(), this:\n{0}", this);
+        LOG.log(INFO, () -> "close(), " + this.getClass().getSimpleName()
+                + " classloader for application: " + webappName);
+        LOG.log(DEBUG, () -> "close(), this:\n" + this);
 
         cleaner.clearReferences(clearReferencesStatic ? resourceEntryCache.values() : null);
         status = LifeCycleStatus.CLOSED;
@@ -1171,7 +1180,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public String toString() {
         StringBuilder sb = new StringBuilder(4096);
         sb.append(super.toString());
-        sb.append("[delegate=").append(delegate);
+        sb.append("[webAppName=").append(webappName);
+        sb.append(", delegate=").append(delegate);
         sb.append(", context=").append(contextName);
         sb.append(", status=").append(status);
         sb.append(", antiJARLocking=").append(antiJARLocking);

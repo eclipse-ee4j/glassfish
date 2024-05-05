@@ -29,25 +29,6 @@ import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
 import static jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST;
 
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
-import org.glassfish.epicyro.services.BaseAuthenticationService;
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
@@ -90,6 +71,22 @@ import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.ws.WebServiceException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
+import org.glassfish.epicyro.services.BaseAuthenticationService;
+import org.glassfish.internal.api.Globals;
 
 public class SoapAuthenticationService extends BaseAuthenticationService {
 

@@ -99,11 +99,11 @@
         <!-- APIs -->
         <jakarta.security-api.version>4.0.0-M2</jakarta.security-api.version>
         <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
+        <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <!-- Implementations -->
         <soteria.version>4.0.0-M3</soteria.version>
         <exousia.version>3.0.0-M3</exousia.version>
-        <epicyro.version>3.1.0-M2</epicyro.version>
+        <epicyro.version>3.1.0</epicyro.version>
         <!-- Dependencies -->
         <nimbus.version>9.38-rc3</nimbus.version>
         <jcip.version>1.0.2</jcip.version>

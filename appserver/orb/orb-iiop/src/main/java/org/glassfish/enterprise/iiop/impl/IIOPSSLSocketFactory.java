@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -287,13 +287,14 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
     public Socket createSocket(String type, InetSocketAddress inetSocketAddress)
             throws IOException {
 
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "createSocket(" + type + ", " + inetSocketAddress + ")");
+        }
+
         try {
-            String host = inetSocketAddress.getHostName();
             int port = inetSocketAddress.getPort();
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "createSocket(" + type + ", " + host + ", " +port + ")");
-            }
             if (type.equals(SSL) || type.equals(SSL_MUTUALAUTH)) {
+                String host = inetSocketAddress.getHostName();
                 return createSSLSocket(host, port);
             } else {
                 Socket socket = null;
@@ -306,7 +307,8 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                     SocketChannel socketChannel = ORBUtility.openSocketChannel(inetSocketAddress);
                     socket = socketChannel.socket();
                 } else {
-                    socket = new Socket(inetSocketAddress.getHostName(), inetSocketAddress.getPort());
+                    String host = inetSocketAddress.getHostName();
+                    socket = new Socket(host, port);
                 }
 
                 // Disable Nagle's algorithm (i.e. always send immediately).

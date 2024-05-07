@@ -61,6 +61,6 @@
         <module>troubleshooting-guide</module>
         <module>upgrade-guide</module>
         <module>distribution</module>
-        <module>EclipseGlassFishHelloSample</module>
+        <module>sample-app</module>
     </modules>
 </project>

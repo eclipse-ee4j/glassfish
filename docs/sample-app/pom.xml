@@ -22,7 +22,7 @@
         <version>7.0.15-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.main.docs</groupId>
-    <artifactId>EclipseGlassFishHelloSample</artifactId>
+    <artifactId>sample-app</artifactId>
     <version>7.0.15-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Eclipse GlassFish Hello Sample, Release 7</name>
@@ -69,31 +69,6 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>jakarta.platform</groupId>
-                                    <artifactId>jakarta.jakartaee-api</artifactId>
-                                    <version>${jakartaee}</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

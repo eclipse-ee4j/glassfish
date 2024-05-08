@@ -167,7 +167,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.glassfish.main.docs</groupId>
-                                    <artifactId>EclipseGlassFishHelloSample</artifactId>
+                                    <artifactId>sample-app</artifactId>
                                     <type>war</type>
                                     <version>${project.version}</version>
                                     <outputDirectory>${site.output.dir}/downloads/quickstart</outputDirectory>

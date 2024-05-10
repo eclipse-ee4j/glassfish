@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,14 +41,28 @@ public class LogCollectorHandler extends Handler {
     private final Logger logger;
 
     /**
+     * Creates a {@link LogRecord} collector handler with the capacity of 100 records and maximal
+     * wait time 5 seconds.
+     *
      * @param loggerToFollow this handler will be added to this logger.
+     * @see LogRecordBuffer
      */
     public LogCollectorHandler(final Logger loggerToFollow) {
-        buffer = new LogRecordBuffer(100, 5);
+        this(loggerToFollow, 100, 5);
+    }
+
+    /**
+     * @param loggerToFollow this handler will be added to this logger.
+     * @param capacity capacity of the buffer.
+     * @param maxWait maximal time in seconds to wait for the free capacity. If &lt; 1, can wait
+     *            forever.
+     * @see LogRecordBuffer
+     */
+    public LogCollectorHandler(final Logger loggerToFollow, int capacity, int maxWait) {
+        buffer = new LogRecordBuffer(capacity, maxWait);
         logger = loggerToFollow;
         logger.addHandler(this);
     }
-
 
     @Override
     public void publish(LogRecord record) {

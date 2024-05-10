@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,8 @@ import java.util.stream.Stream;
 
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
+import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.KEY_CLASS_AND_METHOD_DETECTION_ENABLED;
+import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.KEY_FORMATTER_PRINT_SOURCE_SUFFIX;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.KEY_TRACING_ENABLED;
 
 /**
@@ -39,6 +41,7 @@ public class GlassFishLogManagerConfiguration implements Serializable, Cloneable
     private static final long serialVersionUID = 1L;
     private final LoggingProperties properties;
     private final boolean tracingEnabled;
+    private final boolean classAndMethodDetectionEnabled;
 
     /**
      * @param properties configuration to clone
@@ -46,6 +49,7 @@ public class GlassFishLogManagerConfiguration implements Serializable, Cloneable
     public GlassFishLogManagerConfiguration(final LoggingProperties properties) {
         this.properties = properties.clone();
         this.tracingEnabled = Boolean.parseBoolean(this.properties.getProperty(KEY_TRACING_ENABLED));
+        this.classAndMethodDetectionEnabled = resolveClassAndMethodDetectionEnabled(this.properties);
     }
 
 
@@ -92,6 +96,24 @@ public class GlassFishLogManagerConfiguration implements Serializable, Cloneable
 
 
     /**
+     * If {@link GlassFishLoggingConstants#KEY_CLASS_AND_METHOD_DETECTION_ENABLED} is set to true,
+     * GJULE will detect the caller class and method from stacktrace,
+     * which is quite expensive operation affecting logging throughput.
+     * <p>
+     * If it is set to null, GJULE will not perform such detection.
+     * <p>
+     * If the property is not set, GJULE makes the decision based on known handlers
+     * (<code>*.printSource</code> value) - if any handler requires this feature, it is enabled.
+     * It is disabled otherwise or you can forcibly enable it by setting the value to true or false.
+     *
+     * @return true if handlers can use source class and method in formatters.
+     */
+    public boolean isClassAndMethodDetectionEnabled() {
+        return classAndMethodDetectionEnabled;
+    }
+
+
+    /**
      * Creates clone of this instance.
      */
     @Override
@@ -133,6 +155,21 @@ public class GlassFishLogManagerConfiguration implements Serializable, Cloneable
      */
     public static GlassFishLogManagerConfiguration parse(final InputStream inputStream) throws IOException {
         return new GlassFishLogManagerConfiguration(LoggingProperties.loadFrom(inputStream));
+    }
+
+
+    private static boolean resolveClassAndMethodDetectionEnabled(final LoggingProperties properties) {
+        String value = properties.getProperty(KEY_CLASS_AND_METHOD_DETECTION_ENABLED);
+        if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
+            return true;
+        }
+        if (Boolean.FALSE.toString().equalsIgnoreCase(value)) {
+            return false;
+        }
+        return properties.stringPropertyNames().stream()
+            .filter(name -> name.endsWith(KEY_FORMATTER_PRINT_SOURCE_SUFFIX))
+            .anyMatch(name -> properties.getProperty(name, Boolean.FALSE.toString())
+                .equalsIgnoreCase(Boolean.TRUE.toString()));
     }
 
 

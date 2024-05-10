@@ -157,7 +157,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setResourceBundle(getResourceBundle());
         record.setResourceBundleName(getResourceBundleName());
@@ -171,7 +171,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get());
+        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get(), isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         logOrQueue(record, status);
     }
@@ -189,7 +189,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setResourceBundle(getResourceBundle());
         record.setResourceBundleName(getResourceBundleName());
@@ -204,7 +204,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setResourceBundle(getResourceBundle());
         record.setResourceBundleName(getResourceBundleName());
@@ -219,7 +219,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get());
+        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get(), isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setThrown(thrown);
         logOrQueue(record, status);
@@ -337,7 +337,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         if (params != null && params.length != 0) {
             record.setParameters(params);
@@ -431,6 +431,12 @@ public class GlassFishLogger extends Logger {
 
     private boolean isToQueue(final GlassFishLoggingStatus status) {
         return status == GlassFishLoggingStatus.UNCONFIGURED || status == GlassFishLoggingStatus.CONFIGURING;
+    }
+
+
+    private boolean isClassAndMethodDetectionEnabled() {
+        final GlassFishLogManager manager = GlassFishLogManager.getLogManager();
+        return manager == null ? false : manager.getConfiguration().isClassAndMethodDetectionEnabled();
     }
 
 

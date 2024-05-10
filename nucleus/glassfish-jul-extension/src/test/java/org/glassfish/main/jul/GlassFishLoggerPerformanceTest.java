@@ -47,36 +47,37 @@ public class GlassFishLoggerPerformanceTest {
     private static final Logger LOG = System.getLogger(GlassFishLoggerPerformanceTest.class.getName());
     private static final int COUNT_OF_RECORDS = 100_000;
     private static final Random RND = new Random(System.currentTimeMillis());
+    private static final java.util.logging.Logger JUL_LOGGER = java.util.logging.Logger.getLogger(LOG.getName());
 
     private static LogCollectorHandler collector;
     private long start;
 
     @BeforeAll
     static void collect() {
-        java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LOG.getName());
-        logger.setUseParentHandlers(false);
-        logger.setLevel(Level.INFO);
-        collector = new LogCollectorHandler(logger, COUNT_OF_RECORDS, 10);
+        JUL_LOGGER.setUseParentHandlers(false);
+        JUL_LOGGER.setLevel(Level.INFO);
+        collector = new LogCollectorHandler(JUL_LOGGER, COUNT_OF_RECORDS, 10);
     }
 
 
     @BeforeEach
-    void saveTime(TestInfo info) {
-        System.out.println("Starting test: " + info.getTestMethod().get().getName());
+    void saveTime() {
         start = System.currentTimeMillis();
     }
 
 
     @AfterEach
-    void resetCollector(TestInfo info) {
+    void logAndReset(TestInfo info) {
         System.out
             .println(info.getTestMethod().get().getName() + " time: " + (System.currentTimeMillis() - start) + " ms");
-        List<GlassFishLogRecord> records = collector.getAll();
-        assertThat(records, hasSize(COUNT_OF_RECORDS));
+        final List<GlassFishLogRecord> records = collector.getAll();
+        final int expectedRecords = LOG.isLoggable(INFO) ? COUNT_OF_RECORDS : 0;
+        assertThat(records, hasSize(expectedRecords));
         for (LogRecord record : records) {
             assertThat("message", record.getMessage(), startsWith("Ororok orebuh, random: "));
         }
         collector.reset();
+        JUL_LOGGER.setLevel(Level.INFO);
     }
 
 
@@ -117,7 +118,29 @@ public class GlassFishLoggerPerformanceTest {
 
 
     @RepeatedTest(value = 5)
+    @Timeout(value = 50, unit = TimeUnit.MILLISECONDS)
+    void testSupplierWithConcatWithLevelOff() throws Exception {
+        JUL_LOGGER.setLevel(Level.OFF);
+        int i = 0;
+        while (i++ < COUNT_OF_RECORDS) {
+            LOG.log(INFO, () -> "Ororok orebuh, random: " + RND.nextInt());
+        }
+    }
+
+
+    @RepeatedTest(value = 5)
     void testMessageFormatter() throws Exception {
+        int i = 0;
+        while (i++ < COUNT_OF_RECORDS) {
+            LOG.log(INFO, "Ororok orebuh, random: {0}", RND.nextInt());
+        }
+    }
+
+
+    @RepeatedTest(value = 5)
+    @Timeout(value = 50, unit = TimeUnit.MILLISECONDS)
+    void testMessageFormatterWithLevelOff() throws Exception {
+        JUL_LOGGER.setLevel(Level.OFF);
         int i = 0;
         while (i++ < COUNT_OF_RECORDS) {
             LOG.log(INFO, "Ororok orebuh, random: {0}", RND.nextInt());

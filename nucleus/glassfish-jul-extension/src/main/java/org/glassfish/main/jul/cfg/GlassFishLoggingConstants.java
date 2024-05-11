@@ -72,11 +72,12 @@ public class GlassFishLoggingConstants {
      * If this key is set to true, GJULE will detect the caller class and method from stacktrace,
      * which is quite expensive operation affecting logging throughput.
      * <p>
-     * If it is set to null, GJULE will not perform such detection.
+     * If it is set to false, GJULE will not perform such detection.
      * <p>
-     * If the property is not set, GJULE makes the decision based on known handlers
-     * (<code>*.printSource</code> value) - if any handler requires this feature, it is enabled.
-     * It is disabled otherwise or you can forcibly enable it by setting the value to true or false.
+     * If the property is not set, GJULE makes the decision based on the (<code>*.printSource</code>
+     * property) - if any formatter requires this feature, the feature is enabled.
+     * <p>
+     * It is disabled otherwise.
      */
     public static final String KEY_CLASS_AND_METHOD_DETECTION_ENABLED = "org.glassfish.main.jul.classAndMethodDetection.enabled";
     /**

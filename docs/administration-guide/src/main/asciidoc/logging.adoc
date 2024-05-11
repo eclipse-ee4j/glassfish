@@ -271,6 +271,22 @@ If you edit `logging.properties` manually on an instance managed by the node, it
 overwritten on the next synchronization with DAS.
 ====
 
+[[log-records]]
+
+=== Log Records
+
+Because the automatic detection of caller class and method from stacktrace significantly affects
+performance of the logging system, we added the `org.glassfish.main.jul.classAndMethodDetection.enabled`
+property which affects the `*.printSource` property of formatters.
+
+* If this key is set to true, GJULE will detect the caller class and method from stacktrace,
+which is quite expensive operation affecting logging throughput.
+* If it is set to false, GJULE will not perform such detection. Formatters which use `getSourceClassName`
+or `getSourceMethodName` of the record will receive `null` unless the log record has set these values explicitly.
+* If the property is not set, GJULE makes the decision based on the (`*.printSource` property) - if
+any formatter requires this feature, the feature is enabled. Note that the `*.printSource` property
+must be explicitly set to true in `logging.properties`.
+* It is disabled otherwise.
 
 [[loggers]]
 

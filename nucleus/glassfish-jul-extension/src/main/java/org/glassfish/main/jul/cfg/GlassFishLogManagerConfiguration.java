@@ -100,13 +100,14 @@ public class GlassFishLogManagerConfiguration implements Serializable, Cloneable
      * GJULE will detect the caller class and method from stacktrace,
      * which is quite expensive operation affecting logging throughput.
      * <p>
-     * If it is set to null, GJULE will not perform such detection.
+     * If it is set to false, GJULE will not perform such detection.
      * <p>
-     * If the property is not set, GJULE makes the decision based on known handlers
-     * (<code>*.printSource</code> value) - if any handler requires this feature, it is enabled.
-     * It is disabled otherwise or you can forcibly enable it by setting the value to true or false.
+     * If the property is not set, GJULE makes the decision based on the(<code>*.printSource</code>
+     * property) - if any formatter requires this feature, the feature is enabled.
+     * <p>
+     * It is disabled otherwise.
      *
-     * @return true if handlers can use source class and method in formatters.
+     * @return true if formatters can use autodetected source class and method in formatters.
      */
     public boolean isClassAndMethodDetectionEnabled() {
         return classAndMethodDetectionEnabled;

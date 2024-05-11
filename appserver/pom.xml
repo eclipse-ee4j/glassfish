@@ -81,8 +81,8 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.1.0-M2</jakarta.faces-api.version>
-        <mojarra.version>4.1.0-M2</mojarra.version>
+        <jakarta.faces-api.version>4.1.0</jakarta.faces-api.version>
+        <mojarra.version>4.1.0</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.2.0</jakarta.websocket-api.version>
@@ -97,15 +97,15 @@
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
-        <jakarta.security-api.version>4.0.0-M2</jakarta.security-api.version>
+        <jakarta.security-api.version>4.0.0</jakarta.security-api.version>
         <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <!-- Implementations -->
-        <soteria.version>4.0.0-M3</soteria.version>
+        <soteria.version>4.0.0</soteria.version>
         <exousia.version>3.0.0-M3</exousia.version>
         <epicyro.version>3.1.0</epicyro.version>
         <!-- Dependencies -->
-        <nimbus.version>9.38-rc4</nimbus.version>
+        <nimbus.version>9.38</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -280,7 +280,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
-                <artifactId>jakarta.security.enterprise</artifactId>
+                <artifactId>soteria</artifactId>
                 <version>${soteria.version}</version>
             </dependency>
             <dependency>

@@ -244,7 +244,8 @@
 <li><a href="#logger-levels">Logger Levels</a></li>
 </ul>
 </li>
-<li><a href="#configuring">Configuring the Logging Service</a>
+<li><a href="#configuring">Configuring the Logging Service</a></li>
+<li><a href="#log-records">Log Records</a>
 <ul class="sectlevel3">
 <li><a href="#loggers">Loggers</a></li>
 <li><a href="#handlers">Handlers</a></li>
@@ -11329,6 +11330,34 @@ overwritten on the next synchronization with DAS.</p>
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="log-records"><a class="anchor" href="#log-records"></a>Log Records</h3>
+<div class="paragraph">
+<p>Because the automatic detection of caller class and method from stacktrace significantly affects
+performance of the logging system, we added the <code>org.glassfish.main.jul.classAndMethodDetection.enabled</code>
+property which affects the <code>*.printSource</code> property of formatters.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If this key is set to true, GJULE will detect the caller class and method from stacktrace,
+which is quite expensive operation affecting logging throughput.</p>
+</li>
+<li>
+<p>If it is set to false, GJULE will not perform such detection. Formatters which use <code>getSourceClassName</code>
+or <code>getSourceMethodName</code> of the record will receive <code>null</code> unless the log record has set these values explicitly.</p>
+</li>
+<li>
+<p>If the property is not set, GJULE makes the decision based on the (<code><strong>.printSource</code> property) - if
+any formatter requires this feature, the feature is enabled. Note that the <code></strong>.printSource</code> property
+must be explicitly set to true in <code>logging.properties</code>.</p>
+</li>
+<li>
+<p>It is disabled otherwise.</p>
+</li>
+</ul>
 </div>
 <div class="sect3">
 <h4 id="loggers"><a class="anchor" href="#loggers"></a>Loggers</h4>
@@ -32542,7 +32571,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-07 08:48:56 UTC
+Last updated 2024-05-12 08:08:35 UTC
 </div>
 </div>
 </body>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.time.temporal.ChronoField.NANO_OF_SECOND;
 import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
+import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.KEY_FORMATTER_PRINT_SOURCE_SUFFIX;
 import static org.glassfish.main.jul.formatter.GlassFishLogFormatter.GlassFishLogFormatterProperty.PRINT_SEQUENCE_NUMBER;
 import static org.glassfish.main.jul.formatter.GlassFishLogFormatter.GlassFishLogFormatterProperty.PRINT_SOURCE;
 import static org.glassfish.main.jul.formatter.GlassFishLogFormatter.GlassFishLogFormatterProperty.TIMESTAMP_FORMAT;
@@ -249,7 +250,7 @@ public abstract class GlassFishLogFormatter extends Formatter {
          * Enable printing the source class and method of the LogRecord.
          * See {@link LogRecord#getSourceClassName()} and {@link LogRecord#getSourceMethodName()}
          */
-        PRINT_SOURCE("printSource"),
+        PRINT_SOURCE(KEY_FORMATTER_PRINT_SOURCE_SUFFIX),
         ;
 
         private final String propertyName;

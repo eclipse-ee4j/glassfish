@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.main.jul.cfg;
 
+import java.util.logging.LogRecord;
 
 /**
  * Constants used to configure the Java Util Logging.
@@ -66,6 +67,24 @@ public class GlassFishLoggingConstants {
 
     /** If this key is set to true, GJULE will print really detailed tracing info to the standard output */
     public static final String KEY_TRACING_ENABLED = "org.glassfish.main.jul.tracing.enabled";
+
+    /**
+     * If this key is set to true, GJULE will detect the caller class and method from stacktrace,
+     * which is quite expensive operation affecting logging throughput.
+     * <p>
+     * If it is set to false, GJULE will not perform such detection.
+     * <p>
+     * If the property is not set, GJULE makes the decision based on the (<code>*.printSource</code>
+     * property) - if any formatter requires this feature, the feature is enabled.
+     * <p>
+     * It is disabled otherwise.
+     */
+    public static final String KEY_CLASS_AND_METHOD_DETECTION_ENABLED = "org.glassfish.main.jul.classAndMethodDetection.enabled";
+    /**
+     * Enable printing the source class and method of the LogRecord.
+     * See {@link LogRecord#getSourceClassName()} and {@link LogRecord#getSourceMethodName()}
+     */
+    public static final String KEY_FORMATTER_PRINT_SOURCE_SUFFIX = "printSource";
 
     /** 1 000 000 */
     public static final long BYTES_PER_MEGABYTES = 1_000_000;

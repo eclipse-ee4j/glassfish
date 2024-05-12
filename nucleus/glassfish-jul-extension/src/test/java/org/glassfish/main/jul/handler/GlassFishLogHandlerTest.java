@@ -133,7 +133,7 @@ public class GlassFishLogHandlerTest {
     @Order(30)
     public void roll() throws Exception {
         assertTrue(handler.isReady(), "handler.ready");
-        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File one, record one"));
+        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File one, record one", false));
         // pump is now to play
         Thread.sleep(MILLIS_FOR_PUMP);
         assertAll(
@@ -155,18 +155,18 @@ public class GlassFishLogHandlerTest {
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
             () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
                 contains(
-                    stringContainsInOrder("INFO", "main", "roll Archived file:", "if null, action failed.")
+                    stringContainsInOrder("INFO", "main", "Archived file:", "if null, action failed.")
                 )
             )
         );
-        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two"));
+        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two", false));
         Thread.sleep(MILLIS_FOR_PUMP);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
             () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
                 contains(
-                    stringContainsInOrder("INFO", "main", "roll Archived file:", "if null, action failed."),
+                    stringContainsInOrder("INFO", "main", "Archived file:", "if null, action failed."),
                     stringContainsInOrder("SEVERE", "main", "File two, line two")
                 )
             )

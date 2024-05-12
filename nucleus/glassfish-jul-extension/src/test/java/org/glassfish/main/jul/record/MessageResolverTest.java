@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,7 +34,7 @@ public class MessageResolverTest {
     @Test
     public void testResolve() {
         final GlassFishLogRecord originalRecord = new GlassFishLogRecord(Level.INFO,
-            "This number {0,number,#} is greater than this one {1,number,#}");
+            "This number {0,number,#} is greater than this one {1,number,#}", false);
         originalRecord.setParameters(new Object[] {50L, 33L});
         final GlassFishLogRecord record = resolver.resolve(originalRecord);
         assertAll(() -> assertNull(record.getMessageKey()),

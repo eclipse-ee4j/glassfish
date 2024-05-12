@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,16 +41,6 @@ public class GlassFishLogRecord extends LogRecord {
     private final LogRecord record;
     private final String threadName;
     private String messageKey;
-
-    /**
-     * Creates new record. Source class and method will be autodetected.
-     *
-     * @param level
-     * @param message
-     */
-    public GlassFishLogRecord(final Level level, final String message) {
-        this(new LogRecord(level, message), true);
-    }
 
 
     /**
@@ -298,23 +288,21 @@ public class GlassFishLogRecord extends LogRecord {
     }
 
 
-    private boolean detectClassAndMethod(final LogRecord wrappedRecord) {
-        final StackTraceElement[] stack = new Throwable().getStackTrace();
-        boolean found = false;
+    private void detectClassAndMethod(final LogRecord wrappedRecord) {
+        final StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+        boolean ignoredClass = false;
         for (final StackTraceElement element : stack) {
             final String className = element.getClassName();
-            if (!found) {
-                found = isIgnoredStackTraceElement(className);
+            if (!ignoredClass) {
+                ignoredClass = isIgnoredStackTraceElement(className);
                 continue;
             }
             if (!isIgnoredStackTraceElement(className)) {
                 wrappedRecord.setSourceClassName(className);
                 wrappedRecord.setSourceMethodName(element.getMethodName());
-                return true;
+                return;
             }
         }
-        // don't try it again.
-        return true;
     }
 
 

@@ -1170,6 +1170,11 @@
             <artifactId>soteria</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>

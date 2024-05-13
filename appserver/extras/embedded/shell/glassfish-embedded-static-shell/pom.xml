@@ -1132,6 +1132,11 @@
             <artifactId>parsson</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <optional>true</optional>
+        </dependency>
 
        <!-- glassfish-jersey -->
         <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->

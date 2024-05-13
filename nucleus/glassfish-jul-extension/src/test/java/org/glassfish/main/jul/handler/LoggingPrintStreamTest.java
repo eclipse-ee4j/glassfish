@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -98,7 +98,7 @@ public class LoggingPrintStreamTest {
             () -> assertEquals(1L, record.getThreadID()),
             () -> assertEquals(Thread.currentThread().getName(), record.getThreadName()),
             () -> assertSame(exception, record.getThrown()),
-            () -> assertEquals("testPrintStacktrace", record.getSourceMethodName())
+            () -> assertNull(record.getSourceMethodName())
         );
     }
 

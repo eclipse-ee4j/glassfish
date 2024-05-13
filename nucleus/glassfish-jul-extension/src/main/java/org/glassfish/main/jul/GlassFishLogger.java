@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -157,7 +157,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setResourceBundle(getResourceBundle());
         record.setResourceBundleName(getResourceBundleName());
@@ -171,7 +171,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get());
+        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get(), isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         logOrQueue(record, status);
     }
@@ -189,7 +189,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setResourceBundle(getResourceBundle());
         record.setResourceBundleName(getResourceBundleName());
@@ -204,7 +204,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msg);
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setResourceBundle(getResourceBundle());
         record.setResourceBundleName(getResourceBundleName());
@@ -219,7 +219,7 @@ public class GlassFishLogger extends Logger {
         if (!isProcessible(level, status)) {
             return;
         }
-        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get());
+        final LogRecord record = new GlassFishLogRecord(level, msgSupplier.get(), isClassAndMethodDetectionEnabled());
         record.setLoggerName(getName());
         record.setThrown(thrown);
         logOrQueue(record, status);
@@ -332,6 +332,25 @@ public class GlassFishLogger extends Logger {
 
 
     @Override
+    public void logrb(Level level, ResourceBundle bundle, String msg, Object... params) {
+        final GlassFishLoggingStatus status = getLoggingStatus();
+        if (!isProcessible(level, status)) {
+            return;
+        }
+        final LogRecord record = new GlassFishLogRecord(level, msg, isClassAndMethodDetectionEnabled());
+        record.setLoggerName(getName());
+        if (params != null && params.length != 0) {
+            record.setParameters(params);
+        }
+        if (bundle != null) {
+            record.setResourceBundleName(bundle.getBaseBundleName());
+            record.setResourceBundle(bundle);
+        }
+        logOrQueue(record, status);
+    }
+
+
+    @Override
     public void entering(final String sourceClass, final String sourceMethod, final Object[] params) {
         final GlassFishLoggingStatus status = getLoggingStatus();
         if (!isProcessible(Level.FINER, status)) {
@@ -412,6 +431,12 @@ public class GlassFishLogger extends Logger {
 
     private boolean isToQueue(final GlassFishLoggingStatus status) {
         return status == GlassFishLoggingStatus.UNCONFIGURED || status == GlassFishLoggingStatus.CONFIGURING;
+    }
+
+
+    private boolean isClassAndMethodDetectionEnabled() {
+        final GlassFishLogManager manager = GlassFishLogManager.getLogManager();
+        return manager == null ? false : manager.getConfiguration().isClassAndMethodDetectionEnabled();
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,7 +45,7 @@ public class GlassFishLogRecordTest {
      */
     @Test
     void nullParameters() throws Exception {
-        final GlassFishLogRecord record = new GlassFishLogRecord(Level.ALL, null);
+        final GlassFishLogRecord record = new GlassFishLogRecord(Level.ALL, null, false);
         record.setLevel(Level.INFO);
         record.setMessage(null);
         record.setLoggerName(null);
@@ -63,7 +63,7 @@ public class GlassFishLogRecordTest {
 
     @Test
     void emptyParameters() throws Exception {
-        final GlassFishLogRecord record = new GlassFishLogRecord(Level.CONFIG, "");
+        final GlassFishLogRecord record = new GlassFishLogRecord(Level.CONFIG, "", false);
         record.setMessage("");
         record.setLoggerName("");
         record.setParameters(new Object[] {});
@@ -75,7 +75,7 @@ public class GlassFishLogRecordTest {
 
     @Test
     void serialization() throws Exception {
-        final GlassFishLogRecord record = new GlassFishLogRecord(Level.CONFIG, "message");
+        final GlassFishLogRecord record = new GlassFishLogRecord(Level.CONFIG, "message", false);
         record.setLevel(Level.FINEST);
         record.setMessage("message2");
         record.setLoggerName("loggerNameX");

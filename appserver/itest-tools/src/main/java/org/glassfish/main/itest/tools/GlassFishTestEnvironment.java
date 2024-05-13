@@ -270,7 +270,7 @@ public class GlassFishTestEnvironment {
 
 
     private static File findKeyTool() {
-        return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.bat" : "bin/keytool");
+        return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.exe" : "bin/keytool");
     }
 
 

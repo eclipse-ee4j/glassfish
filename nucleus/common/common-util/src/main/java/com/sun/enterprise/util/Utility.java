@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -544,6 +545,54 @@ public final class Utility {
             AccessController.doPrivileged(action);
         }
         return original;
+    }
+
+    /**
+     * Run an action with a specific classloader as the context classloader. Sets the context classloader, calls the method, resets the context classloader to the previous classloader.
+     * @param Type of a value returned from the supplied action and from this method
+     * @param contextClassLoader Classloader to be used as the context classloader during thi method call
+     * @param action A mathod to call with the classloader as the context classloader.
+     * @return Value returned by the action method
+     */
+    public static <T> T runWithContextClassLoader(ClassLoader contextClassLoader, Supplier<T> action) {
+        ClassLoader originalClassLoader = null;
+        try {
+            originalClassLoader = setContextClassLoader(contextClassLoader, originalClassLoader);
+            return action.get();
+        } finally {
+            resetContextClassLoder(originalClassLoader);
+        }
+    }
+
+    public static interface RunnableWithException<E extends Exception> {
+        void run() throws E;
+    }
+
+    /**
+     * Same as {@link Utility#runWithContextClassLoader(java.lang.ClassLoader, java.util.function.Supplier)} but with an action that doesn't return anything
+     */
+    public static <E extends Exception> void runWithContextClassLoader(ClassLoader contextClassLoader,
+            RunnableWithException<E> action) throws E {
+        ClassLoader originalClassLoader = null;
+        try {
+            originalClassLoader = setContextClassLoader(contextClassLoader, originalClassLoader);
+            action.run();
+        } finally {
+            resetContextClassLoder(originalClassLoader);
+        }
+    }
+
+    private static ClassLoader setContextClassLoader(ClassLoader contextClassLoader, ClassLoader originalClassLoader) {
+        if (contextClassLoader != null) {
+            originalClassLoader = setContextClassLoader(contextClassLoader);
+        }
+        return originalClassLoader;
+    }
+
+    private static void resetContextClassLoder(ClassLoader originalClassLoader) {
+        if (originalClassLoader != null) {
+            setContextClassLoader(originalClassLoader);
+        }
     }
 
     public static void setEnvironment() {

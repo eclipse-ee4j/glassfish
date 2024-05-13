@@ -1061,8 +1061,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>jakarta.security.enterprise</artifactId>
+            <artifactId>soteria</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1070,21 +1075,17 @@
             <artifactId>exousia</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
+         <dependency>
             <groupId>org.glassfish.epicyro</groupId>
             <artifactId>epicyro</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.security.enterprise</groupId>
-            <artifactId>jakarta.security.enterprise-api</artifactId>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
             <optional>true</optional>
         </dependency>
+       
 
         <!-- glassfish-cdi -->
         <dependency>

@@ -133,14 +133,14 @@
 
         <commons-io.version>2.16.1</commons-io.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.5.3.Final</jboss.logging.version>
+        <jboss.logging.version>3.6.0.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.7</asm.version>
         <jsch.version>0.2.17</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.14</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.17.0</jackson.version>
+        <jackson.version>2.17.1</jackson.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
@@ -335,7 +335,7 @@
                 <version>${jakarta.annotation-api.version}</version>
             </dependency>
 
-            
+
 
             <!-- GlassFish Components -->
 
@@ -550,7 +550,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.25.1</version>
+                <version>3.26.0</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -844,7 +844,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
-                        <rerunFailingTestsCount>3</rerunFailingTestsCount>
                         <environmentVariables>
                             <LANG>en</LANG>
                         </environmentVariables>
@@ -868,7 +867,6 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
-                        <rerunFailingTestsCount>3</rerunFailingTestsCount>
                         <environmentVariables>
                             <LANG>en</LANG>
                         </environmentVariables>
@@ -933,7 +931,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.14.2</version>
+                            <version>10.16.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -954,7 +952,7 @@
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.8.1</version>
+                    <version>1.9.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
@@ -981,7 +979,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -989,7 +987,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>

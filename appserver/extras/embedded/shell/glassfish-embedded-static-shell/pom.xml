@@ -1119,7 +1119,7 @@
         <!-- Jakarta Security -->
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>jakarta.security.enterprise</artifactId>
+            <artifactId>soteria</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1130,6 +1130,11 @@
         <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
             <optional>true</optional>
         </dependency>
 

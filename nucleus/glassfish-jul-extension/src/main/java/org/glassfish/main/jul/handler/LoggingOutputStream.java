@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import org.glassfish.main.jul.GlassFishLogManager;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 
 
@@ -68,10 +69,10 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
         if (closed.get()) {
             return;
         }
-        final GlassFishLogRecord logRecord = new GlassFishLogRecord(logRecordLevel, "");
-        logRecord.setThrown(throwable);
-        logRecord.setLoggerName(this.loggerName);
-        logRecordBuffer.add(logRecord);
+        final GlassFishLogRecord record = new GlassFishLogRecord(logRecordLevel, "", isSourceDetectionEnabled());
+        record.setThrown(throwable);
+        record.setLoggerName(this.loggerName);
+        logRecordBuffer.add(record);
     }
 
 
@@ -86,14 +87,14 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
         if (closed.get()) {
             return;
         }
-        final String logMessage = getMessage();
-        if (logMessage.isEmpty() || lineSeparator.equals(logMessage)) {
+        final String message = getMessage();
+        if (message.isEmpty() || lineSeparator.equals(message)) {
             // avoid empty records
             return;
         }
-        final GlassFishLogRecord logRecord = new GlassFishLogRecord(logRecordLevel, logMessage);
-        logRecord.setLoggerName(this.loggerName);
-        logRecordBuffer.add(logRecord);
+        final GlassFishLogRecord record = new GlassFishLogRecord(logRecordLevel, message, isSourceDetectionEnabled());
+        record.setLoggerName(this.loggerName);
+        logRecordBuffer.add(record);
     }
 
     private synchronized String getMessage() throws IOException {
@@ -101,6 +102,12 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
         final String logMessage = super.toString(charset).trim();
         super.reset();
         return logMessage;
+    }
+
+
+    private boolean isSourceDetectionEnabled() {
+        final GlassFishLogManager manager = GlassFishLogManager.getLogManager();
+        return manager == null ? false : manager.getConfiguration().isClassAndMethodDetectionEnabled();
     }
 
 

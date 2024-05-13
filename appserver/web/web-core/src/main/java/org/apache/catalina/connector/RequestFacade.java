@@ -40,7 +40,6 @@ import jakarta.servlet.http.PushBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.Principal;
-import java.security.SecurityPermission;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -61,7 +60,6 @@ public class RequestFacade implements HttpServletRequest {
 
     // ----------------------------------------------- Class/Instance Variables
 
-    private static final SecurityPermission GET_UNWRAPPED_COYOTE_REQUEST_PERMISSION = new SecurityPermission("getUnwrappedCoyoteRequest");
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
     /**
@@ -665,6 +663,11 @@ public class RequestFacade implements HttpServletRequest {
     @Override
     public PushBuilder newPushBuilder() {
         return catalinaConnectorReqest.newPushBuilder();
+    }
+
+    @Override
+    public String toString() {
+        return catalinaConnectorReqest.toString();
     }
 
     /**

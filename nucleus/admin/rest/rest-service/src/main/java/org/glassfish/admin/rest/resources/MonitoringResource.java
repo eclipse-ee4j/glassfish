@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,6 +56,10 @@ import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getStatistic;
 import static org.glassfish.admin.rest.provider.ProviderUtil.jsonValue;
 
+import com.sun.enterprise.util.Utility;
+import jakarta.inject.Inject;
+import org.glassfish.internal.api.ServerContext;
+
 /**
  * @author rajeshwar patil
  * @author Mitesh Meswani
@@ -71,6 +75,9 @@ public class MonitoringResource {
 
     @Context
     protected LocatorBridge habitat;
+
+    @Inject
+    private ServerContext serverContext;
 
     @GET
     @Path("domain{path:.*}")
@@ -154,10 +161,16 @@ public class MonitoringResource {
             } else { //firstPathElement != currentInstanceName => A proxy request
                 if (isRunningOnDAS) { //Attempt to forward to instance if running on Das
                     //TODO validate that firstPathElement corresponds to a valid server name
-                    // FIXME: As of 03.04.2022 Utils.getJerseyClient here throws exception:
-                    // java.lang.ClassNotFoundException: Provider for jakarta.ws.rs.client.ClientBuilder cannot be found
-                    Properties proxiedResponse = new MonitoringProxyImpl().proxyRequest(uriInfo, Util.getJerseyClient(),
-                            habitat.getRemoteLocator());
+
+                    /* Jersey client is not accessible from the current context classloader,
+                        which is kernel OSGi bundle CL. We need to run it within the common classloader as
+                        the context classloader
+                    */
+                    Properties proxiedResponse = Utility.runWithContextClassLoader(serverContext.getCommonClassLoader(),
+                            () -> {
+                                return new MonitoringProxyImpl()
+                                        .proxyRequest(uriInfo, Util.getJerseyClient(), habitat.getRemoteLocator());
+                            });
                     ar.setExtraProperties(proxiedResponse);
                     responseBuilder.entity(new ActionReportResult(ar));
                 } else { // Not running on DAS and firstPathElement != currentInstanceName => Reject the request as invalid

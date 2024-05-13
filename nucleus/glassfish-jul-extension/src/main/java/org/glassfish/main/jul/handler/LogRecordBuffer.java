@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -144,7 +144,7 @@ class LogRecordBuffer {
             this + ": The buffer was forcibly cleared after " + maxWait + " s timeout for adding another log record." //
                 + " Log records were lost." //
                 + " It might be caused by a recursive deadlock," //
-                + " you can increase the capacity or the timeout to avoid this."));
+                + " you can increase the capacity or the timeout to avoid this.", false));
     }
 
 

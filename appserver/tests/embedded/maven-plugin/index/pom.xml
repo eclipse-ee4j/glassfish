@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>maven-plugin</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M6</version>
     </parent>
     <groupId>org.glassfish.tests.embedded.maven-plugin</groupId>
     <artifactId>index</artifactId>

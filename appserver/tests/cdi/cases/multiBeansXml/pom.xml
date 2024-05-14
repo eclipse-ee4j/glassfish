@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.glassfish.tests.cdi</groupId>
         <artifactId>cases</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.cases</groupId>
     <artifactId>multiBeansXml</artifactId>
     <packaging>pom</packaging>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-JDK17-M6</version>
 
     <name>GlassFish CDI MultiBeanXml Test</name>
     <modules>

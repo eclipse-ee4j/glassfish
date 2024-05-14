@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>basic</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M6</version>
     </parent>
 
     <groupId>org.glassfish.tests.embedded.basic</groupId>

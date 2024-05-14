@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>quicklook</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-JDK17-M6</version>
     <packaging>jar</packaging>
 
     <name>Glassfish Quicklook Bundle</name>

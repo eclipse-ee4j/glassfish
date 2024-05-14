@@ -28,7 +28,7 @@
     <artifactId>quicklook</artifactId>
     <name>Glassfish Quicklook Bundle</name>
     <packaging>jar</packaging>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-M6</version>
     <description>This pom describes how to run QuickLook tests on the Glassfish Bundle</description>
 
     <build>

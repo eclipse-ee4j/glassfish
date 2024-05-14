@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,7 @@ public class SimpleLogHandlerTest {
     @Test
     void standardMessage() throws Exception {
         final SimpleLogHandler handler = new SimpleLogHandler(logCollector);
-        final GlassFishLogRecord record = new GlassFishLogRecord(Level.INFO, "This should log.");
+        final GlassFishLogRecord record = new GlassFishLogRecord(Level.INFO, "This should log.", false);
         record.setSourceClassName("FakeClass");
         record.setSourceMethodName("fakeMethod");
         handler.publish(record);
@@ -83,7 +83,7 @@ public class SimpleLogHandlerTest {
     @Test
     void exception() throws Exception {
         final SimpleLogHandler handler = new SimpleLogHandler(logCollector);
-        final GlassFishLogRecord record = new GlassFishLogRecord(Level.SEVERE, "This should log.");
+        final GlassFishLogRecord record = new GlassFishLogRecord(Level.SEVERE, "This should log.", false);
         record.setSourceClassName("FakeClass");
         record.setSourceMethodName("fakeMethod");
         record.setThrown(new IllegalStateException("Something broke."));

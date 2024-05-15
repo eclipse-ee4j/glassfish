@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,10 @@ import java.util.Properties;
  */
 public class ManagedScheduledExecutorDefinitionData implements ContextualResourceDefinition {
 
+    private static final long serialVersionUID = -5569777558325563130L;
     private String name;
     private String context;
+    private Class<?>[] qualifiers;
     private long hungTaskThreshold;
     private int maxAsync = Integer.MAX_VALUE;
     private Properties properties = new Properties();
@@ -50,6 +52,18 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
     @Override
     public void setContext(String context) {
         this.context = context;
+    }
+
+
+    @Override
+    public Class<?>[] getQualifiers() {
+        return qualifiers;
+    }
+
+
+    @Override
+    public void setQualifiers(Class<?>[] qualifiers) {
+        this.qualifiers = qualifiers;
     }
 
 

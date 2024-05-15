@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,6 +71,7 @@ class ManagedThreadFactoryDefinitionConverter extends
         LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
         ManagedThreadFactoryDefinitionData data = new ManagedThreadFactoryDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        data.setQualifiers(annotation.qualifiers());
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         if (annotation.priority() <= 0) {
             data.setPriority(Thread.NORM_PRIORITY);
@@ -88,6 +89,9 @@ class ManagedThreadFactoryDefinitionConverter extends
         if (!annotationData.getName().equals(descriptorData.getName())) {
             throw new IllegalArgumentException("Cannot merge managed thread factories with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
+        }
+        if (descriptorData.getQualifiers().length == 0) {
+            descriptorData.setQualifiers(annotationData.getQualifiers());
         }
         if (descriptorData.getPriority() == -1 && annotationData.getPriority() != -1) {
             descriptorData.setPriority(annotationData.getPriority());

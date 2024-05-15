@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,9 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment.annotation.factory;
-
-import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
+package com.sun.enterprise.deployment.annotation.handlers;
 
 import java.util.Properties;
 
@@ -29,6 +27,7 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
     private String name;
     private String context;
+    private Class<?>[] qualifiers;
     private int maximumPoolSize = Integer.MAX_VALUE;
     private long hungAfterSeconds;
     private final Properties properties = new Properties();
@@ -54,6 +53,18 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     @Override
     public void setContext(String context) {
         this.context = context;
+    }
+
+
+    @Override
+    public Class<?>[] getQualifiers() {
+        return qualifiers;
+    }
+
+
+    @Override
+    public void setQualifiers(Class<?>[] qualifiers) {
+        this.qualifiers = qualifiers;
     }
 
 
@@ -101,5 +112,4 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     public String toString() {
         return super.toString() + "[" + getName() + "]";
     }
-
 }

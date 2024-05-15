@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 import com.sun.enterprise.deployment.MetadataSource;
-import com.sun.enterprise.deployment.annotation.factory.ManagedExecutorDefinitionData;
 
 import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
 
@@ -73,6 +72,7 @@ class ManagedExecutorDefinitionConverter
         ManagedExecutorDefinitionData data = new ManagedExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
+        data.setQualifiers(annotation.qualifiers());
 
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungAfterSeconds(0);
@@ -94,6 +94,9 @@ class ManagedExecutorDefinitionConverter
         if (!annotationData.getName().equals(descriptorData.getName())) {
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
+        }
+        if (descriptorData.getQualifiers().length == 0) {
+            descriptorData.setQualifiers(annotationData.getQualifiers());
         }
         if (descriptorData.getHungAfterSeconds() <= 0 && annotationData.getHungAfterSeconds() != 0) {
             descriptorData.setHungAfterSeconds(annotationData.getHungAfterSeconds());

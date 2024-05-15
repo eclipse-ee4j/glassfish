@@ -58,7 +58,7 @@
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -67,15 +67,15 @@
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
         </dependency>
-        
+
         <!--  The TCK  -->
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-            <version>3.1.0-M1</version>
+            <version>3.1.0</version>
         </dependency>
-        
-       
+
+
         <!--
             The Arquillian connector that starts GlassFish and deploys archives to it.
         -->
@@ -84,7 +84,7 @@
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>1.4</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
@@ -105,7 +105,7 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!--  Signature Test Plugin  -->
         <dependency>
             <groupId>org.netbeans.tools</groupId>
@@ -122,7 +122,7 @@
                     <release>17</release>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -148,41 +148,41 @@
                      </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                
+
                 <configuration>
                     <argLine>-Xmx768m</argLine>
-                    
+
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
                     </dependenciesToScan>
-                    
+
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-                        
+
                         <glassfish.systemProperties>
                             jimage.dir=${project.build.directory}/jimage
                         </glassfish.systemProperties>
-                        
+
                         <glassfish.postBootCommands>
                             create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
                             create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
                         </glassfish.postBootCommands>
                     </systemPropertyVariables>
-                    
+
                     <!-- Groups to include i.e. web/full -->
-                    <groups>${jakarta.tck.platform}</groups> 
+                    <groups>${jakarta.tck.platform}</groups>
                     <reportNameSuffix>${jakarta.tck.platform}</reportNameSuffix>
                     <testSourceDirectory>${basedir}/src/main/java/</testSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>full</id>

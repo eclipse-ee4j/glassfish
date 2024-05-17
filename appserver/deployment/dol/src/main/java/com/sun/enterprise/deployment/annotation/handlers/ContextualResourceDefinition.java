@@ -37,6 +37,11 @@ public interface ContextualResourceDefinition extends Serializable {
 
     void setQualifiers(Class<?>[] qualifiers);
 
+    boolean isVirtual();
+
+    void setVirtual(boolean virtual);
+
+
     default SimpleJndiName getJndiName() {
         return new SimpleJndiName(getName());
     }

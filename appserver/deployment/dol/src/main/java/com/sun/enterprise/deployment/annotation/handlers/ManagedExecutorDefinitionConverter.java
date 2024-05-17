@@ -73,6 +73,7 @@ class ManagedExecutorDefinitionConverter
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         data.setQualifiers(annotation.qualifiers());
+        data.setVirtual(annotation.virtual());
 
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungAfterSeconds(0);
@@ -97,6 +98,9 @@ class ManagedExecutorDefinitionConverter
         }
         if (descriptorData.getQualifiers().length == 0) {
             descriptorData.setQualifiers(annotationData.getQualifiers());
+        }
+        if (!descriptorData.isVirtual()) {
+            descriptorData.setVirtual(annotationData.isVirtual());
         }
         if (descriptorData.getHungAfterSeconds() <= 0 && annotationData.getHungAfterSeconds() != 0) {
             descriptorData.setHungAfterSeconds(annotationData.getHungAfterSeconds());

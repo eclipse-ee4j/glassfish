@@ -82,6 +82,18 @@ public class ManagedThreadFactoryDefinitionDescriptor extends ResourceDescriptor
     }
 
 
+    @Override
+    public boolean isVirtual() {
+        return data.isVirtual();
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        data.setVirtual(virtual);
+    }
+
+
     public int getPriority() {
         return data.getPriority();
     }

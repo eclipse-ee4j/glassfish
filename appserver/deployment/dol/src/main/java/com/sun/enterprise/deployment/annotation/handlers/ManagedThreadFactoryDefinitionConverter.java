@@ -72,6 +72,7 @@ class ManagedThreadFactoryDefinitionConverter extends
         ManagedThreadFactoryDefinitionData data = new ManagedThreadFactoryDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setQualifiers(annotation.qualifiers());
+        data.setVirtual(annotation.virtual());
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         if (annotation.priority() <= 0) {
             data.setPriority(Thread.NORM_PRIORITY);
@@ -92,6 +93,9 @@ class ManagedThreadFactoryDefinitionConverter extends
         }
         if (descriptorData.getQualifiers().length == 0) {
             descriptorData.setQualifiers(annotationData.getQualifiers());
+        }
+        if (!descriptorData.isVirtual()) {
+            descriptorData.setVirtual(annotationData.isVirtual());
         }
         if (descriptorData.getPriority() == -1 && annotationData.getPriority() != -1) {
             descriptorData.setPriority(annotationData.getPriority());

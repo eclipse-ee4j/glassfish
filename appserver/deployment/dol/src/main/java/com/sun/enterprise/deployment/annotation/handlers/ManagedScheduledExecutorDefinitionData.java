@@ -27,6 +27,7 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
     private String name;
     private String context;
     private Class<?>[] qualifiers;
+    private boolean virtual;
     private long hungTaskThreshold;
     private int maxAsync = Integer.MAX_VALUE;
     private Properties properties = new Properties();
@@ -64,6 +65,18 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
     @Override
     public void setQualifiers(Class<?>[] qualifiers) {
         this.qualifiers = qualifiers;
+    }
+
+
+    @Override
+    public boolean isVirtual() {
+        return virtual;
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        this.virtual = virtual;
     }
 
 

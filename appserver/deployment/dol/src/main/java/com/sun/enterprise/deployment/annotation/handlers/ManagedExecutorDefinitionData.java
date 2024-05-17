@@ -30,6 +30,7 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     private Class<?>[] qualifiers;
     private int maximumPoolSize = Integer.MAX_VALUE;
     private long hungAfterSeconds;
+    private boolean virtual;
     private final Properties properties = new Properties();
 
     @Override
@@ -65,6 +66,18 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     @Override
     public void setQualifiers(Class<?>[] qualifiers) {
         this.qualifiers = qualifiers;
+    }
+
+
+    @Override
+    public boolean isVirtual() {
+        return virtual;
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        this.virtual = virtual;
     }
 
 

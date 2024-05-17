@@ -28,6 +28,7 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     private String context;
     private Class<?>[] qualifiers;
     private int priority = Thread.NORM_PRIORITY;
+    private boolean virtual;
     private Properties properties = new Properties();
 
 
@@ -64,6 +65,18 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     @Override
     public void setQualifiers(Class<?>[] qualifiers) {
         this.qualifiers = qualifiers;
+    }
+
+
+    @Override
+    public boolean isVirtual() {
+        return virtual;
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        this.virtual = virtual;
     }
 
 

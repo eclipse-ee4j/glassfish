@@ -82,6 +82,18 @@ public class ManagedScheduledExecutorDefinitionDescriptor extends ResourceDescri
     }
 
 
+    @Override
+    public boolean isVirtual() {
+        return data.isVirtual();
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        data.setVirtual(virtual);
+    }
+
+
     public long getHungTaskThreshold() {
         return data.getHungTaskThreshold();
     }

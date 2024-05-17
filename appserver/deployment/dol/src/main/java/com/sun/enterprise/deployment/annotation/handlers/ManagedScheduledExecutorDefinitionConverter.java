@@ -72,7 +72,7 @@ class ManagedScheduledExecutorDefinitionConverter extends
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setQualifiers(annotation.qualifiers());
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
-
+        data.setVirtual(annotation.virtual());
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungTaskThreshold(0);
         } else {
@@ -96,6 +96,9 @@ class ManagedScheduledExecutorDefinitionConverter extends
         }
         if (descriptorData.getQualifiers().length == 0) {
             descriptorData.setQualifiers(annotationData.getQualifiers());
+        }
+        if (!descriptorData.isVirtual()) {
+            descriptorData.setVirtual(annotationData.isVirtual());
         }
         if (descriptorData.getHungTaskThreshold() <= 0 && annotationData.getHungTaskThreshold() != 0) {
             descriptorData.setHungTaskThreshold(annotationData.getHungTaskThreshold());

@@ -94,7 +94,7 @@ class ManagedScheduledExecutorDefinitionConverter extends
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
         }
-        if (descriptorData.getQualifiers().length == 0) {
+        if (descriptorData.getQualifiers() == null || descriptorData.getQualifiers().length == 0) {
             descriptorData.setQualifiers(annotationData.getQualifiers());
         }
         if (!descriptorData.isVirtual()) {

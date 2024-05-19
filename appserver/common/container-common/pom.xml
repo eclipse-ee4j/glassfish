@@ -115,10 +115,11 @@
             <groupId>org.glassfish.ha</groupId>
             <artifactId>ha-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.concurro</groupId>
-            <artifactId>concurro</artifactId>
-        </dependency>
+        <!--        This dependency breaks Felix -->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.concurro</groupId>-->
+<!--            <artifactId>concurro</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

@@ -83,7 +83,7 @@ import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.concurro.internal.ConcurrencyManagedCDIBeans;
+//import org.glassfish.concurro.internal.ConcurrencyManagedCDIBeans;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -393,6 +393,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     private void registerConcurrencyCDIQualifiers(Collection<JNDIBinding> jndiBindings, Set<ResourceDescriptor> concurrencyDescs) {
         if (!concurrencyDescs.isEmpty()) {
+            /*
             ConcurrencyManagedCDIBeans setup = new ConcurrencyManagedCDIBeans();
             for (ResourceDescriptor desc : concurrencyDescs) {
                 // TODO: preferably introduce common predecessor for all the descriptors
@@ -417,6 +418,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 }
             }
             jndiBindings.add(new CompEnvBinding(new SimpleJndiName(ConcurrencyManagedCDIBeans.JDNI_NAME), setup));
+             */
         }
     }
 

@@ -34,11 +34,9 @@ public interface ContextualResourceDefinition extends Serializable {
 
     void setContext(String context);
 
-    List<Class<?>> getQualifiers();
+    List<String> getQualifiers();
 
-    void setQualifiers(List<Class<?>> qualifiers);
-
-    void addQualifier(Class<?> qualifier);
+    void addQualifier(String qualifier);
 
     boolean isVirtual();
 

@@ -32,7 +32,7 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     private int maximumPoolSize = Integer.MAX_VALUE;
     private long hungAfterSeconds;
     private boolean virtual;
-    private final List<Class<?>> qualifiers = new ArrayList<>();
+    private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
     @Override
@@ -60,21 +60,20 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
 
     @Override
-    public List<Class<?>> getQualifiers() {
+    public List<String> getQualifiers() {
         return qualifiers;
     }
 
 
     @Override
-    public void setQualifiers(List<Class<?>> qualifiers) {
-        this.qualifiers.clear();
-        this.qualifiers.addAll(qualifiers);
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
     }
 
 
-    @Override
-    public void addQualifier(Class<?> qualifier) {
-        this.qualifiers.add(qualifier);
+    public void setQualifiers(List<String> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
     }
 
 

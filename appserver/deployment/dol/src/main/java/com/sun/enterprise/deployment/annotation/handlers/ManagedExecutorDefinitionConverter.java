@@ -72,7 +72,9 @@ class ManagedExecutorDefinitionConverter
         ManagedExecutorDefinitionData data = new ManagedExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
-        data.setQualifiers(Arrays.asList(annotation.qualifiers()));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
         data.setVirtual(annotation.virtual());
 
         if (annotation.hungTaskThreshold() < 0) {

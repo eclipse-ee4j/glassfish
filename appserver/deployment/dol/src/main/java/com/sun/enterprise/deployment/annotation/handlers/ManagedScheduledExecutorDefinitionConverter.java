@@ -70,7 +70,9 @@ class ManagedScheduledExecutorDefinitionConverter extends
         LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
         ManagedScheduledExecutorDefinitionData data = new ManagedScheduledExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
-        data.setQualifiers(Arrays.asList(annotation.qualifiers()));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         data.setVirtual(annotation.virtual());
         if (annotation.hungTaskThreshold() < 0) {

@@ -18,8 +18,6 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
 
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.util.Map;
 
 import org.w3c.dom.Node;
@@ -33,8 +31,6 @@ import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedThreadFactoryDefinitionNode
     extends DeploymentDescriptorNode<ManagedThreadFactoryDefinitionDescriptor> {
-
-    private static final Logger LOG = System.getLogger(ManagedThreadFactoryDefinitionNode.class.getName());
 
 
     public ManagedThreadFactoryDefinitionNode() {
@@ -53,6 +49,7 @@ public class ManagedThreadFactoryDefinitionNode
     protected Map<String, String> getDispatchTable() {
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
+        map.put(QUALIFIER, "addQualifier");
         map.put(VIRTUAL, "setVirtual");
         map.put(MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, "setContext");
         map.put(MANAGED_THREAD_FACTORY_PRIORITY, "setPriority");
@@ -61,27 +58,11 @@ public class ManagedThreadFactoryDefinitionNode
 
 
     @Override
-    public void setElementValue(XMLElement element, String value) {
-        String qname = element.getQName();
-        ManagedThreadFactoryDefinitionDescriptor descriptor = getDescriptor();
-        if (QUALIFIER.equals(qname)) {
-            try {
-                descriptor.addQualifier(Class.forName(value, false, Thread.currentThread().getContextClassLoader()));
-            } catch (ClassNotFoundException e) {
-                LOG.log(Level.WARNING, "Ignoring unresolvable qualifier " + value, e);
-            }
-        } else {
-            super.setElementValue(element, value);
-        }
-    }
-
-
-    @Override
     public Node writeDescriptor(Node parent, String nodeName, ManagedThreadFactoryDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
-        for (Class<?> qualifier : descriptor.getQualifiers()) {
-            appendTextChild(node, QUALIFIER, qualifier.getCanonicalName());
+        for (String qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier);
         }
         appendTextChild(node, VIRTUAL, descriptor.isVirtual());
         appendTextChild(node, MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, descriptor.getContext());

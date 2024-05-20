@@ -53,15 +53,17 @@ class ContextServiceDefinitionConverter {
         return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
     }
 
-    ContextServiceDefinitionData convert(ContextServiceDefinition definition) {
-        LOG.log(Level.DEBUG, "convert(definition={0})", definition);
-        Set<String> unused = collectUnusedContexts(definition);
+    ContextServiceDefinitionData convert(ContextServiceDefinition annotation) {
+        LOG.log(Level.DEBUG, "convert(definition={0})", annotation);
+        Set<String> unused = collectUnusedContexts(annotation);
         ContextServiceDefinitionData data = new ContextServiceDefinitionData();
-        data.setName(new SimpleJndiName(TranslatedConfigView.expandValue(definition.name())));
-        data.setPropagated(evaluateContexts(definition.propagated(), unused));
-        data.setCleared(evaluateContexts(definition.cleared(), unused));
-        data.setUnchanged(evaluateContexts(definition.unchanged(), unused));
-        data.setQualifiers(Arrays.asList(definition.qualifiers()));
+        data.setName(new SimpleJndiName(TranslatedConfigView.expandValue(annotation.name())));
+        data.setPropagated(evaluateContexts(annotation.propagated(), unused));
+        data.setCleared(evaluateContexts(annotation.cleared(), unused));
+        data.setUnchanged(evaluateContexts(annotation.unchanged(), unused));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
         return data;
     }
 

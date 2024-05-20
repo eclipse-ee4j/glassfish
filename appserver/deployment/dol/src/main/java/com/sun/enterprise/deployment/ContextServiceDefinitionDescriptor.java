@@ -61,17 +61,12 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
     }
 
 
-    public List<Class<?>> getQualifiers() {
+    public List<String> getQualifiers() {
         return data.getQualifiers();
     }
 
 
-    public void setQualifiers(List<Class<?>> qualifiers) {
-        data.setQualifiers(qualifiers);
-    }
-
-
-    public void addQualifier(Class<?> qualifier) {
+    public void addQualifier(String qualifier) {
         data.addQualifier(qualifier);
     }
 

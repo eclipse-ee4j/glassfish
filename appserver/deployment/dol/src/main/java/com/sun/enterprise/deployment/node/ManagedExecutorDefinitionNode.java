@@ -20,8 +20,6 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.util.Map;
 
 import org.w3c.dom.Node;
@@ -35,8 +33,6 @@ import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedExecutorDefinitionDescriptor> {
-
-    private static final Logger LOG = System.getLogger(ManagedExecutorDefinitionNode.class.getName());
 
 
     public ManagedExecutorDefinitionNode() {
@@ -55,6 +51,7 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
     protected Map<String, String> getDispatchTable() {
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
+        map.put(QUALIFIER, "addQualifier");
         map.put(VIRTUAL, "setVirtual");
         map.put(MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
         map.put(MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
@@ -64,27 +61,11 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
 
 
     @Override
-    public void setElementValue(XMLElement element, String value) {
-        String qname = element.getQName();
-        ManagedExecutorDefinitionDescriptor descriptor = getDescriptor();
-        if (QUALIFIER.equals(qname)) {
-            try {
-                descriptor.addQualifier(Class.forName(value, false, Thread.currentThread().getContextClassLoader()));
-            } catch (ClassNotFoundException e) {
-                LOG.log(Level.WARNING, "Ignoring unresolvable qualifier " + value, e);
-            }
-        } else {
-            super.setElementValue(element, value);
-        }
-    }
-
-
-    @Override
     public Node writeDescriptor(Node parent, String nodeName, ManagedExecutorDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
-        for (Class<?> qualifier : descriptor.getQualifiers()) {
-            appendTextChild(node, QUALIFIER, qualifier.getCanonicalName());
+        for (String qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier);
         }
         appendTextChild(node, VIRTUAL, descriptor.isVirtual());
         appendTextChild(node, MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(descriptor.getMaximumPoolSize()));

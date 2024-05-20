@@ -40,7 +40,7 @@ public class ContextServiceDefinitionData implements Serializable {
     private Set<String> cleared = new HashSet<>();
     private Set<String> propagated = new HashSet<>();
     private Set<String> unchanged = new HashSet<>();
-    private final List<Class<?>> qualifiers = new ArrayList<>();
+    private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
     public SimpleJndiName getName() {
@@ -53,18 +53,18 @@ public class ContextServiceDefinitionData implements Serializable {
     }
 
 
-    public List<Class<?>> getQualifiers() {
+    public List<String> getQualifiers() {
         return qualifiers;
     }
 
 
-    public void setQualifiers(List<Class<?>> qualifiers) {
+    public void setQualifiers(List<String> qualifiers) {
         this.qualifiers.clear();
         this.qualifiers.addAll(qualifiers);
     }
 
 
-    public void addQualifier(Class<?> qualifier) {
+    public void addQualifier(String qualifier) {
         this.qualifiers.add(qualifier);
     }
 

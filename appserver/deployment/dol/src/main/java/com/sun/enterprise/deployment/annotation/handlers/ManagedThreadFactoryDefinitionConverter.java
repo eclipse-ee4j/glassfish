@@ -71,7 +71,9 @@ class ManagedThreadFactoryDefinitionConverter extends
         LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
         ManagedThreadFactoryDefinitionData data = new ManagedThreadFactoryDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
-        data.setQualifiers(Arrays.asList(annotation.qualifiers()));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
         data.setVirtual(annotation.virtual());
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         if (annotation.priority() <= 0) {

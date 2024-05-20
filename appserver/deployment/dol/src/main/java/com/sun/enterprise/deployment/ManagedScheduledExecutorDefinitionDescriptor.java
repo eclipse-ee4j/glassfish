@@ -72,19 +72,13 @@ public class ManagedScheduledExecutorDefinitionDescriptor extends ResourceDescri
 
 
     @Override
-    public List<Class<?>> getQualifiers() {
+    public List<String> getQualifiers() {
         return data.getQualifiers();
     }
 
 
     @Override
-    public void setQualifiers(List<Class<?>> qualifiers) {
-        data.setQualifiers(qualifiers);
-    }
-
-
-    @Override
-    public void addQualifier(Class<?> qualifier) {
+    public void addQualifier(String qualifier) {
         data.addQualifier(qualifier);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021-2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -23,7 +23,7 @@ public class Constants {
 
     public static final String Package = "org.apache.catalina.core";
     public static final int MAJOR_VERSION = 6;
-    public static final int MINOR_VERSION = 0;
+    public static final int MINOR_VERSION = 1;
 
     public static final String JSP_SERVLET_CLASS = "org.glassfish.wasp.servlet.JspServlet";
 

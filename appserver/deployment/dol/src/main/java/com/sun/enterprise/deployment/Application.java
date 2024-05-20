@@ -1152,7 +1152,8 @@ public class Application extends CommonResourceBundleDescriptor
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             BundleDescriptor bundleDesc = aModule.getDescriptor();
             if (bundleDesc == null) {
-                throw new IllegalArgumentException("Null descriptor for module " + aModule);
+                LOG.log(Level.FINE, () -> "Null descriptor for module " + aModule);
+                continue;
             }
             bundleSet.add(bundleDesc);
             for (RootDeploymentDescriptor rd : bundleDesc.getExtensionsDescriptors()) {

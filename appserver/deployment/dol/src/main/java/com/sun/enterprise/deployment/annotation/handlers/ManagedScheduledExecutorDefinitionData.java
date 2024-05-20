@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -26,11 +28,11 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
     private static final long serialVersionUID = -5569777558325563130L;
     private String name;
     private String context;
-    private Class<?>[] qualifiers;
     private boolean virtual;
     private long hungTaskThreshold;
     private int maxAsync = Integer.MAX_VALUE;
-    private Properties properties = new Properties();
+    private final List<Class<?>> qualifiers = new ArrayList<>();
+    private final Properties properties = new Properties();
 
     @Override
     public String getName() {
@@ -57,14 +59,21 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
 
 
     @Override
-    public Class<?>[] getQualifiers() {
+    public List<Class<?>> getQualifiers() {
         return qualifiers;
     }
 
 
     @Override
-    public void setQualifiers(Class<?>[] qualifiers) {
-        this.qualifiers = qualifiers;
+    public void setQualifiers(List<Class<?>> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
+    }
+
+
+    @Override
+    public void addQualifier(Class<?> qualifier) {
+        this.qualifiers.add(qualifier);
     }
 
 
@@ -102,11 +111,6 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
 
     public Properties getProperties() {
         return properties;
-    }
-
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
     }
 
 

@@ -70,7 +70,7 @@ class ManagedScheduledExecutorDefinitionConverter extends
         LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
         ManagedScheduledExecutorDefinitionData data = new ManagedScheduledExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
-        data.setQualifiers(annotation.qualifiers());
+        data.setQualifiers(Arrays.asList(annotation.qualifiers()));
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         data.setVirtual(annotation.virtual());
         if (annotation.hungTaskThreshold() < 0) {
@@ -94,7 +94,7 @@ class ManagedScheduledExecutorDefinitionConverter extends
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
         }
-        if (descriptorData.getQualifiers() == null || descriptorData.getQualifiers().length == 0) {
+        if (descriptorData.getQualifiers().isEmpty()) {
             descriptorData.setQualifiers(annotationData.getQualifiers());
         }
         if (!descriptorData.isVirtual()) {

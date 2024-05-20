@@ -17,6 +17,7 @@
 package com.sun.enterprise.deployment.annotation.handlers;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.glassfish.api.naming.SimpleJndiName;
 
@@ -33,9 +34,11 @@ public interface ContextualResourceDefinition extends Serializable {
 
     void setContext(String context);
 
-    Class<?>[] getQualifiers();
+    List<Class<?>> getQualifiers();
 
-    void setQualifiers(Class<?>[] qualifiers);
+    void setQualifiers(List<Class<?>> qualifiers);
+
+    void addQualifier(Class<?> qualifier);
 
     boolean isVirtual();
 

@@ -72,7 +72,7 @@ class ManagedExecutorDefinitionConverter
         ManagedExecutorDefinitionData data = new ManagedExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
-        data.setQualifiers(annotation.qualifiers());
+        data.setQualifiers(Arrays.asList(annotation.qualifiers()));
         data.setVirtual(annotation.virtual());
 
         if (annotation.hungTaskThreshold() < 0) {
@@ -96,7 +96,7 @@ class ManagedExecutorDefinitionConverter
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
         }
-        if (descriptorData.getQualifiers() == null || descriptorData.getQualifiers().length == 0) {
+        if (descriptorData.getQualifiers().isEmpty()) {
             descriptorData.setQualifiers(annotationData.getQualifiers());
         }
         if (!descriptorData.isVirtual()) {

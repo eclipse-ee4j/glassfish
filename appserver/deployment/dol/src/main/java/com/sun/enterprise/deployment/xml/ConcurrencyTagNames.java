@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
@@ -23,29 +23,27 @@ public interface ConcurrencyTagNames extends TagNames {
     String MANAGED_EXECUTOR_MAX_ASYNC = "max-async";
     String MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD = "hung-task-threshold";
     String MANAGED_EXECUTOR_CONTEXT_SERVICE_REF = "context-service-ref";
-    String MANAGED_EXECUTOR_QUALIFIER = "qualifier";
 
     String MANAGED_THREAD_FACTORY = "managed-thread-factory";
     String MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF = "context-service-ref";
     String MANAGED_THREAD_FACTORY_PRIORITY = "priority";
-    String MANAGED_THREAD_FACTORY_QUALIFIER = "qualifier";
 
     String MANAGED_SCHEDULED_EXECUTOR = "managed-scheduled-executor";
     String MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF = "context-service-ref";
     String MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC = "max-async";
     String MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD = "hung-task-threshold";
-    String MANAGED_SCHEDULED_EXECUTOR_QUALIFIER = "qualifier";
 
     String CONTEXT_SERVICE = "context-service";
     String CONTEXT_SERVICE_CLEARED = "cleared";
     String CONTEXT_SERVICE_PROPAGATED = "propagated";
     String CONTEXT_SERVICE_UNCHANGED = "unchanged";
-    String CONTEXT_SERVICE_QUALIFIER = "qualifier";
 
     String CONTEXT_INFO = "context-info";
     String CONTEXT_INFO_DEFAULT_VALUE = "Classloader,JNDI,Security,WorkArea";
     String CONTEXT_INFO_ENABLED = "context-info-enabled";
+    String QUALIFIER = "qualifier";
     String THREAD_PRIORITY = "thread-priority";
+    String VIRTUAL = "virtual";
     String LONG_RUNNING_TASKS = "long-runnings-tasks";
     String HUNG_AFTER_SECONDS = "hung-after-seconds";
     String HUNG_LOGGER_PRINT_ONCE = "hung-logger-print-once";

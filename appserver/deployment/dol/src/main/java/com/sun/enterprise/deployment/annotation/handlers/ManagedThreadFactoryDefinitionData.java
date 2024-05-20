@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -26,10 +28,10 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
 
     private String name;
     private String context;
-    private Class<?>[] qualifiers;
     private int priority = Thread.NORM_PRIORITY;
     private boolean virtual;
-    private Properties properties = new Properties();
+    private final List<Class<?>> qualifiers = new ArrayList<>();
+    private final Properties properties = new Properties();
 
 
     @Override
@@ -57,14 +59,21 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
 
 
     @Override
-    public Class<?>[] getQualifiers() {
+    public List<Class<?>> getQualifiers() {
         return qualifiers;
     }
 
 
     @Override
-    public void setQualifiers(Class<?>[] qualifiers) {
-        this.qualifiers = qualifiers;
+    public void setQualifiers(List<Class<?>> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
+    }
+
+
+    @Override
+    public void addQualifier(Class<?> qualifier) {
+        this.qualifiers.add(qualifier);
     }
 
 
@@ -92,11 +101,6 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
 
     public Properties getProperties() {
         return properties;
-    }
-
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
     }
 
 

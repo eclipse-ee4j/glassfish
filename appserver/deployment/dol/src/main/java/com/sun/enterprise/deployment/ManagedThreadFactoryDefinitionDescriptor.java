@@ -19,6 +19,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
 import com.sun.enterprise.deployment.annotation.handlers.ManagedThreadFactoryDefinitionData;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.glassfish.deployment.common.JavaEEResourceType;
@@ -71,14 +72,20 @@ public class ManagedThreadFactoryDefinitionDescriptor extends ResourceDescriptor
 
 
     @Override
-    public Class<?>[] getQualifiers() {
+    public List<Class<?>> getQualifiers() {
         return data.getQualifiers();
     }
 
 
     @Override
-    public void setQualifiers(Class<?>[] qualifiers) {
+    public void setQualifiers(List<Class<?>> qualifiers) {
         data.setQualifiers(qualifiers);
+    }
+
+
+    @Override
+    public void addQualifier(Class<?> qualifier) {
+        data.addQualifier(qualifier);
     }
 
 
@@ -106,11 +113,6 @@ public class ManagedThreadFactoryDefinitionDescriptor extends ResourceDescriptor
 
     public Properties getProperties() {
         return data.getProperties();
-    }
-
-
-    public void setProperties(Properties properties) {
-        data.setProperties(properties);
     }
 
 

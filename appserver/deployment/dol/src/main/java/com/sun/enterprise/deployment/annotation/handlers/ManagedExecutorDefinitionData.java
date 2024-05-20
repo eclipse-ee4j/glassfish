@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -27,10 +29,10 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
     private String name;
     private String context;
-    private Class<?>[] qualifiers;
     private int maximumPoolSize = Integer.MAX_VALUE;
     private long hungAfterSeconds;
     private boolean virtual;
+    private final List<Class<?>> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
     @Override
@@ -58,14 +60,21 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
 
     @Override
-    public Class<?>[] getQualifiers() {
+    public List<Class<?>> getQualifiers() {
         return qualifiers;
     }
 
 
     @Override
-    public void setQualifiers(Class<?>[] qualifiers) {
-        this.qualifiers = qualifiers;
+    public void setQualifiers(List<Class<?>> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
+    }
+
+
+    @Override
+    public void addQualifier(Class<?> qualifier) {
+        this.qualifiers.add(qualifier);
     }
 
 

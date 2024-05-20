@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
@@ -20,6 +20,8 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Map;
 
 import org.w3c.dom.Node;
@@ -27,11 +29,15 @@ import org.w3c.dom.Node;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_MAX_ASYNC;
-import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_QUALIFIER;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedExecutorDefinitionDescriptor> {
+
+    private static final Logger LOG = System.getLogger(ManagedExecutorDefinitionNode.class.getName());
+
 
     public ManagedExecutorDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
@@ -49,11 +55,27 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
     protected Map<String, String> getDispatchTable() {
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
+        map.put(VIRTUAL, "setVirtual");
         map.put(MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
         map.put(MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
         map.put(MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
-        map.put(MANAGED_EXECUTOR_QUALIFIER, "addQualifier");
         return map;
+    }
+
+
+    @Override
+    public void setElementValue(XMLElement element, String value) {
+        String qname = element.getQName();
+        ManagedExecutorDefinitionDescriptor descriptor = getDescriptor();
+        if (QUALIFIER.equals(qname)) {
+            try {
+                descriptor.addQualifier(Class.forName(value, false, Thread.currentThread().getContextClassLoader()));
+            } catch (ClassNotFoundException e) {
+                LOG.log(Level.WARNING, "Ignoring unresolvable qualifier " + value, e);
+            }
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
 
@@ -61,6 +83,10 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
     public Node writeDescriptor(Node parent, String nodeName, ManagedExecutorDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
+        for (Class<?> qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier.getCanonicalName());
+        }
+        appendTextChild(node, VIRTUAL, descriptor.isVirtual());
         appendTextChild(node, MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(descriptor.getMaximumPoolSize()));
         appendTextChild(node, MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(descriptor.getHungAfterSeconds()));
         appendTextChild(node, MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, descriptor.getContext());

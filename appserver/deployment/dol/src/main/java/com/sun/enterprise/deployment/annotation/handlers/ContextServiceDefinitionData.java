@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,9 @@
 package com.sun.enterprise.deployment.annotation.handlers;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
@@ -35,11 +37,11 @@ public class ContextServiceDefinitionData implements Serializable {
     private static final long serialVersionUID = -6964391431010485710L;
 
     private SimpleJndiName name;
-    private Class<?>[] qualifiers;
     private Set<String> cleared = new HashSet<>();
     private Set<String> propagated = new HashSet<>();
     private Set<String> unchanged = new HashSet<>();
-    private Properties properties = new Properties();
+    private final List<Class<?>> qualifiers = new ArrayList<>();
+    private final Properties properties = new Properties();
 
     public SimpleJndiName getName() {
         return name;
@@ -50,13 +52,22 @@ public class ContextServiceDefinitionData implements Serializable {
         this.name = name;
     }
 
-    public Class<?>[] getQualifiers() {
+
+    public List<Class<?>> getQualifiers() {
         return qualifiers;
     }
 
-    public void setQualifiers(Class<?>[] qualifiers) {
-        this.qualifiers = qualifiers;
+
+    public void setQualifiers(List<Class<?>> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
     }
+
+
+    public void addQualifier(Class<?> qualifier) {
+        this.qualifiers.add(qualifier);
+    }
+
 
     public Set<String> getCleared() {
         return cleared;
@@ -109,7 +120,8 @@ public class ContextServiceDefinitionData implements Serializable {
 
 
     public void setProperties(Properties properties) {
-        this.properties = properties;
+        this.properties.clear();
+        this.properties.putAll(properties);
     }
 
 
@@ -136,7 +148,7 @@ public class ContextServiceDefinitionData implements Serializable {
 
     @Override
     public String toString() {
-        return super.toString() + "[name=" + name + ", cleared=" + cleared + ", propagated=" + propagated
-            + ", unchanged=" + unchanged + ']';
+        return super.toString() + "[name=" + name + ", qualifiers=" + qualifiers + ", cleared=" + cleared
+            + ", propagated=" + propagated + ", unchanged=" + unchanged + ']';
     }
 }

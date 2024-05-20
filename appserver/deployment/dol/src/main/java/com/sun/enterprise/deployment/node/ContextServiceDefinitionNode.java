@@ -20,6 +20,8 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Map;
 
 import org.w3c.dom.Node;
@@ -27,11 +29,13 @@ import org.w3c.dom.Node;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_CLEARED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_PROPAGATED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_UNCHANGED;
-import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_QUALIFIER;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<ContextServiceDefinitionDescriptor> {
+
+    private static final Logger LOG = System.getLogger(ContextServiceDefinitionNode.class.getName());
 
     public ContextServiceDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
@@ -52,8 +56,23 @@ public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<Conte
         map.put(CONTEXT_SERVICE_PROPAGATED, "addPropagated");
         map.put(CONTEXT_SERVICE_CLEARED, "addCleared");
         map.put(CONTEXT_SERVICE_UNCHANGED, "addUnchanged");
-        map.put(CONTEXT_SERVICE_QUALIFIER, "addQualifier");
         return map;
+    }
+
+
+    @Override
+    public void setElementValue(XMLElement element, String value) {
+        String qname = element.getQName();
+        ContextServiceDefinitionDescriptor descriptor = getDescriptor();
+        if (QUALIFIER.equals(qname)) {
+            try {
+                descriptor.addQualifier(Class.forName(value, false, Thread.currentThread().getContextClassLoader()));
+            } catch (ClassNotFoundException e) {
+                LOG.log(Level.WARNING, "Ignoring unresolvable qualifier " + value, e);
+            }
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
 
@@ -61,6 +80,9 @@ public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<Conte
     public Node writeDescriptor(Node parent, String nodeName, ContextServiceDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
+        for (Class<?> qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier.getCanonicalName());
+        }
         for (String cleared : descriptor.getCleared()) {
             appendTextChild(node, CONTEXT_SERVICE_CLEARED, cleared);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1172,7 +1172,7 @@ public class Application extends CommonResourceBundleDescriptor
      */
     @Override
     public void addBundleDescriptor(BundleDescriptor bundleDescriptor) {
-        ModuleDescriptor newModule = bundleDescriptor.getModuleDescriptor();
+        ModuleDescriptor<BundleDescriptor> newModule = bundleDescriptor.getModuleDescriptor();
         addModule(newModule);
     }
 
@@ -1249,7 +1249,7 @@ public class Application extends CommonResourceBundleDescriptor
      * @param id unique id for this application
      */
     public void setUniqueId(long id) {
-        LOG.log(Level.FINE, "[Application] " + getName() + " , uid: " + id);
+        LOG.log(Level.FINE, () -> "setUniquiId: [Application] " + getName() + " , uid: " + id);
         this.uniqueId = id;
 
         EjbDescriptor[] descs = getSortedEjbDescriptors();

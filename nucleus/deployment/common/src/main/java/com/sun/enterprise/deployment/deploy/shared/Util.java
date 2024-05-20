@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +18,8 @@
 package com.sun.enterprise.deployment.deploy.shared;
 
 import java.net.URI;
-import java.net.URL;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Utility logic.
@@ -39,21 +40,16 @@ public class Util {
     * @return the name portion of the URI
     */
     public static String getURIName(URI uri) {
-        String name = null;
         String path = uri.getSchemeSpecificPart();
-        if (path != null) {
-            /*
-             * Strip the path up to and including the last slash, if there is one.
-             * A directory URI may end in a slash, so be sure to remove it if it
-             * is there.
-             */
-            if (path.endsWith("/")) {
-                path = path.substring(0, path.length() - 1);
-            }
-            int startOfName = path.lastIndexOf('/') + 1; // correct whether a / appears or not
-            name = path.substring(startOfName);
+         // Strip the path up to and including the last slash, if there is one.
+         // A directory URI may end in a slash, so be sure to remove it if it
+         // is there.
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
         }
-        return name;
+        // correct whether a / appears or not
+        int startOfName = path.lastIndexOf('/') + 1;
+        return path.substring(startOfName);
     }
 
    /**

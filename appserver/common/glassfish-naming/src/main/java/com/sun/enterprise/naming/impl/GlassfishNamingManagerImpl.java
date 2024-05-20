@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -83,7 +83,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     private static final Logger LOG = System.getLogger(GlassfishNamingManagerImpl.class.getName());
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     private final InitialContext initialContext;
 
@@ -684,7 +684,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     private String getComponentId() throws NamingException {
         final ComponentInvocation ci;
         if (invMgr == null) {
-            ci = habitat.<InvocationManager> getService(InvocationManager.class).getCurrentInvocation();
+            ci = serviceLocator.<InvocationManager> getService(InvocationManager.class).getCurrentInvocation();
         } else {
             ci = invMgr.getCurrentInvocation();
         }

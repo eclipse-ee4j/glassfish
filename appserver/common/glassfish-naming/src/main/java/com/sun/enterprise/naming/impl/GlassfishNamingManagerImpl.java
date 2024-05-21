@@ -682,28 +682,22 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
      * @return the component id as a string.
      */
     private String getComponentId() throws NamingException {
-        final ComponentInvocation ci;
+        final ComponentInvocation invocation;
         if (invMgr == null) {
-            ci = serviceLocator.<InvocationManager> getService(InvocationManager.class).getCurrentInvocation();
+            invocation = serviceLocator.<InvocationManager> getService(InvocationManager.class).getCurrentInvocation();
         } else {
-            ci = invMgr.getCurrentInvocation();
+            invocation = invMgr.getCurrentInvocation();
         }
 
-        if (ci == null) {
-            throw new NamingException("Invocation exception: Got null ComponentInvocation ");
+        if (invocation == null) {
+            throw new NamingException("Invocation exception: Got null ComponentInvocation!");
         }
 
-        try {
-            String id = ci.getComponentId();
-            if (id == null) {
-                throw new NamingException("Invocation exception: ComponentId is null");
-            }
-            return id;
-        } catch (Throwable th) {
-            NamingException ine = new NamingException("Invocation exception: " + th);
-            ine.initCause(th);
-            throw ine;
+        String id = invocation.getComponentId();
+        if (id == null) {
+            throw new NamingException("Invocation exception: Got null ComponentId!");
         }
+        return id;
     }
 
 

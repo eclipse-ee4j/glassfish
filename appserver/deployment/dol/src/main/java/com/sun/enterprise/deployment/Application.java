@@ -1250,7 +1250,7 @@ public class Application extends CommonResourceBundleDescriptor
      * @param id unique id for this application
      */
     public void setUniqueId(long id) {
-        LOG.log(Level.FINE, () -> "setUniquiId: [Application] " + getName() + " , uid: " + id);
+        LOG.log(Level.FINE, () -> "setUniqueId called for application " + getName() + " with value: " + id);
         this.uniqueId = id;
 
         EjbDescriptor[] descs = getSortedEjbDescriptors();

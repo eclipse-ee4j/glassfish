@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -110,9 +110,8 @@ public abstract class JarArchive implements Archive {
     static String getName(URI uri) {
         String path = Util.getURIName(uri);
         int lastDot = path.lastIndexOf('.');
-        int endOfName = (lastDot != -1) ? lastDot : path.length();
-        String name = path.substring(0, endOfName);
-        return name;
+        int endOfName = lastDot == -1 ? path.length() : lastDot;
+        return path.substring(0, endOfName);
     }
 
     /**

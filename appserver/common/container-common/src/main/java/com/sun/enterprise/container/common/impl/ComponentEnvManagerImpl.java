@@ -398,6 +398,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     private void registerConcurrencyCDIQualifiers(Collection<JNDIBinding> jndiBindings, Set<ResourceDescriptor> concurrencyDescs) {
         ConcurrencyManagedCDIBeans setup = new ConcurrencyManagedCDIBeans();
         for (ResourceDescriptor desc : concurrencyDescs) {
+            LOG.log(FINE, () -> "Registering concurrency CDI qualifiers for descriptor: " + desc);
             String jndiName = desc.getJndiName().toString();
             if (desc instanceof ContextServiceDefinitionDescriptor) {
                 Set<String> qualifiers = new HashSet<>(((ContextServiceDefinitionDescriptor) desc).getQualifiers());

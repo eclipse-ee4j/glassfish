@@ -93,10 +93,9 @@ class ManagedThreadFactoryDefinitionConverter extends
             throw new IllegalArgumentException("Cannot merge managed thread factories with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
         }
-        // never override qualifiers via annotation
-        //if (descriptorData.getQualifiers().isEmpty()) {
-        //    descriptorData.setQualifiers(annotationData.getQualifiers());
-        //}
+        if (descriptorData.getQualifiers().isEmpty()) {
+            descriptorData.setQualifiers(annotationData.getQualifiers());
+        }
         if (!descriptorData.isVirtual()) {
             descriptorData.setVirtual(annotationData.isVirtual());
         }

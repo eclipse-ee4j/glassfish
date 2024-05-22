@@ -16,17 +16,25 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import java.io.Serializable;
+import java.util.List;
+
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * @author David Matejcek
  */
-public interface ContextualResourceDefinition extends ConcurrencyResourceDefinition {
+public interface ConcurrencyResourceDefinition extends Serializable {
 
-    String getContext();
+    String getName();
 
-    void setContext(String context);
+    void setName(String name);
 
-    boolean isVirtual();
+    List<String> getQualifiers();
 
-    void setVirtual(boolean virtual);
+    void addQualifier(String qualifier);
 
+    default SimpleJndiName getJndiName() {
+        return new SimpleJndiName(getName());
+    }
 }

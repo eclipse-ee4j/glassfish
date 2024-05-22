@@ -19,6 +19,7 @@ package com.sun.enterprise.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 
+import java.lang.System.Logger;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -27,11 +28,14 @@ import java.util.stream.Collectors;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 import static com.sun.enterprise.deployment.ResourceDescriptor.getJavaComponentJndiName;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * @author David Matejcek
  */
-abstract class ConcurrencyDefinitionConvertor<D extends ContextualResourceDefinition, T extends ResourceDescriptor> {
+abstract class ConcurrencyDefinitionConvertor<D extends ConcurrencyResourceDefinition, T extends ResourceDescriptor> {
+    private static final Logger LOG = System.getLogger(ConcurrencyDefinitionConvertor.class.getName());
+
 
     private final Class<T> descriptorClass;
     private final JavaEEResourceType descriptorType;
@@ -48,14 +52,19 @@ abstract class ConcurrencyDefinitionConvertor<D extends ContextualResourceDefini
     abstract void merge(D annotationData, D descriptorData);
 
     final void updateDescriptors(D data, ResourceContainerContext[] contexts) {
+        LOG.log(DEBUG, "updateDescriptors(data={0}, contexts.length={1})", data, contexts.length);
         for (ResourceContainerContext context : contexts) {
             Set<ResourceDescriptor> descriptors = context.getResourceDescriptors(descriptorType);
             List<D> existing = getExisting(data, descriptors);
             if (existing.isEmpty()) {
-                descriptors.add(createDescriptor(data));
+                T descriptor = createDescriptor(data);
+                descriptors.add(descriptor);
+                LOG.log(DEBUG, () -> "Added new descriptor based on annotation: " + descriptor);
             } else {
                 for (D existingData : existing) {
                     merge(data, existingData);
+                    LOG.log(DEBUG,
+                        () -> "Merged data " + data + " into existing descriptor data, result: " + existingData);
                 }
             }
         }

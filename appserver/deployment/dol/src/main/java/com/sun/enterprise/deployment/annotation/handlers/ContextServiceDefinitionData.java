@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,34 +24,35 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
-import org.glassfish.api.naming.SimpleJndiName;
-
 import static com.sun.enterprise.universal.JavaLangUtils.nonNull;
 
 /**
  * @author David Matejcek
  */
-public class ContextServiceDefinitionData implements Serializable {
+public class ContextServiceDefinitionData implements ConcurrencyResourceDefinition {
 
     private static final long serialVersionUID = -6964391431010485710L;
 
-    private SimpleJndiName name;
+    private String name;
     private Set<String> cleared = new HashSet<>();
     private Set<String> propagated = new HashSet<>();
     private Set<String> unchanged = new HashSet<>();
     private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
-    public SimpleJndiName getName() {
+    @Override
+    public String getName() {
         return name;
     }
 
 
-    public void setName(SimpleJndiName name) {
+    @Override
+    public void setName(String name) {
         this.name = name;
     }
 
 
+    @Override
     public List<String> getQualifiers() {
         return qualifiers;
     }
@@ -64,6 +64,7 @@ public class ContextServiceDefinitionData implements Serializable {
     }
 
 
+    @Override
     public void addQualifier(String qualifier) {
         this.qualifiers.add(qualifier);
     }

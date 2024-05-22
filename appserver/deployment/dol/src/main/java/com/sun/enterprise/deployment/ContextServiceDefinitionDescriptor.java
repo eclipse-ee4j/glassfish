@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.annotation.handlers.ConcurrencyResourceDefinition;
 import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
 
 import java.util.List;
@@ -24,14 +25,13 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
-import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 
 /**
  * @author David Matejcek
  */
-public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
+public class ContextServiceDefinitionDescriptor extends ResourceDescriptor implements ConcurrencyResourceDefinition {
 
     private static final long serialVersionUID = 2537143519647534821L;
 
@@ -51,21 +51,23 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
 
     @Override
     public String getName() {
-        return this.data.getName().toString();
+        return this.data.getName();
     }
 
 
     @Override
     public void setName(String name) {
-        this.data.setName(new SimpleJndiName(name));
+        this.data.setName(name);
     }
 
 
+    @Override
     public List<String> getQualifiers() {
         return data.getQualifiers();
     }
 
 
+    @Override
     public void addQualifier(String qualifier) {
         data.addQualifier(qualifier);
     }

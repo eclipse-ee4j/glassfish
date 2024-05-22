@@ -149,7 +149,7 @@ public class ContextServiceDefinitionData implements ConcurrencyResourceDefiniti
 
     @Override
     public String toString() {
-        return super.toString() + "[name=" + name + ", qualifiers=" + qualifiers + ", cleared=" + cleared
-            + ", propagated=" + propagated + ", unchanged=" + unchanged + ']';
+        return super.toString() + "[name=" + name + ", cleared=" + cleared + ", propagated=" + propagated
+            + ", unchanged=" + unchanged + ", qualifiers=" + qualifiers + ", properties=" + properties + ']';
     }
 }

@@ -110,6 +110,7 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
 
     @Override
     public String toString() {
-        return super.toString() + "[" + getName() + "]";
+        return super.toString() + "[name=" + getName() + ", context=" + context + ", priority=" + priority
+            + ", virtual=" + virtual + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
 }

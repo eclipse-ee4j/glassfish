@@ -120,6 +120,8 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
 
     @Override
     public String toString() {
-        return super.toString() + "[" + getName() + "]";
+        return super.toString() + "[name=" + getName() + ", context=" + context + ", virtual=" + virtual
+            + ", hungTaskThreshold=" + hungTaskThreshold + ", maxAsync=" + maxAsync
+            + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
 }

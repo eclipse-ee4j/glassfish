@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,8 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.deployment.ResourceDescriptor.getJavaComponentJndiName;
 
 /**
  * @author David Matejcek
@@ -108,44 +111,55 @@ class ContextServiceDefinitionConverter {
         return contexts;
     }
 
-    void merge(ContextServiceDefinitionData csd, ContextServiceDefinitionData descriptor) {
-        if (descriptor.getName().equals(csd.getName())) {
+    private void merge(ContextServiceDefinitionData annotation, ContextServiceDefinitionData descriptor) {
+        LOG.log(Level.DEBUG, "merge(annotation={0}, descriptor={1})", annotation, descriptor);
+        if (!annotation.getName().equals(descriptor.getName())) {
+            throw new IllegalArgumentException("Cannot merge context services with different names: "
+                + annotation.getName() + " x " + descriptor.getName());
+        }
 
-            if (descriptor.getCleared() == null && csd.getCleared() != null) {
-                descriptor.setCleared(new HashSet<>(csd.getCleared()));
-            }
+        if (descriptor.getCleared() == null && annotation.getCleared() != null) {
+            descriptor.setCleared(new HashSet<>(annotation.getCleared()));
+        }
 
-            if (descriptor.getPropagated() == null && csd.getPropagated() != null) {
-                descriptor.setPropagated(new HashSet<>(csd.getPropagated()));
-            }
+        if (descriptor.getPropagated() == null && annotation.getPropagated() != null) {
+            descriptor.setPropagated(new HashSet<>(annotation.getPropagated()));
+        }
 
-            if (descriptor.getUnchanged() == null && csd.getUnchanged() != null) {
-                descriptor.setUnchanged(new HashSet<>(csd.getUnchanged()));
-            }
+        if (descriptor.getUnchanged() == null && annotation.getUnchanged() != null) {
+            descriptor.setUnchanged(new HashSet<>(annotation.getUnchanged()));
+        }
 
-            if (descriptor.getQualifiers().isEmpty() && !csd.getQualifiers().isEmpty()) {
-                descriptor.setQualifiers(csd.getQualifiers());
-            }
+        // FIXME: descriptor can have one empty qualifier, then it should override annotation.
+        // TODO: null or yet another additional attribute? 4ALL concurrency descriptors.
+        if (descriptor.getQualifiers().isEmpty() && !annotation.getQualifiers().isEmpty()) {
+            descriptor.setQualifiers(annotation.getQualifiers());
         }
     }
 
-    public void updateDescriptors(ContextServiceDefinitionData data, ResourceContainerContext[] contexts) {
+    public void updateDescriptors(ContextServiceDefinitionData annotation, ResourceContainerContext[] contexts) {
         for (ResourceContainerContext context : contexts) {
             Set<ResourceDescriptor> descriptors = context.getResourceDescriptors(JavaEEResourceType.CSDD);
-            List<ResourceDescriptor> existing = getExisting(data, descriptors);
+            List<ContextServiceDefinitionData> existing = getExisting(annotation, descriptors);
             if (existing.isEmpty()) {
-                descriptors.add(new ContextServiceDefinitionDescriptor(data, MetadataSource.ANNOTATION));
+                descriptors.add(new ContextServiceDefinitionDescriptor(annotation, MetadataSource.ANNOTATION));
             } else {
-                for (ResourceDescriptor existingData : existing) {
-                    merge(data, ((ContextServiceDefinitionDescriptor) existingData).getData());
+                for (ContextServiceDefinitionData existingData : existing) {
+                    merge(annotation, existingData);
                 }
             }
         }
     }
 
+    private List<ContextServiceDefinitionData> getExisting(ContextServiceDefinitionData data, Set<ResourceDescriptor> descriptors) {
+        return descriptors.stream().filter(d -> isSameDefinition(data, d)).map(d -> ((ContextServiceDefinitionDescriptor) d).getData())
+            .collect(Collectors.toList());
+    }
 
-    protected static List<ResourceDescriptor> getExisting(ContextServiceDefinitionData descriptor,
-        Set<ResourceDescriptor> resourceDescriptors) {
-        return resourceDescriptors.stream().filter(d -> d.getJndiName().equals(descriptor.getName())).toList();
+
+    private boolean isSameDefinition(ContextServiceDefinitionData data, ResourceDescriptor descriptor) {
+        return descriptor instanceof ContextServiceDefinitionDescriptor
+            && Objects.equals(getJavaComponentJndiName(descriptor.getJndiName().toString()),
+                getJavaComponentJndiName(data.getName().toString()));
     }
 }

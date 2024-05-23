@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.List;
 import org.jboss.arquillian.container.spi.client.deployment.DeploymentDescription;
 import org.jboss.arquillian.container.test.impl.client.deployment.AnnotationDeploymentScenarioGenerator;
-import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.container.test.spi.client.deployment.DeploymentScenarioGenerator;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestClass;
@@ -38,22 +37,16 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
  * @author Arjan Tijms
  *
  */
-public class WebArchiveUpdater implements ApplicationArchiveProcessor, LoadableExtension {
+public class WebArchiveUpdater implements LoadableExtension {
 
     @Override
     public void register(ExtensionBuilder extensionBuilder) {
-        extensionBuilder.service(ApplicationArchiveProcessor.class, WebArchiveUpdater.class);
         extensionBuilder.override(
             DeploymentScenarioGenerator.class,
-            AnnotationDeploymentScenarioGenerator.class, FooGEneratior.class);
+            AnnotationDeploymentScenarioGenerator.class, ScenarioBasedUpdater.class);
     }
 
-    @Override
-    public void process(Archive<?> archive, TestClass testClass) {
-        System.out.printf("WebArchive: %s\n", archive.toString(true));
-    }
-
-    public static class FooGEneratior extends AnnotationDeploymentScenarioGenerator {
+    public static class ScenarioBasedUpdater extends AnnotationDeploymentScenarioGenerator {
 
         @Override
         public List<DeploymentDescription> generate(TestClass testClass) {

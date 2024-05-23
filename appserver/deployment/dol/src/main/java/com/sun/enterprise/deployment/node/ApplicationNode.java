@@ -23,6 +23,7 @@ import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.ApplicationTagNames;
+import com.sun.enterprise.deployment.xml.ConcurrencyTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
@@ -125,6 +126,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public Collection<String> elementsAllowingEmptyValue() {
         final Set<String> result = new HashSet<>();
         result.add(ApplicationTagNames.LIBRARY_DIRECTORY);
+        result.add(ConcurrencyTagNames.QUALIFIER);
         return result;
     }
 

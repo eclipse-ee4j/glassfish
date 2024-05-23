@@ -7,7 +7,7 @@
         <property name="deploymentExportPath">target/</property>
     </engine>
 
-    <group qualifier="jetty-servers" default="true">
+    <group qualifier="glassfish-servers" default="true">
         <container qualifier="http" default="true">
             <configuration>
                 <property name="httpsPortAsDefault">false</property>

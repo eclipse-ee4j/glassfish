@@ -44,6 +44,7 @@ import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.annotation.handlers.ConcurrencyResourceDefinition;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import com.sun.enterprise.naming.spi.NamingUtils;
@@ -400,17 +401,18 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         for (ResourceDescriptor desc : concurrencyDescs) {
             LOG.log(FINE, () -> "Registering concurrency CDI qualifiers for descriptor: " + desc);
             String jndiName = desc.getJndiName().toString();
+            ConcurrencyResourceDefinition descriptor = (ConcurrencyResourceDefinition) desc;
+            Set<String> qualifiers = new HashSet<>(descriptor.getQualifiers());
+            // A special value which might occur in XML
+            // We don't need it any more.
+            qualifiers.remove("");
             if (desc instanceof ContextServiceDefinitionDescriptor) {
-                Set<String> qualifiers = new HashSet<>(((ContextServiceDefinitionDescriptor) desc).getQualifiers());
                 setup.addDefinition(CONTEXT_SERVICE, qualifiers, jndiName);
             } else if (desc instanceof ManagedExecutorDefinitionDescriptor) {
-                Set<String> qualifiers = new HashSet<>(((ManagedExecutorDefinitionDescriptor) desc).getQualifiers());
                 setup.addDefinition(MANAGED_EXECUTOR_SERVICE, qualifiers, jndiName);
             } else if (desc instanceof ManagedScheduledExecutorDefinitionDescriptor) {
-                Set<String> qualifiers = new HashSet<>(((ManagedScheduledExecutorDefinitionDescriptor) desc).getQualifiers());
                 setup.addDefinition(MANAGED_SCHEDULED_EXECUTOR_SERVICE, qualifiers, jndiName);
             } else if (desc instanceof ManagedThreadFactoryDefinitionDescriptor) {
-                Set<String> qualifiers = new HashSet<>(((ManagedThreadFactoryDefinitionDescriptor) desc).getQualifiers());
                 setup.addDefinition(MANAGED_THREAD_FACTORY, qualifiers, jndiName);
             } else {
                 throw new IllegalArgumentException("Unexpected Concurrency type!"

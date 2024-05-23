@@ -83,8 +83,23 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
+            <version>1.5-SNAPSHOT</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-spi</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-impl-base</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
         </dependency>
 
         <dependency>
@@ -129,14 +144,16 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack-glassfish</id>
-                        <phase>test-compile</phase>
+                        <id>unpack-glassfish-and-certs</id>
+                        <phase>generate-test-resources</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
                             <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
                             <artifactItems>
+                                
+                                <!-- Extract GlassFish -->
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>${glassfish-artifact-id}</artifactId>
@@ -145,7 +162,41 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${glassfish.root}</outputDirectory>
                                 </artifactItem>
+
+                                <!-- Extract certificates -->
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>servlet-tck-runtime</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.testOutputDirectory}/</outputDirectory>
+                                    <includes>**/**cts_cert,**/**clientcert.jks,**/**clientcert.p12</includes>
+                                </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>importCertificate</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.testOutputDirectory}/certificates/cts_cert</file>
+                            <alias>cts</alias>
+                            <keystore>${glassfish.root}/glassfish8/glassfish/domains/domain1/config/cacerts.jks</keystore>
+                            <storepass>changeit</storepass>
+                            <keypass>changeit</keypass>
+                            <noprompt>true</noprompt>
+                            <trustcacerts>true</trustcacerts>
+                            <verbose>true</verbose>
                         </configuration>
                     </execution>
                 </executions>
@@ -155,18 +206,44 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <argLine>
+                          -Duser.language=en 
+                          -Duser.country=US 
+                          -Djava.locale.providers=COMPAT,CLDR
+                    </argLine>
+                    
                     <dependenciesToScan>
                         <dependenciesToScan>jakarta.tck:servlet-tck-runtime</dependenciesToScan>
                     </dependenciesToScan>
                     <systemProperties>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
 
+                        <arquillian.xml>${project.basedir}/arquillian.xml</arquillian.xml>
+                        
+                        <javax.net.ssl.keyStore>${project.build.testOutputDirectory}/certificates/clientcert.jks</javax.net.ssl.keyStore>
+                        <javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
+                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish8/glassfish/domains/domain1/config/cacerts.jks</javax.net.ssl.trustStore>
+                        
+                        <!-- Uncomment to debug client-side SSL
+                        <javax.net.debug>ssl:handshake</javax.net.debug>
+                        -->
 
-                        <!-- If the servlet container doesn't support optional cross context -->
+                        <!-- If the servlet container doesn't (want to) support optional cross context -->
                         <servlet.tck.support.crossContext>false</servlet.tck.support.crossContext>
 
-                        <!-- If the servlet container doesn't support optional http2 push -->
+                        <!-- If the servlet container doesn't (want to) support optional http2 push -->
                         <servlet.tck.support.http2Push>false</servlet.tck.support.http2Push>
+                        
+                        <!-- Print the content of the deployed archives -->
+                        <servlet.tck.archive.print>true</servlet.tck.archive.print>
+                        
+                        <!-- 
+                           JDK 11 in TLSv1.3 does not support Post-Handshake Authentication, so TLSv1.2 must be used
+                           for client-cert authentication to work.
+                           
+                           See: https://stackoverflow.com/a/65979678/472792
+                        -->
+                        <jdk.tls.client.protocols>TLSv1.2</jdk.tls.client.protocols>
                         
                         <glassfish.postBootCommands>
                             create-file-user --groups Manager:Employee --passwordfile ${maven.multiModuleProjectDirectory}/javajoe.pass javajoe

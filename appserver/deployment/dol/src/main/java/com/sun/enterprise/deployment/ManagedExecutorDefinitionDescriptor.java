@@ -84,6 +84,12 @@ public class ManagedExecutorDefinitionDescriptor extends ResourceDescriptor impl
 
 
     @Override
+    public void setQualifiers(List<String> qualifiers) {
+        data.setQualifiers(qualifiers);
+    }
+
+
+    @Override
     public boolean isVirtual() {
         return data.isVirtual();
     }

@@ -34,6 +34,8 @@ public interface ConcurrencyResourceDefinition extends Serializable {
 
     void addQualifier(String qualifier);
 
+    void setQualifiers(List<String> qualifiers);
+
     default SimpleJndiName getJndiName() {
         return new SimpleJndiName(getName());
     }

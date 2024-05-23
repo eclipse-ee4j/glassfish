@@ -73,6 +73,12 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor imple
     }
 
 
+    @Override
+    public void setQualifiers(List<String> qualifiers) {
+        data.setQualifiers(qualifiers);
+    }
+
+
     public Set<String> getCleared() {
         return data.getCleared();
     }

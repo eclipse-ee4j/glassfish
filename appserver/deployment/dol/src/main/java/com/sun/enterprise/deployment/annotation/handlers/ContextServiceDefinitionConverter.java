@@ -140,10 +140,6 @@ class ContextServiceDefinitionConverter extends ConcurrencyDefinitionConvertor<C
             descriptor.setUnchanged(new HashSet<>(annotation.getUnchanged()));
         }
 
-        // FIXME: descriptor can have one empty qualifier, then it should override annotation.
-        // TODO: null or yet another additional attribute? 4ALL concurrency descriptors.
-        if (descriptor.getQualifiers().isEmpty() && !annotation.getQualifiers().isEmpty()) {
-            descriptor.setQualifiers(annotation.getQualifiers());
-        }
+        mergeQualifiers(annotation, descriptor);
     }
 }

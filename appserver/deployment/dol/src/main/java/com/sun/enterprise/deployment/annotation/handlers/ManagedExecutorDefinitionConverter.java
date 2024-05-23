@@ -92,28 +92,28 @@ class ManagedExecutorDefinitionConverter
 
 
     @Override
-    void merge(ManagedExecutorDefinitionData annotationData, ManagedExecutorDefinitionData descriptorData) {
-        LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
-        if (!annotationData.getName().equals(descriptorData.getName())) {
+    void merge(ManagedExecutorDefinitionData annotation, ManagedExecutorDefinitionData descriptor) {
+        LOG.log(Level.DEBUG, "merge(annotation={0}, descriptor={1})", annotation, descriptor);
+        if (!annotation.getName().equals(descriptor.getName())) {
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
-                + annotationData.getName() + " x " + descriptorData.getName());
+                + annotation.getName() + " x " + descriptor.getName());
         }
-        if (descriptorData.getQualifiers().isEmpty()) {
-            descriptorData.setQualifiers(annotationData.getQualifiers());
+
+        mergeQualifiers(annotation, descriptor);
+
+        if (!descriptor.isVirtual()) {
+            descriptor.setVirtual(annotation.isVirtual());
         }
-        if (!descriptorData.isVirtual()) {
-            descriptorData.setVirtual(annotationData.isVirtual());
+        if (descriptor.getHungAfterSeconds() <= 0 && annotation.getHungAfterSeconds() != 0) {
+            descriptor.setHungAfterSeconds(annotation.getHungAfterSeconds());
         }
-        if (descriptorData.getHungAfterSeconds() <= 0 && annotationData.getHungAfterSeconds() != 0) {
-            descriptorData.setHungAfterSeconds(annotationData.getHungAfterSeconds());
+        if (descriptor.getMaximumPoolSize() <= 0 && annotation.getMaximumPoolSize() > 0
+            && annotation.getMaximumPoolSize() < Integer.MAX_VALUE) {
+            descriptor.setMaximumPoolSize(annotation.getMaximumPoolSize());
         }
-        if (descriptorData.getMaximumPoolSize() <= 0 && annotationData.getMaximumPoolSize() > 0
-            && annotationData.getMaximumPoolSize() < Integer.MAX_VALUE) {
-            descriptorData.setMaximumPoolSize(annotationData.getMaximumPoolSize());
-        }
-        if (descriptorData.getContext() == null && annotationData.getContext() != null
-            && !annotationData.getContext().isBlank()) {
-            descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));
+        if (descriptor.getContext() == null && annotation.getContext() != null
+            && !annotation.getContext().isBlank()) {
+            descriptor.setContext(TranslatedConfigView.expandValue(annotation.getContext()));
         }
     }
 }

@@ -55,18 +55,20 @@ public class WebArchiveUpdater implements LoadableExtension {
             for (DeploymentDescription description : descriptions) {
                 Archive<?> applicationArchive = description.getArchive();
 
-                if (testClass.getName().contains("ClientCertAnnoTests") && applicationArchive instanceof WebArchive webArchive) {
+                if (
+                    (testClass.getName().contains("ClientCertAnnoTests") || testClass.getName().contains("servletResponseTests")) &&
+                    applicationArchive instanceof WebArchive webArchive) {
+
                     webArchive
-                    .addAsWebInfResource(
-                        new File("src/main/resources", "sun-web.xml"),
-                        "sun-web.xml")
-                    .addAsLibraries(
-                        Maven.configureResolver()
-                             .workOffline()
-                             .loadPomFromFile("pom.xml")
-                             .resolve(System.getProperty("servlet.tck.slf4jimpl", "org.slf4j:slf4j-simple"))
-                             .withTransitivity()
-                             .as(JavaArchive.class));
+                        .addAsWebInfResource(
+                            new File("src/main/resources", "sun-web.xml"),
+                            "sun-web.xml")
+                        .addAsLibraries(
+                            Maven.configureResolver()
+                                 .loadPomFromFile("pom.xml")
+                                 .resolve(System.getProperty("servlet.tck.slf4jimpl", "org.slf4j:slf4j-simple"))
+                                 .withTransitivity()
+                                 .as(JavaArchive.class));
                 }
 
                 if (Boolean.getBoolean("servlet.tck.archive.print")) {

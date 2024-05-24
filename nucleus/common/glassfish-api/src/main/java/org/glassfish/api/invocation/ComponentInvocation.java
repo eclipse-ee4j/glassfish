@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -276,5 +276,13 @@ public class ComponentInvocation implements Cloneable {
         newInv.transactionCompleting = false;
 
         return newInv;
+    }
+
+
+    @Override
+    public String toString() {
+        return super.toString() + "[componentId=" + componentId + ", moduleName=" + moduleName + ", appName=" + appName
+            + ", invocationType=" + invocationType + ", container=" + container + ", instance=" + instance
+            + ", transaction=" + transaction + ']';
     }
 }

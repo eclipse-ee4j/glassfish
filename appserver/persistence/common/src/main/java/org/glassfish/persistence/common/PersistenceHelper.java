@@ -16,6 +16,8 @@
  */
 package org.glassfish.persistence.common;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
@@ -35,6 +37,8 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
  * @author Mitesh Meswani
  */
 public class PersistenceHelper {
+
+    private static final System.Logger LOGGER = System.getLogger(PersistenceHelper.class.getName());
 
     public static DataSource lookupNonTxResource(ConnectorRuntime connectorRuntime, DeploymentContext ctx, SimpleJndiName dataSourceName) throws NamingException {
         return connectorRuntime.lookupNonTxResource(getResourceInfo(ctx, dataSourceName), true);
@@ -60,6 +64,7 @@ public class PersistenceHelper {
             try {
                 return referenceContainer.getResourceReferenceByName(dataSourceName.toString()).getJndiName();
             } catch (IllegalArgumentException e) {
+                LOGGER.log(DEBUG, () -> "Datasource name " + dataSourceName + " is not a reference, will use it as a JNDI name. Error: " + e.getMessage(), e);
                 return dataSourceName;
             }
         }

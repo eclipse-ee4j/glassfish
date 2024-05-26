@@ -31,12 +31,18 @@ import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+
+
 /**
  * Tests bytecode preprocessing in ASURLClassLoader.
  */
 public class ClassTransformerEjbWebAppTest extends ClassTransformerTestBase {
 
-    private static final System.Logger LOG = System.getLogger(ClassTransformerEjbWebAppTest.class.getName());
+    private static final Class<?> TEST_CLASS = ClassTransformerEjbWebAppTest.class;
+
+    private static final Package TEST_PACKAGE = TEST_CLASS.getPackage();
+
+    private static final System.Logger LOG = System.getLogger(TEST_CLASS.getName());
 
     private static final String APP_NAME = "TransformEjbWebApp";
 
@@ -55,14 +61,12 @@ public class ClassTransformerEjbWebAppTest extends ClassTransformerTestBase {
         }
     }
 
-    private File createDeployment() throws IOException {
+    private static File createDeployment() throws IOException {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
             .addAsLibrary(createProvider())
             .addClass(ClassTransformerBean.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsResource(
-                        getTestResource("persistence.xml"),
-                "META-INF/persistence.xml");
+            .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
 
         LOG.log(INFO, webArchive.toString(true));
 

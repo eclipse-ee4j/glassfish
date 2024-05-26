@@ -41,7 +41,11 @@ import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformer
  */
 public class ClassTransformerWebAppTest extends ClassTransformerTestBase {
 
-    private static final System.Logger LOG = System.getLogger(ClassTransformerWebAppTest.class.getName());
+    private static final Class<?> TEST_CLASS = ClassTransformerWebAppTest.class;
+
+    private static final Package TEST_PACKAGE = TEST_CLASS.getPackage();
+
+    private static final System.Logger LOG = System.getLogger(TEST_CLASS.getName());
 
     private static final String APP_NAME = "TransformWebApp";
 
@@ -77,9 +81,7 @@ public class ClassTransformerWebAppTest extends ClassTransformerTestBase {
             .addClass(ClassTransformerResource.class)
             .addClass(ClassTransformerApplication.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsResource(
-                        getTestResource("persistence.xml"),
-                        "META-INF/persistence.xml");
+            .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
 
         LOG.log(INFO, webArchive.toString(true));
 

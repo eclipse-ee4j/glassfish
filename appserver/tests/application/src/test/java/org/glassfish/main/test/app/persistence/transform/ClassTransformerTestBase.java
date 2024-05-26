@@ -38,9 +38,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 
-import org.glassfish.main.test.setup.ResourceAware;
 
-public class ClassTransformerTestBase implements ResourceAware{
+public class ClassTransformerTestBase {
 
     private static final String PROVIDER_FILE_NAME = "provider.jar";
 

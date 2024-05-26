@@ -37,16 +37,19 @@ import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
 import org.glassfish.main.test.setup.DeploymentAware;
-import org.glassfish.main.test.setup.ResourceAware;
 
 /**
  * Tests that JTA datasource in persistence.xml can be a resource reference
  */
-public class JtaDataSourceResourceRefTest implements ResourceAware, DeploymentAware {
+public class JtaDataSourceResourceRefTest implements DeploymentAware {
 
-    private static final System.Logger LOG = System.getLogger(JtaDataSourceResourceRefTest.class.getName());
+    private static final Class<?> TEST_CLASS = JtaDataSourceResourceRefTest.class;
 
-    private static final String APP_NAME = JtaDataSourceResourceRefTest.class.getSimpleName() + "WebApp";
+    private static final Package TEST_PACKAGE = TEST_CLASS.getPackage();
+
+    private static final System.Logger LOG = System.getLogger(TEST_CLASS.getName());
+
+    private static final String APP_NAME = TEST_CLASS.getSimpleName() + "WebApp";
 
     private static final String CONTEXT_ROOT = "/" + APP_NAME;
 
@@ -85,8 +88,8 @@ public class JtaDataSourceResourceRefTest implements ResourceAware, DeploymentAw
             .addClass(ResourceRefResource.class)
             .addClass(ResourceRefApplication.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsWebInfResource(getTestResource("web.xml"), "web.xml")
-            .addAsResource(getTestResource("persistence.xml"), "META-INF/persistence.xml");
+            .addAsWebInfResource(TEST_PACKAGE, "web.xml", "web.xml")
+            .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
 
         return createDeploymentWar(webArchive, APP_NAME);
     }

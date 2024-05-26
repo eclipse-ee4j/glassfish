@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023,2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 
-import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerApplication;
-import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -34,6 +32,9 @@ import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnec
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerApplication;
+import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerResource;
 
 /**
  * Tests bytecode preprocessing in WebappClassLoader.
@@ -70,15 +71,15 @@ public class ClassTransformerWebAppTest extends ClassTransformerTestBase {
         assertThat(ASADMIN.exec("undeploy", APP_NAME), asadminOK());
     }
 
-    private static File createDeployment() throws IOException {
+    private File createDeployment() throws IOException {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
             .addAsLibrary(createProvider())
             .addClass(ClassTransformerResource.class)
             .addClass(ClassTransformerApplication.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsResource(
-                new File("src/main/resources/org/glassfish/main/test/app/persistence/transform/persistence.xml"),
-                "META-INF/persistence.xml");
+                        getTestResource("persistence.xml"),
+                        "META-INF/persistence.xml");
 
         LOG.log(INFO, webArchive.toString(true));
 

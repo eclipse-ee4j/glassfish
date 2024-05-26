@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023,2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,13 +55,13 @@ public class ClassTransformerEjbWebAppTest extends ClassTransformerTestBase {
         }
     }
 
-    private static File createDeployment() throws IOException {
+    private File createDeployment() throws IOException {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
             .addAsLibrary(createProvider())
             .addClass(ClassTransformerBean.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsResource(
-                new File("src/main/resources/org/glassfish/main/test/app/persistence/transform/persistence.xml"),
+                        getTestResource("persistence.xml"),
                 "META-INF/persistence.xml");
 
         LOG.log(INFO, webArchive.toString(true));

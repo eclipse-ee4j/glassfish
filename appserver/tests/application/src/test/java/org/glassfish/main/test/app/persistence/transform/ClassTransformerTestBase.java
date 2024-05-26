@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023,2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 
-public class ClassTransformerTestBase {
+import org.glassfish.main.test.setup.ResourceAware;
+
+public class ClassTransformerTestBase implements ResourceAware{
 
     private static final String PROVIDER_FILE_NAME = "provider.jar";
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023,2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,9 @@ import org.junit.jupiter.api.io.TempDir;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.glassfish.main.test.setup.ResourceAware.getTestResourceStatic;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 
 /**
  * Tests synchronization between DAS and standalone instance.
@@ -69,10 +71,8 @@ public class SynchronizeStandaloneInstanceTest {
 
     private static File createDeployment() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
-            .addAsWebInfResource(
-                new File("src/main/resources/org/glassfish/main/test/app/synchronize/sample.json"),
-                "resources/sample.json")
-            .addAsWebResource(new File("src/main/resources/org/glassfish/main/test/app/synchronize/index.html"));
+            .addAsWebInfResource(getTestResourceStatic("sample.json"), "resources/sample.json")
+            .addAsWebResource(getTestResourceStatic("index.html"));
 
         LOG.log(INFO, webArchive.toString(true));
 

@@ -3921,14 +3921,35 @@ typing <code>asadmin set --help</code> at the command line.</p>
 <div class="sect3">
 <h4 id="to-deploy-an-application-or-module-by-using-a-deployment-plan"><a class="anchor" href="#to-deploy-an-application-or-module-by-using-a-deployment-plan"></a>To Deploy an Application or Module by Using a Deployment Plan</h4>
 <div class="paragraph">
+<p>A Deployment Plan is a ZIP or JAR archive with a collection of descriptor files that are merged into the application or module archive being deployed. This allows deploying the same archive with different descriptors tailored for the specific environment.</p>
+</div>
+<div class="sect4">
+<h5 id="deployment-plan-file-for-a-war"><a class="anchor" href="#deployment-plan-file-for-a-war"></a>Deployment Plan file for a WAR</h5>
+<div class="paragraph">
+<p>In the deployment plan for a WAR file, the <code>glassfish-web.xml</code>
+file is located at the root. Files <code>web.xml</code>, <code>glassfish-web.xml</code>, <code>sun-web.xml</code>, <code>beans.xml</code>, and <code>faces-config.xml</code> will be copied into the <code>WEB-INF</code> directory of the WAR. All other descriptors (e.g. <code>persistence.xml</code>), will be copied into <code>WEB-INF/classes/META-INF</code> in the WAR.</p>
+</div>
+<div class="paragraph">
+<p>The Deployment Plan can also contain any arbitrary files (they can also be in subdirectories), which will be unpacked into the '`WEB-INF/classes/META-INF' directory of the WAR. Any file in the Deployment Plan will overwrite the file with the same name and path in the WAR.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="deployment-plan-file-for-an-ear"><a class="anchor" href="#deployment-plan-file-for-an-ear"></a>Deployment Plan file for an EAR</h5>
+<div class="paragraph">
 <p>In the deployment plan for an EAR file, the <code>glassfish-application.xml</code>
 file is located at the root. The deployment descriptor for each module
 is stored according to this syntax: module-name.gf-dd-name, where the
 gf-dd-name depends on the module type. If a module named <code>MyModule</code>
 contains a CMP mappings file, the file is named
 <code>MyModule.sun-cmp-mappings.xml</code>. A <code>.dbschema</code> file is stored at the
-root level. Each <code>/</code> (forward slash) is replaced by a <code>#</code> (pound sign).</p>
+root level. Each <code>/</code> (forward slash) is replaced by a <code>#</code> (pound sign). All the descriptors will be unpacked into the <code>META-INF</code> directory of the EAR.</p>
 </div>
+<div class="paragraph">
+<p>The Deployment Plan can also contain any arbitrary files (they can also be in subdirectories), which will be unpacked into the 'META-INF' directory of the EAR. Any file in the Deployment Plan will overwrite the file with the same name and path in the EAR.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="use-the-deployment-plan"><a class="anchor" href="#use-the-deployment-plan"></a>Use the Deployment Plan</h5>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -3958,8 +3979,38 @@ option.</p>
 </li>
 </ol>
 </div>
-<div id="gijvy" class="paragraph">
-<p>Example 2-18 Deploying by Using a Deployment Plan</p>
+<div id="example-2-18" class="paragraph">
+<p>Example 2-18 Deploying a WAR Using a Deployment Plan</p>
+</div>
+<div class="paragraph">
+<p>This example deploys the application in the <code>myrostapp.war</code> file
+according to the plan specified by the <code>mydeployplan-war.jar</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt;deploy --deploymentplan mydeployplan-war.jar myrostapp.war
+Application deployed successfully with name myrostapp.
+Command deploy executed successfully.</code></pre>
+</div>
+</div>
+<div id="example-2-19" class="paragraph">
+<p>Example 2-19 Deployment Plan Structure for an Web Application</p>
+</div>
+<div class="paragraph">
+<p>This listing shows the structure of the deployment plan JAR file for a WAR file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ jar -tvf mydeployplan-war.jar
+420 Thu Mar 13 15:37:48 PST 2024 glassfish-web.xml
+370 Thu Mar 13 15:37:48 PST 2024 web.xml
+280 Thu Mar 13 15:37:48 PST 2024 faces-config.xml
+350 Thu Mar 13 15:37:48 PST 2024 beans.xml
+418 Thu Mar 13 15:37:48 PST 2024 persistence.xml</code></pre>
+</div>
+</div>
+<div id="example-2-20" class="paragraph">
+<p>Example 2-20 Deploying an EAR Using a Deployment Plan</p>
 </div>
 <div class="paragraph">
 <p>This example deploys the application in the <code>myrostapp.ear</code> file
@@ -3972,8 +4023,8 @@ Application deployed successfully with name myrostapp.
 Command deploy executed successfully.</code></pre>
 </div>
 </div>
-<div id="gijyn" class="paragraph">
-<p>Example 2-19 Deployment Plan Structure for an Enterprise Application</p>
+<div id="example-2-21" class="paragraph">
+<p>Example 2-21 Deployment Plan Structure for an Enterprise Application</p>
 </div>
 <div class="paragraph">
 <p>This listing shows the structure of the deployment plan JAR file for an
@@ -3991,8 +4042,8 @@ EAR file.</p>
 84805 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.RosterSchema.dbschema</code></pre>
 </div>
 </div>
-<div id="gijwk" class="paragraph">
-<p>Example 2-20 Deployment Plan Structure for an EJB Module</p>
+<div id="example-2-22" class="paragraph">
+<p>Example 2-22 Deployment Plan Structure for an EJB Module</p>
 </div>
 <div class="paragraph">
 <p>In the deployment plan for an EJB module, the deployment descriptor that
@@ -4015,6 +4066,7 @@ following listing, the deployment plan describes a CMP bean:</p>
 <div class="paragraph">
 <p>The deployment plan is part of the implementation of JSR 88. For more
 information about JSR 88, see the JSR 88 page at <code><a href="http://jcp.org/en/jsr/detail?id=88" class="bare">http://jcp.org/en/jsr/detail?id=88</a></code>.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -4117,8 +4169,8 @@ subcommand and specifying the path to the expanded directory.</p>
 </li>
 </ol>
 </div>
-<div id="gilaz" class="paragraph">
-<p>Example 2-21 Deploying an Application From a Directory</p>
+<div id="example-2-23" class="paragraph">
+<p>Example 2-23 Deploying an Application From a Directory</p>
 </div>
 <div class="paragraph">
 <p>This example deploys the expanded directory <code>/apps/MyApp</code> for the
@@ -4235,8 +4287,8 @@ help page.</p>
 </li>
 </ol>
 </div>
-<div id="gjivx" class="paragraph">
-<p>Example 2-22 Setting a Servlet Context-Initialization Parameter for a
+<div id="example-2-24" class="paragraph">
+<p>Example 2-24 Setting a Servlet Context-Initialization Parameter for a
 Web Application</p>
 </div>
 <div class="paragraph">
@@ -4317,8 +4369,8 @@ help page.</p>
 </li>
 </ol>
 </div>
-<div id="gjivv" class="paragraph">
-<p>Example 2-23 Unsetting a Servlet Context-Initialization Parameter for a
+<div id="example-2-25" class="paragraph">
+<p>Example 2-25 Unsetting a Servlet Context-Initialization Parameter for a
 Web Application</p>
 </div>
 <div class="paragraph">
@@ -4383,8 +4435,8 @@ specified when the parameter was set</p>
 </li>
 </ul>
 </div>
-<div id="gjixd" class="paragraph">
-<p>Example 2-24 Listing Servlet Context-Initialization Parameters for a Web
+<div id="example-2-26" class="paragraph">
+<p>Example 2-26 Listing Servlet Context-Initialization Parameters for a Web
 Application</p>
 </div>
 <div class="paragraph">
@@ -4469,8 +4521,8 @@ help page.</p>
 </li>
 </ol>
 </div>
-<div id="gjiwe" class="paragraph">
-<p>Example 2-25 Setting an Environment Entry for a Web Application</p>
+<div id="example-2-27" class="paragraph">
+<p>Example 2-27 Setting an Environment Entry for a Web Application</p>
 </div>
 <div class="paragraph">
 <p>This example sets the environment entry <code>Hello User</code> of the application
@@ -4517,8 +4569,8 @@ help page.</p>
 </li>
 </ol>
 </div>
-<div id="gjivj" class="paragraph">
-<p>Example 2-26 Unsetting an Environment Entry for a Web Application</p>
+<div id="example-2-28" class="paragraph">
+<p>Example 2-28 Unsetting an Environment Entry for a Web Application</p>
 </div>
 <div class="paragraph">
 <p>This example unsets the environment entry <code>Hello User</code> of the web
@@ -4580,8 +4632,8 @@ the <a href="reference-manual.html#list-web-env-entry"><code>list-web-env-entry<
 </li>
 </ul>
 </div>
-<div id="gjiws" class="paragraph">
-<p>Example 2-27 Listing Environment Entries for a Web Application</p>
+<div id="example-2-29" class="paragraph">
+<p>Example 2-29 Listing Environment Entries for a Web Application</p>
 </div>
 <div class="paragraph">
 <p>This example lists all environment entries that have been set for the
@@ -21518,7 +21570,7 @@ WSDL directory (<code>META-INF/wsdl</code> or <code>WEB-INF/wsdl</code>).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-25 12:38:02 UTC
+Last updated 2024-05-26 13:59:58 UTC
 </div>
 </div>
 </body>

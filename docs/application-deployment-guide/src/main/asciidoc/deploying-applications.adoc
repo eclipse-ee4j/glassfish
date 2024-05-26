@@ -628,13 +628,28 @@ typing `asadmin set --help` at the command line.
 
 ==== To Deploy an Application or Module by Using a Deployment Plan
 
+A Deployment Plan is a ZIP or JAR archive with a collection of descriptor files that are merged into the application or module archive being deployed. This allows deploying the same archive with different descriptors tailored for the specific environment.
+
+===== Deployment Plan file for a WAR
+
+In the deployment plan for a WAR file, the `glassfish-web.xml`
+file is located at the root. Files `web.xml`, `glassfish-web.xml`, `sun-web.xml`, `beans.xml`, and `faces-config.xml` will be copied into the `WEB-INF` directory of the WAR. All other descriptors (e.g. `persistence.xml`), will be copied into `WEB-INF/classes/META-INF` in the WAR.
+
+The Deployment Plan can also contain any arbitrary files (they can also be in subdirectories), which will be unpacked into the '`WEB-INF/classes/META-INF' directory of the WAR. Any file in the Deployment Plan will overwrite the file with the same name and path in the WAR.
+
+===== Deployment Plan file for an EAR
+
 In the deployment plan for an EAR file, the `glassfish-application.xml`
 file is located at the root. The deployment descriptor for each module
 is stored according to this syntax: module-name.gf-dd-name, where the
 gf-dd-name depends on the module type. If a module named `MyModule`
 contains a CMP mappings file, the file is named
 `MyModule.sun-cmp-mappings.xml`. A `.dbschema` file is stored at the
-root level. Each `/` (forward slash) is replaced by a `#` (pound sign).
+root level. Each `/` (forward slash) is replaced by a `#` (pound sign). All the descriptors will be unpacked into the `META-INF` directory of the EAR.
+
+The Deployment Plan can also contain any arbitrary files (they can also be in subdirectories), which will be unpacked into the 'META-INF' directory of the EAR. Any file in the Deployment Plan will overwrite the file with the same name and path in the EAR.
+
+===== Use the Deployment Plan
 
 1. Ensure that the server is running.
 +
@@ -650,8 +665,36 @@ Deployment directories might change between {productName} releases.
 ====
 
 
-[[gijvy]]
-Example 2-18 Deploying by Using a Deployment Plan
+[[example-2-18]]
+Example 2-18 Deploying a WAR Using a Deployment Plan
+
+This example deploys the application in the `myrostapp.war` file
+according to the plan specified by the `mydeployplan-war.jar` file.
+
+[source]
+----
+asadmin>deploy --deploymentplan mydeployplan-war.jar myrostapp.war
+Application deployed successfully with name myrostapp.
+Command deploy executed successfully.
+----
+
+[[example-2-19]]
+Example 2-19 Deployment Plan Structure for an Web Application
+
+This listing shows the structure of the deployment plan JAR file for a WAR file.
+
+[source]
+----
+$ jar -tvf mydeployplan-war.jar
+420 Thu Mar 13 15:37:48 PST 2024 glassfish-web.xml
+370 Thu Mar 13 15:37:48 PST 2024 web.xml
+280 Thu Mar 13 15:37:48 PST 2024 faces-config.xml
+350 Thu Mar 13 15:37:48 PST 2024 beans.xml
+418 Thu Mar 13 15:37:48 PST 2024 persistence.xml
+----
+
+[[example-2-20]]
+Example 2-20 Deploying an EAR Using a Deployment Plan
 
 This example deploys the application in the `myrostapp.ear` file
 according to the plan specified by the `mydeployplan.jar` file.
@@ -663,8 +706,8 @@ Application deployed successfully with name myrostapp.
 Command deploy executed successfully.
 ----
 
-[[gijyn]]
-Example 2-19 Deployment Plan Structure for an Enterprise Application
+[[example-2-21]]
+Example 2-21 Deployment Plan Structure for an Enterprise Application
 
 This listing shows the structure of the deployment plan JAR file for an
 EAR file.
@@ -681,8 +724,8 @@ $ jar -tvf mydeployplan.jar
 84805 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.RosterSchema.dbschema
 ----
 
-[[gijwk]]
-Example 2-20 Deployment Plan Structure for an EJB Module
+[[example-2-22]]
+Example 2-22 Deployment Plan Structure for an EJB Module
 
 In the deployment plan for an EJB module, the deployment descriptor that
 is specific to {productName} is at the root level. If a standalone
@@ -772,8 +815,8 @@ Deployment directories might change between {productName} releases.
 ====
 
 
-[[gilaz]]
-Example 2-21 Deploying an Application From a Directory
+[[example-2-23]]
+Example 2-23 Deploying an Application From a Directory
 
 This example deploys the expanded directory `/apps/MyApp` for the
 `hello` application.
@@ -850,8 +893,8 @@ xref:reference-manual.adoc#set-web-context-param[`set-web-context-param`] subcom
 Information about the options for the subcommand is included in this
 help page.
 
-[[gjivx]]
-Example 2-22 Setting a Servlet Context-Initialization Parameter for a
+[[example-2-24]]
+Example 2-24 Setting a Servlet Context-Initialization Parameter for a
 Web Application
 
 This example sets the servlet context-initialization parameter
@@ -909,8 +952,8 @@ xref:reference-manual.adoc#unset-web-context-param[`unset-web-context-param`] su
 Information about the options for the subcommand is included in this
 help page.
 
-[[gjivv]]
-Example 2-23 Unsetting a Servlet Context-Initialization Parameter for a
+[[example-2-25]]
+Example 2-25 Unsetting a Servlet Context-Initialization Parameter for a
 Web Application
 
 This example unsets the servlet context-initialization parameter
@@ -953,8 +996,8 @@ Remote commands require a running server.
 2. List servlet context-initialization parameters by using the
 xref:reference-manual.adoc#list-web-context-param[`list-web-context-param`] subcommand.
 
-[[gjixd]]
-Example 2-24 Listing Servlet Context-Initialization Parameters for a Web
+[[example-2-26]]
+Example 2-26 Listing Servlet Context-Initialization Parameters for a Web
 Application
 
 This example lists all servlet context-initialization parameters of the
@@ -1016,8 +1059,8 @@ using the xref:reference-manual.adoc#set-web-env-entry[`set-web-env-entry`] subc
 Information about the options for the subcommand is included in this
 help page.
 
-[[gjiwe]]
-Example 2-25 Setting an Environment Entry for a Web Application
+[[example-2-27]]
+Example 2-27 Setting an Environment Entry for a Web Application
 
 This example sets the environment entry `Hello User` of the application
 hello to `techscribe`. The Java type of this entry is
@@ -1052,8 +1095,8 @@ xref:reference-manual.adoc#unset-web-env-entry[`unset-web-env-entry`] subcommand
 Information about the options for the subcommand is included in this
 help page.
 
-[[gjivj]]
-Example 2-26 Unsetting an Environment Entry for a Web Application
+[[example-2-28]]
+Example 2-28 Unsetting an Environment Entry for a Web Application
 
 This example unsets the environment entry `Hello User` of the web
 application `hello`.
@@ -1091,8 +1134,8 @@ Remote commands require a running server.
 2. List the environment entries by using
 the xref:reference-manual.adoc#list-web-env-entry[`list-web-env-entry`] subcommand.
 
-[[gjiws]]
-Example 2-27 Listing Environment Entries for a Web Application
+[[example-2-29]]
+Example 2-29 Listing Environment Entries for a Web Application
 
 This example lists all environment entries that have been set for the
 web application `hello` by using the `set-web-env-entry` subcommand.

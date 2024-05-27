@@ -129,7 +129,7 @@
         <parsson.version>1.1.6</parsson.version>
         <parsson-media.version>1.1.6</parsson-media.version>
         <jakarta.json.bind-api.version>3.0.1</jakarta.json.bind-api.version>
-        <yasson.version>3.0.3</yasson.version>
+        <yasson.version>3.0.4</yasson.version>
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>3.1.1</jakarta.pages-api.version>

@@ -37,6 +37,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
@@ -60,6 +61,25 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
+        
+        <!-- Dependencies for our archive enhancer (org.glassfish.servlet.tck.WebArchiveUpdater) to compile -->
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-spi</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-impl-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+        </dependency>
+
 
         <!-- Jakarta Servlet TCK -->
         <dependency>
@@ -76,40 +96,11 @@
             <scope>test</scope>
         </dependency>
 
-
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
-        <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-spi</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-impl-base</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-        </dependency>
-
+        <!-- Junit 5 -->
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -122,12 +113,23 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--  Signature Test Plugin  -->
+        
+        <!-- Dependency for the API signature test -->
         <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.7</version>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!--
+            The Arquillian connector that starts GlassFish and deploys archives to it.
+        -->
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -175,9 +177,34 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    
+                    <execution>
+                        <id>copy-api</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <!-- 
+                                    The main Servlet API artefact to test. This must match exactly the jar
+                                    that's also included in the GlassFish build we're testing. 
+                                -->
+                                <artifactItem>
+                                    <groupId>jakarta.servlet</groupId>
+                                    <artifactId>jakarta.servlet-api</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/</outputDirectory>
+                                    <destFileName>jakarta.servlet-api.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             
+            <!-- Import the certificate that's used for the two tests that test SSL/Certificare authentication -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>keytool-maven-plugin</artifactId>
@@ -215,6 +242,7 @@
                     <dependenciesToScan>
                         <dependenciesToScan>jakarta.tck:servlet-tck-runtime</dependenciesToScan>
                     </dependenciesToScan>
+                    
                     <systemProperties>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
 
@@ -245,10 +273,15 @@
                         -->
                         <jdk.tls.client.protocols>TLSv1.2</jdk.tls.client.protocols>
                         
+                        <!-- Create the users for the various security (authentication tests) -->
                         <glassfish.postBootCommands>
-                            create-file-user --groups Manager:Employee --passwordfile ${maven.multiModuleProjectDirectory}/javajoe.pass javajoe
-                            create-file-user --groups Administrator:Employee --passwordfile ${maven.multiModuleProjectDirectory}/j2ee.pass j2ee
+                            create-file-user --groups Manager:Employee --passwordfile ${project.basedir}/javajoe.pass javajoe
+                            create-file-user --groups Administrator:Employee --passwordfile ${project.basedir}/j2ee.pass j2ee
                         </glassfish.postBootCommands>
+                        
+                        <!-- Set the properties for the API signature test -->
+                        <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
+                        <sigTestClasspath>${project.build.directory}/jakarta.servlet-api.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</sigTestClasspath>
                     </systemProperties>
                 </configuration>
             </plugin>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -1155,17 +1156,8 @@ public class Response implements HttpResponse, HttpServletResponse {
         sendRedirect(location, true);
     }
 
-    /**
-     * Sends a temporary or permanent redirect to the specified redirect location URL.
-     *
-     * @param location Location URL to redirect to
-     * @param isTemporary true if the redirect is supposed to be temporary, false if permanent
-     *
-     * @throws IllegalStateException if this response has already been committed
-     * @throws IOException if an input/output error occurs
-     */
     @Override
-    public void sendRedirect(String location, boolean isTemporary) throws IOException {
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
         if (isCommitted()) {
             throw new IllegalStateException(rb.getString(CANNOT_CALL_SEND_REDIRECT_EXCEPTION));
         }
@@ -1176,7 +1168,9 @@ public class Response implements HttpResponse, HttpServletResponse {
         }
 
         // Clear any data content that has been buffered
-        resetBuffer();
+        if (clearBuffer) {
+            resetBuffer();
+        }
 
         // Generate a temporary redirect to the specified location
         try {
@@ -1187,11 +1181,7 @@ public class Response implements HttpResponse, HttpServletResponse {
                 absolute = toAbsolute(location);
             }
 
-            if (isTemporary) {
-                setStatus(SC_MOVED_TEMPORARILY);
-            } else {
-                setStatus(SC_MOVED_PERMANENTLY);
-            }
+            setStatus(sc);
             setHeader("Location", absolute);
 
             // According to RFC2616 section 10.3.3 302 Found,
@@ -1738,10 +1728,5 @@ public class Response implements HttpResponse, HttpServletResponse {
         }
     }
 
-    @Override
-    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
-        // TODO TODO SERVLET 6.1
-        // TODO Auto-generated method stub
-    }
 
 }

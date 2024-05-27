@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.main.test.app.persistence.resourceref;
 
 import java.io.File;
@@ -34,6 +33,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
 import org.glassfish.main.test.setup.DeploymentAware;
@@ -61,6 +61,7 @@ public class JtaDataSourceResourceRefTest implements DeploymentAware {
 
     @Test
     public void testDeploy() throws IOException {
+        makeTheDefaultDataSourceEmbededded();
         File warFile = createDeployment();
         try {
             assertThat(ASADMIN.exec("deploy", warFile.getAbsolutePath()), asadminOK());
@@ -85,12 +86,26 @@ public class JtaDataSourceResourceRefTest implements DeploymentAware {
 
     private File createDeployment() throws IOException {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
-            .addClass(ResourceRefResource.class)
-            .addClass(ResourceRefApplication.class)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsWebInfResource(TEST_PACKAGE, "web.xml", "web.xml")
-            .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
+                .addClass(ResourceRefResource.class)
+                .addClass(ResourceRefApplication.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(TEST_PACKAGE, "web.xml", "web.xml")
+                .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
 
         return createDeploymentWar(webArchive, APP_NAME);
     }
+
+    private static void makeTheDefaultDataSourceEmbededded() {
+        final AsadminResult result = ASADMIN.exec(5_000, "set",
+                "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
+                "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
+                "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
+                "resources.jdbc-connection-pool.DerbyPool.property.URL=");
+        if (result.isError()) {
+            System.out.println("Failed to update the default datasource DerbyPool.");
+        } else {
+            System.out.println("The default datasource changed to embedded.");
+        }
+    }
+
 }

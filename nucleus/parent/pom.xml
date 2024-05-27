@@ -96,7 +96,7 @@
         <hk2.plugin.version>3.1.0</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
-        <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
+        <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jakarta.jaxb-impl.version>4.0.5</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->

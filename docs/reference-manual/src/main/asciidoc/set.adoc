@@ -13,20 +13,19 @@ set
 set
 ---
 
-Sets the values of configurable attributes
+Sets or deletes the values of configurable attributes
 
 === Synopsis
 
 [source]
 ----
-asadmin [asadmin-options] set [--help]
-attribute-name=value
+asadmin [asadmin-options] set [--help] attribute-name=value [attribute-name=value]
 ----
 
 === Description
 
-The `set` subcommand uses dotted names to modify the values of one or
-more configurable attributes.
+The `set` subcommand uses dotted names to modify or delete the values of one or
+more configurable attributes, separated by a space.
 
 Attributes from the monitoring hierarchy are read-only, but
 configuration attributes can be modified. You can use the
@@ -70,8 +69,10 @@ asadmin-options::
 
 === Operands
 
-attribute-name=value::
-  Identifies the full dotted name of the attribute name and its value.
+attribute-name=value [attribute-name=value]::
+  Identifies the full dotted name of the attribute name and its value. 
+  Multiple attribute=value pairs can be provided, separated by a space (,).
+  To delete a value, set the value to an empty value, e.g. attribute-name=
 
 === Examples
 
@@ -92,11 +93,11 @@ Command set executed successfully.
 
 ==== Example 2   Enabling the Monitoring Service for a Monitorable Object
 
-This example enables monitoring for the JVM.
+This example enables monitoring for the JVM and Thread-Pool modules.
 
 [source]
 ----
-asadmin> set server.monitoring-service.module-monitoring-levels.jvm=HIGH
+asadmin> set server.monitoring-service.module-monitoring-levels.jvm=HIGH server.monitoring-service.module-monitoring-levels.thread-pool=HIGH
 Command set executed successfully.
 ----
 

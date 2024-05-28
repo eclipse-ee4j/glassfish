@@ -118,7 +118,7 @@
         <!-- GlassFish Components -->
 
         <glassfish-corba.version>4.2.5</glassfish-corba.version>
-        <grizzly.version>4.0.2</grizzly.version>
+        <grizzly.version>4.1.0-M1</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>

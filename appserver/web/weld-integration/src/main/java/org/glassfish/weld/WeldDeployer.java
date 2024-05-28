@@ -146,7 +146,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     private InvocationManager invocationManager;
 
     @Inject
-    ArchiveFactory archiveFactory;
+    private ArchiveFactory archiveFactory;
 
     private final Map<Application, WeldBootstrap> appToBootstrap = new HashMap<>();
 
@@ -348,8 +348,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     archive.getServices().add(ResourceLoader.class, loader);
                 }
 
-                addCdiServicesToNonModuleBdas(deploymentImpl.getLibJarRootBdas(), services.getService(InjectionManager.class));
-                addCdiServicesToNonModuleBdas(deploymentImpl.getRarRootBdas(), services.getService(InjectionManager.class));
+                final InjectionManager injectionManager = services.getService(InjectionManager.class);
+                addCdiServicesToNonModuleBdas(deploymentImpl.getLibJarRootBdas(), injectionManager);
+                addCdiServicesToNonModuleBdas(deploymentImpl.getRarRootBdas(), injectionManager);
 
                 // Get Current TCL
                 ClassLoader oldTCL = Thread.currentThread().getContextClassLoader();
@@ -390,12 +391,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     bootstrap.validateBeans();
                     bootstrap.endInitialization();
                 } catch (Throwable t) {
-                    try {
-                        doBootstrapShutdown(appInfo);
-                    } finally {
-                        // ignore.
-                    }
-
+                    doBootstrapShutdown(appInfo);
                     String msgPrefix = getDeploymentErrorMsgPrefix(t);
                     DeploymentException deploymentException = new DeploymentException(msgPrefix + t.getMessage());
                     deploymentException.initCause(t);
@@ -491,16 +487,16 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
     private String getDeploymentErrorMsgPrefix(Throwable t) {
         if (t instanceof jakarta.enterprise.inject.spi.DefinitionException) {
-            return "CDI definition failure:";
+            return "CDI definition failure: ";
         }
 
         if (t instanceof jakarta.enterprise.inject.spi.DeploymentException) {
-            return "CDI deployment failure:";
+            return "CDI deployment failure: ";
         }
 
         Throwable cause = t.getCause();
         if (cause == t || cause == null) {
-            return "CDI deployment failure:";
+            return "CDI deployment failure: ";
         }
 
         return getDeploymentErrorMsgPrefix(cause);

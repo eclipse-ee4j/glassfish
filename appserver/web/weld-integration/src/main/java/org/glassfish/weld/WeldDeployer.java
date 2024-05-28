@@ -393,9 +393,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 } catch (Throwable t) {
                     doBootstrapShutdown(appInfo);
                     String msgPrefix = getDeploymentErrorMsgPrefix(t);
-                    DeploymentException deploymentException = new DeploymentException(msgPrefix + t.getMessage());
-                    deploymentException.initCause(t);
-                    throw deploymentException;
+                    throw new DeploymentException(msgPrefix + t.getMessage(), t);
                 } finally {
                     invocationManager.popAppEnvironment();
 

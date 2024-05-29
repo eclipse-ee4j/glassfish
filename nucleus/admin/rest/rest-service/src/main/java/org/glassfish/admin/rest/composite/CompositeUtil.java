@@ -169,20 +169,6 @@ public class CompositeUtil {
         }
     }
 
-    public Set<Class<?>> getRestModels() {
-        Set<Class<?>> classes = new HashSet<>();
-        for (ActiveDescriptor ad : Globals.getDefaultBaseServiceLocator()
-                .getDescriptors(BuilderHelper.createContractFilter(RestModel.class.getName()))) {
-            try {
-                classes.add(CompositeUtil.instance().getModel(Class.forName(ad.getImplementation())).getClass());
-            } catch (ClassNotFoundException ex) {
-                RestLogging.restLogger.log(Level.SEVERE, null, ex);
-            }
-        }
-
-        return classes;
-    }
-
     /**
      * Find and execute all resource extensions for the specified base resource and HTTP method TODO: method enum?
      *

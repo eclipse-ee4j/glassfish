@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,15 @@
 package org.glassfish.admin.rest.composite;
 
 import com.sun.enterprise.v3.common.ActionReporter;
+
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.UriBuilder;
+
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -26,14 +36,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import javax.security.auth.Subject;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.PathSegment;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.ResponseBuilder;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.UriBuilder;
+
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestResource;
@@ -69,11 +74,11 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     // @Consumes(CONSUMES_TYPE)
     public static final String CONSUMES_TYPE = Constants.MEDIA_TYPE_JSON;
 
-    final protected static String DETACHED = "__detached";
-    final protected static String DETACHED_DEFAULT = "false";
+    protected static final String DETACHED = "__detached";
+    protected static final String DETACHED_DEFAULT = "false";
 
-    final protected static String INCLUDE = "__includeFields";
-    final protected static String EXCLUDE = "__excludeFields";
+    protected static final String INCLUDE = "__includeFields";
+    protected static final String EXCLUDE = "__excludeFields";
 
     // TODO: These should be configurable
     protected static final int THREAD_POOL_CORE = 5;
@@ -101,7 +106,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
      */
     public <T> T getSubResource(Class<T> clazz) {
         try {
-            T resource = clazz.newInstance();
+            T resource = clazz.getDeclaredConstructor().newInstance();
             CompositeResource cr = (CompositeResource) resource;
             cr.locatorBridge = locatorBridge;
             cr.subjectRef = subjectRef;
@@ -494,7 +499,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     }
 
     protected <T extends RestModel> RestCollectionResponseBody<T> restCollectionResponseBody(Class<T> modelIface, String collectionName) {
-        return new RestCollectionResponseBody<T>(includeResourceLinks(), this.uriInfo, collectionName);
+        return new RestCollectionResponseBody<>(includeResourceLinks(), this.uriInfo, collectionName);
     }
 
     protected <T extends RestModel> RestModelResponseBody<T> restModelResponseBody(Class<T> modelIface, URI parentUri, T entity) {
@@ -510,7 +515,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     }
 
     protected <T extends RestModel> RestModelResponseBody<T> restModelResponseBody(Class<T> modelIface) {
-        return new RestModelResponseBody<T>(includeResourceLinks());
+        return new RestModelResponseBody<>(includeResourceLinks());
     }
 
     protected ResponseBody responseBody() {
@@ -574,12 +579,6 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         return ExecutorServiceHolder.INSTANCE;
     }
 
-    private static class ExecutorServiceHolder {
-        private static ExecutorService INSTANCE = new ThreadPoolExecutor(THREAD_POOL_CORE, // core thread pool size
-                THREAD_POOL_MAX, // maximum thread pool size
-                1, // time to wait before resizing pool
-                TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(THREAD_POOL_MAX, true), new ThreadPoolExecutor.CallerRunsPolicy());
-    }
 
     protected Response act(final CommandInvoker invoker, boolean detached) {
         if (detached) {
@@ -708,5 +707,12 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         public String getNewItemName() {
             return this.newItemName;
         }
+    }
+
+    private static class ExecutorServiceHolder {
+        private static final ExecutorService INSTANCE = new ThreadPoolExecutor(THREAD_POOL_CORE, // core thread pool size
+                THREAD_POOL_MAX, // maximum thread pool size
+                1, // time to wait before resizing pool
+                TimeUnit.MINUTES, new ArrayBlockingQueue<>(THREAD_POOL_MAX, true), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 }

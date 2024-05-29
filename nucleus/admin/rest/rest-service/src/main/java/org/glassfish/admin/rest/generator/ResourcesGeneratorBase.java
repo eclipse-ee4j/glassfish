@@ -126,7 +126,6 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     public void generateList(ConfigModel model, DomDocument domDocument) {
         configModelVisited(model);
 

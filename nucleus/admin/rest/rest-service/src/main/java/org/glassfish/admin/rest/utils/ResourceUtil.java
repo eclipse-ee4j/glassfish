@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,14 @@ package org.glassfish.admin.rest.utils;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,31 +49,24 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.PathSegment;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData;
 import org.glassfish.admin.rest.provider.MethodMetaData;
 import org.glassfish.admin.rest.provider.ParameterMetaData;
 import org.glassfish.admin.rest.provider.ProviderUtil;
-import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import org.glassfish.admin.rest.results.ActionReportResult;
-import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
-import static org.glassfish.admin.rest.utils.Util.getHtml;
-import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.admin.restconnector.RestConfig;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
@@ -78,12 +80,16 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.security.services.api.authorization.AuthorizationService;
 import org.glassfish.security.services.common.PrivilegedLookup;
-
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
+
+import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
+import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
+import static org.glassfish.admin.rest.utils.Util.getHtml;
+import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 
 /**
  * Resource utilities class. Used by resource templates, <code>TemplateListOfResource</code> and
@@ -261,7 +267,7 @@ public class ResourceUtil {
     public static void addCommandLog(RestActionReporter ar, String commandName, ParameterMap parameters) {
         List<String> logs = (List<String>) ar.getExtraProperties().get("commandLog");
         if (logs == null) {
-            logs = new ArrayList<String>();
+            logs = new ArrayList<>();
             ar.getExtraProperties().put("commandLog", logs);
         }
         final String parameterList = encodeString(getParameterList(parameters));
@@ -326,10 +332,7 @@ public class ResourceUtil {
             }
 
             if (params != null) {
-                Iterator<CommandModel.ParamModel> iterator = params.iterator();
-                CommandModel.ParamModel paramModel;
-                while (iterator.hasNext()) {
-                    paramModel = iterator.next();
+                for (ParamModel paramModel : params) {
                     Param param = paramModel.getParam();
                     ParameterMetaData parameterMetaData = getParameterMetaData(paramModel);
 
@@ -351,7 +354,7 @@ public class ResourceUtil {
 
     public static void resolveParamValues(Map<String, String> commandParams, UriInfo uriInfo) {
         List<PathSegment> pathSegments = uriInfo.getPathSegments();
-        Map<String, String> processParams = new HashMap<String, String>();
+        Map<String, String> processParams = new HashMap<>();
         processParams.putAll(commandParams);
 
         for (Map.Entry<String, String> entry : commandParams.entrySet()) {
@@ -426,8 +429,8 @@ public class ResourceUtil {
 
     public static MethodMetaData getMethodMetaData2(Dom parent, ConfigModel childModel, int parameterType) {
         MethodMetaData methodMetaData = new MethodMetaData();
-        List<Class<?>> interfaces = new ArrayList<Class<?>>();
-        Map<String, ParameterMetaData> params = new HashMap<String, ParameterMetaData>();
+        List<Class<?>> interfaces = new ArrayList<>();
+        Map<String, ParameterMetaData> params = new HashMap<>();
 
         try {
             Class<? extends ConfigBeanProxy> configBeanProxy = (Class<? extends ConfigBeanProxy>) childModel.classLoaderHolder
@@ -544,7 +547,7 @@ public class ResourceUtil {
         CommandModel cm = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName, RestLogging.restLogger);
         Collection<String> parameterNames = cm.getParametersNames();
 
-        ArrayList<CommandModel.ParamModel> metaData = new ArrayList<CommandModel.ParamModel>();
+        ArrayList<CommandModel.ParamModel> metaData = new ArrayList<>();
         CommandModel.ParamModel paramModel;
         for (String name : parameterNames) {
             paramModel = cm.getModelFor(name);
@@ -788,7 +791,7 @@ public class ResourceUtil {
      * @return A copy of given <code>sourceData</code> where key of each entry from it is converted to xml name
      */
     public static HashMap<String, String> translateCamelCasedNamesToXMLNames(Map<String, String> sourceData) {
-        HashMap<String, String> convertedData = new HashMap<String, String>(sourceData.size());
+        HashMap<String, String> convertedData = new HashMap<>(sourceData.size());
         for (Map.Entry<String, String> entry : sourceData.entrySet()) {
             String camelCasedKeyName = entry.getKey();
             String xmlKeyName = convertToXMLName(camelCasedKeyName);
@@ -818,34 +821,22 @@ public class ResourceUtil {
             }
         }
 
-        if (firstOne != null) {
-            return firstOne;
-        } else {
-            return result;
-        }
+        return firstOne == null ? result : firstOne;
     }
 
     public static Map buildMethodMetadataMap(MethodMetaData mmd) { // yuck
-        Map<String, Map> map = new TreeMap<String, Map>();
+        Map<String, Map> map = new TreeMap<>();
         Set<String> params = mmd.parameters();
-        Iterator<String> iterator = params.iterator();
-        String param;
-        while (iterator.hasNext()) {
-            param = iterator.next();
+        for (String param : params) {
             ParameterMetaData parameterMetaData = mmd.getParameterMetaData(param);
             map.put(param, processAttributes(parameterMetaData.attributes(), parameterMetaData));
         }
-
         return map;
     }
 
     private static Map<String, String> processAttributes(Set<String> attributes, ParameterMetaData parameterMetaData) {
-        Map<String, String> pmdm = new HashMap<String, String>();
-
-        Iterator<String> attriter = attributes.iterator();
-        String attributeName;
-        while (attriter.hasNext()) {
-            attributeName = attriter.next();
+        Map<String, String> pmdm = new HashMap<>();
+        for (String attributeName : attributes) {
             String attributeValue = parameterMetaData.getAttributeValue(attributeName);
             pmdm.put(attributeName, attributeValue);
         }
@@ -853,11 +844,11 @@ public class ResourceUtil {
         return pmdm;
     }
 
-    /*
+    /**
      * REST can now be configured via RestConfig to show or hide the deprecated
      * elements and attributes @return true if this model is deprecated
      */
-    static public boolean isDeprecated(ConfigModel model) {
+    public static boolean isDeprecated(ConfigModel model) {
         try {
             Class<? extends ConfigBeanProxy> cbp = (Class<? extends ConfigBeanProxy>) model.classLoaderHolder
                     .loadClass(model.targetTypeName);
@@ -871,7 +862,7 @@ public class ResourceUtil {
     }
 
     public static Map<String, String> getResourceLinks(Dom dom, UriInfo uriInfo, boolean canShowDeprecated) {
-        Map<String, String> links = new TreeMap<String, String>();
+        Map<String, String> links = new TreeMap<>();
 
         for (String elementName : dom.model.getElementNames()) { //for each element
             if (elementName.equals("*")) {
@@ -928,7 +919,7 @@ public class ResourceUtil {
     }
 
     public static List<ConfigModel> getRealChildConfigModels(ConfigModel childModel, DomDocument domDocument) {
-        List<ConfigModel> retlist = new ArrayList<ConfigModel>();
+        List<ConfigModel> retlist = new ArrayList<>();
         try {
             Class<?> subType = childModel.classLoaderHolder.loadClass(childModel.targetTypeName);
             List<ConfigModel> list = domDocument.getAllModelsImplementing(subType);
@@ -982,7 +973,7 @@ public class ResourceUtil {
     }
 
     public static Map<String, String> getResourceLinks(List<Dom> proxyList, UriInfo uriInfo) {
-        Map<String, String> links = new TreeMap<String, String>();
+        Map<String, String> links = new TreeMap<>();
         Collections.sort(proxyList, new DomConfigurator());
         for (Dom proxy : proxyList) { //for each element
             try {
@@ -996,9 +987,9 @@ public class ResourceUtil {
     }
 
     public static List<Map<String, String>> getCommandLinks(String[][] commandResourcesPaths) {
-        List<Map<String, String>> commands = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> commands = new ArrayList<>();
         for (String[] array : commandResourcesPaths) {
-            Map<String, String> command = new HashMap<String, String>();
+            Map<String, String> command = new HashMap<>();
             command.put("command", array[0]);
             command.put("method", array[1]);
             command.put("path", array[2]);
@@ -1009,7 +1000,7 @@ public class ResourceUtil {
     }
 
     public static void addMethodMetaData(ActionReport ar, Map<String, MethodMetaData> mmd) {
-        List<Map> methodMetaData = new ArrayList<Map>();
+        List<Map> methodMetaData = new ArrayList<>();
 
         MethodMetaData getMetaData = mmd.get("GET");
         methodMetaData.add(new HashMap() {
@@ -1019,7 +1010,7 @@ public class ResourceUtil {
             }
         });
         if (getMetaData != null) { //are they extra params for a GET command?
-            Map<String, Object> getMetaDataMap = new HashMap<String, Object>();
+            Map<String, Object> getMetaDataMap = new HashMap<>();
             if (getMetaData.sizeParameterMetaData() > 0) {
                 getMetaDataMap.put(MESSAGE_PARAMETERS, buildMethodMetadataMap(getMetaData));
             }
@@ -1027,7 +1018,7 @@ public class ResourceUtil {
         }
 
         MethodMetaData postMetaData = mmd.get("POST");
-        Map<String, Object> postMetaDataMap = new HashMap<String, Object>();
+        Map<String, Object> postMetaDataMap = new HashMap<>();
         if (postMetaData != null) {
             postMetaDataMap.put("name", "POST");
             //            if (postMetaData.sizeQueryParamMetaData() > 0) {
@@ -1041,7 +1032,7 @@ public class ResourceUtil {
 
         MethodMetaData deleteMetaData = mmd.get("DELETE");
         if (deleteMetaData != null) {
-            Map<String, Object> deleteMetaDataMap = new HashMap<String, Object>();
+            Map<String, Object> deleteMetaDataMap = new HashMap<>();
 
             deleteMetaDataMap.put("name", "DELETE");
             deleteMetaDataMap.put(MESSAGE_PARAMETERS, buildMethodMetadataMap(deleteMetaData));
@@ -1068,11 +1059,11 @@ public class ResourceUtil {
 
         return restConfig;
     }
-    /*
+
+    /**
      * returns true if the HTML viewer displays the deprecated elements or
      * attributes of a config bean
      */
-
     public static boolean canShowDeprecatedItems(ServiceLocator habitat) {
 
         RestConfig rg = getRestConfig(habitat);
@@ -1115,7 +1106,7 @@ public class ResourceUtil {
     public static boolean isAuthorized(final ServiceLocator habitat, final Subject subject, final String resource, final String action)
             throws URISyntaxException {
         final AuthorizationService authorizationSvc = AccessController
-                .doPrivileged(new PrivilegedLookup<AuthorizationService>(habitat, AuthorizationService.class));
+                .doPrivileged(new PrivilegedLookup<>(habitat, AuthorizationService.class));
         return authorizationSvc.isAuthorized(subject, new URI("admin", resource, null), action);
     }
 }

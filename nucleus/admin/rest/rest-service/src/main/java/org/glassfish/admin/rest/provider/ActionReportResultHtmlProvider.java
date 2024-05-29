@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,29 @@
 
 package org.glassfish.admin.rest.provider;
 
-import org.glassfish.api.ActionReport.ExitCode;
 import com.sun.enterprise.v3.common.ActionReporter;
+
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.Provider;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.glassfish.admin.rest.results.ActionReportResult;
+import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
 import org.jvnet.hk2.config.ConfigBean;
 
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.ext.Provider;
-
+import static org.glassfish.admin.rest.provider.ProviderUtil.getHint;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getHtmlForComponent;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getHtmlRespresentationsForCommand;
-import static org.glassfish.admin.rest.provider.ProviderUtil.getHint;
-import org.glassfish.admin.rest.utils.ResourceUtil;
 
 /**
  * @author Ludovic Champenois
@@ -76,29 +79,29 @@ public class ActionReportResultHtmlProvider extends BaseProvider<ActionReportRes
 
             if ((postMetaData != null) && (entity == null)) {
                 String postCommand = getHtmlRespresentationsForCommand(postMetaData, "POST",
-                        (proxy.getCommandDisplayName() == null) ? "Create" : proxy.getCommandDisplayName(), uriInfo.get());
+                        (proxy.getCommandDisplayName() == null) ? "Create" : proxy.getCommandDisplayName(), uriInfo);
                 result.append(getHtmlForComponent(postCommand, "Create " + ar.getActionDescription(), ""));
             }
             if ((deleteMetaData != null) && (entity == null)) {
                 String deleteCommand = getHtmlRespresentationsForCommand(deleteMetaData, "DELETE",
-                        (proxy.getCommandDisplayName() == null) ? "Delete" : proxy.getCommandDisplayName(), uriInfo.get());
+                        (proxy.getCommandDisplayName() == null) ? "Delete" : proxy.getCommandDisplayName(), uriInfo);
                 result.append(getHtmlForComponent(deleteCommand, "Delete " + ar.getActionDescription(), ""));
             }
             if ((getMetaData != null) && (entity == null) && (proxy.getCommandDisplayName() != null)) {
                 String getCommand = getHtmlRespresentationsForCommand(getMetaData, "GET",
-                        (proxy.getCommandDisplayName() == null) ? "Get" : proxy.getCommandDisplayName(), uriInfo.get());
+                        (proxy.getCommandDisplayName() == null) ? "Get" : proxy.getCommandDisplayName(), uriInfo);
                 result.append(getHtmlForComponent(getCommand, "Get " + ar.getActionDescription(), ""));
             }
             if (entity != null) {
-                String attributes = ProviderUtil.getHtmlRepresentationForAttributes(proxy.getEntity(), uriInfo.get());
+                String attributes = ProviderUtil.getHtmlRepresentationForAttributes(proxy.getEntity(), uriInfo);
                 result.append(ProviderUtil.getHtmlForComponent(attributes, ar.getActionDescription() + " Attributes", ""));
 
                 String deleteCommand = ProviderUtil.getHtmlRespresentationsForCommand(proxy.getMetaData().getMethodMetaData("DELETE"),
-                        "DELETE", (proxy.getCommandDisplayName() == null) ? "Delete" : proxy.getCommandDisplayName(), uriInfo.get());
+                        "DELETE", (proxy.getCommandDisplayName() == null) ? "Delete" : proxy.getCommandDisplayName(), uriInfo);
                 result.append(ProviderUtil.getHtmlForComponent(deleteCommand, "Delete " + entity.model.getTagName(), ""));
 
             } else if (proxy.getLeafContent() != null) { //it is a single leaf @Element
-                String content = "<form action=\"" + uriInfo.get().getAbsolutePath().toString() + "\" method=\"post\">" + "<dl><dt>"
+                String content = "<form action=\"" + uriInfo.getAbsolutePath().toString() + "\" method=\"post\">" + "<dl><dt>"
                         + "<label for=\"" + proxy.getLeafContent().name + "\">" + proxy.getLeafContent().name + ":&nbsp;</label>"
                         + "</dt><dd>" + "<input name=\"" + proxy.getLeafContent().name + "\" value =\"" + proxy.getLeafContent().value
                         + "\" type=\"text\" >"
@@ -136,7 +139,7 @@ public class ActionReportResultHtmlProvider extends BaseProvider<ActionReportRes
                             if (!((Map) object).isEmpty()) {
                                 Map m = (Map) object;
                                 if (vals.size() != 1) {//add a link if more than 1 child
-                                    result.append("<li>").append("<a href=\"" + uriInfo.get().getAbsolutePath().toString() + "/"
+                                    result.append("<li>").append("<a href=\"" + uriInfo.getAbsolutePath().toString() + "/"
                                             + entry.getKey() + "\">" + entry.getKey() + "</a>");
                                 } else {
                                     result.append("<li>").append(entry.getKey());
@@ -162,8 +165,8 @@ public class ActionReportResultHtmlProvider extends BaseProvider<ActionReportRes
 
                 } else {//no values to show... give an hint
                     if ((childResources == null) || (childResources.isEmpty())) {
-                        if ((uriInfo != null) && (uriInfo.get().getPath().equalsIgnoreCase("domain"))) {
-                            result.append(getHint(uriInfo.get(), MediaType.TEXT_HTML));
+                        if ((uriInfo != null) && (uriInfo.getPath().equalsIgnoreCase("domain"))) {
+                            result.append(getHint(uriInfo, MediaType.TEXT_HTML));
                         }
                     }
 
@@ -185,8 +188,8 @@ public class ActionReportResultHtmlProvider extends BaseProvider<ActionReportRes
     }
 
     protected String getBaseUri() {
-        if ((uriInfo != null) && (uriInfo.get() != null)) {
-            return uriInfo.get().getBaseUri().toASCIIString();
+        if (uriInfo != null) {
+            return uriInfo.getBaseUri().toASCIIString();
         }
         return "";
     }
@@ -210,7 +213,7 @@ public class ActionReportResultHtmlProvider extends BaseProvider<ActionReportRes
             if (path.startsWith("_") && (showHiddenCommands == false)) {//hidden cli command name
                 result.append("<!--");//hide the link in a comment
             }
-            result.append("<a href=\"").append(ProviderUtil.getElementLink(uriInfo.get(), command)).append("\">").append(command)
+            result.append("<a href=\"").append(ProviderUtil.getElementLink(uriInfo, command)).append("\">").append(command)
                     .append("</a><br>");
             if (path.startsWith("_") && (showHiddenCommands == false)) {//hidden cli
                 result.append("-->");

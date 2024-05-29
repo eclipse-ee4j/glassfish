@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package org.glassfish.admin.rest.provider;
 
-import org.jvnet.hk2.config.Dom;
-
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -25,11 +24,14 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
+
+import org.jvnet.hk2.config.Dom;
 
 /**
  *
@@ -40,7 +42,7 @@ import java.util.Set;
 @Provider
 public class FormWriter implements MessageBodyWriter<Dom> {
     @Context
-    protected jakarta.inject.Provider<UriInfo> uriInfo;
+    private UriInfo uriInfo;
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -71,7 +73,7 @@ public class FormWriter implements MessageBodyWriter<Dom> {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>\n").append("<html><head><title>Data</title></head>\n")
                 .append("<body><p>Change ").append(data.toString()).append(":</p>\n").append("<form name='pair' action='")
-                .append(uriInfo.get().getAbsolutePath()).append("' method='POST'>\n").append("<table>\n");
+                .append(uriInfo.getAbsolutePath()).append("' method='POST'>\n").append("<table>\n");
 
         Set<String> ss = data.model.getAttributeNames();
 

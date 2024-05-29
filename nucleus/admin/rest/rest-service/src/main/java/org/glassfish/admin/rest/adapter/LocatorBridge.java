@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@ import org.glassfish.hk2.api.ServiceLocator;
  * This is a bridge from one service locator to another, which is not related via parentage
  *
  * @author jwells
- *
  */
 @Singleton
 public class LocatorBridge {
@@ -38,6 +38,7 @@ public class LocatorBridge {
         return remoteLocator;
     }
 
+    @Override
     public String toString() {
         return "LocatorBridge(" + remoteLocator + "," + System.identityHashCode(this) + ")";
     }

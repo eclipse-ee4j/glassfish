@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import jakarta.inject.Inject;
 import javax.security.auth.Subject;
 import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.adapter.LocatorBridge;
@@ -43,8 +42,6 @@ public abstract class AbstractResource {
     protected Ref<Subject> subjectRef;
     @Inject
     protected LocatorBridge locatorBridge;
-    @Inject
-    protected SecurityContext securityContext;
     @Inject
     protected ServiceLocator serviceLocator;
 

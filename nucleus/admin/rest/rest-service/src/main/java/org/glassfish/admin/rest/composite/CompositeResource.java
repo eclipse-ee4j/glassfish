@@ -36,6 +36,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import javax.security.auth.Subject;
 
@@ -105,13 +106,13 @@ public abstract class CompositeResource extends AbstractResource implements Rest
      * @return
      */
     public <T> T getSubResource(Class<T> clazz) {
+        logger.log(Level.FINEST, () -> "Creating sub resource of " + clazz);
         try {
             T resource = clazz.getDeclaredConstructor().newInstance();
             CompositeResource cr = (CompositeResource) resource;
             cr.locatorBridge = locatorBridge;
             cr.subjectRef = subjectRef;
             cr.uriInfo = uriInfo;
-            cr.securityContext = securityContext;
             cr.requestHeaders = requestHeaders;
             cr.serviceLocator = serviceLocator;
 

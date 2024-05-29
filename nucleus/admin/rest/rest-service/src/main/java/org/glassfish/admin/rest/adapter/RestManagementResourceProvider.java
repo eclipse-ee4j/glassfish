@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,23 @@
 package org.glassfish.admin.rest.adapter;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.ws.rs.core.Feature;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+
+import org.glassfish.admin.rest.JavadocWadlGeneratorConfig;
+import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.RestResource;
 import org.glassfish.admin.rest.generator.ASMResourcesGenerator;
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
+import org.glassfish.admin.rest.resources.GeneratorResource;
 import org.glassfish.admin.rest.resources.StatusGenerator;
 import org.glassfish.admin.rest.resources.custom.ManagementProxyResource;
+import org.glassfish.admin.restconnector.Constants;
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceHandle;
@@ -30,27 +43,13 @@ import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.jvnet.hk2.config.Dom;
-
-import jakarta.ws.rs.core.Feature;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import org.glassfish.admin.rest.JavadocWadlGeneratorConfig;
-import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.admin.rest.resources.GeneratorResource;
-import org.glassfish.admin.restconnector.Constants;
 import org.glassfish.jersey.server.ServerProperties;
+import org.jvnet.hk2.config.Dom;
 
 /**
  * Responsible for providing ReST resources for management operations.
  */
 public class RestManagementResourceProvider extends AbstractRestResourceProvider {
-
-    public RestManagementResourceProvider() {
-        super();
-    }
 
     @Override
     public Feature getJsonFeature() {
@@ -65,9 +64,12 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
     }
 
     @Override
-    public ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext sc, final ServiceLocator serviceLocator,
-            final Set<? extends Binder> additionalBinders) throws EndpointRegistrationException {
-        ResourceConfig rc = super.getResourceConfig(classes, sc, serviceLocator, additionalBinders);
+    public ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext serverContext,
+        final ServiceLocator serviceLocator, final Set<? extends Binder> additionalBinders)
+        throws EndpointRegistrationException {
+        ResourceConfig rc = super.getResourceConfig(classes, serverContext, serviceLocator, additionalBinders);
+        RestLogging.restLogger.log(Level.FINEST, () -> "Extending binding configuration with " + this);
+
         registerExtendedWadlConfig(classes, rc, serviceLocator);
         rc.register(ExceptionFilter.class);
         rc.property(ServerProperties.RESOURCE_VALIDATION_DISABLE, Boolean.TRUE);
@@ -75,19 +77,19 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
     }
 
     @Override
-    public Set<Class<?>> getResourceClasses(ServiceLocator habitat) {
+    public Set<Class<?>> getResourceClasses(ServiceLocator serviceLocator) {
         //         return getLazyJersey().getResourcesConfigForManagement(locatorBridge);
-        Class domainResourceClass = null;//org.glassfish.admin.rest.resources.generated.DomainResource.class;
 
-        generateASM(habitat);
+        generateASM(serviceLocator);
+        Class<?> domainResourceClass = null;
         try {
             domainResourceClass = Class.forName("org.glassfish.admin.rest.resources.generatedASM.DomainResource");
         } catch (ClassNotFoundException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
         }
 
-        final Set<Class<?>> r = new HashSet<Class<?>>();
-        addCompositeResources(r, habitat);
+        final Set<Class<?>> r = new HashSet<>();
+        addCompositeResources(r, serviceLocator);
 
         // uncomment if you need to run the generator:
         if ("true".equals(System.getenv("REST_DEBUG"))) {
@@ -103,7 +105,8 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
         r.add(ManagementProxyResource.class);
         r.add(org.glassfish.admin.rest.resources.SessionsResource.class);
 
-        //TODO this needs to be added to all rest adapters that want to be secured. Decide on it after the discussion to unify RestAdapter is concluded
+        // TODO this needs to be added to all rest adapters that want to be secured.
+        //      Decide on it after the discussion to unify RestAdapter is concluded
         r.add(org.glassfish.admin.rest.resources.StaticResource.class);
 
         //body readers, not in META-INF/services anymore
@@ -150,6 +153,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
         return r;
     }
 
+    @SuppressWarnings("unchecked")
     private void registerExtendedWadlConfig(Set<Class<?>> classes, ResourceConfig rc, ServiceLocator serviceLocator) {
         List<ServiceHandle<JavadocWadlGeneratorConfig>> handles = serviceLocator.getAllServiceHandles(JavadocWadlGeneratorConfig.class);
         for (ServiceHandle<JavadocWadlGeneratorConfig> handle : handles) {

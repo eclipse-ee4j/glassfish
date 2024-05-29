@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,8 @@
 
 package org.glassfish.admin.rest.adapter;
 
-import org.jvnet.hk2.annotations.Service;
-
 import org.glassfish.admin.restconnector.Constants;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Adapter for REST management interface
@@ -30,7 +30,6 @@ import org.glassfish.admin.restconnector.Constants;
 public class RestManagementAdapter extends RestAdapter {
 
     public RestManagementAdapter() {
-        setRestResourceProvider(new RestManagementResourceProvider());
+        super(new RestManagementResourceProvider());
     }
-
 }

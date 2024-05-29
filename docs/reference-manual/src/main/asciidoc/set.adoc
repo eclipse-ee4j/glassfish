@@ -25,7 +25,7 @@ asadmin [asadmin-options] set [--help] attribute-name=value [attribute-name=valu
 === Description
 
 The `set` subcommand uses dotted names to modify or delete the values of one or
-more configurable attributes, separated by a space.
+more configurable attributes.
 
 Attributes from the monitoring hierarchy are read-only, but
 configuration attributes can be modified. You can use the
@@ -71,8 +71,8 @@ asadmin-options::
 
 attribute-name=value [attribute-name=value]::
   Identifies the full dotted name of the attribute name and its value. 
-  Multiple attribute=value pairs can be provided, separated by a space (,).
-  To delete a value, set the value to an empty value, e.g. attribute-name=
+  Multiple attribute=value pairs can be provided as multiple arguments, separated by a space.
+  To delete a value, set the value to an empty value, e.g. `attribute-name=`
 
 === Examples
 

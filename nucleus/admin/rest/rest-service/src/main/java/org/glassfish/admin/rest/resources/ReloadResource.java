@@ -17,9 +17,9 @@
 
 package org.glassfish.admin.rest.resources;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Context;
 
 import org.glassfish.admin.rest.adapter.Reloader;
 import org.glassfish.internal.api.ServerContext;
@@ -31,11 +31,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 @Path("reload")
 public class ReloadResource {
 
-    @Context
+    @Inject
     private Reloader reloader;
-    @Context
+    @Inject
     private ResourceConfig resourceConfig;
-    @Context
+    @Inject
     private ServerContext serverContext;
 
     @POST

@@ -23,7 +23,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -50,8 +49,8 @@ import static jakarta.ws.rs.core.Response.Status.UNAUTHORIZED;
  */
 @Path("/sessions")
 public class SessionsResource extends AbstractResource {
-    @Context
-    RestSessionManager sessionManager;
+    @Inject
+    private RestSessionManager sessionManager;
 
     @Inject
     private Ref<Request> request;

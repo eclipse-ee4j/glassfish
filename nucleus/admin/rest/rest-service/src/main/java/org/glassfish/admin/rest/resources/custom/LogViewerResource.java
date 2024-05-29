@@ -68,24 +68,12 @@ import org.jvnet.hk2.config.Dom;
 public class LogViewerResource {
 
     @Inject
-    protected ServiceLocator locator;
-    @Context
-    protected UriInfo ui;
+    private ServiceLocator locator;
+    @Inject
+    private UriInfo uriInfo;
 
-    @Context
-    protected LocatorBridge habitat;
-
-    /**
-     * Represents the data source of this text.
-     */
-    private interface Source {
-
-        Session open() throws IOException;
-
-        long length();
-
-        boolean exists();
-    }
+    @Inject
+    private LocatorBridge locatorBridge;
 
     private Source source;
     protected Charset charset;
@@ -113,7 +101,7 @@ public class LogViewerResource {
         }
 
         // getting logFilter object from habitat
-        LogFilter logFilter = habitat.getRemoteLocator().getService(LogFilter.class);
+        LogFilter logFilter = locatorBridge.getRemoteLocator().getService(LogFilter.class);
         String logLocation = "";
 
         // getting log file location on DAS for server/local instance/remote instance
@@ -122,7 +110,7 @@ public class LogViewerResource {
 
         if (!source.exists()) {
             // file doesn't exist yet
-            UriBuilder uriBuilder = ui.getAbsolutePathBuilder();
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder.queryParam("start", 0);
             uriBuilder.queryParam("instanceName", instanceName);
 
@@ -158,7 +146,7 @@ public class LogViewerResource {
                 w.close();
             }
         });
-        UriBuilder uriBuilder = ui.getAbsolutePathBuilder();
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
         uriBuilder.queryParam("start", size);
         uriBuilder.queryParam("instanceName", instanceName);
         URI next = uriBuilder.build();
@@ -253,6 +241,19 @@ public class LogViewerResource {
 
         return count + start;
     }
+
+    /**
+     * Represents the data source of this text.
+     */
+    private interface Source {
+
+        Session open() throws IOException;
+
+        long length();
+
+        boolean exists();
+    }
+
 
     /**
      * Points to a byte in the buffer.

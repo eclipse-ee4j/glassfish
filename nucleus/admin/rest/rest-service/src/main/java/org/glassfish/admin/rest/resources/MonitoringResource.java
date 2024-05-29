@@ -21,12 +21,12 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.Utility;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
@@ -59,8 +59,6 @@ import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getStatistic;
 import static org.glassfish.admin.rest.provider.ProviderUtil.jsonValue;
 
-import jakarta.inject.Inject;
-
 /**
  * @author rajeshwar patil
  * @author Mitesh Meswani
@@ -71,10 +69,10 @@ import jakarta.inject.Inject;
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
 public class MonitoringResource {
 
-    @Context
+    @Inject
     private UriInfo uriInfo;
 
-    @Context
+    @Inject
     private LocatorBridge locator;
 
     @Inject

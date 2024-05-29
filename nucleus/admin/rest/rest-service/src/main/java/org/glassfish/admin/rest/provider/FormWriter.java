@@ -17,8 +17,8 @@
 
 package org.glassfish.admin.rest.provider;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.UriInfo;
@@ -41,7 +41,7 @@ import org.jvnet.hk2.config.Dom;
 @Produces("application/x-www-form-urlencoded")
 @Provider
 public class FormWriter implements MessageBodyWriter<Dom> {
-    @Context
+    @Inject
     private UriInfo uriInfo;
 
     @Override

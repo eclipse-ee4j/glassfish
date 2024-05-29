@@ -18,13 +18,11 @@
 package org.glassfish.admin.rest.resources.custom;
 
 import com.sun.enterprise.util.Utility;
-import org.jvnet.hk2.config.Dom;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.UriBuilder;
@@ -40,6 +38,7 @@ import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
+import org.jvnet.hk2.config.Dom;
 
 /**
  * @author Mitesh Meswani
@@ -47,11 +46,11 @@ import org.glassfish.internal.api.ServerContext;
 @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
 @Path("domain/proxy/{path:.*}")
 public class ManagementProxyResource {
-    @Context
-    protected UriInfo uriInfo;
+    @Inject
+    private UriInfo uriInfo;
 
-    @Context
-    protected ServiceLocator habitat;
+    @Inject
+    private ServiceLocator locator;
 
     @Inject
     private ServerContext serverContext;
@@ -69,10 +68,8 @@ public class ManagementProxyResource {
         // which is kernel OSGi bundle CL. We need to run it within the common classloader as
         // the context classloader
         Properties proxiedResponse = Utility.runWithContextClassLoader(serverContext.getCommonClassLoader(),
-                () -> {
-                    return new ManagementProxyImpl()
-                            .proxyRequest(uriInfo, Util.getJerseyClient(), habitat);
-                });
+                () -> new ManagementProxyImpl()
+                        .proxyRequest(uriInfo, Util.getJerseyClient(), locator));
         ar.setExtraProperties(proxiedResponse);
         return result;
     }

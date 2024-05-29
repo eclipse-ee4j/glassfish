@@ -19,7 +19,6 @@ package org.glassfish.admin.rest.provider;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -64,10 +63,10 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     @Inject
     protected ServiceLocator locator;
 
-    @Context
+    @Inject
     protected UriInfo uriInfo;
 
-    @Context
+    @Inject
     protected HttpHeaders requestHeaders;
 
     protected Class<T> desiredType;

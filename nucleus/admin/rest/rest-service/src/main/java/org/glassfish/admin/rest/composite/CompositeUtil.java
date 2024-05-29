@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,18 @@ package org.glassfish.admin.rest.composite;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.common.ActionReporter;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,18 +55,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
-import javax.security.auth.Subject;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorContext;
-import jakarta.validation.ValidatorFactory;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
+import javax.security.auth.Subject;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -76,14 +78,26 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
-
-import static org.objectweb.asm.Opcodes.*;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.MessageInterpolatorImpl;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+
+import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.ACC_SUPER;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ARETURN;
+import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.NEW;
+import static org.objectweb.asm.Opcodes.PUTFIELD;
+import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.V11;
 
 /**
  * @author jdlee
@@ -149,7 +163,7 @@ public class CompositeUtil {
             generatedClasses.put(className, newClass);
         }
         try {
-            return (T) generatedClasses.get(className).newInstance();
+            return (T) generatedClasses.get(className).getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -178,8 +192,8 @@ public class CompositeUtil {
      */
     public Object getResourceExtensions(Class<?> baseClass, Object data, String method) {
         List<RestExtension> extensions = new ArrayList<>();
-
-        for (RestExtension extension : Globals.getDefaultHabitat().<RestExtension>getAllServices(RestExtension.class)) {
+        for (RestExtension extension : Globals.getDefaultHabitat().getAllServices(RestExtension.class)) {
+            RestLogging.restLogger.info(() -> "Processing detected extension: " + extension);
             if (baseClass.getName().equals(extension.getParent())) {
                 extensions.add(extension);
             }
@@ -213,7 +227,7 @@ public class CompositeUtil {
                     if (value != null) {
                         String currentValue = currentValues.get(basePath + key);
 
-                        if ((currentValue == null) || "".equals(value) || (!currentValue.equals(value))) {
+                        if (currentValue == null || "".equals(value) || !currentValue.equals(value)) {
                             parameters.add("DEFAULT", basePath + "." + key + "=" + value);
                         }
                     }
@@ -683,13 +697,15 @@ public class CompositeUtil {
         return annos;
     }
 
-    private void handleGetExtensions(List<RestExtension> extensions, Object data) {
+    private void handleGetExtensions(final List<RestExtension> extensions, Object data) {
+        RestLogging.restLogger.finest(() -> "Handling detected GET extension: " + extensions);
         for (RestExtension re : extensions) {
             re.get(data);
         }
     }
 
     private ParameterMap handlePostExtensions(List<RestExtension> extensions, Object data) {
+        RestLogging.restLogger.finest(() -> "Handling detected POST extension: " + extensions);
         ParameterMap parameters = new ParameterMap();
         for (RestExtension re : extensions) {
             parameters.mergeAll(re.post(data));

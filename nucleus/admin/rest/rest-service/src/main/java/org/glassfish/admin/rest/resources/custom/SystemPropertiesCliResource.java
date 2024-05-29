@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,7 @@ package org.glassfish.admin.rest.resources.custom;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -37,10 +33,18 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
-import org.glassfish.admin.rest.utils.ResourceUtil;
+
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.glassfish.admin.rest.resources.TemplateExecCommand;
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.results.OptionsResult;
+import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandLock;
@@ -70,7 +74,6 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
     protected ServiceLocator injector;
 
     protected Dom entity;
-    //    protected Dom parent;
 
     protected Domain domain;
 
@@ -94,7 +97,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
         processCommandParams(data);
         addQueryString(uriInfo.getQueryParameters(), data);
         adjustParameters(data);
-        Map<String, Map<String, String>> properties = new TreeMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> properties = new TreeMap<>();
 
         RestActionReporter actionReport = new RestActionReporter();
         getSystemProperties(properties, getEntity(), false);
@@ -146,7 +149,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
                 String name = sysprop.attribute("name");
                 Map<String, String> currValue = properties.get(name);
                 if (currValue == null) {
-                    currValue = new HashMap<String, String>();
+                    currValue = new HashMap<>();
                     currValue.put("name", name);
                     currValue.put(getDefaults ? "defaultValue" : "value", sysprop.attribute("value"));
 
@@ -220,7 +223,7 @@ public class SystemPropertiesCliResource extends TemplateExecCommand {
     protected Response saveProperties(String parent, HashMap<String, String> data) {
         String propertiesString = convertPropertyMapToString(data);
 
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
         data.put("DEFAULT", propertiesString);
         data.put("target", (parent == null) ? getParent(uriInfo) : parent);
 

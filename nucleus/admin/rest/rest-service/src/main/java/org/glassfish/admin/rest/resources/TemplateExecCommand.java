@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,26 +18,9 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URLDecoder;
-import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.provider.MethodMetaData;
-import org.glassfish.admin.rest.results.ActionReportResult;
-import org.glassfish.admin.rest.results.OptionsResult;
-import org.glassfish.admin.rest.utils.xml.RestActionReporter;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.ParameterMap;
 
 import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Produces;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -45,14 +29,31 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
-import org.glassfish.jersey.media.sse.EventOutput;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
 
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.OptionsCapable;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.composite.metadata.RestResourceMetadata;
+import org.glassfish.admin.rest.provider.MethodMetaData;
+import org.glassfish.admin.rest.results.ActionReportResult;
+import org.glassfish.admin.rest.results.OptionsResult;
+import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.Util;
+import org.glassfish.admin.rest.utils.xml.RestActionReporter;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.jersey.media.sse.EventOutput;
 
 /**
  * @author ludo
@@ -96,7 +97,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
         ar.setActionDescription(commandDisplayName);
 
         OptionsResult optionsResult = new OptionsResult(resourceName);
-        Map<String, MethodMetaData> mmd = new HashMap<String, MethodMetaData>();
+        Map<String, MethodMetaData> mmd = new HashMap<>();
         MethodMetaData methodMetaData = ResourceUtil.getMethodMetaData(commandName, getCommandParams(), locatorBridge.getRemoteLocator());
 
         optionsResult.putMethodMetaData(commandMethod, methodMetaData);
@@ -127,7 +128,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
         RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
         final ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
         final int status = (exitCode == ActionReport.ExitCode.FAILURE) ? HttpURLConnection.HTTP_INTERNAL_ERROR : HttpURLConnection.HTTP_OK;
-        ActionReportResult option = (ActionReportResult) optionsLegacyFormat();
+        ActionReportResult option = optionsLegacyFormat();
         ActionReportResult results = new ActionReportResult(commandName, actionReport, option.getMetaData());
         results.getActionReport().getExtraProperties().putAll(option.getActionReport().getExtraProperties());
         results.setCommandDisplayName(commandDisplayName);
@@ -152,7 +153,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
 
     private Map<String, Object> getExtraProperties(RestActionReporter actionReport) {
         Properties props = actionReport.getExtraProperties();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         for (Map.Entry<Object, Object> entry : props.entrySet()) {
             map.put(entry.getKey().toString(), entry.getValue());
@@ -219,7 +220,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
 
     protected void purgeEmptyEntries(ParameterMap data) {
 
-        HashSet<String> keyToRemove = new HashSet<String>();
+        HashSet<String> keyToRemove = new HashSet<>();
         Set<Entry<String, List<String>>> entries = data.entrySet();
         for (Entry<String, List<String>> entry : entries) {
             if ((entry.getValue() == null) || (entry.getValue().isEmpty())) {

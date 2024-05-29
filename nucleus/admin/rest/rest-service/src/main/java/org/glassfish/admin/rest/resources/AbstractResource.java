@@ -34,6 +34,7 @@ import org.glassfish.security.services.common.SubjectUtil;
  * @author jdlee
  */
 public abstract class AbstractResource {
+    protected static final Logger logger = RestLogging.restLogger;
     @Inject
     protected HttpHeaders requestHeaders;
     @Inject
@@ -48,21 +49,16 @@ public abstract class AbstractResource {
     protected ServiceLocator serviceLocator;
 
     private String authenticatedUser;
-    protected static final Logger logger = RestLogging.restLogger;
 
     /**
-     * This method will return the Subject associated with the current request.
-     *
-     * @return
+     * @return the Subject associated with the current request.
      */
     protected Subject getSubject() {
         return subjectRef.get();
     }
 
     /**
-     * This method will return the authenticated user associated with the current request.
-     *
-     * @return
+     * @return the authenticated user associated with the current request.
      */
     protected String getAuthenticatedUser() {
         if (authenticatedUser == null) {

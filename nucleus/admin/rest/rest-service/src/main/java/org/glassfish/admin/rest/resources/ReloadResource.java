@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,25 +20,31 @@ package org.glassfish.admin.rest.resources;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
+
 import org.glassfish.admin.rest.adapter.Reloader;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
- *
  * @author ludo
  */
 @Path("reload")
 public class ReloadResource {
 
+    @Context
+    private Reloader reloader;
+    @Context
+    private ResourceConfig resourceConfig;
+    @Context
+    private ServerContext serverContext;
+
     @POST
-    public void reload(@Context Reloader r, @Context ResourceConfig rc, @Context ServerContext sc) {
+    public void reload() {
         ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            ClassLoader apiClassLoader = sc.getCommonClassLoader();
-            Thread.currentThread().setContextClassLoader(apiClassLoader);
-            rc.getClasses().add(org.glassfish.admin.rest.resources.StaticResource.class);
-            r.reload();
+            Thread.currentThread().setContextClassLoader(serverContext.getCommonClassLoader());
+            resourceConfig.getClasses().add(org.glassfish.admin.rest.resources.StaticResource.class);
+            reloader.reload();
         } finally {
             Thread.currentThread().setContextClassLoader(originalContextClassLoader);
         }

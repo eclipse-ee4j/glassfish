@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -370,12 +370,12 @@ public class DOLUtils {
     // returns true if GF DD should have higher precedence over
     // WLS DD when both present in the same archive
     public static boolean isGFDDOverWLSDD() {
-        return Boolean.valueOf(System.getProperty(GFDD_OVER_WLSDD));
+        return Boolean.parseBoolean(System.getProperty(GFDD_OVER_WLSDD));
     }
 
     // returns true if we should ignore WLS DD in the archive
     public static boolean isIgnoreWLSDD() {
-        return Boolean.valueOf(System.getProperty(IGNORE_WLSDD));
+        return Boolean.parseBoolean(System.getProperty(IGNORE_WLSDD));
     }
 
     // process the list of the configuration files, and return the sorted
@@ -416,7 +416,7 @@ public class DOLUtils {
         // sort the deployment descriptor files by precedence order
         // when they are present in the same archive
 
-        if (Boolean.valueOf(System.getProperty(GFDD_OVER_WLSDD))) {
+        if (Boolean.parseBoolean(System.getProperty(GFDD_OVER_WLSDD))) {
             // if this property set, it means we need to make GF deployment
             // descriptors higher precedence
             if (gfConfDD != null) {
@@ -425,7 +425,7 @@ public class DOLUtils {
             if (wlsConfDD != null) {
                 sortedConfDDFiles.add(wlsConfDD);
             }
-        } else if (Boolean.valueOf(System.getProperty(IGNORE_WLSDD))) {
+        } else if (Boolean.parseBoolean(System.getProperty(IGNORE_WLSDD))) {
             // if this property set, it means we need to ignore
             // WLS deployment descriptors
             if (gfConfDD != null) {
@@ -852,6 +852,7 @@ public class DOLUtils {
      * @return componentId
      */
     public static String getComponentEnvId(JndiNameEnvironment env) {
+        LOGGER.log(DEBUG, "getComponentEnvId(env.class={0})", env.getClass().getName());
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;

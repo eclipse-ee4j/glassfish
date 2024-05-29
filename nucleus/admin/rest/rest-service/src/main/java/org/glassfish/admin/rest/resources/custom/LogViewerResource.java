@@ -19,6 +19,7 @@ package org.glassfish.admin.rest.resources.custom;
 
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -66,7 +67,7 @@ import org.jvnet.hk2.config.Dom;
 //@Path("view-log/")
 public class LogViewerResource {
 
-    @Context
+    @Inject
     protected ServiceLocator locator;
     @Context
     protected UriInfo ui;

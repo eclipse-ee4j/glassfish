@@ -21,17 +21,18 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.remote.JMXServiceURL;
-import jakarta.ws.rs.core.Context;
+
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Dom;
 
 /**
@@ -39,8 +40,6 @@ import org.jvnet.hk2.config.Dom;
  * @author jasonlee
  */
 public class JmxServiceUrlsResource {
-    @Context
-    protected ServiceLocator habitat;
 
     public void setEntity(Dom p) {
         // ugly no-op hack. For now.

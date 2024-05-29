@@ -19,6 +19,7 @@ package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
@@ -28,7 +29,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -70,7 +70,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
     private static final Logger LOG = Logger.getLogger(TemplateListOfResource.class.getName());
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateListOfResource.class);
 
-    @Context
+    @Inject
     protected ServiceLocator injector;
 
     protected List<Dom> entity;

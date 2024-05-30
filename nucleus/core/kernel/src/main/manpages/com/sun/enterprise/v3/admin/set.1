@@ -1,13 +1,13 @@
 set(1)                    asadmin Utility Subcommands                   set(1)
 
 NAME
-       set - sets the values of configurable attributes
+       set - sets or deletes the values of configurable attributes
 
 SYNOPSIS
-           set [--help] attribute-name=value
+           set [--help] attribute-name=value [attribute-name=value]
 
 DESCRIPTION
-       The set subcommand uses dotted names to modify the values of one or
+       The set subcommand uses dotted names to modify or delete the values of one or
        more configurable attributes.
 
        Attributes from the monitoring hierarchy are read-only, but
@@ -52,9 +52,10 @@ OPTIONS
            Displays the help text for the subcommand.
 
 OPERANDS
-       attribute-name=value
+       attribute-name=value [attribute-name=value]
            Identifies the full dotted name of the attribute name and its
-           value.
+           value. Multiple attribute=value pairs can be provided as multiple arguments, separated by a space.
+           To delete a value, set the value to an empty value, e.g. attribute-name=
 
 EXAMPLES
        Example 1, Setting a JDBC Connection Pool Attribute
@@ -65,9 +66,9 @@ EXAMPLES
                Command set executed successfully.
 
        Example 2, Enabling the Monitoring Service for a Monitorable Object
-           This example enables monitoring for the JVM.
+           This example enables monitoring for the JVM and Thread-Pool modules.
 
-               asadmin> set server.monitoring-service.module-monitoring-levels.jvm=HIGH
+               asadmin> set server.monitoring-service.module-monitoring-levels.jvm=HIGH server.monitoring-service.module-monitoring-levels.thread-pool=HIGH
                Command set executed successfully.
 
        Example 3, Turning on Automatic Recovery for the Transaction Service

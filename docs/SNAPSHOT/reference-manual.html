@@ -47918,21 +47918,20 @@ Command rotate-log executed successfully.</code></pre>
 <h2 id="set"><a class="anchor" href="#set"></a>set</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Sets the values of configurable attributes</p>
+<p>Sets or deletes the values of configurable attributes</p>
 </div>
 <div class="sect2">
 <h3 id="synopsis-247"><a class="anchor" href="#synopsis-247"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] set [--help]
-attribute-name=value</code></pre>
+<pre class="CodeRay highlight"><code>asadmin [asadmin-options] set [--help] attribute-name=value [attribute-name=value]</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="description-248"><a class="anchor" href="#description-248"></a>Description</h3>
 <div class="paragraph">
-<p>The <code>set</code> subcommand uses dotted names to modify the values of one or
+<p>The <code>set</code> subcommand uses dotted names to modify or delete the values of one or
 more configurable attributes.</p>
 </div>
 <div class="paragraph">
@@ -48000,9 +47999,11 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <h3 id="operands-216"><a class="anchor" href="#operands-216"></a>Operands</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">attribute-name=value</dt>
+<dt class="hdlist1">attribute-name=value [attribute-name=value]</dt>
 <dd>
-<p>Identifies the full dotted name of the attribute name and its value.</p>
+<p>Identifies the full dotted name of the attribute name and its value.
+Multiple attribute=value pairs can be provided as multiple arguments, separated by a space.
+To delete a value, set the value to an empty value, e.g. <code>attribute-name=</code></p>
 </dd>
 </dl>
 </div>
@@ -48025,11 +48026,11 @@ Command set executed successfully.</code></pre>
 <div class="sect3">
 <h4 id="sthref2030"><a class="anchor" href="#sthref2030"></a>Example 2   Enabling the Monitoring Service for a Monitorable Object</h4>
 <div class="paragraph">
-<p>This example enables monitoring for the JVM.</p>
+<p>This example enables monitoring for the JVM and Thread-Pool modules.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; set server.monitoring-service.module-monitoring-levels.jvm=HIGH
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.monitoring-service.module-monitoring-levels.jvm=HIGH server.monitoring-service.module-monitoring-levels.thread-pool=HIGH
 Command set executed successfully.</code></pre>
 </div>
 </div>
@@ -57627,7 +57628,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-28 00:25:12 UTC
+Last updated 2024-05-30 03:08:15 UTC
 </div>
 </div>
 </body>

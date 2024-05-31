@@ -23,7 +23,7 @@
     <parent>
        <groupId>org.glassfish.main.persistence</groupId>
        <artifactId>persistence</artifactId>
-       <version>7.0.15-SNAPSHOT</version>
+       <version>7.0.15</version>
        <relativePath>../pom.xml</relativePath>
     </parent>
 

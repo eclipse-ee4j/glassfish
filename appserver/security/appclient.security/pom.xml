@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>securitymodule</artifactId>
-        <version>7.0.15-SNAPSHOT</version>
+        <version>7.0.15</version>
     </parent>
 
     <artifactId>appclient.security</artifactId>

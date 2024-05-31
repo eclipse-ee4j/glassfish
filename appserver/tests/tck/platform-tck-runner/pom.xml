@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.15-SNAPSHOT</version>
+        <version>7.0.15</version>
     </parent>
 
     <artifactId>platform-tck-runner</artifactId>

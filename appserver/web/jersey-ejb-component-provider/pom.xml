@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.web</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.15-SNAPSHOT</version>
+        <version>7.0.15</version>
     </parent>
 
     <artifactId>jersey-ejb-component-provider</artifactId>

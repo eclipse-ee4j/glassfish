@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.connectors</groupId>
         <artifactId>connectors</artifactId>
-        <version>7.0.15-SNAPSHOT</version>
+        <version>7.0.15</version>
     </parent>
 
     <artifactId>descriptors</artifactId>

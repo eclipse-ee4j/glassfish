@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.15</version>
+        <version>7.0.16-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.microprofile</groupId>

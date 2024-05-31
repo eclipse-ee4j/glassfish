@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>nucleus-admin</artifactId>
-        <version>7.0.15</version>
+        <version>7.0.16-SNAPSHOT</version>
     </parent>
 
     <artifactId>server-mgmt</artifactId>

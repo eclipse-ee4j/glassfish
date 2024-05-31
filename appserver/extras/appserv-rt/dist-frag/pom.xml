@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>appserv-rt-pom</artifactId>
-        <version>7.0.15</version>
+        <version>7.0.16-SNAPSHOT</version>
     </parent>
 
     <artifactId>appserv-rt-frag</artifactId>

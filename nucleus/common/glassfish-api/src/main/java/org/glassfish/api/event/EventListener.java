@@ -61,6 +61,9 @@ public interface EventListener {
         }
 
         public T hook() {
+            if (type.getHookType() == null) {
+                return null;
+            }
             return type.getHookType().cast(hook);
         }
 

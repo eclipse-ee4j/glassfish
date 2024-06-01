@@ -23,7 +23,9 @@ import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 
 import jakarta.enterprise.inject.spi.AnnotatedType;
@@ -57,6 +59,7 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.invocation.ApplicationEnvironment;
+import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.cdi.CDILoggerInfo;
 import org.glassfish.deployment.common.DeploymentException;
@@ -96,6 +99,7 @@ import org.jvnet.hk2.annotations.Service;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
 import static org.glassfish.cdi.CDILoggerInfo.ADDING_INJECTION_SERVICES;
 import static org.glassfish.cdi.CDILoggerInfo.JMS_MESSAGElISTENER_AVAILABLE;
 import static org.glassfish.cdi.CDILoggerInfo.MDB_PIT_EVENT;
@@ -118,6 +122,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
     private static final Logger LOG = CDILoggerInfo.getLogger();
 
+    private static final String KEY_BUNDLE_DESCRIPTOR = BundleDescriptor.class.getName();
     public static final String WELD_EXTENSION = "org.glassfish.weld";
     public static final String WELD_DEPLOYMENT = "org.glassfish.weld.WeldDeployment";
     static final String WELD_BOOTSTRAP = "org.glassfish.weld.WeldBootstrap";
@@ -319,6 +324,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 new Object[] {bundle.getClass(), bundle.getName(), beanDeploymentArchive.getClass(),
                     beanDeploymentArchive.getId()});
             bundleToBeanDeploymentArchive.put(bundle, beanDeploymentArchive);
+            appInfo.addTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR, bundle);
         }
 
 
@@ -360,11 +366,16 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 ClassLoader oldTCL = Thread.currentThread().getContextClassLoader();
 
                 invocationManager.pushAppEnvironment(new WeldApplicationEnvironment(appInfo));
-
                 try {
-                    Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
-                    LOG.log(FINE, () -> "Starting extensions: " + extensions);
-                    bootstrap.startExtensions(extensions);
+                    ComponentInvocation componentInvocation = createComponentInvocation(appInfo);
+                    try {
+                        invocationManager.preInvoke(componentInvocation);
+                        Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
+                        LOG.log(FINE, () -> "Starting extensions: " + extensions);
+                        bootstrap.startExtensions(extensions);
+                    } finally {
+                        invocationManager.postInvoke(componentInvocation);
+                    }
                     bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
 
                     // Install support for delegating some EJB tasks to the right bean archive.
@@ -473,6 +484,21 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     public <V> V loadMetaData(Class<V> type, DeploymentContext context) {
         return null;
     }
+
+
+    private ComponentInvocation createComponentInvocation(ApplicationInfo applicationInfo) {
+        BundleDescriptor bundleDescriptor = applicationInfo.getTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR,
+            BundleDescriptor.class);
+        String componentEnvId = DOLUtils.getComponentEnvId((JndiNameEnvironment) bundleDescriptor);
+        LOG.log(Level.FINE,
+            () -> "Computed component env id=" + componentEnvId + " for application name=" + applicationInfo.getName());
+        ComponentInvocation componentInvocation = new ComponentInvocation(componentEnvId, SERVLET_INVOCATION,
+            applicationInfo, applicationInfo.getName(), applicationInfo.getName());
+
+        componentInvocation.setJNDIEnvironment(bundleDescriptor);
+        return componentInvocation;
+    }
+
 
     private void deploymentComplete(DeploymentImpl deploymentImpl) {
         for (BeanDeploymentArchive oneBda : deploymentImpl.getBeanDeploymentArchives()) {

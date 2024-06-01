@@ -74,8 +74,6 @@ import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.hk2.api.ActiveDescriptor;
-import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.jvnet.hk2.config.Attribute;

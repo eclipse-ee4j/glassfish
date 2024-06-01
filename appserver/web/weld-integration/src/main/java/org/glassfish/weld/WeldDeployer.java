@@ -27,6 +27,7 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 
 import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.inject.Inject;
 import jakarta.servlet.Filter;
@@ -80,6 +81,7 @@ import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
 import org.jboss.weld.bootstrap.spi.EEModuleDescriptor;
+import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.helpers.EEModuleDescriptorImpl;
 import org.jboss.weld.ejb.spi.EjbServices;
 import org.jboss.weld.injection.spi.InjectionServices;
@@ -244,8 +246,10 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         }
 
         BeanDeploymentArchive beanDeploymentArchive = deploymentImpl.getBeanDeploymentArchiveForArchive(archive.getName());
-        if (beanDeploymentArchive != null && !beanDeploymentArchive.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
-
+        if (beanDeploymentArchive == null || beanDeploymentArchive.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
+            LOG.log(FINE, "The bean discovery mode was explicitly set to NONE in the beans.xml file"
+                + " or the archive is not a CDI deployment archive.");
+        } else {
             WebBundleDescriptor webBundleDescriptor = context.getModuleMetaData(WebBundleDescriptor.class);
             if (webBundleDescriptor != null) {
                 webBundleDescriptor.setExtensionProperty(WELD_EXTENSION, "true");
@@ -279,45 +283,44 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
             BundleDescriptor bundle = webBundleDescriptor == null ? ejbBundle : webBundleDescriptor;
             if (bundle != null) {
-                if (!beanDeploymentArchive.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
-                    // Register EE injection manager at the bean deployment archive level.
-                    // We use the generic InjectionService service to handle all EE-style
-                    // injection instead of the per-dependency-type InjectionPoint approach.
-                    // Each InjectionServicesImpl instance knows its associated GlassFish bundle.
+                // Register EE injection manager at the bean deployment archive level.
+                // We use the generic InjectionService service to handle all EE-style
+                // injection instead of the per-dependency-type InjectionPoint approach.
+                // Each InjectionServicesImpl instance knows its associated GlassFish bundle.
 
-                    InjectionManager injectionManager = services.getService(InjectionManager.class);
-                    InjectionServices injectionServices = new InjectionServicesImpl(injectionManager, bundle, deploymentImpl);
+                InjectionManager injectionManager = services.getService(InjectionManager.class);
+                InjectionServices injectionServices = new InjectionServicesImpl(injectionManager, bundle, deploymentImpl);
 
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, ADDING_INJECTION_SERVICES, new Object[] { injectionServices, beanDeploymentArchive.getId() });
+                }
+
+                beanDeploymentArchive.getServices().add(InjectionServices.class, injectionServices);
+                EEModuleDescriptor eeModuleDescriptor = getEEModuleDescriptor(beanDeploymentArchive);
+                if (eeModuleDescriptor != null) {
+                    beanDeploymentArchive.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
+                }
+
+                // Relevant in WAR BDA - WEB-INF/lib BDA scenarios
+                for (BeanDeploymentArchive subBeanDeploymentArchive : beanDeploymentArchive.getBeanDeploymentArchives()) {
                     if (LOG.isLoggable(FINE)) {
-                        LOG.log(FINE, ADDING_INJECTION_SERVICES, new Object[] { injectionServices, beanDeploymentArchive.getId() });
+                        LOG.log(FINE, ADDING_INJECTION_SERVICES, new Object[] { injectionServices, subBeanDeploymentArchive.getId() });
                     }
 
-                    beanDeploymentArchive.getServices().add(InjectionServices.class, injectionServices);
-                    EEModuleDescriptor eeModuleDescriptor = getEEModuleDescriptor(beanDeploymentArchive);
+                    subBeanDeploymentArchive.getServices().add(InjectionServices.class, injectionServices);
+                    eeModuleDescriptor = getEEModuleDescriptor(beanDeploymentArchive);
                     if (eeModuleDescriptor != null) {
                         beanDeploymentArchive.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
                     }
-
-                    // Relevant in WAR BDA - WEB-INF/lib BDA scenarios
-                    for (BeanDeploymentArchive subBeanDeploymentArchive : beanDeploymentArchive.getBeanDeploymentArchives()) {
-                        if (LOG.isLoggable(FINE)) {
-                            LOG.log(FINE, ADDING_INJECTION_SERVICES, new Object[] { injectionServices, subBeanDeploymentArchive.getId() });
-                        }
-
-                        subBeanDeploymentArchive.getServices().add(InjectionServices.class, injectionServices);
-                        eeModuleDescriptor = getEEModuleDescriptor(beanDeploymentArchive);
-                        if (eeModuleDescriptor != null) {
-                            beanDeploymentArchive.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
-                        }
-                    }
                 }
-                LOG.log(Level.CONFIG,
-                    "Adding pair bundle.class={0}, bundle.name={1} and archive.class={2}, archive.id={3}",
-                    new Object[] {bundle.getClass(), bundle.getName(), beanDeploymentArchive.getClass(),
-                        beanDeploymentArchive.getId()});
-                bundleToBeanDeploymentArchive.put(bundle, beanDeploymentArchive);
             }
+            LOG.log(Level.CONFIG,
+                "Adding pair bundle.class={0}, bundle.name={1} and archive.class={2}, archive.id={3}",
+                new Object[] {bundle.getClass(), bundle.getName(), beanDeploymentArchive.getClass(),
+                    beanDeploymentArchive.getId()});
+            bundleToBeanDeploymentArchive.put(bundle, beanDeploymentArchive);
         }
+
 
         context.addTransientAppMetaData(WELD_DEPLOYMENT, deploymentImpl);
         appInfo.addTransientAppMetaData(WELD_DEPLOYMENT, deploymentImpl);
@@ -334,6 +337,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
      */
     @Override
     public void event(Event<?> event) {
+        LOG.log(Level.CONFIG, () -> "event(event.name=" + event.name() + ", event.hook=" + event.hook() + ")");
         if (event.is(APPLICATION_LOADED)) {
             ApplicationInfo appInfo = (ApplicationInfo) event.hook();
             WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
@@ -358,7 +362,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 invocationManager.pushAppEnvironment(new WeldApplicationEnvironment(appInfo));
 
                 try {
-                    bootstrap.startExtensions(deploymentImpl.getExtensions());
+                    Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
+                    LOG.log(FINE, () -> "Starting extensions: " + extensions);
+                    bootstrap.startExtensions(extensions);
                     bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
 
                     // Install support for delegating some EJB tasks to the right bean archive.

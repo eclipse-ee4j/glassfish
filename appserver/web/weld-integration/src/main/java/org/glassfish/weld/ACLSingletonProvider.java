@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,11 @@
 
 package org.glassfish.weld;
 
+import java.lang.System.Logger;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.Globals;
@@ -31,6 +32,8 @@ import org.jboss.weld.bootstrap.api.SingletonProvider;
 import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
 
 import static java.lang.System.getSecurityManager;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.Thread.currentThread;
 import static java.security.AccessController.doPrivileged;
 
@@ -50,6 +53,8 @@ import static java.security.AccessController.doPrivileged;
  */
 public class ACLSingletonProvider extends SingletonProvider {
 
+    private static final Logger LOG = System.getLogger(ACLSingletonProvider.class.getName());
+
     /**
      * Calls {@link SingletonProvider#initialize(SingletonProvider)} with
      * {@link ACLSingletonProvider} if there is an EAR support or with {@link TCCLSingletonProvider}
@@ -63,7 +68,9 @@ public class ACLSingletonProvider extends SingletonProvider {
         } catch (ClassNotFoundException ignore) {
             earSupport = false;
         }
-        SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
+        SingletonProvider provider = earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider();
+        SingletonProvider.initialize(provider);
+        LOG.log(DEBUG, () -> "SingletonProvider initialized: " + provider);
     }
 
 
@@ -83,9 +90,10 @@ public class ACLSingletonProvider extends SingletonProvider {
     }
 
     private static class ACLSingleton<T> implements Singleton<T> {
+        private static final Logger LOG = System.getLogger(ACLSingleton.class.getName());
 
         // use Hashtable for concurrent access
-        private final Map<ClassLoader, T> store = new Hashtable<>();
+        private final Map<ClassLoader, T> store = new ConcurrentHashMap<>();
         private final ClassLoader commonClassLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
 
         // Can't assume bootstrap loader as null. That's more of a convention.
@@ -93,12 +101,8 @@ public class ACLSingletonProvider extends SingletonProvider {
         private static ClassLoader bootstrapCL;
 
         static {
-            bootstrapCL = getSecurityManager() != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return Object.class.getClassLoader();
-                }
-            }) : Object.class.getClassLoader();
+            PrivilegedAction<ClassLoader> action = () -> Object.class.getClassLoader();
+            bootstrapCL = getSecurityManager() == null ? action.run() : AccessController.doPrivileged(action);
         }
 
         @Override
@@ -108,8 +112,25 @@ public class ACLSingletonProvider extends SingletonProvider {
             if (instance == null) {
                 throw new IllegalStateException("Singleton not set for " + appClassLoader);
             }
-
+            LOG.log(DEBUG, () -> "get(" + id + ") - found " + instance);
             return instance;
+        }
+
+        @Override
+        public boolean isSet(String id) {
+            return store.containsKey(getClassLoader());
+        }
+
+        @Override
+        public void set(String id, T object) {
+            LOG.log(DEBUG, () -> "set(id=" + id + ", object=" + object + ")");
+            store.put(getClassLoader(), object);
+        }
+
+        @Override
+        public void clear(String id) {
+            LOG.log(DEBUG, () -> "clear(id=" + id + ")");
+            store.remove(getClassLoader());
         }
 
         /**
@@ -131,12 +152,8 @@ public class ACLSingletonProvider extends SingletonProvider {
          * @return a class loader that's common to all modules of a Jakarta EE application
          */
         private ClassLoader getClassLoader() {
-            ClassLoader contextClassLoader = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return currentThread().getContextClassLoader();
-                }
-            }) : currentThread().getContextClassLoader();
+            PrivilegedAction<ClassLoader> action = () -> currentThread().getContextClassLoader();
+            ClassLoader contextClassLoader = getSecurityManager() == null ? action.run() : doPrivileged(action);
 
             if (contextClassLoader == null) {
                 throw new RuntimeException("Thread's context class loader is null");
@@ -168,27 +185,9 @@ public class ACLSingletonProvider extends SingletonProvider {
         }
 
         private ClassLoader getParent(ClassLoader classLoader) {
-            return getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return classLoader.getParent();
-                }
-            }) : classLoader.getParent();
-        }
-
-        @Override
-        public boolean isSet(String id) {
-            return store.containsKey(getClassLoader());
-        }
-
-        @Override
-        public void set(String id, T object) {
-            store.put(getClassLoader(), object);
-        }
-
-        @Override
-        public void clear(String id) {
-            store.remove(getClassLoader());
+            LOG.log(TRACE, () -> "getParent(classLoader=" + classLoader + ")");
+            PrivilegedAction<ClassLoader> action = classLoader::getParent;
+            return getSecurityManager() == null ? action.run() : doPrivileged(action);
         }
     }
 }

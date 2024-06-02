@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022, 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +24,7 @@ import org.w3c.dom.Node;
 
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY_PRIORITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_SCHEDULED_EXECUTOR_QUALIFIER;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
@@ -47,6 +49,7 @@ public class ManagedThreadFactoryDefinitionNode
         map.put(NAME, "setName");
         map.put(MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, "setContext");
         map.put(MANAGED_THREAD_FACTORY_PRIORITY, "setPriority");
+        map.put(MANAGED_SCHEDULED_EXECUTOR_QUALIFIER, "addQualifier");
         return map;
     }
 

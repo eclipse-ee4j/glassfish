@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +27,7 @@ import org.w3c.dom.Node;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_CLEARED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_PROPAGATED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_UNCHANGED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_QUALIFIER;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
@@ -50,6 +52,7 @@ public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<Conte
         map.put(CONTEXT_SERVICE_PROPAGATED, "addPropagated");
         map.put(CONTEXT_SERVICE_CLEARED, "addCleared");
         map.put(CONTEXT_SERVICE_UNCHANGED, "addUnchanged");
+        map.put(CONTEXT_SERVICE_QUALIFIER, "addQualifier");
         return map;
     }
 

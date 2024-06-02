@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +26,7 @@ import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
@@ -35,6 +37,9 @@ import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
@@ -54,6 +59,7 @@ import jakarta.validation.ValidatorFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -62,6 +68,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
@@ -76,6 +83,7 @@ import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.concurro.internal.ConcurrencyManagedCDIBeans;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -371,6 +379,44 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 CompEnvBinding jmscfEnvBinding = new CompEnvBinding(getPMJndiName(logicalJndiName), jmscfProxy);
                 jndiBindings.add(jmscfEnvBinding);
             }
+        }
+
+        if (scope == ScopeType.APP) {
+            Set<ResourceDescriptor> concurrencyDescs = new HashSet<>();
+            concurrencyDescs.addAll(managedExecutorDefinitions);
+            concurrencyDescs.addAll(managedThreadfactoryDefintions);
+            concurrencyDescs.addAll(managedScheduledDefinitions);
+            concurrencyDescs.addAll(contextServiceDefinitions);
+            registerConcurrencyCDIQualifiers(jndiBindings, concurrencyDescs);
+        }
+    }
+
+    private void registerConcurrencyCDIQualifiers(Collection<JNDIBinding> jndiBindings, Set<ResourceDescriptor> concurrencyDescs) {
+        if (!concurrencyDescs.isEmpty()) {
+            ConcurrencyManagedCDIBeans setup = new ConcurrencyManagedCDIBeans();
+            for (ResourceDescriptor desc : concurrencyDescs) {
+                // TODO: preferably introduce common predecessor for all the descriptors
+                if (desc instanceof ContextServiceDefinitionDescriptor) {
+                    Set<String> qualifiers = Arrays.asList(((ContextServiceDefinitionDescriptor)desc).getQualifiers()).stream().map(c -> c.getName()).collect(Collectors.toSet());
+                    String concurrencyType = "CONTEXT_SERVICE";
+                    setup.addDefinition(ConcurrencyManagedCDIBeans.Type.valueOf(concurrencyType), qualifiers, desc.getName());
+                } else if (desc instanceof ManagedExecutorDefinitionDescriptor) {
+                    Set<String> qualifiers = Arrays.asList(((ManagedExecutorDefinitionDescriptor)desc).getQualifiers()).stream().map(c -> c.getName()).collect(Collectors.toSet());
+                    String concurrencyType = "MANAGED_EXECUTOR_SERVICE";
+                    setup.addDefinition(ConcurrencyManagedCDIBeans.Type.valueOf(concurrencyType), qualifiers, desc.getName());
+                } else if (desc instanceof ManagedScheduledExecutorDefinitionDescriptor) {
+                    Set<String> qualifiers = Arrays.asList(((ManagedScheduledExecutorDefinitionDescriptor)desc).getQualifiers()).stream().map(c -> c.getName()).collect(Collectors.toSet());
+                    String concurrencyType = "MANAGED_SCHEDULED_EXECUTOR_SERVICE";
+                    setup.addDefinition(ConcurrencyManagedCDIBeans.Type.valueOf(concurrencyType), qualifiers, desc.getName());
+                } else if (desc instanceof ManagedThreadFactoryDefinitionDescriptor) {
+                    Set<String> qualifiers = Arrays.asList(((ManagedThreadFactoryDefinitionDescriptor)desc).getQualifiers()).stream().map(c -> c.getName()).collect(Collectors.toSet());
+                    String concurrencyType = "MANAGED_THREAD_FACTORY";
+                    setup.addDefinition(ConcurrencyManagedCDIBeans.Type.valueOf(concurrencyType), qualifiers, desc.getName());
+                } else {
+                    LOG.severe(() -> "Unexpected Concurrency type! Expected ContextServiceDefinitionDescriptor, ManagedExecutorDefinitionDescriptor, ManagedScheduledExecutorDefinitionDescriptor, or ManagedThreadFactoryDefinitionDescriptor, got " + desc);
+                }
+            }
+            jndiBindings.add(new CompEnvBinding(new SimpleJndiName(ConcurrencyManagedCDIBeans.JDNI_NAME), setup));
         }
     }
 

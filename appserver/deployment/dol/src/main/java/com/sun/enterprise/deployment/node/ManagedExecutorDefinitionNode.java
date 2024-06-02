@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +27,7 @@ import org.w3c.dom.Node;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_MAX_ASYNC;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_QUALIFIER;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
@@ -50,6 +52,7 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
         map.put(MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
         map.put(MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
         map.put(MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
+        map.put(MANAGED_EXECUTOR_QUALIFIER, "addQualifier");
         return map;
     }
 

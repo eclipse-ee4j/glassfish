@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +17,12 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
+import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
+
+import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
 
 import java.lang.System.Logger;
@@ -23,11 +30,14 @@ import java.lang.System.Logger.Level;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -45,7 +55,6 @@ class ContextServiceDefinitionConverter {
         return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
     }
 
-
     ContextServiceDefinitionData convert(ContextServiceDefinition definition) {
         LOG.log(Level.DEBUG, "convert(definition={0})", definition);
         Set<String> unused = collectUnusedContexts(definition);
@@ -54,6 +63,7 @@ class ContextServiceDefinitionConverter {
         data.setPropagated(evaluateContexts(definition.propagated(), unused));
         data.setCleared(evaluateContexts(definition.cleared(), unused));
         data.setUnchanged(evaluateContexts(definition.unchanged(), unused));
+        data.setQualifiers(definition.qualifiers());
         return data;
     }
 
@@ -85,7 +95,6 @@ class ContextServiceDefinitionConverter {
         return allStandardContexts;
     }
 
-
     private Set<String> evaluateContexts(String[] sourceContexts, Set<String> unusedContexts) {
         Set<String> contexts = new HashSet<>();
         for (String context : sourceContexts) {
@@ -97,5 +106,44 @@ class ContextServiceDefinitionConverter {
             }
         }
         return contexts;
+    }
+
+    void merge(ContextServiceDefinitionData csd, ContextServiceDefinitionData descriptor) {
+        if (descriptor.getName().equals(csd.getName())) {
+
+            if (descriptor.getCleared() == null && csd.getCleared() != null) {
+                descriptor.setCleared(new HashSet<>(csd.getCleared()));
+            }
+
+            if (descriptor.getPropagated() == null && csd.getPropagated() != null) {
+                descriptor.setPropagated(new HashSet<>(csd.getPropagated()));
+            }
+
+            if (descriptor.getUnchanged() == null && csd.getUnchanged() != null) {
+                descriptor.setUnchanged(new HashSet<>(csd.getUnchanged()));
+            }
+
+            if (descriptor.getQualifiers() == null && csd.getQualifiers() != null) {
+                descriptor.setQualifiers(csd.getQualifiers());
+            }
+        }
+    }
+
+    public void updateDescriptors(ContextServiceDefinitionData data, ResourceContainerContext[] contexts) {
+        for (ResourceContainerContext context : contexts) {
+            Set<ResourceDescriptor> descriptors = context.getResourceDescriptors(JavaEEResourceType.CSDD);
+            List<ResourceDescriptor> existing = getExisting(data, descriptors);
+            if (existing.isEmpty()) {
+                descriptors.add(new ContextServiceDefinitionDescriptor(data, MetadataSource.ANNOTATION));
+            } else {
+                for (ResourceDescriptor existingData : existing) {
+                    merge(data, ((ContextServiceDefinitionDescriptor) existingData).getData());
+                }
+            }
+        }
+    }
+
+    protected static List<ResourceDescriptor> getExisting(ContextServiceDefinitionData descriptor, Set<ResourceDescriptor> resourceDescriptors) {
+        return resourceDescriptors.stream().filter(d -> d.getJndiName().equals(descriptor.toString())).toList();
     }
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -58,6 +59,13 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
         this.data.setName(new SimpleJndiName(name));
     }
 
+    public Class<?>[] getQualifiers() {
+        return data.getQualifiers();
+    }
+
+    public void setQualifiers(Class<?>[] qualifiers) {
+        data.setQualifiers(qualifiers);
+    }
 
     public Set<String> getCleared() {
         return data.getCleared();

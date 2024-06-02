@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -349,6 +350,14 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         if (namespace == null) {
             namespace = new JavaNamespace(appName, "app");
             appNamespaces.put(appName, namespace);
+
+            // Create also component id mapping, so the java:app/ binding is found later, even when called from a component
+            ComponentIdInfo appComponentIdInfo = new ComponentIdInfo();
+            appComponentIdInfo.appName = appName;
+            appComponentIdInfo.moduleName = appName;
+            appComponentIdInfo.componentId = appName;
+            appComponentIdInfo.treatComponentAsModule = true;
+            componentIdInfo.put(appName, appComponentIdInfo);
         }
 
         return namespace;

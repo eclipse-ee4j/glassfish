@@ -350,17 +350,22 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         if (namespace == null) {
             namespace = new JavaNamespace(appName, "app");
             appNamespaces.put(appName, namespace);
-
-            // Create also component id mapping, so the java:app/ binding is found later, even when called from a component
-            ComponentIdInfo appComponentIdInfo = new ComponentIdInfo();
-            appComponentIdInfo.appName = appName;
-            appComponentIdInfo.moduleName = appName;
-            appComponentIdInfo.componentId = appName;
-            appComponentIdInfo.treatComponentAsModule = true;
-            componentIdInfo.put(appName, appComponentIdInfo);
         }
 
         return namespace;
+    }
+
+
+    private JavaNamespace getNamespace(SimpleJndiName logicalJndiName) throws NamingException {
+        LOG.log(TRACE, "getNamespace(info, logicalJndiName={0})", logicalJndiName);
+        final ComponentInvocation invocation = getComponentInvocation();
+        if (logicalJndiName.isJavaModule()) {
+            return getModuleNamespace(new AppModuleKey(invocation.getAppName(), invocation.getModuleName()));
+        } else if (logicalJndiName.isJavaApp()) {
+            return getAppNamespace(invocation.getAppName());
+        } else {
+            return getComponentNamespace(invocation.getComponentId());
+        }
     }
 
 
@@ -592,20 +597,24 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     private <T> T lookup(String componentId, SimpleJndiName name, Context ctx) throws NamingException {
         LOG.log(DEBUG, "lookup(componentId={0}, name={1}, ctx={2})", componentId, name, ctx);
-// FIXME: added and commented out dmatej
-//        if (!name.hasJavaPrefix() && name.contains(":")) {
-//            // generic jndi names
-//            return (T) initialContext.lookup(name.toName());
-//        }
         final ComponentIdInfo info = componentIdInfo.get(componentId);
         LOG.log(TRACE, "Found componentIdInfo={0}", info);
-        final boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
-        final SimpleJndiName replacedName = replaceName ? name.changePrefix(JNDI_CTX_JAVA_MODULE) : name;
-        JavaNamespace namespace = info == null ? getComponentNamespace(componentId) : getNamespace(info, replacedName);
-        Object obj = namespace.get(replacedName);
-        LOG.log(TRACE, "For {0} found object={1} in namespace.name={2}", replacedName, obj, namespace.name);
+        final boolean replaceName;
+        final SimpleJndiName lookupName;
+        final JavaNamespace namespace;
+        if (info == null) {
+            replaceName = false;
+            lookupName = name;
+            namespace = getNamespace(lookupName);
+        } else {
+            replaceName = info.treatComponentAsModule && name.isJavaComponent();
+            lookupName = replaceName ? name.changePrefix(JNDI_CTX_JAVA_MODULE) : name;
+            namespace = getNamespace(info, lookupName);
+        }
+        Object obj = namespace.get(lookupName);
+        LOG.log(TRACE, "For {0} found object={1} in namespace.name={2}", lookupName, obj, namespace.name);
         if (obj == null) {
-            throw new NameNotFoundException("No object bound to name " + replacedName + " in namespace " + namespace);
+            throw new NameNotFoundException("No object bound to name " + lookupName + " in namespace " + namespace);
         }
         if (obj instanceof NamingObjectProxy) {
             NamingObjectProxy namingProxy = (NamingObjectProxy) obj;
@@ -691,6 +700,16 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
      * @return the component id as a string.
      */
     private String getComponentId() throws NamingException {
+        final ComponentInvocation invocation = getComponentInvocation();
+        final String id = invocation.getComponentId();
+        if (id == null) {
+            throw new NamingException("Invocation exception: ComponentId is null");
+        }
+        return id;
+    }
+
+
+    private ComponentInvocation getComponentInvocation() throws NamingException {
         final ComponentInvocation invocation;
         if (invMgr == null) {
             invocation = serviceLocator.<InvocationManager> getService(InvocationManager.class).getCurrentInvocation();
@@ -701,12 +720,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         if (invocation == null) {
             throw new NamingException("Invocation exception: Got null ComponentInvocation!");
         }
-
-        String id = invocation.getComponentId();
-        if (id == null) {
-            throw new NamingException("Invocation exception: Got null ComponentId!");
-        }
-        return id;
+        return invocation;
     }
 
 
@@ -736,18 +750,18 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         private final String app;
         private final String module;
 
-        public AppModuleKey(String appName, String moduleName) {
+        private AppModuleKey(String appName, String moduleName) {
             app = appName;
             module = moduleName;
         }
 
 
-        public String getAppName() {
+        private String getAppName() {
             return app;
         }
 
 
-        public String getModuleName() {
+        private String getModuleName() {
             return module;
         }
 

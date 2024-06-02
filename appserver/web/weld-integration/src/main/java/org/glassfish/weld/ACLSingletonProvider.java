@@ -39,15 +39,18 @@ import static java.security.AccessController.doPrivileged;
 
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications.
- *
  * <p>
  * It is different from {@link org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider}.
- *
  * <p>
- * We can't use TCCLSingletonProvider because thread's context class loader can be different for different modules of a
- * single application (ear). To support Application Scoped beans, Weld needs to be bootstrapped per application as
- * opposed to per module. We rely on the fact that all these module class loaders have a common parent which is per
- * application. We use that parent ApplicationClassLoader to identify the singleton scope.
+ * We can't use TCCLSingletonProvider because thread's context class loader can be different for
+ * different modules of a single application (ear).
+ * To support Application Scoped beans, Weld needs to be bootstrapped per application as
+ * opposed to per module. We rely on the fact that all these module class loaders have a common
+ * parent which is per application. We use that parent ApplicationClassLoader to identify the
+ * singleton scope.
+ * <p>
+ * This class assumes a certain delegation hierarchy of application class loaders. So, deployment
+ * team should be aware of this class and change it if application class loader hierarchy changes.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
@@ -73,17 +76,6 @@ public class ACLSingletonProvider extends SingletonProvider {
         LOG.log(DEBUG, () -> "SingletonProvider initialized: " + provider);
     }
 
-
-    /*
-     * See https://glassfish.dev.java.net/issues/show_bug.cgi?id=10192
-     * for more details about this class.
-     *
-     * IMPLEMENTATION NOTE:
-     * This class assumes a certain delegation hierarchy of application
-     * class loaders. So, deployment team should be aware of this class
-     * and change it if application class loader hierarchy changes.
-     */
-
     @Override
     public <T> ACLSingleton<T> create(Class<? extends T> expectedType) {
         return new ACLSingleton<>();
@@ -92,12 +84,11 @@ public class ACLSingletonProvider extends SingletonProvider {
     private static class ACLSingleton<T> implements Singleton<T> {
         private static final Logger LOG = System.getLogger(ACLSingleton.class.getName());
 
-        // use Hashtable for concurrent access
         private final Map<ClassLoader, T> store = new ConcurrentHashMap<>();
         private final ClassLoader commonClassLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
 
-        // Can't assume bootstrap loader as null. That's more of a convention.
-        // I think either android or IBM JVM does not use null for bootstap loader
+        // Can't assume bootstrap loader as null. That's more of a convention, but some JVMs do not
+        // use null for bootstap loader
         private static ClassLoader bootstrapCL;
 
         static {

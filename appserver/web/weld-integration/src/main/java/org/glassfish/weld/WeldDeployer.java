@@ -318,13 +318,13 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                         beanDeploymentArchive.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
                     }
                 }
-            }
-            LOG.log(Level.CONFIG,
-                "Adding pair bundle.class={0}, bundle.name={1} and archive.class={2}, archive.id={3}",
+                LOG.log(Level.CONFIG,
+                    "Adding pair bundle.class={0}, bundle.name={1} and archive.class={2}, archive.id={3}",
                 new Object[] {bundle.getClass(), bundle.getName(), beanDeploymentArchive.getClass(),
                     beanDeploymentArchive.getId()});
-            bundleToBeanDeploymentArchive.put(bundle, beanDeploymentArchive);
-            appInfo.addTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR, bundle);
+                bundleToBeanDeploymentArchive.put(bundle, beanDeploymentArchive);
+                appInfo.addTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR, bundle);
+            }
         }
 
 

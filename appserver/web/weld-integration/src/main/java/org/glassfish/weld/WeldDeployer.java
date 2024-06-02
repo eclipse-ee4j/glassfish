@@ -505,13 +505,13 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
 
     private ComponentInvocation createComponentInvocation(ApplicationInfo applicationInfo) {
-        BundleDescriptor bundleDescriptor = applicationInfo.getTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR,
-            BundleDescriptor.class);
-        String componentEnvId = DOLUtils.getComponentEnvId((JndiNameEnvironment) bundleDescriptor);
+        JndiNameEnvironment bundleDescriptor = applicationInfo.getTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR,
+            JndiNameEnvironment.class);
+        String componentEnvId = DOLUtils.getComponentEnvId(bundleDescriptor);
         LOG.log(Level.FINE,
             () -> "Computed component env id=" + componentEnvId + " for application name=" + applicationInfo.getName());
         ComponentInvocation componentInvocation = new ComponentInvocation(componentEnvId, SERVLET_INVOCATION,
-            applicationInfo, applicationInfo.getName(), applicationInfo.getName());
+            applicationInfo, applicationInfo.getName(), DOLUtils.getModuleName(bundleDescriptor));
 
         componentInvocation.setJNDIEnvironment(bundleDescriptor);
         return componentInvocation;

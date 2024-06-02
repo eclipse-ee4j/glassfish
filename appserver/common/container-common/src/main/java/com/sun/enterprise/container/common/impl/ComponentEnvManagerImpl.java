@@ -89,6 +89,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.javaee.services.CommonResourceProxy;
 import org.glassfish.javaee.services.JMSCFResourcePMProxy;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.naming.ApplicationScopedResourceBinding;
 import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 
@@ -400,28 +401,29 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         ConcurrencyManagedCDIBeans setup = new ConcurrencyManagedCDIBeans();
         for (ResourceDescriptor desc : concurrencyDescs) {
             LOG.log(FINE, () -> "Registering concurrency CDI qualifiers for descriptor: " + desc);
-            String jndiName = desc.getJndiName().toString();
+            String jndiName = toLogicalJndiName(desc).toString();
             ConcurrencyResourceDefinition descriptor = (ConcurrencyResourceDefinition) desc;
             Set<String> qualifiers = new HashSet<>(descriptor.getQualifiers());
             // A special value which might occur in XML
             // We don't need it any more.
             qualifiers.remove("");
-            if (desc instanceof ContextServiceDefinitionDescriptor) {
+            if (descriptor instanceof ContextServiceDefinitionDescriptor) {
                 setup.addDefinition(CONTEXT_SERVICE, qualifiers, jndiName);
-            } else if (desc instanceof ManagedExecutorDefinitionDescriptor) {
+            } else if (descriptor instanceof ManagedExecutorDefinitionDescriptor) {
                 setup.addDefinition(MANAGED_EXECUTOR_SERVICE, qualifiers, jndiName);
-            } else if (desc instanceof ManagedScheduledExecutorDefinitionDescriptor) {
+            } else if (descriptor instanceof ManagedScheduledExecutorDefinitionDescriptor) {
                 setup.addDefinition(MANAGED_SCHEDULED_EXECUTOR_SERVICE, qualifiers, jndiName);
-            } else if (desc instanceof ManagedThreadFactoryDefinitionDescriptor) {
+            } else if (descriptor instanceof ManagedThreadFactoryDefinitionDescriptor) {
                 setup.addDefinition(MANAGED_THREAD_FACTORY, qualifiers, jndiName);
             } else {
                 throw new IllegalArgumentException("Unexpected Concurrency type!"
                     + " Expected ContextServiceDefinitionDescriptor, ManagedExecutorDefinitionDescriptor,"
                     + " ManagedScheduledExecutorDefinitionDescriptor, or ManagedThreadFactoryDefinitionDescriptor,"
-                    + " got " + desc);
+                    + " got " + descriptor);
             }
         }
-        jndiBindings.add(new CompEnvBinding(new SimpleJndiName(ConcurrencyManagedCDIBeans.JDNI_NAME), setup));
+        SimpleJndiName jndiName = new SimpleJndiName(ConcurrencyManagedCDIBeans.JDNI_NAME);
+        jndiBindings.add(new ApplicationScopedResourceBinding(jndiName, setup));
     }
 
     private ResourceDeployer getResourceDeployer(Object resource) {

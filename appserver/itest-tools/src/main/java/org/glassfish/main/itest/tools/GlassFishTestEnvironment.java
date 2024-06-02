@@ -82,13 +82,7 @@ public class GlassFishTestEnvironment {
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
         }
         // This is the absolutely first start - if it fails, all other starts will fail too.
-        try {
-            assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain", "--debug"), asadminOK());
-        } catch (AssertionError e) {
-            // stop domain if the domain is running from a previous test
-            asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "stop-domain");
-            throw e;
-        }
+        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain", "--debug"), asadminOK());
     }
 
 

@@ -103,7 +103,7 @@ public class ApplicationInfo extends ModuleInfo {
     }
 
     private void createServiceLocator() {
-        String locatorName = APP_SERVICE_LOCATOR_PREFIX + name;
+        String locatorName = APP_SERVICE_LOCATOR_PREFIX + getName();
         ServiceLocatorFactory slf = ServiceLocatorFactory.getInstance();
 
         if (slf.find(locatorName) != null) {
@@ -112,12 +112,12 @@ public class ApplicationInfo extends ModuleInfo {
 
         appServiceLocator = slf.create(locatorName);
         deploymentFailedListener = new DeploymentFailedListener(source);
-        events.register(deploymentFailedListener);
+        unregisterEventListener(deploymentFailedListener);
     }
 
     private void disposeServiceLocator() {
         if (deploymentFailedListener != null) {
-            events.unregister(deploymentFailedListener);
+            unregisterEventListener(deploymentFailedListener);
             deploymentFailedListener = null;
         }
 
@@ -138,23 +138,16 @@ public class ApplicationInfo extends ModuleInfo {
         }
     }
 
-    public <T> T getTransientAppMetaData(String key, Class<T> metadataType) {
-        Object metaDataValue = transientAppMetaData.get(key);
-        if (metaDataValue != null) {
-            return metadataType.cast(metaDataValue);
-        }
-
-        return null;
+    public <T> T getTransientAppMetaData(String key, Class<T> expectedType) {
+        return expectedType.cast(transientAppMetaData.get(key));
     }
 
     /**
-     * Returns the registration name for this application
-     *
      * @return the application registration name
      */
     @Override
     public String getName() {
-        return name;
+        return super.getName();
     }
 
     /**
@@ -328,9 +321,7 @@ public class ApplicationInfo extends ModuleInfo {
             tracing.addMark(DeploymentTracing.Mark.LOAD_EVENTS);
         }
 
-        if (events != null) {
-            events.send(new Event<>(Deployment.APPLICATION_LOADED, this), false);
-        }
+        sendEvent(new Event<>(Deployment.APPLICATION_LOADED, this), false);
 
         if (tracing != null) {
             tracing.addMark(DeploymentTracing.Mark.LOADED);
@@ -360,9 +351,7 @@ public class ApplicationInfo extends ModuleInfo {
             tracing.addMark(DeploymentTracing.Mark.START_EVENTS);
         }
 
-        if (events != null) {
-            events.send(new Event<>(Deployment.APPLICATION_STARTED, this), false);
-        }
+        sendEvent(new Event<>(Deployment.APPLICATION_STARTED, this), false);
 
         if (tracing != null) {
             tracing.addMark(DeploymentTracing.Mark.STARTED);
@@ -383,9 +372,7 @@ public class ApplicationInfo extends ModuleInfo {
                 module.stop(getSubContext(module, context), logger);
             }
 
-            if (events != null) {
-                events.send(new Event<>(APPLICATION_STOPPED, this), false);
-            }
+            sendEvent(new Event<>(APPLICATION_STOPPED, this), false);
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
         }
@@ -411,9 +398,7 @@ public class ApplicationInfo extends ModuleInfo {
             }
 
             isLoaded = false;
-            if (events != null) {
-                events.send(new Event<>(APPLICATION_UNLOADED, this), false);
-            }
+            sendEvent(new Event<>(APPLICATION_UNLOADED, this), false);
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
             context.setClassLoader(null);
@@ -488,9 +473,7 @@ public class ApplicationInfo extends ModuleInfo {
         // Will destroy all underlying services
         disposeServiceLocator();
 
-        if (events != null) {
-            events.send(new EventListener.Event<>(Deployment.APPLICATION_CLEANED, context), false);
-        }
+        sendEvent(new EventListener.Event<>(Deployment.APPLICATION_CLEANED, context), false);
     }
 
     /**

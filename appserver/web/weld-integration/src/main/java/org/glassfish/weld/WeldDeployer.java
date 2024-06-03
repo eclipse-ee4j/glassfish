@@ -373,40 +373,40 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                         Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
                         LOG.log(FINE, () -> "Starting extensions: " + extensions);
                         bootstrap.startExtensions(extensions);
+                        bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
+
+                        // Install support for delegating some EJB tasks to the right bean archive.
+                        // Without this, when the a bean manager for the root bean archive is used, it will not
+                        // find the EJB definitions in a sub-archive, and will treat the bean as a normal CDI bean.
+                        //
+                        // For EJB beans a few special rules have to be taken into account, and without applying these
+                        // rules CreateBeanAttributesTest#testBeanAttributesForSessionBean fails.
+                        if (!deploymentImpl.getBeanDeploymentArchives().isEmpty()) {
+
+                            BeanDeploymentArchive rootArchive = deploymentImpl.getBeanDeploymentArchives().get(0);
+                            ServiceRegistry rootServices = bootstrap.getManager(rootArchive).getServices();
+
+                            EjbSupport originalEjbSupport = rootServices.get(EjbSupport.class);
+                            if (originalEjbSupport != null) {
+                                // We need to create a proxy instead of a simple wrapper, since EjbSupport
+                                // references the type "EnhancedAnnotatedType", which the Weld OSGi bundle doesn't
+                                // export.
+                                WeldInvocationHandler handler = new WeldInvocationHandler(deploymentImpl, originalEjbSupport, bootstrap);
+                                EjbSupport proxyEjbSupport = (EjbSupport) Proxy.newProxyInstance(EjbSupport.class.getClassLoader(),
+                                        new Class[] { EjbSupport.class }, handler);
+                                rootServices.add(EjbSupport.class, proxyEjbSupport);
+                            }
+                        }
+
+                        bootstrap.startInitialization();
+                        fireProcessInjectionTargetEvents(bootstrap, deploymentImpl);
+                        bootstrap.deployBeans();
+
+                        bootstrap.validateBeans();
+                        bootstrap.endInitialization();
                     } finally {
                         invocationManager.postInvoke(componentInvocation);
                     }
-                    bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
-
-                    // Install support for delegating some EJB tasks to the right bean archive.
-                    // Without this, when the a bean manager for the root bean archive is used, it will not
-                    // find the EJB definitions in a sub-archive, and will treat the bean as a normal CDI bean.
-                    //
-                    // For EJB beans a few special rules have to be taken into account, and without applying these
-                    // rules CreateBeanAttributesTest#testBeanAttributesForSessionBean fails.
-                    if (!deploymentImpl.getBeanDeploymentArchives().isEmpty()) {
-
-                        BeanDeploymentArchive rootArchive = deploymentImpl.getBeanDeploymentArchives().get(0);
-                        ServiceRegistry rootServices = bootstrap.getManager(rootArchive).getServices();
-
-                        EjbSupport originalEjbSupport = rootServices.get(EjbSupport.class);
-                        if (originalEjbSupport != null) {
-                            // We need to create a proxy instead of a simple wrapper, since EjbSupport
-                            // references the type "EnhancedAnnotatedType", which the Weld OSGi bundle doesn't
-                            // export.
-                            WeldInvocationHandler handler = new WeldInvocationHandler(deploymentImpl, originalEjbSupport, bootstrap);
-                            EjbSupport proxyEjbSupport = (EjbSupport) Proxy.newProxyInstance(EjbSupport.class.getClassLoader(),
-                                    new Class[] { EjbSupport.class }, handler);
-                            rootServices.add(EjbSupport.class, proxyEjbSupport);
-                        }
-                    }
-
-                    bootstrap.startInitialization();
-                    fireProcessInjectionTargetEvents(bootstrap, deploymentImpl);
-                    bootstrap.deployBeans();
-
-                    bootstrap.validateBeans();
-                    bootstrap.endInitialization();
                 } catch (Throwable t) {
                     doBootstrapShutdown(appInfo);
                     String msgPrefix = getDeploymentErrorMsgPrefix(t);

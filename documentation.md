@@ -41,7 +41,7 @@ layout: documentation
 
 ### Documentation for other GlassFish versions {#older}
 
-* [Development version (7.0.15-SNAPSHOT)](docs#development)
+* [Development version (7.0.16-SNAPSHOT)](docs#development)
 * [5.1.0 release](docs#5.1.0)
 
 ## Jakarta EE Documentation {#jakarta-ee}

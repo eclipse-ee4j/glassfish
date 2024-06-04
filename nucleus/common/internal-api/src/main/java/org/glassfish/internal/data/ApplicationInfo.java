@@ -112,7 +112,7 @@ public class ApplicationInfo extends ModuleInfo {
 
         appServiceLocator = slf.create(locatorName);
         deploymentFailedListener = new DeploymentFailedListener(source);
-        unregisterEventListener(deploymentFailedListener);
+        registerEventListener(deploymentFailedListener);
     }
 
     private void disposeServiceLocator() {

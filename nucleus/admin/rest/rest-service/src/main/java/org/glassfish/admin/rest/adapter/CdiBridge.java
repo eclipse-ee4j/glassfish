@@ -40,7 +40,7 @@ class CdiBridge extends AbstractBinder {
 
     @Override
     protected void configure() {
-        RestLogging.restLogger.log(Level.SEVERE, "CdiBridge.configure()");
+        RestLogging.restLogger.log(Level.FINEST, "CdiBridge.configure()");
         AbstractActiveDescriptor<Reloader> descriptor = BuilderHelper.createConstantDescriptor(reloader);
         descriptor.addContractType(Reloader.class);
         bind(descriptor);

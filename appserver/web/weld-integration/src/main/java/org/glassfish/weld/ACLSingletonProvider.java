@@ -103,7 +103,7 @@ public class ACLSingletonProvider extends SingletonProvider {
             if (instance == null) {
                 throw new IllegalStateException("Singleton not set for " + appClassLoader);
             }
-            LOG.log(DEBUG, () -> "get(" + id + ") - found " + instance);
+            LOG.log(DEBUG, () -> "get(" + id + ") - found " + instance + ";  we use ear/war classloader instead of id.");
             return instance;
         }
 
@@ -114,13 +114,13 @@ public class ACLSingletonProvider extends SingletonProvider {
 
         @Override
         public void set(String id, T object) {
-            LOG.log(DEBUG, () -> "set(id=" + id + ", object=" + object + ")");
+            LOG.log(DEBUG, () -> "set(id=" + id + ", object=" + object + "); we use ear/war classloader instead of id.");
             store.put(getClassLoader(), object);
         }
 
         @Override
         public void clear(String id) {
-            LOG.log(DEBUG, () -> "clear(id=" + id + ")");
+            LOG.log(DEBUG, () -> "clear(id=" + id + "); we use ear/war classloader instead of id.");
             store.remove(getClassLoader());
         }
 

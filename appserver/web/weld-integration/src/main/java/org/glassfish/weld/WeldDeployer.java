@@ -397,7 +397,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     private void enable(ApplicationInfo appInfo, WeldBootstrap bootstrap) {
-        LOG.log(INFO, () -> "Enabling Weld for appInfo: " + appInfo);
+        LOG.log(INFO, () -> "Enabling Weld for " + appInfo);
 
         DeploymentImpl deploymentImpl = appInfo.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
 
@@ -436,16 +436,14 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     private void disable(ApplicationInfo appInfo) {
-        LOG.log(INFO, () -> "Disabling Weld for appInfo: " + appInfo);
         Application app = appInfo.getMetaData(Application.class);
-
+        LOG.log(FINEST, () -> "Found application: " + app);
         if (app != null) {
             for (BundleDescriptor next : app.getBundleDescriptors()) {
                 if (next instanceof EjbBundleDescriptor || next instanceof WebBundleDescriptor) {
                     bundleToBeanDeploymentArchive.remove(next);
                 }
             }
-
             appToBootstrap.remove(app);
         }
 
@@ -458,7 +456,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         Thread.currentThread().setContextClassLoader(appInfo.getAppClassLoader());
         try {
             WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
+            LOG.log(FINEST, () -> "Found bootstrap: " + bootstrap);
             if (bootstrap != null) {
+                LOG.log(INFO, () -> "Disabling Weld for " + appInfo);
                 invocationManager.pushAppEnvironment(new WeldApplicationEnvironment(appInfo));
                 try {
                     doBootstrapShutdown(appInfo);

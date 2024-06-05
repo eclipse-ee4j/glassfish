@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,24 +19,6 @@ package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.modularity.ConfigModularityUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.admin.rest.provider.MethodMetaData;
-import org.glassfish.admin.rest.results.ActionReportResult;
-import org.glassfish.admin.rest.results.OptionsResult;
-import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.admin.rest.utils.xml.RestActionReporter;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.RestRedirect;
-import org.glassfish.config.support.Delete;
-import org.glassfish.hk2.api.MultiException;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.jvnet.hk2.config.ConfigBean;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.TransactionFailure;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -49,12 +31,14 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -63,15 +47,32 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
-import jakarta.ws.rs.core.Response.Status;
+
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.OptionsCapable;
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.composite.metadata.RestResourceMetadata;
+import org.glassfish.admin.rest.provider.MethodMetaData;
+import org.glassfish.admin.rest.results.ActionReportResult;
+import org.glassfish.admin.rest.results.OptionsResult;
+import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.admin.rest.utils.Util;
+import org.glassfish.admin.rest.utils.xml.RestActionReporter;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.config.support.Delete;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.TransactionFailure;
 
 import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
-import java.net.URLDecoder;
 
 /**
  * @author Ludovic Champenois ludo@java.net
@@ -81,21 +82,15 @@ import java.net.URLDecoder;
         MediaType.APPLICATION_FORM_URLENCODED + ";qs=0.5" })
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
 public class TemplateRestResource extends AbstractResource implements OptionsCapable {
+
+    public static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateRestResource.class);
+    private static final List<String> attributesToSkip = List.of("parent", "name", "children", "submit");
+
     protected Dom entity; //may be null when not created yet...
     protected Dom parent;
     protected String tagName;
     protected ConfigModel childModel; //good model even if the child entity is null
     protected String childID; // id of the current child if part of a list, might be null
-    public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateRestResource.class);
-    final private static List<String> attributesToSkip = new ArrayList<>() {
-
-        {
-            add("parent");
-            add("name");
-            add("children");
-            add("submit");
-        }
-    };
 
     /**
      * Creates a new instance of xxxResource
@@ -413,7 +408,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
     }
 
-    /*
+    /**
      * This method is called by the ASM generated code change very carefully
      */
     public void setBeanByKey(List<Dom> parentList, String id, String tag) {

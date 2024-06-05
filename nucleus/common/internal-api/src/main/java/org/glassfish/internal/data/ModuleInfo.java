@@ -17,12 +17,15 @@
 
 package org.glassfish.internal.data;
 
+import com.sun.enterprise.config.serverbeans.Engine;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +40,7 @@ import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.Deployer;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventListener.Event;
 import org.glassfish.api.event.Events;
 import org.glassfish.internal.deployment.Deployment;
@@ -44,10 +48,6 @@ import org.glassfish.internal.deployment.DeploymentTracing;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.Engine;
-import com.sun.enterprise.config.serverbeans.Module;
-import com.sun.enterprise.config.serverbeans.ServerTags;
 
 /**
  * Each module of an application has an associated module info instance keeping the list of engines in which that module
@@ -67,12 +67,12 @@ public class ModuleInfo {
 
     final protected Map<Class<? extends Object>, Object> metaData = new HashMap<>();
 
-    protected final String name;
-    protected final Events events;
-    private Properties moduleProps;
+    private final String name;
+    private final Events events;
+    private final Properties moduleProps;
     private boolean started;
     private ClassLoader moduleClassLoader;
-    private Set<ClassLoader> classLoaders = new HashSet<ClassLoader>();
+    private Set<ClassLoader> classLoaders = new HashSet<>();
 
     public ModuleInfo(final Events events, String name, Collection<EngineRef> engineRefs, Properties moduleProps) {
         this.name = name;
@@ -88,8 +88,24 @@ public class ModuleInfo {
         this.moduleProps = moduleProps;
     }
 
+    protected void sendEvent(Event<?> event, boolean asynchronously) {
+        if (events == null) {
+            return;
+        }
+        events.send(event, asynchronously);
+    }
+
+
+    protected void registerEventListener(EventListener listener) {
+        events.register(listener);
+    }
+
+    protected void unregisterEventListener(EventListener listener) {
+        events.unregister(listener);
+    }
+
     public Set<EngineRef> getEngineRefs() {
-        Set<EngineRef> copy = new LinkedHashSet<EngineRef>();
+        Set<EngineRef> copy = new LinkedHashSet<>();
         copy.addAll(_getEngineRefs());
         return copy;
     }
@@ -144,7 +160,7 @@ public class ModuleInfo {
      * @return array of sniffer that loaded the application's module
      */
     public Collection<Sniffer> getSniffers() {
-        List<Sniffer> sniffers = new ArrayList<Sniffer>();
+        List<Sniffer> sniffers = new ArrayList<>();
         for (EngineRef engine : _getEngineRefs()) {
             sniffers.add(engine.getContainerInfo().getSniffer());
         }
@@ -161,8 +177,8 @@ public class ModuleInfo {
 
         moduleClassLoader = context.getClassLoader();
 
-        Set<EngineRef> filteredEngines = new LinkedHashSet<EngineRef>();
-        LinkedList<EngineRef> filteredReversedEngines = new LinkedList<EngineRef>();
+        Set<EngineRef> filteredEngines = new LinkedHashSet<>();
+        LinkedList<EngineRef> filteredReversedEngines = new LinkedList<>();
 
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -204,9 +220,8 @@ public class ModuleInfo {
                 tracing.addMark(DeploymentTracing.Mark.LOAD_EVENTS);
             }
 
-            if (events != null) {
-                events.send(new Event<>(Deployment.MODULE_LOADED, this), false);
-            }
+            sendEvent(new Event<>(Deployment.MODULE_LOADED, this), false);
+
             if (tracing != null) {
                 tracing.addMark(DeploymentTracing.Mark.LOADED);
             }
@@ -242,8 +257,9 @@ public class ModuleInfo {
 
         Logger logger = context.getLogger();
 
-        if (started)
+        if (started) {
             return;
+        }
 
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -284,8 +300,9 @@ public class ModuleInfo {
 
     public synchronized void stop(ExtendedDeploymentContext context, Logger logger) {
 
-        if (!started)
+        if (!started) {
             return;
+        }
 
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -299,9 +316,7 @@ public class ModuleInfo {
                 }
             }
             started = false;
-            if (events != null) {
-                events.send(new Event<>(Deployment.MODULE_STOPPED, this), false);
-            }
+            sendEvent(new Event<>(Deployment.MODULE_STOPPED, this), false);
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
         }
@@ -330,9 +345,7 @@ public class ModuleInfo {
             if (classLoaders != null && moduleClassLoader != null) {
                 classLoaders.add(moduleClassLoader);
             }
-            if (events != null) {
-                events.send(new Event<>(Deployment.MODULE_UNLOADED, this), false);
-            }
+            sendEvent(new Event<>(Deployment.MODULE_UNLOADED, this), false);
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
             context.setClassLoader(null);
@@ -343,10 +356,7 @@ public class ModuleInfo {
         for (EngineRef ref : reversedEngines) {
             ref.clean(context);
         }
-        if (events != null) {
-            events.send(new Event<>(Deployment.MODULE_CLEANED, context), false);
-        }
-
+        sendEvent(new Event<>(Deployment.MODULE_CLEANED, context), false);
     }
 
     public boolean suspend(Logger logger) {
@@ -389,10 +399,10 @@ public class ModuleInfo {
      */
     public void save(Module module) throws TransactionFailure, PropertyVetoException {
         // write out the module properties only for composite app
-        if (Boolean.valueOf(moduleProps.getProperty(ServerTags.IS_COMPOSITE))) {
+        if (Boolean.parseBoolean(moduleProps.getProperty(ServerTags.IS_COMPOSITE))) {
             moduleProps.remove(ServerTags.IS_COMPOSITE);
-            for (Iterator itr = moduleProps.keySet().iterator(); itr.hasNext();) {
-                String propName = (String) itr.next();
+            for (Object element : moduleProps.keySet()) {
+                String propName = (String) element;
                 Property prop = module.createChild(Property.class);
                 module.getProperty().add(prop);
                 prop.setName(propName);
@@ -405,5 +415,13 @@ public class ModuleInfo {
             module.getEngines().add(engine);
             ref.save(engine);
         }
+    }
+
+    /**
+     * Returns simple name of this class and name of the module.
+     */
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[name=" + name + ']';
     }
 }

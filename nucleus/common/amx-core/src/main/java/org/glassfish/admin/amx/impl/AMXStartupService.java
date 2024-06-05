@@ -17,6 +17,24 @@
 
 package org.glassfish.admin.amx.impl;
 
+import jakarta.inject.Inject;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.JMException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerInvocationHandler;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+import javax.management.StandardMBean;
+import javax.management.remote.JMXServiceURL;
+
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.base.MBeanTracker;
 import org.glassfish.admin.amx.base.MBeanTrackerMBean;
@@ -30,6 +48,7 @@ import org.glassfish.admin.amx.impl.util.ImplUtil;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
 import org.glassfish.admin.amx.impl.util.SingletonEnforcer;
+import org.glassfish.admin.amx.util.AMXLoggerInfo;
 import org.glassfish.admin.amx.util.ExceptionUtil;
 import org.glassfish.admin.amx.util.FeatureAvailability;
 import org.glassfish.admin.amx.util.TimingDelta;
@@ -46,16 +65,6 @@ import org.glassfish.external.amx.AMXUtil;
 import org.glassfish.external.amx.MBeanListener;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import javax.management.*;
-import javax.management.remote.JMXServiceURL;
-import java.util.Collection;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.admin.amx.util.AMXLoggerInfo;
 
 /**
 An {@link AMXLoader} responsible for loading core amx MBeans
@@ -91,6 +100,7 @@ public final class AMXStartupService
 
     private final class ShutdownListener implements EventListener {
 
+        @Override
         public void event(Event<?> event) {
             if (event.is(EventTypes.SERVER_SHUTDOWN)) {
                 shutdown();
@@ -117,6 +127,7 @@ public final class AMXStartupService
     }
 
 
+    @Override
     public void postConstruct() {
         final TimingDelta delta = new TimingDelta();
 
@@ -141,19 +152,21 @@ public final class AMXStartupService
             logger.log(Level.INFO, "amx.fatal.error", e);
             throw new Error(e);
         }
-        //debug( "AMXStartupService.postConstruct(): registered: " + OBJECT_NAME );
-        logger.log(Level.INFO,"amx.startupService",new Object[] {delta.elapsedMillis(),OBJECT_NAME});
+        logger.log(Level.INFO,
+            () -> "AMX startup service " + OBJECT_NAME + " started in " + delta.elapsedMillis() + " ms");
 
         mEvents.register(new ShutdownListener());
     }
 
 
+    @Override
     public void preDestroy() {
         logger.log(Level.INFO,"amx.preDestroy");
         unloadAMXMBeans();
     }
 
 
+    @Override
     public JMXServiceURL[] getJMXServiceURLs() {
         try {
             return (JMXServiceURL[]) mMBeanServer.getAttribute(AMXGlassfish.DEFAULT.getBootAMXMBeanObjectName(), "JMXServiceURLs");
@@ -177,6 +190,7 @@ public final class AMXStartupService
     }
 
 
+    @Override
     public synchronized ObjectName getDomainRoot() {
         try {
             // might not be ready yet
@@ -193,6 +207,7 @@ public final class AMXStartupService
     }
 
 
+    @Override
     public ObjectName loadAMXMBeans() {
         ObjectName objectName = AMXGlassfish.DEFAULT.domainRoot();
         if (!mMBeanServer.isRegistered(objectName)) {
@@ -229,7 +244,7 @@ public final class AMXStartupService
     }
 
 
-    protected final ObjectName loadSystemInfo()
+    protected ObjectName loadSystemInfo()
             throws NotCompliantMBeanException, MBeanRegistrationException,
             InstanceAlreadyExistsException {
         final SystemInfoImpl systemInfo = SystemInfoFactory.createInstance(mMBeanServer);
@@ -255,6 +270,7 @@ public final class AMXStartupService
             mLatch = new CountDownLatch(1);
         }
 
+        @Override
         public void run() {
             try {
                 logger.fine("AMXStartupServiceNew.AMXLoaderThread: loading: " + mLoader.getClass().getName());
@@ -338,6 +354,7 @@ public final class AMXStartupService
     }
 
 
+    @Override
     public synchronized void unloadAMXMBeans() {
         if (getDomainRoot() != null) {
             final Collection<AMXLoader> loaders = mHabitat.getAllServices(AMXLoader.class);

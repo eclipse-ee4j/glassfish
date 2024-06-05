@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -363,6 +363,7 @@ public class SaxParserHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        LOG.log(Level.FINEST, "startElement(qName={0})", qName);
         if (!pushedNamespaceContext) {
             // We need one namespae context per element, so push a context
             // if there weren't any prefix mappings defined.
@@ -411,9 +412,7 @@ public class SaxParserHandler extends DefaultHandler {
             }
         }
 
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("start of element with uri=" + uri + ", localName=" + localName + " and qName=" + qName);
-        }
+        LOG.finer(() -> "Start of element with qName=" + qName + ", localName=" + localName + ", uri=" + uri);
         XMLNode<?> node = null;
         elementData = new StringBuffer();
 
@@ -474,7 +473,7 @@ public class SaxParserHandler extends DefaultHandler {
         }
 
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("End of element with uri=" + uri + ", localName=" + localName + ", qName=" + qName + " and value="
+            LOG.finer("End of element with qName=" + qName + ", localName=" + localName + ", uri=" + uri + " and value="
                 + elementData);
         }
         if (nodes.isEmpty()) {
@@ -484,9 +483,14 @@ public class SaxParserHandler extends DefaultHandler {
         }
         XMLElement element = new XMLElement(qName, namespaces);
         XMLNode<?> topNode = nodes.get(nodes.size() - 1);
-        if (elementData != null && (elementData.length() != 0 || allowsEmptyValue(element.getQName()))) {
+        boolean ignoredBecauseEmpty = elementData != null && elementData.isEmpty()
+            && !allowsEmptyValue(element.getQName());
+        if (elementData != null && ignoredBecauseEmpty) {
+            LOG.fine(() -> "Ignoring empty element with qName=" + qName);
+        }
+        if (elementData != null && !ignoredBecauseEmpty) {
             if (LOG.isLoggable(Level.FINER)) {
-                LOG.finer("For element " + element.getQName() + " And value " + elementData);
+                LOG.finer("For element " + element.getQName() + " and value " + elementData);
             }
             boolean doReplace = false;
             String replacementName = null;

@@ -147,7 +147,7 @@ public class CDILoggerInfo {
     @LogMessageInfo(message = "Could not create WeldELContextListener instance. {0}", level = "WARNING")
     public static final String CDI_COULD_NOT_CREATE_WELDELCONTEXTlISTENER = CDI_LOGMSG_PREFIX + "-00035";
 
-    @LogMessageInfo(message = "Exception in WeldBootstrap.shutdown. {0}", level = "WARNING")
+    @LogMessageInfo(message = "Exception in WeldBootstrap.shutdown.", level = "WARNING")
     public static final String WELD_BOOTSTRAP_SHUTDOWN_EXCEPTION = CDI_LOGMSG_PREFIX + "-00036";
 
     @LogMessageInfo(message = "jakarta.jms.MessageListener Class available, so need to fire PIT events to MDBs", level = "FINE")

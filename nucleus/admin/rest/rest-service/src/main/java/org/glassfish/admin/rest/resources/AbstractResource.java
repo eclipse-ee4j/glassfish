@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import jakarta.inject.Inject;
 import javax.security.auth.Subject;
 import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.adapter.LocatorBridge;
@@ -34,6 +33,7 @@ import org.glassfish.security.services.common.SubjectUtil;
  * @author jdlee
  */
 public abstract class AbstractResource {
+    protected static final Logger logger = RestLogging.restLogger;
     @Inject
     protected HttpHeaders requestHeaders;
     @Inject
@@ -43,26 +43,19 @@ public abstract class AbstractResource {
     @Inject
     protected LocatorBridge locatorBridge;
     @Inject
-    protected SecurityContext securityContext;
-    @Inject
     protected ServiceLocator serviceLocator;
 
     private String authenticatedUser;
-    protected static final Logger logger = RestLogging.restLogger;
 
     /**
-     * This method will return the Subject associated with the current request.
-     *
-     * @return
+     * @return the Subject associated with the current request.
      */
     protected Subject getSubject() {
         return subjectRef.get();
     }
 
     /**
-     * This method will return the authenticated user associated with the current request.
-     *
-     * @return
+     * @return the authenticated user associated with the current request.
      */
     protected String getAuthenticatedUser() {
         if (authenticatedUser == null) {

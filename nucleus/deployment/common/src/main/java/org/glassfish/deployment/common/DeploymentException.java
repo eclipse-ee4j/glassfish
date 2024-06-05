@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,42 +18,27 @@
 package org.glassfish.deployment.common;
 
 /**
- *
  * @author  bnevins
- * @version
  */
-public class DeploymentException extends RuntimeException
-{
+public class DeploymentException extends RuntimeException {
 
-    // declare SUID for class versioning compatibility
-    // generated using pe build fcs-b52
-    // this value should stay the same for all
-    // 8.x releases
-    static final long serialVersionUID = -7110600101249180249L;
+    private static final long serialVersionUID = 8L;
 
-    public DeploymentException()
-    {
+    public DeploymentException() {
     }
-    public DeploymentException(String s)
-    {
-        super(s);
+
+
+    public DeploymentException(String message) {
+        super(message);
     }
-    public DeploymentException(Throwable t)
-    {
-        // we cannot just invoke the super(throwable) constructor because
-        // the DeploymentException travels between processes and needs
-        // to be serializable as well as all sub or chained exception.
-        // Therefore, I use the setStackTrace to chain instead of initCause
-        super(t.getMessage());
-        setStackTrace(t.getStackTrace());
+
+
+    public DeploymentException(Throwable cause) {
+        super(cause);
     }
-    public DeploymentException(String s, Throwable t)
-    {
-        // we cannot just invoke the super(throwable) constructor because
-        // the DeploymentException travels between processes and needs
-        // to be serializable as well as all sub or chained exception.
-        // Therefore, I use the setStackTrace to chain instead of initCause
-        super(s + " -- " + t.getMessage());
-        this.setStackTrace(t.getStackTrace());
+
+
+    public DeploymentException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

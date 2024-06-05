@@ -155,6 +155,28 @@
                         </configuration>
                     </execution>
                     <!--
+                        Copy the hello.war to the docs directory.
+                    -->
+                    <execution>
+                        <id>hello-war</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.docs</groupId>
+                                    <artifactId>sample-app</artifactId>
+                                    <type>war</type>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${site.output.dir}/downloads/quickstart</outputDirectory>
+                                    <destFileName>hello.war</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--
                         Add additional execution blocks here as
                         new releases are made, using the above
                         as a template.  Don't forget to update

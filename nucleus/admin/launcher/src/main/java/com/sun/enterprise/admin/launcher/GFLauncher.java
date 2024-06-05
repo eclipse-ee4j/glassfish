@@ -590,7 +590,7 @@ public abstract class GFLauncher {
 
     /**
      *
-     * look for an option of this form: <code>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</code> and
+     * look for an option of this form: <code>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009</code> and
      * extract the suspend and port values.
      *
      */
@@ -604,7 +604,7 @@ public abstract class GFLauncher {
             for (String attribute : attributes) {
                 if (attribute.startsWith("address=")) {
                     try {
-                        debugPort = Integer.parseInt(attribute.substring(8));
+                        debugPort = Integer.parseInt(attribute.substring(10));
                     } catch (NumberFormatException ex) {
                         debugPort = -1;
                     }

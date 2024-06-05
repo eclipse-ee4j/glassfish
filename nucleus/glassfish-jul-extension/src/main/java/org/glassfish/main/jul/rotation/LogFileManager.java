@@ -20,7 +20,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.System.Logger;
+//import java.lang.System.Logger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -29,9 +29,9 @@ import java.time.format.DateTimeFormatter;
 
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
+//import static java.lang.System.Logger.Level.DEBUG;
+//import static java.lang.System.Logger.Level.ERROR;
+//import static java.lang.System.Logger.Level.INFO;
 
 
 /**
@@ -47,7 +47,7 @@ import static java.lang.System.Logger.Level.INFO;
  * @author David Matejcek
  */
 public class LogFileManager {
-    private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
+//    private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
 
     private static final DateTimeFormatter SUFFIX_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
 
@@ -153,18 +153,29 @@ public class LogFileManager {
      */
     public synchronized void roll() {
         final boolean wasOutputEnabled = isOutputEnabled();
-        LOG.log(DEBUG, "Rolling the file {0}; output was originally enabled: {1}", this.logFile, wasOutputEnabled);
+//        LOG.log(INFO, "Rolling the file {0}; output was originally enabled: {1}", this.logFile, wasOutputEnabled);
         disableOutput();
-        LOG.log(DEBUG, "Output disabled for now.");
-        final File archivedFile = rollToNewFile();
-        LOG.log(INFO, "Archived file: {0} - if null, action failed.", archivedFile);
-        if (wasOutputEnabled) {
-            enableOutput();
-            LOG.log(DEBUG, "Output to {0} enabled again.", this.logFile);
+        Exception failure = null;
+        File archivedFile = null;
+        try {
+            if (this.logFile.createNewFile()) {
+                return;
+            }
+            archivedFile = prepareAchivedLogFileTarget();
+            moveFile(logFile, archivedFile);
+            forceOSFilesync(logFile);
+            return;
+        } catch (Exception e) {
+            failure = e;
+        } finally {
+            if (wasOutputEnabled) {
+                enableOutput();
+            }
+            if (archivedFile != null) {
+                archiver.archive(archivedFile);
+            }
         }
-        if (archivedFile != null) {
-            archiver.archive(archivedFile);
-        }
+//        LOG.log(ERROR, "Error, could not rotate log file " + logFile, failure);
     }
 
 
@@ -198,6 +209,7 @@ public class LogFileManager {
             final BufferedOutputStream bout = new BufferedOutputStream(fout);
             final MeteredStream stream = new MeteredStream(bout, this.logFile.length());
             this.writer = new MeteredFileWriter(stream, fileEncoding);
+//            LOG.log(DEBUG, "Output to {0} enabled again.", this.logFile);
         } catch (Exception e) {
             throw new IllegalStateException("Could not open the log file for writing: " + this.logFile, e);
         }
@@ -214,7 +226,7 @@ public class LogFileManager {
             return;
         }
         try {
-            LOG.log(DEBUG, "Closing writer: {0}", writer);
+//            LOG.log(DEBUG, "Closing writer: {0}", writer);
             this.writer.close();
         } catch (final IOException e) {
             GlassFishLoggingTracer.error(getClass(), "Could not close the output stream.", e);
@@ -229,28 +241,6 @@ public class LogFileManager {
         }
         final long fileSize = getFileSize();
         return fileSize >= this.maxFileSize;
-    }
-
-
-    /**
-     * @return archived rolled file or null on error.
-     *         The error will be logged to STDERR and to the logging system.
-     */
-    private File rollToNewFile() {
-        try {
-            if (this.logFile.createNewFile()) {
-                LOG.log(DEBUG, "Created new log file: {0}", this.logFile);
-                return null;
-            }
-            LOG.log(DEBUG, "Rolling log file: {0}", this.logFile);
-            final File archivedLogFile = prepareAchivedLogFileTarget();
-            moveFile(logFile, archivedLogFile);
-            forceOSFilesync(logFile);
-            return archivedLogFile;
-        } catch (final Exception e) {
-            logError("Error, could not rotate log file", e);
-            return null;
-        }
     }
 
 
@@ -284,7 +274,8 @@ public class LogFileManager {
 
 
     private void moveFile(final File logFileToArchive, final File target) throws IOException {
-        LOG.log(DEBUG, "moveFile(logFileToArchive={0}, target={1})", logFileToArchive, target);
+        GlassFishLoggingTracer.trace(getClass(),
+            () -> "moveFile(logFileToArchive=" + logFileToArchive + ", target=" + target + ")");
         try {
             Files.move(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
         } catch (UnsupportedOperationException | IOException e) {
@@ -292,16 +283,10 @@ public class LogFileManager {
             // Windows because of multiple file handles opened. We go through Plan B to
             // copy bytes explicitly to a renamed file.
             // Can happen on some windows file systems - then we try non-atomic version at least.
-            logError(String.format(
+            GlassFishLoggingTracer.error(getClass(), String.format(
                 "File %s could not be renamed to %s atomically, now trying to move it without this request.",
                 logFileToArchive, target), e);
             Files.move(logFileToArchive.toPath(), target.toPath());
         }
-    }
-
-
-    private void logError(final String message, final Throwable t) {
-        GlassFishLoggingTracer.error(getClass(), message, t);
-        LOG.log(ERROR, message, t);
     }
 }

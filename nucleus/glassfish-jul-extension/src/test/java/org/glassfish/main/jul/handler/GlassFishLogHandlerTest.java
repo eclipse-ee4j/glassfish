@@ -150,12 +150,15 @@ public class GlassFishLogHandlerTest {
             )
         );
         handler.roll();
+        // There will be an asynchronous thread.
+        Thread.sleep(10L);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
             () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
                 contains(
-                    stringContainsInOrder("INFO", "main", "Archived file:", "if null, action failed.")
+                    stringContainsInOrder("INFO", "Rolling the file ", ".log", "output was originally enabled: true"),
+                    stringContainsInOrder("INFO", "Archiving file ", ".log", " to ", ".log_")
                 )
             )
         );
@@ -166,7 +169,8 @@ public class GlassFishLogHandlerTest {
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
             () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
                 contains(
-                    stringContainsInOrder("INFO", "main", "Archived file:", "if null, action failed."),
+                    stringContainsInOrder("INFO", "Rolling the file ", ".log", "output was originally enabled: true"),
+                    stringContainsInOrder("INFO", "Archiving file ", ".log", " to ", ".log_"),
                     stringContainsInOrder("SEVERE", "main", "File two, line two")
                 )
             )

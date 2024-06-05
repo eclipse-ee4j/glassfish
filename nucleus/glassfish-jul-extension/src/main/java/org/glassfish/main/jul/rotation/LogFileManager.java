@@ -20,18 +20,20 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-//import java.lang.System.Logger;
+import java.lang.System.Logger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
-//import static java.lang.System.Logger.Level.DEBUG;
-//import static java.lang.System.Logger.Level.ERROR;
-//import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
 
 
 /**
@@ -47,10 +49,11 @@ import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
  * @author David Matejcek
  */
 public class LogFileManager {
-//    private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
+    private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
 
     private static final DateTimeFormatter SUFFIX_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
 
+    private final ReentrantLock lock = new ReentrantLock(true);
     private final File logFile;
     private final LogFileArchiver archiver;
     private final Charset fileEncoding;
@@ -88,14 +91,19 @@ public class LogFileManager {
      * @param text
      * @throws IllegalStateException if the output is disabled.
      */
-    public synchronized void write(String text) throws IllegalStateException {
-        if (!isOutputEnabled()) {
-            throw new IllegalStateException("The file output is disabled!");
-        }
+    public void write(String text) throws IllegalStateException {
+        lock.lock();
         try {
-            writer.write(text);
-        } catch (Exception e) {
-            GlassFishLoggingTracer.error(getClass(), "Could not write to the output stream.", e);
+            if (!isOutputEnabled()) {
+                throw new IllegalStateException("The file output is disabled!");
+            }
+            try {
+                writer.write(text);
+            } catch (Exception e) {
+                GlassFishLoggingTracer.error(getClass(), "Could not write to the output stream.", e);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -103,15 +111,20 @@ public class LogFileManager {
     /**
      * Flushed the file writer and if the file is too large, rolls the file.
      */
-    public synchronized void flush() {
-        if (isOutputEnabled()) {
-            try {
-                writer.flush();
-            } catch (IOException e) {
-                GlassFishLoggingTracer.error(getClass(), "Could not flush the writer.", e);
+    public void flush() {
+        lock.lock();
+        try {
+            if (isOutputEnabled()) {
+                try {
+                    writer.flush();
+                } catch (IOException e) {
+                    GlassFishLoggingTracer.error(getClass(), "Could not flush the writer.", e);
+                }
             }
+            rollIfFileTooBig();
+        } finally {
+            lock.unlock();
         }
-        rollIfFileTooBig();
     }
 
 
@@ -119,17 +132,27 @@ public class LogFileManager {
      * @return the size of the logFile in bytes. The value is obtained from the outputstream, only
      *         if the output stream is closed, this method will check the file system.
      */
-    public synchronized long getFileSize() {
-        return this.writer == null ? this.logFile.length() : this.writer.getBytesWritten();
+    public long getFileSize() {
+        lock.lock();
+        try {
+            return this.writer == null ? this.logFile.length() : this.writer.getBytesWritten();
+        } finally {
+            lock.unlock();
+        }
     }
 
 
     /**
      * Calls {@link #roll()} if the file is bigger than limit given in constructor.
      */
-    public synchronized void rollIfFileTooBig() {
-        if (isRollFileSizeLimitReached()) {
-            roll();
+    public void rollIfFileTooBig() {
+        lock.lock();
+        try {
+            if (isRollFileSizeLimitReached()) {
+                roll();
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -137,9 +160,14 @@ public class LogFileManager {
     /**
      * Calls {@link #roll()} if the file is not empty.
      */
-    public synchronized void rollIfFileNotEmpty() {
-        if (getFileSize() > 0) {
-            roll();
+    public void rollIfFileNotEmpty() {
+        lock.lock();
+        try {
+            if (getFileSize() > 0) {
+                roll();
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -151,39 +179,49 @@ public class LogFileManager {
      * and finally if the output was enabled before this method call, it is enabled
      * again.
      */
-    public synchronized void roll() {
-        final boolean wasOutputEnabled = isOutputEnabled();
-//        LOG.log(INFO, "Rolling the file {0}; output was originally enabled: {1}", this.logFile, wasOutputEnabled);
-        disableOutput();
-        Exception failure = null;
-        File archivedFile = null;
+    public void roll() {
+        lock.lock();
         try {
-            if (this.logFile.createNewFile()) {
+            final boolean wasOutputEnabled = isOutputEnabled();
+            logInfoAsync(
+                () -> "Rolling the file " + this.logFile + "; output was originally enabled: " + wasOutputEnabled);
+            disableOutput();
+            File archivedFile = null;
+            try {
+                if (this.logFile.createNewFile()) {
+                    return;
+                }
+                archivedFile = prepareAchivedLogFileTarget();
+                trace(LogFileManager.class, "Archived file: " + archivedFile);
+                moveFile(logFile, archivedFile);
+                forceOSFilesync(logFile);
                 return;
+            } catch (Exception e) {
+                logErrorAsync("Error, could not rotate log file " + logFile, e);
+            } finally {
+                if (wasOutputEnabled) {
+                    enableOutput();
+                }
+                if (archivedFile != null) {
+                    archiver.archive(archivedFile);
+                }
             }
-            archivedFile = prepareAchivedLogFileTarget();
-            moveFile(logFile, archivedFile);
-            forceOSFilesync(logFile);
-            return;
-        } catch (Exception e) {
-            failure = e;
         } finally {
-            if (wasOutputEnabled) {
-                enableOutput();
-            }
-            if (archivedFile != null) {
-                archiver.archive(archivedFile);
-            }
+            lock.unlock();
         }
-//        LOG.log(ERROR, "Error, could not rotate log file " + logFile, failure);
     }
 
 
     /**
      * @return true if the handler owning this instance can write to the outputstream.
      */
-    public synchronized boolean isOutputEnabled() {
-        return this.writer != null;
+    public boolean isOutputEnabled() {
+        lock.lock();
+        try {
+            return this.writer != null;
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -194,24 +232,29 @@ public class LogFileManager {
      * Redundant calls do nothing.
      * @throws IllegalStateException if the output could not be enabled (IO issues)
      */
-    public synchronized void enableOutput() {
-        if (isOutputEnabled()) {
-            throw new IllegalStateException("Output is already enabled!");
-        }
-        // check that the parent directory exists.
-        final File parent = this.logFile.getParentFile();
-        // if the file instance doesn't use parent, we don't care about it.
-        if (parent != null && !parent.exists() && !parent.mkdirs()) {
-            throw new IllegalStateException("Failed to create the parent directory " + parent.getAbsolutePath());
-        }
+    public void enableOutput() {
+        lock.lock();
         try {
-            final FileOutputStream fout = new FileOutputStream(this.logFile, true);
-            final BufferedOutputStream bout = new BufferedOutputStream(fout);
-            final MeteredStream stream = new MeteredStream(bout, this.logFile.length());
-            this.writer = new MeteredFileWriter(stream, fileEncoding);
-//            LOG.log(DEBUG, "Output to {0} enabled again.", this.logFile);
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not open the log file for writing: " + this.logFile, e);
+            if (isOutputEnabled()) {
+                throw new IllegalStateException("Output is already enabled!");
+            }
+            // check that the parent directory exists.
+            final File parent = this.logFile.getParentFile();
+            // if the file instance doesn't use parent, we don't care about it.
+            if (parent != null && !parent.exists() && !parent.mkdirs()) {
+                throw new IllegalStateException("Failed to create the parent directory " + parent.getAbsolutePath());
+            }
+            try {
+                final FileOutputStream fout = new FileOutputStream(this.logFile, true);
+                final BufferedOutputStream bout = new BufferedOutputStream(fout);
+                final MeteredStream stream = new MeteredStream(bout, this.logFile.length());
+                this.writer = new MeteredFileWriter(stream, fileEncoding);
+                trace(LogFileManager.class, () -> "Output enabled to " + this.logFile);
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not open the log file for writing: " + this.logFile, e);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -221,17 +264,23 @@ public class LogFileManager {
      * <p>
      * Redundant calls do nothing.
      */
-    public synchronized void disableOutput() {
-        if (!isOutputEnabled()) {
-            return;
-        }
+    public void disableOutput() {
+        lock.lock();
         try {
-//            LOG.log(DEBUG, "Closing writer: {0}", writer);
-            this.writer.close();
-        } catch (final IOException e) {
-            GlassFishLoggingTracer.error(getClass(), "Could not close the output stream.", e);
+            if (!isOutputEnabled()) {
+                return;
+            }
+            try {
+                trace(LogFileManager.class, () -> "Closing writer: " + writer);
+                this.writer.close();
+            } catch (final IOException e) {
+                GlassFishLoggingTracer.error(getClass(), "Could not close the output stream.", e);
+            }
+            this.writer = null;
+            trace(LogFileManager.class, () -> "Output disabled to " + this.logFile);
+        } finally {
+            lock.unlock();
         }
-        this.writer = null;
     }
 
 
@@ -274,8 +323,7 @@ public class LogFileManager {
 
 
     private void moveFile(final File logFileToArchive, final File target) throws IOException {
-        GlassFishLoggingTracer.trace(getClass(),
-            () -> "moveFile(logFileToArchive=" + logFileToArchive + ", target=" + target + ")");
+        logInfoAsync(() -> "Archiving file " + logFileToArchive + " to " + target);
         try {
             Files.move(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
         } catch (UnsupportedOperationException | IOException e) {
@@ -283,10 +331,39 @@ public class LogFileManager {
             // Windows because of multiple file handles opened. We go through Plan B to
             // copy bytes explicitly to a renamed file.
             // Can happen on some windows file systems - then we try non-atomic version at least.
-            GlassFishLoggingTracer.error(getClass(), String.format(
+            logErrorAsync(String.format(
                 "File %s could not be renamed to %s atomically, now trying to move it without this request.",
                 logFileToArchive, target), e);
             Files.move(logFileToArchive.toPath(), target.toPath());
         }
+    }
+
+
+    /**
+     * This logs in a separate thread to avoid deadlocks. The separate thread can be blocked when
+     * the LogRecordBuffer is full while the LogFileManager is still locked and doesn't process
+     * any records until it finishes rolling the file.
+     * <p>
+     * The count of messages is limited, so we can do this.
+     */
+    private void logInfoAsync(final Supplier<String> message) {
+        trace(getClass(), message);
+        new Thread(() -> LOG.log(INFO, message), "LogFileManager-Async-Info-Logger").start();
+    }
+
+
+    /**
+     * This logs in a separate thread to avoid deadlocks. The separate thread can be blocked when
+     * the LogRecordBuffer is full while the LogFileManager is still locked and doesn't process
+     * any records until it finishes rolling the file.
+     * <p>
+     * The count of messages is limited, so we can do this.
+     * <p>
+     * However it is not suitable for all errors - if we cannot write to the file, this would just create
+     * another record which could not be written.
+     */
+    private void logErrorAsync(final String message, final Exception exception) {
+        GlassFishLoggingTracer.error(getClass(), message, exception);
+        new Thread(() -> LOG.log(ERROR, message, exception), "LogFileManager-Async-Error-Logger").start();
     }
 }

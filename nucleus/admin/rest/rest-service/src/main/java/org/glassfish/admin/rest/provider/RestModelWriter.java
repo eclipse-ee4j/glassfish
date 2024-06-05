@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,12 @@
 
 package org.glassfish.admin.rest.provider;
 
-import java.util.List;
-import java.util.logging.Level;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.ext.Provider;
+
+import java.util.List;
+import java.util.logging.Level;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.Constants;
@@ -35,13 +38,12 @@ import org.glassfish.admin.rest.utils.JsonUtil;
 public class RestModelWriter extends BaseProvider<RestModel> {
     public RestModelWriter() {
         super(RestModel.class, Constants.MEDIA_TYPE_JSON_TYPE);
-
     }
 
     @Override
     public String getContent(RestModel proxy) {
         StringBuilder sb = new StringBuilder();
-        final List<String> wrapObjectHeader = requestHeaders.get().getRequestHeader("X-Wrap-Object");
+        final List<String> wrapObjectHeader = requestHeaders.getRequestHeader("X-Wrap-Object");
         boolean wrapObject = ((wrapObjectHeader != null) && (wrapObjectHeader.size() > 0));
         try {
             JSONObject object = (JSONObject) JsonUtil.getJsonObject(proxy);

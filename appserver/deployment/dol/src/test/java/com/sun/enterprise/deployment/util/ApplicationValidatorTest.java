@@ -144,8 +144,8 @@ class ApplicationValidatorTest {
         List<GlassFishLogRecord> logs = logCollector.getAll();
         assertThat("Logs: " + logs, logs, hasSize(1));
         assertThat(logs.get(0).getMessage(),
-            equalTo("JNDI name java:app/jdbc/testdb is declared by multiple modules of the application testAppName:"
-                + " EBDLevel:testAppName#test-ejb-jar-name.jar, EBDLevel:testAppName#test-ejb-jar2-name.jar"));
+            equalTo("JNDI name java:app/jdbc/testdb is declared by multiple modules of the application testAppName."
+                + " Scopes: EBDLevel:testAppName#test-ejb-jar-name.jar, EBDLevel:testAppName#test-ejb-jar2-name.jar"));
     }
 
 

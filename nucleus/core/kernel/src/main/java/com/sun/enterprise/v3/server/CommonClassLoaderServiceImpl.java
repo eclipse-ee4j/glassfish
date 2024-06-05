@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,11 @@
  */
 
 package com.sun.enterprise.v3.server;
+
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -37,11 +42,6 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import jakarta.inject.Inject;
 
 /**
  * This class is responsible for setting up Common Class Loader. As the
@@ -180,15 +180,8 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
             derbyLib = new File(derbyHome, "lib");
         }
         if (derbyLib == null || !derbyLib.exists()) {
-            // maybe the jdk...
-            if (System.getProperty("java.version").compareTo("1.6") > 0) {
-                File jdkHome = new File(System.getProperty("java.home"));
-                derbyLib = new File(jdkHome, "../db/lib");
-            }
-        }
-        if (!derbyLib.exists()) {
             logger.info(KernelLoggerInfo.cantFindDerby);
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         return Arrays.asList(derbyLib.listFiles(new FilenameFilter(){

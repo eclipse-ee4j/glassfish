@@ -19,13 +19,14 @@ package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.util.Utility;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
@@ -48,6 +49,8 @@ import org.glassfish.external.statistics.Statistic;
 import org.glassfish.external.statistics.Stats;
 import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
 import org.glassfish.flashlight.datatree.TreeNode;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ServerContext;
 
 import static jakarta.ws.rs.core.Response.Status.FORBIDDEN;
 import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
@@ -55,10 +58,6 @@ import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getStatistic;
 import static org.glassfish.admin.rest.provider.ProviderUtil.jsonValue;
-
-import com.sun.enterprise.util.Utility;
-import jakarta.inject.Inject;
-import org.glassfish.internal.api.ServerContext;
 
 /**
  * @author rajeshwar patil
@@ -70,11 +69,11 @@ import org.glassfish.internal.api.ServerContext;
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
 public class MonitoringResource {
 
-    @Context
-    protected UriInfo uriInfo;
+    @Inject
+    private UriInfo uriInfo;
 
-    @Context
-    protected LocatorBridge habitat;
+    @Inject
+    private LocatorBridge locator;
 
     @Inject
     private ServerContext serverContext;
@@ -91,10 +90,11 @@ public class MonitoringResource {
 
         String currentInstanceName = System.getProperty("com.sun.aas.instanceName");
         boolean isRunningOnDAS = "server".equals(currentInstanceName); //TODO this needs to come from an API. Check with admin team
-        MonitoringRuntimeDataRegistry monitoringRegistry = habitat.getRemoteLocator().getService(MonitoringRuntimeDataRegistry.class);
+        ServiceLocator serviceLocator = locator.getRemoteLocator();
+        MonitoringRuntimeDataRegistry monitoringRegistry = serviceLocator.getService(MonitoringRuntimeDataRegistry.class);
         TreeNode rootNode = monitoringRegistry.get(currentInstanceName);
 
-        //The pathSegments will always contain "domain". Discard it
+        // The pathSegments will always contain "domain". Discard it
         pathSegments = pathSegments.subList(1, pathSegments.size());
         if (!pathSegments.isEmpty()) {
             PathSegment lastSegment = pathSegments.get(pathSegments.size() - 1);
@@ -115,7 +115,7 @@ public class MonitoringResource {
 
             if (isRunningOnDAS) {
                 // Add links to instances from the cluster
-                Domain domain = habitat.getRemoteLocator().getService(Domain.class);
+                Domain domain = serviceLocator.getService(Domain.class);
                 Map<String, String> links = (Map<String, String>) ar.getExtraProperties().get("childResources");
                 for (Server s : domain.getServers().getServer()) {
                     if (!"server".equals(s.getName())) {
@@ -162,15 +162,12 @@ public class MonitoringResource {
                 if (isRunningOnDAS) { //Attempt to forward to instance if running on Das
                     //TODO validate that firstPathElement corresponds to a valid server name
 
-                    /* Jersey client is not accessible from the current context classloader,
-                        which is kernel OSGi bundle CL. We need to run it within the common classloader as
-                        the context classloader
-                    */
+                    // Jersey client is not accessible from the current context classloader,
+                    //  which is kernel OSGi bundle CL. We need to run it within the common classloader as
+                    //  the context classloader
                     Properties proxiedResponse = Utility.runWithContextClassLoader(serverContext.getCommonClassLoader(),
-                            () -> {
-                                return new MonitoringProxyImpl()
-                                        .proxyRequest(uriInfo, Util.getJerseyClient(), habitat.getRemoteLocator());
-                            });
+                            () -> new MonitoringProxyImpl()
+                                    .proxyRequest(uriInfo, Util.getJerseyClient(), serviceLocator));
                     ar.setExtraProperties(proxiedResponse);
                     responseBuilder.entity(new ActionReportResult(ar));
                 } else { // Not running on DAS and firstPathElement != currentInstanceName => Reject the request as invalid

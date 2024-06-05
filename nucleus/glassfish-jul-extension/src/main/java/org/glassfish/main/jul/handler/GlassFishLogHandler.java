@@ -147,9 +147,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
         // parent StreamHandler already set level, filter, encoding and formatter.
         setLevel(configuration.getLevel());
         setEncoding(configuration.getEncoding());
-
-        this.logRecordBuffer = new LogRecordBuffer(
-            configuration.getBufferCapacity(), configuration.getBufferTimeout());
+        this.logRecordBuffer = new LogRecordBuffer(configuration.getBufferCapacity(), configuration.getBufferTimeout());
 
         reconfigure(configuration);
     }
@@ -191,6 +189,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
         trace(GlassFishLogHandler.class, () -> "reconfigure(configuration=" + newConfiguration + ")");
         // stop using output, but allow collecting records. Logging system can continue to work.
         this.status = GlassFishLogHandlerStatus.ACCEPTING;
+        this.logRecordBuffer.reconfigure(newConfiguration.getBufferCapacity(), newConfiguration.getBufferTimeout());
         if (this.rotationTimerTask != null) {
             // to avoid another task from last configuration runs it's action.
             this.rotationTimerTask.cancel();

@@ -18,18 +18,35 @@ package org.glassfish.main.jul.handler;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 
 /**
+ * The buffer for log records.
+ * <p>
+ * If it is full and another record is comming to the buffer, the record will wait until the
+ * buffer would have a free capacity, but only for a maxWait seconds.
+ * <p>
+ * If the buffer would not have free capacity even after the maxWait time, the buffer will be
+ * automatically cleared, the incomming record will be lost and there will be a stacktrace in
+ * standard error output - but that may be redirected to JUL again, so this must be reliable.
+ * <ul>
+ * <li>After this error handling procedure the logging will be available again in full capacity
+ * but it's previous unprocessed log records would be lost.
+ * <li>If the maxWait is lower than 1, the calling thread would be blocked until some records would
+ * be processed. It may remain blocked forever.
+ * </ul>
+ *
  * @author David Matejcek
  */
 class LogRecordBuffer {
 
-    private final int capacity;
-    private final int maxWait;
-    private final ArrayBlockingQueue<GlassFishLogRecord> pendingRecords;
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
+    private int capacity;
+    private int maxWait;
+    private ArrayBlockingQueue<GlassFishLogRecord> pendingRecords;
 
 
     /**
@@ -70,7 +87,31 @@ class LogRecordBuffer {
     public LogRecordBuffer(final int capacity, final int maxWait) {
         this.capacity = capacity;
         this.maxWait = maxWait;
-        this.pendingRecords = new ArrayBlockingQueue<>(capacity);
+        this.pendingRecords = new ArrayBlockingQueue<>(capacity, true);
+    }
+
+
+    /**
+     * Reconfigures the buffer.
+     *
+     * @param newCapacity capacity of the buffer.
+     * @param newMaxWait maximal time in seconds to wait for the free capacity. If &lt; 1, can wait
+     *            forever.
+     */
+    // R/W locks - only this method locks everything, because it has to recreate the queue using
+    // the original pending records.
+    public void reconfigure(final int newCapacity, final int newMaxWait) {
+        if (this.capacity == newCapacity && this.maxWait == newMaxWait) {
+            return;
+        }
+        this.lock.writeLock().lock();
+        try {
+            this.capacity = newCapacity;
+            this.maxWait = newMaxWait;
+            this.pendingRecords = new ArrayBlockingQueue<>(newCapacity, true, this.pendingRecords);
+        } finally {
+            this.lock.writeLock().unlock();
+        }
     }
 
 
@@ -78,17 +119,38 @@ class LogRecordBuffer {
      * @return true if there are not pending records to provide.
      */
     public boolean isEmpty() {
-        return this.pendingRecords.isEmpty();
+        this.lock.readLock().lock();
+        try {
+            return this.pendingRecords.isEmpty();
+        } finally {
+            this.lock.readLock().unlock();
+        }
     }
 
 
+    /**
+     * @return count of records in the buffer waiting to be processed.
+     */
     public int getSize() {
-        return this.pendingRecords.size();
+        this.lock.readLock().lock();
+        try {
+            return this.pendingRecords.size();
+        } finally {
+            this.lock.readLock().unlock();
+        }
     }
 
 
+    /**
+     * @return maximal count of records in the buffer waiting to be processed.
+     */
     public int getCapacity() {
-        return this.capacity;
+        this.lock.readLock().lock();
+        try {
+            return this.capacity;
+        } finally {
+            this.lock.readLock().unlock();
+        }
     }
 
 
@@ -98,10 +160,13 @@ class LogRecordBuffer {
      * @return {@link GlassFishLogRecord} or null if interrupted.
      */
     public GlassFishLogRecord pollOrWait() {
+        this.lock.readLock().lock();
         try {
             return this.pendingRecords.take();
         } catch (final InterruptedException e) {
             return null;
+        } finally {
+            this.lock.readLock().unlock();
         }
     }
 
@@ -109,15 +174,30 @@ class LogRecordBuffer {
      * @return null if there are no pending records, first in the buffer otherwise.
      */
     public GlassFishLogRecord poll() {
-        return this.pendingRecords.poll();
+        this.lock.readLock().lock();
+        try {
+            return this.pendingRecords.poll();
+        } finally {
+            this.lock.readLock().unlock();
+        }
     }
 
 
+    /**
+     * Adds the record to the buffer.
+     *
+     * @param record
+     */
     public void add(final GlassFishLogRecord record) {
-        if (maxWait > 0) {
-            addWithTimeout(record);
-        } else {
-            addWithUnlimitedWaiting(record);
+        this.lock.readLock().lock();
+        try {
+            if (maxWait > 0) {
+                addWithTimeout(record);
+            } else {
+                addWithUnlimitedWaiting(record);
+            }
+        } finally {
+            this.lock.readLock().unlock();
         }
     }
 
@@ -167,10 +247,10 @@ class LogRecordBuffer {
     /**
      * Returns simple name of this class and size/capacity
      *
-     * @return ie.: LogRecordBuffer@2b488078[5/10000]
+     * @return ie.: LogRecordBuffer@2b488078[usage=5/10000, maxWaitTime=60 s]
      */
     @Override
     public String toString() {
-        return super.toString() + "[" + getSize() + "/" + getCapacity() + "]";
+        return super.toString() + "[usage=" + getSize() + "/" + getCapacity() + ", maxWaitTime=" + maxWait + " s]";
     }
 }

@@ -72,7 +72,8 @@
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-            <version>3.1.0</version>
+            <!-- TODO: Required 3.1.1 to pass all 295 tests. -->
+            <version>3.1.1-SNAPSHOT</version>
         </dependency>
 
 

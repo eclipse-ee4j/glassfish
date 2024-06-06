@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 import com.sun.enterprise.deployment.MetadataSource;
-import com.sun.enterprise.deployment.annotation.factory.ManagedExecutorDefinitionData;
 
 import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
 
@@ -73,6 +72,10 @@ class ManagedExecutorDefinitionConverter
         ManagedExecutorDefinitionData data = new ManagedExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
+        data.setVirtual(annotation.virtual());
 
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungAfterSeconds(0);
@@ -89,22 +92,28 @@ class ManagedExecutorDefinitionConverter
 
 
     @Override
-    void merge(ManagedExecutorDefinitionData annotationData, ManagedExecutorDefinitionData descriptorData) {
-        LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
-        if (!annotationData.getName().equals(descriptorData.getName())) {
+    void merge(ManagedExecutorDefinitionData annotation, ManagedExecutorDefinitionData descriptor) {
+        LOG.log(Level.DEBUG, "merge(annotation={0}, descriptor={1})", annotation, descriptor);
+        if (!annotation.getName().equals(descriptor.getName())) {
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
-                + annotationData.getName() + " x " + descriptorData.getName());
+                + annotation.getName() + " x " + descriptor.getName());
         }
-        if (descriptorData.getHungAfterSeconds() <= 0 && annotationData.getHungAfterSeconds() != 0) {
-            descriptorData.setHungAfterSeconds(annotationData.getHungAfterSeconds());
+
+        mergeQualifiers(annotation, descriptor);
+
+        if (!descriptor.isVirtual()) {
+            descriptor.setVirtual(annotation.isVirtual());
         }
-        if (descriptorData.getMaximumPoolSize() <= 0 && annotationData.getMaximumPoolSize() > 0
-            && annotationData.getMaximumPoolSize() < Integer.MAX_VALUE) {
-            descriptorData.setMaximumPoolSize(annotationData.getMaximumPoolSize());
+        if (descriptor.getHungAfterSeconds() <= 0 && annotation.getHungAfterSeconds() != 0) {
+            descriptor.setHungAfterSeconds(annotation.getHungAfterSeconds());
         }
-        if (descriptorData.getContext() == null && annotationData.getContext() != null
-            && !annotationData.getContext().isBlank()) {
-            descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));
+        if (descriptor.getMaximumPoolSize() <= 0 && annotation.getMaximumPoolSize() > 0
+            && annotation.getMaximumPoolSize() < Integer.MAX_VALUE) {
+            descriptor.setMaximumPoolSize(annotation.getMaximumPoolSize());
+        }
+        if (descriptor.getContext() == null && annotation.getContext() != null
+            && !annotation.getContext().isBlank()) {
+            descriptor.setContext(TranslatedConfigView.expandValue(annotation.getContext()));
         }
     }
 }

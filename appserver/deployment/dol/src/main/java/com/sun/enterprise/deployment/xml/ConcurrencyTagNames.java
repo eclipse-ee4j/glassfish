@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,7 +41,9 @@ public interface ConcurrencyTagNames extends TagNames {
     String CONTEXT_INFO = "context-info";
     String CONTEXT_INFO_DEFAULT_VALUE = "Classloader,JNDI,Security,WorkArea";
     String CONTEXT_INFO_ENABLED = "context-info-enabled";
+    String QUALIFIER = "qualifier";
     String THREAD_PRIORITY = "thread-priority";
+    String VIRTUAL = "virtual";
     String LONG_RUNNING_TASKS = "long-runnings-tasks";
     String HUNG_AFTER_SECONDS = "hung-after-seconds";
     String HUNG_LOGGER_PRINT_ONCE = "hung-logger-print-once";

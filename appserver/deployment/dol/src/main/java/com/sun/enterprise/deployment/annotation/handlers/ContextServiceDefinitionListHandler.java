@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
@@ -28,10 +27,7 @@ import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.MetadataSource.ANNOTATION;
 
 @Service
 @AnnotationHandlerFor(ContextServiceDefinition.List.class)
@@ -46,10 +42,7 @@ public class ContextServiceDefinitionListHandler extends AbstractResourceHandler
         ContextServiceDefinition.List annotation = (ContextServiceDefinition.List) ainfo.getAnnotation();
         Set<ContextServiceDefinitionData> set = converter.convert(annotation.value());
         for (ContextServiceDefinitionData data : set) {
-            ContextServiceDefinitionDescriptor descriptor = new ContextServiceDefinitionDescriptor(data, ANNOTATION);
-            for (ResourceContainerContext context : rcContexts) {
-                context.getResourceDescriptors(JavaEEResourceType.CSDD).add(descriptor);
-            }
+            converter.updateDescriptors(data, rcContexts);
         }
         return getDefaultProcessedResult();
     }

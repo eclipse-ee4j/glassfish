@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +26,7 @@ import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
@@ -34,11 +36,15 @@ import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.annotation.handlers.ConcurrencyResourceDefinition;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import com.sun.enterprise.naming.spi.NamingUtils;
@@ -76,12 +82,14 @@ import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.concurro.cdi.ConcurrencyManagedCDIBeans;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.javaee.services.CommonResourceProxy;
 import org.glassfish.javaee.services.JMSCFResourcePMProxy;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.naming.ApplicationScopedResourceBinding;
 import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 
@@ -95,6 +103,10 @@ import static java.util.logging.Level.SEVERE;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+import static org.glassfish.concurro.cdi.ConcurrencyManagedCDIBeans.Type.CONTEXT_SERVICE;
+import static org.glassfish.concurro.cdi.ConcurrencyManagedCDIBeans.Type.MANAGED_EXECUTOR_SERVICE;
+import static org.glassfish.concurro.cdi.ConcurrencyManagedCDIBeans.Type.MANAGED_SCHEDULED_EXECUTOR_SERVICE;
+import static org.glassfish.concurro.cdi.ConcurrencyManagedCDIBeans.Type.MANAGED_THREAD_FACTORY;
 import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
 import static org.glassfish.deployment.common.JavaEEResourceType.CFD;
 import static org.glassfish.deployment.common.JavaEEResourceType.CSDD;
@@ -372,6 +384,46 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 jndiBindings.add(jmscfEnvBinding);
             }
         }
+
+        if (scope == ScopeType.APP) {
+            Set<ResourceDescriptor> concurrencyDescs = new HashSet<>();
+            concurrencyDescs.addAll(managedExecutorDefinitions);
+            concurrencyDescs.addAll(managedThreadfactoryDefintions);
+            concurrencyDescs.addAll(managedScheduledDefinitions);
+            concurrencyDescs.addAll(contextServiceDefinitions);
+            if (!concurrencyDescs.isEmpty()) {
+                registerConcurrencyCDIQualifiers(jndiBindings, concurrencyDescs);
+            }
+        }
+    }
+
+    private void registerConcurrencyCDIQualifiers(Collection<JNDIBinding> jndiBindings, Set<ResourceDescriptor> concurrencyDescs) {
+        ConcurrencyManagedCDIBeans setup = new ConcurrencyManagedCDIBeans();
+        for (ResourceDescriptor desc : concurrencyDescs) {
+            LOG.log(FINE, () -> "Registering concurrency CDI qualifiers for descriptor: " + desc);
+            String jndiName = toLogicalJndiName(desc).toString();
+            ConcurrencyResourceDefinition descriptor = (ConcurrencyResourceDefinition) desc;
+            Set<String> qualifiers = new HashSet<>(descriptor.getQualifiers());
+            // A special value which might occur in XML
+            // We don't need it any more.
+            qualifiers.remove("");
+            if (descriptor instanceof ContextServiceDefinitionDescriptor) {
+                setup.addDefinition(CONTEXT_SERVICE, qualifiers, jndiName);
+            } else if (descriptor instanceof ManagedExecutorDefinitionDescriptor) {
+                setup.addDefinition(MANAGED_EXECUTOR_SERVICE, qualifiers, jndiName);
+            } else if (descriptor instanceof ManagedScheduledExecutorDefinitionDescriptor) {
+                setup.addDefinition(MANAGED_SCHEDULED_EXECUTOR_SERVICE, qualifiers, jndiName);
+            } else if (descriptor instanceof ManagedThreadFactoryDefinitionDescriptor) {
+                setup.addDefinition(MANAGED_THREAD_FACTORY, qualifiers, jndiName);
+            } else {
+                throw new IllegalArgumentException("Unexpected Concurrency type!"
+                    + " Expected ContextServiceDefinitionDescriptor, ManagedExecutorDefinitionDescriptor,"
+                    + " ManagedScheduledExecutorDefinitionDescriptor, or ManagedThreadFactoryDefinitionDescriptor,"
+                    + " got " + descriptor);
+            }
+        }
+        SimpleJndiName jndiName = new SimpleJndiName(ConcurrencyManagedCDIBeans.JDNI_NAME);
+        jndiBindings.add(new ApplicationScopedResourceBinding(jndiName, setup));
     }
 
     private ResourceDeployer getResourceDeployer(Object resource) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,10 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment.annotation.factory;
+package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -31,6 +31,8 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     private String context;
     private int maximumPoolSize = Integer.MAX_VALUE;
     private long hungAfterSeconds;
+    private boolean virtual;
+    private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
     @Override
@@ -54,6 +56,36 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     @Override
     public void setContext(String context) {
         this.context = context;
+    }
+
+
+    @Override
+    public List<String> getQualifiers() {
+        return qualifiers;
+    }
+
+
+    @Override
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
+    }
+
+
+    public void setQualifiers(List<String> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
+    }
+
+
+    @Override
+    public boolean isVirtual() {
+        return virtual;
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        this.virtual = virtual;
     }
 
 
@@ -99,7 +131,8 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
     @Override
     public String toString() {
-        return super.toString() + "[" + getName() + "]";
+        return super.toString() + "[name=" + getName() + ", context=" + context + ", virtual=" + virtual
+            + ", maximumPoolSize=" + maximumPoolSize + ", hungAfterSeconds=" + hungAfterSeconds
+            + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
-
 }

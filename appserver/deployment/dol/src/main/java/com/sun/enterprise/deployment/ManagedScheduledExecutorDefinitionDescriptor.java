@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
 import com.sun.enterprise.deployment.annotation.handlers.ManagedScheduledExecutorDefinitionData;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -70,6 +71,36 @@ public class ManagedScheduledExecutorDefinitionDescriptor extends ResourceDescri
     }
 
 
+    @Override
+    public List<String> getQualifiers() {
+        return data.getQualifiers();
+    }
+
+
+    @Override
+    public void addQualifier(String qualifier) {
+        data.addQualifier(qualifier);
+    }
+
+
+    @Override
+    public void setQualifiers(List<String> qualifiers) {
+        data.setQualifiers(qualifiers);
+    }
+
+
+    @Override
+    public boolean isVirtual() {
+        return data.isVirtual();
+    }
+
+
+    @Override
+    public void setVirtual(boolean virtual) {
+        data.setVirtual(virtual);
+    }
+
+
     public long getHungTaskThreshold() {
         return data.getHungTaskThreshold();
     }
@@ -92,11 +123,6 @@ public class ManagedScheduledExecutorDefinitionDescriptor extends ResourceDescri
 
     public Properties getProperties() {
         return data.getProperties();
-    }
-
-
-    public void setProperties(Properties properties) {
-        data.setProperties(properties);
     }
 
 

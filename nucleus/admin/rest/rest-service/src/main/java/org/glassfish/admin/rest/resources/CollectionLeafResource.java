@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,36 +18,35 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.OPTIONS;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
-import org.jvnet.hk2.config.TransactionFailure;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.OPTIONS;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.WebApplicationException;
-
 import org.glassfish.admin.rest.provider.MethodMetaData;
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.results.OptionsResult;
-import org.glassfish.admin.rest.utils.xml.RestActionReporter;
-import org.glassfish.api.ActionReport;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.Util;
+import org.glassfish.admin.rest.utils.xml.RestActionReporter;
+import org.glassfish.api.ActionReport;
 import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.TransactionFailure;
 
 import static org.glassfish.admin.rest.utils.Util.decode;
 import static org.glassfish.admin.rest.utils.Util.upperCaseFirstLetter;
@@ -157,7 +157,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response delete(HashMap<String, String> data) {
         if (data == null) {
-            data = new HashMap<String, String>();
+            data = new HashMap<>();
         }
         ResourceUtil.addQueryString(uriInfo.getQueryParameters(), data);
         String deleteCommand = getDeleteCommand();
@@ -199,7 +199,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
     }
 
     protected Map<String, MethodMetaData> getMethodMetaData() {
-        Map<String, MethodMetaData> mmd = new TreeMap<String, MethodMetaData>();
+        Map<String, MethodMetaData> mmd = new TreeMap<>();
         //GET meta data
         mmd.put("GET", new MethodMetaData());
 
@@ -293,7 +293,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
 
     // Ugly, temporary hack
     private Map<String, String> processData(Map<String, String> data) {
-        Map<String, String> results = new HashMap<String, String>();
+        Map<String, String> results = new HashMap<>();
         StringBuilder options = new StringBuilder();
         String sep = "";
         for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -342,7 +342,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
     }
 
     protected Map<String, String> deleteExistingOptions() {
-        Map<String, String> existing = new HashMap<String, String>();
+        Map<String, String> existing = new HashMap<>();
         existing.put("target", target);
         for (String option : getEntity()) {
             int index = option.indexOf("=");

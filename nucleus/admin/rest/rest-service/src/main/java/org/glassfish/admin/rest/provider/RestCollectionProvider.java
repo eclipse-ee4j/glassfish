@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package org.glassfish.admin.rest.provider;
 
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.ext.Provider;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -45,8 +46,8 @@ public class RestCollectionProvider extends BaseProvider<RestCollection> {
     @Override
     public String getContent(RestCollection proxy) {
         StringBuilder sb = new StringBuilder();
-        final List<String> wrapObjectHeader = requestHeaders.get().getRequestHeader("X-Wrap-Object");
-        final List<String> skipMetadataHeader = requestHeaders.get().getRequestHeader("X-Skip-Metadata");
+        final List<String> wrapObjectHeader = requestHeaders.getRequestHeader("X-Wrap-Object");
+        final List<String> skipMetadataHeader = requestHeaders.getRequestHeader("X-Skip-Metadata");
         boolean wrapObject = ((wrapObjectHeader != null) && (wrapObjectHeader.size() > 0));
         boolean skipMetadata = ((skipMetadataHeader != null) && (skipMetadataHeader.get(0).equalsIgnoreCase("true")));
 

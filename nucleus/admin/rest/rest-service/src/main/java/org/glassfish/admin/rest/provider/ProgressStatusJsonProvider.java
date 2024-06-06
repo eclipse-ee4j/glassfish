@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,22 @@
 
 package org.glassfish.admin.rest.provider;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Set;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.Provider;
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import org.glassfish.api.admin.ProgressStatus;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Set;
+
 import org.glassfish.api.admin.progress.ProgressStatusBase;
 import org.glassfish.api.admin.progress.ProgressStatusBase.ChildProgressStatus;
 
@@ -45,7 +48,7 @@ public class ProgressStatusJsonProvider extends BaseProvider<ProgressStatusBase>
     private static final JsonFactory factory = new JsonFactory();
 
     public ProgressStatusJsonProvider() {
-        super(ProgressStatus.class, MediaType.APPLICATION_JSON_TYPE, new MediaType("application", "x-javascript"));
+        super(ProgressStatusBase.class, MediaType.APPLICATION_JSON_TYPE, new MediaType("application", "x-javascript"));
     }
 
     @Override
@@ -56,7 +59,7 @@ public class ProgressStatusJsonProvider extends BaseProvider<ProgressStatusBase>
     @Override
     public void writeTo(ProgressStatusBase proxy, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        JsonGenerator out = factory.createJsonGenerator(entityStream, JsonEncoding.UTF8);
+        JsonGenerator out = factory.createGenerator(entityStream, JsonEncoding.UTF8);
         out.writeStartObject();
         writeJson("progress-status", proxy, -1, out);
         out.writeEndObject();

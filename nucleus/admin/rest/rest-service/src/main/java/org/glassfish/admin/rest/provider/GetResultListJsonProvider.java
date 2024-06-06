@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,27 @@
 
 package org.glassfish.admin.rest.provider;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.admin.rest.results.GetResultList;
-import org.jvnet.hk2.config.Dom;
-
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.glassfish.admin.rest.RestLogging;
 
-import static org.glassfish.admin.rest.provider.ProviderUtil.*;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.glassfish.admin.rest.RestLogging;
+import org.glassfish.admin.rest.results.GetResultList;
+import org.jvnet.hk2.config.Dom;
+
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_CHILD_RESOURCES;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_COMMANDS;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_ENTITY;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_METHODS;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getJsonForMethodMetaData;
 
 /**
  *
@@ -66,7 +73,6 @@ public class GetResultListJsonProvider extends BaseProvider<GetResultList> {
 
     private JSONArray getResourcesLinks(List<Dom> proxyList) {
         JSONArray array = new JSONArray();
-        String elementName;
         for (Map.Entry<String, String> link : getResourceLinks(proxyList).entrySet()) {
             array.put(link.getValue());
         }
@@ -79,7 +85,7 @@ public class GetResultListJsonProvider extends BaseProvider<GetResultList> {
         //TODO commandResourcePath is two dimensional array. It seems the second e.x. see DomainResource#getCommandResourcesPaths().
         //The second dimension POST/GET etc. does not seem to be used. Discussed with Ludo. Need to be removed in a separate checkin.
         for (String[] commandResourcePath : commandResourcesPaths) {
-            array.put(getElementLink(uriInfo.get(), commandResourcePath[0]));
+            array.put(getElementLink(uriInfo, commandResourcePath[0]));
         }
         return array;
     }

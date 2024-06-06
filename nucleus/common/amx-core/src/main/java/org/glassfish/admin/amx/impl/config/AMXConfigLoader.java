@@ -46,12 +46,12 @@ import org.glassfish.external.arc.Taxonomy;
 import org.jvnet.hk2.config.*;
 
 /**
-Responsible for loading ConfigBeanProxy MBeans (com.sun.enterprise.config.serverbeans.*)
+ * Responsible for loading ConfigBeanProxy MBeans (com.sun.enterprise.config.serverbeans.*)
+ *
  * @author llc
  */
 @Taxonomy(stability = Stability.NOT_AN_INTERFACE)
-public final class AMXConfigLoader
-        implements TransactionListener {
+public final class AMXConfigLoader implements TransactionListener {
 
     private volatile AMXConfigLoaderThread mLoaderThread;
     private final Transactions mTransactions;
@@ -99,12 +99,12 @@ public final class AMXConfigLoader
 
     private void configBeanRemoved(final ConfigBean cb) {
         final ObjectName objectName = mRegistry.getObjectName(cb);
-        if (objectName != null) {
-            ImplUtil.unregisterAMXMBeans(mServer, objectName);
-            mRegistry.remove(objectName);
-        } else {
+        if (objectName == null) {
             // might or might not be there, but make sure it's gone!
             mPendingConfigBeans.remove(cb);
+        } else {
+            ImplUtil.unregisterAMXMBeans(mServer, objectName);
+            mRegistry.remove(objectName);
         }
     }
 
@@ -142,8 +142,8 @@ public final class AMXConfigLoader
             final List<PropertyChangeEvent> events,
             final long whenChanged) {
         //debug( "AMXConfigLoader.sortAndDispatch: " + events.size() + " events" );
-        final List<ConfigBean> newConfigBeans = new ArrayList<ConfigBean>();
-        final List<PropertyChangeEvent> remainingEvents = new ArrayList<PropertyChangeEvent>();
+        final List<ConfigBean> newConfigBeans = new ArrayList<>();
+        final List<PropertyChangeEvent> remainingEvents = new ArrayList<>();
 
         //
         // Process all ADD and REMOVE events first, placing leftovers into 'remainingEvents'
@@ -157,7 +157,7 @@ public final class AMXConfigLoader
             if (oldValue == null && newValue instanceof ConfigBeanProxy) {
                 // ADD: a new ConfigBean was added
                 final ConfigBeanProxy cbp = (ConfigBeanProxy) newValue;
-                final ConfigBean cb = asConfigBean(ConfigBean.unwrap(cbp));
+                final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
                 final boolean doWait = amxIsRunning();
                 if (handleConfigBean(cb, doWait)) // wait until registered
                 {
@@ -166,7 +166,7 @@ public final class AMXConfigLoader
             } else if (newValue == null && oldValue instanceof ConfigBeanProxy && amxIsRunning()) {
                 // REMOVE
                 final ConfigBeanProxy cbp = (ConfigBeanProxy) oldValue;
-                final ConfigBean cb = asConfigBean(ConfigBean.unwrap(cbp));
+                final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
                 //debug( "AMXConfigLoader.sortAndDispatch: remove (recursive) ConfigBean: " + mRegistry.getObjectName(cb) );
                 configBeanRemoved(cb);
             } else {
@@ -188,7 +188,7 @@ public final class AMXConfigLoader
                 if (source instanceof ConfigBeanProxy) {
                     // CHANGE
                     final ConfigBeanProxy cbp = (ConfigBeanProxy) source;
-                    final ConfigBean cb = asConfigBean(ConfigBean.unwrap(cbp));
+                    final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
                     //final Class<? extends ConfigBeanProxy> proxyClass = ConfigSupport.proxyType(cbp);
 
                     // change events without prior add
@@ -212,12 +212,14 @@ public final class AMXConfigLoader
         }
     }
 
+    @Override
     public void transactionCommited(final List<PropertyChangeEvent> changes) {
         //final PropertyChangeEvent[] changesArray = new PropertyChangeEvent[changes.size()];
         //changes.toArray( changesArray );
         sortAndDispatch(changes, System.currentTimeMillis());
     }
 
+    @Override
     public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
         // not interested...
     }
@@ -296,30 +298,32 @@ public final class AMXConfigLoader
         return (ConfigBean) o;
     }
 
+
     /**
-    Enable registration of MBeans, queued until now.
+     * Enable registration of MBeans, queued until now.
      */
     public synchronized ObjectName start() {
-        mLogger.log(Level.INFO,AMXLoggerInfo.inAMXConfigLoader, mLoaderThread );
-        if (mLoaderThread == null) {
-            FeatureAvailability.getInstance().waitForFeature(FeatureAvailability.AMX_CORE_READY_FEATURE, "AMXConfigLoader.start");
-
-            mLoaderThread = new AMXConfigLoaderThread(mPendingConfigBeans);
-            mLoaderThread.setDaemon(true);
-            mLoaderThread.start();
-
-            mPendingConfigBeans.swapTransactionListener(this);
-            SingletonEnforcer.register(AMXConfigLoader.class, this);
-
-            // wait until config beans have been loaded as MBeans
-            mLoaderThread.waitInitialQueue();
-
-            // Now the Config subsystem is ready: after the first queue of ConfigBeans are registered as MBeans
-            // and after the above MBeans are registered.
-            final ObjectName domainObjectName = ConfigBeanRegistry.getInstance().getObjectNameForProxy(getDomain());
-            mLogger.log(Level.INFO,"amx.domain.config.registered", domainObjectName);
-            FeatureAvailability.getInstance().registerFeature(AMXConfigConstants.AMX_CONFIG_READY_FEATURE, domainObjectName);
+        mLogger.log(Level.INFO, AMXLoggerInfo.inAMXConfigLoader, mLoaderThread );
+        if (mLoaderThread != null) {
+            return null;
         }
+        FeatureAvailability.getInstance().waitForFeature(FeatureAvailability.AMX_CORE_READY_FEATURE, "AMXConfigLoader.start");
+
+        mLoaderThread = new AMXConfigLoaderThread(mPendingConfigBeans);
+        mLoaderThread.setDaemon(true);
+        mLoaderThread.start();
+
+        mPendingConfigBeans.swapTransactionListener(this);
+        SingletonEnforcer.register(AMXConfigLoader.class, this);
+
+        // wait until config beans have been loaded as MBeans
+        mLoaderThread.waitInitialQueue();
+
+        // Now the Config subsystem is ready: after the first queue of ConfigBeans are registered as MBeans
+        // and after the above MBeans are registered.
+        final ObjectName domainObjectName = ConfigBeanRegistry.getInstance().getObjectNameForProxy(getDomain());
+        mLogger.log(Level.INFO, () -> "AMX domain config registered: " + domainObjectName);
+        FeatureAvailability.getInstance().registerFeature(AMXConfigConstants.AMX_CONFIG_READY_FEATURE, domainObjectName);
         return null;
     }
 
@@ -363,6 +367,7 @@ public final class AMXConfigLoader
             return objectName;
         }
 
+        @Override
         public void run() {
             try {
                 doRun();
@@ -563,15 +568,11 @@ public final class AMXConfigLoader
      * @return quoted string if it contains illegal characters; the string otherwise
      */
     private static String quoteIfNeeded(final String name) {
-        /*
-         * JMX names cannot include =  or , or : or * or ? unless they are part of
-         * the value and they are quoted.
-         */
-
-        if (name != null && ILLEGAL_JMX_NAME_PATTERN.matcher(name).matches()) {
-            return "\"" + name + "\"";
-        } else {
+        // JMX names cannot include = or , or : or * or ? unless they are part of
+        // the value and they are quoted.
+        if (name == null || !ILLEGAL_JMX_NAME_PATTERN.matcher(name).matches()) {
             return name;
         }
+        return "\"" + name + "\"";
     }
 }

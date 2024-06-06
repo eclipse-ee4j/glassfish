@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
@@ -27,7 +29,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -69,7 +70,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
     private static final Logger LOG = Logger.getLogger(TemplateListOfResource.class.getName());
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateListOfResource.class);
 
-    @Context
+    @Inject
     protected ServiceLocator injector;
 
     protected List<Dom> entity;
@@ -83,7 +84,6 @@ public abstract class TemplateListOfResource extends AbstractResource {
     }
 
     @POST
-    //create
     @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createResource(HashMap<String, String> data) {

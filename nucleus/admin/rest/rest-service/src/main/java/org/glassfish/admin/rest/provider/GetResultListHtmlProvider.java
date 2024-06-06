@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,25 @@
 
 package org.glassfish.admin.rest.provider;
 
-import org.glassfish.admin.rest.results.GetResultList;
-import org.glassfish.admin.rest.utils.DomConfigurator;
-import org.jvnet.hk2.config.Dom;
-
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.glassfish.admin.rest.utils.Util.*;
-import static org.glassfish.admin.rest.provider.ProviderUtil.*;
+import org.glassfish.admin.rest.results.GetResultList;
+import org.glassfish.admin.rest.utils.DomConfigurator;
+import org.jvnet.hk2.config.Dom;
+
+import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getHtmlForComponent;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getHtmlHeader;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getHtmlRespresentationsForCommand;
+import static org.glassfish.admin.rest.utils.Util.decode;
+import static org.glassfish.admin.rest.utils.Util.getName;
+import static org.glassfish.admin.rest.utils.Util.upperCaseFirstLetter;
 
 /**
  * @author Rajeshwar Patil
@@ -44,12 +51,12 @@ public class GetResultListHtmlProvider extends BaseProvider<GetResultList> {
 
     @Override
     public String getContent(GetResultList proxy) {
-        String result = getHtmlHeader(uriInfo.get().getBaseUri().toASCIIString());
-        final String typeKey = upperCaseFirstLetter((decode(getName(uriInfo.get().getPath(), '/'))));
+        String result = getHtmlHeader(uriInfo.getBaseUri().toASCIIString());
+        final String typeKey = upperCaseFirstLetter((decode(getName(uriInfo.getPath(), '/'))));
         result = result + "<h1>" + typeKey + "</h1>";
 
-        String postCommand = getHtmlRespresentationsForCommand(proxy.getMetaData().getMethodMetaData("POST"), "POST", "Create",
-                uriInfo.get());
+        String postCommand = getHtmlRespresentationsForCommand(proxy.getMetaData().getMethodMetaData("POST"), "POST",
+            "Create", uriInfo);
         result = getHtmlForComponent(postCommand, "Create " + typeKey, result);
 
         String childResourceLinks = getResourcesLinks(proxy.getDomList());
@@ -77,7 +84,7 @@ public class GetResultListHtmlProvider extends BaseProvider<GetResultList> {
         StringBuilder result = new StringBuilder("<div>");
         for (String[] commandResourcePath : commandResourcesPaths) {
             try {
-                result.append("<a href=\"").append(getElementLink(uriInfo.get(), commandResourcePath[0])).append("\">")
+                result.append("<a href=\"").append(getElementLink(uriInfo, commandResourcePath[0])).append("\">")
                         .append(commandResourcePath[0]).append("</a><br/>");
             } catch (Exception e) {
                 throw new RuntimeException(e);

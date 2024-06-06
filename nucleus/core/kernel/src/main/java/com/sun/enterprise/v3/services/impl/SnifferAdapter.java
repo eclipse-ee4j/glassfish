@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,13 +57,13 @@ public class SnifferAdapter extends HttpHandler {
     private static final Logger LOGGER = KernelLoggerInfo.getLogger();
 
     @Inject
-    ContainerRegistry containerRegistry;
+    private ContainerRegistry containerRegistry;
 
     @Inject
-    ContainerStarter containerStarter;
+    private ContainerStarter containerStarter;
 
     @Inject
-    ModulesRegistry modulesRegistry;
+    private ModulesRegistry modulesRegistry;
 
     private Sniffer sniffer;
     private ContainerMapper mapper;
@@ -111,9 +111,7 @@ public class SnifferAdapter extends HttpHandler {
 
                         // Force the start on each container
                         for (EngineInfo<?, ?> info : containersInfo) {
-                            if (LOGGER.isLoggable(FINE)) {
-                                LOGGER.log(FINE, "Got container, deployer is {0}", info.getDeployer());
-                            }
+                            LOGGER.log(FINE, "Got container, deployer is {0}", info.getDeployer());
                             info.getContainer();
                             LOGGER.log(INFO, snifferAdapterContainerStarted, new Object[] { sniffer.getModuleType(), System.currentTimeMillis() - startTime });
                         }
@@ -131,7 +129,7 @@ public class SnifferAdapter extends HttpHandler {
             DataChunk decodedURI = req.getRequest().getRequestURIRef().getDecodedRequestURIBC();
             try {
                 // Clear the previous mapped information.
-                MappingData mappingData = req.getNote(ContainerMapper.MAPPING_DATA);
+                MappingData mappingData = ContainerMapper.getNote(req);
                 mappingData.recycle();
 
                 adapter = mapper.mapUriWithSemicolon(req, decodedURI, 0, null);

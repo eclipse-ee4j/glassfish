@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,26 +19,32 @@ package org.glassfish.admin.rest.resources.custom;
 
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Writer;
-import java.nio.charset.Charset;
-
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.*;
-
-import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.zip.GZIPOutputStream;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Response.ResponseBuilder;
 
 import org.glassfish.admin.rest.adapter.LocatorBridge;
 import org.glassfish.admin.rest.logviewer.CharSpool;
@@ -60,25 +67,13 @@ import org.jvnet.hk2.config.Dom;
 //@Path("view-log/")
 public class LogViewerResource {
 
-    @Context
-    protected ServiceLocator injector;
-    @Context
-    protected UriInfo ui;
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private UriInfo uriInfo;
 
-    @Context
-    protected LocatorBridge habitat;
-
-    /**
-     * Represents the data source of this text.
-     */
-    private interface Source {
-
-        Session open() throws IOException;
-
-        long length();
-
-        boolean exists();
-    }
+    @Inject
+    private LocatorBridge locatorBridge;
 
     private Source source;
     protected Charset charset;
@@ -90,7 +85,7 @@ public class LogViewerResource {
 
     @Path("details/")
     public StructuredLogViewerResource getDomainUptimeResource() {
-        StructuredLogViewerResource resource = injector.createAndInitialize(StructuredLogViewerResource.class);
+        StructuredLogViewerResource resource = locator.createAndInitialize(StructuredLogViewerResource.class);
         return resource;
     }
 
@@ -106,7 +101,7 @@ public class LogViewerResource {
         }
 
         // getting logFilter object from habitat
-        LogFilter logFilter = habitat.getRemoteLocator().getService(LogFilter.class);
+        LogFilter logFilter = locatorBridge.getRemoteLocator().getService(LogFilter.class);
         String logLocation = "";
 
         // getting log file location on DAS for server/local instance/remote instance
@@ -115,7 +110,7 @@ public class LogViewerResource {
 
         if (!source.exists()) {
             // file doesn't exist yet
-            UriBuilder uriBuilder = ui.getAbsolutePathBuilder();
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder.queryParam("start", 0);
             uriBuilder.queryParam("instanceName", instanceName);
 
@@ -151,7 +146,7 @@ public class LogViewerResource {
                 w.close();
             }
         });
-        UriBuilder uriBuilder = ui.getAbsolutePathBuilder();
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
         uriBuilder.queryParam("start", size);
         uriBuilder.queryParam("instanceName", instanceName);
         URI next = uriBuilder.build();
@@ -246,6 +241,19 @@ public class LogViewerResource {
 
         return count + start;
     }
+
+    /**
+     * Represents the data source of this text.
+     */
+    private interface Source {
+
+        Session open() throws IOException;
+
+        long length();
+
+        boolean exists();
+    }
+
 
     /**
      * Points to a byte in the buffer.

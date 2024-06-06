@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,15 @@
 
 package org.glassfish.admin.rest.provider;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.Provider;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -25,16 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.ext.MessageBodyWriter;
-import jakarta.ws.rs.ext.Provider;
+
 import org.glassfish.admin.rest.Constants;
-import static org.glassfish.admin.rest.provider.ProviderUtil.*;
 import org.glassfish.admin.rest.utils.ConfigModelComparator;
 import org.glassfish.admin.rest.utils.DomConfigurator;
 import org.glassfish.admin.rest.utils.ResourceUtil;
@@ -43,29 +45,35 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
 
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_COMMAND;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getEndXmlElement;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getStartXmlElement;
+
 /**
  * @author Jason Lee
  */
 @Provider
 public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
+
     public static final String HEADER_DEBUG = "__debug";
 
     public static final String JSONP_CALLBACK = "jsoncallback";
 
-    @Context
-    protected jakarta.inject.Provider<UriInfo> uriInfo;
+    @Inject
+    protected ServiceLocator locator;
 
-    @Context
-    protected jakarta.inject.Provider<HttpHeaders> requestHeaders;
+    @Inject
+    protected UriInfo uriInfo;
 
-    @Context
-    protected ServiceLocator habitat;
+    @Inject
+    protected HttpHeaders requestHeaders;
 
-    protected Class desiredType;
+    protected Class<T> desiredType;
 
     protected MediaType[] supportedMediaTypes;
 
-    public BaseProvider(Class desiredType, MediaType... mediaType) {
+    public BaseProvider(Class<T> desiredType, MediaType... mediaType) {
         this.desiredType = desiredType;
         if (mediaType == null) {
             mediaType = new MediaType[0];
@@ -106,25 +114,19 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     public abstract String getContent(T proxy);
 
     protected int getFormattingIndentLevel() {
-        RestConfig rg = ResourceUtil.getRestConfig(habitat);
+        RestConfig rg = ResourceUtil.getRestConfig(locator);
         if (rg == null) {
             return -1;
-        } else {
-            return Integer.parseInt(rg.getIndentLevel());
         }
-
+        return Integer.parseInt(rg.getIndentLevel());
     }
 
     /**
      * returns true if the HTML viewer displays the hidden CLI command links
      */
     protected boolean canShowHiddenCommands() {
-
-        RestConfig rg = ResourceUtil.getRestConfig(habitat);
-        if ((rg != null) && (rg.getShowHiddenCommands().equalsIgnoreCase("true"))) {
-            return true;
-        }
-        return false;
+        RestConfig rg = ResourceUtil.getRestConfig(locator);
+        return rg != null && "true".equalsIgnoreCase(rg.getShowHiddenCommands());
     }
 
     /**
@@ -132,12 +134,8 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
      */
 
     protected boolean canShowDeprecatedItems() {
-
-        RestConfig rg = ResourceUtil.getRestConfig(habitat);
-        if ((rg != null) && (rg.getShowDeprecatedItems().equalsIgnoreCase("true"))) {
-            return true;
-        }
-        return false;
+        RestConfig rg = ResourceUtil.getRestConfig(locator);
+        return rg != null && "true".equalsIgnoreCase(rg.getShowDeprecatedItems());
     }
 
     /**
@@ -145,17 +143,16 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
      *
      */
     protected boolean isDebug() {
-
-        RestConfig rg = ResourceUtil.getRestConfig(habitat);
-        if ((rg != null) && (rg.getDebug().equalsIgnoreCase("true"))) {
+        RestConfig rg = ResourceUtil.getRestConfig(locator);
+        if (rg != null && "true".equalsIgnoreCase(rg.getDebug())) {
             return true;
         }
 
         if (requestHeaders == null) {
             return true;
         }
-        List header = requestHeaders.get().getRequestHeader(HEADER_DEBUG);
-        return (header != null) && ("true".equals(header.get(0)));
+        List<String> header = requestHeaders.getRequestHeader(HEADER_DEBUG);
+        return header != null && "true".equals(header.get(0));
     }
 
     /**
@@ -166,7 +163,7 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
             return null;
         }
 
-        MultivaluedMap<String, String> l = uriInfo.get().getQueryParameters();
+        MultivaluedMap<String, String> l = uriInfo.getQueryParameters();
 
         if (l == null) {
             return null;
@@ -178,13 +175,13 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
         StringBuilder result = new StringBuilder();
         for (String[] commandResourcePath : commandResourcesPaths) {
             result.append("\n").append(indent).append(getStartXmlElement(KEY_COMMAND))
-                    .append(getElementLink(uriInfo.get(), commandResourcePath[0])).append(getEndXmlElement(KEY_COMMAND));
+                    .append(getElementLink(uriInfo, commandResourcePath[0])).append(getEndXmlElement(KEY_COMMAND));
         }
         return result.toString();
     }
 
     protected Map<String, String> getResourceLinks(Dom dom) {
-        Map<String, String> links = new TreeMap<String, String>();
+        Map<String, String> links = new TreeMap<>();
         Set<String> elementNames = dom.model.getElementNames();
 
         for (String elementName : elementNames) { //for each element
@@ -195,10 +192,10 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
                 Collections.sort(lcm, new ConfigModelComparator());
                 Collections.sort(lcm, new ConfigModelComparator());
                 for (ConfigModel cmodel : lcm) {
-                    links.put(cmodel.getTagName(), ProviderUtil.getElementLink(uriInfo.get(), cmodel.getTagName()));
+                    links.put(cmodel.getTagName(), ProviderUtil.getElementLink(uriInfo, cmodel.getTagName()));
                 }
             } else {
-                links.put(elementName, ProviderUtil.getElementLink(uriInfo.get(), elementName));
+                links.put(elementName, ProviderUtil.getElementLink(uriInfo, elementName));
             }
         }
 
@@ -206,11 +203,11 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     }
 
     protected Map<String, String> getResourceLinks(List<Dom> proxyList) {
-        Map<String, String> links = new TreeMap<String, String>();
+        Map<String, String> links = new TreeMap<>();
         Collections.sort(proxyList, new DomConfigurator());
         for (Dom proxy : proxyList) { //for each element
             try {
-                links.put(proxy.getKey(), getElementLink(uriInfo.get(), proxy.getKey()));
+                links.put(proxy.getKey(), getElementLink(uriInfo, proxy.getKey()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

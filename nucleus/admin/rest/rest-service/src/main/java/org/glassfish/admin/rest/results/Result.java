@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,47 +24,48 @@ package org.glassfish.admin.rest.results;
  */
 public class Result {
 
-    public Result() {
-        __isError = false;
-        __errorMessage = null;
+    private final String name;
+    private boolean isError;
+    private String errorMessage;
+
+    public Result(String name, boolean isError, String errorMessage) {
+        this.name = name;
+        this.isError = isError;
+        this.errorMessage = errorMessage;
     }
 
     /**
      * Returns name of the resource, this result object is for.
      */
     public String getName() {
-        return __name;
+        return name;
     }
 
     /**
      * Returns true in case of error. Enables provider to generate error message or otherwise.
      */
     public boolean isError() {
-        return __isError;
-    }
-
-    /**
-     * Returns error message in case of an error.
-     */
-    public String getErrorMessage() {
-        return __errorMessage;
+        return isError;
     }
 
     /**
      * Sets status (error or success) of the response
      */
     public void setIsError(boolean isError) {
-        __isError = isError;
+        this.isError = isError;
+    }
+
+    /**
+     * Returns error message in case of an error.
+     */
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     /**
      * Sets error message of the response
      */
     public void setErrorMessage(String errorMessage) {
-        __errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
-
-    boolean __isError;
-    String __errorMessage;
-    String __name;
 }

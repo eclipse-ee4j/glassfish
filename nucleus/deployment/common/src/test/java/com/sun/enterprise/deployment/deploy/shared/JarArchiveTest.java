@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@
 package com.sun.enterprise.deployment.deploy.shared;
 
 import java.net.URI;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,10 +28,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class JarArchiveTest {
 
-    /**
-     * Test of getName method, of class JarArchive.
-     * @throws Exception
-     */
+    @Test
+    void noname() throws Exception {
+        URI uri = new URI("jar:///");
+        assertEquals("", JarArchive.getName(uri));
+    }
+
+    @Test
+    void justSuffix() throws Exception {
+        URI uri = new URI("jar:///.war");
+        assertEquals("", JarArchive.getName(uri));
+    }
+
     @Test
     public void shortSubPaths() throws Exception {
         URI uri = new URI("jar:///a/b/c/d.war");

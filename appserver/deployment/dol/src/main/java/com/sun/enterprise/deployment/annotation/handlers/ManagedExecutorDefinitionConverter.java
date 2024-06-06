@@ -43,7 +43,7 @@ class ManagedExecutorDefinitionConverter
     private static final Logger LOG = System.getLogger(ManagedExecutorDefinitionConverter.class.getName());
 
     ManagedExecutorDefinitionConverter() {
-        super(ManagedExecutorDefinitionDescriptor.class, JavaEEResourceType.MSEDD);
+        super(ManagedExecutorDefinitionDescriptor.class, JavaEEResourceType.MEDD);
     }
 
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,13 +19,20 @@ package org.glassfish.admin.rest.cli;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import org.glassfish.admin.restconnector.RestConfig;
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -46,9 +54,7 @@ public class GetRestConfig implements AdminCommand {
     @AccessRequired.To("read")
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    Config config;
-    @Inject
-    private ServiceLocator habitat;
+    private Config config;
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -87,8 +93,5 @@ public class GetRestConfig implements AdminCommand {
         }
 
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-
-        return;
-
     }
 }

@@ -59,7 +59,7 @@ class LogRecordBuffer {
      *
      * @param capacity capacity of the buffer.
      */
-    public LogRecordBuffer(final int capacity) {
+    LogRecordBuffer(final int capacity) {
         this(capacity, 0);
     }
 
@@ -84,7 +84,7 @@ class LogRecordBuffer {
      * @param maxWait maximal time in seconds to wait for the free capacity. If &lt; 1, can wait
      *            forever.
      */
-    public LogRecordBuffer(final int capacity, final int maxWait) {
+    LogRecordBuffer(final int capacity, final int maxWait) {
         this.capacity = capacity;
         this.maxWait = maxWait;
         this.pendingRecords = new ArrayBlockingQueue<>(capacity, true);
@@ -101,8 +101,13 @@ class LogRecordBuffer {
     // R/W locks - only this method locks everything, because it has to recreate the queue using
     // the original pending records.
     public void reconfigure(final int newCapacity, final int newMaxWait) {
-        if (this.capacity == newCapacity && this.maxWait == newMaxWait) {
-            return;
+        this.lock.readLock().lock();
+        try {
+            if (this.capacity == newCapacity && this.maxWait == newMaxWait) {
+                return;
+            }
+        } finally {
+            this.lock.readLock().unlock();
         }
         this.lock.writeLock().lock();
         try {

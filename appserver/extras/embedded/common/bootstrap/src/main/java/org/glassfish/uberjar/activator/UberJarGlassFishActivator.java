@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +19,8 @@ package org.glassfish.uberjar.activator;
 
 import com.sun.enterprise.glassfish.bootstrap.Constants;
 import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Properties;
 import java.util.logging.Logger;
-
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
@@ -34,8 +30,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.launch.Framework;
 
 /**
- * This is an activator to allow just dropping the uber jar
- * into a running OSGi environment.
+ * This is an activator to allow just dropping the uber jar into a running OSGi environment.
  *
  * @author bhavanishankar@dev.java.net
  */
@@ -46,92 +41,56 @@ public class UberJarGlassFishActivator implements BundleActivator {
 
     private static final String UBER_JAR_URI = "org.glassfish.embedded.osgimain.jarURI";
 
-    public static final String AUTO_START_BUNDLES_PROP =
-            "org.glassfish.embedded.osgimain.autostartBundles";
-
+    public static final String AUTO_START_BUNDLES_PROP = "org.glassfish.embedded.osgimain.autostartBundles";
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         privilegedStart(bundleContext);
-
-/*
-        Properties props = new Properties();
-        props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Constants.Platform.Felix.toString());
-
-        logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
-                ", classloader = " + getClass().getClassLoader());
-
-        Framework framework = (Framework) bundleContext.getBundle(0); // or loop until you find the framework bundle.
-        logger.info("framework bundle = " + framework);
-        props.put("Framework", framework);
-
-        // Use the bundle Jar URI.
-        props.setProperty(UBER_JAR_URI, bundleContext.getBundle().getLocation());
-
-        long startTime = System.currentTimeMillis();
-        GlassFishRuntime gfr = GlassFishRuntime.bootstrap(
-                props, getClass().getClassLoader());  // don't use thread context classloader, otherwise the META-INF/services will not be found.
-        long timeTaken = System.currentTimeMillis() - startTime;
-
-        logger.info("created gfr = " + gfr + ", timeTaken = " + timeTaken);
-
-        startTime = System.currentTimeMillis();
-        GlassFish gf = gfr.newGlassFish(props);
-        timeTaken = System.currentTimeMillis() - startTime;
-        System.out.println("created gf = " + gf + ", timeTaken = " + timeTaken);
-
-
-        startTime = System.currentTimeMillis();
-        gf.start();
-        timeTaken = System.currentTimeMillis() - startTime;
-        System.out.println("started gf, timeTaken = " + timeTaken);
-
-*/
     }
 
     private void privilegedStart(final BundleContext bundleContext) throws Exception {
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-            @Override
-            public Void run() {
-                try {
-                    Properties props = new Properties();
-                    props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name());
+        try {
+            Properties props = new Properties();
+            props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name());
 
-                    logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
-                            ", classloader = " + getClass().getClassLoader());
+            logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() + ", classloader = "
+                    + getClass().getClassLoader());
 
-                    Framework framework = (Framework) bundleContext.getBundle(0); // or loop until you find the framework bundle.
-                    logger.info("framework bundle = " + framework);
-                    props.put("Framework", framework);
+            Framework framework = (Framework) bundleContext.getBundle(0); // or loop until you find the framework bundle.
+            logger.info("framework bundle = " + framework);
+            props.put("Framework", framework);
 
-                    // Use the bundle Jar URI.
-                    props.setProperty(UBER_JAR_URI, bundleContext.getBundle().getLocation());
+            // Use the bundle Jar URI.
+            props.setProperty(UBER_JAR_URI, bundleContext.getBundle().getLocation());
 
-                    long startTime = System.currentTimeMillis();
-                    GlassFishRuntime gfr = GlassFishRuntime.bootstrap(
-                            new BootstrapProperties(props), getClass().getClassLoader());  // don't use thread context classloader, otherwise the META-INF/services will not be found.
-                    long timeTaken = System.currentTimeMillis() - startTime;
+            long startTime = System.currentTimeMillis();
 
-                    logger.info("created gfr = " + gfr + ", timeTaken = " + timeTaken);
+            // Don't use thread context classloader, otherwise the META-INF/services will not be found.
+            GlassFishRuntime glassFishRuntime =
+                GlassFishRuntime.bootstrap(
+                    new BootstrapProperties(props),
+                    getClass().getClassLoader());
 
-                    startTime = System.currentTimeMillis();
-                    // XXX : Why are we passing the same set of properties to
-                    // both bootstrap and newGlassFish ?
-                    GlassFish gf = gfr.newGlassFish(new GlassFishProperties(props));
-                    timeTaken = System.currentTimeMillis() - startTime;
-                    System.out.println("created gf = " + gf + ", timeTaken = " + timeTaken);
+            long timeTaken = System.currentTimeMillis() - startTime;
 
+            logger.info("created gfr = " + glassFishRuntime + ", timeTaken = " + timeTaken);
 
-                    startTime = System.currentTimeMillis();
-                    gf.start();
-                    timeTaken = System.currentTimeMillis() - startTime;
-                    System.out.println("started gf, timeTaken = " + timeTaken);
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-                return null;
-            }
-        });
+            startTime = System.currentTimeMillis();
+
+            // XXX : Why are we passing the same set of properties to
+            // both bootstrap and newGlassFish ?
+            GlassFish glassFish = glassFishRuntime.newGlassFish(new GlassFishProperties(props));
+            timeTaken = System.currentTimeMillis() - startTime;
+            System.out.println("created gf = " + glassFish + ", timeTaken = " + timeTaken);
+
+            startTime = System.currentTimeMillis();
+            glassFish.start();
+            timeTaken = System.currentTimeMillis() - startTime;
+
+            System.out.println("started gf, timeTaken = " + timeTaken);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override

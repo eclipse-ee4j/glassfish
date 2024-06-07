@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.security.ee.authorization.cache;
 
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.ee.authorization.cache.CachedPermissionImpl.Epoch;
 import com.sun.logging.LogDomains;
 import jakarta.security.jacc.PolicyContext;
@@ -27,7 +26,6 @@ import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -306,13 +304,7 @@ public class PermissionCache extends Object {
     }
 
     private void setPolicyContextID(final String newID) throws PrivilegedActionException {
-        AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
-            @Override
-            public java.lang.Object run() throws Exception {
-                PolicyContext.setContextID(newID);
-                return null;
-            }
-        });
+        PolicyContext.setContextID(newID);
     }
 
     // use implies to resolve unresolved permissions

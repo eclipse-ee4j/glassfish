@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,15 +21,6 @@ import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindin
 import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.PROVIDER_ID;
 import static org.glassfish.epicyro.config.helper.HttpServletConstants.SOAP;
 
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
@@ -38,9 +29,11 @@ import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescri
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
 import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.security.common.AppservAccessController;
-
 import jakarta.security.auth.message.MessagePolicy;
+import java.util.List;
+import java.util.Map;
+import javax.security.auth.callback.CallbackHandler;
+import org.glassfish.internal.api.Globals;
 
 /**
  * Utility class for Jakarta Authentication appserver implementation.
@@ -210,21 +203,17 @@ public class AuthMessagePolicy {
 
     public static CallbackHandler getDefaultCallbackHandler() {
         try {
-            return AppservAccessController.doPrivileged(new PrivilegedExceptionAction<CallbackHandler>() {
-                @Override
-                public CallbackHandler run() throws Exception {
-                    if (handlerClassName == null) {
-                        handlerClassName = System.getProperty(HANDLER_CLASS_PROPERTY, DEFAULT_HANDLER_CLASS);
-                    }
+            if (handlerClassName == null) {
+                handlerClassName = System.getProperty(HANDLER_CLASS_PROPERTY, DEFAULT_HANDLER_CLASS);
+            }
 
-                    return (CallbackHandler)
-                        Class.forName(handlerClassName, true, Thread.currentThread().getContextClassLoader())
-                             .getDeclaredConstructor()
-                             .newInstance();
-                }
-            });
-        } catch (PrivilegedActionException pae) {
-            throw new RuntimeException(pae.getException());
+            return (CallbackHandler)
+                Class.forName(handlerClassName, true, Thread.currentThread().getContextClassLoader())
+                     .getDeclaredConstructor()
+                     .newInstance();
+
+        } catch (ReflectiveOperationException pae) {
+            throw new RuntimeException(pae);
         }
     }
 

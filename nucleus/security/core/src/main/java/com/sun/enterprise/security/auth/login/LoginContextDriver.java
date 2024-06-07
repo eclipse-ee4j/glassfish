@@ -17,6 +17,14 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import static com.sun.enterprise.security.SecurityLoggerInfo.auditAtnRefusedError;
+import static com.sun.enterprise.security.SecurityLoggerInfo.noSuchUserInRealmError;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 import com.sun.enterprise.common.iiop.security.AnonCredential;
 import com.sun.enterprise.common.iiop.security.GSSUPName;
 import com.sun.enterprise.security.SecurityContext;
@@ -34,30 +42,18 @@ import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
-
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.x500.X500Principal;
-
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
-
-import static com.sun.enterprise.security.SecurityLoggerInfo.auditAtnRefusedError;
-import static com.sun.enterprise.security.SecurityLoggerInfo.noSuchUserInRealmError;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 
 /**
  *
@@ -770,15 +766,8 @@ public class LoginContextDriver {
         final Set<?> credset = AppservAccessController.doPrivileged(action);
         final Iterator<?> iter = credset.iterator();
         while (iter.hasNext()) {
-            final Object obj;
-            try {
-                PrivilegedAction<Object> iteratorNextAction = () -> iter.next();
-                obj = AppservAccessController.doPrivileged(iteratorNextAction);
-            } catch (Exception e) {
-                // should never come here
-                LOG.log(SEVERE, SecurityLoggerInfo.securityAccessControllerActionError, e);
-                continue;
-            }
+            Object obj = iter.next();
+
             if (obj instanceof PasswordCredential) {
                 PasswordCredential p = (PasswordCredential) obj;
                 String user = p.getUser();

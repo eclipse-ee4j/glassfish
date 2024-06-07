@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -134,28 +135,9 @@ public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, Pos
     @Override
     public void postConstruct() {
         try {
-            SecurityManager sm = System.getSecurityManager();
-            if (sm != null) {
-                try {
-                    AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-                        @Override
-                        public Void run() throws NamingException {
-                            if (isUsingBuilder()) {
-                                NamingManager.setInitialContextFactoryBuilder(GlassFishNamingBuilder.this);
-                            }
-                            return null; //Nothing to return
-                        }
-                    });
-                } catch (PrivilegedActionException e) {
-                    Object obj = e.getCause();
-                    if (obj instanceof NamingException) {
-                        throw (NamingException) obj;
-                    }
-                }
-            } else if (isUsingBuilder()) {
+            if (isUsingBuilder()) {
                 NamingManager.setInitialContextFactoryBuilder(this);
             }
-
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
@@ -163,21 +145,8 @@ public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, Pos
 
     @Override
     public void preDestroy() {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                @Override
-                public Void run() {
-                    if (isUsingBuilder()) {
-                        resetInitialContextFactoryBuilder();
-                    }
-                    return null;
-                }
-            });
-        } else {
-            if (isUsingBuilder()) {
-                resetInitialContextFactoryBuilder();
-            }
+        if (isUsingBuilder()) {
+            resetInitialContextFactoryBuilder();
         }
     }
 

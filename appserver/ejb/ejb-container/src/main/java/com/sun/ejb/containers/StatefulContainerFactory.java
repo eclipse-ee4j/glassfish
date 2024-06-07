@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,8 @@
 
 package com.sun.ejb.containers;
 
-import java.io.File;
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static java.util.logging.Level.WARNING;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import com.sun.appserv.util.cache.CacheListener;
 import com.sun.ejb.Container;
 import com.sun.ejb.ContainerFactory;
 import com.sun.ejb.base.container.util.CacheProperties;
@@ -40,6 +32,14 @@ import com.sun.enterprise.config.serverbeans.AvailabilityService;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.util.Utility;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import java.io.File;
+import java.io.Serializable;
+import java.net.InetAddress;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -55,102 +55,69 @@ import org.glassfish.ha.store.api.BackingStoreConfiguration;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.api.BackingStoreFactory;
 import org.glassfish.ha.store.util.SimpleMetadata;
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- * A builder for StatefulSessionContainer. Takes care of
- * building / initializing the StatefulSessionContainer
- * with the following classes:
- * a) Cache (LRU / NRU / FIFO / UnBounded)
- * b) SFSBStoreManager (Using PersistenceStrategyBuilder)
- * c) Cache passivation task (if idle-timeout is greater than 0)
- * d) Passivated sessions removal task (if removal-timeout is greater than 0)
- * e) CheckpointPolicy (if ha enabled)
- * f) SFSBUUIDUtil
- * g) BeanLifecycleManager
+ * A builder for StatefulSessionContainer. Takes care of building / initializing the StatefulSessionContainer with the
+ * following classes: a) Cache (LRU / NRU / FIFO / UnBounded) b) SFSBStoreManager (Using PersistenceStrategyBuilder) c)
+ * Cache passivation task (if idle-timeout is greater than 0) d) Passivated sessions removal task (if removal-timeout is
+ * greater than 0) e) CheckpointPolicy (if ha enabled) f) SFSBUUIDUtil g) BeanLifecycleManager
  *
  * @author Mahesh Kannan
  */
 @Service(name = "StatefulContainerFactory")
 @PerLookup
-public class StatefulContainerFactory extends BaseContainerFactory
-        implements PostConstruct, ContainerFactory {
-    protected static final Logger _logger  = LogFacade.getLogger();
+public class StatefulContainerFactory extends BaseContainerFactory implements PostConstruct, ContainerFactory {
+    protected static final Logger _logger = LogFacade.getLogger();
 
-    @LogMessageInfo(
-        message = "TopLevel AvailabilityService.getAvailabilityEnabled: [{0}]",
-        level = "FINE")
+    @LogMessageInfo(message = "TopLevel AvailabilityService.getAvailabilityEnabled: [{0}]", level = "FINE")
     private static final String SFSB_BUILDER_TOP_LEVEL_AVAILABILITY_SERVICE_ENABLED = "AS-EJB-00036";
 
-    @LogMessageInfo(
-        message = "TopLevel EjbAvailabilityService.getAvailabilityEnabled: [{0}]",
-        level = "FINE")
+    @LogMessageInfo(message = "TopLevel EjbAvailabilityService.getAvailabilityEnabled: [{0}]", level = "FINE")
     private static final String SFSB_BUILDER_EJB_AVAILABILITY_SERVICE_ENABLED = "AS-EJB-00037";
 
-    @LogMessageInfo(
-        message = "Global AvailabilityEnabled: [{0}], application AvailabilityEnabled: [{1}]",
-        level = "FINE")
+    @LogMessageInfo(message = "Global AvailabilityEnabled: [{0}], application AvailabilityEnabled: [{1}]", level = "FINE")
     private static final String SFSB_BUILDER_GLOBAL_AND_APP_AVAILABILITY_ENABLED = "AS-EJB-00038";
 
-    @LogMessageInfo(
-        message = "Exception while trying to determine availability-enabled settings for this app",
-        level = "WARNING")
+    @LogMessageInfo(message = "Exception while trying to determine availability-enabled settings for this app", level = "WARNING")
     private static final String SFSB_BUILDER_DETERMINE_AVAILABILITY_EXCEPTION = "AS-EJB-00039";
 
-    @LogMessageInfo(
-        message = "StatefulContainerBuilder AvailabilityEnabled [{0}] for this application",
-        level = "FINE")
+    @LogMessageInfo(message = "StatefulContainerBuilder AvailabilityEnabled [{0}] for this application", level = "FINE")
     private static final String SFSB_BUILDER_RESOLVED_AVAILABILITY_ENABLED = "AS-EJB-00040";
 
-    @LogMessageInfo(
-        message = "StatefulContainerBuilder.buildStoreManager() storeName: [{0}]",
-        level = "FINE")
+    @LogMessageInfo(message = "StatefulContainerBuilder.buildStoreManager() storeName: [{0}]", level = "FINE")
     private static final String SFSB_BUILDER_STORE_NAME = "AS-EJB-00041";
 
-    @LogMessageInfo(
-        message = "Could not instantiate backing store for type [{0}]",
-        level = "WARNING")
+    @LogMessageInfo(message = "Could not instantiate backing store for type [{0}]", level = "WARNING")
     private static final String SFSB_BUILDER_INSTANTIATE_BACKING_STORE_EXCEPTION = "AS-EJB-00042";
 
-    @LogMessageInfo(
-        message = "StatefulContainerbuilder instantiated store: {0}, " +
-                "with ha-enabled [{1}], and backing store configuration: {2}",
-        level = "INFO")
+    @LogMessageInfo(message = "StatefulContainerbuilder instantiated store: {0}, "
+            + "with ha-enabled [{1}], and backing store configuration: {2}", level = "INFO")
     private static final String SFSB_BUILDER_INSTANTIATED_BACKING_STORE = "AS-EJB-00043";
 
-    @LogMessageInfo(
-        message = "Error while adding idle bean passivator task",
-        level = "WARNING")
+    @LogMessageInfo(message = "Error while adding idle bean passivator task", level = "WARNING")
     private static final String SFSB_HELPER_ADD_IDLE_PASSIVATOR_TASK_FAILED = "AS-EJB-00044";
 
-    @LogMessageInfo(
-        message = "Error while adding idle bean removal task",
-        level = "WARNING")
+    @LogMessageInfo(message = "Error while adding idle bean removal task", level = "WARNING")
     private static final String SFSB_HELPER_ADD_REMOVE_PASSIVATOR_TASK_FAILED = "AS-EJB-00045";
 
-    @LogMessageInfo(
-        message = "Error while removing idle beans for [{0}]",
-        level = "WARNING")
+    @LogMessageInfo(message = "Error while removing idle beans for [{0}]", level = "WARNING")
     static final String SFSB_HELPER_REMOVE_IDLE_BEANS_FAILED = "AS-EJB-00046";
 
-    @LogMessageInfo(
-        message = "Error while removing expired beans for [{0}]",
-        level = "WARNING")
+    @LogMessageInfo(message = "Error while removing expired beans for [{0}]", level = "WARNING")
     static final String SFSB_HELPER_REMOVE_EXPIRED_BEANS_FAILED = "AS-EJB-00047";
 
-    @LogMessageInfo(
-        message = "Disabling high availability for the stateful session bean {0}, as its marked non passivatable",
-        level = "WARNING")
+    @LogMessageInfo(message = "Disabling high availability for the stateful session bean {0}, as its marked non passivatable", level = "WARNING")
     private static final String SFSB_HA_DISABLED_BY_PASSIVATION_SETTING = "AS-EJB-00051";
 
     private static final Level TRACE_LEVEL = Level.FINE;
 
-    private EjbDescriptor            ejbDescriptor;
+    private EjbDescriptor ejbDescriptor;
 
     private StatefulSessionContainer sfsbContainer;
 
@@ -160,18 +127,23 @@ public class StatefulContainerFactory extends BaseContainerFactory
     @Inject
     private CacheProperties cacheProps;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME) @Optional
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Optional
     private AvailabilityService availabilityService;
 
-    @Inject @Optional
+    @Inject
+    @Optional
     private EjbContainerAvailability ejbAvailability;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config serverConfig;
 
     EjbContainer ejbContainerConfig;
 
-    @Inject @Optional
+    @Inject
+    @Optional
     GMSAdapterService gmsAdapterService;
 
     private LruSessionCache sessionCache;
@@ -184,13 +156,12 @@ public class StatefulContainerFactory extends BaseContainerFactory
 
     private SimpleKeyGenerator keyGen;
 
+    @Override
     public void postConstruct() {
         ejbContainerConfig = serverConfig.getExtensionByType(EjbContainer.class);
     }
 
-    public void buildComponents(byte[] ipAddress, int port,
-                                DeploymentContext dc)
-            throws Exception {
+    public void buildComponents(byte[] ipAddress, int port, DeploymentContext dc) throws Exception {
         if (availabilityService != null) {
             this.HAEnabled = Boolean.valueOf(availabilityService.getAvailabilityEnabled());
             _logger.log(Level.FINE, SFSB_BUILDER_TOP_LEVEL_AVAILABILITY_SERVICE_ENABLED, this.HAEnabled);
@@ -211,10 +182,10 @@ public class StatefulContainerFactory extends BaseContainerFactory
                     }
 
                     _logger.log(Level.FINE, SFSB_BUILDER_GLOBAL_AND_APP_AVAILABILITY_ENABLED,
-                            new Object[] {this.HAEnabled, appLevelHAEnabled});
+                            new Object[] { this.HAEnabled, appLevelHAEnabled });
                 }
             } catch (Exception ex) {
-                _logger.log(Level.WARNING, SFSB_BUILDER_DETERMINE_AVAILABILITY_EXCEPTION, ex);
+                _logger.log(WARNING, SFSB_BUILDER_DETERMINE_AVAILABILITY_EXCEPTION, ex);
                 appLevelHAEnabled = false;
             }
 
@@ -222,11 +193,11 @@ public class StatefulContainerFactory extends BaseContainerFactory
             _logger.log(Level.FINE, SFSB_BUILDER_RESOLVED_AVAILABILITY_ENABLED, this.HAEnabled);
         }
 
-        EjbSessionDescriptor sessionDescriptor = (EjbSessionDescriptor)ejbDescriptor;
-        //When passivation is disabled, we should also forbid ha.
+        EjbSessionDescriptor sessionDescriptor = (EjbSessionDescriptor) ejbDescriptor;
+        // When passivation is disabled, we should also forbid ha.
         if (!sessionDescriptor.isPassivationCapable() && HAEnabled) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, SFSB_HA_DISABLED_BY_PASSIVATION_SETTING, ejbDescriptor.getEjbClassName());
+            if (_logger.isLoggable(WARNING)) {
+                _logger.log(WARNING, SFSB_HA_DISABLED_BY_PASSIVATION_SETTING, ejbDescriptor.getEjbClassName());
             }
             HAEnabled = false;
         }
@@ -234,10 +205,10 @@ public class StatefulContainerFactory extends BaseContainerFactory
         buildCheckpointPolicy(this.HAEnabled);
         buildSFSBUUIDUtil(ipAddress, port);
 
-        //First build BackingStore before Cache is built
-        if (sessionDescriptor.isPassivationCapable()){
+        // First build BackingStore before Cache is built
+        if (sessionDescriptor.isPassivationCapable()) {
             buildStoreManager();
-        } else{
+        } else {
             if (_logger.isLoggable(TRACE_LEVEL)) {
                 _logger.log(TRACE_LEVEL, "Stateful session bean passivation is disabled, so do not create store manger");
             }
@@ -257,30 +228,24 @@ public class StatefulContainerFactory extends BaseContainerFactory
     }
 
     private void buildSFSBUUIDUtil(byte[] ipAddress, int port) {
-        //Just for debugging purpose,  we instantiate
-        //  two different key generators
-        keyGen = HAEnabled
-                ? new ScrambledKeyGenerator(ipAddress, port)
-                : new SimpleKeyGenerator(ipAddress, port);
+        // Just for debugging purpose, we instantiate
+        // two different key generators
+        keyGen = HAEnabled ? new ScrambledKeyGenerator(ipAddress, port) : new SimpleKeyGenerator(ipAddress, port);
         sfsbContainer.setSFSBUUIDUtil(keyGen);
     }
 
-    private void buildStoreManager()
-        throws BackingStoreException {
+    private void buildStoreManager() throws BackingStoreException {
 
         String persistenceStoreType = "file";
 
         if (ejbAvailability != null) {
-            persistenceStoreType = HAEnabled
-                ? ejbAvailability.getSfsbHaPersistenceType() : ejbAvailability.getSfsbPersistenceType();
+            persistenceStoreType = HAEnabled ? ejbAvailability.getSfsbHaPersistenceType() : ejbAvailability.getSfsbPersistenceType();
             if ("ha".equals(persistenceStoreType)) {
                 persistenceStoreType = "replicated";
             } else if ("memory".equals(persistenceStoreType)) {
                 persistenceStoreType = "file";
             }
         }
-
-
 
         BackingStoreConfiguration<Serializable, SimpleMetadata> conf = new BackingStoreConfiguration<Serializable, SimpleMetadata>();
         String storeName = ejbDescriptor.getName() + "-" + ejbDescriptor.getUniqueId() + "-BackingStore";
@@ -289,26 +254,15 @@ public class StatefulContainerFactory extends BaseContainerFactory
 
         String subDirName = "";
 
-/*        if (ejbDescriptor.getApplication().isVirtual()) {
-            String archURI = ejbDescriptor.getEjbBundleDescriptor().
-                    getModuleDescriptor().getArchiveUri();
-            subDirName += FileUtils.makeFriendlyFilename(archURI);
-            subDirName += "_" + FileUtils.makeFriendlyFilename(ejbDescriptor.getName());
-        } else {
-            subDirName += FileUtils.makeFriendlyFilename(ejbDescriptor.getApplication().getRegistrationName());
-            subDirName += "_" + FileUtils.makeFriendlyFilename(ejbDescriptor.getEjbBundleDescriptor().getName());
-            subDirName += "_" + FileUtils.makeFriendlyFilename(ejbDescriptor.getName());
-        }*/
-
         subDirName += ejbDescriptor.getName() + "-" + ejbDescriptor.getUniqueId();
 
-        conf.setShortUniqueName(""+ejbDescriptor.getUniqueId()).setStoreName(storeName)
-                .setStoreType(persistenceStoreType)
-                .setBaseDirectory(new File(ejbContainerConfig.getSessionStore(), subDirName))
-                .setKeyClazz(Serializable.class)
-                .setValueClazz(SimpleMetadata.class)
-                .setClassLoader(StatefulContainerFactory.class.getClassLoader());
-
+        conf.setShortUniqueName("" + ejbDescriptor.getUniqueId())
+            .setStoreName(storeName)
+            .setStoreType(persistenceStoreType)
+            .setBaseDirectory(new File(ejbContainerConfig.getSessionStore(), subDirName))
+            .setKeyClazz(Serializable.class)
+            .setValueClazz(SimpleMetadata.class)
+            .setClassLoader(StatefulContainerFactory.class.getClassLoader());
 
         Map<String, Object> vendorMap = conf.getVendorSpecificSettings();
         vendorMap.put("local.caching", true);
@@ -330,8 +284,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
         try {
             factory = services.getService(BackingStoreFactory.class, persistenceStoreType);
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, SFSB_BUILDER_INSTANTIATE_BACKING_STORE_EXCEPTION,
-                    new Object[]{persistenceStoreType, ex});
+            _logger.log(WARNING, SFSB_BUILDER_INSTANTIATE_BACKING_STORE_EXCEPTION, new Object[] { persistenceStoreType, ex });
         }
 
         try {
@@ -340,12 +293,10 @@ public class StatefulContainerFactory extends BaseContainerFactory
             }
             this.backingStore = factory.createBackingStore(conf);
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, SFSB_BUILDER_INSTANTIATE_BACKING_STORE_EXCEPTION,
-                    new Object[]{persistenceStoreType, ex});
-            throw new BackingStoreException("Could not instantiate backing store for type [" +
-                    persistenceStoreType + "]", ex);
+            _logger.log(WARNING, SFSB_BUILDER_INSTANTIATE_BACKING_STORE_EXCEPTION, new Object[] { persistenceStoreType, ex });
+            throw new BackingStoreException("Could not instantiate backing store for type [" + persistenceStoreType + "]", ex);
         }
-        _logger.log(Level.INFO, SFSB_BUILDER_INSTANTIATED_BACKING_STORE, new Object[]{backingStore, HAEnabled, conf});
+        _logger.log(Level.INFO, SFSB_BUILDER_INSTANTIATED_BACKING_STORE, new Object[] { backingStore, HAEnabled, conf });
     }
 
     private void buildCache() {
@@ -353,26 +304,20 @@ public class StatefulContainerFactory extends BaseContainerFactory
         String victimPolicy = cacheProps.getVictimSelectionPolicy();
 
         if (cacheProps.getMaxCacheSize() <= 0) {
-            sessionCache = new UnBoundedSessionCache(cacheName, sfsbContainer,
-                    cacheProps.getCacheIdleTimeoutInSeconds(),
+            sessionCache = new UnBoundedSessionCache(cacheName, sfsbContainer, cacheProps.getCacheIdleTimeoutInSeconds(),
                     cacheProps.getRemovalTimeoutInSeconds());
         } else if ("lru".equalsIgnoreCase(victimPolicy)) {
-            sessionCache = new LruSessionCache(cacheName, sfsbContainer,
-                    cacheProps.getCacheIdleTimeoutInSeconds(),
+            sessionCache = new LruSessionCache(cacheName, sfsbContainer, cacheProps.getCacheIdleTimeoutInSeconds(),
                     cacheProps.getRemovalTimeoutInSeconds());
         } else if ("fifo".equalsIgnoreCase(victimPolicy)) {
-            sessionCache = new FIFOSessionCache(cacheName, sfsbContainer,
-                    cacheProps.getCacheIdleTimeoutInSeconds(),
+            sessionCache = new FIFOSessionCache(cacheName, sfsbContainer, cacheProps.getCacheIdleTimeoutInSeconds(),
                     cacheProps.getRemovalTimeoutInSeconds());
         } else {
-            sessionCache = new NRUSessionCache(cacheName, sfsbContainer,
-                    cacheProps.getCacheIdleTimeoutInSeconds(),
+            sessionCache = new NRUSessionCache(cacheName, sfsbContainer, cacheProps.getCacheIdleTimeoutInSeconds(),
                     cacheProps.getRemovalTimeoutInSeconds());
         }
 
-
-        float ratio = (float) (1.0 * cacheProps.getNumberOfVictimsToSelect()
-                / cacheProps.getMaxCacheSize());
+        float ratio = (float) (1.0 * cacheProps.getNumberOfVictimsToSelect() / cacheProps.getMaxCacheSize());
         float loadFactor = (float) (1.0 - ratio);
         if (loadFactor < 0 || loadFactor > 1) {
             loadFactor = 0.75f;
@@ -384,21 +329,18 @@ public class StatefulContainerFactory extends BaseContainerFactory
             sessionCache.init(cacheProps.getMaxCacheSize(), loadFactor, null);
         }
 
-        sessionCache.addCacheListener((CacheListener) sfsbContainer);
+        sessionCache.addCacheListener(sfsbContainer);
 
         sfsbContainer.setSessionCache(sessionCache);
         sessionCache.setBackingStore(backingStore);
         sfsbContainer.setBackingStore(this.backingStore);
-        if (cacheProps.getNumberOfVictimsToSelect() >
-                sfsbContainer.MIN_PASSIVATION_BATCH_COUNT) {
-            sfsbContainer.setPassivationBatchCount(
-                    cacheProps.getNumberOfVictimsToSelect());
+        if (cacheProps.getNumberOfVictimsToSelect() > sfsbContainer.MIN_PASSIVATION_BATCH_COUNT) {
+            sfsbContainer.setPassivationBatchCount(cacheProps.getNumberOfVictimsToSelect());
         }
 
         if (_logger.isLoggable(TRACE_LEVEL)) {
-            _logger.log(TRACE_LEVEL,
-                    "Created cache for {0}; cache properties: {1}; loadFactor: {2}; backingStore: {3}",
-                    new Object[]{ejbDescriptor.getName(), cacheProps, loadFactor, this.backingStore});
+            _logger.log(TRACE_LEVEL, "Created cache for {0}; cache properties: {1}; loadFactor: {2}; backingStore: {3}",
+                    new Object[] { ejbDescriptor.getName(), cacheProps, loadFactor, this.backingStore });
         }
     }
 
@@ -408,67 +350,59 @@ public class StatefulContainerFactory extends BaseContainerFactory
         if (cacheProps.getCacheIdleTimeoutInSeconds() > 0) {
             long timeout = cacheProps.getCacheIdleTimeoutInSeconds() * 1000L;
             try {
-                sfsbContainer.invokePeriodically(timeout, timeout,
-                        new CachePassivatorTask(ejbName, sessionCache, _logger));
+                sfsbContainer.invokePeriodically(timeout, timeout, new CachePassivatorTask(ejbName, sessionCache, _logger));
                 if (_logger.isLoggable(TRACE_LEVEL)) {
                     _logger.log(TRACE_LEVEL, "Added CachePassivator for {0} to run after {1} milliseconds",
-                            new Object[]{ejbName, timeout});
+                            new Object[] { ejbName, timeout });
                 }
 
             } catch (Throwable th) {
-                _logger.log(Level.WARNING, SFSB_HELPER_ADD_IDLE_PASSIVATOR_TASK_FAILED, th);
+                _logger.log(WARNING, SFSB_HELPER_ADD_IDLE_PASSIVATOR_TASK_FAILED, th);
             }
         }
 
         if (cacheProps.getRemovalTimeoutInSeconds() > 0 && container.isPassivationCapable()) {
             long timeout = cacheProps.getRemovalTimeoutInSeconds() * 1000L;
             try {
-                sfsbContainer.invokePeriodically(timeout, timeout,
-                        new ExpiredSessionsRemovalTask(ejbName,
-                                this.sfsbContainer, _logger));
+                sfsbContainer.invokePeriodically(timeout, timeout, new ExpiredSessionsRemovalTask(ejbName, this.sfsbContainer, _logger));
                 if (_logger.isLoggable(TRACE_LEVEL)) {
                     _logger.log(TRACE_LEVEL, "Added StorePassivator for {0} to run after {1} milliseconds",
-                            new Object[]{ejbName, timeout});
+                            new Object[] { ejbName, timeout });
                 }
             } catch (Throwable th) {
-                _logger.log(Level.WARNING, SFSB_HELPER_ADD_REMOVE_PASSIVATOR_TASK_FAILED, th);
+                _logger.log(WARNING, SFSB_HELPER_ADD_REMOVE_PASSIVATOR_TASK_FAILED, th);
             }
         }
 
     }
 
-  @Override
-  public Container createContainer(EjbDescriptor ejbDescriptor,
-                                   ClassLoader loader,
-                                   DeploymentContext deployContext)
-          throws Exception {
-    this.ejbDescriptor = ejbDescriptor;
+    @Override
+    public Container createContainer(EjbDescriptor ejbDescriptor, ClassLoader loader, DeploymentContext deployContext) throws Exception {
+        this.ejbDescriptor = ejbDescriptor;
 
-    //FIXME: Read from domain.xml iiop-service ip-addr
-    byte[] ipAddress = new byte[4];
-    try {
-      ipAddress = InetAddress.getLocalHost().getAddress();
-    } catch (Exception ex) {
-      long val = System.identityHashCode(ipAddress)
-              + System.currentTimeMillis();
-      Utility.longToBytes(val, ipAddress, 0);
+        // FIXME: Read from domain.xml iiop-service ip-addr
+        byte[] ipAddress = new byte[4];
+        try {
+            ipAddress = InetAddress.getLocalHost().getAddress();
+        } catch (Exception ex) {
+            long val = System.identityHashCode(ipAddress) + System.currentTimeMillis();
+            Utility.longToBytes(val, ipAddress, 0);
+        }
+
+        // FIXME: Read from domain.xml
+        int port = 8080;
+
+        cacheProps.init(ejbDescriptor);
+        SecurityManager sm = getSecurityManager(ejbDescriptor);
+        sfsbContainer = new StatefulSessionContainer(ejbDescriptor, loader, sm);
+        buildComponents(ipAddress, port, deployContext);
+        sfsbContainer.initializeHome();
+        return sfsbContainer;
     }
-
-    //FIXME: Read from domain.xml
-    int port = 8080;
-
-    cacheProps.init(ejbDescriptor);
-    SecurityManager sm = getSecurityManager(ejbDescriptor);
-    sfsbContainer = new StatefulSessionContainer(ejbDescriptor, loader, sm);
-    buildComponents(ipAddress, port, deployContext);
-    sfsbContainer.initializeHome();
-    return sfsbContainer;
-  }
 
 }
 
-class CachePassivatorTask
-        implements Runnable {
+class CachePassivatorTask implements Runnable {
 
     private LruSessionCache cache;
     private Logger logger;
@@ -480,38 +414,36 @@ class CachePassivatorTask
         this.logger = logger;
     }
 
+    @Override
     public void run() {
         try {
             cache.trimTimedoutItems(Integer.MAX_VALUE);
         } catch (Exception ex) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, StatefulContainerFactory.SFSB_HELPER_REMOVE_IDLE_BEANS_FAILED,
-                        new Object[]{name, ex});
+            if (logger.isLoggable(WARNING)) {
+                logger.log(WARNING, StatefulContainerFactory.SFSB_HELPER_REMOVE_IDLE_BEANS_FAILED, new Object[] { name, ex });
             }
         }
     }
 }
 
-class ExpiredSessionsRemovalTask
-        implements Runnable {
+class ExpiredSessionsRemovalTask implements Runnable {
     private StatefulSessionContainer container;
     private Logger logger;
     private String name;
 
-    ExpiredSessionsRemovalTask(String name,
-                               StatefulSessionContainer container, Logger logger) {
+    ExpiredSessionsRemovalTask(String name, StatefulSessionContainer container, Logger logger) {
         this.name = name;
         this.container = container;
         this.logger = logger;
     }
 
+    @Override
     public void run() {
         try {
             container.removeExpiredSessions();
         } catch (Exception ex) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, StatefulContainerFactory.SFSB_HELPER_REMOVE_EXPIRED_BEANS_FAILED,
-                        new Object[]{name, ex});
+            if (logger.isLoggable(WARNING)) {
+                logger.log(WARNING, StatefulContainerFactory.SFSB_HELPER_REMOVE_EXPIRED_BEANS_FAILED, new Object[] { name, ex });
             }
         }
     }

@@ -22,20 +22,16 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 
+import com.sun.enterprise.naming.impl.SerialInitContextFactory;
+import jakarta.inject.Inject;
 import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Hashtable;
-
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.InitialContextFactoryBuilder;
 import javax.naming.spi.NamingManager;
-
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.runlevel.RunLevel;
@@ -43,10 +39,6 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.naming.impl.SerialInitContextFactory;
-
-import jakarta.inject.Inject;
 
 /**
  * This is both a init run level service as well as our implementation of {@link InitialContextFactoryBuilder}. When GlassFish

@@ -757,7 +757,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     // Note: preFind is already called from getContext
     @Override
     protected Object invokeFindByPrimaryKey(Method method, EjbInvocation inv, Object[] args) throws Throwable {
-        Object pKeys = super.invokeTargetBeanMethod(method, inv, inv.ejb, args, null);
+        Object pKeys = super.invokeTargetBeanMethod(method, inv, inv.ejb, args);
         return postFind(inv, pKeys, null);
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,7 @@ import java.security.Permission;
  * @author Ron Monzillo
  */
 
-public class CachedPermissionImpl extends Object implements CachedPermission {
+public class CachedPermissionImpl implements CachedPermission {
 
     PermissionCache permissionCache;
     Permission permission;
@@ -53,6 +54,7 @@ public class CachedPermissionImpl extends Object implements CachedPermission {
         if (permissionCache != null) {
             granted = permissionCache.checkPermission(this.permission, this.epoch);
         }
+
         return granted;
     }
 

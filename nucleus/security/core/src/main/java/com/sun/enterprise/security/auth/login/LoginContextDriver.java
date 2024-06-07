@@ -19,6 +19,8 @@ package com.sun.enterprise.security.auth.login;
 
 import static com.sun.enterprise.security.SecurityLoggerInfo.auditAtnRefusedError;
 import static com.sun.enterprise.security.SecurityLoggerInfo.noSuchUserInRealmError;
+import static com.sun.enterprise.security.common.SecurityConstants.CLIENT_JAAS_CERTIFICATE;
+import static com.sun.enterprise.security.common.SecurityConstants.CLIENT_JAAS_PASSWORD;
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
@@ -39,16 +41,14 @@ import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.x500.X500Principal;
 import org.glassfish.internal.api.Globals;
@@ -523,32 +523,22 @@ public class LoginContextDriver {
      * This method retains the RI assumption that only the first credential of the given type is used.
      *
      */
-    private static Object getPublicCredentials(Subject s, Class<?> cls) throws LoginException {
-        Set credset = s.getPublicCredentials(cls);
-
-        final Iterator iter = credset.iterator();
-
-        if (!iter.hasNext()) {
+    private static Object getPublicCredentials(Subject subject, Class<?> cls) throws LoginException {
+        Set<?> publicCredentials = subject.getPublicCredentials(cls);
+        if (publicCredentials.isEmpty()) {
             throw new LoginException("Expected public credential of type: " + cls + " but none found.");
         }
 
-        Object obj = null;
         try {
-            obj = AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    return iter.next();
-                }
-            });
+            return publicCredentials.iterator().next();
         } catch (Exception e) {
-            // should never come here
-            if (e instanceof LoginException) {
-                throw (LoginException) e;
+            // Should never come here
+            if (e instanceof LoginException loginException) {
+                throw loginException;
             }
+
             throw new LoginException("Failed to retrieve public credential: " + e.getMessage(), e);
         }
-
-        return obj;
     }
 
     /**
@@ -559,40 +549,22 @@ public class LoginContextDriver {
      *
      */
     private static Object getPrivateCredentials(Subject subject, Class<?> cls) throws LoginException {
-        final Subject s = subject;
-        final Class<?> cl = cls;
-
-        final Set credset = (Set) AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public java.lang.Object run() {
-                return s.getPrivateCredentials(cl);
-            }
-        });
-
-        final Iterator iter = credset.iterator();
-
-        if (!iter.hasNext()) {
+        Set<?> privateCredentials = subject.getPrivateCredentials(cls);
+        if (privateCredentials.isEmpty()) {
             throw new LoginException("Expected private credential of type: " + cls + " but none found.");
         }
 
         // retrieve only first credential of give type
-        Object obj = null;
         try {
-            obj = AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    return iter.next();
-                }
-            });
+            return privateCredentials.iterator().next();
         } catch (Exception e) {
             // should never come here
-            if (e instanceof LoginException) {
-                throw (LoginException) e;
+            if (e instanceof LoginException loginException) {
+                throw loginException;
             }
+
             throw new LoginException("Failed to retrieve private credential: " + e.getMessage(), e);
         }
-
-        return obj;
     }
 
     /**
@@ -603,9 +575,7 @@ public class LoginContextDriver {
      * @param Credentials the credentials that the server associated with it
      */
     private static void setSecurityContext(String userName, Subject subject, String realm) {
-
-        SecurityContext securityContext = new SecurityContext(userName, subject, realm);
-        SecurityContext.setCurrent(securityContext);
+        SecurityContext.setCurrent(new SecurityContext(userName, subject, realm));
     }
 
     /**
@@ -625,8 +595,9 @@ public class LoginContextDriver {
      * @exception LoginException the exception thrown by the callback handler.
      */
     public static Subject doClientLogin(int type, javax.security.auth.callback.CallbackHandler jaasHandler) throws LoginException {
-        final javax.security.auth.callback.CallbackHandler handler = jaasHandler;
-        // the subject will actually be filled in with a PasswordCredential
+        final CallbackHandler handler = jaasHandler;
+
+        // The subject will actually be filled in with a PasswordCredential
         // required by the csiv2 layer in the LoginModule.
         // we create the dummy credential here and call the
         // set security context. Thus, we have 2  credentials, one each for
@@ -634,73 +605,52 @@ public class LoginContextDriver {
         final Subject subject = new Subject();
 
         if (type == SecurityConstants.USERNAME_PASSWORD) {
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    try {
-                        LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
-                        lg.login();
-                    } catch (javax.security.auth.login.LoginException e) {
-                        throw new LoginException(e.getMessage(), e);
-                    }
-
-                    return null;
-                }
-            });
+            try {
+                LoginContext lg = new LoginContext(CLIENT_JAAS_PASSWORD, subject, handler);
+                lg.login();
+            } catch (javax.security.auth.login.LoginException e) {
+                throw new LoginException(e.getMessage(), e);
+            }
             postClientAuth(subject, PasswordCredential.class);
             return subject;
-        } else if (type == SecurityConstants.CERTIFICATE) {
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    try {
-                        LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE, subject, handler);
-                        lg.login();
-                    } catch (javax.security.auth.login.LoginException e) {
-                        throw new LoginException(e.getMessage(), e);
-                    }
+        }
 
-                    return null;
-                }
-            });
+        if (type == SecurityConstants.CERTIFICATE) {
+            try {
+                LoginContext lg = new LoginContext(CLIENT_JAAS_CERTIFICATE, subject, handler);
+                lg.login();
+            } catch (javax.security.auth.login.LoginException e) {
+                throw new LoginException(e.getMessage(), e);
+            }
             postClientAuth(subject, X509CertificateCredential.class);
             return subject;
-        } else if (type == SecurityConstants.ALL) {
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    try {
-                        LoginContext lgup = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
-                        LoginContext lgc = new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE, subject, handler);
-                        lgup.login();
-                        postClientAuth(subject, PasswordCredential.class);
+        }
 
-                        lgc.login();
-                        postClientAuth(subject, X509CertificateCredential.class);
-                    } catch (javax.security.auth.login.LoginException e) {
-                        throw new LoginException(e.getMessage(), e);
-                    }
+        if (type == SecurityConstants.ALL) {
+            try {
+                LoginContext lgup = new LoginContext(CLIENT_JAAS_PASSWORD, subject, handler);
+                LoginContext lgc = new LoginContext(CLIENT_JAAS_CERTIFICATE, subject, handler);
+                lgup.login();
+                postClientAuth(subject, PasswordCredential.class);
 
-                    return null;
-                }
-            });
-            return subject;
-        } else {
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    try {
-                        LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
-                        lg.login();
-                        postClientAuth(subject, PasswordCredential.class);
-                    } catch (javax.security.auth.login.LoginException e) {
-                        throw new LoginException(e.getMessage(), e);
-                    }
-                    return null;
-                }
-            });
+                lgc.login();
+                postClientAuth(subject, X509CertificateCredential.class);
+            } catch (javax.security.auth.login.LoginException e) {
+                throw new LoginException(e.getMessage(), e);
+            }
+
             return subject;
         }
+
+        try {
+            LoginContext lg = new LoginContext(CLIENT_JAAS_PASSWORD, subject, handler);
+            lg.login();
+            postClientAuth(subject, PasswordCredential.class);
+        } catch (javax.security.auth.login.LoginException e) {
+            throw new LoginException(e.getMessage(), e);
+        }
+
+        return subject;
     }
 
     /**
@@ -759,25 +709,19 @@ public class LoginContextDriver {
      *
      */
     private static void postClientAuth(final Subject subject, final Class<?> clazz) {
-        final PrivilegedAction<Set<?>> action = () -> {
-            LOG.log(FINEST, "LCD post login subject: {0}", subject);
-            return subject.getPrivateCredentials(clazz);
-        };
-        final Set<?> credset = AppservAccessController.doPrivileged(action);
-        final Iterator<?> iter = credset.iterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
+        LOG.log(FINEST, "LCD post login subject: {0}", subject);
 
-            if (obj instanceof PasswordCredential) {
-                PasswordCredential p = (PasswordCredential) obj;
-                String user = p.getUser();
-                LOG.log(FINEST, "In LCD user-pass login: {0}, realm: {1}", new Object[] {user, p.getRealm()});
+        for (Object privateCredential : subject.getPrivateCredentials(clazz)) {
+            if (privateCredential instanceof PasswordCredential passwordCredential) {
+                String user = passwordCredential.getUser();
+                LOG.log(FINEST, "In LCD user-pass login: {0}, realm: {1}", new Object[] {user, passwordCredential.getRealm()});
                 setClientSecurityContext(user, subject);
                 return;
-            } else if (obj instanceof X509CertificateCredential) {
-                X509CertificateCredential p = (X509CertificateCredential) obj;
-                String user = p.getAlias();
-                LOG.log(FINEST, "In LCD cert-login: {0}, realm: {1}", new Object[] {user, p.getRealm()});
+            }
+
+            if (privateCredential instanceof X509CertificateCredential certificateCredential) {
+                String user = certificateCredential.getAlias();
+                LOG.log(FINEST, "In LCD cert-login: {0}, realm: {1}", new Object[] {user, certificateCredential.getRealm()});
                 setClientSecurityContext(user, subject);
                 return;
             }

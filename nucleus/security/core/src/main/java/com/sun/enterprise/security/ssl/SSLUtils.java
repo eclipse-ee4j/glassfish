@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,41 +20,30 @@ package com.sun.enterprise.security.ssl;
 import static java.util.Collections.list;
 import static java.util.logging.Level.FINE;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.integration.AppClientSSL;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Permission;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Enumeration;
-import java.util.PropertyPermission;
 import java.util.logging.Logger;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
-
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.common.Util;
-//V3:Commented import com.sun.web.security.SSLSocketFactory;
-import com.sun.enterprise.security.integration.AppClientSSL;
-//V3:Commented import com.sun.enterprise.config.clientbeans.Ssl
-import com.sun.enterprise.server.pluggable.SecuritySupport;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * Handy class containing static functions.
@@ -255,8 +245,6 @@ public final class SSLUtils implements PostConstruct {
      * @return PrivateKeyEntry
      */
     public PrivateKeyEntry getPrivateKeyEntryFromTokenAlias(String certNickname) throws Exception {
-        checkPermission(SecuritySupport.KEYSTORE_PASS_PROP);
-
         PrivateKeyEntry privateKeyEntry = null;
 
         if (certNickname != null) {
@@ -292,27 +280,6 @@ public final class SSLUtils implements PostConstruct {
         }
 
         return privateKeyEntry;
-    }
-
-    public static void checkPermission(String key) {
-        try {
-            // Checking a random permission to check if it is server.
-            if (Util.isEmbeddedServer() || Util.getDefaultHabitat() == null || Util.getInstance().isACC()
-                || Util.getInstance().isNotServerOrACC()) {
-                return;
-            }
-
-            Permission perm = new RuntimePermission("SSLPassword");
-            AccessController.checkPermission(perm);
-        } catch (AccessControlException e) {
-            String message = e.getMessage();
-            Permission perm = new PropertyPermission(key, "read");
-            if (message != null) {
-                message = message.replace(e.getPermission().toString(), perm.toString());
-            }
-
-            throw new AccessControlException(message, perm);
-        }
     }
 
     public String[] getSupportedCipherSuites() {

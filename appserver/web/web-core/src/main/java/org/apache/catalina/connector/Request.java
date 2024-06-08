@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -297,14 +297,16 @@ public class Request implements HttpRequest, HttpServletRequest {
     protected boolean secure;
 
     /**
-     * The Subject associated with the current AccessControllerContext
+     * The Subject associated with the current request
      */
     protected Subject subject;
+
     /**
      * Post data buffer.
      */
     protected static final int CACHED_POST_LEN = 8192;
     protected byte[] postData;
+
     /**
      * Hash map used in the getParametersMap method.
      */

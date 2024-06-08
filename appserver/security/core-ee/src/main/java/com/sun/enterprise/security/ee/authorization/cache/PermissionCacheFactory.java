@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.security.ee.authorization.cache;
 
-import java.security.CodeSource;
 import java.security.Permission;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -33,9 +33,6 @@ public class PermissionCacheFactory {
     private static int factoryKey = 0;
     private static boolean supportsReuse = false;
 
-    private static Permission[] protoPerms = { new java.net.SocketPermission("localhost", "connect"), new java.util.PropertyPermission("x", "read") };
-
-    private static PermissionCache securityManagerCache = createSecurityManagerCache();
 
     /**
      * Reserve the next Cache Key for subsequent registration.
@@ -43,7 +40,6 @@ public class PermissionCacheFactory {
      * @return the key as an Integer object.
      */
     private static Integer getNextKey() {
-
         Integer key = factoryKey++;
 
         while (cacheMap.get(key) != null) {
@@ -53,19 +49,10 @@ public class PermissionCacheFactory {
         return key;
     }
 
-    private static synchronized PermissionCache createSecurityManagerCache() {
-
-        Integer key = getNextKey();
-
-        PermissionCache cache = new PermissionCache(key, null, protoPerms, null);
-
-        return registerPermissionCache(cache);
-    }
-
     /**
      * Create a PermissionCache object. If the corresponding object exists, then it will overwrite the previous one.
      *
-     * @param pcID - a string identifying the policy context and which must be set when getPermissions is called (internally). This
+     * @param contextId - a string identifying the policy context and which must be set when getPermissions is called (internally). This
      * value may be null, in which case the permisions of the default policy context will be cached.
      * @param perms - an array of Permission objects identifying the permission types that will be managed by the cache. This value
      * may be null, in which case all permissions obtained by the getPermissions call will be cached.
@@ -73,22 +60,18 @@ public class PermissionCacheFactory {
      * matches the name parameter will be included in the cache. This value may be null, in which case permission name dos not factor
      * into the permission caching.
      */
-    public static synchronized PermissionCache createPermissionCache(String pcID, Permission[] perms, String name) {
+    public static synchronized PermissionCache createPermissionCache(String contextId, Permission[] perms, String name) {
         if (!supportsReuse) {
             return null;
         }
 
-        Integer key = getNextKey();
-
-        PermissionCache cache = new PermissionCache(key, pcID, perms, name);
-
-        return registerPermissionCache(cache);
+        return registerPermissionCache(new PermissionCache(getNextKey(), contextId, perms, name));
     }
 
     /**
      * Create a PermissionCache object. If the corresponding object exists, then it will overwrite the previous one.
      *
-     * @param pcID - a string identifying the policy context and which must be set when getPermissions is called (internally). This
+     * @param contextId - a string identifying the policy context and which must be set when getPermissions is called (internally). This
      * value may be null, in which case the permisions of the default policy context will be cached.
      * @param codesource - the codesource argument to be used in the call to getPermissions. This value may be null.
      * @param clazz - a class object identifying the permission type that will be managed by the cache. This value may be null, in
@@ -97,16 +80,12 @@ public class PermissionCacheFactory {
      * matches the name parameter will be included in the cache. This value may be null, in which case permission name dos not factor
      * into the permission caching.
      */
-    public static synchronized PermissionCache createPermissionCache(String pcID, CodeSource codesource, Class clazz, String name) {
+    public static synchronized PermissionCache createPermissionCache(String contextId, Class<?> clazz, String name) {
         if (!supportsReuse) {
             return null;
         }
 
-        Integer key = getNextKey();
-
-        PermissionCache cache = new PermissionCache(key, pcID, codesource, clazz, name);
-
-        return registerPermissionCache(cache);
+        return registerPermissionCache(new PermissionCache(getNextKey(), contextId, clazz, name));
     }
 
     /**
@@ -122,19 +101,18 @@ public class PermissionCacheFactory {
     }
 
     public static synchronized PermissionCache removePermissionCache(PermissionCache cache) {
-
-        PermissionCache rvalue = null;
+        PermissionCache permissionCache = null;
 
         if (cache != null) {
-
             Object value = cacheMap.remove(cache.getFactoryKey());
 
             if (value != null && value instanceof PermissionCache) {
-                rvalue = (PermissionCache) value;
-                rvalue.reset();
+                permissionCache = (PermissionCache) value;
+                permissionCache.reset();
             }
         }
-        return rvalue;
+
+        return permissionCache;
     }
 
     /**

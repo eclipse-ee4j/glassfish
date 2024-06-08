@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,19 +18,17 @@
 
 package org.apache.naming.factory;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Enumeration;
 import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimePartDataSource;
-import javax.naming.Name;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 import javax.naming.Context;
-import javax.naming.Reference;
+import javax.naming.Name;
 import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 /**
@@ -78,45 +77,38 @@ public class SendMailFactory implements ObjectFactory {
     protected static final String DataSourceClassName = "jakarta.mail.internet.MimePartDataSource";
 
     @Override
-    public Object getObjectInstance(Object RefObj, Name Nm, Context Ctx, Hashtable<?, ?> Env) throws Exception {
-        final Reference Ref = (Reference) RefObj;
+    public Object getObjectInstance(Object RefObj, Name name, Context Ctx, Hashtable<?, ?> Env) throws Exception {
+        final Reference reference = (Reference) RefObj;
 
-        // Creation of the DataSource is wrapped inside a doPrivileged
-        // so that Jakarta Mail can read its default properties without
-        // throwing Security Exceptions
-        if (Ref.getClassName().equals(DataSourceClassName)) {
-            return AccessController.doPrivileged(new PrivilegedAction<MimePartDataSource>() {
+        if (!reference.getClassName().equals(DataSourceClassName)) {
+            // We can't create an instance of the DataSource
+            return null;
+        }
 
-                @Override
-                public MimePartDataSource run() {
-                    // set up the smtp session that will send the message
-                    Properties props = new Properties();
-                    // enumeration of all refaddr
-                    Enumeration<RefAddr> list = Ref.getAll();
-                    // current refaddr to be set
-                    RefAddr refaddr;
-                    // set transport to smtp
-                    props.put("mail.transport.protocol", "smtp");
+        // Set up the smtp session that will send the message
+        Properties props = new Properties();
 
-                    while (list.hasMoreElements()) {
-                        refaddr = list.nextElement();
+        // Enumeration of all refaddr
+        Enumeration<RefAddr> list = reference.getAll();
 
-                        // set property
-                        props.put(refaddr.getType(), refaddr.getContent());
-                    }
-                    try {
-                        MimeMessage message = new MimeMessage(Session.getInstance(props));
-                        String from = (String) Ref.get("mail.from").getContent();
-                        message.setFrom(new InternetAddress(from));
-                        message.setSubject("");
-                        MimePartDataSource mds = new MimePartDataSource(message);
-                        return mds;
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }
-            });
-        } else { // We can't create an instance of the DataSource
+        // Set transport to smtp
+        props.put("mail.transport.protocol", "smtp");
+
+        while (list.hasMoreElements()) {
+            RefAddr refaddr = list.nextElement();
+
+            // Set property
+            props.put(refaddr.getType(), refaddr.getContent());
+        }
+
+        try {
+            MimeMessage message = new MimeMessage(Session.getInstance(props));
+            String from = (String) reference.get("mail.from").getContent();
+            message.setFrom(new InternetAddress(from));
+            message.setSubject("");
+
+            return new MimePartDataSource(message);
+        } catch (Exception e) {
             return null;
         }
     }

@@ -47,7 +47,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.ArrayList;
@@ -144,24 +143,17 @@ public class WoodstockHandler {
             if (lastIndex != -1) {
                 name = name.substring(lastIndex + 1, name.length());
             }
-            int index = name.indexOf(".");
+            int index = name.lastIndexOf(".");
             if (index <= 0) {
                 logger.info("name=" + name + ",index=" + index);
                 String mesg = GuiUtil.getMessage("msg.deploy.nullArchiveError");
                 GuiUtil.handleError(handlerCtx, mesg);
                 return;
             }
-            String suffix = name.substring(index);
-            String prefix = name.substring(0, index);
-            handlerCtx.setOutputValue("origPath", prefix);
+            handlerCtx.setOutputValue("origPath", name);
             try {
-                //createTempFile requires min. of 3 char for prefix.
-                if (prefix.length() <= 2) {
-                    prefix = prefix + new SecureRandom().nextInt(100000);
-                }
-
-                tmpFile = File.createTempFile(prefix, suffix);
-                tmpFile.deleteOnExit();
+                // keep the filename for the temp file, it's used to generate the context root
+                tmpFile = createTempFileWithOriginalFileName(name);
 
                 //delete the file, otherwise FileUtils#moveTo throws file already exist error
                 tmpFile.delete();
@@ -191,6 +183,16 @@ public class WoodstockHandler {
             logger.fine(GuiUtil.getCommonMessage("log.successfullyUploadedTmp") + uploadTmpFile);
         }
         handlerCtx.setOutputValue("uploadedTempFile", uploadTmpFile);
+    }
+
+    private static File createTempFileWithOriginalFileName(String name) throws IOException {
+        final Path dir = Files.createTempDirectory(name);
+        dir.toFile().deleteOnExit();
+        final Path file = dir.resolve(name);
+        Files.createFile(file);
+        final File result = file.toFile();
+        result.deleteOnExit();
+        return result;
     }
 
     /**

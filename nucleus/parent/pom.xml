@@ -192,6 +192,8 @@
         <!-- GlassFishLogManager is a child of this module, so we cannot use it here yet. -->
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
+
+        <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish7/glassfish</glassfish.distribution.dir>
     </properties>
 
     <dependencyManagement>
@@ -1673,7 +1675,9 @@
         <profile>
             <id>dev</id>
             <properties>
-                <copy.modules.to-distribution.skip>true</copy.modules.to-distribution.skip>
+                <copy.modules.to.distribution.skip>true</copy.modules.to.distribution.skip>
+                <copy.modules.to.distribution.path.to.root>../../..</copy.modules.to.distribution.path.to.root>
+                <copy.modules.to.distribution.destFile>${basedir}/${copy.modules.to.distribution.path.to.root}/${glassfish.distribution.dir}/modules/${project.build.finalName}.jar</copy.modules.to.distribution.destFile>
             </properties>
             <build>
                 <pluginManagement>
@@ -1689,8 +1693,8 @@
                                         <goal>copy-file</goal>
                                     </goals>
                                     <configuration>
-                                        <skip>${copy.modules.to-distribution.skip}</skip>
-                                        <destFile>${copy.modules.to-distribution.destFile}</destFile>
+                                        <skip>${copy.modules.to.distribution.skip}</skip>
+                                        <destFile>${copy.modules.to.distribution.destFile}</destFile>
                                     </configuration>
                                 </execution>
                             </executions>

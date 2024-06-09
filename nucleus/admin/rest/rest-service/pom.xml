@@ -35,6 +35,8 @@
 
     <properties>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+        <copy.modules.to.distribution.path.to.root>../../../..</copy.modules.to.distribution.path.to.root>
     </properties>
 
     <dependencies>

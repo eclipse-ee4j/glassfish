@@ -34,8 +34,8 @@
     <name>Admin Console Core Jar</name>
 
     <properties>
-        <copy.modules.to-distribution.skip>false</copy.modules.to-distribution.skip>
-        <copy.modules.to-distribution.destFile>${basedir}/../../distributions/glassfish/target/stage/glassfish7/glassfish/lib/install/applications/__admingui/WEB-INF/lib/console-core-${project.version}.jar</copy.modules.to-distribution.destFile>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+        <copy.modules.to.distribution.destFile>${basedir}/../../../${glassfish.distribution.dir}/lib/install/applications/__admingui/WEB-INF/lib/console-core-${project.version}.jar</copy.modules.to.distribution.destFile>
     </properties>
 
     <dependencies>

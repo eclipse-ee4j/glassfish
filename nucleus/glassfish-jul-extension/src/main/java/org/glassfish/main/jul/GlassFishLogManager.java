@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -90,6 +91,8 @@ public class GlassFishLogManager extends LogManager {
     /** Empty string - standard root logger name */
     public static final String ROOT_LOGGER_NAME = "";
 
+    private static final ReentrantLock LOCK = new ReentrantLock();
+
     private static final AtomicBoolean RESET_PROTECTION = new AtomicBoolean(true);
     private static volatile GlassFishLoggingStatus status = GlassFishLoggingStatus.UNINITIALIZED;
     private static GlassFishLogManager glassfishLogManager;
@@ -101,26 +104,31 @@ public class GlassFishLogManager extends LogManager {
     private GlassFishLogManagerConfiguration configuration;
 
 
-    static synchronized boolean initialize(final Properties configuration) {
+    static boolean initialize(final Properties configuration) {
         trace(GlassFishLogManager.class, "initialize(configuration)");
         if (status.ordinal() > GlassFishLoggingStatus.UNINITIALIZED.ordinal()) {
             error(GlassFishLogManager.class, "Initialization of the logging system failed - it was already executed");
             return false;
         }
-        // We must respect that LogManager.getLogManager()
-        // - creates final root and global loggers,
-        // - calls also addLogger.
-        // - calls setLevel if the level was not set in addLogger.
-        // OR something already configured another log manager implementation
-        // Therefore status is now moved directly to UNCONFIGURED
-        status = GlassFishLoggingStatus.UNCONFIGURED;
-        final GlassFishLogManager logManager = getLogManager();
-        if (logManager == null) {
-            // oh no, another LogManager implementation is already used.
-            return false;
+        LOCK.lock();
+        try {
+            // We must respect that LogManager.getLogManager()
+            // - creates final root and global loggers,
+            // - calls also addLogger.
+            // - calls setLevel if the level was not set in addLogger.
+            // OR something already configured another log manager implementation
+            // Therefore status is now moved directly to UNCONFIGURED
+            status = GlassFishLoggingStatus.UNCONFIGURED;
+            final GlassFishLogManager logManager = getLogManager();
+            if (logManager == null) {
+                // oh no, another LogManager implementation is already used.
+                return false;
+            }
+            logManager.doFirstInitialization(ensureSortedProperties(configuration));
+            return true;
+        } finally {
+            LOCK.unlock();
         }
-        logManager.doFirstInitialization(ensureSortedProperties(configuration));
-        return true;
     }
 
 
@@ -146,7 +154,8 @@ public class GlassFishLogManager extends LogManager {
         if (glassfishLogManager != null) {
             return glassfishLogManager;
         }
-        synchronized (GlassFishLogManager.class) {
+        LOCK.lock();
+        try {
             final LogManager logManager = LogManager.getLogManager();
             if (logManager instanceof GlassFishLogManager) {
                 glassfishLogManager = (GlassFishLogManager) logManager;
@@ -163,6 +172,8 @@ public class GlassFishLogManager extends LogManager {
                         + "\n there: " + logManager.getClass().getClassLoader());
             }
             return null;
+        } finally {
+            LOCK.unlock();
         }
     }
 
@@ -274,25 +285,35 @@ public class GlassFishLogManager extends LogManager {
      */
     @Override
     @Deprecated
-    public synchronized void reset() {
-        // reset causes closing of current handlers
-        // reset is invoked automatically also in the begining of super.readConfiguration(is).
-        if (RESET_PROTECTION.get()) {
-            stacktrace(GlassFishLogManager.class, "reset() ignored.");
-            return;
+    public void reset() {
+        LOCK.lock();
+        try {
+            // reset causes closing of current handlers
+            // reset is invoked automatically also in the begining of super.readConfiguration(is).
+            if (RESET_PROTECTION.get()) {
+                stacktrace(GlassFishLogManager.class, "reset() ignored.");
+                return;
+            }
+            super.reset();
+            trace(getClass(), "reset() done.");
+        } finally {
+            LOCK.unlock();
         }
-        super.reset();
-        trace(getClass(), "reset() done.");
     }
 
 
     /**
-     * Does nothing!
+     * Does nothing! (Except it can lock caller thread)
      */
     @Override
     @Deprecated
-    public synchronized void readConfiguration() throws SecurityException, IOException {
-        trace(getClass(), "readConfiguration() ignored.");
+    public void readConfiguration() throws SecurityException, IOException {
+        LOCK.lock();
+        try {
+            trace(getClass(), "readConfiguration() ignored.");
+        } finally {
+            LOCK.unlock();
+        }
     }
 
 
@@ -302,10 +323,15 @@ public class GlassFishLogManager extends LogManager {
      */
     @Override
     @Deprecated
-    public synchronized void readConfiguration(final InputStream input) throws SecurityException, IOException {
-        trace(getClass(), () -> "readConfiguration(ins=" + input + ")");
-        this.configuration = GlassFishLogManagerConfiguration.parse(input);
-        trace(getClass(), "readConfiguration(input) done.");
+    public void readConfiguration(final InputStream input) throws SecurityException, IOException {
+        LOCK.lock();
+        try {
+            trace(getClass(), () -> "readConfiguration(ins=" + input + ")");
+            this.configuration = GlassFishLogManagerConfiguration.parse(input);
+            trace(getClass(), "readConfiguration(input) done.");
+        } finally {
+            LOCK.unlock();
+        }
     }
 
 
@@ -384,26 +410,28 @@ public class GlassFishLogManager extends LogManager {
      * @param flushAction - a callback executed after reconfigureAction to flush program's
      *            {@link LogRecord} buffers waiting until the reconfiguration is completed.
      */
-    public synchronized void reconfigure(final GlassFishLogManagerConfiguration cfg, final Action reconfigureAction,
+    public void reconfigure(final GlassFishLogManagerConfiguration cfg, final Action reconfigureAction,
         final Action flushAction) {
+        LOCK.lock();
         final long start = System.nanoTime();
-        trace(getClass(), () -> "reconfigure(cfg, action, action); Configuration:\n"
-            + cfg + "\n reconfigureAction: " + reconfigureAction + "\n flushAction: " + flushAction);
-        if (cfg.isTracingEnabled()) {
-            // if enabled, start immediately. If not, don't change it yet, it could be set by JVM option.
-            setTracingEnabled(cfg.isTracingEnabled());
-        }
-        setStatus(GlassFishLoggingStatus.CONFIGURING);
-        this.configuration = cfg;
-        final ConfigurationHelper configurationHelper = getConfigurationHelper();
-        setReleaseParametersEarly(
-            configurationHelper.getBoolean(KEY_RELEASE_PARAMETERS_EARLY, isReleaseParametersEarly()));
-        setResolveLevelWithIncompleteConfiguration(configurationHelper
-            .getBoolean(KEY_RESOLVE_LEVEL_WITH_INCOMPLETE_CONFIGURATION, isResolveLevelWithIncompleteConfiguration()));
-        // it is used to configure new objects in LogManager class
-        final Thread currentThread = Thread.currentThread();
-        final ClassLoader originalCL = currentThread.getContextClassLoader();
         try {
+            trace(getClass(), () -> "reconfigure(cfg, action, action); Configuration:\n" + cfg
+                + "\n reconfigureAction: " + reconfigureAction + "\n flushAction: " + flushAction);
+            if (cfg.isTracingEnabled()) {
+                // if enabled, start immediately. If not, don't change it yet, it could be set by
+                // JVM option.
+                setTracingEnabled(cfg.isTracingEnabled());
+            }
+            setStatus(GlassFishLoggingStatus.CONFIGURING);
+            this.configuration = cfg;
+            final ConfigurationHelper configurationHelper = getConfigurationHelper();
+            setReleaseParametersEarly(
+                configurationHelper.getBoolean(KEY_RELEASE_PARAMETERS_EARLY, isReleaseParametersEarly()));
+            setResolveLevelWithIncompleteConfiguration(configurationHelper.getBoolean(
+                KEY_RESOLVE_LEVEL_WITH_INCOMPLETE_CONFIGURATION, isResolveLevelWithIncompleteConfiguration()));
+            // it is used to configure new objects in LogManager class
+            final Thread currentThread = Thread.currentThread();
+            final ClassLoader originalCL = currentThread.getContextClassLoader();
             trace(GlassFishLogManager.class, "Reconfiguring logger levels...");
             final Enumeration<String> existingLoggerNames = getLoggerNames();
             while (existingLoggerNames.hasMoreElements()) {
@@ -456,6 +484,7 @@ public class GlassFishLogManager extends LogManager {
             trace(getClass(), "Reconfiguration finished in " + (System.nanoTime() - start) + " ns");
             // regardless of the result, set tracing.
             setTracingEnabled(cfg.isTracingEnabled());
+            LOCK.unlock();
         }
     }
 

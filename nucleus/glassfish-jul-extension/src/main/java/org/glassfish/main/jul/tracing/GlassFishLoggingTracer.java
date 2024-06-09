@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.main.jul.tracing;
 
 import java.io.PrintStream;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 /**
@@ -30,6 +31,7 @@ public final class GlassFishLoggingTracer {
     private static final String JVM_OPT_LOGGING_TRACING_ENABLED = "org.glassfish.main.jul.tracing.enabled";
     private static final PrintStream OUT = System.out;
     private static final PrintStream ERR = System.err;
+    private static final ReentrantLock LOCK = new ReentrantLock();
     private static volatile boolean tracingEnabled = Boolean.getBoolean(JVM_OPT_LOGGING_TRACING_ENABLED);
 
     private GlassFishLoggingTracer() {
@@ -61,9 +63,14 @@ public final class GlassFishLoggingTracer {
      * @param source
      * @param message
      */
-    public static synchronized void trace(final Class<?> source, final Supplier<String> message) {
+    public static void trace(final Class<?> source, final Supplier<String> message) {
         if (tracingEnabled) {
-            trace(source, message.get());
+            LOCK.lock();
+            try {
+                trace(source, message.get());
+            } finally {
+                LOCK.unlock();
+            }
         }
     }
 
@@ -74,10 +81,15 @@ public final class GlassFishLoggingTracer {
      * @param source
      * @param message
      */
-    public static synchronized void trace(final Class<?> source, final String message) {
+    public static void trace(final Class<?> source, final String message) {
         if (tracingEnabled) {
-            OUT.println(source.getCanonicalName() + ": " + message);
-            OUT.flush();
+            LOCK.lock();
+            try {
+                OUT.println(source.getCanonicalName() + ": " + message);
+                OUT.flush();
+            } finally {
+                LOCK.unlock();
+            }
         }
     }
 
@@ -89,12 +101,17 @@ public final class GlassFishLoggingTracer {
      * @param source
      * @param exceptionMessage
      */
-    public static synchronized void stacktrace(final Class<?> source, final String exceptionMessage) {
+    public static void stacktrace(final Class<?> source, final String exceptionMessage) {
         if (tracingEnabled) {
-            OUT.println(
-                source.getCanonicalName() + ": Don't panic, following stacktrace is only to see what invoked this!");
-            new RuntimeException(exceptionMessage).printStackTrace(OUT);
-            OUT.flush();
+            LOCK.lock();
+            try {
+                OUT.println(source.getCanonicalName()
+                    + ": Don't panic, following stacktrace is only to see what invoked this!");
+                new RuntimeException(exceptionMessage).printStackTrace(OUT);
+                OUT.flush();
+            } finally {
+                LOCK.unlock();
+            }
         }
     }
 
@@ -105,9 +122,14 @@ public final class GlassFishLoggingTracer {
      * @param source
      * @param message
      */
-    public static synchronized void error(final Class<?> source, final String message) {
-        ERR.println(source.getCanonicalName() + ": " + message);
-        ERR.flush();
+    public static void error(final Class<?> source, final String message) {
+        LOCK.lock();
+        try {
+            ERR.println(source.getCanonicalName() + ": " + message);
+            ERR.flush();
+        } finally {
+            LOCK.unlock();
+        }
     }
 
 
@@ -118,9 +140,14 @@ public final class GlassFishLoggingTracer {
      * @param message
      * @param cause
      */
-    public static synchronized void error(final Class<?> source, final String message, final Throwable cause) {
-        ERR.println(source.getCanonicalName() + ": " + message);
-        cause.printStackTrace(ERR);
-        ERR.flush();
+    public static void error(final Class<?> source, final String message, final Throwable cause) {
+        LOCK.lock();
+        try {
+            ERR.println(source.getCanonicalName() + ": " + message);
+            cause.printStackTrace(ERR);
+            ERR.flush();
+        } finally {
+            LOCK.unlock();
+        }
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,19 @@
 
 package org.glassfish.security.services.impl.common;
 
-
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.TreeSet;
 import java.util.Set;
-
+import java.util.TreeSet;
 import org.glassfish.security.services.api.common.Attribute;
-
 
 public class AttributeImpl implements Attribute {
 
-    private String name = null;
+    private String name;
     private final Set<String> values = new TreeSet<>();
 
-    protected AttributeImpl() {}
+    protected AttributeImpl() {
+    }
 
     public AttributeImpl(String name) {
         this.name = name;
@@ -52,14 +51,18 @@ public class AttributeImpl implements Attribute {
     }
 
     @Override
-    public int getValueCount() { return values.size(); }
+    public int getValueCount() {
+        return values.size();
+    }
 
     @Override
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     @Override
     public String getValue() {
-        if(getValueCount() == 0) {
+        if (getValueCount() == 0) {
             return null;
         }
         Iterator<String> i = values.iterator();
@@ -67,10 +70,14 @@ public class AttributeImpl implements Attribute {
     }
 
     @Override
-    public Set<String> getValues() { return values; }
+    public Set<String> getValues() {
+        return values;
+    }
 
     @Override
-    public String[] getValuesAsArray() { return values.toArray(new String[0]); }
+    public String[] getValuesAsArray() {
+        return values.toArray(new String[0]);
+    }
 
     @Override
     public void addValue(String value) {

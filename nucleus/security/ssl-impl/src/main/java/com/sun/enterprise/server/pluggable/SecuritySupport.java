@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +51,7 @@ public abstract class SecuritySupport {
         if (defaultInstance == null) {
             defaultInstance = new SecuritySupportImpl();
         }
+
         return defaultInstance;
     }
 
@@ -81,7 +83,7 @@ public abstract class SecuritySupport {
      * @return load a null keystore of given type.
      */
     abstract public KeyStore loadNullStore(String type, int index)
-        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException;
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException;
 
     /**
      * @param masterPass
@@ -98,7 +100,7 @@ public abstract class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     abstract public KeyManager[] getKeyManagers(String algorithm)
-        throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
+            throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
 
     /**
      * @param algorithm
@@ -120,7 +122,7 @@ public abstract class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     abstract public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex)
-        throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
+            throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
 
     /**
      * This method returns an array of token names in order corresponding to array of keystores.
@@ -132,17 +134,10 @@ public abstract class SecuritySupport {
      *
      * @param config the ConfigContextx
      * @param fileRealmName
-     * @exception if fail to synchronize, a known exception is com.sun.enterprise.ee.synchronization.SynchronizationException
+     * @exception if fail to synchronize, a known exception is
+     * com.sun.enterprise.ee.synchronization.SynchronizationException
      */
     /** TODO:V3:Cluster ConfigContext is no longer present so find out what this needs to be */
-    //public void synchronizeKeyFile(ConfigContext config, String fileRealmName)
     abstract public void synchronizeKeyFile(Object configContext, String fileRealmName) throws Exception;
-
-    /**
-     * Check permission for the given key.
-     *
-     * @param key
-     */
-    abstract public void checkPermission(String key);
 
 }

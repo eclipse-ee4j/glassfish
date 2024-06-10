@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,21 @@
 
 package com.sun.enterprise.security.ssl.impl;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+
 import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
 import com.sun.enterprise.security.ssl.manager.UnifiedX509TrustManager;
-//V3:Commented import com.sun.enterprise.config.ConfigContext;
 import com.sun.enterprise.server.pluggable.SecuritySupport;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Permission;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.UnrecoverableKeyException;
@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.PropertyPermission;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.KeyManager;
@@ -56,7 +55,6 @@ import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.embedded.Server;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
@@ -86,13 +84,13 @@ public class SecuritySupportImpl extends SecuritySupport {
     @LogMessageInfo(message = "The SSL certificate with alias {0} has expired: {1}", level = "SEVERE", cause = "Certificate expired.", action = "Check the expiration date of the certicate.")
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
-    private static boolean initialized = false;
+    private static boolean initialized;
     protected static final List<KeyStore> keyStores = new ArrayList<>();
     protected static final List<KeyStore> trustStores = new ArrayList<>();
     protected static final List<char[]> keyStorePasswords = new ArrayList<>();
     protected static final List<String> tokenNames = new ArrayList<>();
-    private MasterPasswordImpl masterPasswordHelper = null;
-    private static boolean instantiated = false;
+    private MasterPasswordImpl masterPasswordHelper;
+    private static boolean instantiated;
     private final Date initDate = new Date();
 
     @Inject
@@ -122,7 +120,7 @@ public class SecuritySupportImpl extends SecuritySupport {
         char[] trustStorePass = null;
         if (!isInstantiated()) {
             if (serviceLocator == null) {
-                serviceLocator = Globals.getDefaultHabitat();
+                serviceLocator = Globals.getDefaultBaseServiceLocator();
             }
 
             if (masterPasswordHelper == null && serviceLocator != null) {
@@ -167,10 +165,6 @@ public class SecuritySupportImpl extends SecuritySupport {
             Arrays.fill(trustStorePass, ' ');
             initialized = true;
         }
-    }
-
-    private boolean isEmbeddedServer() {
-        return !Server.getServerNames().isEmpty();
     }
 
     private static synchronized boolean isInstantiated() {
@@ -232,8 +226,8 @@ public class SecuritySupportImpl extends SecuritySupport {
         BufferedInputStream bstream = null;
         try {
             if (keyStoreFile != null) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Loading keystoreFile = {0}, keystorePass = {1}", new Object[] { keyStoreFile, keyStorePass });
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, "Loading keystoreFile = {0}, keystorePass = {1}", new Object[] { keyStoreFile, keyStorePass });
                 }
                 istream = new FileInputStream(keyStoreFile);
                 bstream = new BufferedInputStream(istream);
@@ -253,6 +247,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     // --- implements SecuritySupport ---
+
     /**
      * This method returns an array of keystores containing keys and certificates.
      */
@@ -270,8 +265,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     @Override
-    public KeyManager[] getKeyManagers(String algorithm)
-        throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+    public KeyManager[] getKeyManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         KeyStore[] kstores = getKeyStores();
         ArrayList<KeyManager> keyManagers = new ArrayList<>();
         for (int i = 0; i < kstores.length; i++) {
@@ -303,6 +297,7 @@ public class SecuritySupportImpl extends SecuritySupport {
                 trustManagers.addAll(Arrays.asList(tmgrs));
             }
         }
+
         TrustManager trustManager;
         if (trustManagers.size() == 1) {
             trustManager = trustManagers.get(0);
@@ -312,10 +307,10 @@ public class SecuritySupportImpl extends SecuritySupport {
 
         return new TrustManager[] { trustManager };
     }
+
     /*
      * Check X509 certificates in a store for expiration.
      */
-
     private void checkCertificateDates(KeyStore store) throws KeyStoreException {
 
         Enumeration<String> aliases = store.aliases();
@@ -361,6 +356,7 @@ public class SecuritySupportImpl extends SecuritySupport {
         if (idx < 0) {
             return null;
         }
+
         return keyStores.get(idx);
     }
 
@@ -374,6 +370,7 @@ public class SecuritySupportImpl extends SecuritySupport {
         if (idx < 0) {
             return null;
         }
+
         return trustStores.get(idx);
     }
 
@@ -384,8 +381,8 @@ public class SecuritySupportImpl extends SecuritySupport {
         int idx = -1;
         if (token != null) {
             idx = tokenNames.indexOf(token);
-            if (idx < 0 && _logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "token {0} is not found", token);
+            if (idx < 0 && _logger.isLoggable(FINEST)) {
+                _logger.log(FINEST, "token {0} is not found", token);
             }
         }
         return idx;
@@ -393,41 +390,10 @@ public class SecuritySupportImpl extends SecuritySupport {
 
     @Override
     public void synchronizeKeyFile(Object configContext, String fileRealmName) throws Exception {
-        //throw new UnsupportedOperationException("Not supported yet in V3.");
-    }
-
-    @Override
-    public void checkPermission(String key) {
-        try {
-            // Checking a random permission to check if it is server.
-            if (isEmbeddedServer() || serviceLocator == null || isACC() || isNotServerORACC()) {
-                return;
-            }
-
-            Permission perm = new RuntimePermission("SSLPassword");
-            AccessController.checkPermission(perm);
-        } catch (AccessControlException e) {
-            String message = e.getMessage();
-            Permission perm = new PropertyPermission(key, "read");
-            if (message != null) {
-                message = message.replace(e.getPermission().toString(), perm.toString());
-            }
-            throw new AccessControlException(message, perm);
-        }
-    }
-
-    public boolean isACC() {
-        return (processEnvironment == null ? false : processEnvironment.getProcessType().equals(ProcessType.ACC));
-    }
-
-    public boolean isNotServerORACC() {
-        return processEnvironment.getProcessType().equals(ProcessType.Other);
     }
 
     @Override
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        checkPermission(KEYSTORE_PASS_PROP);
-
         Key key = keyStores.get(keystoreIndex).getKey(alias, keyStorePasswords.get(keystoreIndex));
         if (key instanceof PrivateKey) {
             return (PrivateKey) key;
@@ -435,4 +401,14 @@ public class SecuritySupportImpl extends SecuritySupport {
 
         return null;
     }
+
+    public boolean isACC() {
+        return processEnvironment == null ? false : processEnvironment.getProcessType().equals(ProcessType.ACC);
+    }
+
+    public boolean isNotServerORACC() {
+        return processEnvironment.getProcessType().equals(ProcessType.Other);
+    }
+
+
 }

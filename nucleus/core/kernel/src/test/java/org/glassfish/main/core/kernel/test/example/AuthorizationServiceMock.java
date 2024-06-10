@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Eclipse Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,20 +17,17 @@
 package org.glassfish.main.core.kernel.test.example;
 
 import java.net.URI;
-import java.security.Permission;
 import java.util.Collections;
 import java.util.List;
-
 import javax.security.auth.Subject;
-
 import org.glassfish.security.services.api.authorization.AuthorizationService;
 import org.glassfish.security.services.api.authorization.AzAction;
 import org.glassfish.security.services.api.authorization.AzAttributeResolver;
 import org.glassfish.security.services.api.authorization.AzResource;
 import org.glassfish.security.services.api.authorization.AzResult;
-import org.glassfish.security.services.api.authorization.AzSubject;
 import org.glassfish.security.services.api.authorization.AzResult.Decision;
 import org.glassfish.security.services.api.authorization.AzResult.Status;
+import org.glassfish.security.services.api.authorization.AzSubject;
 import org.glassfish.security.services.config.SecurityConfiguration;
 import org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl;
 import org.glassfish.security.services.impl.authorization.AzActionImpl;
@@ -52,12 +49,6 @@ public class AuthorizationServiceMock implements AuthorizationService {
 
     @Override
     public void initialize(SecurityConfiguration securityServiceConfiguration) {
-    }
-
-
-    @Override
-    public boolean isPermissionGranted(Subject subject, Permission permission) {
-        return true;
     }
 
 

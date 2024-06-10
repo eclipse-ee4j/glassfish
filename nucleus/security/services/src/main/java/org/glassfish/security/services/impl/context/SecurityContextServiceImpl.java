@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package org.glassfish.security.services.impl.context;
 
-
 import org.glassfish.security.services.api.common.Attributes;
 import org.glassfish.security.services.api.context.SecurityContextService;
 import org.glassfish.security.services.impl.common.AttributesImpl;
@@ -28,10 +28,10 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class SecurityContextServiceImpl implements SecurityContextService {
 
-        private Attributes envAttributes = new AttributesImpl();
+    private Attributes envAttributes = new AttributesImpl();
 
-        public Attributes getEnvironmentAttributes() {
-                return envAttributes;
-        }
-
+    @Override
+    public Attributes getEnvironmentAttributes() {
+        return envAttributes;
+    }
 }

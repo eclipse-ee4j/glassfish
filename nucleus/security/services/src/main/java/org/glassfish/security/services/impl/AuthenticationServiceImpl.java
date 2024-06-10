@@ -43,7 +43,6 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.glassfish.security.services.api.authentication.ImpersonationService;
-import org.glassfish.security.services.common.Secure;
 import org.glassfish.security.services.config.LoginModuleConfig;
 import org.glassfish.security.services.config.SecurityConfiguration;
 import org.glassfish.security.services.config.SecurityProvider;
@@ -57,7 +56,6 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @Singleton
-@Secure(accessPermissionName = "security/service/authentication")
 public class AuthenticationServiceImpl implements AuthenticationService, PostConstruct {
     @Inject
     private Domain domain;

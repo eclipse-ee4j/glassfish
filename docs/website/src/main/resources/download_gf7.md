@@ -1,5 +1,30 @@
 # Eclipse GlassFish 7.x Downloads
 
+### GlassFish 7.0.15
+
+GlassFish 7.0.15 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.
+
+GlassFish 7.0.15 compiles and passes all internal tests using OpenJDK 21. Several Jakarta EE 10 TCKs passed on JDK 21 as well. The Jakarta EE 10 TCK as a whole is not JDK 21 compatible and it's not possible to run all the Jakarta EE TCK tests.
+
+In this release we updated and thoroughly tested a lot of important components, including Exousia (Security), Mojarra (Faces), Jersey (REST) and Yasson/Parsson (JSON).
+
+Testing has been improved by fixing a number of issues within the tests itself.
+
+Finally, we fixed a number of errors in the documentation.
+
+Download:
+
+* [Eclipse GlassFish 7.0.15, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.15.zip)
+* [Eclipse GlassFish 7.0.15, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.15.zip)
+* [Eclipse GlassFish Embedded 7.0.15, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.15/jar)
+* [Eclipse GlassFish Embedded 7.0.15, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.15/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.15 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.15)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
+
 ### GlassFish 7.0.14
 
 GlassFish 7.0.14 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.

@@ -92,7 +92,7 @@ public class WoodstockHandler {
         if (Files.exists(pathToFile)) {
             try {
                 Files.delete(pathToFile);
-
+                Files.delete(pathToFile.getParent());
             } catch (IOException x) {
                 logger.log(Level.WARNING, prepareFileNotDeletedMessage(deleteTempFile));
 
@@ -155,8 +155,9 @@ public class WoodstockHandler {
                 // keep the filename for the temp file, it's used to generate the context root
                 tmpFile = createTempFileWithOriginalFileName(name);
 
-                //delete the file, otherwise FileUtils#moveTo throws file already exist error
-                tmpFile.delete();
+                // delete the file, otherwise FileUtils#moveTo called inside uploadedFile.write
+                // throws file already exist error
+                Files.deleteIfExists(tmpFile.toPath());
 
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.writeToTmpFile"));
@@ -170,11 +171,13 @@ public class WoodstockHandler {
             } catch (IOException ioex) {
                 try {
                     if (tmpFile != null) {
-                        uploadTmpFile = tmpFile.getAbsolutePath();
+                        Files.deleteIfExists(tmpFile.toPath());
+                        Files.deleteIfExists(tmpFile.toPath().getParent());
                     }
                 } catch (Exception ex) {
-                    //Handle AbsolutePathException here
+                    // ignore nested exception, handle the original exception only
                 }
+                GuiUtil.handleException(handlerCtx, ioex);
             } catch (Exception ex) {
                 GuiUtil.handleException(handlerCtx, ex);
             }

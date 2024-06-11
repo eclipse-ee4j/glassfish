@@ -395,7 +395,8 @@ public class GuiUtil {
      */
     public static void prepareException(HandlerContext handlerCtx, Throwable ex) {
         Throwable rootException = getRootCause(ex);
-        prepareAlert("error", GuiUtil.getMessage("msg.Error"), rootException.getMessage());
+        prepareAlert("error", GuiUtil.getMessage("msg.Error"), rootException.getClass().getSimpleName()
+                + ": " + rootException.getMessage());
         GuiUtil.getLogger().info(GuiUtil.getCommonMessage("LOG_EXCEPTION_OCCURED") + ex.getLocalizedMessage());
         if (GuiUtil.getLogger().isLoggable(Level.FINE)){
             ex.printStackTrace();

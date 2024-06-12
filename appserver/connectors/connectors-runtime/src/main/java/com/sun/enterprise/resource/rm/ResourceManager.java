@@ -71,7 +71,7 @@ public interface ResourceManager {
      * Delist the resource from the transaction.
      *
      * @param resource Resource to be delisted.
-     * @param xaresFlag XA Flag
+     * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
     void delistResource(ResourceHandle resource, int xaresFlag);
 
@@ -79,7 +79,7 @@ public interface ResourceManager {
      * Unregister the resource from a transaction's list.
      *
      * @param resource Resource to be unregistered.
-     * @param xaresFlag XA Flag
+     * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
     void unregisterResource(ResourceHandle resource, int xaresFlag);
 }

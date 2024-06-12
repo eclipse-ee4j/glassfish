@@ -120,20 +120,21 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     /**
      * Create and initialize pool if not created already.
+     * <p>
+     * package default for unit test
      *
-     * @param poolInfo Name of the pool to be created
-     * @param poolType - PoolType
-     * @return ResourcePool - newly created pool
+     * @param poolInfo pool identifier of the pool to be created
+     * @param poolType the type of pool to be created
+     * @param env the jndi information to find the ConnectorConnectionPool configuration used to configure the pool
      * @throws PoolingException when unable to create/initialize pool
      */
-    private ResourcePool createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
+    void createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
         ResourcePool pool = getPool(poolInfo);
         if (pool == null) {
             pool = ResourcePoolFactoryImpl.newInstance(poolInfo, poolType, env);
             addPool(pool);
             LOG.log(INFO, "Created connection pool and added it to PoolManager: {0}", pool);
         }
-        return pool;
     }
 
     // invoked by DataSource objects to obtain a connection
@@ -158,7 +159,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             // we need to associate a new connection with it
             try {
                 Object connection = resourceSpec.getConnectionToAssociate();
-                ManagedConnection managedConnection = (ManagedConnection) resourceHandle.getResource();
+                ManagedConnection managedConnection = resourceHandle.getResource();
                 managedConnection.associateConnection(connection);
             } catch (ResourceException e) {
                 putbackDirectToPool(resourceHandle, resourceSpec.getPoolInfo());
@@ -172,6 +173,9 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             resourceSpec.setLazyEnlistable(false);
         }
 
+        // Overwrite the resourceSpec value in the resourceHandle.
+        // TODO: explain why this is done and why resourceAllocator in the resourceHandle is not overwritten with this
+        // resourceAllocator.
         resourceHandle.setResourceSpec(resourceSpec);
 
         try {
@@ -221,11 +225,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         return getPool(resourceSpec.getPoolInfo()).getResource(resourceSpec, resourceAllocator, transaction);
     }
 
-    /**
-     * Switch on matching in the pool.
-     *
-     * @param poolInfo Name of the pool
-     */
     @Override
     public boolean switchOnMatching(PoolInfo poolInfo) {
         ResourcePool pool = getPool(poolInfo);
@@ -238,7 +237,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         return true;
     }
 
-    private void addPool(ResourcePool pool) {
+    /* package protected for unit test */
+    protected void addPool(ResourcePool pool) {
         LOG.log(FINE, "Adding pool {0} to pooltable", pool.getPoolInfo());
         poolTable.put(pool.getPoolInfo(), pool);
     }
@@ -271,7 +271,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
     }
 
-    // called by EJB Transaction Manager
     @Override
     public void transactionCompleted(Transaction transaction, int status) throws IllegalStateException {
         Set<PoolInfo> pools = ((JavaEETransaction) transaction).getAllParticipatingPools();
@@ -308,10 +307,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
     }
 
-    /**
-     * This method gets called by the LazyEnlistableConnectionManagerImpl when a connection needs enlistment, i.e on use of
-     * a Statement etc.
-     */
     @Override
     public void lazyEnlist(ManagedConnection mc) throws ResourceException {
         lazyEnlistableResourceManager.lazyEnlist(mc);
@@ -360,23 +355,42 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     @Override
     public void resourceErrorOccurred(ResourceHandle resource) {
+        // TODO: Why is delistResource not called like done in resourceAbortOccurred and in resourceClosed?
+        // Shouldn't delistResource be called with TMFAIL ?
+        // Added example in unit test PoolManagerImplTest that shows the delist is not called.
+
+        // TODO: Why is resourceHandle.setConnectionErrorOccurred() not performed?
+        // Added example in unit test PoolManagerImplTest that shows connection error is not updated
+
         putbackResourceToPool(resource, true);
     }
 
     @Override
     public void resourceAbortOccurred(ResourceHandle resource) {
+        // TODO: Why is TMSUCCESS used and not TMFAIL? Document the meaning of Abort.
+        // <p>
+        // com.sun.gjc.spi.ManagedConnectionImpl.transactionCompleted()
+        // performs: badConnectionEventListener.connectionAbortOccurred -> jdbc.markedForRemoval_conAborted
+        // <p>
+        // com.sun.gjc.spi.jdbc40.ConnectionHolder40.abort(Executor) documents: "Abort operation to mark the connection
+        // internally as a bad connection for removal and to close the connection. This ensures that at the end of the
+        // transaction, the connection is destroyed. A running thread holding a connection will run to completion before the
+        // connection is destroyed"
         getResourceManager(resource.getResourceSpec()).delistResource(resource, TMSUCCESS);
+
+        // TODO: Why is resourceHandle.setConnectionErrorOccurred() not performed?
+        // Added example in unit test PoolManagerImplTest that shows connection error is not updated
         putbackResourceToPool(resource, true);
     }
 
-    @Override
-    public void putbackBadResourceToPool(ResourceHandle resourceHandle) {
+    private void putbackBadResourceToPool(ResourceHandle resourceHandle) {
         // Notify pool
         PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
         if (poolInfo != null) {
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
                 synchronized (pool) {
+                    // TODO: why is resourceClosed called AND resourceErrorOccurred?
                     pool.resourceClosed(resourceHandle);
                     resourceHandle.setConnectionErrorOccurred();
                     pool.resourceErrorOccurred(resourceHandle);
@@ -393,6 +407,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
                 if (errorOccurred) {
+                    // TODO: this code is different from putbackBadResourceToPool logic, explain why
+                    // TODO: why is resourceHandle.setConnectionErrorOccurred(); not called?
                     pool.resourceErrorOccurred(resourceHandle);
                 } else {
                     pool.resourceClosed(resourceHandle);

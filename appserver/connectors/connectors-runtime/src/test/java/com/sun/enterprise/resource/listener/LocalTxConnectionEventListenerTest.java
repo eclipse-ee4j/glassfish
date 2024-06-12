@@ -82,6 +82,6 @@ public class LocalTxConnectionEventListenerTest {
     private ResourceHandle createResourceHandle(int i) throws ResourceException {
         ManagedConnection managedConnection = createNiceMock(ManagedConnection.class);
         replay();
-        return new ResourceHandle(managedConnection, new ResourceSpec(new SimpleJndiName("testResource" + i), 0), null, null);
+        return new ResourceHandle(managedConnection, new ResourceSpec(new SimpleJndiName("testResource" + i), 0), null);
     }
 }

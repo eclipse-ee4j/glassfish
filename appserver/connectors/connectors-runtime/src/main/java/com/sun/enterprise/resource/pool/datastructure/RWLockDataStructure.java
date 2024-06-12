@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,7 +54,7 @@ public class RWLockDataStructure implements DataStructure {
 
     private volatile int maxSize;
 
-    public RWLockDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
+    public RWLockDataStructure(String parameters, int maxSize, ResourceHandler handler) {
         this.availableResources = new DataStructureSemaphore(maxSize);
         this.useMask = new BitSet(maxSize);
         this.resources = new ResourceHandle[maxSize];
@@ -63,7 +63,6 @@ public class RWLockDataStructure implements DataStructure {
 
         LOG.log(Level.FINEST, "pool.datastructure.rwlockds.init");
     }
-
 
     @Override
     public int addResource(ResourceAllocator allocator, int count) throws PoolingException {
@@ -96,7 +95,7 @@ public class RWLockDataStructure implements DataStructure {
                         newResources = Arrays.copyOf(resources, currentMaxSize);
                     }
 
-                    resource.setIndex(size);
+                    resource.setRwLockDataStructureResourceIndex(size);
 
                     stamp = lock.tryConvertToWriteLock(stamp);
                     if (stamp == 0L) {
@@ -167,7 +166,7 @@ public class RWLockDataStructure implements DataStructure {
                 }
 
                 int currentSize = size;
-                int removeIndex = resource.getIndex();
+                int removeIndex = resource.getRwLockDataStructureResourceIndex();
                 if (!lock.validate(stamp)) {
                     continue;
                 }
@@ -196,7 +195,7 @@ public class RWLockDataStructure implements DataStructure {
                 if (removeIndex < lastIndex) {
                     // Move last resource in place of removed
                     ResourceHandle lastResource = resources[lastIndex];
-                    lastResource.setIndex(removeIndex);
+                    lastResource.setRwLockDataStructureResourceIndex(removeIndex);
                     resources[removeIndex] = lastResource;
                     useMask.set(removeIndex, useMask.get(lastIndex));
                 }
@@ -228,7 +227,7 @@ public class RWLockDataStructure implements DataStructure {
                 }
 
                 int currentSize = size;
-                int returnIndex = resource.getIndex();
+                int returnIndex = resource.getRwLockDataStructureResourceIndex();
                 if (!lock.validate(stamp)) {
                     continue;
                 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,9 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 import javax.security.auth.Subject;
 
 /**
+ * NoTransaction Connector Allocator, used for transaction level:
+ * {@link com.sun.appserv.connectors.internal.api.ConnectorConstants#NO_TRANSACTION_INT}.
+ *
  * @author Tony Ng
  */
 public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
@@ -104,12 +107,11 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
         super(poolMgr, mcf, spec, subject, reqInfo, info, desc);
     }
 
-
     @Override
     public ResourceHandle createResource() throws PoolingException {
         try {
             ManagedConnection mc = mcf.createManagedConnection(subject, reqInfo);
-            ResourceHandle resource = createResourceHandle(mc, spec, this, info);
+            ResourceHandle resource = createResourceHandle(mc, spec, this);
             ConnectionEventListener l = new ConnectionListenerImpl(resource);
             mc.addConnectionEventListener(l);
             return resource;
@@ -119,10 +121,9 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
     }
 
     @Override
-    public void fillInResourceObjects(ResourceHandle resource)
-            throws PoolingException {
+    public void fillInResourceObjects(ResourceHandle resource) throws PoolingException {
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
+            ManagedConnection mc = resource.getResource();
             Object con = mc.getConnection(subject, reqInfo);
             resource.fillInResourceObjects(con, null);
         } catch (ResourceException ex) {
@@ -131,11 +132,9 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
     }
 
     @Override
-    public void destroyResource(ResourceHandle resource)
-            throws PoolingException {
-
+    public void destroyResource(ResourceHandle resource) throws PoolingException {
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
+            ManagedConnection mc = resource.getResource();
             mc.destroy();
         } catch (Exception ex) {
             throw new PoolingException(ex);

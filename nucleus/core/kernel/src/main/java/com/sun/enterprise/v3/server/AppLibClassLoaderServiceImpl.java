@@ -192,13 +192,6 @@ public class AppLibClassLoaderServiceImpl {
          */
         @Override
         public Class<?> findClass(String name) throws ClassNotFoundException {
-            if (notFoundResources.contains(name)) {
-                throw new ClassNotFoundException(name);
-            }
-            Class<?> c = findLoadedClass(name);
-            if (c != null) {
-                return c;
-            }
             try {
                 return super.findClass(name);
             } catch (ClassNotFoundException e) {
@@ -215,6 +208,9 @@ public class AppLibClassLoaderServiceImpl {
          */
         @Override
         public Class<?> findExistingClass(String name) {
+            if (notFoundResources.contains(name)) {
+                return null;
+            }
             return findLoadedClass(name);
         }
 

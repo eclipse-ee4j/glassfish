@@ -123,6 +123,23 @@
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
+                    
+                    <execution>
+                        <id>install-javatest-as-5</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/javatest.jar</file>
+                            <sources>${project.build.directory}/javatest-sources.jar</sources>
+                            <groupId>javatest</groupId>
+                            <artifactId>javatest</artifactId>
+                            <version>5.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

@@ -41,9 +41,11 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -51,6 +53,9 @@ import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.api.DelegatingClassLoader.ClassFinder;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.Collections.emptyEnumeration;
+import static java.util.Collections.enumeration;
 
 /**
  * This class is responsible for constructing class loader that has visibility
@@ -172,6 +177,8 @@ public class AppLibClassLoaderServiceImpl {
      */
     private static class URLClassFinder extends GlassfishUrlClassLoader implements ClassFinder {
 
+        private final Set<String> notFoundResources = new HashSet<>();
+
         URLClassFinder(URL url, ClassLoader parent) {
             super(new URL[] {url}, parent);
         }
@@ -185,11 +192,19 @@ public class AppLibClassLoaderServiceImpl {
          */
         @Override
         public Class<?> findClass(String name) throws ClassNotFoundException {
+            if (notFoundResources.contains(name)) {
+                throw new ClassNotFoundException(name);
+            }
             Class<?> c = findLoadedClass(name);
             if (c != null) {
                 return c;
             }
-            return super.findClass(name);
+            try {
+                return super.findClass(name);
+            } catch (ClassNotFoundException e) {
+                notFoundResources.add(name);
+                throw e;
+            }
         }
 
         /**
@@ -201,6 +216,38 @@ public class AppLibClassLoaderServiceImpl {
         @Override
         public Class<?> findExistingClass(String name) {
             return findLoadedClass(name);
+        }
+
+        /**
+         * Finds the resource with the given name.
+         *
+         * @param name the resource name
+         * @return a URL object for reading the resource, or {@code null} if the resource
+         * could not be found
+         */
+        @Override
+        public URL findResource(String name) {
+            if (notFoundResources.contains(name)) {
+                return null;
+            }
+            URL resourceURL = super.findResource(name);
+            if (resourceURL == null){
+                notFoundResources.add(name);
+            }
+            return resourceURL;
+        }
+
+        /**
+         * Returns an enumeration of URL object representing the resource with the given name.
+         *
+         * @param name the resource name
+         * @return a singleton enumeration of URL object for the resource, or empty enumeration
+         * if the resources not found
+         */
+        @Override
+        public Enumeration<URL> findResources(String name) {
+            URL resourceURL = findResource(name);
+            return resourceURL != null ? enumeration(List.of(resourceURL)) : emptyEnumeration();
         }
     }
 

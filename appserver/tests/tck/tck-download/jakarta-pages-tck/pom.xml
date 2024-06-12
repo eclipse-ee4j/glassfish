@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,9 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
@@ -32,8 +30,9 @@
     <name>TCK: Install Jakarta Pages TCK</name>
 
     <properties>
-        <tck.test.pages.file>jakarta-pages-tck-3.1.0.zip</tck.test.pages.file>
-        <tck.test.pages.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.pages.file}</tck.test.pages.url>
+        <tck.test.pages.file>jakarta-pages-tck-${tck.test.pages.version}.zip</tck.test.pages.file>
+        <tck.test.pages.url>https://download.eclipse.org/jakartaee/pages/4.0/${tck.test.pages.file}</tck.test.pages.url>
+        <tck.test.pages.version>4.0.0</tck.test.pages.version>
     </properties>
 
     <build>
@@ -41,43 +40,43 @@
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
+                <configuration>
+                    <url>${tck.test.pages.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <id>download-pages-tck</id>
-                        <phase>generate-resources</phase>
                         <goals>
                             <goal>wget</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <skipCache>true</skipCache>
-                    <overwrite>true</overwrite>
-                    <url>${tck.test.pages.url}</url>
-                    <unpack>false</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
+
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-pages-tck</id>
-                        <phase>process-resources</phase>
+                        <id>install-pages-tck-jar</id>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
+                        <phase>process-resources</phase>
                         <configuration>
-                            <file>${project.build.directory}/${tck.test.pages.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
+                            <file>${project.build.directory}/pages-tck/artifacts/jakarta-pages-tck-4.0.0.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>jakarta-pages-tck</artifactId>
+                            <version>${tck.test.pages.version}</version>
+                            <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

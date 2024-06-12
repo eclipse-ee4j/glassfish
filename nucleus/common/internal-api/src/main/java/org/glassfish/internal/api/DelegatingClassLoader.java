@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.Collections;
 import java.net.URL;
 import java.io.IOException;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This classloader has a list of classloaders called as delegates
@@ -77,13 +78,14 @@ public class DelegatingClassLoader extends ClassLoader {
         Enumeration<URL> findResources(String name) throws IOException;
     }
 
+    private final CopyOnWriteArrayList<ClassFinder> delegates = new CopyOnWriteArrayList<>();
+
     /**
      * Name of this class loader. Used mostly for reporting purpose.
      * No guarantee about its uniqueness.
      */
-    private String name;
+    private volatile String name;
 
-    private List<ClassFinder> delegates = new ArrayList<ClassFinder>();
 
     /**
      * @throws IllegalArgumentException when the delegate does not have same parent
@@ -114,13 +116,10 @@ public class DelegatingClassLoader extends ClassLoader {
      * @throws IllegalArgumentException when the delegate does not have same parent
      * as this classloader.
      */
-    public synchronized boolean addDelegate(ClassFinder d) throws
+    public boolean addDelegate(ClassFinder d) throws
             IllegalStateException, IllegalArgumentException {
         checkDelegate(d);
-        if (delegates.contains(d)) {
-            return false;
-        }
-        return delegates.add(d);
+        return delegates.addIfAbsent(d);
     }
 
     /**
@@ -146,7 +145,7 @@ public class DelegatingClassLoader extends ClassLoader {
      * @throws IllegalStateException when this method is called after the
      * classloader has been used to load any class.
      */
-    public synchronized boolean removeDelegate(ClassFinder d) {
+    public boolean removeDelegate(ClassFinder d) {
         return delegates.remove(d);
     }
 

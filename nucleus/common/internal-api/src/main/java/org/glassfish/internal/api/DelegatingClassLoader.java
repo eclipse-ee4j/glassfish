@@ -86,7 +86,6 @@ public class DelegatingClassLoader extends ClassLoader {
      */
     private volatile String name;
 
-
     /**
      * @throws IllegalArgumentException when the delegate does not have same parent
      * as this classloader.
@@ -111,13 +110,10 @@ public class DelegatingClassLoader extends ClassLoader {
      * a delegate to be added that has a different parent.
      * @param d ClassFinder to add to the list of delegates
      * @return true if the delegate is added, false otherwise.
-     * @throws IllegalStateException when this method is called after the
-     * classloader has been used to load any class.
      * @throws IllegalArgumentException when the delegate does not have same parent
      * as this classloader.
      */
-    public boolean addDelegate(ClassFinder d) throws
-            IllegalStateException, IllegalArgumentException {
+    public boolean addDelegate(ClassFinder d) throws IllegalArgumentException {
         checkDelegate(d);
         return delegates.addIfAbsent(d);
     }
@@ -137,13 +133,10 @@ public class DelegatingClassLoader extends ClassLoader {
     }
 
     /**
-     * Removes a ClassFinder from list of delegates. This method must not be used
-     * once this classloader has beed used to load any class. If attempted to
-     * do so, this method throws IllegalStateException
+     * Removes a ClassFinder from list of delegates.
+     *
      * @param d ClassFinder to remove from the list of delegates
      * @return true if the delegate was removed, false otherwise.
-     * @throws IllegalStateException when this method is called after the
-     * classloader has been used to load any class.
      */
     public boolean removeDelegate(ClassFinder d) {
         return delegates.remove(d);

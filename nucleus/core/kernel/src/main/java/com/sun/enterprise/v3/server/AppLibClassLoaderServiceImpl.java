@@ -29,6 +29,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -58,6 +59,9 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.api.DelegatingClassLoader.ClassFinder;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.file.StandardOpenOption.DELETE_ON_CLOSE;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
@@ -77,6 +81,8 @@ import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN_NAME;
 @Service
 @Singleton
 public class AppLibClassLoaderServiceImpl implements EventListener {
+
+    private static final Logger LOG = System.getLogger(AppLibClassLoaderServiceImpl.class.getName());
 
     /**
      * Class finders' registry.
@@ -105,10 +111,10 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
         for (Library library : classFinderRegistry.keySet()) {
             if (library.isSnapshot()) {
                 try {
-                    // Remove library snapshots on exit
+                    // Delete on close application library snapshot
                     Files.newInputStream(Path.of(library.getURI()), DELETE_ON_CLOSE).close();
                 } catch (IOException e) {
-                    // do nothing
+                    LOG.log(WARNING, () -> "Could not delete on close application library snapshot " + library.getURI(), e);
                 }
             }
         }
@@ -324,6 +330,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      */
     private static class Library {
 
+        private static final Logger LOG = System.getLogger(Library.class.getName());
+
         /**
          * Represents a method to read the attributes of an open file.
          */
@@ -383,7 +391,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
             try {
                 this.fileInputStream = new FileInputStream(new File(libURI));
             } catch (IOException e) {
-                // do nothing
+                LOG.log(WARNING, () -> "Could not open input stream for application library " + libURI, e);
             }
 
             BasicFileAttributes attributes = null;
@@ -412,8 +420,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
             if (source == null) {
                 File snapshot = createSnapshot();
                 if (snapshot != null) {
-                    // Snapshot successfully created.
-                    // Use it URI as a library source.
+                    LOG.log(TRACE, "Created snapshot {0} for application library {1}", snapshot, originalSource);
+                    // Use snapshot URI as a library source.
                     source = snapshot.toURI();
                 } else {
                     // Snapshot creation failed.
@@ -437,7 +445,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    // do nothing
+                    LOG.log(WARNING, () -> "Could not close input stream for application library " + source, e);
                 }
             }
         }
@@ -506,9 +514,11 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                     FileDescriptor fileDescriptor = fileInputStream.getFD();
                     if (fileDescriptor.valid()) {
                         nativeDescriptor = nativeDescriptorField.get(fileDescriptor);
+                        LOG.log(TRACE, "Returning nativeDescriptor={0} for application library {1}",
+                                nativeDescriptor, source);
                     }
                 } catch (IllegalAccessException | IOException e) {
-                    // do nothing
+                    LOG.log(WARNING, () -> "Could not obtain native descriptor for application library " + source, e);
                 }
             }
             return nativeDescriptor;
@@ -521,12 +531,14 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
          * @return the file attributes or {@code null} if an error occurs
          */
         private BasicFileAttributes readAttributes(Object nativeDescriptor) {
+            LOG.log(DEBUG, "readAttributes(nativeDescriptor={0})", nativeDescriptor);
             BasicFileAttributes attributes = null;
             if (readAttributesMethod != null) {
                 try {
                     attributes = (BasicFileAttributes) readAttributesMethod.invoke(null, nativeDescriptor);
-                } catch (ReflectiveOperationException e) {
-                    // do nothing
+                } catch (Exception e) {
+                    LOG.log(WARNING, () -> "Could not read file attributes for nativeDescriptor="
+                            + nativeDescriptor, e);
                 }
             }
             return attributes;
@@ -540,9 +552,11 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
          * @return the file attributes or {@code null} if an error occurs
          */
         private BasicFileAttributes readAttributes(URI libURI) {
+            LOG.log(DEBUG, "readAttributes(libURI={0})", libURI);
             try {
                 return Files.readAttributes(Path.of(libURI), BasicFileAttributes.class);
             } catch (IOException e) {
+                LOG.log(WARNING, () -> "Could not read file attributes for libURI=" + libURI, e);
                 return null;
             }
         }
@@ -555,6 +569,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
          * @return an abstract pathname denoting a newly-created snapshot
          */
         private File createSnapshot() {
+            LOG.log(DEBUG, "createSnapshot()");
             File snapshot = null;
             try {
                 snapshot = File.createTempFile("applib", ".jar");
@@ -563,6 +578,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 }
                 snapshot.deleteOnExit();
             } catch (IOException e) {
+                LOG.log(WARNING, () -> "Could not create snapshot for application library " + source, e);
                 FileUtils.deleteFileMaybe(snapshot);
             } finally {
                 fileInputStream = null;

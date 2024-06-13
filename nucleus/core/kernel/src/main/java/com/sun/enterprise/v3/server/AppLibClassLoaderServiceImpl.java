@@ -20,6 +20,7 @@ package com.sun.enterprise.v3.server;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.io.FileUtils;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,6 +48,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.Events;
+import org.glassfish.api.event.RestrictTo;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
@@ -54,8 +58,10 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.api.DelegatingClassLoader.ClassFinder;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.nio.file.StandardOpenOption.DELETE_ON_CLOSE;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
+import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN_NAME;
 
 /**
  * This class is responsible for constructing class loader that has visibility
@@ -70,7 +76,7 @@ import static java.util.Collections.enumeration;
  */
 @Service
 @Singleton
-public class AppLibClassLoaderServiceImpl {
+public class AppLibClassLoaderServiceImpl implements EventListener {
 
     /**
      * Class finders' registry.
@@ -86,6 +92,27 @@ public class AppLibClassLoaderServiceImpl {
     @Inject
     private CommonClassLoaderServiceImpl commonClassLoaderService;
 
+    @Inject
+    private Events events;
+
+    @PostConstruct
+    public void postConstruct() {
+        events.register(this);
+    }
+
+    @Override
+    public void event(@RestrictTo(PREPARE_SHUTDOWN_NAME) Event<?> event) {
+        for (Library library : classFinderRegistry.keySet()) {
+            if (library.isSnapshot()) {
+                try {
+                    // Remove library snapshots on exit
+                    Files.newInputStream(Path.of(library.getURI()), DELETE_ON_CLOSE).close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
+    }
 
     /**
      * Returns the application libraries class loader.
@@ -395,6 +422,10 @@ public class AppLibClassLoaderServiceImpl {
                 }
             }
             return source;
+        }
+
+        public boolean isSnapshot() {
+            return source != originalSource;
         }
 
         /**

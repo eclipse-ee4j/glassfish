@@ -48,7 +48,7 @@
                                 <artifactItem>
                                     <groupId>jakarta.enterprise</groupId>
                                     <artifactId>cdi-tck-core-impl</artifactId>
-                                    <version>${cdi.tck-4-0.version}</version>
+                                    <version>${cdi.tck-4-1.version}</version>
                                     <type>sig</type>
                                     <classifier>sigtest-jdk11</classifier>
                                     <outputDirectory>${project.build.directory}/sigtest</outputDirectory>

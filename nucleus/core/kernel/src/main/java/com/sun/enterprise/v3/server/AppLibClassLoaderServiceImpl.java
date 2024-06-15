@@ -42,7 +42,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -90,7 +89,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      * If multiple applications or modules refer to the same libraries,
      * share this libraries by reusing the same class loaders.
      */
-    private final Map<Library, ClassFinder> classFinderRegistry = new HashMap<>();
+    private final Map<Library, ClassFinder> classFinderRegistry = new ConcurrentHashMap<>();
 
     @Inject
     private ServiceLocator serviceLocator;

@@ -35,18 +35,23 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+@TestMethodOrder(OrderAnnotation.class)
 public class ApplicationLibraryTest {
 
     private static final System.Logger LOG = System.getLogger(ApplicationLibraryTest.class.getName());
@@ -98,7 +103,7 @@ public class ApplicationLibraryTest {
         // Remove old version of the application library
         Files.deleteIfExists(appLib.toPath());
 
-        // Create the new one
+        // And create the new one
         appLib = createAppLib(2);
 
         result = ASADMIN.exec("deploy",
@@ -119,6 +124,7 @@ public class ApplicationLibraryTest {
     }
 
     @Test
+    @Order(1)
     public void testFindClass() throws IOException {
         String version1 = getEntity(WEBAPP1_NAME, "version");
         String version2 = getEntity(WEBAPP2_NAME, "version");
@@ -132,6 +138,7 @@ public class ApplicationLibraryTest {
     }
 
     @Test
+    @Order(2)
     public void testFindResource() throws IOException {
         String version1 = getEntity(WEBAPP1_NAME, "resource");
         String version2 = getEntity(WEBAPP2_NAME, "resource");
@@ -145,6 +152,7 @@ public class ApplicationLibraryTest {
     }
 
     @Test
+    @Order(3)
     public void testApplicationLibrarySharing() throws IOException {
         String uuid1 = getEntity(WEBAPP1_NAME, "uuid");
         String uuid2 = getEntity(WEBAPP2_NAME, "uuid");
@@ -153,9 +161,34 @@ public class ApplicationLibraryTest {
         assertAll(
             // Both 'webapp1' and 'webapp2' share the same library
             () -> assertEquals(uuid1, uuid2),
-            // The 'webapp3' uses its own version
+            // The 'webapp3' uses its own newer version
             () -> assertNotEquals(uuid1, uuid3)
         );
+    }
+
+    @Test
+    @Order(99)
+    public void testApplicationLibrariesPreserveBetweenRestarts() throws IOException {
+        assertThat(ASADMIN.exec("stop-domain"), asadminOK());
+        assertThat(ASADMIN.exec("start-domain"), asadminOK());
+
+        String version1 = getEntity(WEBAPP1_NAME, "version");
+        String version2 = getEntity(WEBAPP2_NAME, "version");
+        String version3 = getEntity(WEBAPP3_NAME, "version");
+
+        // Should be used latest library version
+        assertAll(
+            () -> assertThat(Integer.parseInt(version1), equalTo(2)),
+            () -> assertThat(Integer.parseInt(version2), equalTo(2)),
+            () -> assertThat(Integer.parseInt(version3), equalTo(2))
+        );
+
+        String uuid1 = getEntity(WEBAPP1_NAME, "uuid");
+        String uuid2 = getEntity(WEBAPP2_NAME, "uuid");
+        String uuid3 = getEntity(WEBAPP3_NAME, "uuid");
+
+        // The same application library should be shared by all three apps
+        assertThat(uuid1, allOf(equalTo(uuid2), equalTo(uuid3)));
     }
 
     private String getEntity(String contextRoot, String endpoint) throws IOException {

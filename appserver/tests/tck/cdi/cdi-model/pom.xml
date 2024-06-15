@@ -129,7 +129,7 @@
                     <reuseForks>true</reuseForks>
                     <!-- System Properties -->
                     <systemPropertyVariables>
-                        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableAssertions>:org.jboss.cdi...</glassfish.enableAssertions>
                     </systemPropertyVariables>
                     <includes>

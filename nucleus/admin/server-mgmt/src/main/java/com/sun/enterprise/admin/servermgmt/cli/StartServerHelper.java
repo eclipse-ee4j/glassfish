@@ -68,7 +68,6 @@ public class StartServerHelper {
     private final String masterPassword;
     private final String serverOrDomainName;
     private final int debugPort;
-    private final boolean isDebugSuspend;
 
     public StartServerHelper(boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword) {
         this(terse, serverDirs, launcher, masterPassword, false);
@@ -93,11 +92,6 @@ public class StartServerHelper {
 
         // it will be < 0 if both --debug is false and debug-enabled=false in jvm-config
         debugPort = launcher.getDebugPort();
-        isDebugSuspend = launcher.isDebugSuspend();
-
-        if (isDebugSuspend && debugPort >= 0) {
-            LOG.log(Level.INFO, "ServerStart.DebuggerSuspendedMessage", debugPort);
-        }
     }
 
 
@@ -193,9 +187,6 @@ public class StartServerHelper {
         }
         LOG.log(Level.INFO, "ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance",
             serverDirs.getServerName(), serverDirs.getServerDir(), logfile, adminPort);
-        if (debugPort >= 0) {
-            LOG.log(Level.INFO, "ServerStart.DebuggerMessage", debugPort);
-        }
     }
 
 

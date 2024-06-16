@@ -61,7 +61,6 @@ import org.jvnet.hk2.annotations.Service;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
-import static java.nio.file.StandardOpenOption.DELETE_ON_CLOSE;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN_NAME;
@@ -107,13 +106,21 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
 
     @Override
     public void event(@RestrictTo(PREPARE_SHUTDOWN_NAME) Event<?> event) {
+        // Close application libraries class finders
+        for (ClassFinder classFinder : classFinderRegistry.values()) {
+            try {
+                ((GlassfishUrlClassLoader) classFinder).close();
+            } catch (IOException e) {
+                LOG.log(WARNING, () -> "Could not close class finder " + classFinder, e);
+            }
+        }
+        // Remove application libraries temporary snapshots
         for (Library library : classFinderRegistry.keySet()) {
             if (library.isSnapshot()) {
                 try {
-                    // Delete on close application library snapshot
-                    Files.newInputStream(Path.of(library.getURI()), DELETE_ON_CLOSE).close();
+                    Files.delete(Path.of(library.getURI()));
                 } catch (IOException e) {
-                    LOG.log(WARNING, () -> "Could not delete on close application library snapshot " + library.getURI(), e);
+                    LOG.log(WARNING, () -> "Could not delete application library snapshot " + library.getURI(), e);
                 }
             }
         }
@@ -575,6 +582,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 if (!copy(fileInputStream, snapshot)) {
                     FileUtils.copy(new File(originalSource), snapshot);
                 }
+                // Normally snapshots should be removed at server shutdown.
+                // This should remove snapshot if SIGTERM signal received.
                 snapshot.deleteOnExit();
             } catch (IOException e) {
                 LOG.log(WARNING, () -> "Could not create snapshot for application library " + source, e);

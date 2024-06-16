@@ -32,9 +32,12 @@ import java.io.InputStream;
 import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -47,6 +50,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarFile;
 
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
@@ -216,6 +220,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      */
     private static class URLClassFinder extends GlassfishUrlClassLoader implements ClassFinder {
 
+        private static final URLStreamHandler urlStreamHandler = new NonCachingURLStreamHandler();
+
         private final Set<String> notFoundResources = ConcurrentHashMap.newKeySet();
 
         URLClassFinder(URL url, ClassLoader parent) {
@@ -266,6 +272,13 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 return null;
             }
             URL resourceURL = super.findResource(name);
+            if (resourceURL != null) {
+                try {
+                    resourceURL = new URL(resourceURL, resourceURL.toExternalForm(), urlStreamHandler);
+                } catch (MalformedURLException e) {
+                    resourceURL = null;
+                }
+            }
             if (resourceURL == null){
                 notFoundResources.add(name);
             }
@@ -283,6 +296,55 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
         public Enumeration<URL> findResources(String name) {
             URL resourceURL = findResource(name);
             return resourceURL != null ? enumeration(List.of(resourceURL)) : emptyEnumeration();
+        }
+    }
+
+    /**
+     * Non-caching {@link URLStreamHandler}.
+     */
+    private static class NonCachingURLStreamHandler extends URLStreamHandler {
+
+        @Override
+        protected URLConnection openConnection(URL url) throws IOException {
+            return new NonCachedURLConnection(url);
+        }
+    }
+
+    /**
+     * Non-cached {@link  JarURLConnection}.
+     */
+    private static class NonCachedURLConnection extends JarURLConnection {
+
+        private JarURLConnection jarURLConnection;
+
+        public NonCachedURLConnection(URL url) throws MalformedURLException {
+            super(url);
+        }
+
+        @Override
+        public void connect() throws IOException {
+            if (jarURLConnection == null) {
+                URLConnection urlConnection = new URL(url.toExternalForm()).openConnection();
+                urlConnection.setUseCaches(false);
+                jarURLConnection = (JarURLConnection) urlConnection;
+            }
+        }
+
+        @Override
+        public JarFile getJarFile() throws IOException {
+            connect();
+            return jarURLConnection.getJarFile();
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            connect();
+            return jarURLConnection.getInputStream();
+        }
+
+        @Override
+        public void setUseCaches(boolean useCaches) {
+            // do nothing
         }
     }
 

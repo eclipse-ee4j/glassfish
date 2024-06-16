@@ -347,7 +347,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
             try {
                 if (OS.isWindows()) {
                     Class<?> attributesClass = Class.forName("sun.nio.fs.WindowsFileAttributes");
-                    method = attributesClass.getDeclaredMethod("readAttributes", Long.class);
+                    method = attributesClass.getDeclaredMethod("readAttributes", Long.TYPE);
                     field = FileDescriptor.class.getDeclaredField("handle");
                 } else {
                     Class<?> attributesClass = Class.forName("sun.nio.fs.UnixFileAttributes");

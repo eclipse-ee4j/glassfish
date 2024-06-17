@@ -488,7 +488,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
             if (source == null) {
                 File snapshot = createSnapshot();
                 if (snapshot != null) {
-                    LOG.log(TRACE, "Created snapshot {0} for application library {1}", snapshot, originalSource);
+                    LOG.log(TRACE, "Created snapshot {0} for application library {1}",
+                            snapshot.getAbsolutePath(), originalSource);
                     // Use snapshot URI as a library source.
                     source = snapshot.toURI();
                 } else {
@@ -513,7 +514,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    LOG.log(WARNING, () -> "Could not close input stream for application library " + source, e);
+                    LOG.log(WARNING, () -> "Could not close input stream for application library " + originalSource, e);
                 }
             }
         }
@@ -583,10 +584,10 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                     if (fileDescriptor.valid()) {
                         nativeDescriptor = nativeDescriptorField.get(fileDescriptor);
                         LOG.log(TRACE, "Returning nativeDescriptor={0} for application library {1}",
-                                nativeDescriptor, source);
+                                nativeDescriptor, originalSource);
                     }
                 } catch (IllegalAccessException | IOException e) {
-                    LOG.log(WARNING, () -> "Could not obtain native descriptor for application library " + source, e);
+                    LOG.log(WARNING, () -> "Could not obtain native descriptor for application library " + originalSource, e);
                 }
             }
             return nativeDescriptor;
@@ -648,7 +649,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 // This should remove snapshot if SIGTERM signal received.
                 snapshot.deleteOnExit();
             } catch (IOException e) {
-                LOG.log(WARNING, () -> "Could not create snapshot for application library " + source, e);
+                LOG.log(WARNING, () -> "Could not create snapshot for application library " + originalSource, e);
                 FileUtils.deleteFileMaybe(snapshot);
             } finally {
                 fileInputStream = null;

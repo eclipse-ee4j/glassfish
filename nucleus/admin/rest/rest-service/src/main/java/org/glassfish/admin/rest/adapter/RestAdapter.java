@@ -59,11 +59,13 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.TypeLiteral;
+import org.glassfish.hk2.extras.ExtrasUtilities;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.internal.api.AdminAccessController;
 import org.glassfish.internal.api.RemoteAdminAccessException;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;
@@ -278,7 +280,9 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     private JerseyContainer getJerseyContainer(ResourceConfig config) {
         RestLogging.restLogger.log(Level.FINEST,
             () -> this + ": Creating Jersey container for " + HttpHandler.class + " and " + config);
-        final HttpHandler httpHandler = ContainerFactory.createContainer(HttpHandler.class, config);
+        final GrizzlyHttpContainer httpHandler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
+        final ServiceLocator jerseyLocator = httpHandler.getApplicationHandler().getInjectionManager().getInstance(ServiceLocator.class);
+        ExtrasUtilities.enableTopicDistribution(jerseyLocator);
         return new JerseyContainer() {
             @Override
             public void service(Request request, Response response) throws Exception {

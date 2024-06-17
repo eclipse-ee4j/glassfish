@@ -92,7 +92,9 @@ import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
 import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 
-import org.glassfish.admin.rest.commandrecorder.AdminCommandRecorder;
+import org.glassfish.admin.rest.events.CommandInvokedEvent;
+import org.glassfish.admin.rest.events.InvokeEventService;
+
 
 /**
  * Resource utilities class. Used by resource templates, <code>TemplateListOfResource</code> and
@@ -223,8 +225,9 @@ public class ResourceUtil {
      */
     public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject, boolean managedJob) {
 
-        AdminCommandRecorder recorder = new AdminCommandRecorder();
-        recorder.logCommand(commandName, parameters, subject);
+        InvokeEventService.get()
+                .getCommandInvokedTopic()
+                .publish(new CommandInvokedEvent(commandName, parameters, subject));
 
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();

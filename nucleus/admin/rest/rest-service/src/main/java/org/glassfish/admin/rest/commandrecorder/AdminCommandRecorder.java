@@ -15,29 +15,45 @@
  */
 package org.glassfish.admin.rest.commandrecorder;
 
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.util.stream.Collectors.joining;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.security.auth.Subject;
-import org.glassfish.admin.rest.RestLogging;
+import org.glassfish.admin.rest.events.CommandInvokedEvent;
+import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.hk2.api.messaging.MessageReceiver;
+import org.glassfish.hk2.api.messaging.SubscribeTo;
+import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.security.common.UserPrincipal;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *
  * @author Ondro Mihalyi
  */
+@Service
+@RunLevel(value = StartupRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
+@MessageReceiver({CommandInvokedEvent.class})
 public class AdminCommandRecorder {
+
+    private static final System.Logger logger = System.getLogger(AdminCommandRecorder.class.getName());
+
+    public void receiveCommandInvokedEvent(@SubscribeTo CommandInvokedEvent event) {
+        logCommand(event.getCommandName(), event.getParameters(), event.getSubject());
+    }
 
     public void logCommand(String commandName, ParameterMap parameters, Subject subject) {
         if (shouldLogCommand(commandName)) {
-            final Logger logger = RestLogging.restLogger;
             String commandLine = constructCommandLine(commandName, parameters);
             Optional<UserPrincipal> userPrincipalMaybe = getUserPrincipal(subject);
-            logger.info(() -> {
+            logger.log(INFO, () -> {
                 return userPrincipalMaybe.map(user -> "User " + user.getName())
                         .orElse("Unknown user")
                         + " executed command in the Admin Console: " + commandLine;
@@ -54,16 +70,64 @@ public class AdminCommandRecorder {
                 .filter(param -> !DEFAULT_PARAM_KEY.equals(param.getKey()))
                 .map(param -> "--" + param.getKey() + "=" + param.getValue().get(0));
         final List<String> unnamedParams = parameters.get(DEFAULT_PARAM_KEY);
-        return Stream.concat(Stream.concat(Stream.of(commandName), namedParamsStream), unnamedParams != null ? unnamedParams.stream() : Stream.empty())
+        final Stream<? extends String> unnamedParamsStream = unnamedParams != null ? unnamedParams.stream() : Stream.empty();
+        return Stream.concat(Stream.concat(
+                Stream.of(commandName),
+                namedParamsStream),
+                unnamedParamsStream)
                 .collect(joining(" "));
     }
 
+    private static enum LogMode {
+        ALL_COMMANDS, INTERNAL_COMMANDS, WRITE_COMMANDS, READ_WRITE_COMMANDS, NO_COMMAND;
+
+        public static final LogMode DEFAULT = LogMode.WRITE_COMMANDS;
+        public static final String PROPERTY_NAME = "glassfish.commandrecorder.logmode";
+
+        public static LogMode get() {
+            final String logModeValue = TranslatedConfigView.expandValue("${" + LogMode.PROPERTY_NAME + "}");
+            if (logModeValue != null && !logModeValue.startsWith("$")) {
+                try {
+                    return LogMode.valueOf(logModeValue);
+                } catch (IllegalArgumentException e) {
+                    logger.log(WARNING,
+                            () -> "The value of the property " + LogMode.PROPERTY_NAME + " is invalid: " + logModeValue
+                            + ". It should be one of " + Arrays.toString(LogMode.values()));
+                    return LogMode.DEFAULT;
+                }
+            } else {
+                return LogMode.DEFAULT;
+            }
+        }
+
+    }
+
     private boolean shouldLogCommand(String commandName) {
-        return Stream.of("version", "_(.*)", "list(.*)", "get(.*)", "(.*)-list-services", "uptime",
-                "enable-asadmin-recorder", "disable-asadmin-recorder", "set-asadmin-recorder-configuration",
-                "asadmin-recorder-enabled")
+        final LogMode logMode = LogMode.get();
+        switch (logMode) {
+            case ALL_COMMANDS:
+                return true;
+            case NO_COMMAND:
+                return false;
+            case INTERNAL_COMMANDS:
+                return !isReadCommand(commandName);
+            case READ_WRITE_COMMANDS:
+                return !isInternalCommand(commandName);
+            case WRITE_COMMANDS:
+                return !isReadCommand(commandName) && !isInternalCommand(commandName);
+        }
+        throw new IllegalStateException("Log mode " + logMode + " not supported yet.");
+    }
+
+    private boolean isReadCommand(String commandName) {
+        return Stream.of(
+                "version", "list(.*)", "get(.*)", "(.*)-list-services", "uptime")
                 .filter(commandName::matches)
-                .findAny().isEmpty();
+                .findAny().isPresent();
+    }
+
+    private boolean isInternalCommand(String commandName) {
+        return commandName.matches("_(.*)");
     }
 
     private Optional<UserPrincipal> getUserPrincipal(Subject subject) {

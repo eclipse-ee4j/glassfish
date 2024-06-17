@@ -24,6 +24,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.hk2.api.ServiceLocator;
 
 import java.util.Properties;
+import org.glassfish.hk2.extras.ExtrasUtilities;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -38,6 +39,7 @@ public class GlassFishImpl implements GlassFish {
     public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator habitat, Properties gfProps) throws GlassFishException {
         this.gfKernel = gfKernel;
         this.habitat = habitat;
+        ExtrasUtilities.enableTopicDistribution(habitat);
         configure(gfProps);
     }
 

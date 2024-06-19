@@ -41,6 +41,7 @@ import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
@@ -124,7 +125,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 try {
                     Files.delete(Path.of(library.getURI()));
                 } catch (IOException e) {
-                    LOG.log(WARNING, () -> "Could not delete application library snapshot " + library.getURI(), e);
+                    LOG.log(WARNING, () -> "Could not delete application library snapshot " + library, e);
                 }
             }
         }
@@ -676,6 +677,25 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
             } catch (IOException e) {
                 return false;
             }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder(getClass().getSimpleName());
+            sb.append("[");
+            sb.append("originalSource=").append(originalSource).append(", ");
+            sb.append("source=").append(source);
+            if (attributes != null) {
+                sb.append(", ");
+                sb.append("size=").append(attributes.size());
+                FileTime lastModifiedTime = attributes.lastModifiedTime();
+                if (lastModifiedTime != null) {
+                    sb.append(", ");
+                    sb.append("lastModifiedTime=").append(lastModifiedTime);
+                }
+            }
+            sb.append("]");
+            return sb.toString();
         }
     }
 }

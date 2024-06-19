@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -529,6 +529,7 @@ public final class ServerSynchronizer implements PostConstruct {
                                     throws URISyntaxException {
         List<String> skip = new ArrayList<>();
         skip.add("databases");
+        skip.add("snapshots");
         synchronizeDirectory(payload, server, sr,
                                 env.getLibPath(), skip, SyncLevel.RECURSIVE);
     }

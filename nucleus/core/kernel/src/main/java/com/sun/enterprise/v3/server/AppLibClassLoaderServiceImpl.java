@@ -648,11 +648,14 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
         private File createSnapshot(ServerEnvironment serverEnvironment) {
             LOG.log(DEBUG, "createSnapshot()");
             File snapshotsDir = new File(serverEnvironment.getLibPath(), "snapshots");
+            File originalFile = new File(originalSource);
             File snapshot = null;
             try {
-                snapshot = Files.createTempFile(snapshotsDir.toPath(), "applib", ".jar").toFile();
+                String snapshotPrefix = FileUtils.removeExtension(originalFile) + "-";
+                String snapshotSuffix = FileUtils.getExtension(originalFile);
+                snapshot = Files.createTempFile(snapshotsDir.toPath(), snapshotPrefix, snapshotSuffix).toFile();
                 if (!copy(fileInputStream, snapshot)) {
-                    FileUtils.copy(new File(originalSource), snapshot);
+                    FileUtils.copy(originalFile, snapshot);
                 }
                 // Normally snapshots should be removed at server shutdown.
                 // This should remove snapshot if SIGTERM signal received.

@@ -43,9 +43,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.TypeLiteral;
-import org.glassfish.hk2.extras.ExtrasUtilities;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.hk2util.SimpleTopicDistributionService;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
@@ -142,8 +142,13 @@ public class JerseyContainerCommandService implements PostConstruct {
                 () -> this + ": Creating Jersey container for " + HttpHandler.class + " and " + config);
             final GrizzlyHttpContainer httpHandler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
             final ServiceLocator jerseyLocator = httpHandler.getApplicationHandler().getInjectionManager().getInstance(ServiceLocator.class);
-            ExtrasUtilities.enableTopicDistribution(jerseyLocator);
-            return new JerseyContainer() {
+        /*
+            We enable a temporary distribution service until the HK2 Extras package is fixed so that we can enable
+            the topic distribution service provided by HK2.
+        */
+        //ExtrasUtilities.enableTopicDistribution(jerseyLocator);
+        SimpleTopicDistributionService.enable(jerseyLocator);
+        return new JerseyContainer() {
                 @Override
                 public void service(Request request, Response response) throws Exception {
                     httpHandler.service(request, response);

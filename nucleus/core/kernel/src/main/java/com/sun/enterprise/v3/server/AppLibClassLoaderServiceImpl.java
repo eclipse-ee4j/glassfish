@@ -53,6 +53,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.event.RestrictTo;
@@ -119,15 +120,9 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 LOG.log(WARNING, () -> "Could not close class finder " + classFinder, e);
             }
         }
-        // Remove application libraries temporary snapshots
+        // Close application libraries.
         for (Library library : classFinderRegistry.keySet()) {
-            if (library.isSnapshot()) {
-                try {
-                    Files.delete(Path.of(library.getURI()));
-                } catch (IOException e) {
-                    LOG.log(WARNING, () -> "Could not delete application library snapshot " + library, e);
-                }
-            }
+           library.close();
         }
     }
 
@@ -205,7 +200,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 Library library = new Library(libURI);
                 ClassFinder classFinder = classFinderRegistry.get(library);
                 if (classFinder == null) {
-                    classFinder = new URLClassFinder(library.getURI().toURL(), commonClassLoader);
+                    ServerEnvironment serverEnvironment = serviceLocator.getService(ServerEnvironment.class);
+                    classFinder = new URLClassFinder(library.getURL(serverEnvironment), commonClassLoader);
                     classFinderRegistry.put(library, classFinder);
                 } else {
                     library.close();
@@ -485,9 +481,9 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
          *
          * @return the deployment time library URI
          */
-        public URI getURI() {
+        public URL getURL(ServerEnvironment serverEnvironment) throws MalformedURLException {
             if (source == null) {
-                File snapshot = createSnapshot();
+                File snapshot = createSnapshot(serverEnvironment);
                 if (snapshot != null) {
                     LOG.log(TRACE, "Created snapshot {0} for application library {1}",
                             snapshot.getAbsolutePath(), originalSource);
@@ -499,18 +495,17 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                     source = originalSource;
                 }
             }
-            return source;
-        }
-
-        public boolean isSnapshot() {
-            return source != originalSource;
+            return source.toURL();
         }
 
         /**
          * Closes associated file input stream and releases any system resources
          * associated with the stream.
+         * <p>
+         * Removes library snapshot if any.
          */
         public void close() {
+            // Close associated input stream
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
@@ -518,6 +513,18 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                     LOG.log(WARNING, () -> "Could not close input stream for application library " + originalSource, e);
                 }
             }
+            // Remove snapshot if any
+            if (hasSnapshot()) {
+                try {
+                    Files.delete(Path.of(source));
+                } catch (IOException e) {
+                    LOG.log(WARNING, () -> "Could not delete snapshot for library " + this, e);
+                }
+            }
+        }
+
+        private boolean hasSnapshot() {
+            return source != null && source != originalSource;
         }
 
         /**
@@ -638,11 +645,12 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
          *
          * @return an abstract pathname denoting a newly-created snapshot
          */
-        private File createSnapshot() {
+        private File createSnapshot(ServerEnvironment serverEnvironment) {
             LOG.log(DEBUG, "createSnapshot()");
+            File snapshotsDir = new File(serverEnvironment.getLibPath(), "snapshots");
             File snapshot = null;
             try {
-                snapshot = File.createTempFile("applib", ".jar");
+                snapshot = Files.createTempFile(snapshotsDir.toPath(), "applib", ".jar").toFile();
                 if (!copy(fileInputStream, snapshot)) {
                     FileUtils.copy(new File(originalSource), snapshot);
                 }

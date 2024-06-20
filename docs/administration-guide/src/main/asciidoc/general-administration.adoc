@@ -1075,6 +1075,7 @@ Status of MEjbApp is enabled
 Command show-component-status executed successfully.
 ----
 
+
 [[using-rest-interfaces-to-administer-glassfish-server]]
 
 === Using REST Interfaces to Administer {productName}
@@ -3157,4 +3158,25 @@ specify the type through the `-H` option as follows:
 * For JSON, specify `-H "Content-type: application/json"`.
 * For XML, specify `-H "Content-type: application/xml"`.
 * For form URL encoded, specify `-H "Content-type: application/x-www-form-urlencoded"`.
+
+[[log-executed-admin-commands]]
+=== Log executed admin commands
+
+It's possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.
+
+To enable this logging, set the system property `glassfish.commandrecorder.logmode` on the DAS server to one of the following values:
+
+* `ALL_COMMANDS` - will log all commands
+* `WRITE_COMMANDS` - will log all commands that modify server configuration
+* `INTERNAL_COMMANDS` - will log all commands that modify server configuration and also those that start with `_` (internal commands)
+* `READ_WRITE_COMMANDS` - will log all commands that modify server configuration or return info about the configuration
+* `NO_COMMAND` - do not log any command, this is the default value if the property not specified
+
+The log message will contain:
+
+* name of the admin user that executed the command
+* name of the command
+* arguments to the command
+
+The name and arguments can be copied and pasted to the asadmin CLI to repeat running the same command from the command line.
 

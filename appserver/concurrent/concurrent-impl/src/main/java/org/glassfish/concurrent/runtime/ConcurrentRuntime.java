@@ -35,6 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.glassfish.api.deployment.DeploymentContext;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -57,6 +58,7 @@ import org.glassfish.enterprise.concurrent.spi.ContextSetupProvider;
 import org.glassfish.enterprise.concurrent.spi.TransactionSetupProvider;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.api.WithDeploymentContext;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
@@ -162,7 +164,7 @@ public class ConcurrentRuntime {
                 toManagedThreadFactoryName(jndiName),
                 null,
                 config.getThreadPriority());
-        ManagedExecutorServiceImpl mes = new ManagedExecutorServiceImpl(jndiName.toString(),
+        DeploymentAwareManagedExecutorService managedExecutorService = new DeploymentAwareManagedExecutorService(jndiName.toString(),
                 managedThreadFactory,
                 config.getHungAfterSeconds() * 1000L, // in millis
                 config.isLongRunningTasks(),
@@ -173,12 +175,21 @@ public class ConcurrentRuntime {
                 config.getTaskQueueCapacity(),
                 contextService,
                 AbstractManagedExecutorService.RejectPolicy.ABORT);
+        managedExecutorService.setDeploymentContextSupplier(this::getCurrentDeploymentContext);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
             scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds(), config.isHungLoggerPrintOnce());
         }
-        return mes;
+        return managedExecutorService;
     }
 
+    DeploymentContext getCurrentDeploymentContext() {
+        Object container = invocationManager.getCurrentInvocation().getContainer();
+        if (container instanceof WithDeploymentContext) {
+            WithDeploymentContext containerWithContext = (WithDeploymentContext) container;
+            return containerWithContext.getDeploymentContext();
+        }
+        return null;
+    }
 
     public synchronized ManagedScheduledExecutorServiceImpl getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
         LOG.log(Level.FINE, "getManagedScheduledExecutorService(config={0})", config);

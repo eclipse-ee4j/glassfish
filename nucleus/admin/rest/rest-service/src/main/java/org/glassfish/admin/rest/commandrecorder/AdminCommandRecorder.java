@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.security.auth.Subject;
-import org.glassfish.admin.rest.events.CommandInvokedEvent;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.messaging.MessageReceiver;
 import org.glassfish.hk2.api.messaging.SubscribeTo;
 import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.internal.api.events.CommandInvokedEvent;
 import org.glassfish.security.common.UserPrincipal;
 import org.jvnet.hk2.annotations.Service;
 

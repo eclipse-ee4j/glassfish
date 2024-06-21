@@ -92,8 +92,9 @@ import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
 import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 
-import org.glassfish.admin.rest.events.CommandInvokedEvent;
-import org.glassfish.admin.rest.events.InvokeEventService;
+import org.glassfish.internal.api.events.CommandInvokedEvent;
+import org.glassfish.internal.api.events.InvokeEventService;
+
 
 
 /**
@@ -227,7 +228,7 @@ public class ResourceUtil {
 
         InvokeEventService.get()
                 .getCommandInvokedTopic()
-                .publish(new CommandInvokedEvent(commandName, parameters, subject));
+                .publish(new CommandInvokedEvent(commandName, parameters, subject, ResourceUtil.class.getSimpleName()));
 
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();

@@ -39,13 +39,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.admin.rest.events.CommandInvokedEvent;
-import org.glassfish.admin.rest.events.InvokeEventService;
 import org.glassfish.admin.rest.utils.SseCommandHelper;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.*;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.events.CommandInvokedEvent;
+import org.glassfish.internal.api.events.InvokeEventService;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.media.sse.SseFeature;
 
@@ -360,7 +360,7 @@ public class CommandResource {
         }
         InvokeEventService.get()
                 .getCommandInvokedTopic()
-                .publish(new CommandInvokedEvent(commandName.getName(), params, getSubject()));
+                .publish(new CommandInvokedEvent(commandName.getName(), params, getSubject(), this.getClass().getSimpleName()));
         commandInvocation.outbound(outbound).parameters(params).execute();
         ar = (ActionReporter) commandInvocation.report();
         fixActionReporterSpecialCases(ar);

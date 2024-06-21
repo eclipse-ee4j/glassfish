@@ -49,7 +49,10 @@ public class PersistenceHelper {
     }
 
     private static ResourceInfo getResourceInfo(DeploymentContext ctx, SimpleJndiName dataSourceName) {
-        dataSourceName = translateResourceReference(ctx, dataSourceName);
+        if (ctx != null) {
+            // ctx can be null e.g. in appclient
+            dataSourceName = translateResourceReference(ctx, dataSourceName);
+        }
         if (dataSourceName.isJavaApp()) {
             String applicationName = ctx.getCommandParameters(OpsParams.class).name();
             return new ResourceInfo(dataSourceName, applicationName);

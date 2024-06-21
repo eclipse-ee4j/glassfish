@@ -3164,7 +3164,7 @@ specify the type through the `-H` option as follows:
 
 It's possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.
 
-To enable this logging, set the system property `glassfish.commandrecorder.logmode` on the DAS server to one of the following values:
+To enable this logging, set the system property `glassfish.commandlogger.logmode` on the DAS server to one of the following values:
 
 * `ALL_COMMANDS` - will log all commands
 * `WRITE_COMMANDS` - will log all commands that modify server configuration
@@ -3172,11 +3172,10 @@ To enable this logging, set the system property `glassfish.commandrecorder.logmo
 * `READ_WRITE_COMMANDS` - will log all commands that modify server configuration or return info about the configuration
 * `NO_COMMAND` - do not log any command, this is the default value if the property not specified
 
-The log message will contain:
+The log message will be logged using `org.glassfish.extras.commandlogger.AdminCommandLogger` logger with `INFO` level, and will contain:
 
 * name of the admin user that executed the command
 * name of the command
 * arguments to the command
 
 The name and arguments can be copied and pasted to the asadmin CLI to repeat running the same command from the command line.
-

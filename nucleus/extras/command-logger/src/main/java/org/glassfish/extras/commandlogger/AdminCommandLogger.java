@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.admin.rest.commandrecorder;
+package org.glassfish.extras.commandlogger;
 
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
@@ -41,9 +41,9 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @RunLevel(value = StartupRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 @MessageReceiver({CommandInvokedEvent.class})
-public class AdminCommandRecorder {
+public class AdminCommandLogger {
 
-    private static final System.Logger logger = System.getLogger(AdminCommandRecorder.class.getName());
+    private static final System.Logger logger = System.getLogger(AdminCommandLogger.class.getName());
 
     public void receiveCommandInvokedEvent(@SubscribeTo CommandInvokedEvent event) {
         logCommand(event.getCommandName(), event.getParameters(), event.getSubject());
@@ -64,7 +64,6 @@ public class AdminCommandRecorder {
 
     private String constructCommandLine(String commandName, ParameterMap parameters) {
         final String DEFAULT_PARAM_KEY = "DEFAULT";
-        final StringBuilder commandLineBuilder = new StringBuilder();
         final Stream<String> namedParamsStream = parameters.entrySet().stream()
                 .filter(param -> !"userpassword".equals(param.getKey()))
                 .filter(param -> !DEFAULT_PARAM_KEY.equals(param.getKey()))
@@ -82,7 +81,7 @@ public class AdminCommandRecorder {
         ALL_COMMANDS, INTERNAL_COMMANDS, WRITE_COMMANDS, READ_WRITE_COMMANDS, NO_COMMAND;
 
         public static final LogMode DEFAULT = LogMode.WRITE_COMMANDS;
-        public static final String PROPERTY_NAME = "glassfish.commandrecorder.logmode";
+        public static final String PROPERTY_NAME = "glassfish.commandlogger.logmode";
 
         public static LogMode get() {
             final String logModeValue = TranslatedConfigView.expandValue("${" + LogMode.PROPERTY_NAME + "}");

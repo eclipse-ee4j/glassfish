@@ -288,5 +288,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Nuclues extras -->
+        <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>command-logger</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 </project>

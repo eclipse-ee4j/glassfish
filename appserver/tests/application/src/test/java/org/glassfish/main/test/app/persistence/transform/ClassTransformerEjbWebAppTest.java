@@ -31,8 +31,6 @@ import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-
-
 /**
  * Tests bytecode preprocessing in ASURLClassLoader.
  */

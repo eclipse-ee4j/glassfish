@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 
+import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerApplication;
+import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -32,9 +34,6 @@ import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnec
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerApplication;
-import org.glassfish.main.test.app.persistence.transform.webapp.ClassTransformerResource;
 
 /**
  * Tests bytecode preprocessing in WebappClassLoader.

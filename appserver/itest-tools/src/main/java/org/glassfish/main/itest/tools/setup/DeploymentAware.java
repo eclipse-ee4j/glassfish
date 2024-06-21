@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.test.setup;
+package org.glassfish.main.itest.tools.setup;
 
 import static java.lang.System.Logger.Level.INFO;
 
@@ -24,7 +24,7 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
- *
+ * Adds some helper methods as default interface methods related to creating deployments in tests.
  * @author Ondro Mihalyi
  */
 public interface DeploymentAware {

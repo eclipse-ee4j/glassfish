@@ -34,9 +34,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.itest.tools.setup.DeploymentAware;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
-import org.glassfish.main.test.setup.DeploymentAware;
 
 /**
  * Tests that JTA datasource in persistence.xml can be a resource reference

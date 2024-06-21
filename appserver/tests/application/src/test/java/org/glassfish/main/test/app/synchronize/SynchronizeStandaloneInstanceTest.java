@@ -32,7 +32,6 @@ import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-
 /**
  * Tests synchronization between DAS and standalone instance.
  */
@@ -58,6 +57,7 @@ public class SynchronizeStandaloneInstanceTest {
         try {
             assertThat(ASADMIN.exec("create-instance", "--node", "localhost-domain1", INSTANCE_NAME), asadminOK());
         } catch (AssertionError e) {
+            // cleanup on error, the instance is not going to be deleted otherwise
             ASADMIN.exec("delete-instance", INSTANCE_NAME);
             throw e;
         }

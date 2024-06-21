@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2023,2024 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -29,21 +29,27 @@ if [ ${AS_JAVA} ]; then
 fi
 
 start_as_main_process () {
-    local COMMAND
-
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
       exec java -jar "$ASADMIN_JAR" start-domain --help
     fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
-    # The first and last line will not be part of the command to execute, we'll remove them later.
+    # All lines before and including a line that starts with Dump (Dump of JVM Invocation line...) will be ignored.
+    # The last line will not be part of the command to execute, we'll it them later.
     # If command fails, the last item in the array will be "FAILED"
-    DRY_RUN_OUTPUT=()
+    local DRY_RUN_OUTPUT=()
+    local SKIP_LINES_UNTIL_DUMP=y
     while read COM; do
-      DRY_RUN_OUTPUT+=("$COM");
+      if [[ "$SKIP_LINES_UNTIL_DUMP" == y ]]; then
+        if [[ "$COM" == Dump* ]]; then
+          SKIP_LINES_UNTIL_DUMP=n
+        fi
+      else
+        DRY_RUN_OUTPUT+=("$COM");
+      fi
     done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo "FAILED" )
-    OUTPUT_LENGTH=${#DRY_RUN_OUTPUT[@]}
-    LAST_LINE=${DRY_RUN_OUTPUT[${OUTPUT_LENGTH}-1]}
+    local OUTPUT_LENGTH=${#DRY_RUN_OUTPUT[@]}
+    local LAST_LINE=${DRY_RUN_OUTPUT[${OUTPUT_LENGTH}-1]}
 
     # If asadmin command failed (last line is FAILED), we execute it again to show
     #   the output to the user and exit
@@ -52,8 +58,8 @@ start_as_main_process () {
         exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --dry-run "$@"
       else
         # If all OK, execute the command to start GlassFish.
-        # Remove the first and last line as they aren't part of the command.
-        FINAL_COMMAND=(${DRY_RUN_OUTPUT[@]:1:${OUTPUT_LENGTH}-2})
+        # Remove the last line as they aren't part of the command.
+        local FINAL_COMMAND=(${DRY_RUN_OUTPUT[@]:0:${OUTPUT_LENGTH}-2})
         exec "${FINAL_COMMAND[@]}"
     fi
 

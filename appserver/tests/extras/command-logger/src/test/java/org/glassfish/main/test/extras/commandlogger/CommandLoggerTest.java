@@ -16,24 +16,19 @@ package org.glassfish.main.test.extras.commandlogger;
 
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.Matchers.not;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
-import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-import org.junit.jupiter.api.Test;
+import org.glassfish.main.itest.tools.asadmin.CollectLogFiles;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  *
@@ -43,24 +38,69 @@ public class CommandLoggerTest {
 
     private static final Asadmin ASADMIN = getAsadmin();
 
-    @Test
-    public void testLogWriteCommands() throws IOException {
-        assertThat(ASADMIN.exec("create-system-properties", "--target=server", "glassfish.commandlogger.logmode=WRITE_COMMANDS"), asadminOK());
-        ASADMIN.exec("delete-system-property", "X");
-        AsadminResult result = ASADMIN.exec("collect-log-files");
-        assertThat(result, asadminOK());
-        String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".\n");
-        assertNotNull(path, () -> "zip file path parsed from " + result.getStdOut());
-        File file = new File(path);
-        assertThat(file.getName(), endsWith(".zip"));
-        final ZipFile zipFile = new ZipFile(file);
-        final ZipEntry entry = zipFile.getEntry("logs/server/server.log");
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)));
-        List<String> lines = new ArrayList<>();
-        while (reader.ready()) {
-            lines.add(reader.readLine());
+    @ParameterizedTest
+    @CsvSource(useHeadersInDisplayName = true,
+            value = {
+                "LOG_MODE               , LOG_WRITE , LOG_READ , LOG_INTERNAL",
+                "WRITE_COMMANDS         , true      , false    , false       ",
+                "READ_WRITE_COMMANDS    , true      , true     , false       ",
+                "INTERNAL_COMMANDS      , true      , false    , true        ",
+                "ALL_COMMANDS           , true      , true     , true        ",
+                "NO_COMMAND             , false     , false    , false       ",
+                "                       , false     , false    , false       ",}
+    )
+    public void testLogWriteCommands(String logMode, boolean logWriteOp, boolean logReadOp, boolean logInternalOp) throws IOException {
+        if (logMode != null) {
+            assertThat(ASADMIN.exec("create-system-properties", "--target=server", "glassfish.commandlogger.logmode=" + logMode), asadminOK());
+        } else {
+            ASADMIN.exec("delete-system-property", "--target=server", "glassfish.commandlogger.logmode");
         }
-        assertThat("log", lines, hasItem(containsString("delete-system-property X")));
+        clearLogFile();
+
+        // execute some write command, it doesn't have to complete successfully
+        ASADMIN.exec("delete-system-property", "X");
+        // execute some read command
+        ASADMIN.exec("list-applications", "--long");
+        // exxecute some internal command
+        ASADMIN.exec("__locations");
+
+        final List<String> lines = new CollectLogFiles()
+                .collect()
+                .getServerLogLines();
+
+        if (logWriteOp) {
+            assertCommandLogged(lines, "admin", "delete-system-property X");
+        } else {
+            assertCommandNotLogged(lines, "delete-system-property");
+        }
+
+        if (logReadOp) {
+            assertCommandLogged(lines, "admin", "list-applications --long");
+        } else {
+            assertCommandNotLogged(lines, "list-applications");
+        }
+
+        if (logInternalOp) {
+            assertCommandLogged(lines, "admin", "__locations");
+        } else {
+            assertCommandNotLogged(lines, "__locations");
+        }
+
+    }
+
+    private void clearLogFile() {
+        assertThat(ASADMIN.exec("rotate-log", "--target=server"), asadminOK());
+    }
+
+    private void assertCommandNotLogged(final List<String> lines, String command) {
+        assertThat("log", lines, everyItem(not(containsString(command))));
+    }
+
+    private void assertCommandLogged(final List<String> lines, String user, String fullCommand) {
+        assertThat("server.log", lines, hasItem(allOf(containsString(user),
+                containsString(fullCommand)
+        )
+        ));
     }
 
 }

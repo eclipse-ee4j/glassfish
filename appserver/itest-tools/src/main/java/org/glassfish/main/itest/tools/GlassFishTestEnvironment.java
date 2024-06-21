@@ -16,6 +16,8 @@
 
 package org.glassfish.main.itest.tools;
 
+import static org.glassfish.main.itest.tools.TestUtilities.getConfigBoolean;
+
 import jakarta.ws.rs.client.Client;
 
 import java.io.File;
@@ -82,7 +84,8 @@ public class GlassFishTestEnvironment {
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
         }
         // This is the absolutely first start - if it fails, all other starts will fail too.
-        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain", "--debug"), asadminOK());
+        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain",
+                getConfigBoolean("glassfish.suspend") ? "--suspend" : "--debug"), asadminOK());
     }
 
 

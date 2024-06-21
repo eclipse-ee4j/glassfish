@@ -28,7 +28,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-       </dependency>
+        </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -74,6 +74,11 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>

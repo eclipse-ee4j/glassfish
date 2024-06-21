@@ -80,7 +80,7 @@ public class AdminCommandLogger {
     private static enum LogMode {
         ALL_COMMANDS, INTERNAL_COMMANDS, WRITE_COMMANDS, READ_WRITE_COMMANDS, NO_COMMAND;
 
-        public static final LogMode DEFAULT = LogMode.WRITE_COMMANDS;
+        public static final LogMode DEFAULT = LogMode.NO_COMMAND;
         public static final String PROPERTY_NAME = "glassfish.commandlogger.logmode";
 
         public static LogMode get() {
@@ -120,7 +120,9 @@ public class AdminCommandLogger {
 
     private boolean isReadCommand(String commandName) {
         return Stream.of(
-                "version", "list(.*)", "get(.*)", "(.*)-list-services", "uptime")
+                "attach", "backup-domain", "collect-log-files", "export(.*)", "generate-jvm-report", "get(.*)",
+                "jms-ping", "list(.*)", "login", "monitor", "ping(.*)", "show(.*)",
+                "uptime", "validate(.*)", "verify(.*)", "version", "(.*)-list-services")
                 .filter(commandName::matches)
                 .findAny().isPresent();
     }

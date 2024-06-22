@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,43 +17,6 @@
 
 -->
 
-<!--
-
-Usage:
-
-Run full TCK:
-
-mvn clean clean
-
-
-Run full TCK, debugging remote GlassFish (suspends on port 9009)
-
-mvn clean install -Dglassfish.suspend
-
-
-Run full TCK, debugging client TCK
-
-mvn clean install -Dsuspend-tck
-
-
-Run full TCK with security manager (deprecated in principal, but still needed for EE 10 to pass)
-
-mvn clean install -Dglassfish.security.manager
-
-
-Run all tests in test class
-
-mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClient.java"
-
-
-Run single test:
-
-mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.java#validateNoInvalidStates_from_standalone"
-
-
-
--->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -66,324 +29,81 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
     <artifactId>glassfish-external-tck-authorization</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: Authorization</name>
+    <name>TCK: authorization</name>
+
+
+    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta authorization standalone TCK</description>
 
     <properties>
-        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
-        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        <tck.home>${project.build.directory}/authorization-tck</tck.home>
-        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
-        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
-        <port.admin>14848</port.admin>
-        <port.derby>11527</port.derby>
-        <port.http>18080</port.http>
-        <port.https>18181</port.https>
-        <port.jms>17676</port.jms>
-        <port.jmx>18686</port.jmx>
-        <port.orb>13700</port.orb>
-        <port.orb.mutual>13920</port.orb.mutual>
-        <port.orb.ssl>13820</port.orb.ssl>
-        <port.harness.log>12000</port.harness.log>
+        <tck.root>${project.build.directory}</tck.root>
+        <maven.executable>${maven.home}/bin/mvn</maven.executable>
+        <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.main.distributions</groupId>
-            <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
-            <type>zip</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>jakarta-authorization-tck</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>download-authorization-tck</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>unpack-glassfish</id>
+                        <id>unpack</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>unpack-dependencies</goal>
+                            <goal>unpack</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>glassfish</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-tck</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>jakarta-authorization-tck</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.tests.tck</groupId>
+                                    <artifactId>jakarta-authorization-tck</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${tck.root}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>${ant.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant-contrib</groupId>
-                        <artifactId>ant-contrib</artifactId>
-                        <version>1.0b3</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>ant</groupId>
-                                <artifactId>ant</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>prepare-tck-and-glassfish</id>
-                        <phase>pre-integration-test</phase>
-                        <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
-
-                                <!-- Change configuration -->
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="s1as\.admin\.port=.*"
-                                    replace="s1as\.admin\.port=${port.admin}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="orb\.port=.*"
-                                    replace="orb\.port=${port.orb}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="database\.port=.*"
-                                    replace="database\.port=${port.derby}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="webServerPort=.*"
-                                    replace="webServerPort=${port.http}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="securedWebServicePort=.*"
-                                    replace="securedWebServicePort=${port.https}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="harness\.log\.port=.*"
-                                    replace="harness\.log\.port=${port.harness.log}" />
-
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="javaee\.level=.*"
-                                    replace="javaee\.level=full" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="jacc\.home=.*"
-                                    replace="jacc\.home=${glassfish.home}/glassfish" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="report\.dir=.*"
-                                    replace="report\.dir=${tck.home}/jacctckreport/jacctck" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="work\.dir=.*"
-                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
-
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="work\.dir=.*"
-                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
-
-                                <!-- Run just selected subset tests -->
-                                <replaceregexp file="${tck.home}/bin/build.xml" byline="true"
-                                    match="&lt;/project&gt;"
-                                    replace="&lt;property name=&quot;all.test.dir&quot; value=&quot;com/sun/ts/tests/jacc/,com/sun/ts/tests/signaturetest/jacc,com/sun/ts/tests/common/vehicle/&quot; /&gt; &lt;/project&gt;" />
-
-                                <limit maxwait="60">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="delete-domain"/>
-                                        <arg value="domain1" />
-                                    </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="create-domain"/>
-                                        <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
-                                        <arg value="--user=admin" />
-                                        <arg value="--nopassword" />
-                                        <arg value="domain1" />
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="start-domain"/>
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" if:set="glassfish.security.manager" failonerror="true">
-                                        <arg value="create-jvm-options" />
-                                        <arg value="--port=${port.admin}" />
-                                        <arg value="&quot;-Djava.security.manager&quot;" />
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-
-                                    <if>
-                                        <isset property="jacoco.version" />
-                                        <then>
-                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                                <arg value="create-jvm-options" />
-                                                <arg value="--port=${port.admin}" />
-                                                <arg value="&quot;-javaagent\:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=${jacoco.includes}&quot;" />
-                                                <env key="AS_JAVA" value="${java.home}"/>
-                                            </exec>
-                                        </then>
-                                    </if>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="stop-domain"/>
-                                        <arg value="domain1"/>
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-                                </limit>
-                                <mkdir dir="${tck.home}/jacctckreport"/>
-                                <mkdir dir="${tck.home}/jacctckreport/jacctck"/>
-
-                                <replace file="${tck.home}/bin/xml/ts.top.import.xml">
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
-                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
-                                <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
-                                </replace>
-
-                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
-                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
-                                <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008"/>]]></replacevalue>
-                                </replace>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>configure-tck-tests</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
-                                <limit maxwait="20">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="start-domain"/>
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-                                </limit>
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
-                                    <arg value="config.vi" />
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                    <env key="JAVA_HOME" value="${java.home}"/>
-                                    <env key="tck.home" value="${tck.home}"/>
-                                </exec>
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
-                                    <arg value="enable.jacc"  />
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                    <env key="JAVA_HOME" value="${java.home}"/>
-                                    <env key="tck.home" value="${tck.home}"/>
-                                </exec>
-
-                                <!-- Restart GlassFish in debug mode if so requested -->
-                                <sequential if:set="glassfish.suspend">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="stop-domain" />
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-                                    <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="start-domain"/>
-                                        <arg value="--suspend" if:set="glassfish.suspend"/>
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-                                </sequential>
-                            </target>
-                        </configuration>
-                    </execution>
-
-                     <execution>
-                        <id>run-tck-tests</id>
                         <phase>integration-test</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>exec</goal>
                         </goals>
-                        <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
-
-                                <echo level="info" message="Start running all tests" />
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
-                                    <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="deploy"/>
-                                    <arg value="run.all" unless:set="run.test"/>
-                                    <arg value="runclient" if:set="run.test" />
-                                    <env key="LC_ALL" value="C" />
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                    <env key="JAVA_HOME" value="${java.home}"/>
-                                </exec>
-
-                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="stop-domain" />
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                </exec>
-
-                                <if>
-                                    <not>
-                                        <equals arg1="${testResult}" arg2="0" />
-                                    </not>
-                                    <then>
-                                        <echo message="Running tests failed." />
-                                        <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
-                                        <fail status="${testResult}" message="${contents}" />
-                                    </then>
-                                </if>
-
-                            </target>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <executable>${maven.executable}</executable>
+                    <arguments>
+                        <argument>-B</argument>
+                        <argument>-e</argument>
+                        <argument>-s</argument>
+                        <argument>${maven.settings.xml}</argument>
+                        <argument>-f</argument>
+                        <argument>${tck.root}/authorization-tck-3.0.0/tck/pom.xml</argument>
+                        <argument>clean</argument>
+                        <argument>install</argument>
+                        <argument>-Dglassfish.version=${glassfish.version}</argument>
+                    </arguments>
+                    <environmentVariables>
+                        <LC_ALL>C</LC_ALL>
+                    </environmentVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>

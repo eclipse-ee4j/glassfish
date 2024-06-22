@@ -97,6 +97,7 @@
                         <argument>install</argument>
                         <argument>-Dglassfish.version=${glassfish.version}</argument>
                         <argument>-Dmojarra.version=${mojarra.version}</argument>
+                        <argument>-Dfaces.version=4.1.0</argument>
                     </arguments>
                     <environmentVariables>
                         <LC_ALL>C</LC_ALL>

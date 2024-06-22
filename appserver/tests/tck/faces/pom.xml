@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -92,7 +92,7 @@
                         <argument>-s</argument>
                         <argument>${maven.settings.xml}</argument>
                         <argument>-f</argument>
-                        <argument>${tck.root}/faces-tck-4.0.3/tck/pom.xml</argument>
+                        <argument>${tck.root}/faces-tck-4.1.0/tck/pom.xml</argument>
                         <argument>clean</argument>
                         <argument>install</argument>
                         <argument>-Dglassfish.version=${glassfish.version}</argument>

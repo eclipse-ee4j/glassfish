@@ -119,6 +119,9 @@
          -->
         <profile>
             <id>fastest</id>
+            <properties>
+                <cyclonedx.skip>true</cyclonedx.skip>
+            </properties>
             <modules>
                 <module>qa</module>
                 <module>nucleus</module>

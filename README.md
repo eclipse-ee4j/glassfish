@@ -36,6 +36,8 @@ The Zip distributions can be found on following paths:
 You can use also some maven optimizations, see [Maven documentation](https://maven.apache.org/ref/3.9.5/maven-embedder/cli.html).
 Especially `-am`, `-amd`, `-f`, `-pl`, `-rf` and their combinations are useful.
 
+If you use Maven 3.9+, we recommend that you copy the `.mvn/maven.config.template` file into `.mvn/maven.config` and uncomment one of the options there or customize the options as you need. Then you can just run `mvn clean install` and the options in `maven.config` will be applied automatically. Or with just `mvn`, the default goal will be run with those options. See [Configuring Maven Documentation](https://maven.apache.org/configure.html)
+
 If you want to see more logs you can use the `-Dtest.logLevel=FINEST` option set to an appropriate log level.
 Note that this applies just for tests which are executed by Maven and which use the **GlassFish Java Util Logging Extension (GJULE)**.
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,8 +31,8 @@
     <name>TCK: Install Jakarta Authorization TCK</name>
 
     <properties>
-        <tck.test.authorization.file>jakarta-authorization-tck-2.1.0.zip</tck.test.authorization.file>
-        <tck.tests.authorization.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.authorization.file}</tck.tests.authorization.url>
+        <tck.test.authorization.file>jakarta-authorization-tck-3.0.0.zip</tck.test.authorization.file>
+        <tck.tests.authorization.url>https://download.eclipse.org/jakartaee/authorization/3.0/${tck.test.authorization.file}</tck.tests.authorization.url>
     </properties>
 
     <build>

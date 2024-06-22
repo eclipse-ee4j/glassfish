@@ -16,20 +16,41 @@
 
 package org.glassfish.main.jul.handler;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 
 /**
+ * The buffer for log records.
+ * <p>
+ * If it is full and another record is comming to the buffer, the record will wait until the
+ * buffer would have a free capacity, but only for a maxWait seconds.
+ * <p>
+ * If the buffer would not have free capacity even after the maxWait time, the buffer will be
+ * automatically cleared, the incomming record will be lost and there will be a stacktrace in
+ * standard error output - but that may be redirected to JUL again, so this must be reliable.
+ * <ul>
+ * <li>After this error handling procedure the logging will be available again in full capacity
+ * but it's previous unprocessed log records would be lost.
+ * <li>If the maxWait is lower than 1, the calling thread would be blocked until some records would
+ * be processed. It may remain blocked forever.
+ * </ul>
+ *
  * @author David Matejcek
  */
 class LogRecordBuffer {
 
-    private final int capacity;
-    private final int maxWait;
-    private final ArrayBlockingQueue<GlassFishLogRecord> pendingRecords;
+    private final BlockingQueue<GlassFishLogRecord> pendingRecords = new LinkedBlockingQueue<>();
+    private final CapacitySemaphore availableCapacity = new CapacitySemaphore();
+    private final ReentrantLock lock = new ReentrantLock();
+
+    private volatile int capacity;
+    private volatile int maxWait;
 
 
     /**
@@ -42,7 +63,7 @@ class LogRecordBuffer {
      *
      * @param capacity capacity of the buffer.
      */
-    public LogRecordBuffer(final int capacity) {
+    LogRecordBuffer(final int capacity) {
         this(capacity, 0);
     }
 
@@ -67,10 +88,42 @@ class LogRecordBuffer {
      * @param maxWait maximal time in seconds to wait for the free capacity. If &lt; 1, can wait
      *            forever.
      */
-    public LogRecordBuffer(final int capacity, final int maxWait) {
+    LogRecordBuffer(final int capacity, final int maxWait) {
         this.capacity = capacity;
         this.maxWait = maxWait;
-        this.pendingRecords = new ArrayBlockingQueue<>(capacity);
+
+        this.availableCapacity.release(capacity);
+    }
+
+
+    /**
+     * Reconfigures the buffer.
+     *
+     * @param newCapacity capacity of the buffer.
+     * @param newMaxWait maximal time in seconds to wait for the free capacity. If &lt; 1, can wait
+     *            forever.
+     */
+    public void reconfigure(final int newCapacity, final int newMaxWait) {
+        if (maxWait != newMaxWait) {
+            maxWait = newMaxWait;
+        }
+
+        int permits = newCapacity - capacity;
+        if (permits == 0) {
+            return;
+        }
+
+        lock.lock();
+        try {
+            if (permits > 0) {
+                availableCapacity.release(permits);
+            } else {
+                availableCapacity.reducePermits(Math.abs(permits));
+            }
+            capacity = newCapacity;
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -78,17 +131,23 @@ class LogRecordBuffer {
      * @return true if there are not pending records to provide.
      */
     public boolean isEmpty() {
-        return this.pendingRecords.isEmpty();
+        return pendingRecords.isEmpty();
     }
 
 
+    /**
+     * @return count of records in the buffer waiting to be processed.
+     */
     public int getSize() {
-        return this.pendingRecords.size();
+        return pendingRecords.size();
     }
 
 
+    /**
+     * @return maximal count of records in the buffer waiting to be processed.
+     */
     public int getCapacity() {
-        return this.capacity;
+        return capacity;
     }
 
 
@@ -98,21 +157,33 @@ class LogRecordBuffer {
      * @return {@link GlassFishLogRecord} or null if interrupted.
      */
     public GlassFishLogRecord pollOrWait() {
+        GlassFishLogRecord logRecord = null;
         try {
-            return this.pendingRecords.take();
-        } catch (final InterruptedException e) {
-            return null;
+            logRecord = pendingRecords.take();
+            availableCapacity.release();
+        } catch (InterruptedException e) {
+            // do nothing
         }
+        return logRecord;
     }
 
     /**
      * @return null if there are no pending records, first in the buffer otherwise.
      */
     public GlassFishLogRecord poll() {
-        return this.pendingRecords.poll();
+        GlassFishLogRecord logRecord = pendingRecords.poll();
+        if (logRecord != null) {
+            availableCapacity.release();
+        }
+        return logRecord;
     }
 
 
+    /**
+     * Adds the record to the buffer.
+     *
+     * @param record
+     */
     public void add(final GlassFishLogRecord record) {
         if (maxWait > 0) {
             addWithTimeout(record);
@@ -128,23 +199,44 @@ class LogRecordBuffer {
      */
     private void addWithTimeout(final GlassFishLogRecord record) {
         try {
-            if (this.pendingRecords.offer(record)) {
-                return;
-            }
-            if (this.pendingRecords.offer(record, this.maxWait, TimeUnit.SECONDS)) {
+            if (availableCapacity.tryAcquire(maxWait, TimeUnit.SECONDS)) {
+                pendingRecords.add(record);
                 return;
             }
         } catch (final InterruptedException e) {
             // do nothing
         }
 
-        this.pendingRecords.clear();
-        // note: the record is not meaningful for the message. The cause is in another place.
-        this.pendingRecords.offer(new GlassFishLogRecord(Level.SEVERE, //
-            this + ": The buffer was forcibly cleared after " + maxWait + " s timeout for adding another log record." //
-                + " Log records were lost." //
-                + " It might be caused by a recursive deadlock," //
-                + " you can increase the capacity or the timeout to avoid this.", false));
+        lock.lock();
+        try {
+            try {
+                if (availableCapacity.tryAcquire(0, TimeUnit.SECONDS)) {
+                    pendingRecords.add(record);
+                    return;
+                }
+            } catch (InterruptedException e) {
+                // do nothing
+            }
+
+            int currentCapacity = capacity;
+
+            availableCapacity.reducePermits(currentCapacity);
+
+            pendingRecords.clear();
+
+            availableCapacity.drainPermits();
+
+            // Note: the record is not meaningful for the message. The cause is in another place.
+            pendingRecords.add(new GlassFishLogRecord(Level.SEVERE, //
+                    this + ": The buffer was forcibly cleared after " + maxWait + " s timeout for adding another log record." //
+                            + " Log records were lost." //
+                            + " It might be caused by a recursive deadlock," //
+                            + " you can increase the capacity or the timeout to avoid this.", false));
+
+            availableCapacity.release(currentCapacity - 1);
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -152,12 +244,15 @@ class LogRecordBuffer {
      * This prevents losing any records, but may end up in deadlock if the capacity is reached.
      */
     private void addWithUnlimitedWaiting(final GlassFishLogRecord record) {
-        if (this.pendingRecords.offer(record)) {
-            return;
-        }
         try {
+            if (availableCapacity.tryAcquire(0, TimeUnit.SECONDS)) {
+                pendingRecords.add(record);
+                return;
+            }
+
             Thread.yield();
-            this.pendingRecords.put(record);
+            availableCapacity.acquire();
+            pendingRecords.add(record);
         } catch (final InterruptedException e) {
             // do nothing
         }
@@ -167,10 +262,22 @@ class LogRecordBuffer {
     /**
      * Returns simple name of this class and size/capacity
      *
-     * @return ie.: LogRecordBuffer@2b488078[5/10000]
+     * @return ie.: LogRecordBuffer@2b488078[usage=5/10000, maxWaitTime=60 s]
      */
     @Override
     public String toString() {
-        return super.toString() + "[" + getSize() + "/" + getCapacity() + "]";
+        return super.toString() + "[usage=" + getSize() + "/" + getCapacity() + ", maxWaitTime=" + maxWait + " s]";
+    }
+
+    private static class CapacitySemaphore extends Semaphore {
+
+        public CapacitySemaphore() {
+            super(0, true);
+        }
+
+        @Override
+        protected void reducePermits(int reduction) {
+            super.reducePermits(reduction);
+        }
     }
 }

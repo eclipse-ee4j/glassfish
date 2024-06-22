@@ -9,6 +9,21 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## May 31, 2024 -- Eclipse GlassFish 7.0.15 Available
+
+We are very happy to bring you Eclipse GlassFish 7.0.15.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In this release we updated and thoroughly tested a lot of important components, including Exousia (Security), Mojarra (Faces), Jersey (REST) and Yasson/Parsson (JSON).
+
+Testing has been improved by fixing a number of issues within the tests itself.
+
+Finally, we fixed a number of errors in the documentation.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+
 ## March 31, 2024 -- Eclipse GlassFish 7.0.14 Available
 
 We are very happy to bring you Eclipse GlassFish 7.0.14.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +19,6 @@ package org.glassfish.appclient.client.acc;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
@@ -30,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
 import org.glassfish.appclient.client.acc.config.LogService;
 import org.glassfish.main.jul.GlassFishLogger;
 
@@ -127,17 +124,11 @@ public class ACCLogger extends GlassFishLogger {
     }
 
     private static void reviseLogger(final Logger logger, final Level level, final Handler handler) {
-        AccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public Object run() {
-                if (!logger.isLoggable(level)) {
-                    logger.setLevel(level);
-                }
-                if (handler != null) {
-                    logger.addHandler(handler);
-                }
-                return null;
-            }
-        });
+        if (!logger.isLoggable(level)) {
+            logger.setLevel(level);
+        }
+        if (handler != null) {
+            logger.addHandler(handler);
+        }
     }
 }

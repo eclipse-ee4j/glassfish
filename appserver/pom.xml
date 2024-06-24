@@ -99,7 +99,7 @@
         <soteria.version>3.0.3</soteria.version>
         <exousia.version>2.1.2</exousia.version>
         <epicyro.version>3.0.0</epicyro.version>
-        <nimbus.version>9.39.1</nimbus.version>
+        <nimbus.version>9.40</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->

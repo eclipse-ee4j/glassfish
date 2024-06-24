@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,7 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -33,46 +33,32 @@
     <properties>
         <project.build.downloadedSources>${project.build.directory}/downloaded-sources</project.build.downloadedSources>
         <javatest.source.url>https://github.com/openjdk/jtharness/archive/refs/tags/jt5.0.zip</javatest.source.url>
-    </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-authorization-tck</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
+        <tck.test.authorization.file>jakarta-authorization-tck-2.1.0.zip</tck.test.authorization.file>
+        <tck.tests.authorization.url>https://download.eclipse.org/jakartaee/authorization/2.1/${tck.test.authorization.file}</tck.tests.authorization.url>
+    </properties>
 
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-authorization-tck</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                            <includes>authorization-tck/lib/javatest.jar</includes>
-                            <includeArtifactIds>jakarta-authorization-tck</includeArtifactIds>
-                            <includeGroupIds>org.glassfish.main.tests.tck</includeGroupIds>
-                            <fileMappers>
-                                <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
-                            </fileMappers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
+                    <execution>
+                        <id>download-authorization-tck</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${tck.tests.authorization.url}</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <fileMappers>
+                                <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+                            </fileMappers>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>download-javatest-src</id>
                         <phase>generate-sources</phase>
@@ -87,6 +73,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -115,7 +103,8 @@
                         </goals>
                         <configuration>
                             <file>${project.build.directory}/javatest.jar</file>
-                            <sources>${project.build.directory}/javatest-sources.jar</sources>
+                            <sources>
+                                ${project.build.directory}/javatest-sources.jar</sources>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
                             <version>${project.version}</version>
@@ -123,7 +112,7 @@
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
-                    
+
                     <execution>
                         <id>install-javatest-as-5</id>
                         <phase>package</phase>
@@ -132,7 +121,8 @@
                         </goals>
                         <configuration>
                             <file>${project.build.directory}/javatest.jar</file>
-                            <sources>${project.build.directory}/javatest-sources.jar</sources>
+                            <sources>
+                                ${project.build.directory}/javatest-sources.jar</sources>
                             <groupId>javatest</groupId>
                             <artifactId>javatest</artifactId>
                             <version>5.0</version>

@@ -94,6 +94,8 @@
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
         <hk2.version>3.1.0</hk2.version>
         <hk2.plugin.version>3.1.0</hk2.plugin.version>
+<!--        <hk2.version>3.1.1-SNAPSHOT</hk2.version>
+        <hk2.plugin.version>3.1.1-SNAPSHOT</hk2.plugin.version>-->
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
@@ -879,6 +881,7 @@
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
+                            <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

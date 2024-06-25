@@ -76,6 +76,7 @@
         <module>resources</module>
         <module>featuresets</module>
         <module>xmlbind-annotations</module>
+        <module>extras</module>
     </modules>
 
     <scm>

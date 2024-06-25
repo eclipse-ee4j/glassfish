@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,8 +15,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.admin.rest.utils;
+
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -91,6 +92,11 @@ import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
 import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 
+import org.glassfish.internal.api.events.CommandInvokedEvent;
+import org.glassfish.internal.api.events.InvokeEventService;
+
+
+
 /**
  * Resource utilities class. Used by resource templates, <code>TemplateListOfResource</code> and
  * <code>TemplateRestResource</code>
@@ -98,6 +104,7 @@ import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
  * @author Rajeshwar Patil
  */
 public class ResourceUtil {
+
     private static final String DAS_LOOK_FOR_CERT_PROPERTY_NAME = "org.glassfish.admin.DASCheckAdminCert";
     private static final String MESSAGE_PARAMETERS = "messageParameters";
     private static RestConfig restConfig = null;
@@ -139,9 +146,9 @@ public class ResourceUtil {
     }
 
     /**
-     * Adjust the input parameters. In case of POST and DELETE methods, user can provide name, id or DEFAULT parameter for
-     * primary parameter(i.e the object to create or delete). This method is used to rename primary parameter name to
-     * DEFAULT irrespective of what user provides.
+     * Adjust the input parameters. In case of POST and DELETE methods, user can provide name, id or DEFAULT parameter
+     * for primary parameter(i.e the object to create or delete). This method is used to rename primary parameter name
+     * to DEFAULT irrespective of what user provides.
      */
     public static void adjustParameters(Map<String, String> data) {
         if (data != null) {
@@ -155,9 +162,9 @@ public class ResourceUtil {
     }
 
     /**
-     * Adjust the input parameters. In case of POST and DELETE methods, user can provide id or DEFAULT parameter for primary
-     * parameter(i.e the object to create or delete). This method is used to rename primary parameter name to DEFAULT
-     * irrespective of what user provides.
+     * Adjust the input parameters. In case of POST and DELETE methods, user can provide id or DEFAULT parameter for
+     * primary parameter(i.e the object to create or delete). This method is used to rename primary parameter name to
+     * DEFAULT irrespective of what user provides.
      */
     public static void defineDefaultParameters(Map<String, String> data) {
         if (data != null) {
@@ -218,6 +225,11 @@ public class ResourceUtil {
      * @return
      */
     public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject, boolean managedJob) {
+
+        InvokeEventService.get()
+                .getCommandInvokedTopic()
+                .publish(new CommandInvokedEvent(commandName, parameters, subject, ResourceUtil.class.getSimpleName()));
+
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
         final CommandInvocation commandInvocation = cr.getCommandInvocation(commandName, ar, subject);
@@ -362,7 +374,8 @@ public class ResourceUtil {
             if (value.equals(Constants.VAR_PARENT)) {
                 processParams.put(entry.getKey(), pathSegments.get(pathSegments.size() - 2).getPath());
             } else if (value.startsWith(Constants.VAR_GRANDPARENT)) {
-                int number = (value.equals(Constants.VAR_GRANDPARENT)) ? 1 : // no number given
+                int number = (value.equals(Constants.VAR_GRANDPARENT)) ? 1
+                        : // no number given
                         Integer.parseInt(value.substring(Constants.VAR_GRANDPARENT.length()));
 
                 processParams.put(entry.getKey(), pathSegments.get(pathSegments.size() - (number + 2)).getPath());
@@ -374,8 +387,8 @@ public class ResourceUtil {
     }
 
     /**
-     * Constructs and returns the resource method meta-data. This method is called to get meta-data in case of update method
-     * (POST).
+     * Constructs and returns the resource method meta-data. This method is called to get meta-data in case of update
+     * method (POST).
      *
      * @param configBeanModel the config bean associated with the resource.
      * @return MethodMetaData the meta-data store for the resource method.
@@ -639,13 +652,13 @@ public class ResourceUtil {
 
     /**
      * <p>
-     * This method takes any query string parameters and adds them to the specified map. This is used, for example, with the
-     * delete operation when cascading deletes are required:
+     * This method takes any query string parameters and adds them to the specified map. This is used, for example, with
+     * the delete operation when cascading deletes are required:
      * </p>
      * <code style="margin-left: 3em">DELETE http://localhost:4848/.../foo?cascade=true</code>
      * <p>
-     * The reason we need to use query parameters versus "body" variables is the limitation that HttpURLConnection has in
-     * this regard.
+     * The reason we need to use query parameters versus "body" variables is the limitation that HttpURLConnection has
+     * in this regard.
      *
      * @param data
      */
@@ -908,7 +921,8 @@ public class ResourceUtil {
 
     /**
      * @param qualifiedTypeName
-     * @return unqualified type name for given qualified type name. This is a substring of qualifiedTypeName after last "."
+     * @return unqualified type name for given qualified type name. This is a substring of qualifiedTypeName after last
+     * "."
      */
     public static String getUnqualifiedTypeName(String qualifiedTypeName) {
         return qualifiedTypeName.substring(qualifiedTypeName.lastIndexOf(".") + 1, qualifiedTypeName.length());

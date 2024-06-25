@@ -36,6 +36,10 @@
         <!-- See parent POM -->
     </developers>
 
+    <properties>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>

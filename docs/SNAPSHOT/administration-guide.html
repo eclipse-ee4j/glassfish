@@ -109,6 +109,7 @@
 <li><a href="#supported-content-types-in-requests-to-rest-resources">Supported Content Types in Requests to REST Resources</a></li>
 </ul>
 </li>
+<li><a href="#log-executed-admin-commands">Log executed admin commands</a></li>
 </ul>
 </li>
 <li><a href="#administering-domains">3 Administering Domains</a>
@@ -7156,6 +7157,53 @@ specify the type through the <code>-H</code> option as follows:</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="log-executed-admin-commands"><a class="anchor" href="#log-executed-admin-commands"></a>Log executed admin commands</h3>
+<div class="paragraph">
+<p>It&#8217;s possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.</p>
+</div>
+<div class="paragraph">
+<p>To enable this logging, set the system property <code>glassfish.commandlogger.logmode</code> on the DAS server to one of the following values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ALL_COMMANDS</code> - will log all commands</p>
+</li>
+<li>
+<p><code>WRITE_COMMANDS</code> - will log all commands that modify server configuration</p>
+</li>
+<li>
+<p><code>INTERNAL_COMMANDS</code> - will log all commands that modify server configuration and also those that start with <code>_</code> (internal commands)</p>
+</li>
+<li>
+<p><code>READ_WRITE_COMMANDS</code> - will log all commands that modify server configuration or return info about the configuration</p>
+</li>
+<li>
+<p><code>NO_COMMAND</code> - do not log any command, this is the default value if the property not specified</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The log message will be logged using <code>org.glassfish.extras.commandlogger.AdminCommandLogger</code> logger with <code>INFO</code> level, and will contain:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>name of the admin user that executed the command</p>
+</li>
+<li>
+<p>name of the command</p>
+</li>
+<li>
+<p>arguments to the command</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The name and arguments can be copied and pasted to the asadmin CLI to repeat running the same command from the command line.</p>
 </div>
 </div>
 </div>
@@ -32571,7 +32619,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-06-24 16:01:39 UTC
+Last updated 2024-06-25 10:52:12 UTC
 </div>
 </div>
 </body>

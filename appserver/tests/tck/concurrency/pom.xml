@@ -72,8 +72,8 @@
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-            <!-- TODO: Required 3.1.1 to pass all 295 tests. -->
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -83,7 +83,8 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -94,6 +95,7 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -103,7 +105,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -173,9 +174,12 @@
                             create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
                             create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
                         </glassfish.postBootCommands>
+                        
+                             
+                        <jimage.dir>${project.build.directory}/jimage</jimage.dir>
                     </systemPropertyVariables>
-
-                    <!-- Groups to include i.e. web/full -->
+               
+                    <!-- Groups to include i.e. web/platform -->
                     <groups>${jakarta.tck.platform}</groups>
                     <reportNameSuffix>${jakarta.tck.platform}</reportNameSuffix>
                     <testSourceDirectory>${basedir}/src/main/java/</testSourceDirectory>
@@ -192,7 +196,7 @@
             </activation>
             <properties>
                 <glassfish-artifact-id>glassfish</glassfish-artifact-id>
-                <jakarta.tck.platform>full</jakarta.tck.platform>
+                <jakarta.tck.platform>platform</jakarta.tck.platform>
             </properties>
         </profile>
         <profile>

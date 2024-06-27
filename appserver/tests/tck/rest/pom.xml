@@ -84,7 +84,7 @@ mvn clean install -Dgroups=security
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -97,15 +97,8 @@ mvn clean install -Dgroups=security
         <!-- Client libs for doing HTTP requests, specifically done via the REST Client -->
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>glassfish-client-ee10</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>3.1.1</version>
+            <artifactId>glassfish-client-ee11</artifactId>
+            <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -133,7 +126,7 @@ mvn clean install -Dgroups=security
         </dependency>
     </dependencies>
 
-   <build>
+    <build>
         <plugins>
             <!-- Download and installation of the GlassFish server used for testing  -->
             <plugin>

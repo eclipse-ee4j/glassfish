@@ -32,8 +32,9 @@
     <name>TCK: Install Jakarta websocket TCK</name>
 
     <properties>
-        <tck.test.websocket.file>jakarta-websocket-tck-2.1.0.zip</tck.test.websocket.file>
-        <tck.test.websocket.url>https://download.eclipse.org/jakartaee/websocket/2.1/${tck.test.websocket.file}</tck.test.websocket.url>
+        <tck.test.websocket.version>2.2.0</tck.test.websocket.version>
+        <tck.test.websocket.file>jakarta-websocket-tck-${tck.test.websocket.version}.zip</tck.test.websocket.file>
+        <tck.test.websocket.url>https://download.eclipse.org/jakartaee/websocket/2.2/${tck.test.websocket.file}</tck.test.websocket.url>
     </properties>
 
     <build>
@@ -52,28 +53,95 @@
                 </executions>
                 <configuration>
                     <url>${tck.test.websocket.url}</url>
-                    <unpack>false</unpack>
+                    <unpack>true</unpack>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
             </plugin>
+    
+            
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
+                    
                     <execution>
-                        <id>install-websocket-tck</id>
+                        <id>install-websocket-tck-pom</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.build.directory}/${tck.test.websocket.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
-                            <generatePom>true</generatePom>
+                            <file>${project.build.directory}/websocket-tck/artifacts/websocket-tck-${tck.test.websocket.version}.pom</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>websocket-tck</artifactId>
+                            <version>${tck.test.websocket.version}</version>
+                            <packaging>pom</packaging>
                         </configuration>
                     </execution>
+                    
+                      
+                    <execution>
+                        <id>install-websocket-tck-common-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/websocket-tck/artifacts/websocket-tck-common-${tck.test.websocket.version}.pom</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>websocket-tck-common</artifactId>
+                            <version>${tck.test.websocket.version}</version>
+                            <packaging>pom</packaging>
+                        </configuration>
+                    </execution>
+                    
+                           
+                    <execution>
+                        <id>install-websocket-tck-common-jar</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/websocket-tck/artifacts/websocket-tck-common-${tck.test.websocket.version}.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>websocket-tck-common</artifactId>
+                            <version>${tck.test.websocket.version}</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    
+                    
+                    <execution>
+                        <id>websocket-tck-spec-tests-jar</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/websocket-tck/artifacts/websocket-tck-spec-tests-${tck.test.websocket.version}.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>websocket-tck-spec-tests</artifactId>
+                            <version>${tck.test.websocket.version}</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    
+                    
+                    <execution>
+                        <id>websocket-tck-spec-tests-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/websocket-tck/artifacts/websocket-tck-spec-tests-${tck.test.websocket.version}.pom</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>websocket-tck-spec-tests</artifactId>
+                            <version>${tck.test.websocket.version}</version>
+                            <packaging>pom</packaging>
+                        </configuration>
+                    </execution>
+                    
                 </executions>
             </plugin>
         </plugins>

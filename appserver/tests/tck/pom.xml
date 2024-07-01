@@ -58,6 +58,7 @@
         <module>jwt</module>
         <module>websocket</module>
         <module>jsonp</module>
+        <module>jsonp_pluggability</module>
     </modules>
 
     <build>

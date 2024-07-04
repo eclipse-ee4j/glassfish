@@ -24,6 +24,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.hk2.api.ServiceLocator;
 
 import java.util.Properties;
+import org.glassfish.hk2util.SimpleTopicDistributionService;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -38,6 +39,13 @@ public class GlassFishImpl implements GlassFish {
     public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator habitat, Properties gfProps) throws GlassFishException {
         this.gfKernel = gfKernel;
         this.habitat = habitat;
+        /*
+            We enable a temporary distribution service until the HK2 Extras package is fixed so that we can enable
+            the topic distribution service provided by HK2.
+        */
+        //ExtrasUtilities.enableTopicDistribution(habitat);
+        SimpleTopicDistributionService.enable(habitat);
+
         configure(gfProps);
     }
 

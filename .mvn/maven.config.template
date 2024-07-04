@@ -1,0 +1,81 @@
+############################################
+# Build GlassFish Server Full Distribution #
+############################################
+
+#-Pfastest
+#-T4C
+#-am
+#-pl
+#org.glassfish.main.distributions:glassfish
+
+###########################################
+# Build GlassFish Server Web Distribution #
+###########################################
+
+#-Pfastest 
+#-T4C
+#-am
+#-pl
+#org.glassfish.main.distributions:web
+
+##############################################
+# Build GlassFish Embedded Full Distribution #
+##############################################
+
+#-Pfastest
+#-T4C
+#-am
+#-pl
+#org.glassfish.main.extras:glassfish-embedded-all
+
+##############################################
+# Build GlassFish Embedded Full Distribution #
+##############################################
+
+#-Pfastest
+#-T4C
+#-am
+#-pl
+#org.glassfish.main.extras:glassfish-embedded-web
+
+###########################################################################
+# Repackage GlassFish Server (not for Embedded).                          #
+# Assembles already built GlassFish modules into GlassFish distributions. #
+# Suitable if modules are already built in an IDE.                        #
+###########################################################################
+
+#-Pfastest
+#-T4C
+#-rf
+#appserver/featuresets
+
+################################################################################
+# Building all distribution artifacts, running QA and all maven managed tests. #
+# Excludes Ant, TCK and documentation.                                         #
+# Typical time: 10 minutes.                                                    #
+################################################################################
+
+#-Pqa
+
+################################################################################
+# Building all distribution artifacts, running just unit tests.                #
+# Excludes QA, integration tests, Ant, TCK and documentation.                  #
+# Typical time: 7 minutes.                                                     #
+################################################################################
+
+#-Pfast
+
+############################################################
+# Building all distribution artifacts as fast as possible. #
+# Excludes everything not serving this purpose.            #
+# Typical time: 1.5 minutes.                               #
+############################################################
+
+#-Pfastest
+#-T4C
+
+#################################
+# Configure log level for tests #
+#################################
+
+#-Dtest.logLevel=FINEST

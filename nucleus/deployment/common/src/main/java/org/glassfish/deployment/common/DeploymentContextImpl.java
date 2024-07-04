@@ -431,7 +431,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
             for (URL url : urls) {
                 File file = new File(url.getFile());
                 deplLogger.log(FINE, "Specified library jar: " + file.getAbsolutePath());
-                if (file.exists()) {
+                if (file.isFile()) {
                     libURIs.add(url.toURI());
                 } else {
                     throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.nonexist.libraries",

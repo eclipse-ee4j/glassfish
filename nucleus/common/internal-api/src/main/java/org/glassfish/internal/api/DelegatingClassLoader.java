@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,79 +22,109 @@ import com.sun.enterprise.module.common_impl.CompositeEnumeration;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Collections;
 import java.net.URL;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static java.util.Collections.unmodifiableList;
 
 /**
- * This classloader has a list of classloaders called as delegates
- * that it uses to find classes. All those delegates must have the
- * same parent as this classloader in order to have a consistent class space.
- * By consistent class space, I mean a class space where no two loaded class
- * have same name. An inconsistent class space can lead to ClassCastException.
- * This classloader does not define any class, classes are always loaded
- * either by its parent or by one of the delegates.
+ * This class loader has a list of class loaders called as delegates
+ * that it uses to find classes.
+ * <p>
+ * All those delegates must have the same parent as this class loader in order to
+ * have a consistent class space. By consistent class space, we mean a class space
+ * where no two loaded class have same name. An inconsistent class space can lead
+ * to {@link ClassCastException}.
+ * <p>
+ * This class loader does not define any class, classes are always loaded either by
+ * its parent or by one of the delegates.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class DelegatingClassLoader extends ClassLoader {
-    /*
-     * TODO(Sahoo):
-     * 1. I18N
-     * 2. Move to a more common package, as it has no dependency on kernel.
-     */
 
     /**
-     * findClass method of ClassLoader is usually a protected method.
-     * Calling loadClass on a ClassLoader is expenssive, as it searches
+     * This interface is an optimization.
+     * <p>
+     * The {@code findClass} method of {@link ClassLoader} is usually a protected method.
+     * Calling {@code loadClass} on a {@link ClassLoader} is expensive, as it searches
      * the delegation hierarchy before searching in its private space.
-     * Hence we add this interface as an optimization.
      */
     public interface ClassFinder {
 
         /**
+         * Returns the paren class loader.
+         * <p>
+         * The parent class loader used to check delegation hierarchy.
+         *
+         * @return the parent classloader
          * @see ClassLoader#getParent()
          */
         ClassLoader getParent();
 
         /**
+         * Finds the class with the specified binary name.
+         *
+         * @param name the binary name of the class
+         * @return the resulting {@link Class} object
+         * @throws ClassNotFoundException if class could not be found
          * @see ClassLoader#findClass(String)
          */
         Class<?> findClass(String name) throws ClassNotFoundException;
 
         /**
+         * Returns the loaded class with the given binary name.
+         *
+         * @param name the binary name of the class
+         * @return the {@link Class} object, or {@code null} if the class has not been loaded
          * @see ClassLoader#findLoadedClass(String)
          */
         Class<?> findExistingClass(String name);
 
         /**
+         * Finds the resource with the given name.
+         *
+         * @param name the resource name
+         * @return a URL object for reading the resource, or {@code null} if the resource
+         * could not be found
          * @see ClassLoader#findResource(String)
          */
         URL findResource(String name);
 
         /**
+         * Returns an enumeration of URL objects representing all resources with the given name.
+         *
+         * @param name the resource name
+         * @return an enumeration of URL objects for the resources
+         * @throws IOException if an I/O error occurs
          * @see ClassLoader#findResources(String)
          */
         Enumeration<URL> findResources(String name) throws IOException;
     }
 
+    private final CopyOnWriteArrayList<ClassFinder> delegates = new CopyOnWriteArrayList<>();
+
     /**
-     * Name of this class loader. Used mostly for reporting purpose.
+     * Name of this class loader.
+     * <p>
+     * Used mostly for reporting purpose.
+     * <p>
      * No guarantee about its uniqueness.
      */
-    private String name;
-
-    private List<ClassFinder> delegates = new ArrayList<ClassFinder>();
+    private volatile String name;
 
     /**
+     * Creates new delegating class loader.
+     *
      * @throws IllegalArgumentException when the delegate does not have same parent
-     * as this classloader.
+     * as this class loader
      */
-    public DelegatingClassLoader(ClassLoader parent, List<ClassFinder> delegates)
-            throws IllegalArgumentException{
+    public DelegatingClassLoader(ClassLoader parent, List<ClassFinder> delegates) {
         super(parent);
-        for (ClassFinder d : delegates) {
-            checkDelegate(d);
+        for (ClassFinder classFinder : delegates) {
+            checkDelegate(classFinder);
         }
         this.delegates.addAll(delegates);
     }
@@ -103,62 +134,56 @@ public class DelegatingClassLoader extends ClassLoader {
     }
 
     /**
-     * Adds a ClassFinder to list of delegates. To have a consistent
-     * class space (by consistent class space, I mean a classpace where there
-     * does not exist two class with same name), this method does not allow
+     * Adds a class finder to list of delegates.
+     * <p>
+     * To have a consistent class space (by consistent class space, we mean a class space
+     * where there does not exist two class with same name), this method does not allow
      * a delegate to be added that has a different parent.
-     * @param d ClassFinder to add to the list of delegates
-     * @return true if the delegate is added, false otherwise.
-     * @throws IllegalStateException when this method is called after the
-     * classloader has been used to load any class.
+     *
+     * @param classFinder class finder to add to the list of delegates
+     * @return {@code true} if the delegate is added, {@code false} otherwise
      * @throws IllegalArgumentException when the delegate does not have same parent
-     * as this classloader.
+     * as this class loader
      */
-    public synchronized boolean addDelegate(ClassFinder d) throws
-            IllegalStateException, IllegalArgumentException {
-        checkDelegate(d);
-        if (delegates.contains(d)) {
-            return false;
-        }
-        return delegates.add(d);
+    public boolean addDelegate(ClassFinder classFinder) {
+        checkDelegate(classFinder);
+        return delegates.addIfAbsent(classFinder);
     }
 
     /**
+     * Checks delegation hierarchy.
+     *
+     * @param classFinder class finder to check
      * @throws IllegalArgumentException when the delegate does not have same parent
-     * as this classloader.
+     * as this class loader
      */
-    private void checkDelegate(ClassFinder d) throws IllegalArgumentException {
-        final ClassLoader dp = d.getParent();
-        final ClassLoader p = getParent();
-        if (dp != p) { // check for equals
-            if ((dp != null && !dp.equals(p)) || !p.equals(dp)) {
-                throw new IllegalArgumentException("Delegation hierarchy mismatch");
-            }
+    private void checkDelegate(ClassFinder classFinder) {
+        final ClassLoader delegateParent = classFinder.getParent();
+        final ClassLoader parent = getParent();
+        if (!Objects.equals(delegateParent, parent)) {
+            throw new IllegalArgumentException("Delegation hierarchy mismatch");
         }
     }
 
     /**
-     * Removes a ClassFinder from list of delegates. This method must not be used
-     * once this classloader has beed used to load any class. If attempted to
-     * do so, this method throws IllegalStateException
-     * @param d ClassFinder to remove from the list of delegates
-     * @return true if the delegate was removed, false otherwise.
-     * @throws IllegalStateException when this method is called after the
-     * classloader has been used to load any class.
+     * Removes a class finder from list of delegates.
+     *
+     * @param classFinder class finder to remove from the list of delegates
+     * @return {@code true} if the delegate was removed, {@code false} otherwise
      */
-    public synchronized boolean removeDelegate(ClassFinder d) {
-        return delegates.remove(d);
+    public boolean removeDelegate(ClassFinder classFinder) {
+        return delegates.remove(classFinder);
     }
 
     @Override
     public Class<?> findClass(String name) throws ClassNotFoundException {
-        for (ClassFinder d : delegates) {
+        for (ClassFinder classFinder : delegates) {
             try {
-                Class c = null;
-                synchronized(d){
-                    c = d.findExistingClass(name);
-                    if(c == null){
-                        c = d.findClass(name);
+                Class<?> c;
+                synchronized (classFinder) {
+                    c = classFinder.findExistingClass(name);
+                    if (c == null) {
+                        c = classFinder.findClass(name);
                     }
                 }
                 return c;
@@ -171,18 +196,20 @@ public class DelegatingClassLoader extends ClassLoader {
 
     @Override
     protected URL findResource(String name) {
-        for (ClassFinder d : delegates) {
-            URL u = d.findResource(name);
-            if (u!=null) return u;
+        for (ClassFinder classFinder : delegates) {
+            URL resourceURL = classFinder.findResource(name);
+            if (resourceURL != null) {
+                return resourceURL;
+            }
         }
         return null;
     }
 
     @Override
     protected Enumeration<URL> findResources(String name) throws IOException {
-        List<Enumeration<URL>> enumerators = new ArrayList<Enumeration<URL>>();
-        for (ClassFinder delegate : delegates) {
-            Enumeration<URL> enumerator = delegate.findResources(name);
+        List<Enumeration<URL>> enumerators = new ArrayList<>();
+        for (ClassFinder classFinder : delegates) {
+            Enumeration<URL> enumerator = classFinder.findResources(name);
             enumerators.add(enumerator);
         }
         return new CompositeEnumeration(enumerators);
@@ -197,12 +224,12 @@ public class DelegatingClassLoader extends ClassLoader {
     }
 
     public List<ClassFinder> getDelegates() {
-        return Collections.unmodifiableList(delegates);
+        return unmodifiableList(delegates);
     }
 
     @Override
     public String toString() {
-        if (name!=null) {
+        if (name != null) {
             return name;
         } else {
             return super.toString();

@@ -1,3 +1,4 @@
+.mvn/maven.config
 *.ipr
 *.iml
 *.iws

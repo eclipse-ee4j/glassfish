@@ -65,4 +65,14 @@ public final class TestUtilities {
         }
         throw failures;
     }
+
+    public static String getConfig(String key) {
+        final String NOT_ALPHA_NUM = "\\P{Alnum}";
+        final String envValue = System.getenv(key.replaceAll(NOT_ALPHA_NUM, "_"));
+        return envValue != null ? envValue : System.getProperty(key);
+    }
+
+    public static boolean getConfigBoolean(String key) {
+        return Boolean.parseBoolean(getConfig(key));
+    }
 }

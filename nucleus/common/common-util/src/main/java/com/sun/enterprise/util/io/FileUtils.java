@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -254,6 +254,45 @@ public final class FileUtils {
         return f.getName().toLowerCase(Locale.ENGLISH).endsWith(ext.toLowerCase(Locale.ENGLISH));
     }
 
+    /**
+     * Gets the extension of the {@code file}.
+     * <p>
+     * This method returns the extension of the {@code file} <strong>with</strong> the leading dot.
+     *
+     * @param file the file
+     * @return the file extension
+     */
+    public static String getExtension(File file) {
+        if (file == null) {
+            return null;
+        }
+        String fileName = file.getName();
+        int extensionIndex = fileName.lastIndexOf('.');
+        if (extensionIndex == -1) {
+            return "";
+        }
+        return fileName.substring(extensionIndex);
+    }
+
+    /**
+     * Removes the extension from a file name for the {@code file}.
+     * <p>
+     * This method returns the textual part of the file name before last dot.
+     *
+     * @param file the file
+     * @return the file name without extension or {@code null} if {@code file} is {@code null}
+     */
+    public static String removeExtension(File file) {
+        if (file == null) {
+            return null;
+        }
+        String fileName = file.getName();
+        int extensionIndex = fileName.lastIndexOf('.');
+        if (extensionIndex == -1) {
+            return fileName;
+        }
+        return fileName.substring(0, extensionIndex);
+    }
 
     public static boolean isLegalFilename(String filename) {
         if (!isValidString(filename)) {

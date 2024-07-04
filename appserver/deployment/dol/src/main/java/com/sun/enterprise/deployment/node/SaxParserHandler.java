@@ -483,7 +483,7 @@ public class SaxParserHandler extends DefaultHandler {
         }
         XMLElement element = new XMLElement(qName, namespaces);
         XMLNode<?> topNode = nodes.get(nodes.size() - 1);
-        boolean ignoredBecauseEmpty = elementData != null && elementData.isEmpty()
+        boolean ignoredBecauseEmpty = elementData != null && elementData.length() == 0
             && !allowsEmptyValue(element.getQName());
         if (elementData != null && ignoredBecauseEmpty) {
             LOG.fine(() -> "Ignoring empty element with qName=" + qName);

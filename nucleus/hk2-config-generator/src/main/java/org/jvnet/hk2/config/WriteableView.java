@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -93,15 +93,15 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
                 }
             });
 
-       try {
-           Thread.currentThread().setContextClassLoader(HibernateValidator.class.getClassLoader());
-           ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-           ValidatorContext validatorContext = validatorFactory.usingContext();
-           validatorContext.messageInterpolator(new MessageInterpolatorImpl());
-           beanValidator = validatorContext.traversableResolver(TRAVERSABLE_RESOLVER).getValidator();
-       } finally {
-           Thread.currentThread().setContextClassLoader(cl);
-       }
+        try {
+            Thread.currentThread().setContextClassLoader(HibernateValidator.class.getClassLoader());
+            ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+            ValidatorContext validatorContext = validatorFactory.usingContext();
+            validatorContext.messageInterpolator(new MessageInterpolatorImpl());
+            beanValidator = validatorContext.traversableResolver(TRAVERSABLE_RESOLVER).getValidator();
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
     }
 
     // private final Validator beanValidator;
@@ -240,7 +240,7 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
                         bean.getLock().unlock();
                         throw new IllegalArgumentException(
                             "Keys cannot be duplicate. Old value of this key " +
-                            "property, " + oldKeyValue + "will be retained");
+                            "property, " + oldKeyValue + " will be retained");
                     }
                 }
             }

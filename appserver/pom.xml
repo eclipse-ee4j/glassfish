@@ -883,12 +883,12 @@
                             <artifact>
                                 <groupId>jakarta.servlet</groupId>
                                 <artifactId>jakarta.servlet-api</artifactId>
-                                <version>${servlet-api.version}</version>
+                                <version>${jakarta.servlet-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>3.1</specVersion>
-                            <specImplVersion>${servlet-api.version}</specImplVersion>
+                            <specVersion>6.0</specVersion>
+                            <specImplVersion>${jakarta.servlet-api.version}</specImplVersion>
                             <apiPackage>jakarta.servlet</apiPackage>
                         </spec>
                         <spec>

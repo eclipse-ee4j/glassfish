@@ -887,7 +887,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${jakarta.servlet-api.version}</specVersion>
+                            <specVersion>6.0</specVersion>
                             <specImplVersion>${jakarta.servlet-api.version}</specImplVersion>
                             <apiPackage>jakarta.servlet</apiPackage>
                         </spec>

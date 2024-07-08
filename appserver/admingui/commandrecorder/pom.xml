@@ -27,23 +27,22 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>console-cluster-plugin</artifactId>
+    <artifactId>console-commandrecorder-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Admin Console Clustering Support Plugin</name>
-    <description>Clustering support plugin bundle for GlassFish Admin Console</description>
+    <name>Admin Console Command Recorder Plugin</name>
+    <description>Command Recorder plugin bundle for GlassFish Admin Console</description>
 
     <dependencies>
-<!--        <dependency>
-            <groupId>org.glassfish.main.admingui</groupId>
-            <artifactId>console-plugin-service</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>console-common</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

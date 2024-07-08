@@ -86,6 +86,7 @@
         <module>core</module>
         <module>concurrent</module>
         <module>cluster</module>
+        <module>commandrecorder</module>
         <module>community-theme</module>
         <module>web</module>
         <module>gf-admingui-connector</module>

@@ -1832,6 +1832,17 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
+            <artifactId>console-commandrecorder-plugin</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>console-web-plugin</artifactId>
             <version>${project.version}</version>
             <exclusions>

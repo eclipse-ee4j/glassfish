@@ -17,6 +17,7 @@ package org.glassfish.admingui.common;
 
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
+import jakarta.faces.application.ResourceHandler;
 import jakarta.faces.application.ViewHandler;
 
 /**
@@ -29,6 +30,10 @@ public class AdminGuiApplication extends ApplicationWrapper {
 
     public AdminGuiApplication(Application wrapped) {
         super(wrapped);
+        final ResourceHandler resourceHandlerInWrapped = wrapped.getResourceHandler();
+        if (resourceHandlerInWrapped != null) {
+            setResourceHandler(resourceHandlerInWrapped);
+        }
     }
 
     @Override
@@ -41,6 +46,11 @@ public class AdminGuiApplication extends ApplicationWrapper {
 
     public ViewHandler getDefaultViewHandler() {
         return defaultViewHandler;
+    }
+
+    @Override
+    public void setResourceHandler(ResourceHandler resourceHandler) {
+        super.setResourceHandler(new AdminGuiResourceHandler(resourceHandler));
     }
 
 }

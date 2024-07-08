@@ -45,7 +45,7 @@ public class AdminGuiViewHandler extends ViewHandlerWrapper {
         if (FacesContext.getCurrentInstance() != null) {
             requestServletPath = FacesContext.getCurrentInstance().getExternalContext().getRequestServletPath();
         }
-        if (defaultViewHandler != null && requestServletPath != null && requestServletPath.startsWith("/faces")) {
+        if (defaultViewHandler != null && requestServletPath != null && requestServletPath.endsWith(".xhtml")) {
             return defaultViewHandler;
         }
         return super.getWrapped();

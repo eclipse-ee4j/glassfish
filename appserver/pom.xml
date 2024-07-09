@@ -54,6 +54,7 @@
         <module>persistence</module>
         <module>concurrent</module>
         <module>batch</module>
+        <module>microprofile</module>
         <module>extras</module>
         <module>admingui</module>
         <module>extras/embedded/shell</module>
@@ -1050,16 +1051,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>jdk17</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-           <modules>
-               <module>microprofile</module>
-           </modules>
-        </profile>
-    </profiles>
 </project>

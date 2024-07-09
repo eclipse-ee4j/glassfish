@@ -162,7 +162,7 @@
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
-        <omnifaces-jwt-auth.version>3.0.0-M1</omnifaces-jwt-auth.version>
+        <omnifaces-jwt-auth.version>3.0.0</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
         <microprofile.rest-client.version>3.0.1</microprofile.rest-client.version>

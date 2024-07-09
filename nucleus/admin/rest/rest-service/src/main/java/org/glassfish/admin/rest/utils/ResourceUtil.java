@@ -92,8 +92,6 @@ import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
 import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 
-import org.glassfish.internal.api.events.CommandInvokedEvent;
-import org.glassfish.internal.api.events.InvokeEventService;
 
 
 
@@ -225,10 +223,6 @@ public class ResourceUtil {
      * @return
      */
     public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject, boolean managedJob) {
-
-        InvokeEventService.get()
-                .getCommandInvokedTopic()
-                .publish(new CommandInvokedEvent(commandName, parameters, subject, ResourceUtil.class.getSimpleName()));
 
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();

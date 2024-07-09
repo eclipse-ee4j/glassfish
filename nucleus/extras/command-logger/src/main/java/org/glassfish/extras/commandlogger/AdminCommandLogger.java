@@ -56,7 +56,7 @@ public class AdminCommandLogger {
             logger.log(INFO, () -> {
                 return userPrincipalMaybe.map(user -> "User " + user.getName())
                         .orElse("Unknown user")
-                        + " executed command in the Admin Console: " + commandLine;
+                        + " executed admin command: " + commandLine;
             });
         }
 

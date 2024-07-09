@@ -1,4 +1,21 @@
 <?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2024 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html">
@@ -11,8 +28,11 @@
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resource/common/css/style.css"/>
     </h:head>
     <h:body>
-        <div style="text-align: left; height: 20px; background-color: #5b87a4">
-            <div class="mastheadButton_4_sun4" style="margin: 5px;"><a href="#">X #{menuView.toggleButtonTitle}</a></div>
-        </div>
+        <h:form>
+            <div style="text-align: left; height: 20px; background-color: #5b87a4">
+                <div class="mastheadButton_4_sun4" style="margin: 5px;">
+                    <h:commandLink actionListener="#{commandRecorder.toggle()}">#{commandRecorder.toggleButtonTitle}</h:commandLink></div>
+            </div>
+        </h:form>
     </h:body>
 </html>

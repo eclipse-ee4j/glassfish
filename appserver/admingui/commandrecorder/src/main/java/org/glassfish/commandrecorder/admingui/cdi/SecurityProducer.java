@@ -13,30 +13,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.commandrecorder.admingui;
+package org.glassfish.commandrecorder.admingui.cdi;
 
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Named;
-import java.io.Serializable;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.security.enterprise.SecurityContext;
+import java.security.Principal;
+import java.util.Set;
+import javax.security.auth.Subject;
 
-@Named
-@SessionScoped
-public class MenuView implements Serializable {
-    private boolean enabled = false;
+@ApplicationScoped
+public class SecurityProducer {
 
-    public boolean isEnabled() {
-        return enabled;
+    @Produces
+    Subject getSubject(SecurityContext securityContext) {
+        return new Subject(true, securityContext.getPrincipalsByType(Principal.class), Set.of(), Set.of());
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void toggle() {
-        enabled = !enabled;
-    }
-
-    public String getToggleButtonTitle() {
-        return (enabled ? "Disable" : "Enable") + " command recorder";
-    }
 }

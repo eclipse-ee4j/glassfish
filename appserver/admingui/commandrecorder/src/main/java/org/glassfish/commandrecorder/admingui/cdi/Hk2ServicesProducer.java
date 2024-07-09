@@ -13,18 +13,28 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.commandrecorder.admingui;
+package org.glassfish.commandrecorder.admingui.cdi;
 
-import java.net.URL;
-import org.glassfish.api.admingui.ConsoleProvider;
-import org.jvnet.hk2.annotations.Service;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.internal.api.Globals;
 
-@Service
-public class CommandRecorderConsolePlugin implements ConsoleProvider {
+@ApplicationScoped
+public class Hk2ServicesProducer {
 
-    @Override
-    public URL getConfiguration() {
-        return null;
+    @Produces
+    CommandRunner getCommandRunner() {
+        return getGlobalService(CommandRunner.class);
     }
 
+    @Produces
+    ActionReport getActionReport() {
+        return getGlobalService(ActionReport.class);
+    }
+
+    private static <T> T getGlobalService(Class<T> aClass) {
+        return Globals.getDefaultHabitat().getService(aClass);
+    }
 }

@@ -77,7 +77,7 @@ public class AdminCommandLogger {
                 .collect(joining(" "));
     }
 
-    private static enum LogMode {
+    public static enum LogMode {
         ALL_COMMANDS, INTERNAL_COMMANDS, WRITE_COMMANDS, READ_WRITE_COMMANDS, NO_COMMAND;
 
         public static final LogMode DEFAULT = LogMode.NO_COMMAND;

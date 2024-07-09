@@ -105,14 +105,6 @@
                             groupId=io.helidon.logging;artifactId=helidon-logging-common,
                             artifactId=snakeyaml,
                         </Embed-Dependency>
-                        
-                        
-                       
-
-
-
-
-
 
                         <!--
                             Include transitive dependencies (note that this only include compile scoped dependencies,

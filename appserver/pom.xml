@@ -835,7 +835,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>impl</jarType>
-                            <specVersion>4.0</specVersion>
+                            <specVersion>5.0</specVersion>
                             <implVersion>${mojarra.version}</implVersion>
                             <apiPackage>jakarta.faces</apiPackage>
                             <implNamespace>org.glassfish</implNamespace>
@@ -848,7 +848,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>2.1</specVersion>
+                            <specVersion>3.0</specVersion>
                             <specImplVersion>${jakarta.authorization-api.version}</specImplVersion>
                             <apiPackage>jakarta.authorization</apiPackage>
                         </spec>
@@ -860,7 +860,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>3.0</specVersion>
+                            <specVersion>3.1</specVersion>
                             <specImplVersion>${jakarta.authentication-api.version}</specImplVersion>
                             <apiPackage>jakarta.security.auth.message</apiPackage>
                         </spec>
@@ -920,7 +920,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>3.0</specVersion>
+                            <specVersion>3.1</specVersion>
                             <specImplVersion>${jakarta.concurrent-api.version}</specImplVersion>
                             <apiPackage>jakarta.enterprise.concurrent</apiPackage>
                         </spec>
@@ -932,7 +932,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>6.0</specVersion>
+                            <specVersion>6.1</specVersion>
                             <specImplVersion>${jakarta.servlet-api.version}</specImplVersion>
                             <apiPackage>jakarta.servlet</apiPackage>
                         </spec>
@@ -944,7 +944,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>2.1</specVersion>
+                            <specVersion>3.0</specVersion>
                             <specImplVersion>${jakarta.annotation-api.version}</specImplVersion>
                             <apiPackage>jakarta.annotation</apiPackage>
                         </spec>
@@ -956,7 +956,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>2.1</specVersion>
+                            <specVersion>2.2</specVersion>
                             <specImplVersion>${jakarta.websocket-api.version}</specImplVersion>
                             <apiPackage>jakarta.websocket</apiPackage>
                         </spec>
@@ -968,7 +968,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>3.1</specVersion>
+                            <specVersion>4.0</specVersion>
                             <specImplVersion>${jakarta.rest-api.version}</specImplVersion>
                             <apiPackage>jakarta.ws.rs</apiPackage>
                         </spec>
@@ -992,7 +992,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>2.1</specVersion>
+                            <specVersion>2.2</specVersion>
                             <specImplVersion>${jakarta.interceptor-api.version}</specImplVersion>
                             <apiPackage>jakarta.interceptor</apiPackage>
                         </spec>
@@ -1016,7 +1016,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>3.1</specVersion>
+                            <specVersion>4.0</specVersion>
                             <specImplVersion>${jakarta.pages-api.version}</specImplVersion>
                             <apiPackage>jakarta.servlet.jsp</apiPackage>
                         </spec>

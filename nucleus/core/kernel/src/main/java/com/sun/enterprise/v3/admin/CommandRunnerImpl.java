@@ -1640,8 +1640,7 @@ public class CommandRunnerImpl implements CommandRunner {
         final CommandInvokedEvent event = new CommandInvokedEvent(
                 invocation.name(),
                 invocation.parameters(),
-                subject,
-                CommandRunner.class.getSimpleName());
+                subject);
         InvokeEventService.get()
                 .getCommandInvokedTopic()
                 .publish(event);

@@ -160,10 +160,6 @@
                                     destfile="${glassfish.modules}/parsson-media.jar"
                                 />
                                 <jarupdate
-                                    basedir="${patches}/webservices-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/webservices-osgi.jar"
-                                />
-                                <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />

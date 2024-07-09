@@ -16,8 +16,6 @@
 
 package org.glassfish.main.itest.tools;
 
-import static org.glassfish.main.itest.tools.TestUtilities.getConfigBoolean;
-
 import jakarta.ws.rs.client.Client;
 
 import java.io.File;
@@ -85,8 +83,9 @@ public class GlassFishTestEnvironment {
         }
 
         // This is the absolutely first start - if it fails, all other starts will fail too.
+        // Note: --suspend implicitly enables --debug
         assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain",
-                getConfigBoolean("glassfish.suspend") ? "--suspend" : "--debug"), asadminOK());
+                isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
     }
 
 
@@ -310,6 +309,12 @@ public class GlassFishTestEnvironment {
         } else {
             System.out.println("Admin password changed.");
         }
+    }
+
+
+    private static boolean isStartDomainSuspendEnabled() {
+        final String envValue = System.getenv("GLASSFISH_SUSPEND");
+        return envValue == null ? Boolean.getBoolean("glassfish.suspend") : Boolean.parseBoolean(envValue);
     }
 
 

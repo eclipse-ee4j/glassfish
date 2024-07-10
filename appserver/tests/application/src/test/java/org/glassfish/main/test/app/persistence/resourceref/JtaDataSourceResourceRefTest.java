@@ -18,94 +18,113 @@ package org.glassfish.main.test.app.persistence.resourceref;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.file.Files;
+import java.util.stream.Stream;
 
+import org.glassfish.main.itest.tools.TestUtilities;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
+import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static java.lang.System.Logger.Level.WARNING;
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.glassfish.main.itest.tools.asadmin.Asadmin;
-import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-import org.glassfish.main.itest.tools.setup.DeploymentAware;
-import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
-import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
-
 /**
  * Tests that JTA datasource in persistence.xml can be a resource reference
  */
-public class JtaDataSourceResourceRefTest implements DeploymentAware {
+public class JtaDataSourceResourceRefTest {
 
-    private static final Class<?> TEST_CLASS = JtaDataSourceResourceRefTest.class;
+    private static final System.Logger LOG = System.getLogger(JtaDataSourceResourceRefTest.class.getName());
+    private static final Package TEST_PACKAGE = JtaDataSourceResourceRefTest.class.getPackage();
+    private static final String APP_NAME = JtaDataSourceResourceRefTest.class.getSimpleName() + "WebApp";
+    private static final String CONTEXT_ROOT = "/";
+    private static final Asadmin ASADMIN = getAsadmin();
 
-    private static final Package TEST_PACKAGE = TEST_CLASS.getPackage();
+    private static String[] derbyPoolSettingsBackup;
 
-    private static final System.Logger LOG = System.getLogger(TEST_CLASS.getName());
-
-    private static final String APP_NAME = TEST_CLASS.getSimpleName() + "WebApp";
-
-    private static final String CONTEXT_ROOT = "/" + APP_NAME;
-
-    protected static final Asadmin ASADMIN = getAsadmin();
-
-    public System.Logger getLogger() {
-        return LOG;
+    @BeforeAll
+    public static void deploy() throws Exception {
+        backupDerbyPoolSettings();
+        setDerbyPoolEmbededded();
+        final File warFile = createDeployment();
+        try {
+            AsadminResult result = ASADMIN.exec("deploy", "--contextroot", CONTEXT_ROOT, "--name", APP_NAME,
+                warFile.getAbsolutePath());
+            assertThat(result, asadminOK());
+        } finally {
+            TestUtilities.delete(warFile);
+        }
     }
 
-    @Test
-    public void testDeploy() throws IOException {
-        makeTheDefaultDataSourceEmbededded();
-        File warFile = createDeployment();
-        try {
-            assertThat(ASADMIN.exec("deploy", warFile.getAbsolutePath()), asadminOK());
-        } finally {
-            try {
-                Files.deleteIfExists(warFile.toPath());
-            } catch (IOException e) {
-                LOG.log(WARNING, "An error occurred while remove temp file " + warFile.getAbsolutePath(), e);
-            }
-        }
 
-        HttpURLConnection connection = openConnection(8080, CONTEXT_ROOT);
+    @AfterAll
+    static void undeploy() {
+        AsadminResult result = ASADMIN.exec("undeploy", APP_NAME);
+        assertThat(result, asadminOK());
+        restoreDerbyPoolSettings();
+    }
+
+
+    @Test
+    public void test() throws IOException {
+        final HttpURLConnection connection = openConnection(8080, CONTEXT_ROOT);
         connection.setRequestMethod("GET");
         try {
             assertThat(connection.getResponseCode(), equalTo(200));
         } finally {
             connection.disconnect();
         }
-
-        assertThat(ASADMIN.exec("undeploy", APP_NAME), asadminOK());
     }
 
-    private File createDeployment() throws IOException {
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+    private static void backupDerbyPoolSettings() {
+        final AsadminResult result = ASADMIN.exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*");
+        // Exclude "command successful and .name which cannot be changed
+        derbyPoolSettingsBackup = Stream.of(result.getStdOut().split("\n"))
+            .filter(line -> line.contains("=") && !line.contains(".name=")).toArray(String[]::new);
+    }
+
+    private static void restoreDerbyPoolSettings() {
+        String[] args = new String[derbyPoolSettingsBackup.length + 1];
+        args[0] = "set";
+        for (int i = 1; i < args.length; i++) {
+            args[i] = derbyPoolSettingsBackup[i - 1];
+        }
+        final AsadminResult result = ASADMIN.exec(5_000, args);
+        assertThat(result, asadminOK());
+    }
+
+    /** Default is org.apache.derby.jdbc.ClientDataSource */
+    private static void setDerbyPoolEmbededded() {
+        final AsadminResult result = ASADMIN.exec(5_000, "set",
+            "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
+            "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
+            "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
+            "resources.jdbc-connection-pool.DerbyPool.property.URL=");
+        assertThat(result, asadminOK());
+        ASADMIN.exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*");
+    }
+
+    private static File createDeployment() throws IOException {
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
                 .addClass(ResourceRefResource.class)
                 .addClass(ResourceRefApplication.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource(TEST_PACKAGE, "web.xml", "web.xml")
                 .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
-
-        return createDeploymentWar(webArchive, APP_NAME);
+        LOG.log(INFO, webArchive.toString(true));
+        File tempFile = File.createTempFile(APP_NAME, ".war");
+        webArchive.as(ZipExporter.class).exportTo(tempFile, true);
+        return tempFile;
     }
-
-    private static void makeTheDefaultDataSourceEmbededded() {
-        final AsadminResult result = ASADMIN.exec(5_000, "set",
-                "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
-                "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
-                "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
-                "resources.jdbc-connection-pool.DerbyPool.property.URL=");
-        if (result.isError()) {
-            System.out.println("Failed to update the default datasource DerbyPool.");
-        } else {
-            System.out.println("The default datasource changed to embedded.");
-        }
-    }
-
 }

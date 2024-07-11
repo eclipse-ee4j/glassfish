@@ -33,6 +33,10 @@
     <name>Admin Console Connectors Plugin</name>
     <description>Connectors plugin bundle for GlassFish Admin Console</description>
 
+    <properties>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>

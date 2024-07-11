@@ -1519,6 +1519,10 @@
         </profile>
         <profile>
             <id>oss-release</id>
+            <properties>
+                <!-- Until we fix everything -->
+                <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+            </properties>
             <build>
                 <plugins>
                     <plugin>

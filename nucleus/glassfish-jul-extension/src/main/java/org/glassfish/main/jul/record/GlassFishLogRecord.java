@@ -39,20 +39,6 @@ public class GlassFishLogRecord extends LogRecord {
 
     private static final ZoneId TIME_ZONE = ZoneId.systemDefault();
 
-    private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.SHOW_REFLECT_FRAMES);
-
-    private static final Set<String> IGNORED_CLASSES = Set.of(
-        "org.glassfish.main.jul.GlassFishLogger",
-        "org.glassfish.main.jul.GlassFishLoggerWrapper",
-        // see LogDomains in GlassFish sources
-        "com.sun.logging.LogDomainsLogger",
-        // remaining classes are in the JDK
-        "java.util.logging.Logger",
-        "java.util.logging.LoggingProxyImpl",
-        // see LoggingPrintStream
-        "java.lang.Throwable"
-    );
-
     private final LogRecord record;
     private final String threadName;
     private String messageKey;
@@ -83,7 +69,7 @@ public class GlassFishLogRecord extends LogRecord {
         this.threadName = Thread.currentThread().getName();
         this.record = record;
         if (autodetectSource) {
-            detectClassAndMethod(record);
+            SourceDetector.detectClassAndMethod(record);
         }
     }
 
@@ -303,28 +289,43 @@ public class GlassFishLogRecord extends LogRecord {
         return getMessage();
     }
 
+    private static class SourceDetector {
 
-    private void detectClassAndMethod(final LogRecord wrappedRecord) {
-        STACK_WALKER
-            .walk(stackFrames ->
-                stackFrames.dropWhile(frame -> !isIgnoredStackFrame(frame.getClassName()))
-                    .filter(frame -> !isIgnoredStackFrame(frame.getClassName()))
-                    .findFirst())
-            .ifPresent(frame -> {
-                wrappedRecord.setSourceClassName(frame.getClassName());
-                wrappedRecord.setSourceMethodName(frame.getMethodName());
-            });
-    }
+        private static final Set<String> IGNORED_CLASSES = Set.of(
+            "org.glassfish.main.jul.GlassFishLogger",
+            "org.glassfish.main.jul.GlassFishLoggerWrapper",
+            // see LogDomains in GlassFish sources
+            "com.sun.logging.LogDomainsLogger",
+            // remaining classes are in the JDK
+            "java.util.logging.Logger",
+            "java.util.logging.LoggingProxyImpl",
+            // see LoggingPrintStream
+            "java.lang.Throwable"
+        );
 
+        private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.SHOW_REFLECT_FRAMES);
 
-    /**
-     * @param sourceClassName usually class which created this record
-     * @return if true the class will not be used as a source.
-     */
-    protected boolean isIgnoredStackFrame(final String sourceClassName) {
-        return IGNORED_CLASSES.contains(sourceClassName)
-            || sourceClassName.startsWith("java.lang.reflect.")
-            || sourceClassName.startsWith("sun.util.logging.")
-            || sourceClassName.startsWith("sun.reflect.");
+        static void detectClassAndMethod(final LogRecord wrappedRecord) {
+            STACK_WALKER
+                .walk(stackFrames ->
+                    stackFrames.dropWhile(frame -> !isIgnoredStackFrame(frame.getClassName()))
+                        .filter(frame -> !isIgnoredStackFrame(frame.getClassName()))
+                        .findFirst())
+                .ifPresent(frame -> {
+                    wrappedRecord.setSourceClassName(frame.getClassName());
+                    wrappedRecord.setSourceMethodName(frame.getMethodName());
+                });
+        }
+
+        /**
+         * @param sourceClassName usually class which created this record
+         * @return if true the class will not be used as a source.
+         */
+        private static boolean isIgnoredStackFrame(final String sourceClassName) {
+            return IGNORED_CLASSES.contains(sourceClassName)
+                || sourceClassName.startsWith("java.lang.reflect.")
+                || sourceClassName.startsWith("sun.util.logging.")
+                || sourceClassName.startsWith("sun.reflect.");
+        }
     }
 }

@@ -1830,7 +1830,7 @@
    <profiles>
         <profile>
             <!-- generate empty javadoc jar -->
-            <id>release-phase2</id>
+            <id>oss-release</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

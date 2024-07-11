@@ -25,6 +25,21 @@
     <name>admingui</name>
     <application>
         <view-handler>org.glassfish.admingui.common.AdminGuiViewHandler</view-handler>
+        <locale-config>
+          <default-locale>en</default-locale>
+          <supported-locale>de</supported-locale>
+          <supported-locale>sv</supported-locale>
+          <supported-locale>en_US</supported-locale>
+          <supported-locale>fr</supported-locale>
+          <supported-locale>ko</supported-locale>
+          <supported-locale>ja</supported-locale>
+          <supported-locale>zh_TW</supported-locale>
+          <supported-locale>zh_CN</supported-locale>
+          <supported-locale>es</supported-locale>
+          <supported-locale>it</supported-locale>
+          <supported-locale>pt_BR</supported-locale>
+        </locale-config>
+        <el-resolver>com.sun.webui.jsf.faces.UIComponentELResolver</el-resolver>
     </application>
     <factory>
         <application-factory>org.glassfish.admingui.common.AdminGuiApplicationFactory</application-factory>

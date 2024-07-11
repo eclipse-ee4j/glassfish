@@ -65,7 +65,7 @@
                                onFocus="window.status='$resource{i18n.masthead.restartStatusMsg}'; return true"
                                url="#{request.contextPath}/common/appServer/restart.jsf">
                 </sun:hyperlink>
-                "</span>
+            "</span>
             <!afterCreate
                 includeIntegrations(type="org.glassfish.admingui:mastheadStatusArea" root="$this{component}");
             />

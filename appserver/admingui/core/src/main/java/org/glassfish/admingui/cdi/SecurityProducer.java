@@ -13,28 +13,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.commandrecorder.admingui.cdi;
+package org.glassfish.admingui.cdi;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.internal.api.Globals;
+import jakarta.security.enterprise.SecurityContext;
+import java.security.Principal;
+import java.util.Set;
+import javax.security.auth.Subject;
 
 @ApplicationScoped
-public class Hk2ServicesProducer {
+public class SecurityProducer {
 
     @Produces
-    CommandRunner getCommandRunner() {
-        return getGlobalService(CommandRunner.class);
+    Subject getSubject(SecurityContext securityContext) {
+        return new Subject(true, securityContext.getPrincipalsByType(Principal.class), Set.of(), Set.of());
     }
 
-    @Produces
-    ActionReport getActionReport() {
-        return getGlobalService(ActionReport.class);
-    }
-
-    private static <T> T getGlobalService(Class<T> aClass) {
-        return Globals.getDefaultHabitat().getService(aClass);
-    }
 }

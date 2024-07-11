@@ -163,6 +163,10 @@
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
+                                 <jarupdate
+                                    basedir="${patches}/weld-osgi-bundle" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/weld-osgi-bundle.jar"
+                                />
                             </target>
                         </configuration>
                     </execution>

@@ -34,12 +34,12 @@
     <description>Clustering support plugin bundle for GlassFish Admin Console</description>
 
     <dependencies>
-<!--        <dependency>
+        <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>console-plugin-service</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>console-common</artifactId>

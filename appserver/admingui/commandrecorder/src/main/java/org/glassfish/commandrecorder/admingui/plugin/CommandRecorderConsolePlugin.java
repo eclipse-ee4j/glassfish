@@ -13,21 +13,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.admingui.common.view;
+package org.glassfish.commandrecorder.admingui.plugin;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Named;
+import java.net.URL;
+import org.glassfish.api.admingui.ConsoleProvider;
+import org.jvnet.hk2.annotations.Service;
 
-/**
- *
- * @author Ondro Mihalyi
- */
-@RequestScoped
-@Named
-public class HeaderView {
+@Service
+public class CommandRecorderConsolePlugin implements ConsoleProvider {
 
-    public String getTitle() {
-        return "This is a new header";
+    @Override
+    public URL getConfiguration() {
+        return null;
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +16,7 @@
  */
 package org.glassfish.main.admin.test;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.glassfish.main.admin.test.ConnectionUtils.getURL;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -28,15 +28,9 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,10 +38,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -91,6 +81,10 @@ public class ClusterITest {
         String warFile = getWar().getAbsolutePath();
         assertThat(ASADMIN.exec("deploy", "--target", CLUSTER_NAME, "--name", TEST_APP_NAME, "--contextroot", TEST_APP_NAME,
                 warFile), asadminOK());
+    }
+
+    private static File getWar() {
+        return TestResources.createSimpleWarDeployment(TEST_APP_NAME);
     }
 
     @Test
@@ -216,59 +210,6 @@ public class ClusterITest {
     @Order(23)
     public void deleteClusterTest() {
         assertThat(ASADMIN.exec("delete-cluster", CLUSTER_NAME), asadminOK());
-    }
-
-    /**
-     * These methods open a connection to the given URL and returns the string that is returned from that URL. This is
-     * useful for simple servlet retrieval
-     *
-     * @param urlstr The URL to connect to
-     * @return The string returned from that URL, or empty string if there was a problem contacting the URL
-     */
-    private static String getURL(String urlstr) {
-        URLConnection urlc = openConnection(urlstr);
-        try (
-                BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(), ISO_8859_1)); StringWriter ow = new StringWriter()) {
-            String line;
-            while ((line = ir.readLine()) != null) {
-                ow.write(line);
-                ow.write("\n");
-            }
-            return ow.getBuffer().toString();
-        } catch (IOException ex) {
-            return fail(ex);
-        }
-    }
-
-    private static URLConnection openConnection(String url) {
-        try {
-            return new URL(url).openConnection();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    protected static File getWar() {
-        final WebArchive war = ShrinkWrap.create(WebArchive.class)
-                .addAsWebResource(
-                        new StringAsset(
-                                "<html>\n"
-                                + "    <head>\n"
-                                + "        <title>Simple test app</title>\n"
-                                + "        <meta charset=\"UTF-8\">\n"
-                                + "    </head>\n"
-                                + "    <body>\n"
-                                + "        <div>Simple test app</div>\n"
-                                + "    </body>\n"
-                                + "</html>"),
-                        "index.html");
-        try {
-            File tempFile = File.createTempFile(TEST_APP_NAME, ".war");
-            war.as(ZipExporter.class).exportTo(tempFile, true);
-            return tempFile;
-        } catch (IOException e) {
-            throw new IllegalStateException("WAR file creation failed for app " + TEST_APP_NAME, e);
-        }
     }
 
 }

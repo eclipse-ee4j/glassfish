@@ -23,12 +23,13 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.ErrorManager;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
- * This class provides additional attributes not supported by JUL LogRecord
+ * This class provides additional attributes not supported by JUL LogRecord.
  *
  * @author David Matejcek
  */
@@ -44,12 +45,13 @@ public class GlassFishLogRecord extends LogRecord {
 
 
     /**
-     * Creates new record. Source class and method will be autodetected now or set after this
-     * constructor ends.
+     * Creates new record.
+     * <p>
+     * Source class and method will be autodetected now or set after this constructor ends.
      *
-     * @param level
-     * @param message
-     * @param autodetectSource
+     * @param level a logging level value
+     * @param message the logging message
+     * @param autodetectSource autodetect source class and method
      */
     public GlassFishLogRecord(final Level level, final String message, final boolean autodetectSource) {
         this(new LogRecord(level, message), autodetectSource);
@@ -59,21 +61,21 @@ public class GlassFishLogRecord extends LogRecord {
     /**
      * Wraps the log record.
      *
-     * @param record
-     * @param autodetectSource
+     * @param record the log record
+     * @param autodetectSource autodetect source class and method
      */
     public GlassFishLogRecord(final LogRecord record, final boolean autodetectSource) {
         super(record.getLevel(), null);
         this.threadName = Thread.currentThread().getName();
         this.record = record;
         if (autodetectSource) {
-            detectClassAndMethod(record);
+            SourceDetector.detectClassAndMethod(record);
         }
     }
 
 
     /**
-     * @return the message identifier (generally not unique, may be null)
+     * @return the message identifier (generally not unique, may be {@code null})
      */
     public String getMessageKey() {
         return messageKey;
@@ -84,7 +86,7 @@ public class GlassFishLogRecord extends LogRecord {
      * This is called just to remember the original message value after it was translated using
      * the resource bundle.
      *
-     * @param messageKey the message identifier (generally not unique, may be null)
+     * @param messageKey the message identifier (generally not unique, may be {@code null})
      */
     void setMessageKey(final String messageKey) {
         this.messageKey = messageKey;
@@ -266,7 +268,7 @@ public class GlassFishLogRecord extends LogRecord {
 
 
     /**
-     * @return printed stacktrace of {@link #getThrown()} or null
+     * @return printed stacktrace of {@link #getThrown()} or {@code null}
      */
     public String getThrownStackTrace() {
         if (getThrown() == null) {
@@ -287,41 +289,43 @@ public class GlassFishLogRecord extends LogRecord {
         return getMessage();
     }
 
+    private static class SourceDetector {
 
-    private void detectClassAndMethod(final LogRecord wrappedRecord) {
-        final StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-        boolean ignoredClass = false;
-        for (final StackTraceElement element : stack) {
-            final String className = element.getClassName();
-            if (!ignoredClass) {
-                ignoredClass = isIgnoredStackTraceElement(className);
-                continue;
-            }
-            if (!isIgnoredStackTraceElement(className)) {
-                wrappedRecord.setSourceClassName(className);
-                wrappedRecord.setSourceMethodName(element.getMethodName());
-                return;
-            }
-        }
-    }
-
-
-    /**
-     * @param sourceClassName usually class which created this record
-     * @return if true the class will not be used as a source.
-     */
-    protected boolean isIgnoredStackTraceElement(final String sourceClassName) {
-        return "org.glassfish.main.jul.GlassFishLogger".equals(sourceClassName)
-            || "org.glassfish.main.jul.GlassFishLoggerWrapper".equals(sourceClassName)
+        private static final Set<String> IGNORED_CLASSES = Set.of(
+            "org.glassfish.main.jul.GlassFishLogger",
+            "org.glassfish.main.jul.GlassFishLoggerWrapper",
             // see LogDomains in GlassFish sources
-            || "com.sun.logging.LogDomainsLogger".equals(sourceClassName)
+            "com.sun.logging.LogDomainsLogger",
             // remaining classes are in the JDK
-            || "java.util.logging.Logger".equals(sourceClassName)
-            || "java.util.logging.LoggingProxyImpl".equals(sourceClassName)
+            "java.util.logging.Logger",
+            "java.util.logging.LoggingProxyImpl",
             // see LoggingPrintStream
-            || "java.lang.Throwable".equals(sourceClassName)
-            || sourceClassName.startsWith("java.lang.reflect.")
-            || sourceClassName.startsWith("sun.util.logging.")
-            || sourceClassName.startsWith("sun.reflect.");
+            "java.lang.Throwable"
+        );
+
+        private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.SHOW_REFLECT_FRAMES);
+
+        static void detectClassAndMethod(final LogRecord wrappedRecord) {
+            STACK_WALKER
+                .walk(stackFrames ->
+                    stackFrames.dropWhile(frame -> !isIgnoredStackFrame(frame.getClassName()))
+                        .filter(frame -> !isIgnoredStackFrame(frame.getClassName()))
+                        .findFirst())
+                .ifPresent(frame -> {
+                    wrappedRecord.setSourceClassName(frame.getClassName());
+                    wrappedRecord.setSourceMethodName(frame.getMethodName());
+                });
+        }
+
+        /**
+         * @param sourceClassName usually class which created this record
+         * @return if true the class will not be used as a source.
+         */
+        private static boolean isIgnoredStackFrame(final String sourceClassName) {
+            return IGNORED_CLASSES.contains(sourceClassName)
+                || sourceClassName.startsWith("java.lang.reflect.")
+                || sourceClassName.startsWith("sun.util.logging.")
+                || sourceClassName.startsWith("sun.reflect.");
+        }
     }
 }

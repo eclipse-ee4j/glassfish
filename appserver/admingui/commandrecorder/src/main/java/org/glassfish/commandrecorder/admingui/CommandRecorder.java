@@ -22,7 +22,6 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.io.Serializable;
 import javax.security.auth.Subject;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandRunner;
@@ -31,7 +30,7 @@ import org.glassfish.extras.commandlogger.AdminCommandLogger;
 
 @Named
 @RequestScoped
-public class CommandRecorder implements Serializable {
+public class CommandRecorder {
 
     @Inject
     Instance<CommandRunner> commandRunnerprovider;

@@ -127,10 +127,6 @@
                                 
                                 <!-- To support Jakarta Annotations 3 -->
                                 <jarupdate
-                                    basedir="${patches}/parsson-media" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/parsson-media.jar"
-                                />
-                                <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />

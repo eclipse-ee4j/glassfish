@@ -291,7 +291,7 @@ public class GlassFishLogRecord extends LogRecord {
 
     private static class SourceDetector {
 
-        private static final Set<String> IGNORED_CLASSES = Set.of(
+        private static final Set<String> LOGGING_CLASSES = Set.of(
             "org.glassfish.main.jul.GlassFishLogger",
             "org.glassfish.main.jul.GlassFishLoggerWrapper",
             // see LogDomains in GlassFish sources
@@ -308,8 +308,8 @@ public class GlassFishLogRecord extends LogRecord {
         static void detectClassAndMethod(final LogRecord wrappedRecord) {
             STACK_WALKER
                 .walk(stackFrames ->
-                    stackFrames.dropWhile(frame -> !isIgnoredStackFrame(frame.getClassName()))
-                        .filter(frame -> !isIgnoredStackFrame(frame.getClassName()))
+                    stackFrames.dropWhile(SourceDetector::isSourceStackFrame)
+                        .filter(SourceDetector::isSourceStackFrame)
                         .findFirst())
                 .ifPresent(frame -> {
                     wrappedRecord.setSourceClassName(frame.getClassName());
@@ -318,13 +318,33 @@ public class GlassFishLogRecord extends LogRecord {
         }
 
         /**
-         * @param sourceClassName usually class which created this record
-         * @return if true the class will not be used as a source.
+         * @param stackFrame the stack frame
+         * @return {@code true} if the {@code stackFrame} will be used as a source
          */
-        private static boolean isIgnoredStackFrame(final String sourceClassName) {
-            return IGNORED_CLASSES.contains(sourceClassName)
+        private static boolean isSourceStackFrame(StackWalker.StackFrame stackFrame) {
+            return !isLoggingStackFrame(stackFrame)
+                && !isReflectionStackFrame(stackFrame);
+        }
+
+        /**
+         * @param stackFrame the stack frame
+         * @return {@code true} if the {@code stackFrame} is logging frame
+         */
+        private static boolean isLoggingStackFrame(final StackWalker.StackFrame stackFrame) {
+            final String sourceClassName = stackFrame.getClassName();
+            return LOGGING_CLASSES.contains(sourceClassName)
+                || sourceClassName.startsWith("sun.util.logging.");
+        }
+
+        /**
+         * @param stackFrame the stack frame
+         * @return {@code true} if the {@code stackFrame} is reflection frame
+         */
+        private static boolean isReflectionStackFrame(final StackWalker.StackFrame stackFrame) {
+            final String sourceClassName = stackFrame.getClassName();
+            return sourceClassName.startsWith("jdk.internal.reflect.")
                 || sourceClassName.startsWith("java.lang.reflect.")
-                || sourceClassName.startsWith("sun.util.logging.")
+                || sourceClassName.startsWith("java.lang.invoke.")
                 || sourceClassName.startsWith("sun.reflect.");
         }
     }

@@ -19,7 +19,7 @@ package org.glassfish.orb.admin.test;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
 
-import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.hk2.HK2JUnit5Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 

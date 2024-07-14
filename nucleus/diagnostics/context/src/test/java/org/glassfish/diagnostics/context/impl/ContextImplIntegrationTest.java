@@ -17,7 +17,7 @@
 package org.glassfish.diagnostics.context.impl;
 
 import org.glassfish.diagnostics.context.ContextManager;
-import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.hk2.HK2JUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

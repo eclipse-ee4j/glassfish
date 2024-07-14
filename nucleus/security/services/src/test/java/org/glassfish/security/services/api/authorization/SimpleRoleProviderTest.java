@@ -28,7 +28,7 @@ import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl;
 import org.glassfish.security.services.spi.authorization.RoleMappingProvider;
-import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.hk2.HK2JUnit5Extension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

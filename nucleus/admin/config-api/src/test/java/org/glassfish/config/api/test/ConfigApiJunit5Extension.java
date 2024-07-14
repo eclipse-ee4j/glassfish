@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,18 +31,17 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.tests.utils.junit.DomainXml;
-import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.BaseHK2JUnit5Extension;
 import org.glassfish.tests.utils.mock.TestDocument;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.jvnet.hk2.config.DomDocument;
 
 import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 
-
 /**
  * @author David Matejcek
  */
-public class ConfigApiJunit5Extension extends HK2JUnit5Extension {
+public class ConfigApiJunit5Extension extends BaseHK2JUnit5Extension {
 
     @Override
     protected String getDomainXml(Class<?> testClass) {

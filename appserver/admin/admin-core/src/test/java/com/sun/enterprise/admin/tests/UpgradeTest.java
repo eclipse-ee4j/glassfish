@@ -33,7 +33,7 @@ import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.grizzly.config.dom.ThreadPool;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.tests.utils.junit.DomainXml;
-import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.hk2.HK2JUnit5Extension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,10 +89,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author David Matejcek
  */
-public class HK2JUnit5Extension
+public class BaseHK2JUnit5Extension
     implements BeforeAllCallback, TestInstancePostProcessor, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
-    private static final Logger LOG = Logger.getLogger(HK2JUnit5Extension.class.getName());
+    protected final Logger LOG = Logger.getLogger(getClass().getName());
     private static final String CLASS_PATH_PROP = "java.class.path";
     private static final String DOT_CLASS = ".class";
     private static final String START_TIME_METHOD = "start time method";

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021-2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021-2024 Contributors to the Eclipse Foundation.
     Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -71,7 +71,7 @@
         <module>deployment</module>
         <module>distributions</module>
         <module>security</module>
-        <module>test-utils</module>
+        <module>tests</module>
         <module>diagnostics</module>
         <module>resources</module>
         <module>featuresets</module>

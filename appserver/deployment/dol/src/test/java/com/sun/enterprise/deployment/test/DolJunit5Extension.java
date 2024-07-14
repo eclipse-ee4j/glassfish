@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.deployment.test;
 
-import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.hk2.HK2JUnit5Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**

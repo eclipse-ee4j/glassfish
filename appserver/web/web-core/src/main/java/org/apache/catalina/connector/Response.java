@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -1539,10 +1540,15 @@ public class Response implements HttpResponse, HttpServletResponse {
     private String getRedirectScheme() {
         String scheme = connectorRequest.getScheme();
 
-        if (getConnector() != null && getConnector().getAuthPassthroughEnabled()) {
-            ProxyHandler proxyHandler = getConnector().getProxyHandler();
-            if (proxyHandler != null && proxyHandler.getSSLKeysize(connectorRequest) > 0) {
-                scheme = "https";
+        if (getConnector() != null) {
+            if (getConnector().getProxyScheme() != null) {
+                scheme = getConnector().getProxyScheme();
+            }
+            if (getConnector().getAuthPassthroughEnabled()) {
+                ProxyHandler proxyHandler = getConnector().getProxyHandler();
+                if (proxyHandler != null && proxyHandler.getSSLKeysize(connectorRequest) > 0) {
+                    scheme = "https";
+                }
             }
         }
 

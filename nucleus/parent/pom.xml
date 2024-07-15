@@ -70,7 +70,7 @@
     </issueManagement>
     <properties>
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>6.0.0</jakarta.el-api.version>
+        <jakarta.el-api.version>6.0.1-SNAPSHOT</jakarta.el-api.version>
         <expressly.version>6.0.0-M1</expressly.version>
 
         <!-- Jakarta Servlet -->
@@ -727,11 +727,6 @@
                 <version>${jsch.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>3.3.3</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.annotations</groupId>
                 <artifactId>logging-annotation-processor</artifactId>
                 <version>${logging-annotation-processor.version}</version>
@@ -819,7 +814,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -837,7 +832,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.3</version>
+                    <version>3.7.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -846,15 +841,15 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -878,7 +873,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -914,11 +909,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <configLocation>org/glassfish/qa/config/checkstyle/checkstyle.xml</configLocation>
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
@@ -944,7 +939,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.16.0</version>
+                            <version>10.17.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -960,7 +955,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.4</version>
                 </plugin>
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
@@ -969,7 +964,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -977,12 +972,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M13</version>
+                    <version>4.0.0-M15</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -996,7 +991,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
@@ -1004,16 +999,16 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>

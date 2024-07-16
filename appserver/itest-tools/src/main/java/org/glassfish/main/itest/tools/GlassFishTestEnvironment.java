@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.itest.tools.asadmin.StartServ;
 
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,6 +62,7 @@ public class GlassFishTestEnvironment {
     private static final String ADMIN_PASSWORD = "admintest";
 
     private static final File ASADMIN = findAsadmin();
+    private static final File STARTSERV = findStartServ();
     private static final File KEYTOOL = findKeyTool();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
@@ -80,7 +82,7 @@ public class GlassFishTestEnvironment {
             // AS_START_TIMEOUT for the detection that "the server is running!"
             // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
-        }
+    }
         // This is the absolutely first start - if it fails, all other starts will fail too.
         // Note: --suspend implicitly enables --debug
         assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain",
@@ -93,6 +95,21 @@ public class GlassFishTestEnvironment {
      */
     public static Asadmin getAsadmin() {
         return new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE);
+    }
+
+
+    /**
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static StartServ getStartServ() {
+        return new StartServ(STARTSERV);
+    }
+
+    /**
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static StartServ getStartServInTopLevelBin() {
+        return new StartServ(findStartServ("../"));
     }
 
 
@@ -259,6 +276,10 @@ public class GlassFishTestEnvironment {
         return new File(GF_ROOT, isWindows() ? "bin/asadmin.bat" : "bin/asadmin");
     }
 
+    private static File findStartServ(String... optionalPrefix) {
+        String prefix = optionalPrefix.length > 0 ? optionalPrefix[0] : "";
+        return new File(GF_ROOT, isWindows() ? prefix + "bin/startserv.bat" : prefix + "bin/startserv");
+    }
 
     private static File findKeyTool() {
         return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.exe" : "bin/keytool");

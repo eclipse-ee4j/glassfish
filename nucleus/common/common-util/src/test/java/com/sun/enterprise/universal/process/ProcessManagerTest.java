@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.universal.process;
 
+
 import com.sun.enterprise.util.OS;
 
 import java.io.File;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
+
 
 /**
  * @author bnevins
@@ -94,6 +96,50 @@ public class ProcessManagerTest {
         assertAll(
                 () -> assertEquals(0, exitCode),
                 () -> assertEquals("hello\n", pm.getStdout())
+        );
+    }
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    @DisabledOnOs(WINDOWS)
+    void testWaitUntilTextInStdOut() {
+        ProcessManager pm = new ProcessManager("sh", "-c", "echo \"start\nhello\ncontinue\"; sleep 10");
+        pm.setEcho(false);
+        pm.setTextToWaitFor("hello");
+        int exitCode = assertDoesNotThrow(pm::execute);
+        assertAll(
+                () -> assertEquals(0, exitCode),
+                () -> assertEquals("start\nhello\ncontinue\n", pm.getStdout())
+        );
+    }
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    @DisabledOnOs(WINDOWS)
+    void testWaitUntilTextInStdErr() {
+        ProcessManager pm = new ProcessManager("sh", "-c", "echo \"start\nhello\ncontinue\" >&2; sleep 10");
+        pm.setEcho(false);
+        pm.setTextToWaitFor("hello");
+        int exitCode = assertDoesNotThrow(pm::execute);
+        assertAll(
+                () -> assertEquals(0, exitCode),
+                () -> assertEquals("start\nhello\ncontinue\n", pm.getStderr())
+        );
+    }
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    @DisabledOnOs(WINDOWS)
+    void testDetectTextInStdOutIfProcessStops() throws InterruptedException {
+        int sleepTimeSeconds = 1;
+        ProcessManager pm = new ProcessManager("sh", "-c", "echo \"start\nhello\ncontinue\"");
+        pm.setEcho(false);
+        pm.setTextToWaitFor("hello");
+        int exitCode = assertDoesNotThrow(pm::execute);
+        Thread.sleep(sleepTimeSeconds * 1000);
+        assertAll(
+                () -> assertEquals(0, exitCode),
+                () -> assertEquals("start\nhello\ncontinue\n", pm.getStdout())
         );
     }
 

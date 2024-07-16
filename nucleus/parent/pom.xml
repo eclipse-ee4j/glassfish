@@ -747,11 +747,6 @@
                 <version>${jsch.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>3.3.3</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.annotations</groupId>
                 <artifactId>logging-annotation-processor</artifactId>
                 <version>${logging-annotation-processor.version}</version>
@@ -839,18 +834,30 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>4.0.0</version>
+                    <version>4.0.1</version>
                     <!-- Adds support for glassfish-jar and it's customized lifecycle-->
                     <extensions>true</extensions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>commons-io</groupId>
+                            <artifactId>commons-io</artifactId>
+                            <version>2.16.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-utils</artifactId>
+                            <version>4.0.1</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.3</version>
+                    <version>3.7.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -859,15 +866,15 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -891,7 +898,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -927,11 +934,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <configLocation>org/glassfish/qa/config/checkstyle/checkstyle.xml</configLocation>
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
@@ -973,7 +980,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.cyclonedx</groupId>
@@ -983,11 +990,11 @@
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.7.1</version>
+                    <version>1.9.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -995,12 +1002,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M9</version>
+                    <version>4.0.0-M15</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.3.0</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1010,28 +1017,28 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1082,7 +1089,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>8.0.2</version>
+                    <version>9.0.1</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1133,17 +1140,6 @@
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>20030911</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
-                                        </rule>
-                                        <rule>
-                                            <groupId>org.bsc.maven</groupId>
-                                            <artifactId>maven-processor-plugin</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>5.0-jdk8(-rc.)?</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>

@@ -21,9 +21,8 @@
         <groupId>org.glassfish.main.docs</groupId>
         <version>7.0.16-SNAPSHOT</version>
     </parent>
-    <groupId>org.glassfish.main.docs</groupId>
+    
     <artifactId>sample-app</artifactId>
-    <version>7.0.16-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Eclipse GlassFish Hello Sample, Release 7</name>
     
@@ -47,12 +46,10 @@
            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
             </plugin>
         </plugins>
     </build>

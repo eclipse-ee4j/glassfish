@@ -157,7 +157,7 @@
             <plugin>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>4.0.3</version>
                 <executions>
                     <execution>
                         <id>jaxws-generate</id>

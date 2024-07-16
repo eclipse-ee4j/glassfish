@@ -48,14 +48,13 @@ public class AdminCommandLogger {
                 event.getParameters(),
                 event.getUserPrincipal()
                         .map(UserPrincipal::getName)
-                        .orElse(null));
+                        .orElse("Unknown user"));
     }
 
     public void logCommand(String commandName, ParameterMap parameters, String userName) {
         if (shouldLogCommand(commandName)) {
             String commandLine = constructCommandLine(commandName, parameters);
-            logger.log(INFO, () -> userName != null ? "User " + userName : "Unknown user"
-                        + " executed admin command: " + commandLine
+            logger.log(INFO, () -> "User " + userName + " executed admin command: " + commandLine
             );
         }
     }

@@ -179,6 +179,9 @@ public class CommandRunnerImpl implements CommandRunner {
     @Inject
     private CommandSecurityChecker commandSecurityChecker;
 
+    @Inject
+    private InvokeEventService eventService;
+
     /**
      * Returns an initialized ActionReport instance for the passed type or
      * null if it cannot be found.
@@ -1641,8 +1644,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 invocation.name(),
                 invocation.parameters(),
                 subject);
-        InvokeEventService.get()
-                .getCommandInvokedTopic()
+        eventService.getCommandInvokedTopic()
                 .publish(event);
     }
 

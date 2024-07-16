@@ -26,7 +26,7 @@ import jakarta.faces.context.FacesContext;
  */
 public class AdminGuiViewHandler extends ViewHandlerWrapper {
 
-    private ViewHandler defaultViewHandler = null;
+    private ViewHandler defaultViewHandler;
 
     public AdminGuiViewHandler(ViewHandler wrapped) {
         super(wrapped);

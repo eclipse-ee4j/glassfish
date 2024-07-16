@@ -33,7 +33,7 @@ import org.glassfish.extras.commandlogger.AdminCommandLogger;
 public class CommandRecorder {
 
     @Inject
-    Instance<CommandRunner> commandRunnerprovider;
+    Instance<CommandRunner> commandRunnerProvider;
 
     @Inject
     Instance<ActionReport> actionReportProvider;
@@ -54,7 +54,7 @@ public class CommandRecorder {
     }
 
     private void setSystemProperty(AdminCommandLogger.LogMode propertyValue) {
-        final CommandRunner.CommandInvocation commandInvocation = commandRunnerprovider.get().getCommandInvocation("create-system-properties", actionReportProvider.get(), subjectProvider.get());
+        final CommandRunner.CommandInvocation commandInvocation = commandRunnerProvider.get().getCommandInvocation("create-system-properties", actionReportProvider.get(), subjectProvider.get());
         commandInvocation.parameters(parameters(propertyValue)).execute();
     }
 

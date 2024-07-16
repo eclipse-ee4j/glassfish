@@ -189,7 +189,7 @@ final class WebModuleListener implements LifecycleListener {
         ServiceLocator defaultServices = webContainer.getServerContext().getDefaultServices();
         final String servicesName = webModule.getComponentId();
         ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(servicesName, defaultServices);
-        initializeChildServices(webAppServices, Thread.currentThread().getContextClassLoader());
+        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
 
         // set services for jsf injection
         servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, webAppServices);
@@ -272,16 +272,14 @@ final class WebModuleListener implements LifecycleListener {
 
     }
 
-    private static void initializeChildServices(ServiceLocator serviceLocator, ClassLoader childClassLoader) {
+    private static void initializeServicesFromClassLoader(ServiceLocator serviceLocator, ClassLoader classLoader) {
         DynamicConfigurationService dcs =
                     serviceLocator.getService(DynamicConfigurationService.class);
             Populator populator = dcs.getPopulator();
         try {
-            populator.populate(new ClasspathDescriptorFileFinder(childClassLoader));
-        } catch (IOException ex) {
-            Logger.getLogger(WebModuleListener.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MultiException ex) {
-            Logger.getLogger(WebModuleListener.class.getName()).log(Level.SEVERE, null, ex);
+            populator.populate(new ClasspathDescriptorFileFinder(classLoader));
+        } catch (IOException | MultiException ex) {
+            _logger.log(Level.SEVERE, ex, ex::getMessage);
         }
     }
 

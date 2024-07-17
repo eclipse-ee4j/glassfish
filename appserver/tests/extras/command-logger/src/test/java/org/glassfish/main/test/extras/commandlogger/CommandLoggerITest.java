@@ -34,7 +34,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  *
  * @author Ondro Mihalyi
  */
-public class CommandLoggerTest {
+public class CommandLoggerITest {
 
     private static final Asadmin ASADMIN = getAsadmin();
 

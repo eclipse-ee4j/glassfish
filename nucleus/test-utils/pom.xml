@@ -71,6 +71,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>compile</scope>
         </dependency>
+        <!-- Used in Hk2 junit extension to initialize the HK2 Topic service -->
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-extras</artifactId>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>

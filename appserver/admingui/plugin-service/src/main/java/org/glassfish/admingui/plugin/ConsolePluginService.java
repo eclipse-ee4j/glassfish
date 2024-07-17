@@ -44,6 +44,7 @@ import org.glassfish.admingui.connector.IntegrationPoint;
 import org.glassfish.admingui.connector.ConsoleConfig;
 
 import jakarta.inject.Inject;
+import java.util.Iterator;
 
 /**
  * <p>
@@ -80,24 +81,39 @@ public class ConsolePluginService {
         if ((providers != null) && (providers.iterator().hasNext())) {
             // Get our parser...
             ConfigParser parser = new ConfigParser(habitat);
-            URL url = null;
             String id = null;
+
+            Map<URL, ClassLoader> configUrls = new HashMap<>();
 
             // Loop through the configs and add them all
             for (ConsoleProvider provider : providers) {
                 // Read the contents from the URL
-                url = provider.getConfiguration();
-                if (url == null) {
-                    url = provider.getClass().getClassLoader().getResource(
-                            ConsoleProvider.DEFAULT_CONFIG_FILENAME);
+                URL url = provider.getConfiguration();
+                Iterator<URL> urlsIterator;
+                if (url != null) {
+                    urlsIterator = List.of(url).iterator();
+                } else {
+                    try {
+                        urlsIterator = provider.getClass().getClassLoader().getResources(
+                                ConsoleProvider.DEFAULT_CONFIG_FILENAME).asIterator();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if (!urlsIterator.hasNext()) {
+                        logger.log(Level.INFO, "Unable to find "
+                                + ConsoleProvider.DEFAULT_CONFIG_FILENAME
+                                + " file for provider '"
+                                + provider.getClass().getName() + "'");
+                        continue;
+                    }
                 }
-                if (url == null) {
-                    logger.log(Level.INFO, "Unable to find "
-                            + ConsoleProvider.DEFAULT_CONFIG_FILENAME
-                            + " file for provider '"
-                            + provider.getClass().getName() + "'");
-                    continue;
+                while (urlsIterator.hasNext()) {
+                    configUrls.put(urlsIterator.next(), provider.getClass().getClassLoader());
                 }
+            }
+            for (Map.Entry<URL, ClassLoader> entry : configUrls.entrySet()) {
+                URL url = entry.getKey();
+                ClassLoader classLoader = entry.getValue();
 //System.out.println("Provider *"+provider+"* : url=*"+url+"*");
                 DomDocument doc = parser.parse(url);
 
@@ -107,8 +123,8 @@ public class ConsolePluginService {
                 // Save the ClassLoader for later
 //System.out.println("Storing: " + config.getId() + " : " + provider.getClass().getClassLoader());
                 id = config.getId();
-                moduleClassLoaderMap.put(id, provider.getClass().getClassLoader());
-                classLoaderModuleMap.put(provider.getClass().getClassLoader(), id);
+                moduleClassLoaderMap.put(id, classLoader);
+                classLoaderModuleMap.put(classLoader, id);
 
                 // Add the new IntegrationPoints
                 addIntegrationPoints(config.getIntegrationPoints(), id);

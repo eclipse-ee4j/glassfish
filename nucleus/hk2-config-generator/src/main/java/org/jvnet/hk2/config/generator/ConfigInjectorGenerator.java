@@ -69,7 +69,6 @@ import javax.lang.model.util.SimpleElementVisitor9;
 import javax.lang.model.util.SimpleTypeVisitor9;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import javax.tools.Diagnostic.Kind;
 import javax.tools.StandardLocation;
 
 import org.jvnet.hk2.annotations.InhabitantAnnotation;

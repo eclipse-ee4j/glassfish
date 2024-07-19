@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,12 +14,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package org.glassfish.admingui.common.deployment;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.glassfish.deployment.common.DeploymentUtils;
 
 /**
  * Convenience class for managing deployment properties - settings or options to
@@ -308,8 +309,7 @@ public class DFDeploymentProperties extends Properties {
     public static final String RES_UNDEPLOYMENT = "resUndeployment";
     public static final String RES_REDEPLOYMENT = "resRedeployment";
     public static final String RES_NO_OP = "resNoOp";
-    public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED
-            = DeploymentUtils.DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED;
+    public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
     public static final String DEPLOY_OPTION_LIBRARIES = "libraries";
 
     // possible values for module state

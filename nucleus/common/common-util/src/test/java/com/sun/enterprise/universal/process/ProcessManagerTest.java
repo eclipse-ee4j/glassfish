@@ -131,12 +131,15 @@ public class ProcessManagerTest {
     @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
     void testDetectTextInStdOutIfProcessStops() throws InterruptedException {
-        int sleepTimeSeconds = 1;
         ProcessManager pm = new ProcessManager("sh", "-c", "echo \"start\nhello\ncontinue\"");
         pm.setEcho(false);
         pm.setTextToWaitFor("hello");
         int exitCode = assertDoesNotThrow(pm::execute);
-        Thread.sleep(sleepTimeSeconds * 1000);
+        try {
+            Thread.sleep(100L);
+        } catch (InterruptedException e) {
+            // ignore.
+        }
         assertAll(
                 () -> assertEquals(0, exitCode),
                 () -> assertEquals("start\nhello\ncontinue\n", pm.getStdout())

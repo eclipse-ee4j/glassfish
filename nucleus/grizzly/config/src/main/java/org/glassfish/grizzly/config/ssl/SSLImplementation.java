@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +19,11 @@
 package org.glassfish.grizzly.config.ssl;
 
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.net.ssl.SSLEngine;
-import org.glassfish.grizzly.config.GrizzlyConfig;
 
 import org.glassfish.grizzly.ssl.SSLSupport;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * SSLImplementation:
@@ -32,48 +32,14 @@ import org.glassfish.grizzly.ssl.SSLSupport;
  *
  * @author EKR
  */
-public abstract class SSLImplementation {
-    /**
-     * Default Logger.
-     */
-    private final static Logger logger = GrizzlyConfig.logger();
-    // The default implementations in our search path
-    private static final String JSSEImplementationClass = JSSEImplementation.class.getName();
-    private static final String[] implementations = {JSSEImplementationClass};
+@Contract
+public interface SSLImplementation {
 
-    public static SSLImplementation getInstance() throws ClassNotFoundException {
-        for (String implementation : implementations) {
-            try {
-                return getInstance(implementation);
-            } catch (Exception e) {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "Error creating " + implementation, e);
-                }
-            }
-        }
-        // If we can't instantiate any of these
-        throw new ClassNotFoundException("Can't find any SSL implementation");
-    }
+    String getImplementationName();
 
-    public static SSLImplementation getInstance(String className) throws ClassNotFoundException {
-        if (className == null) {
-            return getInstance();
-        }
-        try {
-            return (SSLImplementation) ((Class) Class.forName(className)).newInstance();
-        } catch (Exception e) {
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.log(Level.FINEST, "Error loading SSL Implementation " + className, e);
-            }
-            throw new ClassNotFoundException("Error loading SSL Implementation " + className + " :" + e.toString());
-        }
-    }
+    ServerSocketFactory getServerSocketFactory();
 
-    public abstract String getImplementationName();
+    SSLSupport getSSLSupport(Socket sock);
 
-    public abstract ServerSocketFactory getServerSocketFactory();
-
-    public abstract SSLSupport getSSLSupport(Socket sock);
-
-    public abstract SSLSupport getSSLSupport(SSLEngine sslEngine);
+    SSLSupport getSSLSupport(SSLEngine sslEngine);
 }

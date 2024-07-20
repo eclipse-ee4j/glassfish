@@ -17,15 +17,12 @@
 
 package com.sun.enterprise.security.ssl;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -34,22 +31,32 @@ import javax.net.ssl.SSLSocket;
 
 import org.glassfish.grizzly.ssl.SSLSupport;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
+
 /**
- *
  * @author Sudarsan Sridhar
  */
 public class GlassfishSSLSupport implements SSLSupport {
 
-    private static final Logger LOG = SecurityLoggerInfo.getLogger();
+    private static final Logger LOG = System.getLogger(GlassfishSSLSupport.class.getName());
 
     /**
      * A mapping table to determine the number of effective bits in the key when using a cipher suite containing the specified cipher
      * name. The underlying data came from the TLS Specification (RFC 2246), Appendix C.
      */
-    private static final CipherData ciphers[] = { new CipherData("_WITH_NULL_", 0), new CipherData("_WITH_IDEA_CBC_", 128),
-        new CipherData("_WITH_RC2_CBC_40_", 40), new CipherData("_WITH_RC4_40_", 40), new CipherData("_WITH_RC4_128_", 128),
-        new CipherData("_WITH_DES40_CBC_", 40), new CipherData("_WITH_DES_CBC_", 56), new CipherData("_WITH_3DES_EDE_CBC_", 168),
-        new CipherData("_WITH_AES_128_", 128), new CipherData("_WITH_AES_256_", 256) };
+    private static final CipherData ciphers[] = {
+        new CipherData("_WITH_NULL_", 0),
+        new CipherData("_WITH_IDEA_CBC_", 128),
+        new CipherData("_WITH_RC2_CBC_40_", 40),
+        new CipherData("_WITH_RC4_40_", 40),
+        new CipherData("_WITH_RC4_128_", 128),
+        new CipherData("_WITH_DES40_CBC_", 40),
+        new CipherData("_WITH_DES_CBC_", 56),
+        new CipherData("_WITH_3DES_EDE_CBC_", 168),
+        new CipherData("_WITH_AES_128_", 128),
+        new CipherData("_WITH_AES_256_", 256)};
 
     private final SSLSocket socket;
     private final SSLEngine engine;
@@ -85,7 +92,7 @@ public class GlassfishSSLSupport implements SSLSupport {
     @Override
     public Certificate[] getPeerCertificates(boolean force) throws IOException {
         if (session == null) {
-            LOG.log(Level.FINEST, "SSL session is null, no certificates available.");
+            LOG.log(DEBUG, "SSL session is null, no certificates available.");
             return null;
         }
         Certificate[] certs = null;
@@ -159,22 +166,24 @@ public class GlassfishSSLSupport implements SSLSupport {
         try {
             certs = session.getPeerCertificates();
         } catch (SSLPeerUnverifiedException e) {
-            LOG.log(Level.FINE, "Could not get peer certificates.", e);
+            LOG.log(TRACE, "Could not get peer certificates.", e);
+            return null;
         }
 
         if (certs == null) {
-            certs = new X509Certificate[0];
+            return null;
         }
         X509Certificate[] x509Certs = new X509Certificate[certs.length];
         for (int i = 0; i < x509Certs.length; i++) {
+            final Certificate srcCertificate = certs[i];
             try {
-                byte buffer[] = certs[i].getEncoded();
+                byte[] buffer = srcCertificate.getEncoded();
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
-                x509Certs[i] = (X509Certificate) cf.generateCertificate(stream);
-                LOG.log(Level.FINE, "Cert #{0} = {1}", new Object[] {i, x509Certs[i]});
+                X509Certificate certificate = (X509Certificate) cf.generateCertificate(stream);
+                LOG.log(TRACE, "Cert #{0} = {1}", i, certificate);
             } catch (Exception ex) {
-                LOG.log(Level.INFO, SecurityLoggerInfo.convertingCertError, new Object[] {certs[i], ex.toString()});
+                LOG.log(ERROR, "Error translating " + srcCertificate, ex);
                 return null;
             }
         }

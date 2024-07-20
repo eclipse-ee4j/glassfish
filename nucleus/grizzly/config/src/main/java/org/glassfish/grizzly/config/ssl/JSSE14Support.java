@@ -21,12 +21,12 @@ package org.glassfish.grizzly.config.ssl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
 import java.net.SocketException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.SSLEngine;
@@ -34,15 +34,13 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
-import org.glassfish.grizzly.Grizzly;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 
 
 class JSSE14Support extends JSSESupport {
 
-    /**
-     * Default Logger.
-     */
-    private final static Logger logger = Grizzly.logger(JSSE14Support.class);
+    private static final Logger LOG = System.getLogger(JSSE14Support.class.getName());
 
     private final Listener listener = new Listener();
 
@@ -57,8 +55,8 @@ class JSSE14Support extends JSSESupport {
 
     @Override
     protected void handShake() throws IOException {
-        ssl.setNeedClientAuth(true);
-        synchronousHandshake(ssl);
+        socket.setNeedClientAuth(true);
+        synchronousHandshake(socket);
     }
 
     /**
@@ -76,8 +74,7 @@ class JSSE14Support extends JSSESupport {
         socket.startHandshake();
         int maxTries = 60; // 60 * 1000 = example 1 minute time out
         for (int i = 0; i < maxTries; i++) {
-            if(logger.isLoggable(Level.FINE))
-                logger.log(Level.FINE, "Reading for try #{0}", i);
+            LOG.log(DEBUG, "Reading for try #{0}", i);
             try {
                 final int bytesRead = in.read(b);
                 assert bytesRead <= 0;
@@ -107,9 +104,10 @@ class JSSE14Support extends JSSESupport {
         Certificate [] certs;
         try {
             certs = session.getPeerCertificates();
-        } catch( Throwable t ) {
-            if (logger.isLoggable(Level.FINEST))
-                logger.log(Level.FINEST,"Error getting client certs",t);
+        } catch (Throwable t) {
+            LOG.log(DEBUG,"Error getting client certs", t);
+            return null;
+        }
         if (certs == null) {
             return null;
         }
@@ -121,20 +119,16 @@ class JSSE14Support extends JSSESupport {
                 x509Certs[i] = (X509Certificate) certs[i];
             } else {
                 try {
-                    byte [] buffer = certs[i].getEncoded();
-                    CertificateFactory cf =
-                        CertificateFactory.getInstance("X.509");
-                    ByteArrayInputStream stream =
-                        new ByteArrayInputStream(buffer);
-                    x509Certs[i] = (X509Certificate)
-                        cf.generateCertificate(stream);
-                } catch(Exception ex) {
-                    logger.log(Level.SEVERE,"Error translating cert " + certs[i], ex);
+                    byte[] buffer = certs[i].getEncoded();
+                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                    ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
+                    x509Certs[i] = (X509Certificate) cf.generateCertificate(stream);
+                } catch (Exception ex) {
+                    LOG.log(ERROR, "Error translating cert " + certs[i], ex);
                     return null;
                 }
             }
-            if(logger.isLoggable(Level.FINE))
-                logger.log(Level.FINE, "Cert #{0} = {1}", new Object[]{i, x509Certs[i]});
+            LOG.log(DEBUG, "Cert #{0} = {1}", i, x509Certs[i]);
         }
         if (x509Certs.length < 1) {
             return null;

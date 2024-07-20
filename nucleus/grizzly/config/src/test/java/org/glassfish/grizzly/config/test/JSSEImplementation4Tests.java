@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -15,12 +16,20 @@
  * limitations under the License.
  */
 
-package org.glassfish.grizzly.config.ssl;
+package org.glassfish.grizzly.config.test;
+
+import jakarta.inject.Singleton;
 
 import java.net.Socket;
+
 import javax.net.ssl.SSLEngine;
 
+import org.glassfish.grizzly.config.ssl.JSSEFactory;
+import org.glassfish.grizzly.config.ssl.SSLImplementation;
+import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
 import org.glassfish.grizzly.ssl.SSLSupport;
+import org.jvnet.hk2.annotations.ContractsProvided;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * JSSEImplementation:
@@ -29,17 +38,20 @@ import org.glassfish.grizzly.ssl.SSLSupport;
  *
  * @author EKR
  */
-public class JSSEImplementation extends SSLImplementation {
+@Service
+@Singleton
+@ContractsProvided(SSLImplementation.class)
+public class JSSEImplementation4Tests implements SSLImplementation {
     static final String JSSE14Factory = "org.glassfish.grizzly.config.ssl.JSSE14Factory";
     static final String SSLSocketClass = "javax.net.ssl.SSLSocket";
     private JSSEFactory factory;
 
-    public JSSEImplementation() throws ClassNotFoundException {
+    public JSSEImplementation4Tests() throws ClassNotFoundException {
         // Check to see if JSSE is floating around somewhere
         Class.forName(SSLSocketClass);
         try {
-            Class factcl = Class.forName(JSSE14Factory);
-            factory = (JSSEFactory) factcl.newInstance();
+            Class<?> factcl = Class.forName(JSSE14Factory);
+            factory = (JSSEFactory) factcl.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -59,11 +71,9 @@ public class JSSEImplementation extends SSLImplementation {
     public SSLSupport getSSLSupport(Socket s) {
         return factory.getSSLSupport(s);
     }
-    // START SJSAS 6439313
 
     @Override
     public SSLSupport getSSLSupport(SSLEngine sslEngine) {
         return factory.getSSLSupport(sslEngine);
     }
-    // END SJSAS 6439313
 }

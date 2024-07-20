@@ -127,7 +127,7 @@ public class CreateSsl implements AdminCommand {
     @Inject
     ServiceLocator habitat;
 
-    private static final String GF_SSL_IMPL_NAME = "com.sun.enterprise.security.ssl.GlassfishSSLImpl";
+    private static final String GF_SSL_IMPL_NAME = GlassfishSSLImpl.class.getName();
 
     /**
      * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the

@@ -208,7 +208,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         private static final String CLIENT_AUTH_VALUE = "want";
         private static final String SSL3_ENABLED_VALUE = "false";
-        private static final String CLASSNAME_VALUE = "com.sun.enterprise.security.ssl.GlassfishSSLImpl";
+        private static final String CLASSNAME_VALUE = GlassfishSSLImpl.class.getName();
 
         private final Transaction t;
         private final Config config_w;

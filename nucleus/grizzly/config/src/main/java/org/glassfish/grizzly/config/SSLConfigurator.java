@@ -327,22 +327,20 @@ public class SSLConfigurator extends SSLEngineConfigurator {
                 }
             }
         }
-        return ((enabledCiphers == null)
-                ? null
-                : enabledCiphers.toArray(new String[enabledCiphers.size()]));
+        return enabledCiphers == null ? null : enabledCiphers.toArray(String[]::new);
     }
-    /*
+
+
+    /**
      * Converts the given cipher suite name to the corresponding JSSE cipher.
      *
      * @param cipher The cipher suite name to convert
-     *
      * @return The corresponding JSSE cipher suite name, or null if the given
-     * cipher suite name can not be mapped
+     *         cipher suite name can not be mapped
      */
-
     private static String getJSSECipher(final String cipher) {
         final CipherInfo ci = CipherInfo.getCipherInfo(cipher);
-        return ci != null ? ci.getCipherName() : null;
+        return ci == null ? null : ci.getCipherName();
 
     }
     // ---------------------------------------------------------- Nested Classes
@@ -355,6 +353,11 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
         @Override
         public SSLContext createSSLContext() {
+            return configureSSL();
+        }
+
+        @Override
+        public SSLContext createSSLContext(final boolean throwException) {
             return configureSSL();
         }
 
@@ -432,11 +435,6 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         public void setTrustStoreType(String trustStoreType) {
             throw new IllegalStateException("The configuration is immutable");
         }
-
-        @Override
-        public SSLContext createSSLContext(final boolean throwException) {
-            return configureSSL();
-        }
     }
 
     private String getKeyStorePassword(Ssl ssl) {
@@ -497,8 +495,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"}
         };
 
-        private static final Map<String,CipherInfo> ciphers =
-                new HashMap<String,CipherInfo>();
+        private static final Map<String, CipherInfo> ciphers = new HashMap<>();
         private static final ReadWriteLock ciphersLock = new ReentrantReadWriteLock();
 
         private final String configName;
@@ -506,9 +503,9 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         private final short protocolVersion;
 
         static {
-            for (int i = 0, len = OLD_CIPHER_MAPPING.length; i < len; i++) {
-                String nonStdName = OLD_CIPHER_MAPPING[i][0];
-                String stdName = OLD_CIPHER_MAPPING[i][1];
+            for (String[] pair : OLD_CIPHER_MAPPING) {
+                String nonStdName = pair[0];
+                String stdName = pair[1];
                 ciphers.put(nonStdName,
                         new CipherInfo(nonStdName, stdName, (short) (SSL3 | TLS)));
             }
@@ -531,9 +528,8 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
             ciphersLock.writeLock().lock();
             try {
-                for (int i = 0, len = supportedCiphers.length; i < len; i++) {
-                    String s = supportedCiphers[i];
-                    ciphers.put(s, new CipherInfo(s, s, (short) (SSL3 | TLS)));
+                for (String cipher : supportedCiphers) {
+                    ciphers.put(cipher, new CipherInfo(cipher, cipher, (short) (SSL3 | TLS)));
                 }
             } finally {
                 ciphersLock.writeLock().unlock();

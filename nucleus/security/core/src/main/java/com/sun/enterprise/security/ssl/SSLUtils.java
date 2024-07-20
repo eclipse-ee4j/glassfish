@@ -105,8 +105,7 @@ public final class SSLUtils implements PostConstruct {
             mergedTrustStore = mergingTrustStores(securitySupport.getTrustStores());
             getSSLContext(null, null, null);
         } catch (Exception ex) {
-            _logger.log(FINE, "SSLUtils static init fails.", ex);
-            throw new IllegalStateException(ex);
+            throw new IllegalStateException("SSLUtils static init fails.", ex);
         }
     }
 
@@ -371,11 +370,12 @@ public final class SSLUtils implements PostConstruct {
         return getAdminSSLContext(alias, protocol).getSocketFactory();
     }
 
-    /*
-    * @param alias  the admin key alias
-    * @param protocol the protocol or null, uses "TLS" if this argument is null.
-    * @return the initialized SSLContext
-    */
+
+    /**
+     * @param alias the admin key alias
+     * @param protocol the protocol or null, uses "TLS" if this argument is null.
+     * @return the initialized SSLContext
+     */
     public SSLContext getAdminSSLContext(String alias, String protocol) {
         try {
             if (protocol == null) {

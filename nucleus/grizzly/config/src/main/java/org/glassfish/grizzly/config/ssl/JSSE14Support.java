@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,22 +35,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
 import org.glassfish.grizzly.Grizzly;
-// START SJSAS 6439313
-// END SJSAS 6439313
 
-/* JSSESupport
-
-   Concrete implementation class for JSSE
-   Support classes.
-
-   This will only work with JDK 1.2 and up since it
-   depends on JDK 1.2's certificate support
-
-   @author EKR
-   @author Craig R. McClanahan
-   Parts cribbed from JSSECertCompat
-   Parts cribbed from CertificatesValve
-*/
 
 class JSSE14Support extends JSSESupport {
 
@@ -58,18 +44,16 @@ class JSSE14Support extends JSSESupport {
      */
     private final static Logger logger = Grizzly.logger(JSSE14Support.class);
 
-    final Listener listener = new Listener();
+    private final Listener listener = new Listener();
 
-    public JSSE14Support(SSLSocket sock){
+    JSSE14Support(SSLSocket sock){
         super(sock);
         sock.addHandshakeCompletedListener(listener);
     }
 
-    // START SJSAS 6439313
-    public JSSE14Support(SSLEngine sslEngine){
+    JSSE14Support(SSLEngine sslEngine){
         super(sslEngine);
     }
-    // END SJSAS 6439313
 
     @Override
     protected void handShake() throws IOException {
@@ -126,15 +110,15 @@ class JSSE14Support extends JSSESupport {
         } catch( Throwable t ) {
             if (logger.isLoggable(Level.FINEST))
                 logger.log(Level.FINEST,"Error getting client certs",t);
+        if (certs == null) {
             return null;
         }
-        if( certs==null ) return null;
 
         X509Certificate [] x509Certs = new X509Certificate[certs.length];
-        for(int i=0; i < certs.length; i++) {
-            if( certs[i] instanceof X509Certificate ) {
+        for (int i = 0; i < certs.length; i++) {
+            if (certs[i] instanceof X509Certificate) {
                 // always currently true with the JSSE 1.1.x
-                x509Certs[i] = (X509Certificate)certs[i];
+                x509Certs[i] = (X509Certificate) certs[i];
             } else {
                 try {
                     byte [] buffer = certs[i].getEncoded();
@@ -152,14 +136,15 @@ class JSSE14Support extends JSSESupport {
             if(logger.isLoggable(Level.FINE))
                 logger.log(Level.FINE, "Cert #{0} = {1}", new Object[]{i, x509Certs[i]});
         }
-        if(x509Certs.length < 1)
+        if (x509Certs.length < 1) {
             return null;
+        }
         return x509Certs;
     }
 
 
     private static class Listener implements HandshakeCompletedListener {
-        volatile boolean completed = false;
+        volatile boolean completed;
         @Override
         public void handshakeCompleted(HandshakeCompletedEvent event) {
             completed = true;

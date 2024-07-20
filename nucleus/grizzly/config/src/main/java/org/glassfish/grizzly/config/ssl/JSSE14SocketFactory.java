@@ -38,6 +38,7 @@ import java.security.cert.X509CertSelector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.net.ssl.CertPathTrustManagerParameters;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -124,10 +125,8 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
     /**
      * Gets the initialized key managers.
      */
-    protected KeyManager[] getKeyManagers(String algorithm,
-        String keyAlias)
+    protected KeyManager[] getKeyManagers(String algorithm, String keyAlias)
         throws Exception {
-        KeyManager[] kms;
         String keystorePass = getKeystorePassword();
         KeyStore ks = getKeystore(keystorePass);
         if (keyAlias != null && !ks.isKeyEntry(keyAlias)) {
@@ -135,7 +134,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
         }
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(algorithm);
         kmf.init(ks, keystorePass.toCharArray());
-        kms = kmf.getKeyManagers();
+        KeyManager[] kms = kmf.getKeyManagers();
         if (keyAlias != null) {
             for (int i = 0; i < kms.length; i++) {
                 kms[i] = new JSSEKeyManager((X509KeyManager) kms[i], keyAlias);
@@ -253,7 +252,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
                         for (String supportedProtocol : supportedProtocols) {
                             if (supportedProtocol.equals(protocol)) {
                                 if (vec == null) {
-                                    vec = new ArrayList<String>();
+                                    vec = new ArrayList<>();
                                 }
                                 vec.add(protocol);
                                 break;
@@ -277,7 +276,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
                 for (String supportedProtocol : supportedProtocols) {
                     if (supportedProtocol.equals(protocol)) {
                         if (vec == null) {
-                            vec = new ArrayList<String>();
+                            vec = new ArrayList<>();
                         }
                         vec.add(protocol);
                         break;
@@ -330,9 +329,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
             // Will never get here - no client can connect to an unbound port
         } catch (SSLException ssle) {
             // SSL configuration is invalid. Possibly cert doesn't match ciphers
-            IOException ioe = new IOException(sm.getString("jsse.invalid_ssl_conf", ssle.getMessage()));
-            ioe.initCause(ssle);
-            throw ioe;
+            throw new IOException(sm.getString("jsse.invalid_ssl_conf", ssle.getMessage()), ssle);
         } catch (Exception e) {
             /*
              * Possible ways of getting here

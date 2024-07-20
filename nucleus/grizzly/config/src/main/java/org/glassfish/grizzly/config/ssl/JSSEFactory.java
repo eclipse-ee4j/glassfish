@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -27,19 +28,20 @@ import org.glassfish.grizzly.ssl.SSLSupport;
  *
  * @author Bill Barker
  */
-interface JSSEFactory {
+public interface JSSEFactory {
+
     /**
-     * Returns the ServerSocketFactory to use.
+     * @return the ServerSocketFactory to use.
      */
     ServerSocketFactory getSocketFactory();
 
     /**
-     * returns the SSLSupport attached to this socket.
+     * @return the SSLSupport attached to this socket.
      */
     SSLSupport getSSLSupport(Socket socket);
 
     /**
-     * returns the SSLSupport attached to this SSLEngine.
+     * @return the SSLSupport attached to this SSLEngine.
      */
     SSLSupport getSSLSupport(SSLEngine sslEngine);
 }

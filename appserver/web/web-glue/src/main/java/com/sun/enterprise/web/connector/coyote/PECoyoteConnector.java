@@ -26,23 +26,39 @@ import com.sun.enterprise.web.connector.MapperListener;
 import com.sun.enterprise.web.connector.extension.GrizzlyConfig;
 import com.sun.enterprise.web.connector.grizzly.DummyConnectorLauncher;
 import com.sun.enterprise.web.pwc.connector.coyote.PwcCoyoteRequest;
-import org.glassfish.grizzly.config.dom.*;
-import org.glassfish.web.util.IntrospectionUtils;
-import org.apache.catalina.*;
-import org.apache.catalina.connector.Connector;
-import org.glassfish.security.common.CipherInfo;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.admin.monitor.RequestProbeProvider;
 
-import javax.management.Notification;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.*;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.Notification;
+
+import org.apache.catalina.Context;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.connector.Connector;
+import org.glassfish.grizzly.config.dom.FileCache;
+import org.glassfish.grizzly.config.dom.Http;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.grizzly.config.dom.Transport;
+import org.glassfish.security.common.CipherInfo;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.admin.monitor.RequestProbeProvider;
+import org.glassfish.web.util.IntrospectionUtils;
 
 public class PECoyoteConnector extends Connector {
 
@@ -212,9 +228,9 @@ public class PECoyoteConnector extends Connector {
      */
     private String trustMaxCertLength;
 
-    private WebContainer webContainer;
+    private final WebContainer webContainer;
 
-    private RequestProbeProvider requestProbeProvider;
+    private final RequestProbeProvider requestProbeProvider;
 
 
     /**

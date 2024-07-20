@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,11 +36,17 @@ public interface MasterPassword {
     /**
      * Create and return PasswordAdapter using the master password.
      *
-     * @return PasswordAdapter using the master password.
+     * @return PasswordAdapter using the master password. Never null.
      * @throws CertificateException
      * @throws IOException
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
      */
-    public PasswordAdapter getMasterPasswordAdapter() throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException;
+    PasswordAdapter getMasterPasswordAdapter()
+        throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException;
+
+    /**
+     * @return null or master password.
+     */
+    char[] getMasterPassword();
 }

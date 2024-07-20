@@ -269,7 +269,7 @@ public class DynamicReloader implements Runnable {
 
         private AppReloadInfo(Application app) throws URISyntaxException {
             this.app = app;
-            appDir = new File(new URI(app.getLocation()));
+            this.appDir = app.getLocation() == null ? null : new File(new URI(app.getLocation()));
             reloadFile = new File(appDir, RELOAD_FILE_NAME);
             recordLoad();
         }

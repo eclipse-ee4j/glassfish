@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,7 +59,7 @@ public class DynamicReloader implements Runnable {
     private static final String RELOAD_FILE_NAME = ".reload";
 
     private static class SyncBoolean {
-        private boolean b = false;
+        private boolean b;
 
         private SyncBoolean(final boolean initialValue) {
             b = initialValue;
@@ -164,7 +165,7 @@ public class DynamicReloader implements Runnable {
         for (ApplicationName m : applications.getModules()) {
             if (m instanceof Application) {
                 Application app = (Application) m;
-                if (Boolean.valueOf(app.getDeployProperties().getProperty
+                if (Boolean.parseBoolean(app.getDeployProperties().getProperty
                     (ServerTags.IS_LIFECYCLE))) {
                     // skip lifecycle modules
                     continue;

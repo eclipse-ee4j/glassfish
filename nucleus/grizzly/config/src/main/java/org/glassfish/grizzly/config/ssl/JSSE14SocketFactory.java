@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -65,16 +66,14 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
             JSSE14SocketFactory.class.getPackage().getName(),
             JSSE14SocketFactory.class.getClassLoader());
 
-    public JSSE14SocketFactory() {
-    }
-
     /**
      * Reads the keystore and initializes the SSL socket factory.
      */
+    @Override
     public void init() throws IOException {
         try {
-            clientAuthNeed = Boolean.valueOf((String) attributes.get("clientAuthNeed"));
-            clientAuthWant = Boolean.valueOf((String) attributes.get("clientAuthWant"));
+            clientAuthNeed = Boolean.parseBoolean((String) attributes.get("clientAuthNeed"));
+            clientAuthWant = Boolean.parseBoolean((String) attributes.get("clientAuthWant"));
 
             // SSL protocol variant (e.g., TLS, SSL v3, etc.)
             String protocol = (String) attributes.get("protocol");
@@ -227,12 +226,14 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
         return crls;
     }
 
+    @Override
     protected void setEnabledProtocols(SSLServerSocket socket, String[] protocols) {
         if (protocols != null) {
             socket.setEnabledProtocols(protocols);
         }
     }
 
+    @Override
     protected String[] getEnabledProtocols(SSLServerSocket socket, String requestedProtocols) {
         String[] supportedProtocols = socket.getSupportedProtocols();
         String[] enabledProtocols = null;

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ package org.glassfish.appclient.server.core.jws.servedcontent;
 import com.sun.enterprise.server.pluggable.SecuritySupport;
 import com.sun.enterprise.util.i18n.StringManager;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedOutputStream;
@@ -76,9 +77,10 @@ public class ASJarSigner implements PostConstruct {
     private static final String DEFAULT_DIGEST_ALGORITHM = "SHA-256";
     private static final String DEFAULT_SIGNATURE_ALGORITHM = "SHA256withRSA";
 
-    private static final SecuritySupport securitySupport = SecuritySupport.getDefaultInstance();
-
     private static final StringManager localStrings = StringManager.getManager(ASJarSigner.class);
+
+    @Inject
+    private SecuritySupport securitySupport;
 
     private Logger logger;
 

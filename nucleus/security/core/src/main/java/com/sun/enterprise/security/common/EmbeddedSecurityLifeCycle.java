@@ -87,8 +87,8 @@ public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
             } catch (IOException ex) {
                 _logger.log(Level.SEVERE, SecurityLoggerInfo.obtainingKeyAndTrustStoresError, ex);
             }
-            System.setProperty(SecuritySupport.keyStoreProp, keystoreFile);
-            System.setProperty(SecuritySupport.trustStoreProp, truststoreFile);
+            System.setProperty(SecuritySupport.KEY_STORE_PROP, keystoreFile);
+            System.setProperty(SecuritySupport.TRUST_STORE_PROP, truststoreFile);
         } catch (IOException ioEx) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.copyingSecurityConfigFilesIOError, ioEx);
         }

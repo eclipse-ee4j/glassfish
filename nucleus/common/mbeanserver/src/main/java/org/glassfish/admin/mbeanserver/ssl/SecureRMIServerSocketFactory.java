@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.rmi.ssl.SslRMIServerSocketFactory;
 
@@ -45,7 +46,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 public class SecureRMIServerSocketFactory extends SslRMIServerSocketFactory {
 
     private final InetAddress mAddress;
-    private final ServiceLocator habitat;
+    private final ServiceLocator locator;
     private final Ssl ssl;
     private String[] enabledCipherSuites;
     private volatile Object enabledCipherSuitesLock;
@@ -61,16 +62,14 @@ public class SecureRMIServerSocketFactory extends SslRMIServerSocketFactory {
     @LogMessageInfo(level="INFO", message="SSLServerSocket {0} and {1} created")
     private final static String createdServerSocket = Util.LOG_PREFIX + "00025";
 
-    public SecureRMIServerSocketFactory(final ServiceLocator habitat,
+    public SecureRMIServerSocketFactory(final ServiceLocator locator,
             final Ssl sslConfig,
             final InetAddress addr) {
-        mAddress = addr;
-        this.habitat = habitat;
-        ssl = sslConfig;
+        this.mAddress = addr;
+        this.locator = locator;
+        this.ssl = sslConfig;
 
-        Util.getLogger().log(Level.INFO,
-                creatingServerSocketFactory,
-                new Object[] {addr.getHostAddress(), ssl.toString()});
+        Util.getLogger().log(Level.INFO, creatingServerSocketFactory, new Object[] {addr.getHostAddress(), ssl});
     }
 
     @Override
@@ -96,7 +95,7 @@ public class SecureRMIServerSocketFactory extends SslRMIServerSocketFactory {
         if (!Arrays.equals(enabledProtocols, that.enabledProtocols)) {
             return false;
         }
-        if (habitat != null ? !habitat.equals(that.habitat) : that.habitat != null) {
+        if (locator != null ? !locator.equals(that.locator) : that.locator != null) {
             return false;
         }
         if (mAddress != null ? !mAddress.equals(that.mAddress) : that.mAddress != null) {
@@ -119,7 +118,7 @@ public class SecureRMIServerSocketFactory extends SslRMIServerSocketFactory {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (mAddress != null ? mAddress.hashCode() : 0);
-        result = 31 * result + (habitat != null ? habitat.hashCode() : 0);
+        result = 31 * result + (locator != null ? locator.hashCode() : 0);
         result = 31 * result + (ssl != null ? ssl.hashCode() : 0);
         result = 31 * result + (enabledCipherSuites != null ? Arrays.hashCode(enabledCipherSuites) : 0);
         result = 31 * result + (enabledProtocols != null ? Arrays.hashCode(enabledProtocols) : 0);
@@ -140,11 +139,10 @@ public class SecureRMIServerSocketFactory extends SslRMIServerSocketFactory {
         // we use a custom class here. The reason is mentioned in the class.
         final JMXSslConfigHolder sslConfigHolder;
         try {
-            sslConfigHolder = new JMXSslConfigHolder(habitat, ssl);
+            sslConfigHolder = new JMXSslConfigHolder(locator, ssl);
         } catch (SSLException ssle) {
             throw new IllegalStateException(ssle);
         }
-
         final SSLContext context = sslConfigHolder.getSslContext();
         ServerSocket sslSocket = context.getServerSocketFactory().createServerSocket(port, backlog, mAddress);
         if (!(sslSocket instanceof SSLServerSocket)) {

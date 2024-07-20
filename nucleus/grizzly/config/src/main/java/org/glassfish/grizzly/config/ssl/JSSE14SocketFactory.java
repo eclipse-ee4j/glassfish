@@ -118,7 +118,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
             if (e instanceof IOException) {
                 throw (IOException) e;
             }
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(), e);
         }
     }
 

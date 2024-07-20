@@ -63,8 +63,11 @@
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- test deps -->
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>ssl-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>

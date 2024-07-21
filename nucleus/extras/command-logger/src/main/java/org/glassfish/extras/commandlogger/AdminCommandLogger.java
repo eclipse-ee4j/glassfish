@@ -21,9 +21,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
-import javax.security.auth.Subject;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.config.support.TranslatedConfigView;
@@ -46,20 +44,19 @@ public class AdminCommandLogger {
     private static final System.Logger logger = System.getLogger(AdminCommandLogger.class.getName());
 
     public void receiveCommandInvokedEvent(@SubscribeTo CommandInvokedEvent event) {
-        logCommand(event.getCommandName(), event.getParameters(), event.getSubject());
+        logCommand(event.getCommandName(),
+                event.getParameters(),
+                event.getUserPrincipal()
+                        .map(UserPrincipal::getName)
+                        .orElse("Unknown user"));
     }
 
-    public void logCommand(String commandName, ParameterMap parameters, Subject subject) {
+    public void logCommand(String commandName, ParameterMap parameters, String userName) {
         if (shouldLogCommand(commandName)) {
             String commandLine = constructCommandLine(commandName, parameters);
-            Optional<UserPrincipal> userPrincipalMaybe = getUserPrincipal(subject);
-            logger.log(INFO, () -> {
-                return userPrincipalMaybe.map(user -> "User " + user.getName())
-                        .orElse("Unknown user")
-                        + " executed command in the Admin Console: " + commandLine;
-            });
+            logger.log(INFO, () -> "User " + userName + " executed admin command: " + commandLine
+            );
         }
-
     }
 
     private String constructCommandLine(String commandName, ParameterMap parameters) {
@@ -77,7 +74,7 @@ public class AdminCommandLogger {
                 .collect(joining(" "));
     }
 
-    private static enum LogMode {
+    public static enum LogMode {
         ALL_COMMANDS, INTERNAL_COMMANDS, WRITE_COMMANDS, READ_WRITE_COMMANDS, NO_COMMAND;
 
         public static final LogMode DEFAULT = LogMode.NO_COMMAND;
@@ -129,13 +126,6 @@ public class AdminCommandLogger {
 
     private boolean isInternalCommand(String commandName) {
         return commandName.matches("_(.*)");
-    }
-
-    private Optional<UserPrincipal> getUserPrincipal(Subject subject) {
-        return subject.getPrincipals().stream()
-                .filter(principal -> principal instanceof UserPrincipal)
-                .map(UserPrincipal.class::cast)
-                .findAny();
     }
 
 }

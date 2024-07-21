@@ -1485,10 +1485,15 @@ public class Response implements HttpResponse, HttpServletResponse {
     private String getRedirectScheme() {
         String scheme = connectorRequest.getScheme();
 
-        if (getConnector() != null && getConnector().getAuthPassthroughEnabled()) {
-            ProxyHandler proxyHandler = getConnector().getProxyHandler();
-            if (proxyHandler != null && proxyHandler.getSSLKeysize(connectorRequest) > 0) {
-                scheme = "https";
+        if (getConnector() != null) {
+            if (getConnector().getProxyScheme() != null) {
+                scheme = getConnector().getProxyScheme();
+            }
+            if (getConnector().getAuthPassthroughEnabled()) {
+                ProxyHandler proxyHandler = getConnector().getProxyHandler();
+                if (proxyHandler != null && proxyHandler.getSSLKeysize(connectorRequest) > 0) {
+                    scheme = "https";
+                }
             }
         }
 

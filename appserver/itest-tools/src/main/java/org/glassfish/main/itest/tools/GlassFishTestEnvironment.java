@@ -16,8 +16,10 @@
 
 package org.glassfish.main.itest.tools;
 
-import jakarta.ws.rs.client.Client;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.MatcherAssert.assertThat;
 
+import jakarta.ws.rs.client.Client;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,13 +37,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-
-import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.glassfish.main.itest.tools.asadmin.StartServ;
 
 /**
  * This class represents GlassFish installation outside test environment.
@@ -61,6 +60,7 @@ public class GlassFishTestEnvironment {
     private static final String ADMIN_PASSWORD = "admintest";
 
     private static final File ASADMIN = findAsadmin();
+    private static final File STARTSERV = findStartServ();
     private static final File KEYTOOL = findKeyTool();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
@@ -94,6 +94,20 @@ public class GlassFishTestEnvironment {
      */
     public static Asadmin getAsadmin() {
         return new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE);
+    }
+
+    /**
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static StartServ getStartServ() {
+        return new StartServ(STARTSERV);
+    }
+
+    /**
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static StartServ getStartServInTopLevelBin() {
+        return new StartServ(findStartServ("../"));
     }
 
 
@@ -263,6 +277,11 @@ public class GlassFishTestEnvironment {
 
     private static File findAsadmin() {
         return new File(GF_ROOT, isWindows() ? "bin/asadmin.bat" : "bin/asadmin");
+    }
+
+    private static File findStartServ(String... optionalPrefix) {
+        String prefix = optionalPrefix.length > 0 ? optionalPrefix[0] : "";
+        return new File(GF_ROOT, isWindows() ? prefix + "bin/startserv.bat" : prefix + "bin/startserv");
     }
 
 

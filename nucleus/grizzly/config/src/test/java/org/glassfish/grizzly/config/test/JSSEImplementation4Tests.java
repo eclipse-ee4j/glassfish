@@ -18,8 +18,6 @@
 
 package org.glassfish.grizzly.config.test;
 
-import jakarta.inject.Singleton;
-
 import java.net.Socket;
 
 import javax.net.ssl.SSLEngine;
@@ -28,34 +26,18 @@ import org.glassfish.grizzly.config.ssl.JSSEFactory;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
 import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
 import org.glassfish.grizzly.ssl.SSLSupport;
-import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * JSSEImplementation:
  *
- * Concrete implementation class for JSSE
+ * Concrete implementation class for JSSE Grizzly Config Tests
  *
  * @author EKR
  */
 @Service
-@Singleton
-@ContractsProvided(SSLImplementation.class)
 public class JSSEImplementation4Tests implements SSLImplementation {
-    static final String JSSE14Factory = "org.glassfish.grizzly.config.ssl.JSSE14Factory";
-    static final String SSLSocketClass = "javax.net.ssl.SSLSocket";
-    private JSSEFactory factory;
-
-    public JSSEImplementation4Tests() throws ClassNotFoundException {
-        // Check to see if JSSE is floating around somewhere
-        Class.forName(SSLSocketClass);
-        try {
-            Class<?> factcl = Class.forName(JSSE14Factory);
-            factory = (JSSEFactory) factcl.getDeclaredConstructor().newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+    private final JSSEFactory factory = new JSSEFactory();
 
     @Override
     public String getImplementationName() {
@@ -68,8 +50,8 @@ public class JSSEImplementation4Tests implements SSLImplementation {
     }
 
     @Override
-    public SSLSupport getSSLSupport(Socket s) {
-        return factory.getSSLSupport(s);
+    public SSLSupport getSSLSupport(Socket socket) {
+        return factory.getSSLSupport(socket);
     }
 
     @Override

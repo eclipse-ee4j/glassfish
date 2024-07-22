@@ -30,5 +30,5 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface SSLImplementation {
 
-    JSSESocketFactory getServerSocketFactory();
+    SSLContextFactory getSSLContextFactory();
 }

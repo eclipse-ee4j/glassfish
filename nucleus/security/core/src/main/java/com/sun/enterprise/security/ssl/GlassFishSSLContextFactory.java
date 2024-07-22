@@ -27,28 +27,28 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.grizzly.config.ssl.JSSESocketFactory;
+import org.glassfish.grizzly.config.ssl.SSLContextFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * @author Sudarsan Sridhar
  */
-public class GlassfishServerSocketFactory extends JSSESocketFactory {
+public class GlassFishSSLContextFactory extends SSLContextFactory {
 
-    private static final Logger LOG = System.getLogger(GlassfishServerSocketFactory.class.getName());
+    private static final Logger LOG = System.getLogger(GlassFishSSLContextFactory.class.getName());
 
     private final ServiceLocator locator;
     private SSLUtils sslUtils;
 
-    public GlassfishServerSocketFactory(ServiceLocator locator) {
+    public GlassFishSSLContextFactory(ServiceLocator locator) {
         this.locator = Objects.requireNonNull(locator, "locator");
     }
 
 
     @Override
-    public SSLContext init() throws IOException {
+    public SSLContext create() throws IOException {
         sslUtils = locator.getService(SSLUtils.class);
-        return super.init();
+        return super.create();
     }
 
 

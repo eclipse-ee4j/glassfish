@@ -35,7 +35,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
-import org.glassfish.grizzly.config.ssl.JSSESocketFactory;
+import org.glassfish.grizzly.config.ssl.SSLContextFactory;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
 import org.glassfish.grizzly.localization.LogMessages;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
@@ -179,33 +179,33 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
     private SSLContext initializeSSLContext() {
         try {
-            final JSSESocketFactory serverSF = getSslImplementation().getServerSocketFactory();
+            final SSLContextFactory sslContextFactory = getSslImplementation().getSSLContextFactory();
             if (ssl != null) {
                 if (ssl.getCrlFile() != null) {
-                    setAttribute(serverSF, "crlFile", ssl.getCrlFile(), null, null);
+                    setAttribute(sslContextFactory, "crlFile", ssl.getCrlFile(), null, null);
                 }
                 if (ssl.getTrustAlgorithm() != null) {
-                    setAttribute(serverSF, "truststoreAlgorithm", ssl.getTrustAlgorithm(), null, null);
+                    setAttribute(sslContextFactory, "truststoreAlgorithm", ssl.getTrustAlgorithm(), null, null);
                 }
                 if (ssl.getKeyAlgorithm() != null) {
-                    setAttribute(serverSF, "algorithm", ssl.getKeyAlgorithm(), null, null);
+                    setAttribute(sslContextFactory, "algorithm", ssl.getKeyAlgorithm(), null, null);
                 }
-                setAttribute(serverSF, "trustMaxCertLength", ssl.getTrustMaxCertLength(), null, null);
+                setAttribute(sslContextFactory, "trustMaxCertLength", ssl.getTrustMaxCertLength(), null, null);
             }
 
             // Key store settings
-            setAttribute(serverSF, "keystore", ssl != null ? ssl.getKeyStore() : null, "javax.net.ssl.keyStore", null);
-            setAttribute(serverSF, "keystoreType", ssl != null ? ssl.getKeyStoreType() : null, "javax.net.ssl.keyStoreType", "JKS");
-            setAttribute(serverSF, "keystorePass", ssl != null ? getKeyStorePassword(ssl) : null, "javax.net.ssl.keyStorePassword", "changeit");
+            setAttribute(sslContextFactory, "keystore", ssl != null ? ssl.getKeyStore() : null, "javax.net.ssl.keyStore", null);
+            setAttribute(sslContextFactory, "keystoreType", ssl != null ? ssl.getKeyStoreType() : null, "javax.net.ssl.keyStoreType", "JKS");
+            setAttribute(sslContextFactory, "keystorePass", ssl != null ? getKeyStorePassword(ssl) : null, "javax.net.ssl.keyStorePassword", "changeit");
 
             // Trust store settings
-            setAttribute(serverSF, "truststore", ssl != null ? ssl.getTrustStore() : null, "javax.net.ssl.trustStore", null);
-            setAttribute(serverSF, "truststoreType", ssl != null ? ssl.getTrustStoreType() : null, "javax.net.ssl.trustStoreType", "JKS");
-            setAttribute(serverSF, "truststorePass", ssl != null ? getTrustStorePassword(ssl) : null, "javax.net.ssl.trustStorePassword", "changeit");
+            setAttribute(sslContextFactory, "truststore", ssl != null ? ssl.getTrustStore() : null, "javax.net.ssl.trustStore", null);
+            setAttribute(sslContextFactory, "truststoreType", ssl != null ? ssl.getTrustStoreType() : null, "javax.net.ssl.trustStoreType", "JKS");
+            setAttribute(sslContextFactory, "truststorePass", ssl != null ? getTrustStorePassword(ssl) : null, "javax.net.ssl.trustStorePassword", "changeit");
 
             // Cert nick name
-            serverSF.setAttribute("keyAlias", ssl != null ? ssl.getCertNickname() : null);
-            SSLContext newSslContext = serverSF.init();
+            sslContextFactory.setAttribute("keyAlias", ssl != null ? ssl.getCertNickname() : null);
+            SSLContext newSslContext = sslContextFactory.create();
             CipherInfo.updateCiphers(newSslContext);
             return newSslContext;
         } catch (IOException e) {
@@ -264,7 +264,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         return null;
     }
 
-    private static void setAttribute(final JSSESocketFactory serverSF, final String name, final String value,
+    private static void setAttribute(final SSLContextFactory serverSF, final String name, final String value,
             final String property, final String defaultValue) {
         serverSF.setAttribute(name, value == null ? System.getProperty(property, defaultValue) : value);
     }

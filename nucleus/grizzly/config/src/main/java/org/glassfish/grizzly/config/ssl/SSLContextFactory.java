@@ -69,10 +69,10 @@ import org.glassfish.grizzly.http.util.StringManager;
  * @author EKR -- renamed to JSSESocketFactory
  * @author Jan Luehe
  */
-public class JSSESocketFactory implements Cloneable {
+public class SSLContextFactory implements Cloneable {
     private static final StringManager sm = StringManager.getManager(
-            JSSESocketFactory.class.getPackage().getName(),
-            JSSESocketFactory.class.getClassLoader());
+            SSLContextFactory.class.getPackage().getName(),
+            SSLContextFactory.class.getClassLoader());
     private static final String defaultProtocol = "TLS";
     private static final String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
     private static final String defaultKeyPass = "changeit";
@@ -86,11 +86,11 @@ public class JSSESocketFactory implements Cloneable {
 
 
     /**
-     * Reads the keystore and initializes the SSL socket factory.
+     * Reads the keystore and initializes the SSL Context.
      *
      * @return {@link SSLContext}
      */
-    public SSLContext init() throws IOException {
+    public SSLContext create() throws IOException {
         try {
             clientAuthNeed = Boolean.parseBoolean(getAttribute("clientAuthNeed"));
             clientAuthWant = Boolean.parseBoolean(getAttribute("clientAuthWant"));

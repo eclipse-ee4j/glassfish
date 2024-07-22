@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,11 +19,11 @@
 package org.glassfish.grizzly.config.ssl;
 
 import java.net.Socket;
-import javax.net.ssl.SSLSocket;
-// START SJSAS 6439313
+
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLSocket;
+
 import org.glassfish.grizzly.ssl.SSLSupport;
-// END SJSAS 6439313
 
 /**
  * Implementation class for JSSEFactory for JSSE 1.1.x (that ships with the
@@ -30,17 +31,7 @@ import org.glassfish.grizzly.ssl.SSLSupport;
  *
  * @author Bill Barker
  */
-// START SJSAS 6240885
-//class JSSE14Factory implements JSSEFactory {
 public class JSSE14Factory implements JSSEFactory {
-// END SJSAS 6240885
-
-    // START SJSAS 6240885
-    //
-    //JSSE14Factory() {
-    public JSSE14Factory() {
-    // END SJSAS 6240885
-    }
 
     @Override
     public ServerSocketFactory getSocketFactory() {
@@ -53,14 +44,11 @@ public class JSSE14Factory implements JSSEFactory {
         if (!(socket instanceof SSLSocket)) {
             throw new IllegalArgumentException("The Socket has to be SSLSocket");
         }
-        return new JSSE14Support((SSLSocket)socket);
+        return new JSSESupport((SSLSocket)socket);
     }
 
-    // START SJSAS 6439313
     @Override
     public SSLSupport getSSLSupport(SSLEngine sslEngine) {
-        return new JSSE14Support(sslEngine);
+        return new JSSESupport(sslEngine);
     }
-
-    // END SJSAS 6439313
 }

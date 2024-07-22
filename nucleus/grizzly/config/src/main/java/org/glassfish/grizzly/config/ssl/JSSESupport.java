@@ -20,13 +20,18 @@ package org.glassfish.grizzly.config.ssl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.System.Logger;
+import java.net.SocketException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.net.ssl.HandshakeCompletedEvent;
+import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
@@ -34,7 +39,6 @@ import org.glassfish.grizzly.ssl.SSLSupport;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * Concrete implementation class for JSSE Support classes.
@@ -63,30 +67,34 @@ class JSSESupport implements SSLSupport {
         new CipherData("_WITH_AES_256_", 256)
     };
 
-    protected SSLSocket socket;
+    private SSLSocket socket;
 
     /**
      * The SSLEngine used to support SSL over NIO.
      */
-    protected SSLEngine sslEngine;
+    private SSLEngine sslEngine;
 
 
     /**
      * The SSLSession contains SSL information.
      */
-    protected SSLSession session;
+    private SSLSession session;
+
+    private final AtomicBoolean completed = new AtomicBoolean();
+
 
     JSSESupport(SSLSocket sock) {
         LOG.log(DEBUG, "JSSESupport(sock={0})", sock);
-        socket = sock;
-        session = socket.getSession();
+        this.socket = sock;
+        this.session = socket.getSession();
+        sock.addHandshakeCompletedListener(new Listener(completed));
     }
 
 
     JSSESupport(SSLEngine sslEngine) {
         LOG.log(DEBUG, "JSSESupport(sslEngine={0})", sslEngine);
         this.sslEngine = sslEngine;
-        session = sslEngine.getSession();
+        this.session = sslEngine.getSession();
     }
 
 
@@ -102,43 +110,6 @@ class JSSESupport implements SSLSupport {
     @Override
     public Certificate[] getPeerCertificates() throws IOException {
         return getPeerCertificates(false);
-    }
-
-
-    protected Certificate[] getX509Certificates(SSLSession session) throws IOException {
-        Certificate[] jsseCerts = null;
-        try {
-            jsseCerts = session.getPeerCertificates();
-        } catch (SSLPeerUnverifiedException ex) {
-            // Get rid of the warning in the logs when no Client-Cert is available
-        } catch (Exception e) {
-            LOG.log(ERROR, "Cannot get peer certificates.", e);
-            return null;
-        }
-
-        if (jsseCerts == null) {
-            return null;
-        }
-        X509Certificate[] x509Certs = new X509Certificate[jsseCerts.length];
-        for (int i = 0; i < x509Certs.length; i++) {
-            final Certificate srcCertificate = jsseCerts[i];
-            try {
-                byte[] buffer = srcCertificate.getEncoded();
-                CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
-                X509Certificate certificate = (X509Certificate) cf.generateCertificate(stream);
-                LOG.log(TRACE, "Cert #{0} = {1}", i, certificate);
-                x509Certs[i] = certificate;
-            } catch (Exception ex) {
-                LOG.log(ERROR, "Error translating " + srcCertificate, ex);
-                return null;
-            }
-        }
-
-        if (x509Certs.length < 1) {
-            return null;
-        }
-        return x509Certs;
     }
 
 
@@ -160,20 +131,15 @@ class JSSESupport implements SSLSupport {
         }
         if (jsseCerts.length <= 0 && force) {
             session.invalidate();
-            handShake();
+            socket.setNeedClientAuth(true);
+            synchronousHandshake(socket);
             if (socket == null) {
                 session = sslEngine.getSession();
             } else {
                 session = socket.getSession();
             }
         }
-        return getX509Certificates(session);
-    }
-
-
-    protected void handShake() throws IOException {
-        socket.setNeedClientAuth(true);
-        socket.startHandshake();
+        return getX509Certificates();
     }
 
 
@@ -224,5 +190,95 @@ class JSSESupport implements SSLSupport {
             buf.append(digit);
         }
         return buf.toString();
+    }
+
+
+    /**
+     * @return the X509certificates or null if we can't get them.
+     */
+    private X509Certificate[] getX509Certificates() {
+        final Certificate[] certs;
+        try {
+            certs = session.getPeerCertificates();
+        } catch (Throwable t) {
+            LOG.log(DEBUG, "Error getting client certs", t);
+            return null;
+        }
+        if (certs == null) {
+            return null;
+        }
+
+        X509Certificate[] x509Certs = new X509Certificate[certs.length];
+        for (int i = 0; i < certs.length; i++) {
+            final Certificate certificate = certs[i];
+            if (certificate instanceof X509Certificate) {
+                // always currently true with the JSSE 1.1.x
+                x509Certs[i] = (X509Certificate) certificate;
+            } else {
+                try {
+                    byte[] buffer = certificate.getEncoded();
+                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                    ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
+                    x509Certs[i] = (X509Certificate) cf.generateCertificate(stream);
+                } catch (Exception ex) {
+                    LOG.log(ERROR, "Error translating cert " + certificate, ex);
+                    return null;
+                }
+            }
+            LOG.log(DEBUG, "Cert #{0} = {1}", i, x509Certs[i]);
+        }
+        if (x509Certs.length < 1) {
+            return null;
+        }
+        return x509Certs;
+    }
+
+
+    /**
+     * JSSE in JDK 1.4 has an issue/feature that requires us to do a read() to get the client-cert.
+     *
+     * As suggested by Andreas Sterbenz
+     */
+    private void synchronousHandshake(SSLSocket socket) throws IOException {
+        InputStream in = socket.getInputStream();
+        int oldTimeout = socket.getSoTimeout();
+        socket.setSoTimeout(1000);
+        byte[] b = new byte[0];
+        completed.set(false);
+        socket.startHandshake();
+        int maxTries = 60; // 60 * 1000 = example 1 minute time out
+        for (int i = 0; i < maxTries; i++) {
+            LOG.log(DEBUG, "Reading for try #{0}", i);
+            try {
+                final int bytesRead = in.read(b);
+                assert bytesRead <= 0;
+            } catch(SSLException sslex) {
+                //logger.log(Level.SEVERE,"SSL Error getting client Certs",sslex);
+                throw sslex;
+            } catch (IOException e) {
+                // ignore - presumably the timeout
+            }
+            if (completed.get()) {
+                break;
+            }
+        }
+        socket.setSoTimeout(oldTimeout);
+        if (!completed.get()) {
+            throw new SocketException("SSL Cert handshake timeout");
+        }
+    }
+
+    private static class Listener implements HandshakeCompletedListener {
+
+        private final AtomicBoolean completed;
+
+        Listener(AtomicBoolean completed) {
+            this.completed = completed;
+        }
+
+        @Override
+        public void handshakeCompleted(HandshakeCompletedEvent event) {
+            completed.set(true);
+        }
     }
 }

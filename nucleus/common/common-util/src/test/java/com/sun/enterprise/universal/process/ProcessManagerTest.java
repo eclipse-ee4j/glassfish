@@ -130,7 +130,7 @@ public class ProcessManagerTest {
     @Test
     @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
-    void testDetectTextInStdOutIfProcessStops() throws InterruptedException {
+    void testDetectTextInStdOutIfProcessStops() {
         ProcessManager pm = new ProcessManager("sh", "-c", "echo \"start\nhello\ncontinue\"");
         pm.setEcho(false);
         pm.setTextToWaitFor("hello");

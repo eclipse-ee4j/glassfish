@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,28 +25,27 @@ import javax.net.ssl.SSLSocket;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
 import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
 import org.glassfish.grizzly.ssl.SSLSupport;
-import org.jvnet.hk2.annotations.ContractsProvided;
+import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- *
  * @author Sudarsan Sridhar
  */
-@Service(name = "com.sun.enterprise.security.ssl.GlassfishSSLImpl")
-@ContractsProvided({ GlassfishSSLImpl.class, SSLImplementation.class })
-public class GlassfishSSLImpl extends SSLImplementation {
-    public GlassfishSSLImpl() {
-    }
+@Service
+// The class name is explicitly used in domain.xml files.
+public class GlassfishSSLImpl implements SSLImplementation {
 
     @Override
     public String getImplementationName() {
-        return "Glassfish";
+        return "GlassFish";
     }
+
 
     @Override
     public ServerSocketFactory getServerSocketFactory() {
-        return new GlassfishServerSocketFactory();
+        return new GlassfishServerSocketFactory(Globals.getStaticBaseServiceLocator());
     }
+
 
     @Override
     public SSLSupport getSSLSupport(Socket socket) {
@@ -54,6 +54,7 @@ public class GlassfishSSLImpl extends SSLImplementation {
         }
         return null;
     }
+
 
     @Override
     public SSLSupport getSSLSupport(SSLEngine ssle) {

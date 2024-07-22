@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,12 +14,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package org.glassfish.admingui.common.deployment;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.glassfish.deployment.common.DeploymentUtils;
 
 /**
  * Convenience class for managing deployment properties - settings or options to
@@ -52,7 +53,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getRedeploy() {
-        return Boolean.valueOf(getProperty(REDEPLOY, DEFAULT_REDEPLOY));
+        return Boolean.parseBoolean(getProperty(REDEPLOY, DEFAULT_REDEPLOY));
     }
 
     public void setRedeploy(boolean redeploy) {
@@ -60,7 +61,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getForce() {
-        return Boolean.valueOf(getProperty(FORCE, DEFAULT_FORCE));
+        return Boolean.parseBoolean(getProperty(FORCE, DEFAULT_FORCE));
     }
 
     public void setForce(boolean force) {
@@ -68,7 +69,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getReload() {
-        return Boolean.valueOf(getProperty(RELOAD, DEFAULT_RELOAD));
+        return Boolean.parseBoolean(getProperty(RELOAD, DEFAULT_RELOAD));
     }
 
     public void setReload(boolean reload) {
@@ -76,7 +77,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getCascade() {
-        return Boolean.valueOf(getProperty(CASCADE, DEFAULT_CASCADE));
+        return Boolean.parseBoolean(getProperty(CASCADE, DEFAULT_CASCADE));
     }
 
     public void setCascade(boolean cascade) {
@@ -84,7 +85,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getPrecompileJSP() {
-        return Boolean.valueOf(getProperty(PRECOMPILE_JSP, DEFAULT_PRECOMPILE_JSP));
+        return Boolean.parseBoolean(getProperty(PRECOMPILE_JSP, DEFAULT_PRECOMPILE_JSP));
     }
 
     public void setPrecompileJSP(boolean precompileJSP) {
@@ -92,7 +93,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getVerify() {
-        return Boolean.valueOf(getProperty(VERIFY, DEFAULT_VERIFY));
+        return Boolean.parseBoolean(getProperty(VERIFY, DEFAULT_VERIFY));
     }
 
     public void setVerify(boolean verify) {
@@ -110,7 +111,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getEnabled() {
-        return Boolean.valueOf(getProperty(ENABLED, DEFAULT_ENABLED));
+        return Boolean.parseBoolean(getProperty(ENABLED, DEFAULT_ENABLED));
     }
 
     public void setEnabled(boolean enabled) {
@@ -148,7 +149,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getGenerateRMIStubs() {
-        return Boolean.valueOf(getProperty(GENERATE_RMI_STUBS,
+        return Boolean.parseBoolean(getProperty(GENERATE_RMI_STUBS,
                 DEFAULT_GENERATE_RMI_STUBS));
     }
 
@@ -158,7 +159,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getAvailabilityEnabled() {
-        return Boolean.valueOf(getProperty(AVAILABILITY_ENABLED,
+        return Boolean.parseBoolean(getProperty(AVAILABILITY_ENABLED,
                 DEFAULT_AVAILABILITY_ENABLED));
     }
 
@@ -168,7 +169,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getJavaWebStartEnabled() {
-        return Boolean.valueOf(getProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED,
+        return Boolean.parseBoolean(getProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED,
                 DEFAULT_JAVA_WEB_START_ENABLED));
     }
 
@@ -212,7 +213,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getUpload() {
-        return Boolean.valueOf(getProperty(UPLOAD, DEFAULT_UPLOAD));
+        return Boolean.parseBoolean(getProperty(UPLOAD, DEFAULT_UPLOAD));
     }
 
     public void setExternallyManaged(boolean isExternallyManaged) {
@@ -228,7 +229,7 @@ public class DFDeploymentProperties extends Properties {
     }
 
     public boolean getExternallyManaged() {
-        return Boolean.valueOf(getProperty(EXTERNALLY_MANAGED,
+        return Boolean.parseBoolean(getProperty(EXTERNALLY_MANAGED,
                 DEFAULT_EXTERNALLY_MANAGED));
     }
 
@@ -308,8 +309,7 @@ public class DFDeploymentProperties extends Properties {
     public static final String RES_UNDEPLOYMENT = "resUndeployment";
     public static final String RES_REDEPLOYMENT = "resRedeployment";
     public static final String RES_NO_OP = "resNoOp";
-    public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED
-            = DeploymentUtils.DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED;
+    public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
     public static final String DEPLOY_OPTION_LIBRARIES = "libraries";
 
     // possible values for module state

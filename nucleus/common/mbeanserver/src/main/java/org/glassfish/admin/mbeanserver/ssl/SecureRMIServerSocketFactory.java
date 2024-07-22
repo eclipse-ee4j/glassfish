@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,12 @@ package org.glassfish.admin.mbeanserver.ssl;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
@@ -42,21 +43,18 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  *
  * @author prasad
  */
-public class SecureRMIServerSocketFactory
-        extends SslRMIServerSocketFactory {
+public class SecureRMIServerSocketFactory extends SslRMIServerSocketFactory {
 
     private final InetAddress mAddress;
-    private final ServiceLocator habitat;
+    private final ServiceLocator locator;
     private final Ssl ssl;
-    // The list of cipher suite
     private String[] enabledCipherSuites;
     private volatile Object enabledCipherSuitesLock;
-    //the list of protocols
     private String[] enabledProtocols;
     private volatile Object enabledProtocolsLock;
     private final Object cipherSuitesSync = new Object();
     private final Object protocolsSync = new Object();
-    private Map socketMap = new HashMap<Integer, Socket>();
+    private final Map<Integer, ServerSocket> socketMap = new HashMap<>();
 
     @LogMessageInfo(level="INFO", message="Creating a SecureRMIServerSocketFactory @ {0} with ssl config = {1}")
     private final static String creatingServerSocketFactory = Util.LOG_PREFIX + "00024";
@@ -64,42 +62,54 @@ public class SecureRMIServerSocketFactory
     @LogMessageInfo(level="INFO", message="SSLServerSocket {0} and {1} created")
     private final static String createdServerSocket = Util.LOG_PREFIX + "00025";
 
-    public SecureRMIServerSocketFactory(final ServiceLocator habitat,
+    public SecureRMIServerSocketFactory(final ServiceLocator locator,
             final Ssl sslConfig,
             final InetAddress addr) {
-        mAddress = addr;
-        this.habitat = habitat;
-        ssl = sslConfig;
+        this.mAddress = addr;
+        this.locator = locator;
+        this.ssl = sslConfig;
 
-        Util.getLogger().log(Level.INFO,
-                creatingServerSocketFactory,
-                new Object[] {addr.getHostAddress(), ssl.toString()});
+        Util.getLogger().log(Level.INFO, creatingServerSocketFactory, new Object[] {addr.getHostAddress(), ssl});
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         SecureRMIServerSocketFactory that = (SecureRMIServerSocketFactory) o;
 
-        if (cipherSuitesSync != null ? !cipherSuitesSync.equals(that.cipherSuitesSync) : that.cipherSuitesSync != null)
+        if (cipherSuitesSync != null ? !cipherSuitesSync.equals(that.cipherSuitesSync) : that.cipherSuitesSync != null) {
             return false;
-        if (!Arrays.equals(enabledCipherSuites, that.enabledCipherSuites))
+        }
+        if (!Arrays.equals(enabledCipherSuites, that.enabledCipherSuites)) {
             return false;
-        if (!Arrays.equals(enabledProtocols, that.enabledProtocols))
+        }
+        if (!Arrays.equals(enabledProtocols, that.enabledProtocols)) {
             return false;
-        if (habitat != null ? !habitat.equals(that.habitat) : that.habitat != null)
+        }
+        if (locator != null ? !locator.equals(that.locator) : that.locator != null) {
             return false;
-        if (mAddress != null ? !mAddress.equals(that.mAddress) : that.mAddress != null)
+        }
+        if (mAddress != null ? !mAddress.equals(that.mAddress) : that.mAddress != null) {
             return false;
-        if (protocolsSync != null ? !protocolsSync.equals(that.protocolsSync) : that.protocolsSync != null)
+        }
+        if (protocolsSync != null ? !protocolsSync.equals(that.protocolsSync) : that.protocolsSync != null) {
             return false;
-        if (socketMap != null ? !socketMap.equals(that.socketMap) : that.socketMap != null)
+        }
+        if (socketMap != null ? !socketMap.equals(that.socketMap) : that.socketMap != null) {
             return false;
-        if (ssl != null ? !ssl.equals(that.ssl) : that.ssl != null)
+        }
+        if (ssl != null ? !ssl.equals(that.ssl) : that.ssl != null) {
             return false;
+        }
 
         return true;
     }
@@ -108,7 +118,7 @@ public class SecureRMIServerSocketFactory
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (mAddress != null ? mAddress.hashCode() : 0);
-        result = 31 * result + (habitat != null ? habitat.hashCode() : 0);
+        result = 31 * result + (locator != null ? locator.hashCode() : 0);
         result = 31 * result + (ssl != null ? ssl.hashCode() : 0);
         result = 31 * result + (enabledCipherSuites != null ? Arrays.hashCode(enabledCipherSuites) : 0);
         result = 31 * result + (enabledProtocols != null ? Arrays.hashCode(enabledProtocols) : 0);
@@ -122,22 +132,19 @@ public class SecureRMIServerSocketFactory
     public ServerSocket createServerSocket(int port) throws IOException {
         //debug( "MyRMIServerSocketFactory.createServerSocket(): " + mAddress + " : " + port );
         if (socketMap.containsKey(port)) {
-            return (ServerSocket) socketMap.get(port);
+            return socketMap.get(port);
         }
 
         final int backlog = 5;  // plenty
         // we use a custom class here. The reason is mentioned in the class.
         final JMXSslConfigHolder sslConfigHolder;
         try {
-            sslConfigHolder = new JMXSslConfigHolder(habitat, ssl);
+            sslConfigHolder = new JMXSslConfigHolder(locator, ssl);
         } catch (SSLException ssle) {
             throw new IllegalStateException(ssle);
         }
-
         final SSLContext context = sslConfigHolder.getSslContext();
-        ServerSocket sslSocket =
-                context.getServerSocketFactory().
-                createServerSocket(port, backlog, mAddress);
+        ServerSocket sslSocket = context.getServerSocketFactory().createServerSocket(port, backlog, mAddress);
         if (!(sslSocket instanceof SSLServerSocket)) {
             throw new IllegalStateException("ServerSocketFactory returned non-secure server socket.");
         }
@@ -188,7 +195,7 @@ public class SecureRMIServerSocketFactory
      *
      * @return String[] an array of supported protocols.
      */
-    private final static String[] configureEnabledProtocols(
+    private static String[] configureEnabledProtocols(
             SSLServerSocket socket, String[] requestedProtocols) {
 
         String[] supportedProtocols = socket.getSupportedProtocols();
@@ -203,7 +210,7 @@ public class SecureRMIServerSocketFactory
                 protocol = protocol.trim();
                 if (supportedProtocol.equals(protocol)) {
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                     }
                     list.add(protocol);
                     break;
@@ -224,7 +231,7 @@ public class SecureRMIServerSocketFactory
      * @return Array of SSL cipher suites to be enabled, or null if none of the
      * requested ciphers are supported
      */
-    private final static String[] configureEnabledCiphers(SSLServerSocket socket,
+    private static String[] configureEnabledCiphers(SSLServerSocket socket,
             String[] requestedCiphers) {
 
         String[] supportedCiphers = socket.getSupportedCipherSuites();
@@ -239,7 +246,7 @@ public class SecureRMIServerSocketFactory
                 cipher = cipher.trim();
                 if (supportedCipher.equals(cipher)) {
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                     }
                     list.add(cipher);
                     break;

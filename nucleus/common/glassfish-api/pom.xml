@@ -52,6 +52,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>scattered-archive-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2</artifactId>
         </dependency>
@@ -69,19 +75,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>scattered-archive-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.grizzly</groupId>
-            <artifactId>nucleus-grizzly-all</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-omgapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-http-server</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>

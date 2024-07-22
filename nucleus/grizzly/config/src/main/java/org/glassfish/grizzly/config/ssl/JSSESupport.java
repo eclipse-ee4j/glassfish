@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
- * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,21 @@ package org.glassfish.grizzly.config.ssl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
-import org.glassfish.grizzly.Grizzly;
 import org.glassfish.grizzly.ssl.SSLSupport;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * Concrete implementation class for JSSE Support classes.
@@ -40,7 +43,7 @@ import org.glassfish.grizzly.ssl.SSLSupport;
  * @author Craig R. McClanahan
  */
 class JSSESupport implements SSLSupport {
-    private final static Logger logger = Grizzly.logger(JSSESupport.class);
+    private static final Logger LOG = System.getLogger(JSSESupport.class.getName());
 
     /**
      * A mapping table to determine the number of effective bits in the key
@@ -60,7 +63,7 @@ class JSSESupport implements SSLSupport {
         new CipherData("_WITH_AES_256_", 256)
     };
 
-    protected SSLSocket ssl;
+    protected SSLSocket socket;
 
     /**
      * The SSLEngine used to support SSL over NIO.
@@ -74,12 +77,14 @@ class JSSESupport implements SSLSupport {
     protected SSLSession session;
 
     JSSESupport(SSLSocket sock) {
-        ssl = sock;
-        session = ssl.getSession();
+        LOG.log(DEBUG, "JSSESupport(sock={0})", sock);
+        socket = sock;
+        session = socket.getSession();
     }
 
 
     JSSESupport(SSLEngine sslEngine) {
+        LOG.log(DEBUG, "JSSESupport(sslEngine={0})", sslEngine);
         this.sslEngine = sslEngine;
         session = sslEngine.getSession();
     }
@@ -104,26 +109,28 @@ class JSSESupport implements SSLSupport {
         Certificate[] jsseCerts = null;
         try {
             jsseCerts = session.getPeerCertificates();
-        } catch (Throwable ex) {
-            // Get rid of the warning in the logs when no Client-Cert is
-            // available
+        } catch (SSLPeerUnverifiedException ex) {
+            // Get rid of the warning in the logs when no Client-Cert is available
+        } catch (Exception e) {
+            LOG.log(ERROR, "Cannot get peer certificates.", e);
+            return null;
         }
 
         if (jsseCerts == null) {
-            jsseCerts = new X509Certificate[0];
+            return null;
         }
         X509Certificate[] x509Certs = new X509Certificate[jsseCerts.length];
         for (int i = 0; i < x509Certs.length; i++) {
+            final Certificate srcCertificate = jsseCerts[i];
             try {
-                byte buffer[] = jsseCerts[i].getEncoded();
+                byte[] buffer = srcCertificate.getEncoded();
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
-                x509Certs[i] = (X509Certificate) cf.generateCertificate(stream);
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINE, "Cert #" + i + " = " + x509Certs[i]);
-                }
+                X509Certificate certificate = (X509Certificate) cf.generateCertificate(stream);
+                LOG.log(TRACE, "Cert #{0} = {1}", i, certificate);
+                x509Certs[i] = certificate;
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Error translating " + jsseCerts[i], ex);
+                LOG.log(ERROR, "Error translating " + srcCertificate, ex);
                 return null;
             }
         }
@@ -154,10 +161,10 @@ class JSSESupport implements SSLSupport {
         if (jsseCerts.length <= 0 && force) {
             session.invalidate();
             handShake();
-            if (ssl == null) {
+            if (socket == null) {
                 session = sslEngine.getSession();
             } else {
-                session = ssl.getSession();
+                session = socket.getSession();
             }
         }
         return getX509Certificates(session);
@@ -165,8 +172,8 @@ class JSSESupport implements SSLSupport {
 
 
     protected void handShake() throws IOException {
-        ssl.setNeedClientAuth(true);
-        ssl.startHandshake();
+        socket.setNeedClientAuth(true);
+        socket.startHandshake();
     }
 
 

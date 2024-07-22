@@ -57,16 +57,10 @@ public abstract class GlassFishBaseCallbackHandler extends BaseCallbackHandler {
     protected final MasterPassword masterPasswordHelper;
 
     protected GlassFishBaseCallbackHandler() {
-        if (Globals.getDefaultHabitat() == null) {
-            sslUtils = new SSLUtils();
-            securitySupport = SecuritySupport.getDefaultInstance();
-            masterPasswordHelper = null;
-            sslUtils.postConstruct();
-        } else {
-            sslUtils = Globals.get(SSLUtils.class);
-            securitySupport = Globals.get(SecuritySupport.class);
-            masterPasswordHelper = Globals.getDefaultHabitat().getService(MasterPassword.class, "Security SSL Password Provider Service");
-        }
+        sslUtils = Globals.get(SSLUtils.class);
+        securitySupport = Globals.get(SecuritySupport.class);
+        masterPasswordHelper = Globals.getDefaultHabitat().getService(MasterPassword.class,
+            "Security SSL Password Provider Service");
     }
 
     @Override

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -37,6 +38,7 @@ import java.security.cert.X509CertSelector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.net.ssl.CertPathTrustManagerParameters;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -65,16 +67,14 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
             JSSE14SocketFactory.class.getPackage().getName(),
             JSSE14SocketFactory.class.getClassLoader());
 
-    public JSSE14SocketFactory() {
-    }
-
     /**
      * Reads the keystore and initializes the SSL socket factory.
      */
+    @Override
     public void init() throws IOException {
         try {
-            clientAuthNeed = Boolean.valueOf((String) attributes.get("clientAuthNeed"));
-            clientAuthWant = Boolean.valueOf((String) attributes.get("clientAuthWant"));
+            clientAuthNeed = Boolean.parseBoolean((String) attributes.get("clientAuthNeed"));
+            clientAuthWant = Boolean.parseBoolean((String) attributes.get("clientAuthWant"));
 
             // SSL protocol variant (e.g., TLS, SSL v3, etc.)
             String protocol = (String) attributes.get("protocol");
@@ -118,17 +118,15 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
             if (e instanceof IOException) {
                 throw (IOException) e;
             }
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     /**
      * Gets the initialized key managers.
      */
-    protected KeyManager[] getKeyManagers(String algorithm,
-        String keyAlias)
+    protected KeyManager[] getKeyManagers(String algorithm, String keyAlias)
         throws Exception {
-        KeyManager[] kms;
         String keystorePass = getKeystorePassword();
         KeyStore ks = getKeystore(keystorePass);
         if (keyAlias != null && !ks.isKeyEntry(keyAlias)) {
@@ -136,7 +134,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
         }
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(algorithm);
         kmf.init(ks, keystorePass.toCharArray());
-        kms = kmf.getKeyManagers();
+        KeyManager[] kms = kmf.getKeyManagers();
         if (keyAlias != null) {
             for (int i = 0; i < kms.length; i++) {
                 kms[i] = new JSSEKeyManager((X509KeyManager) kms[i], keyAlias);
@@ -227,12 +225,14 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
         return crls;
     }
 
+    @Override
     protected void setEnabledProtocols(SSLServerSocket socket, String[] protocols) {
         if (protocols != null) {
             socket.setEnabledProtocols(protocols);
         }
     }
 
+    @Override
     protected String[] getEnabledProtocols(SSLServerSocket socket, String requestedProtocols) {
         String[] supportedProtocols = socket.getSupportedProtocols();
         String[] enabledProtocols = null;
@@ -252,7 +252,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
                         for (String supportedProtocol : supportedProtocols) {
                             if (supportedProtocol.equals(protocol)) {
                                 if (vec == null) {
-                                    vec = new ArrayList<String>();
+                                    vec = new ArrayList<>();
                                 }
                                 vec.add(protocol);
                                 break;
@@ -276,7 +276,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
                 for (String supportedProtocol : supportedProtocols) {
                     if (supportedProtocol.equals(protocol)) {
                         if (vec == null) {
-                            vec = new ArrayList<String>();
+                            vec = new ArrayList<>();
                         }
                         vec.add(protocol);
                         break;
@@ -329,9 +329,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
             // Will never get here - no client can connect to an unbound port
         } catch (SSLException ssle) {
             // SSL configuration is invalid. Possibly cert doesn't match ciphers
-            IOException ioe = new IOException(sm.getString("jsse.invalid_ssl_conf", ssle.getMessage()));
-            ioe.initCause(ssle);
-            throw ioe;
+            throw new IOException(sm.getString("jsse.invalid_ssl_conf", ssle.getMessage()), ssle);
         } catch (Exception e) {
             /*
              * Possible ways of getting here

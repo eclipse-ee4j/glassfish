@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,13 @@
 
 package com.sun.enterprise.security.ssl;
 
-import static java.util.Collections.list;
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.integration.AppClientSSL;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.security.AccessControlException;
@@ -33,7 +39,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Enumeration;
 import java.util.PropertyPermission;
-import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
@@ -42,18 +47,9 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.common.Util;
-//V3:Commented import com.sun.web.security.SSLSocketFactory;
-import com.sun.enterprise.security.integration.AppClientSSL;
-//V3:Commented import com.sun.enterprise.config.clientbeans.Ssl
-import com.sun.enterprise.server.pluggable.SecuritySupport;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static java.util.Collections.list;
 
 /**
  * Handy class containing static functions.
@@ -64,11 +60,9 @@ import jakarta.inject.Singleton;
  */
 @Service
 @Singleton
-public final class SSLUtils implements PostConstruct {
+public final class SSLUtils {
     public static final String HTTPS_OUTBOUND_KEY_ALIAS = "com.sun.enterprise.security.httpsOutboundKeyAlias";
     private static final String DEFAULT_SSL_PROTOCOL = "TLS";
-
-    private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     @Inject
     private SecuritySupport securitySupport;
@@ -78,14 +72,9 @@ public final class SSLUtils implements PostConstruct {
     private AppClientSSL appclientSsl;
     private SSLContext sslContext;
 
-    @Override
-    public void postConstruct() {
+    @PostConstruct
+    private void init() {
         try {
-            // TODO: To check the right implementation once we support EE.
-            if (securitySupport == null) {
-                securitySupport = SecuritySupport.getDefaultInstance();
-            }
-
             KeyStore[] keyStores = getKeyStores();
             if (keyStores != null) {
                 for (KeyStore keyStore : keyStores) {
@@ -105,8 +94,7 @@ public final class SSLUtils implements PostConstruct {
             mergedTrustStore = mergingTrustStores(securitySupport.getTrustStores());
             getSSLContext(null, null, null);
         } catch (Exception ex) {
-            _logger.log(FINE, "SSLUtils static init fails.", ex);
-            throw new IllegalStateException(ex);
+            throw new IllegalStateException("SSLUtils static init fails.", ex);
         }
     }
 
@@ -371,11 +359,12 @@ public final class SSLUtils implements PostConstruct {
         return getAdminSSLContext(alias, protocol).getSocketFactory();
     }
 
-    /*
-    * @param alias  the admin key alias
-    * @param protocol the protocol or null, uses "TLS" if this argument is null.
-    * @return the initialized SSLContext
-    */
+
+    /**
+     * @param alias the admin key alias
+     * @param protocol the protocol or null, uses "TLS" if this argument is null.
+     * @return the initialized SSLContext
+     */
     public SSLContext getAdminSSLContext(String alias, String protocol) {
         try {
             if (protocol == null) {

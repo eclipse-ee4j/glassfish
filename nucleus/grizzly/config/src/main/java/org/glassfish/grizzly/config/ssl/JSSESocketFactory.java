@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -27,17 +28,38 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CRL;
+import java.security.cert.CRLException;
+import java.security.cert.CertPathParameters;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreParameters;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.CollectionCertStoreParameters;
+import java.security.cert.PKIXBuilderParameters;
+import java.security.cert.X509CertSelector;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.net.ssl.CertPathTrustManagerParameters;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.ManagerFactoryParameters;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSessionContext;
 import javax.net.ssl.SSLSocket;
-import org.glassfish.grizzly.config.GrizzlyConfig;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509KeyManager;
 
+import org.glassfish.grizzly.config.GrizzlyConfig;
 import org.glassfish.grizzly.http.util.StringManager;
 
 /**
@@ -47,24 +69,21 @@ import org.glassfish.grizzly.http.util.StringManager;
  * @author Costin Manolache
  * @author Stefan Freyr Stefansson
  * @author EKR -- renamed to JSSESocketFactory
+ * @author Jan Luehe
  */
-public abstract class JSSESocketFactory extends ServerSocketFactory {
+public class JSSESocketFactory extends ServerSocketFactory {
     private static final StringManager sm = StringManager.getManager(
             JSSESocketFactory.class.getPackage().getName(),
             JSSESocketFactory.class.getClassLoader());
-    public final static String defaultProtocol = "TLS";
-    public final static String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
-    final static boolean defaultClientAuth = false;
+    private static final String defaultProtocol = "TLS";
+    private static final String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
     private static final String defaultKeyPass = "changeit";
-    protected static final Logger logger = GrizzlyConfig.logger();
-    protected boolean initialized;
-    protected boolean clientAuthNeed = false;
-    protected boolean clientAuthWant = false;
-    protected SSLServerSocketFactory sslProxy = null;
-    protected String[] enabledCiphers;
-
-    public JSSESocketFactory() {
-    }
+    private static final Logger logger = GrizzlyConfig.logger();
+    private boolean initialized;
+    private boolean clientAuthNeed;
+    private boolean clientAuthWant;
+    private SSLServerSocketFactory sslProxy;
+    private String[] enabledCiphers;
 
     @Override
     public ServerSocket createSocket(int port) throws IOException {
@@ -149,7 +168,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
                         for (int i = 0; supportedCiphers != null && i < supportedCiphers.length; i++) {
                             if (supportedCiphers[i].equals(cipher)) {
                                 if (vec == null) {
-                                    vec = new ArrayList<String>();
+                                    vec = new ArrayList<>();
                                 }
                                 vec.add(cipher);
                                 break;
@@ -174,7 +193,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
                     && i < supportedCiphers.length; i++) {
                     if (supportedCiphers[i].equals(cipher)) {
                         if (vec == null) {
-                            vec = new ArrayList<String>();
+                            vec = new ArrayList<>();
                         }
                         vec.add(cipher);
                         break;
@@ -191,7 +210,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
     /**
      * Gets the SSL server's keystore password.
      */
-    protected String getKeystorePassword() {
+    private String getKeystorePassword() {
         String keyPass = (String) attributes.get("keypass");
         if (keyPass == null) {
             keyPass = defaultKeyPass;
@@ -217,11 +236,12 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
         }
         return getStore(keystoreType, keystoreFile, pass);
     }
-    /*
-    * Gets the SSL server's truststore password.
-    */
 
-    protected String getTruststorePassword() {
+
+    /**
+     * Gets the SSL server's truststore password.
+     */
+    private String getTruststorePassword() {
         String truststorePassword = (String) attributes.get("truststorePass");
         if (truststorePassword == null) {
             truststorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
@@ -233,7 +253,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
     }
 
     /**
-     * Gets the SSL server's truststore.
+     * @return the SSL server's truststore.
      */
     protected KeyStore getTrustStore() throws IOException {
         KeyStore ts = null;
@@ -293,11 +313,58 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
 
     /**
      * Reads the keystore and initializes the SSL socket factory.
-     *
-     * Place holder method to initialize the KeyStore, etc.
      */
     @Override
-    public abstract void init() throws IOException;
+    public void init() throws IOException {
+        try {
+            clientAuthNeed = Boolean.parseBoolean((String) attributes.get("clientAuthNeed"));
+            clientAuthWant = Boolean.parseBoolean((String) attributes.get("clientAuthWant"));
+
+            // SSL protocol variant (e.g., TLS, SSL v3, etc.)
+            String protocol = (String) attributes.get("protocol");
+            if (protocol == null) {
+                protocol = defaultProtocol;
+            }
+            // Certificate encoding algorithm (e.g., SunX509)
+            String algorithm = (String) attributes.get("algorithm");
+            if (algorithm == null) {
+                algorithm = defaultAlgorithm;
+            }
+            // Create and init SSLContext
+            /* SJSAS 6439313
+            SSLContext context = SSLContext.getInstance(protocol);
+             */
+            // START SJSAS 6439313
+            context = SSLContext.getInstance(protocol);
+            // END SJSAS 6439313
+            // Configure SSL session timeout and cache size
+            configureSSLSessionContext(context.getServerSessionContext());
+            String trustAlgorithm = (String) attributes.get("truststoreAlgorithm");
+            if (trustAlgorithm == null) {
+                trustAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+            }
+            context.init(getKeyManagers(algorithm,
+                (String) attributes.get("keyAlias")),
+                getTrustManagers(trustAlgorithm),
+                new SecureRandom());
+            // create proxy
+            sslProxy = context.getServerSocketFactory();
+            // Determine which cipher suites to enable
+            String requestedCiphers = (String) attributes.get("ciphers");
+            if (requestedCiphers != null) {
+                enabledCiphers = getEnabledCiphers(requestedCiphers,
+                    sslProxy.getSupportedCipherSuites());
+            }
+            // Check the SSL config is ok
+            checkConfig();
+
+        } catch (Exception e) {
+            if (e instanceof IOException) {
+                throw (IOException) e;
+            }
+            throw new IOException(e.getMessage(), e);
+        }
+    }
 
     /**
      * Determines the SSL protocol variants to be enabled.
@@ -308,21 +375,69 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
      * @return Array of SSL protocol variants to be enabled, or null if none of the requested protocol variants are
      *         supported
      */
-    abstract protected String[] getEnabledProtocols(SSLServerSocket socket, String requestedProtocols);
+    protected String[] getEnabledProtocols(SSLServerSocket socket, String requestedProtocols) {
+        String[] supportedProtocols = socket.getSupportedProtocols();
+        String[] enabledProtocols = null;
+        if (requestedProtocols != null) {
+            List<String> vec = null;
+            String protocol = requestedProtocols;
+            int index = requestedProtocols.indexOf(',');
+            if (index != -1) {
+                int fromIndex = 0;
+                while (index != -1) {
+                    protocol = requestedProtocols.substring(fromIndex, index).trim();
+                    if (supportedProtocols != null && protocol.length() > 0) {
+                        /*
+                         * Check to see if the requested protocol is among the
+                         * supported protocols, i.e., may be enabled
+                         */
+                        for (String supportedProtocol : supportedProtocols) {
+                            if (supportedProtocol.equals(protocol)) {
+                                if (vec == null) {
+                                    vec = new ArrayList<>();
+                                }
+                                vec.add(protocol);
+                                break;
+                            }
+                        }
+                    }
+                    fromIndex = index + 1;
+                    index = requestedProtocols.indexOf(',', fromIndex);
+                } // while
+                protocol = requestedProtocols.substring(fromIndex);
+            }
 
-    /**
-     * Set the SSL protocol variants to be enabled.
-     *
-     * @param socket the SSLServerSocket.
-     * @param protocols the protocols to use.
-     */
-    abstract protected void setEnabledProtocols(SSLServerSocket socket, String[] protocols);
+            assert protocol != null;
+
+            protocol = protocol.trim();
+            if (protocol.length() > 0 && supportedProtocols != null) {
+                /*
+                 * Check to see if the requested protocol is among the
+                 * supported protocols, i.e., may be enabled
+                 */
+                for (String supportedProtocol : supportedProtocols) {
+                    if (supportedProtocol.equals(protocol)) {
+                        if (vec == null) {
+                            vec = new ArrayList<>();
+                        }
+                        vec.add(protocol);
+                        break;
+                    }
+                }
+            }
+            if (vec != null) {
+                enabledProtocols = vec.toArray(String[]::new);
+            }
+        }
+        return enabledProtocols;
+    }
+
 
     /**
      * Configures the given SSL server socket with the requested cipher suites, protocol versions, and need for client
      * authentication
      */
-    protected void initServerSocket(ServerSocket ssocket) {
+    private void initServerSocket(ServerSocket ssocket) {
         if (!(ssocket instanceof SSLServerSocket)) {
             throw new IllegalArgumentException("The ServerSocket has to be SSLServerSocket");
         }
@@ -336,10 +451,185 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
             requestedProtocols));
         // we don't know if client auth is needed -
         // after parsing the request we may re-handshake
-        if(clientAuthNeed) {
+        if (clientAuthNeed) {
             socket.setNeedClientAuth(clientAuthNeed);
         } else {
             socket.setWantClientAuth(clientAuthWant);
+        }
+    }
+
+
+    /**
+     * Set the SSL protocol variants to be enabled.
+     *
+     * @param socket the SSLServerSocket.
+     * @param protocols the protocols to use.
+     */
+    private void setEnabledProtocols(SSLServerSocket socket, String[] protocols) {
+        if (protocols != null) {
+            socket.setEnabledProtocols(protocols);
+        }
+    }
+
+
+    /**
+     * @return the initialized key managers.
+     */
+    protected KeyManager[] getKeyManagers(String algorithm, String keyAlias) throws Exception {
+        String keystorePass = getKeystorePassword();
+        KeyStore ks = getKeystore(keystorePass);
+        if (keyAlias != null && !ks.isKeyEntry(keyAlias)) {
+            throw new IOException(sm.getString("jsse.alias_no_key_entry", keyAlias));
+        }
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(algorithm);
+        kmf.init(ks, keystorePass.toCharArray());
+        KeyManager[] kms = kmf.getKeyManagers();
+        if (keyAlias != null) {
+            for (int i = 0; i < kms.length; i++) {
+                kms[i] = new JSSEKeyManager((X509KeyManager) kms[i], keyAlias);
+            }
+        }
+        return kms;
+    }
+
+    /**
+     * @return the initialized trust managers.
+     */
+    protected TrustManager[] getTrustManagers(String algorithm) throws Exception {
+        String crlFile = (String) attributes.get("crlFile");
+        TrustManager[] tms = null;
+        KeyStore trustStore = getTrustStore();
+        if (trustStore != null) {
+            if (crlFile == null) {
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(algorithm);
+                tmf.init(trustStore);
+                tms = tmf.getTrustManagers();
+            } else {
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(algorithm);
+                CertPathParameters params = getParameters(algorithm, crlFile, trustStore);
+                ManagerFactoryParameters mfp = new CertPathTrustManagerParameters(params);
+                tmf.init(mfp);
+                tms = tmf.getTrustManagers();
+            }
+        }
+        return tms;
+    }
+
+
+    /**
+     * Return the initialization parameters for the TrustManager. Currently, only the default <code>PKIX</code> is
+     * supported.
+     *
+     * @param algorithm The algorithm to get parameters for.
+     * @param crlf The path to the CRL file.
+     * @param trustStore The configured TrustStore.
+     *
+     * @return The parameters including the CRLs and TrustStore.
+     */
+    private CertPathParameters getParameters(String algorithm, String crlf, KeyStore trustStore) throws Exception {
+        CertPathParameters params;
+        if ("PKIX".equalsIgnoreCase(algorithm)) {
+            PKIXBuilderParameters xparams = new PKIXBuilderParameters(trustStore, new X509CertSelector());
+            Collection crls = getCRLs(crlf);
+            CertStoreParameters csp = new CollectionCertStoreParameters(crls);
+            CertStore store = CertStore.getInstance("Collection", csp);
+            xparams.addCertStore(store);
+            xparams.setRevocationEnabled(true);
+            String trustLength = (String) attributes.get("trustMaxCertLength");
+            if (trustLength != null) {
+                try {
+                    xparams.setMaxPathLength(Integer.parseInt(trustLength));
+                } catch (Exception ex) {
+                    logger.warning("Bad maxCertLength: " + trustLength);
+                }
+            }
+            params = xparams;
+        } else {
+            throw new CRLException("CRLs not supported for type: " + algorithm);
+        }
+        return params;
+    }
+
+    /**
+     * Load the collection of CRLs.
+     */
+    private Collection<? extends CRL> getCRLs(String crlf) throws IOException, CRLException, CertificateException {
+        File crlFile = new File(crlf);
+        if (!crlFile.isAbsolute()) {
+            crlFile = new File(System.getProperty("catalina.base"), crlf);
+        }
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        InputStream is = new FileInputStream(crlFile);
+        try {
+            return cf.generateCRLs(is);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Configures the given SSLSessionContext.
+     *
+     * @param sslSessionCtxt The SSLSessionContext to configure
+     */
+    private void configureSSLSessionContext(SSLSessionContext sslSessionCtxt) {
+        String attrValue = (String) attributes.get("sslSessionTimeout");
+        if (attrValue != null) {
+            sslSessionCtxt.setSessionTimeout(
+                Integer.parseInt(attrValue));
+        }
+        attrValue = (String) attributes.get("ssl3SessionTimeout");
+        if (attrValue != null) {
+            sslSessionCtxt.setSessionTimeout(
+                Integer.parseInt(attrValue));
+        }
+        attrValue = (String) attributes.get("sslSessionCacheSize");
+        if (attrValue != null) {
+            sslSessionCtxt.setSessionCacheSize(
+                Integer.parseInt(attrValue));
+        }
+    }
+
+
+    /**
+     * Checks that the certificate is compatible with the enabled cipher suites. If we don't check now, the JIoEndpoint
+     * can enter a nasty logging loop. See bug 45528.
+     */
+    private void checkConfig() throws IOException {
+        // Create an unbound server socket
+        ServerSocket socket = sslProxy.createServerSocket();
+        initServerSocket(socket);
+        try {
+            // Set the timeout to 1ms as all we care about is if it throws an
+            // SSLException on accept.
+            socket.setSoTimeout(1);
+            socket.accept();
+            // Will never get here - no client can connect to an unbound port
+        } catch (SSLException ssle) {
+            // SSL configuration is invalid. Possibly cert doesn't match ciphers
+            throw new IOException(sm.getString("jsse.invalid_ssl_conf", ssle.getMessage()), ssle);
+        } catch (Exception e) {
+            /*
+             * Possible ways of getting here
+             * socket.accept() throws a SecurityException
+             * socket.setSoTimeout() throws a SocketException
+             * socket.accept() throws some other exception (after a JDK change)
+             *      In these cases the test won't work so carry on - essentially
+             *      the behaviour before this patch
+             * socket.accept() throws a SocketTimeoutException
+             *      In this case all is well so carry on
+             */
+        } finally {
+            // Should be open here but just in case
+            if (!socket.isClosed()) {
+                socket.close();
+            }
         }
     }
 }

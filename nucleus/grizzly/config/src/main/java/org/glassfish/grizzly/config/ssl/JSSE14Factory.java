@@ -26,8 +26,7 @@ import javax.net.ssl.SSLSocket;
 import org.glassfish.grizzly.ssl.SSLSupport;
 
 /**
- * Implementation class for JSSEFactory for JSSE 1.1.x (that ships with the
- * 1.4 JVM).
+ * Implementation class for {@link JSSEFactory}
  *
  * @author Bill Barker
  */
@@ -35,7 +34,7 @@ public class JSSE14Factory implements JSSEFactory {
 
     @Override
     public ServerSocketFactory getSocketFactory() {
-        return new JSSE14SocketFactory();
+        return new JSSESocketFactory();
     }
 
 

@@ -27,5 +27,5 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
  * @author Alexey Stashok
  */
 public interface ConfigAwareElement<E extends ConfigBeanProxy> {
-    public void configure(ServiceLocator habitat, NetworkListener networkListener, E configuration);
+    void configure(ServiceLocator habitat, NetworkListener networkListener, E configuration);
 }

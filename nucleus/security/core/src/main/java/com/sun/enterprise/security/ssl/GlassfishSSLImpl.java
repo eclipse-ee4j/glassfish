@@ -17,8 +17,8 @@
 
 package com.sun.enterprise.security.ssl;
 
+import org.glassfish.grizzly.config.ssl.JSSESocketFactory;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
-import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
@@ -30,7 +30,7 @@ import org.jvnet.hk2.annotations.Service;
 public class GlassfishSSLImpl implements SSLImplementation {
 
     @Override
-    public ServerSocketFactory getServerSocketFactory() {
+    public JSSESocketFactory getServerSocketFactory() {
         return new GlassfishServerSocketFactory(Globals.getStaticBaseServiceLocator());
     }
 }

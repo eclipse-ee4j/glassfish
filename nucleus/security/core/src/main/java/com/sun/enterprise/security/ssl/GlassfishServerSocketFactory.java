@@ -53,10 +53,10 @@ public class GlassfishServerSocketFactory extends JSSESocketFactory {
 
     @Override
     protected KeyManager[] getKeyManagers(String algorithm, String keyAlias) throws Exception {
-        String keystoreFile = (String) attributes.get("keystore");
+        String keystoreFile = getAttribute("keystore");
         LOG.log(Level.DEBUG, "Keystore file = {0}", keystoreFile);
 
-        String keystoreType = (String) attributes.get("keystoreType");
+        String keystoreType = getAttribute("keystoreType");
         LOG.log(Level.DEBUG, "Keystore type = {0}", keystoreType);
         KeyManager[] kMgrs = sslUtils.getKeyManagers(algorithm);
         if (keyAlias != null && keyAlias.length() > 0 && kMgrs != null) {

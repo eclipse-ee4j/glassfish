@@ -35,8 +35,8 @@ import javax.net.ssl.SSLServerSocketFactory;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.grizzly.config.ssl.JSSESocketFactory;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
-import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
 import org.glassfish.grizzly.localization.LogMessages;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
@@ -179,7 +179,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
     private SSLContext initializeSSLContext() {
         try {
-            final ServerSocketFactory serverSF = getSslImplementation().getServerSocketFactory();
+            final JSSESocketFactory serverSF = getSslImplementation().getServerSocketFactory();
             if (ssl != null) {
                 if (ssl.getCrlFile() != null) {
                     setAttribute(serverSF, "crlFile", ssl.getCrlFile(), null, null);
@@ -265,7 +265,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         return null;
     }
 
-    private static void setAttribute(final ServerSocketFactory serverSF, final String name, final String value,
+    private static void setAttribute(final JSSESocketFactory serverSF, final String name, final String value,
             final String property, final String defaultValue) {
         serverSF.setAttribute(name, value == null ? System.getProperty(property, defaultValue) : value);
     }
@@ -334,7 +334,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
     private final class InternalSSLContextConfigurator extends SSLContextConfigurator {
 
-        public InternalSSLContextConfigurator() {
+        private InternalSSLContextConfigurator() {
             super(false);
         }
 

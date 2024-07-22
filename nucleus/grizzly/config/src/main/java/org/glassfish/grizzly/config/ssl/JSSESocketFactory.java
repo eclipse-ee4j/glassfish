@@ -38,7 +38,9 @@ import java.security.cert.PKIXBuilderParameters;
 import java.security.cert.X509CertSelector;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,7 +69,7 @@ import org.glassfish.grizzly.http.util.StringManager;
  * @author EKR -- renamed to JSSESocketFactory
  * @author Jan Luehe
  */
-public class JSSESocketFactory extends ServerSocketFactory {
+public class JSSESocketFactory implements Cloneable {
     private static final StringManager sm = StringManager.getManager(
             JSSESocketFactory.class.getPackage().getName(),
             JSSESocketFactory.class.getClassLoader());
@@ -75,11 +77,102 @@ public class JSSESocketFactory extends ServerSocketFactory {
     private static final String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
     private static final String defaultKeyPass = "changeit";
     private static final Logger logger = GrizzlyConfig.logger();
-    private boolean initialized;
+
+    private final Map<String, String> attributes = new HashMap<>();
     private boolean clientAuthNeed;
     private boolean clientAuthWant;
     private SSLServerSocketFactory sslProxy;
     private String[] enabledCiphers;
+    private SSLContext context;
+
+
+    /**
+     * Reads the keystore and initializes the SSL socket factory.
+     */
+    public void init() throws IOException {
+        try {
+            clientAuthNeed = Boolean.parseBoolean(getAttribute("clientAuthNeed"));
+            clientAuthWant = Boolean.parseBoolean(getAttribute("clientAuthWant"));
+
+            // SSL protocol variant (e.g., TLS, SSL v3, etc.)
+            String protocol = getAttribute("protocol");
+            if (protocol == null) {
+                protocol = defaultProtocol;
+            }
+            // Certificate encoding algorithm (e.g., SunX509)
+            String algorithm = getAttribute("algorithm");
+            if (algorithm == null) {
+                algorithm = defaultAlgorithm;
+            }
+            // Create and init SSLContext
+            /* SJSAS 6439313
+            SSLContext context = SSLContext.getInstance(protocol);
+             */
+            // START SJSAS 6439313
+            context = SSLContext.getInstance(protocol);
+            // END SJSAS 6439313
+            // Configure SSL session timeout and cache size
+            configureSSLSessionContext(context.getServerSessionContext());
+            String trustAlgorithm = getAttribute("truststoreAlgorithm");
+            if (trustAlgorithm == null) {
+                trustAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+            }
+            context.init(getKeyManagers(algorithm,
+                getAttribute("keyAlias")),
+                getTrustManagers(trustAlgorithm),
+                new SecureRandom());
+            // create proxy
+            sslProxy = context.getServerSocketFactory();
+            // Determine which cipher suites to enable
+            String requestedCiphers = getAttribute("ciphers");
+            if (requestedCiphers != null) {
+                enabledCiphers = getEnabledCiphers(requestedCiphers,
+                    sslProxy.getSupportedCipherSuites());
+            }
+            // Check the SSL config is ok
+            checkConfig();
+
+        } catch (Exception e) {
+            if (e instanceof IOException) {
+                throw (IOException) e;
+            }
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * Return the {@link SSLContext} required when implementing SSL over NIO non-blocking.
+     *
+     * @return SSLContext
+     */
+    public SSLContext getSSLContext() {
+        return context;
+    }
+
+    /**
+     * General mechanism to pass attributes from the ServerConnector to the socket factory.
+     *
+     * Note that the "preferred" mechanism is to use bean setters and explicit methods, but this allows easy
+     * configuration via server.xml or simple Properties
+     *
+     * @param name attribute name - null name will be ignored
+     * @param value attribute value - null value will be ignored
+     */
+    public final void setAttribute(String name, String value) {
+        if (name != null && value != null) {
+            attributes.put(name, value);
+        }
+    }
+
+
+    /**
+     * @param name
+     * @return value for the name
+     */
+    public final String getAttribute(final String name) {
+        return attributes.get(name);
+    }
 
     /**
      * Determines the SSL cipher suites to be enabled.
@@ -150,11 +243,11 @@ public class JSSESocketFactory extends ServerSocketFactory {
      * Gets the SSL server's keystore password.
      */
     private String getKeystorePassword() {
-        String keyPass = (String) attributes.get("keypass");
+        String keyPass = getAttribute("keypass");
         if (keyPass == null) {
             keyPass = defaultKeyPass;
         }
-        String keystorePass = (String) attributes.get("keystorePass");
+        String keystorePass = getAttribute("keystorePass");
         if (keystorePass == null) {
             keystorePass = keyPass;
         }
@@ -162,14 +255,31 @@ public class JSSESocketFactory extends ServerSocketFactory {
     }
 
     /**
-     * Gets the SSL server's keystore.
+     * @return the SSL server's keystore.
      */
-    protected KeyStore getKeystore(String pass) throws IOException {
-        String keystoreFile = (String) attributes.get("keystore");
+    private KeyStore getKeystore(String pass) throws IOException {
+        String keystoreFile = getAttribute("keystore");
         logger.log(Level.FINE, "Keystore file= {0}", keystoreFile);
-        String keystoreType = (String) attributes.get("keystoreType");
+        String keystoreType = getAttribute("keystoreType");
         logger.log(Level.FINE, "Keystore type= {0}", keystoreType);
         return getStore(keystoreType, keystoreFile, pass);
+    }
+
+
+    /**
+     * @return the SSL server's truststore.
+     */
+    protected KeyStore getTrustStore() throws IOException {
+        KeyStore ts = null;
+        String truststore = getAttribute("truststore");
+        logger.log(Level.FINE, "Truststore file= {0}", truststore);
+        String truststoreType = getAttribute("truststoreType");
+        logger.log(Level.FINE, "Truststore type= {0}", truststoreType);
+        String truststorePassword = getTruststorePassword();
+        if (truststore != null && truststorePassword != null) {
+            ts = getStore(truststoreType, truststore, truststorePassword);
+        }
+        return ts;
     }
 
 
@@ -177,7 +287,7 @@ public class JSSESocketFactory extends ServerSocketFactory {
      * Gets the SSL server's truststore password.
      */
     private String getTruststorePassword() {
-        String truststorePassword = (String) attributes.get("truststorePass");
+        String truststorePassword = getAttribute("truststorePass");
         if (truststorePassword == null) {
             truststorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
             if (truststorePassword == null) {
@@ -187,24 +297,9 @@ public class JSSESocketFactory extends ServerSocketFactory {
         return truststorePassword;
     }
 
-    /**
-     * @return the SSL server's truststore.
-     */
-    protected KeyStore getTrustStore() throws IOException {
-        KeyStore ts = null;
-        String truststore = (String) attributes.get("truststore");
-        logger.log(Level.FINE, "Truststore file= {0}", truststore);
-        String truststoreType = (String) attributes.get("truststoreType");
-        logger.log(Level.FINE, "Truststore type= {0}", truststoreType);
-        String truststorePassword = getTruststorePassword();
-        if (truststore != null && truststorePassword != null) {
-            ts = getStore(truststoreType, truststore, truststorePassword);
-        }
-        return ts;
-    }
 
     /**
-     * Gets the key- or truststore with the specified type, path, and password.
+     * @return the key or truststore with the specified type, path, and password.
      */
     private KeyStore getStore(String type, String path, String pass) throws IOException {
         KeyStore ks = null;
@@ -240,61 +335,6 @@ public class JSSESocketFactory extends ServerSocketFactory {
             }
         }
         return ks;
-    }
-
-    /**
-     * Reads the keystore and initializes the SSL socket factory.
-     */
-    @Override
-    public void init() throws IOException {
-        try {
-            clientAuthNeed = Boolean.parseBoolean((String) attributes.get("clientAuthNeed"));
-            clientAuthWant = Boolean.parseBoolean((String) attributes.get("clientAuthWant"));
-
-            // SSL protocol variant (e.g., TLS, SSL v3, etc.)
-            String protocol = (String) attributes.get("protocol");
-            if (protocol == null) {
-                protocol = defaultProtocol;
-            }
-            // Certificate encoding algorithm (e.g., SunX509)
-            String algorithm = (String) attributes.get("algorithm");
-            if (algorithm == null) {
-                algorithm = defaultAlgorithm;
-            }
-            // Create and init SSLContext
-            /* SJSAS 6439313
-            SSLContext context = SSLContext.getInstance(protocol);
-             */
-            // START SJSAS 6439313
-            context = SSLContext.getInstance(protocol);
-            // END SJSAS 6439313
-            // Configure SSL session timeout and cache size
-            configureSSLSessionContext(context.getServerSessionContext());
-            String trustAlgorithm = (String) attributes.get("truststoreAlgorithm");
-            if (trustAlgorithm == null) {
-                trustAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-            }
-            context.init(getKeyManagers(algorithm,
-                (String) attributes.get("keyAlias")),
-                getTrustManagers(trustAlgorithm),
-                new SecureRandom());
-            // create proxy
-            sslProxy = context.getServerSocketFactory();
-            // Determine which cipher suites to enable
-            String requestedCiphers = (String) attributes.get("ciphers");
-            if (requestedCiphers != null) {
-                enabledCiphers = getEnabledCiphers(requestedCiphers,
-                    sslProxy.getSupportedCipherSuites());
-            }
-            // Check the SSL config is ok
-            checkConfig();
-
-        } catch (Exception e) {
-            if (e instanceof IOException) {
-                throw (IOException) e;
-            }
-            throw new IOException(e.getMessage(), e);
-        }
     }
 
     /**
@@ -374,10 +414,10 @@ public class JSSESocketFactory extends ServerSocketFactory {
         }
 
         SSLServerSocket socket = (SSLServerSocket) ssocket;
-        if (attributes.get("ciphers") != null) {
+        if (getAttribute("ciphers") != null) {
             socket.setEnabledCipherSuites(enabledCiphers);
         }
-        String requestedProtocols = (String) attributes.get("protocols");
+        String requestedProtocols = getAttribute("protocols");
         setEnabledProtocols(socket, getEnabledProtocols(socket,
             requestedProtocols));
         // we don't know if client auth is needed -
@@ -427,7 +467,7 @@ public class JSSESocketFactory extends ServerSocketFactory {
      * @return the initialized trust managers.
      */
     protected TrustManager[] getTrustManagers(String algorithm) throws Exception {
-        String crlFile = (String) attributes.get("crlFile");
+        String crlFile = getAttribute("crlFile");
         TrustManager[] tms = null;
         KeyStore trustStore = getTrustStore();
         if (trustStore != null) {
@@ -466,7 +506,7 @@ public class JSSESocketFactory extends ServerSocketFactory {
             CertStore store = CertStore.getInstance("Collection", csp);
             xparams.addCertStore(store);
             xparams.setRevocationEnabled(true);
-            String trustLength = (String) attributes.get("trustMaxCertLength");
+            String trustLength = getAttribute("trustMaxCertLength");
             if (trustLength != null) {
                 try {
                     xparams.setMaxPathLength(Integer.parseInt(trustLength));
@@ -510,17 +550,17 @@ public class JSSESocketFactory extends ServerSocketFactory {
      * @param sslSessionCtxt The SSLSessionContext to configure
      */
     private void configureSSLSessionContext(SSLSessionContext sslSessionCtxt) {
-        String attrValue = (String) attributes.get("sslSessionTimeout");
+        String attrValue = getAttribute("sslSessionTimeout");
         if (attrValue != null) {
             sslSessionCtxt.setSessionTimeout(
                 Integer.parseInt(attrValue));
         }
-        attrValue = (String) attributes.get("ssl3SessionTimeout");
+        attrValue = getAttribute("ssl3SessionTimeout");
         if (attrValue != null) {
             sslSessionCtxt.setSessionTimeout(
                 Integer.parseInt(attrValue));
         }
-        attrValue = (String) attributes.get("sslSessionCacheSize");
+        attrValue = getAttribute("sslSessionCacheSize");
         if (attrValue != null) {
             sslSessionCtxt.setSessionCacheSize(
                 Integer.parseInt(attrValue));

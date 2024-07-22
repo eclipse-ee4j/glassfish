@@ -33,7 +33,7 @@ public class JSSEFactory {
     /**
      * @return the ServerSocketFactory to use.
      */
-    public ServerSocketFactory getSocketFactory() {
+    public JSSESocketFactory getSocketFactory() {
         return new JSSESocketFactory();
     }
 

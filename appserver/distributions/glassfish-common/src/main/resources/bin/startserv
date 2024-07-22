@@ -39,29 +39,29 @@ start_as_main_process () {
     # If command fails, the last item in the array will be "FAILED"
     local DRY_RUN_OUTPUT=()
     local SKIP_LINES_UNTIL_DUMP=y
+    local DRY_RUN_OUTPUT_BEFORE_DUMP=
     while read COM; do
       if [[ "$SKIP_LINES_UNTIL_DUMP" == y ]]; then
         if [[ "$COM" == Dump* ]]; then
           SKIP_LINES_UNTIL_DUMP=n
+        elif [[ "$COM" != "FAILED" ]]; then
+          DRY_RUN_OUTPUT_BEFORE_DUMP+="$COM\n";
         fi
       else
         DRY_RUN_OUTPUT+=("$COM");
       fi
-    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo "FAILED" )
-    local OUTPUT_LENGTH=${#DRY_RUN_OUTPUT[@]}
-    local LAST_LINE=${DRY_RUN_OUTPUT[${OUTPUT_LENGTH}-1]}
-
-    # If asadmin command failed (last line is FAILED), we execute it again to show
-    #   the output to the user and exit
-    if [[ "$LAST_LINE" == FAILED ]]
+    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
+    if [[ x"$DRY_RUN_OUTPUT" == x ]]
       then
-        exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --dry-run "$@"
-      else
-        # If all OK, execute the command to start GlassFish.
-        # Remove the last line as they aren't part of the command.
-        local FINAL_COMMAND=(${DRY_RUN_OUTPUT[@]:0:${OUTPUT_LENGTH}-2})
-        exec "${FINAL_COMMAND[@]}"
+        echo -n -e "${DRY_RUN_OUTPUT_BEFORE_DUMP}" >&2
+        exit 1
     fi
+    local OUTPUT_LENGTH=${#DRY_RUN_OUTPUT[@]}
+
+    # If all OK, execute the command to start GlassFish.
+    # Remove the last line as it's not part of the command.
+    local FINAL_COMMAND=(${DRY_RUN_OUTPUT[@]:0:${OUTPUT_LENGTH}-2})
+    exec "${FINAL_COMMAND[@]}"
 
 }
 

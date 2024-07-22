@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -879,31 +880,7 @@ public class PECoyoteConnector extends Connector {
 
         // server-name (may contain scheme and colon-separated port number)
         String serverName = http.getServerName();
-        if (serverName != null && serverName.length() > 0) {
-            // Ignore scheme, which was required for webcore issued redirects
-            // in 8.x EE
-            if (serverName.startsWith("http://")) {
-                serverName = serverName.substring("http://".length());
-            } else if (serverName.startsWith("https://")) {
-                serverName = serverName.substring("https://".length());
-            }
-            int index = serverName.indexOf(':');
-            if (index != -1) {
-                setProxyName(serverName.substring(0, index).trim());
-                String serverPort = serverName.substring(index+1).trim();
-                if (serverPort.length() > 0) {
-                    try {
-                        setProxyPort(Integer.parseInt(serverPort));
-                    } catch (NumberFormatException nfe) {
-                        _logger.log(Level.SEVERE,
-                            LogFacade.INVALID_PROXY_PORT,
-                            new Object[] { serverPort, listener.getName() });
-            }
-                }
-            } else {
-                setProxyName(serverName);
-            }
-        }
+        setProxyAttributesFromServerName(serverName, listener);
 
         // redirect-port
         String redirectPort = http.getRedirectPort();
@@ -947,6 +924,41 @@ public class PECoyoteConnector extends Connector {
 
         // Overrided http-service property if defined.
         configureHttpListenerProperties(listener);
+    }
+
+    private void setProxyAttributesFromServerName(String serverName, NetworkListener listener) {
+        if (serverName != null && serverName.length() > 0) {
+            // Split serverName into scheme, serverName, and port number
+            String scheme = null;
+            if (serverName.startsWith("http://")) {
+                scheme = "http";
+                serverName = serverName.substring("http://".length());
+            } else if (serverName.startsWith("https://")) {
+                scheme = "https";
+                serverName = serverName.substring("https://".length());
+            }
+            setProxyScheme(scheme);
+            int index = serverName.indexOf(':');
+            if (index != -1) {
+                setProxyName(serverName.substring(0, index).trim());
+                String serverPort = serverName.substring(index+1).trim();
+                setProxyPort(serverPort, listener);
+            } else {
+                setProxyName(serverName);
+            }
+        }
+    }
+
+    private void setProxyPort(String serverPort, NetworkListener listener) {
+        if (serverPort.length() > 0) {
+            try {
+                setProxyPort(Integer.parseInt(serverPort));
+            } catch (NumberFormatException nfe) {
+                _logger.log(Level.SEVERE,
+                        LogFacade.INVALID_PROXY_PORT,
+                        new Object[] { serverPort, listener.getName() });
+            }
+        }
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,6 +72,7 @@ import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescript
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.glassfish.hk2.extras.ExtrasUtilities;
 
 /**
  * This JUnit5 extension allows to use HK2 services in tests.
@@ -145,6 +146,8 @@ public class HK2JUnit5Extension
             ServiceLocatorUtilities.dumpAllDescriptors(locator, System.err);
             throw e;
         }
+
+        ExtrasUtilities.enableTopicDistribution(getLocator());
     }
 
 

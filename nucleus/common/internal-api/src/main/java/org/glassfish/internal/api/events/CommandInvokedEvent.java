@@ -15,9 +15,11 @@
  */
 package org.glassfish.internal.api.events;
 
+import java.util.Optional;
 import javax.security.auth.Subject;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.messaging.MessageReceiver;
+import org.glassfish.security.common.UserPrincipal;
 
 /**
  * <p>
@@ -62,17 +64,15 @@ public class CommandSubscriber {
  */
 public class CommandInvokedEvent {
 
-    public CommandInvokedEvent(String commandName, ParameterMap parameters, Subject subject, String source) {
+    public CommandInvokedEvent(String commandName, ParameterMap parameters, Subject subject) {
         this.commandName = commandName;
         this.parameters = parameters;
         this.subject = subject;
-        this.source = source;
     }
 
     private final String commandName;
     private final ParameterMap parameters;
     private final Subject subject;
-    private final String source;
 
     public String getCommandName() {
         return commandName;
@@ -86,8 +86,11 @@ public class CommandInvokedEvent {
         return subject;
     }
 
-    public String getSource() {
-        return source;
+    public Optional<UserPrincipal> getUserPrincipal() {
+        return subject.getPrincipals().stream()
+                .filter(principal -> principal instanceof UserPrincipal)
+                .map(UserPrincipal.class::cast)
+                .findAny();
     }
 
 }

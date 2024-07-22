@@ -205,8 +205,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
             // Cert nick name
             serverSF.setAttribute("keyAlias", ssl != null ? ssl.getCertNickname() : null);
-            serverSF.init();
-            SSLContext newSslContext = serverSF.getSSLContext();
+            SSLContext newSslContext = serverSF.init();
             CipherInfo.updateCiphers(newSslContext);
             return newSslContext;
         } catch (IOException e) {

@@ -24,6 +24,7 @@ import java.security.KeyStore;
 import java.util.Objects;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509KeyManager;
 
 import org.glassfish.grizzly.config.ssl.JSSESocketFactory;
@@ -45,9 +46,9 @@ public class GlassfishServerSocketFactory extends JSSESocketFactory {
 
 
     @Override
-    public void init() throws IOException {
+    public SSLContext init() throws IOException {
         sslUtils = locator.getService(SSLUtils.class);
-        super.init();
+        return super.init();
     }
 
 

@@ -83,13 +83,14 @@ public class JSSESocketFactory implements Cloneable {
     private boolean clientAuthWant;
     private SSLServerSocketFactory sslProxy;
     private String[] enabledCiphers;
-    private SSLContext context;
 
 
     /**
      * Reads the keystore and initializes the SSL socket factory.
+     *
+     * @return {@link SSLContext}
      */
-    public void init() throws IOException {
+    public SSLContext init() throws IOException {
         try {
             clientAuthNeed = Boolean.parseBoolean(getAttribute("clientAuthNeed"));
             clientAuthWant = Boolean.parseBoolean(getAttribute("clientAuthWant"));
@@ -109,7 +110,7 @@ public class JSSESocketFactory implements Cloneable {
             SSLContext context = SSLContext.getInstance(protocol);
              */
             // START SJSAS 6439313
-            context = SSLContext.getInstance(protocol);
+            SSLContext context = SSLContext.getInstance(protocol);
             // END SJSAS 6439313
             // Configure SSL session timeout and cache size
             configureSSLSessionContext(context.getServerSessionContext());
@@ -131,23 +132,13 @@ public class JSSESocketFactory implements Cloneable {
             }
             // Check the SSL config is ok
             checkConfig();
-
+            return context;
         } catch (Exception e) {
             if (e instanceof IOException) {
                 throw (IOException) e;
             }
             throw new IOException(e.getMessage(), e);
         }
-    }
-
-
-    /**
-     * Return the {@link SSLContext} required when implementing SSL over NIO non-blocking.
-     *
-     * @return SSLContext
-     */
-    public SSLContext getSSLContext() {
-        return context;
     }
 
     /**

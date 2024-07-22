@@ -18,14 +18,9 @@
 
 package org.glassfish.grizzly.config.test;
 
-import java.net.Socket;
-
-import javax.net.ssl.SSLEngine;
-
 import org.glassfish.grizzly.config.ssl.JSSEFactory;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
 import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
-import org.glassfish.grizzly.ssl.SSLSupport;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -40,22 +35,7 @@ public class JSSEImplementation4Tests implements SSLImplementation {
     private final JSSEFactory factory = new JSSEFactory();
 
     @Override
-    public String getImplementationName() {
-        return "JSSE";
-    }
-
-    @Override
     public ServerSocketFactory getServerSocketFactory() {
         return factory.getSocketFactory();
-    }
-
-    @Override
-    public SSLSupport getSSLSupport(Socket socket) {
-        return factory.getSSLSupport(socket);
-    }
-
-    @Override
-    public SSLSupport getSSLSupport(SSLEngine sslEngine) {
-        return factory.getSSLSupport(sslEngine);
     }
 }

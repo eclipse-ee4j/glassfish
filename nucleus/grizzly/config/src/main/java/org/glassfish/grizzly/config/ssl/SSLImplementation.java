@@ -18,11 +18,6 @@
 
 package org.glassfish.grizzly.config.ssl;
 
-import java.net.Socket;
-
-import javax.net.ssl.SSLEngine;
-
-import org.glassfish.grizzly.ssl.SSLSupport;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -35,11 +30,5 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface SSLImplementation {
 
-    String getImplementationName();
-
     ServerSocketFactory getServerSocketFactory();
-
-    SSLSupport getSSLSupport(Socket sock);
-
-    SSLSupport getSSLSupport(SSLEngine sslEngine);
 }

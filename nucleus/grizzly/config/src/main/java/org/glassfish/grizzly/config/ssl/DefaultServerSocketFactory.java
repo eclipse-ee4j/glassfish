@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,9 +19,6 @@
 package org.glassfish.grizzly.config.ssl;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
  * Default server socket factory. Doesn't do much except give us plain ol' server sockets.
@@ -32,25 +30,7 @@ class DefaultServerSocketFactory extends ServerSocketFactory {
     DefaultServerSocketFactory() {
     }
 
-    public ServerSocket createSocket(int port) throws IOException {
-        return new ServerSocket(port);
-    }
-
-    public ServerSocket createSocket(int port, int backlog) throws IOException {
-        return new ServerSocket(port, backlog);
-    }
-
-    public ServerSocket createSocket(int port, int backlog, InetAddress ifAddress) throws IOException {
-        return new ServerSocket(port, backlog, ifAddress);
-    }
-
-    public Socket acceptSocket(ServerSocket socket) throws IOException {
-        return socket.accept();
-    }
-
-    public void handshake(Socket sock) throws IOException {
-    }
-
+    @Override
     public void init() throws IOException {
     }
 }

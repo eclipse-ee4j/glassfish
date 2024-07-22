@@ -23,10 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CRL;
@@ -54,7 +51,6 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSessionContext;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
@@ -84,63 +80,6 @@ public class JSSESocketFactory extends ServerSocketFactory {
     private boolean clientAuthWant;
     private SSLServerSocketFactory sslProxy;
     private String[] enabledCiphers;
-
-    @Override
-    public ServerSocket createSocket(int port) throws IOException {
-        if (!initialized) {
-            init();
-        }
-        ServerSocket socket = sslProxy.createServerSocket(port);
-        initServerSocket(socket);
-        return socket;
-    }
-
-    @Override
-    public ServerSocket createSocket(int port, int backlog) throws IOException {
-        if (!initialized) {
-            init();
-        }
-        ServerSocket socket = sslProxy.createServerSocket(port, backlog);
-        initServerSocket(socket);
-        return socket;
-    }
-
-    @Override
-    public ServerSocket createSocket(int port, int backlog, InetAddress ifAddress) throws IOException {
-        if (!initialized) {
-            init();
-        }
-        ServerSocket socket = sslProxy.createServerSocket(port, backlog, ifAddress);
-        initServerSocket(socket);
-        return socket;
-    }
-
-    @Override
-    public Socket acceptSocket(ServerSocket socket) throws IOException {
-        Socket asock;
-        try {
-            asock = socket.accept();
-            assert asock instanceof SSLSocket;
-
-            if(clientAuthNeed) {
-                ((SSLSocket) asock).setNeedClientAuth(clientAuthNeed);
-            } else {
-                ((SSLSocket) asock).setWantClientAuth(clientAuthWant);
-            }
-        } catch (SSLException e) {
-            throw new SocketException("SSL handshake error" + e.toString());
-        }
-        return asock;
-    }
-
-    @Override
-    public void handshake(Socket sock) throws IOException {
-        if (!(sock instanceof SSLSocket)) {
-            throw new IllegalArgumentException("The Socket has to be SSLSocket");
-        }
-
-        ((SSLSocket) sock).startHandshake();
-    }
 
     /**
      * Determines the SSL cipher suites to be enabled.
@@ -227,13 +166,9 @@ public class JSSESocketFactory extends ServerSocketFactory {
      */
     protected KeyStore getKeystore(String pass) throws IOException {
         String keystoreFile = (String) attributes.get("keystore");
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Keystore file= {0}", keystoreFile);
-        }
+        logger.log(Level.FINE, "Keystore file= {0}", keystoreFile);
         String keystoreType = (String) attributes.get("keystoreType");
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Keystore type= {0}", keystoreType);
-        }
+        logger.log(Level.FINE, "Keystore type= {0}", keystoreType);
         return getStore(keystoreType, keystoreFile, pass);
     }
 
@@ -258,13 +193,9 @@ public class JSSESocketFactory extends ServerSocketFactory {
     protected KeyStore getTrustStore() throws IOException {
         KeyStore ts = null;
         String truststore = (String) attributes.get("truststore");
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Truststore file= {0}", truststore);
-        }
+        logger.log(Level.FINE, "Truststore file= {0}", truststore);
         String truststoreType = (String) attributes.get("truststoreType");
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Truststore type= {0}", truststoreType);
-        }
+        logger.log(Level.FINE, "Truststore type= {0}", truststoreType);
         String truststorePassword = getTruststorePassword();
         if (truststore != null && truststorePassword != null) {
             ts = getStore(truststoreType, truststore, truststorePassword);
@@ -530,7 +461,7 @@ public class JSSESocketFactory extends ServerSocketFactory {
         CertPathParameters params;
         if ("PKIX".equalsIgnoreCase(algorithm)) {
             PKIXBuilderParameters xparams = new PKIXBuilderParameters(trustStore, new X509CertSelector());
-            Collection crls = getCRLs(crlf);
+            Collection<?> crls = getCRLs(crlf);
             CertStoreParameters csp = new CollectionCertStoreParameters(crls);
             CertStore store = CertStore.getInstance("Collection", csp);
             xparams.addCertStore(store);

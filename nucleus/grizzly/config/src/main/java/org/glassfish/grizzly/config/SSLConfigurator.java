@@ -19,6 +19,7 @@ package org.glassfish.grizzly.config;
 
 import java.io.IOException;
 import java.lang.System.Logger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,83 +99,35 @@ public class SSLConfigurator extends SSLEngineConfigurator {
      * Configures the SSL properties on the given PECoyoteConnector from the SSL config of the given HTTP listener.
      */
     private SSLContext configureSSL() {
-        SSLContext newSslContext;
-
-        final List<String> tmpSSLArtifactsList = new LinkedList<>();
         try {
-            newSslContext = initializeSSLContext();
+            final SSLContext newSslContext = initializeSSLContext();
 
             if (ssl != null) {
-                // ssl protocol variants
-                if (Boolean.parseBoolean(ssl.getSsl2Enabled())) {
-                    tmpSSLArtifactsList.add("SSLv2");
-                }
-                if (Boolean.parseBoolean(ssl.getSsl3Enabled())) {
-                    tmpSSLArtifactsList.add("SSLv3");
-                }
-                if (Boolean.parseBoolean(ssl.getTlsEnabled())) {
-                    tmpSSLArtifactsList.add("TLSv1");
-                }
-                if (Boolean.parseBoolean(ssl.getTls11Enabled())) {
-                    tmpSSLArtifactsList.add("TLSv1.1");
-                }
-                if (Boolean.parseBoolean(ssl.getTls12Enabled())) {
-                    tmpSSLArtifactsList.add("TLSv1.2");
-                }
-                if (Boolean.parseBoolean(ssl.getTls13Enabled())) {
-                    tmpSSLArtifactsList.add("TLSv1.3");
-                }
-                if (Boolean.parseBoolean(ssl.getSsl3Enabled())
-                        || Boolean.parseBoolean(ssl.getTlsEnabled())) {
-                    tmpSSLArtifactsList.add("SSLv2Hello");
-                }
-                if (tmpSSLArtifactsList.isEmpty()) {
+                final List<String> enabledProtocols = getListOfEnabledProtocols();
+                if (enabledProtocols.isEmpty()) {
                     logEmptyWarning(ssl, "protocol variants");
                 } else {
-                    final String[] protocols = new String[tmpSSLArtifactsList.size()];
-                    tmpSSLArtifactsList.toArray(protocols);
-                    setEnabledProtocols(protocols);
+                    setEnabledProtocols(enabledProtocols.toArray(String[]::new));
                 }
 
-                tmpSSLArtifactsList.clear();
-
-                // ssl3-tls-ciphers
-                final String ssl3Ciphers = ssl.getSsl3TlsCiphers();
-                if (ssl3Ciphers != null && ssl3Ciphers.length() > 0) {
-                    final String[] ssl3CiphersArray = ssl3Ciphers.split(",");
-                    for (final String cipher : ssl3CiphersArray) {
-                        tmpSSLArtifactsList.add(cipher.trim());
-                    }
-                }
-
-                // ssl2-tls-ciphers
-                final String ssl2Ciphers = ssl.getSsl2Ciphers();
-                if (ssl2Ciphers != null && ssl2Ciphers.length() > 0) {
-                    final String[] ssl2CiphersArray = ssl2Ciphers.split(",");
-                    for (final String cipher : ssl2CiphersArray) {
-                        tmpSSLArtifactsList.add(cipher.trim());
-                    }
-                }
-
-                final String[] ciphers = getJSSECiphers(tmpSSLArtifactsList);
-                if (ciphers == null || ciphers.length == 0) {
+                final Set<String> ciphers = getSetOfEnabledCiphers();
+                if (ciphers.isEmpty()) {
                     logEmptyWarning(ssl, "cipher suites");
                 } else {
-                    setEnabledCipherSuites(ciphers);
+                    setEnabledCipherSuites(ciphers.toArray(String[]::new));
                 }
             }
 
             if (LOG.isLoggable(DEBUG)) {
-                LOG.log(DEBUG, "Enabled secure protocols={0} ciphers={1}", Arrays.toString(getEnabledProtocols()),
+                LOG.log(DEBUG, "Enabled secure protocols={0} and ciphers={1}", Arrays.toString(getEnabledProtocols()),
                     Arrays.toString(getEnabledCipherSuites()));
             }
 
             return newSslContext;
         } catch (Exception e) {
             LOG.log(WARNING, LogMessages.WARNING_GRIZZLY_CONFIG_SSL_GENERAL_CONFIG_ERROR(), e);
+            return null;
         }
-
-        return null;
     }
 
     private SSLContext initializeSSLContext() {
@@ -212,6 +165,56 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             LOG.log(WARNING, LogMessages.WARNING_GRIZZLY_CONFIG_SSL_GENERAL_CONFIG_ERROR(), e);
             return null;
         }
+    }
+
+    private List<String> getListOfEnabledProtocols() {
+        final List<String> enabledProtocols = new ArrayList<>(8);
+        // ssl protocol variants
+        if (Boolean.parseBoolean(ssl.getSsl2Enabled())) {
+            enabledProtocols.add("SSLv2");
+        }
+        if (Boolean.parseBoolean(ssl.getSsl3Enabled())) {
+            enabledProtocols.add("SSLv3");
+        }
+        if (Boolean.parseBoolean(ssl.getTlsEnabled())) {
+            enabledProtocols.add("TLSv1");
+        }
+        if (Boolean.parseBoolean(ssl.getTls11Enabled())) {
+            enabledProtocols.add("TLSv1.1");
+        }
+        if (Boolean.parseBoolean(ssl.getTls12Enabled())) {
+            enabledProtocols.add("TLSv1.2");
+        }
+        if (Boolean.parseBoolean(ssl.getTls13Enabled())) {
+            enabledProtocols.add("TLSv1.3");
+        }
+        if (Boolean.parseBoolean(ssl.getSsl3Enabled()) || Boolean.parseBoolean(ssl.getTlsEnabled())) {
+            enabledProtocols.add("SSLv2Hello");
+        }
+        return enabledProtocols;
+    }
+
+    private Set<String> getSetOfEnabledCiphers() {
+        final List<String> enabledCiphers = new LinkedList<>();
+        // ssl3-tls-ciphers
+        final String ssl3Ciphers = ssl.getSsl3TlsCiphers();
+        if (ssl3Ciphers != null && ssl3Ciphers.length() > 0) {
+            final String[] ssl3CiphersArray = ssl3Ciphers.split(",");
+            for (final String cipher : ssl3CiphersArray) {
+                enabledCiphers.add(cipher.trim());
+            }
+        }
+
+        // ssl2-tls-ciphers
+        final String ssl2Ciphers = ssl.getSsl2Ciphers();
+        if (ssl2Ciphers != null && ssl2Ciphers.length() > 0) {
+            final String[] ssl2CiphersArray = ssl2Ciphers.split(",");
+            for (final String cipher : ssl2CiphersArray) {
+                enabledCiphers.add(cipher.trim());
+            }
+        }
+
+        return getJSSECiphers(enabledCiphers);
     }
 
     protected void logEmptyWarning(Ssl ssl, String type) {
@@ -285,7 +288,6 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
     }
 
-
     /**
      * Evaluates the given List of cipher suite names, converts each cipher suite that is enabled (i.e., not preceded by
      * a '-') to the corresponding JSSE cipher suite name, and returns a String[] of enabled cipher suites.
@@ -295,10 +297,10 @@ public class SSLConfigurator extends SSLEngineConfigurator {
      * @return String[] of cipher suite names, or null if none of the cipher suites in the given List are enabled or can
      *         be mapped to corresponding JSSE cipher suite names
      */
-    private static String[] getJSSECiphers(final List<String> configuredCiphers) {
-        Set<String> enabledCiphers = null;
+    private static Set<String> getJSSECiphers(final List<String> configuredCiphers) {
+        final Set<String> enabledCiphers = new HashSet<>(configuredCiphers.size());
         for (String cipher : configuredCiphers) {
-            if (cipher.length() > 0 && cipher.charAt(0) != '-') {
+            if (!cipher.isEmpty() && cipher.charAt(0) != '-') {
                 if (cipher.charAt(0) == '+') {
                     cipher = cipher.substring(1);
                 }
@@ -306,14 +308,11 @@ public class SSLConfigurator extends SSLEngineConfigurator {
                 if (jsseCipher == null) {
                     LOG.log(WARNING, LogMessages.WARNING_GRIZZLY_CONFIG_SSL_UNKNOWN_CIPHER_ERROR(cipher));
                 } else {
-                    if (enabledCiphers == null) {
-                        enabledCiphers = new HashSet<>(configuredCiphers.size());
-                    }
                     enabledCiphers.add(jsseCipher);
                 }
             }
         }
-        return enabledCiphers == null ? null : enabledCiphers.toArray(String[]::new);
+        return enabledCiphers;
     }
 
 

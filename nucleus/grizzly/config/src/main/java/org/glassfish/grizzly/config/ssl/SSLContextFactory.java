@@ -224,7 +224,7 @@ public class SSLContextFactory implements Cloneable {
                 }
             }
             if (vec != null) {
-                enabled = vec.toArray(new String[vec.size()]);
+                enabled = vec.toArray(String[]::new);
             }
         }
         return enabled;

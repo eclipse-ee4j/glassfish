@@ -267,9 +267,9 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         return null;
     }
 
-    private static void setAttribute(final SSLContextFactory serverSF, final String name, final String value,
-            final String property, final String defaultValue) {
-        serverSF.setAttribute(name, value == null ? System.getProperty(property, defaultValue) : value);
+    private static void setAttribute(final SSLContextFactory sslContextFactory, final String name, final String value,
+        final String property, final String defaultValue) {
+        sslContextFactory.setAttribute(name, value == null ? System.getProperty(property, defaultValue) : value);
     }
 
     private static boolean isWantClientAuth(final Ssl ssl) {

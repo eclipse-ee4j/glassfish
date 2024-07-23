@@ -18,7 +18,6 @@
 
 package org.glassfish.grizzly.config.test;
 
-import org.glassfish.grizzly.config.ssl.JSSEFactory;
 import org.glassfish.grizzly.config.ssl.SSLContextFactory;
 import org.glassfish.grizzly.config.ssl.SSLImplementation;
 import org.jvnet.hk2.annotations.Service;
@@ -32,10 +31,9 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 public class JSSEImplementation4Tests implements SSLImplementation {
-    private final JSSEFactory factory = new JSSEFactory();
 
     @Override
     public SSLContextFactory getSSLContextFactory() {
-        return factory.getSSLContextFactory();
+        return new SSLContextFactory();
     }
 }

@@ -18,41 +18,47 @@
 package com.sun.enterprise.security.ssl;
 
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.security.KeyStore;
 import java.util.Objects;
-import java.util.logging.Level;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.grizzly.config.ssl.JSSE14SocketFactory;
+import org.glassfish.grizzly.config.ssl.SSLContextFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * @author Sudarsan Sridhar
  */
-public class GlassfishServerSocketFactory extends JSSE14SocketFactory {
+public class GlassFishSSLContextFactory extends SSLContextFactory {
+
+    private static final Logger LOG = System.getLogger(GlassFishSSLContextFactory.class.getName());
 
     private final ServiceLocator locator;
     private SSLUtils sslUtils;
 
-    public GlassfishServerSocketFactory(ServiceLocator locator) {
+    public GlassFishSSLContextFactory(ServiceLocator locator) {
         this.locator = Objects.requireNonNull(locator, "locator");
     }
 
+
     @Override
-    public void init() throws IOException {
+    public SSLContext create() throws IOException {
         sslUtils = locator.getService(SSLUtils.class);
-        super.init();
+        return super.create();
     }
+
 
     @Override
     protected KeyManager[] getKeyManagers(String algorithm, String keyAlias) throws Exception {
-        String keystoreFile = (String) attributes.get("keystore");
-        logger.log(Level.FINE, "Keystore file = {0}", keystoreFile);
+        String keystoreFile = getAttribute("keystore");
+        LOG.log(Level.DEBUG, "Keystore file = {0}", keystoreFile);
 
-        String keystoreType = (String) attributes.get("keystoreType");
-        logger.log(Level.FINE, "Keystore type = {0}", keystoreType);
+        String keystoreType = getAttribute("keystoreType");
+        LOG.log(Level.DEBUG, "Keystore type = {0}", keystoreType);
         KeyManager[] kMgrs = sslUtils.getKeyManagers(algorithm);
         if (keyAlias != null && keyAlias.length() > 0 && kMgrs != null) {
             for (int i = 0; i < kMgrs.length; i++) {
@@ -61,6 +67,7 @@ public class GlassfishServerSocketFactory extends JSSE14SocketFactory {
         }
         return kMgrs;
     }
+
 
     @Override
     protected KeyStore getTrustStore() throws IOException {

@@ -55,6 +55,7 @@ import org.glassfish.grizzly.filterchain.Filter;
 import org.glassfish.grizzly.filterchain.FilterChain;
 import org.glassfish.grizzly.filterchain.FilterChainBuilder;
 import org.glassfish.grizzly.filterchain.TransportFilter;
+import org.glassfish.grizzly.http.CompressionConfig.CompressionMode;
 import org.glassfish.grizzly.http.ContentEncoding;
 import org.glassfish.grizzly.http.GZipContentEncoding;
 import org.glassfish.grizzly.http.HttpCodecFilter;
@@ -63,7 +64,6 @@ import org.glassfish.grizzly.http.LZMAContentEncoding;
 import org.glassfish.grizzly.http.server.AddOn;
 import org.glassfish.grizzly.http.server.BackendConfiguration;
 import org.glassfish.grizzly.http.server.CompressionEncodingFilter;
-import org.glassfish.grizzly.http.server.CompressionLevel;
 import org.glassfish.grizzly.http.server.FileCacheFilter;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServerFilter;
@@ -85,8 +85,8 @@ import org.glassfish.grizzly.portunif.PUFilter;
 import org.glassfish.grizzly.portunif.PUProtocol;
 import org.glassfish.grizzly.portunif.ProtocolFinder;
 import org.glassfish.grizzly.portunif.finders.SSLProtocolFinder;
-import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.grizzly.ssl.SSLBaseFilter;
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
 import org.glassfish.grizzly.threadpool.DefaultWorkerThread;
 import org.glassfish.grizzly.threadpool.GrizzlyExecutorService;
@@ -396,7 +396,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
             final Protocol protocol,
             final FilterChainBuilder filterChainBuilder) {
 
-        if (Boolean.valueOf(protocol.getSecurityEnabled())) {
+        if (Boolean.parseBoolean(protocol.getSecurityEnabled())) {
             configureSsl(habitat,
                          getSsl(protocol),
                          filterChainBuilder);
@@ -416,7 +416,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
                                   networkListener,
                                   http,
                                   filterChainBuilder,
-                                  Boolean.valueOf(protocol.getSecurityEnabled()));
+                                  Boolean.parseBoolean(protocol.getSecurityEnabled()));
 
         } else if (protocol.getPortUnification() != null) {
             // Port unification
@@ -457,7 +457,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
                     final FilterChainBuilder subProtocolFilterChainBuilder =
                         puFilter.getPUFilterChainBuilder();
                     // If subprotocol is secured - we need to wrap it under SSLProtocolFinder
-                    if (Boolean.valueOf(subProtocol.getSecurityEnabled())) {
+                    if (Boolean.parseBoolean(subProtocol.getSecurityEnabled())) {
                         final PUFilter extraSslPUFilter = new PUFilter();
 
                         final Filter addedSSLFilter = configureSsl(
@@ -946,7 +946,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
             serverFilterConfiguration.setBackendConfiguration(backendConfiguration);
         }
         serverFilterConfiguration.setPassTraceRequest(true);
-        serverFilterConfiguration.setTraceEnabled(Boolean.valueOf(http.getTraceEnabled()));
+        serverFilterConfiguration.setTraceEnabled(Boolean.parseBoolean(http.getTraceEnabled()));
         int maxRequestParameters;
         try {
             maxRequestParameters = Integer.parseInt(http.getMaxRequestParameters());
@@ -1014,17 +1014,17 @@ public class GenericGrizzlyListener implements GrizzlyListener {
     protected Set<ContentEncoding> configureCompressionEncodings(Http http) {
         final String mode = http.getCompression();
         int compressionMinSize = Integer.parseInt(http.getCompressionMinSizeBytes());
-        CompressionLevel compressionLevel;
+        CompressionMode compressionMode;
         try {
-            compressionLevel = CompressionLevel.getCompressionLevel(mode);
+            compressionMode = CompressionMode.fromString(mode);
         } catch (IllegalArgumentException e) {
             try {
                 // Try to parse compression as an int, which would give the
                 // minimum compression size
-                compressionLevel = CompressionLevel.ON;
+                compressionMode = CompressionMode.ON;
                 compressionMinSize = Integer.parseInt(mode);
             } catch (Exception ignore) {
-                compressionLevel = CompressionLevel.OFF;
+                compressionMode = CompressionMode.OFF;
             }
         }
         final String compressableMimeTypesString = http.getCompressableMimeType();
@@ -1040,11 +1040,11 @@ public class GenericGrizzlyListener implements GrizzlyListener {
         final ContentEncoding gzipContentEncoding = new GZipContentEncoding(
             GZipContentEncoding.DEFAULT_IN_BUFFER_SIZE,
             GZipContentEncoding.DEFAULT_OUT_BUFFER_SIZE,
-            new CompressionEncodingFilter(compressionLevel, compressionMinSize,
+            new CompressionEncodingFilter(compressionMode, compressionMinSize,
                 compressableMimeTypes,
                 noCompressionUserAgents,
                 GZipContentEncoding.getGzipAliases()));
-        final ContentEncoding lzmaEncoding = new LZMAContentEncoding(new CompressionEncodingFilter(compressionLevel, compressionMinSize,
+        final ContentEncoding lzmaEncoding = new LZMAContentEncoding(new CompressionEncodingFilter(compressionMode, compressionMinSize,
                 compressableMimeTypes,
                 noCompressionUserAgents,
                 LZMAContentEncoding.getLzmaAliases()));

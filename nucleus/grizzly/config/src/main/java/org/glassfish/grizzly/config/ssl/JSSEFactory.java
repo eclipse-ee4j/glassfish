@@ -33,7 +33,7 @@ public class JSSEFactory {
     /**
      * @return the ServerSocketFactory to use.
      */
-    public SSLContextFactory getSocketFactory() {
+    public SSLContextFactory getSSLContextFactory() {
         return new SSLContextFactory();
     }
 

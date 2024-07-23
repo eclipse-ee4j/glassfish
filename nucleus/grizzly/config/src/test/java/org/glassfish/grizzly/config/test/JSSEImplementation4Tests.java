@@ -36,6 +36,6 @@ public class JSSEImplementation4Tests implements SSLImplementation {
 
     @Override
     public SSLContextFactory getSSLContextFactory() {
-        return factory.getSocketFactory();
+        return factory.getSSLContextFactory();
     }
 }

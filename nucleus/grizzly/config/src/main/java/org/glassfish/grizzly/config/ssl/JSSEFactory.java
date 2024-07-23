@@ -18,13 +18,6 @@
 
 package org.glassfish.grizzly.config.ssl;
 
-import java.net.Socket;
-
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLSocket;
-
-import org.glassfish.grizzly.ssl.SSLSupport;
-
 /**
  * @author Bill Barker
  */
@@ -35,23 +28,5 @@ public class JSSEFactory {
      */
     public SSLContextFactory getSSLContextFactory() {
         return new SSLContextFactory();
-    }
-
-    /**
-     * @return the SSLSupport attached to this socket.
-     * @throws IllegalArgumentException if the socket is not a {@link SSLSocket}
-     */
-    public SSLSupport getSSLSupport(Socket socket) {
-        if (!(socket instanceof SSLSocket)) {
-            throw new IllegalArgumentException("The Socket has to be SSLSocket");
-        }
-        return new JSSESupport((SSLSocket) socket);
-    }
-
-    /**
-     * @return the SSLSupport attached to this SSLEngine.
-     */
-    public SSLSupport getSSLSupport(SSLEngine sslEngine) {
-        return new JSSESupport(sslEngine);
     }
 }

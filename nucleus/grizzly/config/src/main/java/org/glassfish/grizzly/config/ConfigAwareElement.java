@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,5 +28,5 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
  * @author Alexey Stashok
  */
 public interface ConfigAwareElement<E extends ConfigBeanProxy> {
-    void configure(ServiceLocator habitat, NetworkListener networkListener, E configuration);
+    void configure(ServiceLocator locator, NetworkListener networkListener, E configuration);
 }

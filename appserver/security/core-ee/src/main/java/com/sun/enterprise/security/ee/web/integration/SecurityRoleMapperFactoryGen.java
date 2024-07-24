@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SecurityRoleMapperFactoryGen.java
- *
- * Created on September 23, 2009, 12:34 PM
- */
-
-package com.sun.enterprise.security;
+package com.sun.enterprise.security.ee.web.integration;
 
 import java.lang.ref.WeakReference;
 
@@ -28,12 +23,11 @@ import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.internal.api.Globals;
 
 /**
- *
- * @author nasradu8
+ * @author nasradu8 2009
  */
 public class SecurityRoleMapperFactoryGen {
 
-    private static WeakReference<SecurityRoleMapperFactory> securityRoleMapperFactory = new WeakReference<SecurityRoleMapperFactory>(null);
+    private static WeakReference<SecurityRoleMapperFactory> securityRoleMapperFactory = new WeakReference<>(null);
 
     public static SecurityRoleMapperFactory getSecurityRoleMapperFactory() {
         if (securityRoleMapperFactory.get() != null) {
@@ -45,7 +39,7 @@ public class SecurityRoleMapperFactoryGen {
 
     private static synchronized SecurityRoleMapperFactory _getSecurityRoleMapperFactory() {
         if (securityRoleMapperFactory.get() == null) {
-            securityRoleMapperFactory = new WeakReference<SecurityRoleMapperFactory>(Globals.get(SecurityRoleMapperFactory.class));
+            securityRoleMapperFactory = new WeakReference<>(Globals.get(SecurityRoleMapperFactory.class));
         }
 
         return securityRoleMapperFactory.get();

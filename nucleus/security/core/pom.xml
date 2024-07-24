@@ -71,13 +71,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.security</groupId>
-            <artifactId>ssl-impl</artifactId>
+            <groupId>org.glassfish.main.grizzly</groupId>
+            <artifactId>grizzly-config</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>deployment-common</artifactId>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>ssl-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -89,12 +89,6 @@
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency><!-- for FindBugs -->
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>simple-glassfish-api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>

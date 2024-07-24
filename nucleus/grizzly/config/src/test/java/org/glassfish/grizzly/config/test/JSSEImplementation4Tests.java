@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -15,31 +16,24 @@
  * limitations under the License.
  */
 
-package org.glassfish.grizzly.config.ssl;
+package org.glassfish.grizzly.config.test;
 
-import java.net.Socket;
-import javax.net.ssl.SSLEngine;
-
-import org.glassfish.grizzly.ssl.SSLSupport;
+import org.glassfish.grizzly.config.ssl.SSLContextFactory;
+import org.glassfish.grizzly.config.ssl.SSLImplementation;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- * Factory interface to construct components based on the JSSE version in use.
+ * JSSEImplementation:
  *
- * @author Bill Barker
+ * Concrete implementation class for JSSE Grizzly Config Tests
+ *
+ * @author EKR
  */
-interface JSSEFactory {
-    /**
-     * Returns the ServerSocketFactory to use.
-     */
-    ServerSocketFactory getSocketFactory();
+@Service
+public class JSSEImplementation4Tests implements SSLImplementation {
 
-    /**
-     * returns the SSLSupport attached to this socket.
-     */
-    SSLSupport getSSLSupport(Socket socket);
-
-    /**
-     * returns the SSLSupport attached to this SSLEngine.
-     */
-    SSLSupport getSSLSupport(SSLEngine sslEngine);
+    @Override
+    public SSLContextFactory getSSLContextFactory() {
+        return new SSLContextFactory();
+    }
 }

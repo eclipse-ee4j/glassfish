@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,7 +59,7 @@ public class DynamicReloader implements Runnable {
     private static final String RELOAD_FILE_NAME = ".reload";
 
     private static class SyncBoolean {
-        private boolean b = false;
+        private boolean b;
 
         private SyncBoolean(final boolean initialValue) {
             b = initialValue;
@@ -77,22 +78,22 @@ public class DynamicReloader implements Runnable {
     /** Records info about apps being monitored */
     private Map<String,AppReloadInfo> appReloadInfo;
 
-    private AtomicBoolean cancelRequested = new AtomicBoolean(false);
+    private final AtomicBoolean cancelRequested = new AtomicBoolean(false);
 
-    private Applications applications;
+    private final Applications applications;
 
-    private Logger logger = KernelLoggerInfo.getLogger();
+    private final Logger logger = KernelLoggerInfo.getLogger();
 
-    private ServiceLocator habitat;
+    private final ServiceLocator locator;
 
     private final Subject kernelSubject;
 
-    DynamicReloader(Applications applications, ServiceLocator habitat) throws URISyntaxException {
+    DynamicReloader(Applications applications, ServiceLocator locator) throws URISyntaxException {
         this.applications = applications;
-        this.habitat = habitat;
+        this.locator = locator;
         initAppReloadInfo(applications);
         inProgress = new SyncBoolean(false);
-        final InternalSystemAdministrator kernelIdentity = habitat.getService(InternalSystemAdministrator.class);
+        final InternalSystemAdministrator kernelIdentity = locator.getService(InternalSystemAdministrator.class);
         kernelSubject = kernelIdentity.getSubject();
     }
 
@@ -102,21 +103,20 @@ public class DynamicReloader implements Runnable {
      * @param applications
      */
     private synchronized void initAppReloadInfo(Applications applications) throws URISyntaxException {
-         appReloadInfo = new HashMap<>();
-         logger.fine("[Reloader] Preparing list of apps to monitor:");
-         for (ApplicationName m : applications.getModules()) {
-             if (m instanceof Application) {
-                 Application app = (Application) m;
-                 if (Boolean.valueOf(app.getDeployProperties().getProperty
-                     (ServerTags.IS_LIFECYCLE))) {
-                     // skip lifecycle modules
-                     continue;
-                 }
-                 AppReloadInfo info = new AppReloadInfo(app);
-                 appReloadInfo.put(app.getName(), info);
-                 logger.fine("[Reloader] Monitoring " + app.getName() + " at " + app.getLocation());
-             }
-         }
+        appReloadInfo = new HashMap<>();
+        logger.fine("[Reloader] Preparing list of apps to monitor:");
+        for (ApplicationName m : applications.getModules()) {
+            if (m instanceof Application) {
+                Application app = (Application) m;
+                if (Boolean.parseBoolean(app.getDeployProperties().getProperty(ServerTags.IS_LIFECYCLE))) {
+                    // skip lifecycle modules
+                    continue;
+                }
+                AppReloadInfo info = new AppReloadInfo(app);
+                appReloadInfo.put(app.getName(), info);
+                logger.fine("[Reloader] Monitoring " + app.getName() + " at " + app.getLocation());
+            }
+        }
     }
 
     @Override
@@ -164,7 +164,7 @@ public class DynamicReloader implements Runnable {
         for (ApplicationName m : applications.getModules()) {
             if (m instanceof Application) {
                 Application app = (Application) m;
-                if (Boolean.valueOf(app.getDeployProperties().getProperty
+                if (Boolean.parseBoolean(app.getDeployProperties().getProperty
                     (ServerTags.IS_LIFECYCLE))) {
                     // skip lifecycle modules
                     continue;
@@ -213,7 +213,7 @@ public class DynamicReloader implements Runnable {
          * the app is directory-deployed.
          *
          */
-        CommandRunnerImpl commandRunner = habitat.getService(CommandRunnerImpl.class);
+        CommandRunnerImpl commandRunner = locator.getService(CommandRunnerImpl.class);
 
         ParameterMap deployParam = new ParameterMap();
         deployParam.set(DeploymentProperties.FORCE, Boolean.TRUE.toString());
@@ -258,18 +258,18 @@ public class DynamicReloader implements Runnable {
      */
     private final static class AppReloadInfo {
         /** points to the .reload file, whether one exists for this app or not */
-        private File reloadFile;
+        private final File reloadFile;
 
         private long latestRecordedLoad;
 
         /** application info */
-        private Application app;
+        private final Application app;
 
-        private File appDir;
+        private final File appDir;
 
         private AppReloadInfo(Application app) throws URISyntaxException {
             this.app = app;
-            appDir = new File(new URI(app.getLocation()));
+            this.appDir = app.getLocation() == null ? null : new File(new URI(app.getLocation()));
             reloadFile = new File(appDir, RELOAD_FILE_NAME);
             recordLoad();
         }

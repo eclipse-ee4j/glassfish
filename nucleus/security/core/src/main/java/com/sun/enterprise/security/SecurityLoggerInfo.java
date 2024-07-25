@@ -289,11 +289,6 @@ public class SecurityLoggerInfo {
     public static final String roleMappingConflictError = LOGMSG_PREFIX + "-05055";
 
     @LogMessageInfo(
-            message = "Error converting certificate {0}: {1}",
-            level = "INFO")
-    public static final String convertingCertError = LOGMSG_PREFIX + "-05056";
-
-    @LogMessageInfo(
             message = "Failed to instantiate the SecurityLifeCycle.",
             cause = "Unknown",
             action = "Check the server logs and contact support.",

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,7 @@ package org.glassfish.appclient.client.acc.callbackhandler;
 
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.security.ssl.impl.SecuritySupportImpl;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -71,7 +71,7 @@ public class DefaultGUICallbackHandlerTest {
         Globals.setDefaultHabitat(locator);
         DynamicConfiguration config = locator.getService(DynamicConfigurationService.class).createDynamicConfiguration();
         config.addActiveDescriptor(ProcessEnvironment.class);
-        config.addActiveDescriptor(SecuritySupportImpl.class);
+        config.addActiveDescriptor(SecuritySupport.class);
         config.addActiveDescriptor(SSLUtils.class);
         config.commit();
     }

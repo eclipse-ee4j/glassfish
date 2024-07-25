@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,37 +18,47 @@
 package com.sun.enterprise.security.ssl;
 
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.security.KeyStore;
-import java.util.logging.Level;
+import java.util.Objects;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.grizzly.config.ssl.JSSE14SocketFactory;
-import org.glassfish.internal.api.Globals;
+import org.glassfish.grizzly.config.ssl.SSLContextFactory;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
- *
  * @author Sudarsan Sridhar
  */
-public class GlassfishServerSocketFactory extends JSSE14SocketFactory {
+public class GlassFishSSLContextFactory extends SSLContextFactory {
 
+    private static final Logger LOG = System.getLogger(GlassFishSSLContextFactory.class.getName());
+
+    private final ServiceLocator locator;
     private SSLUtils sslUtils;
+
+    public GlassFishSSLContextFactory(ServiceLocator locator) {
+        this.locator = Objects.requireNonNull(locator, "locator");
+    }
+
+
+    @Override
+    public SSLContext create() throws IOException {
+        sslUtils = locator.getService(SSLUtils.class);
+        return super.create();
+    }
+
 
     @Override
     protected KeyManager[] getKeyManagers(String algorithm, String keyAlias) throws Exception {
-        if (sslUtils == null) {
-            initSSLUtils();
-        }
-        String keystoreFile = (String) attributes.get("keystore");
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Keystore file= {0}", keystoreFile);
-        }
+        String keystoreFile = getAttribute("keystore");
+        LOG.log(Level.DEBUG, "Keystore file = {0}", keystoreFile);
 
-        String keystoreType = (String) attributes.get("keystoreType");
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Keystore type= {0}", keystoreType);
-        }
+        String keystoreType = getAttribute("keystoreType");
+        LOG.log(Level.DEBUG, "Keystore type = {0}", keystoreType);
         KeyManager[] kMgrs = sslUtils.getKeyManagers(algorithm);
         if (keyAlias != null && keyAlias.length() > 0 && kMgrs != null) {
             for (int i = 0; i < kMgrs.length; i++) {
@@ -57,22 +68,9 @@ public class GlassfishServerSocketFactory extends JSSE14SocketFactory {
         return kMgrs;
     }
 
+
     @Override
     protected KeyStore getTrustStore() throws IOException {
-        if (sslUtils == null) {
-            initSSLUtils();
-        }
         return sslUtils.getTrustStore();
-    }
-
-    private void initSSLUtils() {
-        if (sslUtils == null) {
-            if (Globals.getDefaultHabitat() != null) {
-                sslUtils = Globals.getDefaultHabitat().getService(SSLUtils.class);
-            } else {
-                sslUtils = new SSLUtils();
-                sslUtils.postConstruct();
-            }
-        }
     }
 }

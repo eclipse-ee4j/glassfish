@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,15 +40,17 @@ public class MasterPasswordImpl implements MasterPassword {
 
     @Inject
     @Optional
-    IdentityManagement idm;
+    private IdentityManagement idm;
 
     @Override
     public PasswordAdapter getMasterPasswordAdapter()
         throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        char pw[] = idm == null ? null : idm.getMasterPassword();
+        char[] pw = idm == null ? null : idm.getMasterPassword();
         return new PasswordAdapter(pw);
     }
 
+
+    @Override
     public char[] getMasterPassword() {
         return idm == null ? null : idm.getMasterPassword();
     }

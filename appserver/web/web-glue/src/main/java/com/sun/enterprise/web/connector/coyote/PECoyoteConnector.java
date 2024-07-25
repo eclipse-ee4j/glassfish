@@ -26,23 +26,39 @@ import com.sun.enterprise.web.connector.MapperListener;
 import com.sun.enterprise.web.connector.extension.GrizzlyConfig;
 import com.sun.enterprise.web.connector.grizzly.DummyConnectorLauncher;
 import com.sun.enterprise.web.pwc.connector.coyote.PwcCoyoteRequest;
-import org.glassfish.grizzly.config.dom.*;
-import org.glassfish.web.util.IntrospectionUtils;
-import org.apache.catalina.*;
-import org.apache.catalina.connector.Connector;
-import org.glassfish.security.common.CipherInfo;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.admin.monitor.RequestProbeProvider;
 
-import javax.management.Notification;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.*;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.Notification;
+
+import org.apache.catalina.Context;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.connector.Connector;
+import org.glassfish.grizzly.config.dom.FileCache;
+import org.glassfish.grizzly.config.dom.Http;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.grizzly.config.dom.Transport;
+import org.glassfish.security.common.CipherInfo;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.admin.monitor.RequestProbeProvider;
+import org.glassfish.web.util.IntrospectionUtils;
 
 public class PECoyoteConnector extends Connector {
 
@@ -212,9 +228,9 @@ public class PECoyoteConnector extends Connector {
      */
     private String trustMaxCertLength;
 
-    private WebContainer webContainer;
+    private final WebContainer webContainer;
 
-    private RequestProbeProvider requestProbeProvider;
+    private final RequestProbeProvider requestProbeProvider;
 
 
     /**
@@ -852,14 +868,6 @@ public class PECoyoteConnector extends Connector {
                 Integer.toString(getSocketServerBacklog()));
             _logger.log(Level.WARNING, msg, ex);
         }
-        /* TODO
-        //WebContainerFeatureFactory wcFeatureFactory = _serverContext.getDefaultHabitat().getService(WebContainerFeatureFactory.class);
-        String sslImplementationName =
-            webFeatureFactory.getSSLImplementationName();
-
-        if (sslImplementationName != null) {
-            connector.setProperty("sSLImplementation",sslImplementationName);
-        }*/
 
         setDomain(webContainer.getServerContext().getDefaultDomainName());
 
@@ -873,7 +881,7 @@ public class PECoyoteConnector extends Connector {
         setDefaultHost(http.getDefaultVirtualServer());
         setEnableLookups(ConfigBeansUtilities.toBoolean(http.getDnsLookupEnabled()));
 
-        setXpoweredBy(Boolean.valueOf(http.getXpoweredBy()));
+        setXpoweredBy(Boolean.parseBoolean(http.getXpoweredBy()));
 
         // Application root
         setWebAppRootPath(webContainer.getModulesRoot().getAbsolutePath());
@@ -1107,9 +1115,9 @@ public class PECoyoteConnector extends Connector {
             setProperty("restrictedUserAgents", http.getRestrictedUserAgents());
         }
         setProperty("cometSupport",
-                Boolean.valueOf(ConfigBeansUtilities.toBoolean(http.getCometSupportEnabled())).toString());
+                Boolean.toString(ConfigBeansUtilities.toBoolean(http.getCometSupportEnabled())));
         setProperty("rcmSupport",
-                Boolean.valueOf(ConfigBeansUtilities.toBoolean(http.getRcmSupportEnabled())).toString());
+                Boolean.toString(ConfigBeansUtilities.toBoolean(http.getRcmSupportEnabled())));
         setConnectionUploadTimeout(Integer.parseInt(http.getConnectionUploadTimeoutMillis()));
         setDisableUploadTimeout(!ConfigBeansUtilities.toBoolean(http.getUploadTimeoutEnabled()));
         setURIEncoding(http.getUriEncoding());
@@ -1189,7 +1197,7 @@ public class PECoyoteConnector extends Connector {
                 request.getServerName(), request.getServerPort(),
                 request.getContextPath(), request.getServletPath());
         }
-    };
+    }
 
     /**
      * Fires probe event related to the fact that the given request is about
@@ -1218,7 +1226,7 @@ public class PECoyoteConnector extends Connector {
                 request.getContextPath(), request.getServletPath(),
                 statusCode, request.getMethod(), request.getRequestURI());
         }
-    };
+    }
 
 
     /*
@@ -1235,18 +1243,18 @@ public class PECoyoteConnector extends Connector {
         }
 
         // client-auth
-        if (Boolean.valueOf(sslConfig.getClientAuthEnabled())) {
+        if (Boolean.parseBoolean(sslConfig.getClientAuthEnabled())) {
             setClientAuth(true);
         }
 
         // ssl protocol variants
         StringBuilder sslProtocolsBuf = new StringBuilder();
         boolean needComma = false;
-        if (Boolean.valueOf(sslConfig.getSsl2Enabled())) {
+        if (Boolean.parseBoolean(sslConfig.getSsl2Enabled())) {
             sslProtocolsBuf.append("SSLv2");
             needComma = true;
         }
-        if (Boolean.valueOf(sslConfig.getSsl3Enabled())) {
+        if (Boolean.parseBoolean(sslConfig.getSsl3Enabled())) {
             if (needComma) {
                 sslProtocolsBuf.append(", ");
             } else {
@@ -1254,7 +1262,7 @@ public class PECoyoteConnector extends Connector {
             }
             sslProtocolsBuf.append("SSLv3");
         }
-        if (Boolean.valueOf(sslConfig.getTlsEnabled())) {
+        if (Boolean.parseBoolean(sslConfig.getTlsEnabled())) {
             if (needComma) {
                 sslProtocolsBuf.append(", ");
             } else {
@@ -1262,7 +1270,7 @@ public class PECoyoteConnector extends Connector {
             }
             sslProtocolsBuf.append("TLSv1");
         }
-        if (Boolean.valueOf(sslConfig.getTls11Enabled())) {
+        if (Boolean.parseBoolean(sslConfig.getTls11Enabled())) {
             if (needComma) {
                 sslProtocolsBuf.append(", ");
             } else {
@@ -1270,7 +1278,7 @@ public class PECoyoteConnector extends Connector {
             }
             sslProtocolsBuf.append("TLSv1.1");
         }
-        if (Boolean.valueOf(sslConfig.getTls12Enabled())) {
+        if (Boolean.parseBoolean(sslConfig.getTls12Enabled())) {
             if (needComma) {
                 sslProtocolsBuf.append(", ");
             } else {
@@ -1278,7 +1286,7 @@ public class PECoyoteConnector extends Connector {
             }
             sslProtocolsBuf.append("TLSv1.2");
         }
-        if (Boolean.valueOf(sslConfig.getTls13Enabled())) {
+        if (Boolean.parseBoolean(sslConfig.getTls13Enabled())) {
             if (needComma) {
                 sslProtocolsBuf.append(", ");
             }

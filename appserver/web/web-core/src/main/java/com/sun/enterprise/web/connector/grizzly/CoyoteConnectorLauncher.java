@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.catalina.connector.ProtocolHandler;
-import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
 import org.glassfish.grizzly.http.server.HttpHandler;
 
 /**
@@ -306,10 +305,6 @@ public class CoyoteConnectorLauncher implements ProtocolHandler {
     public void setSocketCloseDelay(int d) {
         socketCloseDelay = d;
         setAttribute("socketCloseDelay", "" + d);
-    }
-
-    protected static ServerSocketFactory string2SocketFactory(String val) throws ReflectiveOperationException, IllegalArgumentException, SecurityException {
-        return (ServerSocketFactory) Class.forName(val).getDeclaredConstructor().newInstance();
     }
 
     public int getTimeout() {

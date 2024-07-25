@@ -85,6 +85,8 @@ import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
 import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
 import static org.glassfish.web.loader.LogFacade.getString;
 
+import org.apache.naming.resources.BaseDirContext;
+
 /**
  * Specialized web application class loader.
  * <p>
@@ -313,6 +315,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             dirCtx = proxyRes.getDirContext();
         } else {
             dirCtx = resources;
+            if (dirCtx instanceof BaseDirContext) {
+                contextName = new File(((BaseDirContext)dirCtx).getDocBase()).getName();
+            }
         }
         if (dirCtx instanceof WebDirContext) {
             ((WebDirContext) dirCtx).setJarFileResourcesProvider(this);

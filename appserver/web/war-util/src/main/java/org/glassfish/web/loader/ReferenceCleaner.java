@@ -44,6 +44,8 @@ import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS;
 import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_KEY;
 import static org.glassfish.web.loader.LogFacade.getString;
 
+import java.lang.reflect.InaccessibleObjectException;
+
 class ReferenceCleaner {
     private static final Logger LOG = LogFacade.getSysLogger(ReferenceCleaner.class);
 
@@ -143,6 +145,9 @@ class ReferenceCleaner {
                     checkThreadLocalMapForLeaks(inheritableMap, tableField);
                 }
             }
+        } catch (InaccessibleObjectException e) {
+            // module java.base does not "opens java.lang"
+            LOG.log(WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_NOT_SUPPORTED, loader.getName()));
         } catch (Exception e) {
             LOG.log(WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL, loader.getName()), e);
         }

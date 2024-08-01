@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>bookstore</artifactId>
-    <version>7.0.16-SNAPSHOT</version>
+    <version>7.0.17-SNAPSHOT</version>
     <name>Bookstore PaaS sample</name>
     <packaging>war</packaging>
     <build>

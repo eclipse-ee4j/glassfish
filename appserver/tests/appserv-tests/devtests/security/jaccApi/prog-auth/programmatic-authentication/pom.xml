@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jaccApi.test</groupId>
         <artifactId>prog-auth</artifactId>
-        <version>7.0.16-SNAPSHOT</version>
+        <version>7.0.17-SNAPSHOT</version>
     </parent>
 
     <artifactId>programmatic-authentication-jacc-api</artifactId>

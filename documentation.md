@@ -4,7 +4,7 @@ layout: documentation
 
 # Eclipse GlassFish Documentation
 
-## Current Release - 7.0.15 {#current}
+## Current Release - 7.0.16 {#current}
 
 * [Add On Component Development Guide](docs/latest/add-on-component-development-guide.html)
   ([pdf](docs/latest/add-on-component-development-guide.pdf))
@@ -46,12 +46,12 @@ layout: documentation
 
 ## Jakarta EE Documentation {#jakarta-ee}
 
-Eclipse GlassFish 7.0.15 provides the following Jakarta EE APIs:
+Eclipse GlassFish 7.0.16 provides the following Jakarta EE APIs:
 
 * [Jakarta EE Platform 10 APIs](https://jakarta.ee/specifications/platform/10/)
 * [Jakarta MVC 2.1](https://jakarta.ee/specifications/mvc/2.1/)
 
-Eclipse GlassFish 7.0.15 Web Profile provides the following Jakarta EE APIs:
+Eclipse GlassFish 7.0.16 Web Profile provides the following Jakarta EE APIs:
 
 * [Jakarta EE Web Profile 10 APIs](https://jakarta.ee/specifications/webprofile/10/)
 * [Jakarta MVC 2.1](https://jakarta.ee/specifications/mvc/2.1/)
@@ -62,13 +62,13 @@ Eclipse GlassFish 7.0.15 Web Profile provides the following Jakarta EE APIs:
 
 ## MicroProfile Documentation {#microprofile}
 
-Eclipse GlassFish 7.0.15 provides the following MicroProfile APIs:
+Eclipse GlassFish 7.0.16 provides the following MicroProfile APIs:
 
 * [MicroProfile Config 3.0](https://github.com/eclipse/microprofile-config/releases/tag/3.0.3)
 * [MicroProfile JWT RBAC 2.1](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1)
 * [MicroProfile Rest Client 3.0](https://github.com/eclipse/microprofile-rest-client/releases/tag/3.0)
 
-Eclipse GlassFish 7.0.15 Web Profile doesn't provide any MicroProfile APIs.
+Eclipse GlassFish 7.0.16 Web Profile doesn't provide any MicroProfile APIs.
 
 
 ## Eclipse Open MQ Documentation {#open-mq}

@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<title>Eclipse GlassFish Release Notes, Release 7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Eclipse GlassFish Release Notes, Release 7</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#GSRLN">1 Eclipse GlassFish 7 Release Notes</a>
+<ul class="sectlevel2">
+<li><a href="#revision-history">Revision History</a></li>
+<li><a href="#whats-new-in-the-glassfish-server-release">What&#8217;s New in the Eclipse GlassFish 7 Release?</a></li>
+<li><a href="#hardware-and-software-requirements">Hardware and Software Requirements</a>
+<ul class="sectlevel3">
+<li><a href="#required-jdk-versions">Required JDK Versions</a></li>
+<li><a href="#required-disk-space">Required Disk Space</a></li>
+<li><a href="#required-free-ports">Required Free Ports</a></li>
+<li><a href="#message-queue-broker-requirements">Message Queue Broker Requirements</a></li>
+<li><a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the JDK Software</a></li>
+</ul>
+</li>
+<li><a href="#known-issues-in-eclipse-glassfish-7">Known Issues in Eclipse GlassFish 7</a>
+<ul class="sectlevel3">
+<li><a href="#jaxb-and-jax-ws-no-longer-part-of-java-ee-platform">JAXB and JAX-WS no longer part of Jakarta EE platform</a></li>
+<li><a href="#resource-validation-property-is-enabled-in-the-jvm-option-for-deployment">Resource validation property is enabled in the JVM option for deployment</a></li>
+<li><a href="#update-tool-and-pkg-command-no-longer-part-of-glassfish-server">Update Tool and pkg Command no longer part of Eclipse GlassFish</a></li>
+<li><a href="#java-db-has-been-replaced-by-apache-derby">Java DB has been replaced by Apache Derby</a></li>
+</ul>
+</li>
+<li><a href="#restrictions-and-deprecated-functionality">Restrictions and Deprecated Functionality</a>
+<ul class="sectlevel3">
+<li><a href="#asadmin-subcommands"><code>asadmin</code> Subcommands</a></li>
+<li><a href="#deprecated-unsupported-and-obsolete-options">Deprecated, Unsupported, and Obsolete Options</a></li>
+<li><a href="#applications-that-use-apache-derby">Applications That Use Apache Derby</a></li>
+<li><a href="#no-support-for-client-vm-on-windows-amd64">No Support for Client VM on Windows AMD64</a></li>
+<li><a href="#metro-reliable-messaging-in-inorder-delivery-mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></li>
+<li><a href="#no-support-for-kerberos-on-aix">No Support for Kerberos on AIX</a></li>
+</ul>
+</li>
+<li><a href="#documentation-errata">Documentation Errata</a>
+<ul class="sectlevel3">
+<li><a href="#upgrading-to-oracle-glassfish-server-is-not-necessary">Upgrading to Eclipse GlassFish Is Not Necessary</a></li>
+</ul>
+</li>
+<li><a href="#features-available-only-in-the-full-platform">Features Available Only in the Full Platform</a></li>
+<li><a href="#java-ee-standards-support">Jakarta EE Standards Support</a></li>
+<li><a href="#how-to-report-problems-and-provide-feedback">How to Report Problems and Provide Feedback</a></li>
+<li><a href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Release Notes</p>
+</div>
+<div class="paragraph">
+<p>Release 7</p>
+</div>
+<div class="paragraph">
+<p>Contributed 2018 - 2024</p>
+</div>
+<div class="paragraph">
+<p>These Release Notes provide late-breaking information about Eclipse GlassFish 7
+software and documentation. Also included are a summary of
+new product features in the 7 release, and descriptions and
+workarounds for known issues and limitations.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Eclipse GlassFish Release Notes, Release 7</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+<a href="http://www.eclipse.org/legal/epl-2.0" class="bare">http://www.eclipse.org/legal/epl-2.0</a>.</p>
+</div>
+<div class="paragraph">
+<p>SPDX-License-Identifier: EPL-2.0</p>
+</div>
+<div class="paragraph">
+<p>Oracle and Java are registered trademarks of Oracle and/or its
+affiliates. Other names may be trademarks of their respective owners.</p>
+</div>
+<div class="paragraph">
+<p>Intel and Intel Xeon are trademarks or registered trademarks of Intel
+Corporation. All SPARC trademarks are used under license and are
+trademarks or registered trademarks of SPARC International, Inc. AMD,
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or
+registered trademarks of Advanced Micro Devices. UNIX is a registered
+trademark of The Open Group.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="data:image/png;base64,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" alt="Eclipse Logo"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This documentation is part of the Java Enterprise Edition contribution
+to the Eclipse Foundation and is not intended for use in relation to
+Java Enterprise Edition or Orace GlassFish. The documentation is in the
+process of being revised to reflect the new Jakarta EE branding.
+Additional changes will be made as requirements and procedures evolve
+for Jakarta EE. Where applicable, references to Jakarta EE or Java
+Enterprise Edition should be considered references to Jakarta EE.</p>
+</div>
+<div class="paragraph">
+<p>Please see the Title page for additional license information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This preface contains information about and conventions for the entire
+Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is developed through the GlassFish project
+open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
+The GlassFish project provides a structured process for developing the
+Eclipse GlassFish platform that makes the new features of the Jakarta EE
+platform available faster, while maintaining the most important feature
+of Jakarta EE: compatibility. It enables Java developers to access the
+Eclipse GlassFish source code and to contribute to the development of the
+Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></p>
+</li>
+<li>
+<p><a href="#related-documentation">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="#typographic-conventions">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="#symbol-conventions">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="#default-paths-and-file-names">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
+<div class="paragraph">
+<p>The Eclipse GlassFish documentation set describes deployment planning and
+system installation. For an introduction to Eclipse GlassFish, refer to
+the books in the order in which they are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#GSRLN">Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
+the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java
+Development Kit (JDK), and database drivers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish product.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to install the software and its components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="upgrade-guide.html#GSUPG">Upgrade Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to upgrade to the latest version of Eclipse GlassFish.
+This guide also describes differences between adjacent product releases and configuration
+options that can result in incompatibility with the product specifications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="deployment-planning-guide.html#GSPLG">Deployment Planning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to build a production deployment of Eclipse GlassFish that meets the requirements of
+your system and enterprise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+Instructions for performing these tasks from the Administration Console are provided
+in the Administration Console online help.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish security.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and deploy applications to the Eclipse GlassFish and provides information
+about deployment descriptors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="add-on-component-development-guide.html#GSACG">Add-On Component Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to use published interfaces of Eclipse GlassFish to develop add-on components
+for Eclipse GlassFish.
+This document explains how to perform only those tasks that ensure that the add-on component
+is suitable for Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in embedded Eclipse GlassFish and to develop applications
+in which Eclipse GlassFish is embedded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure Eclipse GlassFish to provide higher availability and
+scalability through failover and load balancing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish and explains how to solve them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
+the Message Queue messaging service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-jmx/toc.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
+programmatically configuring and monitoring Message Queue resources in
+conformance with the Java Management Extensions (JMX).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-java/toc.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
+applications (Java clients) that work with Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-c/toc.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
+Message Queue who want to use the C language binding to the Message
+Queue messaging service to send, receive, and process Message Queue messages.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
+<div class="paragraph">
+<p>The following tutorials explain how to develop Jakarta EE applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/jakartaee-firstcup-examples">
+Your First Cup: An Introduction to the Jakarta EE Platform</a>.
+For beginning Jakarta EE programmers, this short tutorial explains the entire
+process for developing a simple enterprise application.
+The sample application is a web application that consists of a component that is
+based on the Enterprise JavaBeans specification, a JAX-RS web service,
+and a JavaServer Faces component for the web front end.</p>
+</li>
+<li>
+<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Javadoc tool reference documentation for packages that are provided with
+Eclipse GlassFish is available as follows.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Jakarta EE specifications and API specification is
+located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
+</li>
+<li>
+<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+platform packages and nonplatform packages that are specific to the
+Eclipse GlassFish product, is located at
+<a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about creating enterprise applications in the NetBeans
+Integrated Development Environment (IDE), see the
+<a href="https://netbeans.apache.org/kb/docs/java-ee.html">
+NetBeans Documentation, Training &amp; Support page</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about the Derby database for use with
+the Eclipse GlassFish, see the <a href="https://db.apache.org/derby/index.html">Derby page</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Jakarta EE Samples project is a collection of sample applications that
+demonstrate a broad range of Jakarta EE technologies. The Jakarta EE Samples
+are bundled with the Jakarta EE Software Development Kit (SDK) and are also
+available from the repository
+(<code><a href="https://github.com/eclipse-ee4j/glassfish-samples" class="bare">https://github.com/eclipse-ee4j/glassfish-samples</a></code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="typographic-conventions"><a class="anchor" href="#typographic-conventions"></a>Typographic Conventions</h3>
+<div class="paragraph">
+<p>The following table describes the typographic changes that are used in
+this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 37%;">
+<col style="width: 49%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Typeface</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The names of commands, files, and directories, and onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Edit your <code>.login</code> file.</p>
+<p class="tableblock">Use <code>ls</code> <code>a</code> to list all files.</p>
+<p class="tableblock"><code>machine_name% you have mail.</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What you type, contrasted with onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>machine_name%</code> <code>su</code></p>
+<p class="tableblock"><code>Password:</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A placeholder to be replaced with a real name or value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The command to remove a file is <code>rm</code> filename.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Book titles, new terms, and terms to be emphasized (note that some emphasized items appear bold online)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read Chapter 6 in the User&#8217;s Guide.</p>
+<p class="tableblock">A cache is a copy that is stored locally.</p>
+<p class="tableblock">Do not save the file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="symbol-conventions"><a class="anchor" href="#symbol-conventions"></a>Symbol Conventions</h3>
+<div class="paragraph">
+<p>The following table explains symbols that might be used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 26%;">
+<col style="width: 28%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Symbol</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[ ]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains optional arguments and command options.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ls [-l]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-l</code> option is not required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ | }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains a set of choices for a required command option.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-d {y|n}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-d</code> option requires that you use either the <code>y</code> argument or the <code>n</code> argument.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${ }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates a variable reference.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${com.sun.javaRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">References the value of the <code>com.sun.javaRoot</code> variable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins simultaneous multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Control-A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key while you press the A key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins consecutive multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ctrl+A+N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key, release it, and then press the subsequent keys.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates menu item selection in a graphical user interface.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File &gt; New &gt; Templates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From the File menu, choose New. From the New submenu, choose Templates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="default-paths-and-file-names"><a class="anchor" href="#default-paths-and-file-names"></a>Default Paths and File Names</h3>
+<div class="paragraph">
+<p>The following table describes the default paths and file names that are
+used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Placeholder</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Represents the base installation directory for Eclipse GlassFish.
+In configuration files, as-install is represented as follows:
+<code>${com.sun.aas.installRoot}</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac OS operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install-parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the parent of the base installation directory for Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain is created by default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install<code>/domains/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain&#8217;s configuration is stored.
+In configuration files, domain-dir is represented as follows:
+<code>${com.sun.aas.instanceRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir/domain-name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instance-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory for a server instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir/instance-name</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="GSRLN"><a class="anchor" href="#GSRLN"></a>1 Eclipse GlassFish 7 Release Notes</h2>
+<div class="sectionbody">
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To Be Done</p>
+</div>
+<div class="paragraph">
+<p>This page must be updated before the release!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish provides a lightweight, modular server for the
+development of Java Platform Enterprise Edition (Jakarta EE) 8
+applications. It is the Reference Implementation for Jakarta EE. It
+delivers a highly productive platform for developing with the latest
+Jakarta EE technologies.</p>
+</div>
+<div class="paragraph">
+<p>For any issue or information on Eclipse GlassFish,
+see the <a href="https://glassfish.org/" class="bare">https://glassfish.org/</a>.</p>
+</div>
+<div class="paragraph">
+<p>These Release Notes provide late-breaking information about Eclipse GlassFish 7
+software and documentation. These Release Notes include
+summaries of supported hardware, operating environments, and JDK and
+JDBC/RDBMS requirements. Also included are a summary of new product
+features in the 7 release, and descriptions and workarounds for known
+issues and limitations.</p>
+</div>
+<div class="paragraph">
+<p>Refer to this document prior to installing, configuring, or using
+Eclipse GlassFish 7 software. Consult this document periodically to
+view the most up-to-date product information.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#revision-history">"Revision History"</a></p>
+</li>
+<li>
+<p><a href="#whats-new-in-the-glassfish-server-release">"What&#8217;s New in the Eclipse GlassFish 7 Release?"</a></p>
+</li>
+<li>
+<p><a href="#hardware-and-software-requirements">"Hardware and Software Requirements"</a></p>
+</li>
+<li>
+<p><a href="#GSRLN00253">"Known Issues in Eclipse GlassFish 7"</a></p>
+</li>
+<li>
+<p><a href="#restrictions-and-deprecated-functionality">"Restrictions and Deprecated Functionality"</a></p>
+</li>
+<li>
+<p><a href="#documentation-errata">"Documentation Errata"</a></p>
+</li>
+<li>
+<p><a href="#features-available-only-in-the-full-platform">"Features Available Only in the Full Platform"</a></p>
+</li>
+<li>
+<p><a href="#java-ee-standards-support">"Jakarta EE Standards Support"</a></p>
+</li>
+<li>
+<p><a href="#how-to-report-problems-and-provide-feedback">"How to Report Problems and Provide Feedback"</a></p>
+</li>
+<li>
+<p><a href="#additional-resources">"Additional Resources"</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="revision-history"><a class="anchor" href="#revision-history"></a>Revision History</h3>
+<div class="paragraph">
+<p>This section lists the revision history for these Release Notes.</p>
+</div>
+<div id="gabzd" class="paragraph">
+<p>Table 1-1 Revision History</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Date</th>
+<th class="tableblock halign-left valign-top">Description of Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">September 2022</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse GlassFish 7.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="whats-new-in-the-glassfish-server-release"><a class="anchor" href="#whats-new-in-the-glassfish-server-release"></a>What&#8217;s New in the Eclipse GlassFish 7 Release?</h3>
+<div class="paragraph">
+<p>GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE 10
+introduces &#8230;&#8203; To Be Done</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 includes the following new and updated Jakarta EE standards.</p>
+</div>
+<div class="paragraph">
+<p>New Features</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To Be Done</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Updated</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To Be Done</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a complete list of the Jakarta EE technologies included in Eclipse GlassFish 7,
+see <a href="#java-ee-standards-support">Jakarta EE Standards Support</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The main thrust of the Eclipse GlassFish 7 release
+is to provide an application server for developers to explore and begin
+exploiting the new and updated technologies in the Jakarta EE 10 platform.
+Thus, the following features of Eclipse GlassFish were not a focus of
+this release:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Clusters and centralized management of standalone instances</p>
+</li>
+<li>
+<p>High availability features</p>
+</li>
+<li>
+<p>Upgrade</p>
+</li>
+<li>
+<p>Embedded Server</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These features are included in the release, but they may not function
+properly with some of the new features added in support of the Jakarta EE 10 platform.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hardware-and-software-requirements"><a class="anchor" href="#hardware-and-software-requirements"></a>Hardware and Software Requirements</h3>
+<div class="paragraph">
+<p>This section lists the requirements that must be met before installing
+Eclipse GlassFish Release 7 software.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#required-jdk-versions">Required JDK Versions</a></p>
+</li>
+<li>
+<p><a href="#required-disk-space">Required Disk Space</a></p>
+</li>
+<li>
+<p><a href="#required-free-ports">Required Free Ports</a></p>
+</li>
+<li>
+<p><a href="#message-queue-broker-requirements">Message Queue Broker Requirements</a></p>
+</li>
+<li>
+<p><a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the JDK Software</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="required-jdk-versions"><a class="anchor" href="#required-jdk-versions"></a>Required JDK Versions</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish Release 7 requires Oracle JDK 8
+Update 144 or later.</p>
+</div>
+<div class="paragraph">
+<p>Also be sure to see <a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the
+JDK Software</a> for important JDK configuration instructions.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It is recommended that any machine that is hosting a Eclipse GlassFish
+DAS or server instance have a minimum of 1 GB RAM.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="required-disk-space"><a class="anchor" href="#required-disk-space"></a>Required Disk Space</h4>
+<div class="paragraph">
+<p>The download sizes for Eclipse GlassFish 7 vary depending on the
+package you choose. The following are the approximate sizes of the ZIP
+packages for the Full and Web profiles:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full <code>*.zip</code>: 114 MB (136 MB unzipped)</p>
+</li>
+<li>
+<p>Web <code>*.zip</code>: 64.9 MB (82.9 MB unzipped)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The installation sizes will vary depending on your configuration, but
+the approximate amount of disk space used by Eclipse GlassFish 7 is as
+follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full: 138 MB</p>
+</li>
+<li>
+<p>Web: 84.4 MB</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="required-free-ports"><a class="anchor" href="#required-free-ports"></a>Required Free Ports</h4>
+<div class="paragraph">
+<p>You must have sixteen unused ports available for the ports Eclipse GlassFish uses. The installation program automatically detects ports that
+are in use and suggests currently unused ports for the default settings.
+The initial default port assignments are listed in the following table.
+If these default port numbers are in use, the installation program
+assigns a randomly selected port number from the dynamic port range. The
+selected port number might not be the next available port number.</p>
+</div>
+<div class="paragraph">
+<p>Table 1-2 Default Port Assignments for Eclipse GlassFish 7</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 63%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Port Number</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4848</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administration Console</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8080</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8081</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8686</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pure JMX clients</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3700</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3820</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3920</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL with mutual authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java debugger</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7676</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS provider</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated from the operating system&#8217;s dynamic port range</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message Queue TCP port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated from the operating system&#8217;s dynamic port range</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message Queue Admin port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9090</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS TCP start port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9200</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS TCP end port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated between GMS TCP start and end ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS listener port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto generated between 2048 and 49151</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS multicast port</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In some situations, such as when multiple domains are running on a
+single host, port conflicts can arise in the auto-generated ports used
+by Message Queue and the GMS. To avoid these conflicts, you can
+configure the JMS host and the GMS to use specific ports.</p>
+</div>
+<div class="sect4">
+<h5 id="to-configure-specific-ports-for-a-jms-host"><a class="anchor" href="#to-configure-specific-ports-for-a-jms-host"></a>To Configure Specific Ports for a JMS Host</h5>
+<div class="paragraph">
+<p>When you create a JMS Host, Eclipse GlassFish automatically selects ports
+for the JMS provider (called the portmapper port in Message Queue
+terminology), the Message Queue TCP port and the Message Queue admin
+port.</p>
+</div>
+<div class="paragraph">
+<p>To provide specific values for these ports, use the <code>--mqport</code> and
+<code>--property</code> options when creating the JMS host:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; create-jms-host --mqhost hostName --mqport portNumber \
+--mquser adminUser --mqpassword adminPassword --target glassfishTarget \
+--property imq\\.jms\\.tcp\\.port=tcpPort:imq\\.admin\\.tcp\\.port=adminPort \
+jms-host-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--mqport</code> <code>portNumber</code></dt>
+<dd>
+<p>This option specifies the JMS provider port number.</p>
+</dd>
+<dt class="hdlist1"><code>--property imq\\.jms\\.tcp\\.port=<code>tcpPort</code>:imq\\.admin\\.tcp\\.port=``adminPort</code></dt>
+<dd>
+<p>The <code>imq.jms.tcp.port</code> and <code>imq.admin.tcp.port</code> properties specify the
+TCP port and the admin port numbers. The double backslashes (<code>\\</code>) are
+used in the <code>--properties</code> option to escape the dots in the property
+names.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-configure-specific-gms-ports-for-a-cluster"><a class="anchor" href="#to-configure-specific-gms-ports-for-a-cluster"></a>To Configure Specific GMS Ports for a Cluster</h5>
+<div class="paragraph">
+<p>When you create a cluster, Eclipse GlassFish automatically selects a port
+for GMS multicast that does not conflict with the GMS multicast port of
+any other cluster in the domain. Additionally, when you start a cluster,
+the GMS automatically selects an available port in a specific range for
+its TCP listener.</p>
+</div>
+<div class="paragraph">
+<p>If two or more domains are running on the same host, configure the
+clusters in the domains to ensure that no GMS port conflicts can arise
+among the clusters. To avoid possible port conflicts, use the
+<code>--multicast</code> and <code>--properties</code> options when creating the cluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; create-cluster --multicastport multicast-port \
+--properties GMS_TCPSTARTPORT=start-port:GMS_TCPENDPORT=end-port \
+cluster-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--multicastport</code> <code>multicast-port</code></dt>
+<dd>
+<p>This option specifies the port number for the GMS to use for UDP
+multicast.</p>
+</dd>
+<dt class="hdlist1"><code>--properties GMS_TCPSTARTPORT=<code>start-port</code>:GMS_TCPENDPORT=``end-port</code></dt>
+<dd>
+<p>The <code>GMS_TCPSTARTPORT</code> and <code>GMS_TCPENDPORT</code> properties specify the
+range of port numbers the GMS is to use when selecting an available
+port for its TCP listener.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Though you can create a cluster, there is no support for
+configuration, as this has not been tested.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="message-queue-broker-requirements"><a class="anchor" href="#message-queue-broker-requirements"></a>Message Queue Broker Requirements</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is now bundled with Message Queue (MQ) Broker
+5.1.1. Refer to the
+<a href="https://github.com/eclipse-ee4j/glassfishdoc/5.1/mq-release-notes.pdf"><code>Open Message Queue Release Notes</code></a>
+for complete information about MQ Broker requirements.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="paths-and-environment-settings-for-the-jdk-software"><a class="anchor" href="#paths-and-environment-settings-for-the-jdk-software"></a>Paths and Environment Settings for the JDK Software</h4>
+<div class="paragraph">
+<p>Ensure that your JDK configuration settings on all local and remote
+Eclipse GlassFish hosts adhere to the guidelines listed below. Failure to
+adhere to these guidelines can cause various problems that may be
+difficult to trace.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#use-the-jdk-binaries">Use the JDK Binaries</a></p>
+</li>
+<li>
+<p><a href="#set-the-java_home-environment-variable">Set the <code>JAVA_HOME</code> Environment Variable</a></p>
+</li>
+<li>
+<p><a href="#set-other-environment-variables-as-necessary">Set Other Environment Variables As Necessary</a></p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="use-the-jdk-binaries"><a class="anchor" href="#use-the-jdk-binaries"></a>Use the JDK Binaries</h5>
+<div class="paragraph">
+<p>The following binary files that are used with Eclipse GlassFish must come
+from the JDK software, not the Java Runtime Environment (JRE) software:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java</code></p>
+</li>
+<li>
+<p><code>keytool</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To meet this requirement, ensure that the <code>bin</code> directory for the JDK
+software precedes the <code>bin</code> directory for the JRE software in your path.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="set-the-java_home-environment-variable"><a class="anchor" href="#set-the-java_home-environment-variable"></a>Set the <code>JAVA_HOME</code> Environment Variable</h5>
+<div class="paragraph">
+<p>Before performing any Eclipse GlassFish installation or configuration
+procedures, set the <code>JAVA_HOME</code> environment variable on the Eclipse GlassFish host machine to point to the correct Java version. Also be sure
+to add the <code>JAVA_HOME/bin</code> directory to the <code>PATH</code> variable for your
+environment. The <code>JAVA_HOME</code> variable must be set on all local and
+remote Eclipse GlassFish hosts.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="set-other-environment-variables-as-necessary"><a class="anchor" href="#set-other-environment-variables-as-necessary"></a>Set Other Environment Variables As Necessary</h5>
+<div class="paragraph">
+<p>All remote <code>asadmin</code> subcommands require the correct version of Java to
+be available on the affected remote machine. For example, when creating
+a cluster or server instance on a remote machine, the remote machine
+uses its local default Java installation, not the Java installation that
+is on the DAS. Errors will therefore occur if the remote machine uses
+the wrong Java version.</p>
+</div>
+<div class="paragraph">
+<p>Depending on the remote subcommand, the errors may not occur when the
+subcommand is executed, but may occur later, when interacting with a
+configuration or resource created or modified by the subcommand. For
+example, when creating a clustered server instance on a remote machine,
+the error may only first appear when you attempt to deploy an
+application on that server instance.</p>
+</div>
+<div class="paragraph">
+<p>This issue is more likely to be encountered when Eclipse GlassFish is
+installed on the remote server by means of a ZIP file package as you do
+not have the option to specifically choose your Java version while
+unzipping a ZIP file.</p>
+</div>
+<div class="paragraph">
+<p>Depending on what shell is invoked via SSH on the remote host, the
+<code>JAVA_HOME</code> and <code>PATH</code> environment variables may need to be explicitly
+set in <code>.bashrc</code>, <code>.cshrc</code>, or some other shell configuration file. This
+configuration file may differ from the one that is used when you log in
+to the machine, such as <code>.profile</code>.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can specifically set the Java path with the <code>AS_JAVA</code>
+property in the in the as-install<code>/config/asenv.conf</code> file.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSRLN00253"></a><a id="known-issues-in-glassfish-server-5.1"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="known-issues-in-eclipse-glassfish-7"><a class="anchor" href="#known-issues-in-eclipse-glassfish-7"></a>Known Issues in Eclipse GlassFish 7</h3>
+<div class="paragraph">
+<p>This section describes known issues and any available workarounds for
+Eclipse GlassFish 7 software.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#jaxb-and-jax-ws-no-longer-part-of-java-ee-platform">JAXB and JAX-WS no longer part of Jakarta EE platform</a></p>
+</li>
+<li>
+<p><a href="#resource-validation-property-is-enabled-in-the-jvm-option-for-deployment">Resource validation property is enabled in the JVM option for deployment</a></p>
+</li>
+<li>
+<p><a href="#update-tool-and-pkg-command-no-longer-part-of-glassfish-server">Update Tool and pkg Command no longer part of Eclipse GlassFish</a></p>
+</li>
+<li>
+<p><a href="#java-db-has-been-replaced-by-apache-derby">Java DB has been replaced by Apache Derby</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="jaxb-and-jax-ws-no-longer-part-of-java-ee-platform"><a class="anchor" href="#jaxb-and-jax-ws-no-longer-part-of-java-ee-platform"></a>JAXB and JAX-WS no longer part of Jakarta EE platform</h4>
+<div class="sect4">
+<h5 id="description"><a class="anchor" href="#description"></a>Description</h5>
+<div class="paragraph">
+<p>Jakarta XML Binding (previous JAXB) and Jakarta XML Web Services (previouly JAX-WS)
+are part of Jakarta EE platform, but as optional technologies. However,
+the jars are packaged in GlassFish.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>These jars are present only in the full profile of GlassFish and
+not part of web profile.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="workaround"><a class="anchor" href="#workaround"></a>Workaround</h5>
+<div class="paragraph">
+<p>None</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-validation-property-is-enabled-in-the-jvm-option-for-deployment"><a class="anchor" href="#resource-validation-property-is-enabled-in-the-jvm-option-for-deployment"></a>Resource validation property is enabled in the JVM option for deployment</h4>
+<div class="sect4">
+<h5 id="description-2"><a class="anchor" href="#description-2"></a>Description</h5>
+<div class="paragraph">
+<p>A new JVM option for deployment - deployment.resource.validation is
+introduced in Eclipse GlassFish 7. This property is set to True by
+default so that each resource is validated during deployment time. This
+ensures that all resources are created beforehand. This property is
+applicable for administration server as well as instances when clusters
+are involved.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>However, for deployment of applications containing embedded resource
+adapter, a connector resource is created after deployment. For the
+deployment of such applications to succeed, the server(s) must be
+started with this property set to false. For more information on JVM
+deployment options see
+<a href="https://github.com/eclipse-ee4j/glassfishdoc/5.1/administration-guide.pdf#G11.998994"><code>Administering JVM Options.</code></a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="workaround-1"><a class="anchor" href="#workaround-1"></a>Workaround</h5>
+<div class="paragraph">
+<p>In case you do not want the resource validation to take place during the
+deployment, you can set this property value to False.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="update-tool-and-pkg-command-no-longer-part-of-glassfish-server"><a class="anchor" href="#update-tool-and-pkg-command-no-longer-part-of-glassfish-server"></a>Update Tool and pkg Command no longer part of Eclipse GlassFish</h4>
+<div class="sect4">
+<h5 id="description-3"><a class="anchor" href="#description-3"></a>Description</h5>
+<div class="paragraph">
+<p>In previous releases, you could update your Eclipse GlassFish software
+using the pkg command and the Update tool. Since the recent release of
+Eclipse GlassFish does not require the use of these features, they have
+been removed from the Eclipse GlassFish installation.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="workaround-2"><a class="anchor" href="#workaround-2"></a>Workaround</h5>
+<div class="paragraph">
+<p>No workaround.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="java-db-has-been-replaced-by-apache-derby"><a class="anchor" href="#java-db-has-been-replaced-by-apache-derby"></a>Java DB has been replaced by Apache Derby</h4>
+<div class="sect4">
+<h5 id="description-4"><a class="anchor" href="#description-4"></a>Description</h5>
+<div class="paragraph">
+<p>In the previous releases, Java DB was used as the database for Eclipse GlassFishs. With the release of Eclipse GlassFish 7, Apache Derby
+10.13.1.1 has replaced Java DB as the database for Eclipse GlassFishs.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="workaround-3"><a class="anchor" href="#workaround-3"></a>Workaround</h5>
+<div class="paragraph">
+<p>No workaround.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="restrictions-and-deprecated-functionality"><a class="anchor" href="#restrictions-and-deprecated-functionality"></a>Restrictions and Deprecated Functionality</h3>
+<div class="paragraph">
+<p>This section describes restrictions and deprecated functionality in
+Eclipse GlassFish 7.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#asadmin-subcommands"><code>asadmin</code> Subcommands</a></p>
+</li>
+<li>
+<p><a href="#deprecated-unsupported-and-obsolete-options">Deprecated, Unsupported, and Obsolete Options</a></p>
+</li>
+<li>
+<p><a href="#applications-that-use-apache-derby">Applications That Use Apache Derby</a></p>
+</li>
+<li>
+<p><a href="#no-support-for-client-vm-on-windows-amd64">No Support for Client VM on Windows AMD64</a></p>
+</li>
+<li>
+<p><a href="#metro-reliable-messaging-in-inorder-delivery-mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="asadmin-subcommands"><a class="anchor" href="#asadmin-subcommands"></a><code>asadmin</code> Subcommands</h4>
+<div class="paragraph">
+<p>In Eclipse GlassFish 7, it is recommended that utility options of the
+<code>asadmin</code> command precede the subcommand. Utility options are options
+that control the behavior of the <code>asadmin</code> utility, as distinguished
+from subcommand options. Use of the following options after the
+subcommand is deprecated.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--host</code></p>
+</li>
+<li>
+<p><code>--port</code></p>
+</li>
+<li>
+<p><code>--user</code></p>
+</li>
+<li>
+<p><code>--passwordfile</code></p>
+</li>
+<li>
+<p><code>--terse</code></p>
+</li>
+<li>
+<p><code>--secure</code></p>
+</li>
+<li>
+<p><code>--echo</code></p>
+</li>
+<li>
+<p><code>--interactive</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deprecated-unsupported-and-obsolete-options"><a class="anchor" href="#deprecated-unsupported-and-obsolete-options"></a>Deprecated, Unsupported, and Obsolete Options</h4>
+<div class="paragraph">
+<p>Options in <a href="#gaeki">Table 1-3</a> are deprecated or no longer supported,
+or are obsolete and are ignored.</p>
+</div>
+<div id="gaeki" class="paragraph">
+<p>Table 1-3 Deprecated, Unsupported, and Obsolete Options for <code>asadmin</code>
+and Subcommands</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 67%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Affected Subcommands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--acceptlang</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--acls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--adminpassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all relevant subcommands. Use
+<code>--passwordfile</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autoapplyenabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-http-lb</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autohadb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autohadboverride</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>start-cluster</code> subcommand and
+the <code>stop-cluster</code> subcommand</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--blockingenabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-http-listener</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--configfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--defaultobj</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--defaultvs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated for the <code>create-http-listener</code> subcommand.
+Use <code>--default-virtual-server</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>restore-domain</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--devicesize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haadminpassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haadminpasswordfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haagentport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haproperty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--hosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--ignoreDescriptorItem</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replaced by the all lowercase option
+<code>--ignoredescriptoritem</code> in the <code>set-web-context-param</code> subcommand and
+the <code>set-web-env-entry</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all remote subcommands. Use
+<code>--passwordfile</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-domain</code> subcommand. Use
+<code>--domaindir</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--portbase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete only for the <code>create-cluster</code> subcommand. This
+option is still valid in other subcommands such as <code>create-domain</code>,
+<code>create-instance</code>, and <code>create-local-instance</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--resourcetype</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all relevant subcommands. Use
+<code>--restype</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--retrievefile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>export-http-lb-config</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--setenv</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>start-instance</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--target</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Obsolete only for the following subcommands:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create-connector-connection-pool</code></p>
+</li>
+<li>
+<p><code>create-resource-adapter-config</code></p>
+</li>
+<li>
+<p><code>delete-connector-connection-pool</code></p>
+</li>
+<li>
+<p><code>delete-connector-security-map</code></p>
+</li>
+<li>
+<p><code>delete-jdbc-connection-pool</code></p>
+</li>
+<li>
+<p><code>delete-resource-ref</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Replaced by an operand in the <code>list-custom-resources</code> subcommand and the
+<code>list-jndi-entries</code> subcommand.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="applications-that-use-apache-derby"><a class="anchor" href="#applications-that-use-apache-derby"></a>Applications That Use Apache Derby</h4>
+<div class="paragraph">
+<p>The directory location of Apache Derby in Eclipse GlassFish 7 has
+changed from its location in previous installations. Suppose that you
+have deployed applications that use Apache Derby databases in your
+previous server installation, and you upgrade your existing installation
+to Eclipse GlassFish 7. If you run the <code>asadmin start-database</code> command
+and successfully start Apache Derby, you could run into problems while
+trying to run applications that were deployed on your previous server
+installation.</p>
+</div>
+<div class="paragraph">
+<p>To solve this problem, you can copy the <code>databases</code> directory from your
+previous installation to as-install<code>/databases</code>. Make sure the database
+is not running when you do this.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can perform these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>asadmin start-database</code> command with the <code>--dbhome</code> option
+pointing to the <code>databases</code> directory in the older version of Apache
+Derby. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin start-database --dbhome c:\glassfish\databases</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After upgrade, start Eclipse GlassFish 7.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="no-support-for-client-vm-on-windows-amd64"><a class="anchor" href="#no-support-for-client-vm-on-windows-amd64"></a>No Support for Client VM on Windows AMD64</h4>
+<div class="paragraph">
+<p>By default, the Eclipse GlassFish DAS uses the Client VM to achieve best
+startup and deployment performance. If you are using Windows AMD64, edit
+the <code>domain.xml</code> file to remove the line
+<code>&lt;jvm-options&gt;-client&lt;jvm-options&gt;</code>. In this case, JVM ergonomics
+chooses the appropriate kind of VM for the given platform. Note that
+server instances use the Server VM by default.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="metro-reliable-messaging-in-inorder-delivery-mode"><a class="anchor" href="#metro-reliable-messaging-in-inorder-delivery-mode"></a>Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</h4>
+<div class="paragraph">
+<p>The Metro Reliable Messaging in <code>InOrder</code> Delivery mode has not been
+tested for high availability in Eclipse GlassFish 7. The feature may
+work, but it has not been formally tested and is therefore not a
+supported feature.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="no-support-for-kerberos-on-aix"><a class="anchor" href="#no-support-for-kerberos-on-aix"></a>No Support for Kerberos on AIX</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 does not support Kerberos on the AIX platform.</p>
+</div>
+<div class="paragraph">
+<p>For the complete report about this issue, see
+<a href="https://github.com/javaee/glassfish/issues/16728"><code>Issue-16728</code></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="documentation-errata"><a class="anchor" href="#documentation-errata"></a>Documentation Errata</h3>
+<div class="paragraph">
+<p>This section describes documentation errata.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#upgrading-to-oracle-glassfish-server-is-not-necessary">Upgrading to Eclipse GlassFish Is Not Necessary</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="upgrading-to-oracle-glassfish-server-is-not-necessary"><a class="anchor" href="#upgrading-to-oracle-glassfish-server-is-not-necessary"></a>Upgrading to Eclipse GlassFish Is Not Necessary</h4>
+<div class="paragraph">
+<p>The Eclipse GlassFish Administration Guide discusses
+upgrading Eclipse GlassFish to Eclipse GlassFish. Eclipse GlassFish 4.x is only an open source release, so this
+upgrade is not necessary.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Upgrading may not work for Eclipse GlassFish 7</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="features-available-only-in-the-full-platform"><a class="anchor" href="#features-available-only-in-the-full-platform"></a>Features Available Only in the Full Platform</h3>
+<div class="paragraph">
+<p>The following features of Eclipse GlassFish 7 are available only in the
+Full Platform:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EJB features that make up the full EJB 3.2 API, such as remote EJB
+components, message-driven beans, web service EJB endpoints, and the EJB
+Timer Service</p>
+<div class="paragraph">
+<p>The EJB 3.2 Lite specification is supported in the Web Profile. This
+specification allows enterprise beans within web applications and
+includes support for local stateless session beans, stateful session
+beans, and singleton session beans.</p>
+</div>
+</li>
+<li>
+<p>Application Client Container</p>
+</li>
+<li>
+<p>JMS resources</p>
+</li>
+<li>
+<p>Web services</p>
+<div class="paragraph">
+<p>In the Web Profile, a servlet or EJB component cannot be a web service
+endpoint. The <code>sun-web.xml</code> and <code>sun-ejb-jar.xml</code> elements that are
+related to web services are ignored.</p>
+</div>
+</li>
+<li>
+<p>Message security</p>
+</li>
+<li>
+<p>Jakarta Mail resources</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Connector modules that use only outbound communication features and
+work-management that does not involve inbound communication features are
+supported in the Web Profile. Other connector features are supported
+only in the Eclipse GlassFish 7 full platform.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java-ee-standards-support"><a class="anchor" href="#java-ee-standards-support"></a>Jakarta EE Standards Support</h3>
+<div class="paragraph">
+<p><a href="#gjxcp">Table 1-4</a> lists the Jakarta EE standards implemented in
+Eclipse GlassFish 7. The table also indicates the distributions in
+which the implementation of a standard is available.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>X indicates that the implementation is available in the distribution.</p>
+</li>
+<li>
+<p>- indicates that the implementation is not available in the
+distribution.</p>
+</li>
+</ul>
+</div>
+<div id="gjxcp" class="paragraph">
+<p>Table 1-4 Jakarta EE Standards Implementations in Eclipse GlassFish 7</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 61.5384%;">
+<col style="width: 12.8205%;">
+<col style="width: 12.8205%;">
+<col style="width: 12.8206%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Jakarta EE Standard</th>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 7 Full Platform</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 7 Web Profile</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/platform/10/">Jakarta EE Specification</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/activation/">Activation</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/security/">Security</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/batch/">Batch</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/concurrency/">Concurrency</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/jsonp/">JSON Processing</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/jsonb/">JSON Binding</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/websocket/">WebSocket</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/websocket/">Servlet</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/pages/">Server Pages</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/expression-language/">Expression Language</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/debugging/">Debugging Support for Other Languages</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/tags/">Standard Tag Library</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/mvc/">MVC</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/faces/">JavaServer Faces</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/annotations/">Annotations</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/transactions/">Transactions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/persistence/">Persistence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/managedbeans/">Managed Beans</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/interceptors/">Interceptors</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/dependency-injection/">Dependency Injection</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/cdi/">Contexts and Dependency Injection</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/persistence/">Enterprise Beans</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/restful-ws/">RESTful Web Services</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/bean-validation/">Bean Validation</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/connectors/">Connectors</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup>*</sup></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-web-services/">XML Web Services</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/soap-attachments/">SOAP With Attachements</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-binding/">XML Binding</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/enterprise-ws/">Enterprise Web Services</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/web-services-metadata/">Web Services Metadata</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/messaging/">Messaging</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/mail/">Mail</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/authentication/">Authentication</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/authorization/">Authorization</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/deployment/">Deployment</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/management/">Management</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-rpc/">XML RPC</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-registries/">XML Registries</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><sup>*</sup> Standalone Connector 1.7 Container only.</p>
+</div>
+<div class="paragraph">
+<p>Building on these standards, Eclipse GlassFish 7 provides a number of
+extensions, including the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ajax (asynchronous JavaScript and XML): Retrieves and displays new
+data for a portion of a web page without affecting the rest of the page.</p>
+</li>
+<li>
+<p>Metro: A web services stack that implements Java Architecture for XML
+Binding (JAXB) and Java APIs for XML Web Services 2.3 (JAX-WS 2.3).</p>
+</li>
+<li>
+<p>Grizzly: A framework for building scalable and robust servers using
+New I/O (NIO) APIs, which make scaling to thousands of users possible.
+The ability to embed components that support HTTP, Bayeux Protocol, Java
+Servlet API, and Comet is provided.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-to-report-problems-and-provide-feedback"><a class="anchor" href="#how-to-report-problems-and-provide-feedback"></a>How to Report Problems and Provide Feedback</h3>
+<div class="paragraph">
+<p>If you have problems with Eclipse GlassFish 7, provide feedback through
+one of the following mechanisms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://javaee.groups.io/g/glassfish">Eclipse GlassFish forum</a>
+(<code><a href="https://javaee.groups.io/g/glassfish" class="bare">https://javaee.groups.io/g/glassfish</a></code>) — A variety of Eclipse GlassFish
+community for various interests and feedback</p>
+</li>
+<li>
+<p><a href="https://github.com/javaee/glassfish/issues">GlassFish Issue track</a>er
+(<code><a href="https://github.com/javaee/glassfish/issues" class="bare">https://github.com/javaee/glassfish/issues</a></code>) — Eclipse GlassFish
+project dashboards and issue tracking database</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional-resources"><a class="anchor" href="#additional-resources"></a>Additional Resources</h3>
+<div class="paragraph">
+<p>Useful information can be found at the following locations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/glassfish">Eclipse GlassFish Community</a>
+(<code><a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a></code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2024-07-30 14:08:20 UTC
+</div>
+</div>
+</body>
+</html>

@@ -59,6 +59,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import org.apache.naming.resources.BaseDirContext;
 import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.JarFileResourcesProvider;
 import org.apache.naming.resources.ProxyDirContext;
@@ -285,6 +286,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
             dirCtx = proxyRes.getDirContext();
         } else {
             dirCtx = resources;
+            if (dirCtx instanceof BaseDirContext) {
+                contextName = new File(((BaseDirContext)dirCtx).getDocBase()).getName();
+            }
         }
         if (dirCtx instanceof WebDirContext) {
             ((WebDirContext) dirCtx).setJarFileResourcesProvider(this);

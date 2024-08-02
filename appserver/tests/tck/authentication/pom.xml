@@ -99,6 +99,7 @@
                         <argument>clean</argument>
                         <argument>install</argument>
                         <argument>-Dglassfish.version=${glassfish.version}</argument>
+                        <argument>-Dmaven.multiModuleProjectDirectory=${tck.root}/authentication-tck-3.1.0/tck</argument>
                     </arguments>
                     <environmentVariables>
                         <LC_ALL>C</LC_ALL>

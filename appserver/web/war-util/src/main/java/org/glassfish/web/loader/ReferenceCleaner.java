@@ -32,6 +32,7 @@ import java.lang.System.Logger;
 import java.lang.ref.Reference;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.Driver;
@@ -140,6 +141,9 @@ class ReferenceCleaner {
                     checkThreadLocalMapForLeaks(inheritableMap, tableField);
                 }
             }
+        } catch (InaccessibleObjectException e) {
+            // module java.base does not "opens java.lang"
+            LOG.log(WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_NOT_SUPPORTED, loader.getName()));
         } catch (Exception e) {
             LOG.log(WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL, loader.getName()), e);
         }

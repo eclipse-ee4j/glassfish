@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,10 +38,28 @@ public interface ResourceAllocator {
 
     void destroyResource(ResourceHandle resource) throws PoolingException;
 
-    boolean matchConnection(ResourceHandle h);
+    /**
+     * Represents the "match-connections" configuration value of a connection pool.<br>
+     * If true, enables connection matching. You can set to false if connections are homogeneous.
+     * <p>
+     * Jakarta documentation:
+     * {@link jakarta.resource.spi.ManagedConnectionFactory#matchManagedConnections(Set, Subject, ConnectionRequestInfo)}
+     * mentions: "criteria used for matching is specific to a resource adapter and is not prescribed by the Connector
+     * specification."
+     *
+     * @param handle The resource handle to be matched.
+     * @return True if matching applies to this handle, otherwise false
+     */
+    boolean matchConnection(ResourceHandle handle);
 
     boolean isTransactional();
 
+    /**
+     * Forces the cleanup of the ManagedConnection associated to the given resource.
+     *
+     * @param resource the resource referencing a ManagedConnection
+     * @throws PoolingException in case the cleanup failed
+     */
     void cleanup(ResourceHandle resource) throws PoolingException;
 
     boolean shareableWithinComponent();

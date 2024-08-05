@@ -186,7 +186,7 @@ public class AssocWithThreadPoolResizer extends Resizer {
                 for (ResourceHandle handle : freeConnectionsToValidate) {
                     if (handle != null) {
                         Set<ManagedConnection> connectionsToTest = new HashSet<>();
-                        connectionsToTest.add((ManagedConnection) handle.getResource());
+                        connectionsToTest.add(handle.getResource());
                         Set<ManagedConnection> invalidConnections = handler.getInvalidConnections(connectionsToTest);
                         if (invalidConnections != null && !invalidConnections.isEmpty()) {
                             invalidConnectionsCount = validateAndRemoveResource(handle, invalidConnections);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,15 +44,13 @@ public class ListDataStructure implements DataStructure {
     private ResourceHandler handler;
     private ResourceSelectionStrategy strategy;
 
-    public ListDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
+    public ListDataStructure(String parameters, int maxSize, ResourceHandler handler) {
         resources = new ArrayList<>((maxSize > 1000) ? 1000 : maxSize);
         free = new ArrayList<>((maxSize > 1000) ? 1000 : maxSize);
         this.handler = handler;
-        initializeStrategy(strategyClass);
         dynSemaphore = new DynamicSemaphore();
         setMaxSize(maxSize);
     }
-
 
     /**
      * Set maxSize based on the new max pool size set on the connection pool
@@ -84,10 +82,6 @@ public class ListDataStructure implements DataStructure {
             this.dynSemaphore.reducePermits(permits);
         }
         this.maxSize = newMaxSize;
-    }
-
-    private void initializeStrategy(String strategyClass) {
-        //TODO
     }
 
     /**

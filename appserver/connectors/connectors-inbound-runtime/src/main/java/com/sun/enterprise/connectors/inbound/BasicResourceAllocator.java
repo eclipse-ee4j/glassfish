@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,12 +42,10 @@ public final class BasicResourceAllocator extends AbstractConnectorAllocator {
     public BasicResourceAllocator() {
     }
 
-
     @Override
     public ResourceHandle createResource() throws PoolingException {
         throw new UnsupportedOperationException();
     }
-
 
     public ResourceHandle createResource(XAResource xaResource) throws PoolingException {
         ResourceHandle resourceHandle = null;
@@ -56,7 +54,7 @@ public final class BasicResourceAllocator extends AbstractConnectorAllocator {
         if (xaResource != null) {
             logger.logp(Level.FINEST, "BasicResourceAllocator", "createResource", "NOT NULL", xaResource);
             try {
-                resourceHandle = new ResourceHandle(null, spec, this, null);
+                resourceHandle = new ResourceHandle(null, spec, this);
                 if (logger.isLoggable(Level.FINEST)) {
                     xaResource = new XAResourceWrapper(xaResource);
                 }
@@ -71,13 +69,11 @@ public final class BasicResourceAllocator extends AbstractConnectorAllocator {
         return resourceHandle;
     }
 
-
     @Override
     public void closeUserConnection(ResourceHandle resourceHandle)
             throws PoolingException {
         throw new UnsupportedOperationException();
     }
-
 
     @Override
     public boolean matchConnection(ResourceHandle resourceHandle) {

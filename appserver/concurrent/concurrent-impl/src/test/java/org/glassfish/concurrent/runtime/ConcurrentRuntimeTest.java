@@ -136,7 +136,7 @@ public class ConcurrentRuntimeTest {
 
         assertEquals(100_000L, managedThreadFactory.getHungTaskThreshold());
 
-        ManagedThreadPoolExecutor executor = getField(mes, "threadPoolExecutor");
+        ManagedThreadPoolExecutor executor = getField(mes, "threadPoolExecutor", ManagedExecutorServiceImpl.class);
         assertEquals(1, executor.getCorePoolSize());
         assertEquals(88, executor.getKeepAliveTime(TimeUnit.SECONDS));
         assertEquals(5, executor.getMaximumPoolSize());

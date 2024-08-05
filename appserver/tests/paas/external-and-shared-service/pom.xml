@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>external-and-shared-service-test</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-M7</version>
     <name>External and Shared Service Test</name>
     <packaging>war</packaging>
     <build>

@@ -27,7 +27,7 @@
 
     <artifactId>glassfish-external-tck-cdi</artifactId>
 
-    <name>CDI TCK Full runner 4.0 for Weld (GlassFish)</name>
+    <name>CDI TCK Full runner 4.1 for Weld (GlassFish)</name>
     <description>Aggregates dependencies and runs the CDI TCK on GlassFish</description>
 
     <dependencies>
@@ -36,6 +36,11 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -134,7 +139,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-api</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
+            <version>${cdi.tck-4-1.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -151,7 +156,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
+            <version>${cdi.tck-4-1.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -161,14 +166,12 @@
             </exclusions>
         </dependency>
 
-        <!--
-            The TCK Web implementation contains test helper code such as the WebArchiveBuilder,
-            as well as a large amount of additional tests.
-        -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-web-impl</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
+            <artifactId>cdi-tck-core-impl</artifactId>
+            <version>${cdi.tck-4-1.version}</version>
+            <type>xml</type>
+            <classifier>suite</classifier>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -177,7 +180,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
 
         <dependency>
             <groupId>org.glassfish.expressly</groupId>
@@ -203,11 +205,17 @@
             <version>${htmlunit.version}</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-lite-extension-translator</artifactId>
+            <version>${weld.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.4.0</version>
+            <version>7.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -226,7 +234,7 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -271,19 +279,19 @@
                         <configuration>
                             <artifactItems>
                                 <!--
-                                    Contains what becomes the tck-web-suite.xml; the TestNG suite file that dictates
+                                    Contains what becomes the tck-core-suite.xml; the TestNG suite file that dictates
                                     which tests from the TCK Web implementation are executed and which are excluded.
                                     Note that this file is essentially a superset of the suite file from the TCK Core,
                                     so we don't need that one separately here.
                                 -->
                                 <artifactItem>
                                     <groupId>jakarta.enterprise</groupId>
-                                    <artifactId>cdi-tck-web-impl</artifactId>
-                                    <version>${cdi.tck-4-0.version}</version>
+                                    <artifactId>cdi-tck-core-impl</artifactId>
+                                    <version>${cdi.tck-4-1.version}</version>
                                     <type>xml</type>
                                     <classifier>suite</classifier>
-                                    <overWrite>false</overWrite>
-                                    <destFileName>tck-web-suite.xml</destFileName>
+                                    <overWrite>false</overWrite> 
+                                    <destFileName>tck-core-suite.xml</destFileName>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>target/suites</outputDirectory>
@@ -313,7 +321,7 @@
                         </configuration>
                      </execution>
 
-                     <!-- Install a jar with a few amount of test classes, for which some of the tests are looking -->
+                    <!-- Install a jar with a few amount of test classes, for which some of the tests are looking -->
                     <execution>
                         <id>install-cdi-tck-ext-lib</id>
                         <phase>pre-integration-test</phase>
@@ -325,7 +333,7 @@
                                 <artifactItem>
                                     <groupId>jakarta.enterprise</groupId>
                                     <artifactId>cdi-tck-ext-lib</artifactId>
-                                    <version>${cdi.tck-4-0.version}</version>
+                                    <version>${cdi.tck-4-1.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${glassfish.root}/glassfish8/glassfish/domains/domain1/lib/applibs</outputDirectory>
@@ -344,12 +352,11 @@
                     <!-- Surefire / TestNG Properties -->
                     <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>target/suites/tck-web-suite.xml</suiteXmlFile>
+                        <suiteXmlFile>target/suites/tck-core-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <excludedGroups>${excluded.groups}</excludedGroups>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
-                        <dependency>jakarta.enterprise:cdi-tck-web-impl</dependency>
                     </dependenciesToScan>
                     <properties>
                         <property>

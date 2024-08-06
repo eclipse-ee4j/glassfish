@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +28,6 @@ import javax.security.auth.login.LoginException;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.services.api.authentication.ImpersonationService;
-import org.glassfish.security.services.common.Secure;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -38,7 +37,6 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service(name="impersonationService")
 @Singleton
-@Secure(accessPermissionName = "security/service/impersonation/simple")
 public class ImpersonationServiceImpl implements ImpersonationService {
 
     @Override

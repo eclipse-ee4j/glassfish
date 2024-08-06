@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -19,6 +19,7 @@
 package org.apache.catalina.connector;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_MOVED_PERMANENTLY;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
@@ -476,7 +477,7 @@ public class CoyoteAdapter extends HttpHandler {
             if (InputValidationUtil.validateStringforCRLF(redirectPath)) {
                 catalinaResponse.sendError(403, "Forbidden");
             } else {
-                catalinaResponse.sendRedirect(InputValidationUtil.removeLinearWhiteSpaces(redirectPath), false);
+                catalinaResponse.sendRedirect(InputValidationUtil.removeLinearWhiteSpaces(redirectPath), SC_MOVED_PERMANENTLY);
             }
 
             return false;

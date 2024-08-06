@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -95,10 +95,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.AccessController;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -1735,19 +1733,14 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         if (principal == null) {
             return null;
         }
-        if (principal instanceof WebPrincipal) {
-            return ((WebPrincipal) principal).getSecurityContext();
+        if (principal instanceof WebPrincipal webPrincipal) {
+            return webPrincipal.getSecurityContext();
         }
 
-        return AccessController.doPrivileged(new PrivilegedAction<SecurityContext>() {
-            @Override
-            public SecurityContext run() {
-                Subject s = new Subject();
-                s.getPrincipals().add(principal);
-                return new SecurityContext(principal.getName(), s);
-            }
-        });
+        Subject subject = new Subject();
+        subject.getPrincipals().add(principal);
 
+        return new SecurityContext(principal.getName(), subject);
     }
 
     public void setCurrentSecurityContextWithWebPrincipal(Principal principal) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,12 @@
 
 package com.sun.enterprise.security;
 
-import java.security.PrivilegedAction;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.security.auth.login.ClientPasswordLoginModule;
+import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.SecurityConstants;
+import javax.security.auth.callback.CallbackHandler;
 
 /**
  * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:
@@ -46,40 +45,26 @@ import com.sun.enterprise.security.common.SecurityConstants;
 
 public final class LoginContext {
 
-    private static Logger _logger = null;
-    static {
-        _logger = SecurityLoggerInfo.getLogger();
-    }
-
-    private boolean guiAuth = false;
+    private boolean guiAuth;
 
     // declaring this different from the Appcontainer as
     // this will be called from standalone clients.
-    public javax.security.auth.callback.CallbackHandler handler = null;
+    public CallbackHandler handler;
 
     /**
      * Creates the LoginContext with the defauly callback handler
      */
     public LoginContext() {
-        handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(guiAuth);
+        handler = new LoginCallbackHandler(guiAuth);
     }
 
     /**
      * Login method to login username and password
      */
-    public void login(String user, String pass) throws LoginException {
-        final String username = user;
-        final String password = pass;
-        AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public java.lang.Object run() {
+    public void login(String username, String password) throws LoginException {
+        System.setProperty(ClientPasswordLoginModule.LOGIN_NAME, username);
+        System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password);
 
-                System.setProperty(ClientPasswordLoginModule.LOGIN_NAME, username);
-                System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password);
-
-                return null;
-            }
-        });
         // Since this is  a private api and the user is not supposed to use
         // this. We use the default the LoginCallbackHandler.
         LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD, handler);
@@ -89,7 +74,6 @@ public final class LoginContext {
      * This method has been provided to satisfy the CTS Porting Package requirement for logging in a certificate
      */
     public void login(String username, byte[] authData) throws LoginException {
-
         // do nothing
     }
 

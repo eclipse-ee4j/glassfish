@@ -64,9 +64,8 @@ import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPE
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static java.lang.Boolean.TRUE;
+import static java.lang.System.Logger.Level.INFO;
 import static java.util.Collections.emptyList;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -79,6 +78,8 @@ import static java.util.stream.Collectors.toList;
  */
 public abstract class GFLauncher {
 
+    private static final LocalStringsImpl I18N = new LocalStringsImpl(GFLauncher.class);
+    protected static final System.Logger LOG = System.getLogger(GFLauncher.class.getName(), I18N.getBundle());
     private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncher.class);
 
     /**
@@ -197,6 +198,12 @@ public abstract class GFLauncher {
      * @throws com.sun.enterprise.admin.launcher.GFLauncherException
      */
     public final void launch() throws GFLauncherException {
+        if (isDebugSuspend()) {
+            LOG.log(INFO, "ServerStart.DebuggerSuspendedMessage", debugPort);
+        } else if (debugPort >= 0) {
+            LOG.log(INFO, "ServerStart.DebuggerMessage", debugPort);
+        }
+
         try {
             startTime = System.currentTimeMillis();
             if (!setupCalledByClients) {
@@ -590,7 +597,7 @@ public abstract class GFLauncher {
 
     /**
      *
-     * look for an option of this form: <code>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</code> and
+     * look for an option of this form: <code>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009</code> and
      * extract the suspend and port values.
      *
      */
@@ -604,7 +611,7 @@ public abstract class GFLauncher {
             for (String attribute : attributes) {
                 if (attribute.startsWith("address=")) {
                     try {
-                        debugPort = Integer.parseInt(attribute.substring(8));
+                        debugPort = Integer.parseInt(attribute.substring(10));
                     } catch (NumberFormatException ex) {
                         debugPort = -1;
                     }
@@ -1063,9 +1070,9 @@ public abstract class GFLauncher {
 
     private void setupLogLevels() {
         if (callerParameters.isVerbose()) {
-            GFLauncherLogger.setConsoleLevel(INFO);
+            GFLauncherLogger.setConsoleLevel(java.util.logging.Level.INFO);
         } else {
-            GFLauncherLogger.setConsoleLevel(WARNING);
+            GFLauncherLogger.setConsoleLevel(java.util.logging.Level.WARNING);
         }
     }
 

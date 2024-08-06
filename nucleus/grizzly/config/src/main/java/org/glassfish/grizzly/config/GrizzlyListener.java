@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,18 +25,18 @@ import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
- * <p>The GrizzlyServiceListener is responsible of mapping incoming requests to the proper Container or Grizzly
- * extensions. Registered Containers can be notified by Grizzly using three mode:</p>
- *
- * <ul> <li>At the transport level: Containers can be notified when TCP, TLS or UDP requests are mapped to them.</li>
- * <li>At the protocol level: Containers can be notified when protocols (ex: SIP, HTTP) requests are mapped to
- * them.</li> </li>At the requests level: Containers can be notified when specific patterns requests are mapped to
- * them.</li> <ul>
+ * The GrizzlyServiceListener is responsible of mapping incoming requests to the proper Container or
+ * Grizzly extensions. Registered Containers can be notified by Grizzly using three mode:
+ * <ul>
+ * <li>At the transport level: Containers can be notified when TCP, TLS or UDP requests are mapped to them.
+ * <li>At the protocol level: Containers can be notified when protocols (ex: SIP, HTTP) requests are
+ * mapped to them.
+ * <li>At the requests level: Containers can be notified when specific patterns requests are mapped to them.
+ * </ul>
  *
  * @author Jeanfrancois Arcand
  * @author Justin Lee
  */
-@SuppressWarnings("UnusedDeclaration")
 public interface GrizzlyListener {
 
     void start() throws IOException;
@@ -50,14 +51,14 @@ public interface GrizzlyListener {
 
     int getPort();
 
-    /*
+    /**
      * Configures the given grizzlyListener.
      *
      * @param networkListener The NetworkListener to configure
      */
-    void configure(ServiceLocator habitat, NetworkListener networkListener) throws IOException;
+    void configure(ServiceLocator locator, NetworkListener networkListener) throws IOException;
 
-    void processDynamicConfigurationChange(ServiceLocator habitat, PropertyChangeEvent[] events);
+    void processDynamicConfigurationChange(ServiceLocator locator, PropertyChangeEvent[] events);
 
     <T> T getAdapter(Class<T> adapterClass);
 }

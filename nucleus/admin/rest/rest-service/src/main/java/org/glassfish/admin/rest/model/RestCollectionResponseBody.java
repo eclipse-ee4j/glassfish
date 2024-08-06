@@ -35,7 +35,7 @@ public class RestCollectionResponseBody<T extends RestModel> extends ResponseBod
 
     private String collectionName;
     private UriInfo uriInfo;
-    private List<T> items = new ArrayList<T>();
+    private List<T> items = new ArrayList<>();
 
     // If you want this object to automatically compute the links to the child entities,
     // then include the collection name (which becomes the 'rel' part of the link) and the

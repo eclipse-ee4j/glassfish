@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,11 @@ package org.glassfish.admin.rest.adapter;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collections;
@@ -27,9 +33,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 
@@ -46,24 +50,28 @@ import org.glassfish.admin.restconnector.ProxiedRestAdapter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.EndpointRegistrationException;
-import org.glassfish.common.util.admin.RestSessionManager;
 import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
-import org.glassfish.hk2.api.*;
+import org.glassfish.hk2.api.Factory;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.api.TypeLiteral;
+import org.glassfish.hk2.extras.ExtrasUtilities;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.internal.api.AdminAccessController;
 import org.glassfish.internal.api.RemoteAdminAccessException;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.internal.util.collection.Refs;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.jvnet.hk2.annotations.Optional;
 
 /**
  * Adapter for REST interface
@@ -79,35 +87,31 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     protected static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
     protected static final String HEADER_AUTHENTICATE = "WWW-Authenticate";
 
-    protected final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RestService.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RestService.class);
 
-    private RestResourceProvider restResourceProvider;
+    private final CountDownLatch latch = new CountDownLatch(1);
+    private final RestResourceProvider restResourceProvider;
 
     @Inject
-    protected ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
-    private CountDownLatch latch = new CountDownLatch(1);
+    @Inject
+    private ServerContext serverContext;
 
     @Inject
-    protected ServerContext sc;
+    private ServerEnvironment serverEnvironment;
 
     @Inject
-    protected ServerEnvironment serverEnvironment;
+    private AdminAccessController adminAuthenticator;
 
-    @Inject
-    private RestSessionManager sessionManager;
+    private volatile JerseyContainer adapter;
 
-    @Inject
-    @Optional
-    protected AdminAccessController adminAuthenticator;
-
-    private volatile JerseyContainer adapter = null;
-
-    protected RestAdapter() {
+    protected RestAdapter(RestResourceProvider restResourceProvider) {
+        this.restResourceProvider = restResourceProvider;
         setAllowEncodedSlash(true);
     }
 
@@ -140,13 +144,11 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
                     }
                 }
 
-                if (adminAuthenticator != null) {
-                    final Subject subject = adminAuthenticator.loginAsAdmin(req);
-                    req.setAttribute(Constants.REQ_ATTR_SUBJECT, subject);
-                }
+                final Subject subject = adminAuthenticator.loginAsAdmin(req);
+                req.setAttribute(Constants.REQ_ATTR_SUBJECT, subject);
 
                 String context = getContextRoot();
-                if ((context != null) && (!"".equals(context)) && (adapter == null)) {
+                if (context != null && !context.isEmpty() && adapter == null) {
                     RestLogging.restLogger.log(Level.FINE, "Exposing rest resource context root: {0}", context);
                     adapter = exposeContext();
                     RestLogging.restLogger.log(Level.INFO, RestLogging.REST_INTERFACE_INITIALIZED, context);
@@ -184,7 +186,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     private String getAcceptedMimeType(Request req) {
         String type = null;
         String requestURI = req.getRequestURI();
-        Set<String> acceptableTypes = new HashSet<String>(3);
+        Set<String> acceptableTypes = new HashSet<>(3);
         acceptableTypes.add("html");
         acceptableTypes.add("xml");
         acceptableTypes.add("json");
@@ -218,10 +220,6 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
 
     protected RestResourceProvider getRestResourceProvider() {
         return restResourceProvider;
-    }
-
-    protected void setRestResourceProvider(RestResourceProvider rrp) {
-        this.restResourceProvider = rrp;
     }
 
     public static class SubjectReferenceFactory implements Factory<Ref<Subject>> {
@@ -261,7 +259,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
      * RestAdapter is loaded at boot time gain a few 100 millis at GlassFish startup time
      */
     protected JerseyContainer exposeContext() throws EndpointRegistrationException {
-        Set<Class<?>> classes = getRestResourceProvider().getResourceClasses(habitat);
+        Set<Class<?>> classes = getRestResourceProvider().getResourceClasses(serviceLocator);
         // Use common classloader. Jersey artifacts are not visible through
         // module classloader. Actually there is a more important reason to use CommonClassLoader.
         // jax-rs API called RuntimeDelegate makes stupid class loading assumption and throws LinkageError
@@ -269,17 +267,22 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
         // So, we force it to restrict its search space using common class loader.
         ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            ClassLoader apiClassLoader = sc.getCommonClassLoader();
+            ClassLoader apiClassLoader = serverContext.getCommonClassLoader();
             Thread.currentThread().setContextClassLoader(apiClassLoader);
-            ResourceConfig rc = getRestResourceProvider().getResourceConfig(classes, sc, habitat, getAdditionalBinders());
+            ResourceConfig rc = getRestResourceProvider().getResourceConfig(classes, serverContext, serviceLocator,
+                getAdditionalBinders());
             return getJerseyContainer(rc);
         } finally {
             Thread.currentThread().setContextClassLoader(originalContextClassLoader);
         }
     }
 
-    protected JerseyContainer getJerseyContainer(ResourceConfig rc) {
-        final HttpHandler httpHandler = ContainerFactory.createContainer(HttpHandler.class, rc);
+    private JerseyContainer getJerseyContainer(ResourceConfig config) {
+        RestLogging.restLogger.log(Level.FINEST,
+            () -> this + ": Creating Jersey container for " + HttpHandler.class + " and " + config);
+        final GrizzlyHttpContainer httpHandler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
+        final ServiceLocator jerseyLocator = httpHandler.getApplicationHandler().getInjectionManager().getInstance(ServiceLocator.class);
+        ExtrasUtilities.enableTopicDistribution(jerseyLocator);
         return new JerseyContainer() {
             @Override
             public void service(Request request, Response response) throws Exception {

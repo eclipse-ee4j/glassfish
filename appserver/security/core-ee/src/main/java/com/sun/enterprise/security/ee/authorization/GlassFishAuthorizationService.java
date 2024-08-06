@@ -16,15 +16,8 @@
  */
 package com.sun.enterprise.security.ee.authorization;
 
-import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
-import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
-import static java.util.logging.Level.FINE;
-import static java.util.stream.Collectors.toSet;
-
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
@@ -33,7 +26,9 @@ import com.sun.enterprise.security.ee.authorization.cache.CachedPermissionImpl;
 import com.sun.enterprise.security.ee.authorization.cache.PermissionCache;
 import com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory;
 import com.sun.enterprise.security.ee.web.integration.LogUtils;
+import com.sun.enterprise.security.ee.web.integration.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
+
 import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
@@ -41,12 +36,21 @@ import jakarta.security.jacc.PolicyFactory;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.Permission;
 import java.security.Principal;
 import java.util.Set;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.exousia.AuthorizationService;
+
+import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
+import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
+import static java.util.logging.Level.FINE;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * The class provides support for Jakarta Authorization. This class is a companion class of
@@ -87,7 +91,7 @@ public class GlassFishAuthorizationService {
 
     private static Set<Principal> defaultPrincipalSet = SecurityContext.getDefaultSecurityContext().getPrincipalSet();
 
-    private boolean register;
+    private final boolean register;
 
     private final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
     private final AuthorizationService exousiaAuthorizationService;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -38,13 +38,10 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.AccessController;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.PrivilegedAction;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +59,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import org.apache.naming.resources.BaseDirContext;
 import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.JarFileResourcesProvider;
 import org.apache.naming.resources.ProxyDirContext;
@@ -288,6 +286,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
             dirCtx = proxyRes.getDirContext();
         } else {
             dirCtx = resources;
+            if (dirCtx instanceof BaseDirContext) {
+                contextName = new File(((BaseDirContext)dirCtx).getDocBase()).getName();
+            }
         }
         if (dirCtx instanceof WebDirContext) {
             ((WebDirContext) dirCtx).setJarFileResourcesProvider(this);
@@ -968,10 +969,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
     public ClassLoader copy() {
         LOG.log(DEBUG, "copy()");
         // set getParent() as the parent of the cloned class loader
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
-        return AccessController.doPrivileged(action);
+        return new GlassfishUrlClassLoader(getURLs(), getParent());
     }
-
 
     @Override
     public void close() throws IOException {

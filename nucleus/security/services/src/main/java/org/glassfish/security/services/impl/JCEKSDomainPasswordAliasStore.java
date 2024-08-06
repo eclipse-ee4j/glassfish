@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.security.services.common.Secure;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
@@ -36,7 +36,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @Named("JCEKS")
 @PerLookup
-@Secure(accessPermissionName = "security/service/credential/provider/jceks")
 public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore implements DomainScopedPasswordAliasStore  {
 
     private static final String PASSWORD_ALIAS_KEYSTORE = "domain-passwords";

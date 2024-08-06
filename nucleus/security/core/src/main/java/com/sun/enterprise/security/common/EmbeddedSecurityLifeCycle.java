@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,15 @@
 
 package com.sun.enterprise.security.common;
 
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.EmbeddedSecurity;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -28,15 +37,6 @@ import org.glassfish.internal.embedded.EmbeddedFileSystem;
 import org.glassfish.internal.embedded.EmbeddedLifecycle;
 import org.glassfish.internal.embedded.Server;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.EmbeddedSecurity;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * @author Nithya Subramanian
@@ -87,8 +87,8 @@ public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
             } catch (IOException ex) {
                 _logger.log(Level.SEVERE, SecurityLoggerInfo.obtainingKeyAndTrustStoresError, ex);
             }
-            System.setProperty(SecuritySupport.keyStoreProp, keystoreFile);
-            System.setProperty(SecuritySupport.trustStoreProp, truststoreFile);
+            System.setProperty(SecuritySupport.KEY_STORE_PROP, keystoreFile);
+            System.setProperty(SecuritySupport.TRUST_STORE_PROP, truststoreFile);
         } catch (IOException ioEx) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.copyingSecurityConfigFilesIOError, ioEx);
         }

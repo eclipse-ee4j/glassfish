@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,18 @@
  */
 
 package com.sun.enterprise.security.admin.cli;
+
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.JmxConnector;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.ssl.GlassfishSSLImpl;
+
+import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
@@ -40,17 +53,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import com.sun.enterprise.config.serverbeans.AdminService;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JmxConnector;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-
-import jakarta.inject.Inject;
 
 /**
  * Provides common behavior for the enable and disable secure admin commands.
@@ -206,17 +208,17 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         private static final String CLIENT_AUTH_VALUE = "want";
         private static final String SSL3_ENABLED_VALUE = "false";
-        private static final String CLASSNAME_VALUE = "com.sun.enterprise.security.ssl.GlassfishSSLImpl";
+        private static final String CLASSNAME_VALUE = GlassfishSSLImpl.class.getName();
 
         private final Transaction t;
         private final Config config_w;
         private final TopLevelContext topLevelContext;
 
-        private Protocols protocols_w = null;
-        private Map<String, Protocol> namedProtocols_w = new HashMap<String, Protocol>();
+        private Protocols protocols_w;
+        private final Map<String, Protocol> namedProtocols_w = new HashMap<>();
 
-        private JmxConnector jmxConnector_w = null;
-        private Ssl jmxConnectorSsl_w = null;
+        private JmxConnector jmxConnector_w;
+        private Ssl jmxConnectorSsl_w;
 
         ConfigLevelContext(final TopLevelContext topLevelContext, final Config config_w) {
             this.topLevelContext = topLevelContext;
@@ -345,7 +347,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
      * The concrete command implementation classes implement updateSecureAdminSettings differently but they expose the same method
      * signature, so onEnable and onDisable just invoke the same method.
      */
-    private Step<TopLevelContext> perDomainStep = new Step<TopLevelContext>() {
+    private final Step<TopLevelContext> perDomainStep = new Step<>() {
 
         /**
          * Sets enabled=true/false on the secure-admin element.
@@ -393,14 +395,14 @@ public abstract class SecureAdminCommand implements AdminCommand {
     /**
      * Manages the jmx-connector settings.
      */
-    private Step<ConfigLevelContext> jmxConnectorStep = new Step<ConfigLevelContext>() {
+    private final Step<ConfigLevelContext> jmxConnectorStep = new Step<>() {
 
         /**
          * Sets the jmx-connector security-enabled to true and creates and initializes the child ssl element.
          */
         @Override
         public Work<ConfigLevelContext> enableWork() {
-            return new Work<ConfigLevelContext>() {
+            return new Work<>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -431,7 +433,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> disableWork() {
-            return new Work<ConfigLevelContext>() {
+            return new Work<>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -456,7 +458,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
     /**
      * Manages the sec-admin-listener protocol.
      */
-    private Step<ConfigLevelContext> secAdminListenerProtocolStep = new Step<ConfigLevelContext>() {
+    private final Step<ConfigLevelContext> secAdminListenerProtocolStep = new Step<>() {
 
         private static final String ASADMIN_VIRTUAL_SERVER_NAME = "__asadmin";
 
@@ -503,7 +505,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> enableWork() {
-            return new Work<ConfigLevelContext>() {
+            return new Work<>() {
 
                 @Override
                 public boolean run(final ConfigLevelContext context) throws TransactionFailure {
@@ -543,7 +545,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> disableWork() {
-            return new Work<ConfigLevelContext>() {
+            return new Work<>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -564,14 +566,14 @@ public abstract class SecureAdminCommand implements AdminCommand {
         private final String protocolName;
         private final String classname = "org.glassfish.grizzly.config.portunif.HttpProtocolFinder";
 
-        private ProtocolFinderInfo(final String name, final String protocolName) {
+        ProtocolFinderInfo(final String name, final String protocolName) {
             this.name = name;
             this.protocolName = protocolName;
         }
 
     }
 
-    private Step<ConfigLevelContext> secAdminPortUnifAndRedirectStep = new Step<ConfigLevelContext>() {
+    private final Step<ConfigLevelContext> secAdminPortUnifAndRedirectStep = new Step<>() {
 
         private final static String PORT_UNIF_PROTOCOL_NAME = "pu-protocol";
         private final static String UNSECURE_ADMIN_LISTENER_PROTOCOL_NAME = "admin-listener";
@@ -652,7 +654,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> enableWork() {
-            return new Work<ConfigLevelContext>() {
+            return new Work<>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -685,7 +687,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> disableWork() {
-            return new Work<ConfigLevelContext>() {
+            return new Work<>() {
 
                 @Override
                 public boolean run(final ConfigLevelContext context) throws TransactionFailure {

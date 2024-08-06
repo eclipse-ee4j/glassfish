@@ -17,9 +17,6 @@
 
 package com.sun.enterprise.security.ee.web.integration;
 
-import static java.util.logging.Level.FINE;
-import static org.glassfish.api.web.Constants.ADMIN_VS;
-
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
@@ -30,13 +27,19 @@ import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
 import com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService;
+
 import jakarta.security.jacc.PolicyContextException;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.logging.Logger;
+
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
+
+import static java.util.logging.Level.FINE;
+import static org.glassfish.api.web.Constants.ADMIN_VS;
 
 /**
  * This class manages the GlassFish authorization service and the admin virtual server setup

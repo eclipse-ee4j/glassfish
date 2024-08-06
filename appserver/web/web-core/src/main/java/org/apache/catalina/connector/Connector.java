@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -197,17 +197,23 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
 
     /**
      * The server name to which we should pretend requests to this Connector were directed. This is useful when operating
-     * Tomcat behind a proxy server, so that redirects get constructed accurately. If not specified, the server name
+     * GlassFish behind a proxy server, so that redirects get constructed accurately. If not specified, the server name
      * included in the <code>Host</code> header is used.
      */
     private String proxyName;
 
     /**
      * The server port to which we should pretend requests to this Connector were directed. This is useful when operating
-     * Tomcat behind a proxy server, so that redirects get constructed accurately. If not specified, the port number
+     * GlassFish behind a proxy server, so that redirects get constructed accurately. If not specified, the port number
      * specified by the <code>port</code> property is used.
      */
     private int proxyPort = 0;
+
+    /**
+     * The HTTP scheme to which we should pretend requests to this Connector were directed. This is useful when operating
+     * GlassFish behind a proxy server, so that redirects get constructed accurately.
+     */
+    private String proxyScheme = null;
 
     /**
      * The redirect port for non-SSL to SSL redirects.
@@ -822,6 +828,24 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
         setProperty("proxyPort", String.valueOf(proxyPort));
+    }
+
+    /**
+     * Return the proxy scheme for this Connector
+     * @return The scheme or null if not set
+     */
+    public String getProxyScheme() {
+        return proxyScheme;
+    }
+
+    /**
+     * Set the proxy scheme for this Connector.
+     *
+     * @param proxyPort The new proxy scheme or null to unset
+     */
+    public void setProxyScheme(String scheme) {
+        this.proxyScheme = scheme;
+        setProperty("proxyScheme", String.valueOf(scheme));
     }
 
     /**

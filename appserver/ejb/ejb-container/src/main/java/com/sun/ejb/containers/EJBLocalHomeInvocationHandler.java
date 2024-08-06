@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,20 +41,19 @@ import java.lang.reflect.Method;
  */
 public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements InvocationHandler {
 
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
-        EJBLocalHomeInvocationHandler.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EJBLocalHomeInvocationHandler.class);
 
     private boolean isStatelessSession_;
 
-    // Our associated proxy object.  Used when a caller needs EJBLocalObject
+    // Our associated proxy object. Used when a caller needs EJBLocalObject
     // but only has InvocationHandler.
     private EJBLocalHome proxy_;
 
     private final Class localHomeIntfClass_;
 
-    // Cache reference to invocation info.  There is one of these per
-    // container.  It's populated during container initialization and
-    // passed in when the InvocationHandler is created.  This avoids the
+    // Cache reference to invocation info. There is one of these per
+    // container. It's populated during container initialization and
+    // passed in when the InvocationHandler is created. This avoids the
     // overhead of building the method info each time a LocalHome proxy
     // is created.
     private MethodMap invocationInfoMap_;
@@ -72,22 +71,18 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
         // constructor is called.
     }
 
-
     public void setMethodMap(MethodMap map) {
         invocationInfoMap_ = map;
     }
-
 
     public void setProxy(EJBLocalHome proxy) {
         proxy_ = proxy;
     }
 
-
     @Override
     protected EJBLocalHome getEJBLocalHome() {
         return proxy_;
     }
-
 
     /**
      * Called by EJBLocalHome proxy.
@@ -97,8 +92,8 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
 
         ClassLoader originalClassLoader = null;
 
-        // NOTE : be careful with "args" parameter.  It is null
-        //        if method signature has 0 arguments.
+        // NOTE : be careful with "args" parameter. It is null
+        // if method signature has 0 arguments.
         try {
             getContainer().onEnteringContainer();
 
@@ -153,7 +148,7 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
 
             if (!isStatelessSession_) {
                 if (invInfo.targetMethod1 == null) {
-                    Object[] params = new Object[] {invInfo.ejbName, "LocalHome", invInfo.method.toString()};
+                    Object[] params = new Object[] { invInfo.ejbName, "LocalHome", invInfo.method.toString() };
                     String errorMsg = localStrings.getLocalString("ejb.bean_class_method_not_found", "", params);
                     throw new EJBException(errorMsg);
                 }
@@ -161,12 +156,12 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
                 EjbInvocation inv = getContainer().createEjbInvocation();
 
                 inv.isLocal = true;
-                inv.isHome  = true;
-                inv.method  = method;
+                inv.isHome = true;
+                inv.method = method;
 
                 inv.clientInterface = localHomeIntfClass_;
 
-                // Set cached invocation params.  This will save additional lookups
+                // Set cached invocation params. This will save additional lookups
                 // in BaseContainer.
                 inv.transactionAttribute = invInfo.txAttr;
                 inv.invocationInfo = invInfo;
@@ -180,8 +175,7 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
                     container.preInvoke(inv);
 
                     if (invInfo.startsWithCreate) {
-                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container, invInfo.targetMethod1, inv,
-                            inv.ejb, args);
+                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container, invInfo.targetMethod1, inv, inv.ejb, args);
                         postCreate(container, inv, invInfo, ejbCreateReturnValue, args);
                         if (inv.ejbObject != null) {
                             returnValue = ((EJBLocalObjectImpl) inv.ejbObject).getClientObject();
@@ -196,7 +190,7 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
                     }
                 } catch (InvocationTargetException ite) {
                     inv.exception = ite.getCause();
-                } catch(Throwable c) {
+                } catch (Throwable c) {
                     inv.exception = c;
                 } finally {
                     container.postInvoke(inv);
@@ -222,25 +216,20 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
     }
 
     // default impl to be overridden in subclasses if special invoke is necessary
-    protected Object invokeSpecialEJBLocalHomeMethod(Method method, Class methodClass,
-            Object[] args) throws Throwable {
+    protected Object invokeSpecialEJBLocalHomeMethod(Method method, Class methodClass, Object[] args) throws Throwable {
         return null;
     }
 
     // default impl to be overridden in subclass if necessary
-    protected void postCreate(Container container, EjbInvocation inv,
-            InvocationInfo invInfo, Object primaryKey, Object[] args)
+    protected void postCreate(Container container, EjbInvocation inv, InvocationInfo invInfo, Object primaryKey, Object[] args)
             throws Throwable {
     }
 
     /**
      * Allow subclasses to execute a protected method in BaseContainer
      */
-    protected Object invokeTargetBeanMethod(BaseContainer container,
-            Method beanClassMethod, EjbInvocation inv, Object target, Object[] params)
-            throws Throwable {
-
-        return container.invokeTargetBeanMethod(beanClassMethod, inv, target, params, null);
+    protected Object invokeTargetBeanMethod(BaseContainer container, Method beanClassMethod, EjbInvocation inv, Object target, Object[] params) throws Throwable {
+        return container.invokeTargetBeanMethod(beanClassMethod, inv, target, params);
     }
 
 }

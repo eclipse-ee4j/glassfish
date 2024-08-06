@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,14 +18,12 @@
 
 package org.apache.naming.factory;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import jakarta.mail.Session;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-import jakarta.mail.Session;
-import javax.naming.Name;
 import javax.naming.Context;
+import javax.naming.Name;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
@@ -88,38 +87,27 @@ public class MailSessionFactory implements ObjectFactory {
      */
     @Override
     public Object getObjectInstance(Object refObj, Name name, Context context, Hashtable<?, ?> env) throws Exception {
-
-        // Return null if we cannot create an object of the requested type
         final Reference ref = (Reference) refObj;
+
         if (!ref.getClassName().equals(factoryType)) {
-            return (null);
+            // Return null if we cannot create an object of the requested type
+            return null;
         }
 
-        // Create a new Session inside a doPrivileged block, so that Jakarta
-        // Mail can read its default properties without throwing Security
-        // exceptions
-        return AccessController.doPrivileged(new PrivilegedAction<Session>() {
-
-            @Override
-            public Session run() {
-                // Create the Jakarta Mail properties we will use
-                Properties props = new Properties();
-                props.put("mail.transport.protocol", "smtp");
-                props.put("mail.smtp.host", "localhost");
-                Enumeration<RefAddr> attrs = ref.getAll();
-                while (attrs.hasMoreElements()) {
-                    RefAddr attr = attrs.nextElement();
-                    if ("factory".equals(attr.getType())) {
-                        continue;
-                    }
-                    props.put(attr.getType(), attr.getContent());
-                }
-
-                // Create and return the new Session object
-                Session session = Session.getInstance(props, null);
-                return (session);
-
+        // Create the Jakarta Mail properties we will use
+        Properties props = new Properties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.host", "localhost");
+        Enumeration<RefAddr> attrs = ref.getAll();
+        while (attrs.hasMoreElements()) {
+            RefAddr attr = attrs.nextElement();
+            if ("factory".equals(attr.getType())) {
+                continue;
             }
-        });
+            props.put(attr.getType(), attr.getContent());
+        }
+
+        // Create and return the new Session object
+        return Session.getInstance(props, null);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.deploy.shared.MemoryMappedArchive;
 import com.sun.enterprise.deployment.util.DOLUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,13 +30,10 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
-
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
@@ -71,8 +67,7 @@ public class MainClassLaunchable implements Launchable {
         // There is no developer-provided descriptor possible so just use a default one.
         if (acDesc == null) {
             ReadableArchive tempArchive = null;
-            PrivilegedAction<ACCClassLoader> action = () -> new ACCClassLoader(loader.getURLs(), loader.getParent());
-            final ACCClassLoader tempLoader = AccessController.doPrivileged(action);
+            final ACCClassLoader tempLoader = new ACCClassLoader(loader.getURLs(), loader.getParent());
             tempArchive = createArchive(tempLoader, mainClass);
             final AppClientArchivist acArchivist = getArchivist(tempArchive, tempLoader);
             archivist.setClassLoader(tempLoader);

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +17,21 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.annotation.handlers.ConcurrencyResourceDefinition;
 import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
-import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 
 /**
  * @author David Matejcek
  */
-public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
+public class ContextServiceDefinitionDescriptor extends ResourceDescriptor implements ConcurrencyResourceDefinition {
 
     private static final long serialVersionUID = 2537143519647534821L;
 
@@ -49,13 +51,31 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
 
     @Override
     public String getName() {
-        return this.data.getName().toString();
+        return this.data.getName();
     }
 
 
     @Override
     public void setName(String name) {
-        this.data.setName(new SimpleJndiName(name));
+        this.data.setName(name);
+    }
+
+
+    @Override
+    public List<String> getQualifiers() {
+        return data.getQualifiers();
+    }
+
+
+    @Override
+    public void addQualifier(String qualifier) {
+        data.addQualifier(qualifier);
+    }
+
+
+    @Override
+    public void setQualifiers(List<String> qualifiers) {
+        data.setQualifiers(qualifiers);
     }
 
 

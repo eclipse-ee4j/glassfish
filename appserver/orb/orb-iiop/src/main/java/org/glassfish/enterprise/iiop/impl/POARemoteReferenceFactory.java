@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -305,21 +305,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
 
 
     private void setClassLoader() {
-        ClassLoader cl;
-        SecurityManager sman = System.getSecurityManager();
-        if (sman == null) {
-            cl = this.getClass().getClassLoader();
-        } else {
-            cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-
-                @Override
-                public ClassLoader run() {
-                    return this.getClass().getClassLoader();
-                }
-            });
-        }
-
-        Wrapper._setClassLoader(cl);
+        Wrapper._setClassLoader(this.getClass().getClassLoader());
     }
 
 

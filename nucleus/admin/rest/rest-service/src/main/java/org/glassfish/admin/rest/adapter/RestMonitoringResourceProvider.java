@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,19 +25,15 @@ import java.util.Set;
 
 /**
  * ReST adapter for monitoring requests via HttpServlet interface
- *
- *
  */
 public class RestMonitoringResourceProvider extends AbstractRestResourceProvider {
-    public RestMonitoringResourceProvider() {
-        super();
-    }
 
+    @Override
     public Set<Class<?>> getResourceClasses(ServiceLocator habitat) {
         //        return getLazyJersey().getResourcesConfigForMonitoring(habitat);
         //    @Override
         //    public Set<Class<?>> getResourcesConfigForMonitoring(ServiceLocator habitat) {
-        final Set<Class<?>> r = new HashSet<Class<?>>();
+        final Set<Class<?>> r = new HashSet<>();
         r.add(org.glassfish.admin.rest.resources.MonitoringResource.class);
 
         r.add(org.glassfish.admin.rest.provider.ActionReportResultHtmlProvider.class);

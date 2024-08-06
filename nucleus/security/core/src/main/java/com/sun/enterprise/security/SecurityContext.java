@@ -17,27 +17,19 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
-import com.sun.enterprise.security.common.AbstractSecurityContext;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.integration.AppServSecurityContext;
-
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
 
-import java.security.AccessController;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.common.AbstractSecurityContext;
+import com.sun.enterprise.security.integration.AppServSecurityContext;
 import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import javax.security.auth.AuthPermission;
 import javax.security.auth.Subject;
-
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Globals;
@@ -70,8 +62,6 @@ public class SecurityContext extends AbstractSecurityContext {
     private static InheritableThreadLocal<SecurityContext> currentSecurityContext = new InheritableThreadLocal<>();
     private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
 
-    private static AuthPermission doAsPrivilegedPerm = new AuthPermission("doAsPrivileged");
-
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;
 
@@ -95,13 +85,9 @@ public class SecurityContext extends AbstractSecurityContext {
         }
 
         this.initiator = new UserNameAndPassword(userName);
-        final Subject finalSubject = nonNullSubject;
-        PrivilegedAction<Subject> action = () -> {
-            finalSubject.getPrincipals().add(initiator);
-            return finalSubject;
-        };
+        nonNullSubject.getPrincipals().add(initiator);
 
-        this.subject = AppservAccessController.doPrivileged(action);
+        this.subject = nonNullSubject;
     }
 
     /**
@@ -116,42 +102,37 @@ public class SecurityContext extends AbstractSecurityContext {
             _logger.warning(SecurityLoggerInfo.nullSubjectWarning);
         }
 
-        final Subject finalSubject = subject;
         this.subject = subject;
-        this.initiator = AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-            @Override
-            public Principal run() {
-                Principal principal = null;
 
-                for (Object publicCredential : finalSubject.getPublicCredentials()) {
-                    if (publicCredential instanceof DistinguishedPrincipalCredential) {
-                        DistinguishedPrincipalCredential distinguishedPrincipalCredential = (DistinguishedPrincipalCredential) publicCredential;
-                        principal = distinguishedPrincipalCredential.getPrincipal();
-                        break;
-                    }
-                }
+        Principal principal = null;
 
-                if (principal == null) {
-                    for (Principal publicCredential : finalSubject.getPrincipals()) {
-                        if (publicCredential instanceof DistinguishedPrincipalCredential) {
-                            DistinguishedPrincipalCredential distinguishedPrincipalCredential = (DistinguishedPrincipalCredential) publicCredential;
-                            principal = distinguishedPrincipalCredential.getPrincipal();
-                            break;
-                        }
-                    }
-                }
-
-                // for old auth module
-                if (principal == null) {
-                    Iterator<Principal> prinIter = finalSubject.getPrincipals().iterator();
-                    if (prinIter.hasNext()) {
-                        principal = prinIter.next();
-                    }
-                }
-
-                return principal;
+        for (Object publicCredential : subject.getPublicCredentials()) {
+            if (publicCredential instanceof DistinguishedPrincipalCredential) {
+                DistinguishedPrincipalCredential distinguishedPrincipalCredential = (DistinguishedPrincipalCredential) publicCredential;
+                principal = distinguishedPrincipalCredential.getPrincipal();
+                break;
             }
-        });
+        }
+
+        if (principal == null) {
+            for (Principal publicCredential : subject.getPrincipals()) {
+                if (publicCredential instanceof DistinguishedPrincipalCredential) {
+                    DistinguishedPrincipalCredential distinguishedPrincipalCredential = (DistinguishedPrincipalCredential) publicCredential;
+                    principal = distinguishedPrincipalCredential.getPrincipal();
+                    break;
+                }
+            }
+        }
+
+        // for old auth module
+        if (principal == null) {
+            Iterator<Principal> prinIter = subject.getPrincipals().iterator();
+            if (prinIter.hasNext()) {
+                principal = prinIter.next();
+            }
+        }
+
+        this.initiator = principal;
 
         postConstruct();
     }
@@ -174,14 +155,9 @@ public class SecurityContext extends AbstractSecurityContext {
             this.initiator = factory.getPrincipalInstance(userName, realm);
         }
 
-        final Subject finalSubject = nonNullSubject;
-        this.subject = AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-            @Override
-            public Subject run() {
-                finalSubject.getPrincipals().add(initiator);
-                return finalSubject;
-            }
-        });
+        nonNullSubject.getPrincipals().add(initiator);
+
+        this.subject = nonNullSubject;
     }
 
     public SecurityContext() {
@@ -192,14 +168,8 @@ public class SecurityContext extends AbstractSecurityContext {
         this.initiator = null;
         this.setServerGeneratedCredentials();
 
-        // read only is only done for guest logins.
-        AppservAccessController.doPrivileged(new PrivilegedAction<Void>() {
-            @Override
-            public Void run() {
-                subject.setReadOnly();
-                return null;
-            }
-        });
+        // Read only is only done for guest logins.
+        subject.setReadOnly();
     }
 
     /**
@@ -231,17 +201,18 @@ public class SecurityContext extends AbstractSecurityContext {
             if (defaultSecurityContext.initiator == null) {
                 String guestUser = null;
                 try {
-                    guestUser = AppservAccessController.doPrivileged(new PrivilegedExceptionAction<>() {
-                        @Override
-                        public String run() throws Exception {
-                            SecurityService securityService = SecurityServicesUtil.getInstance().getHabitat()
-                                    .getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
-                            if (securityService == null) {
-                                return null;
-                            }
-                            return securityService.getDefaultPrincipal();
-                        }
-                    });
+                    SecurityService securityService =
+                        SecurityServicesUtil.getInstance()
+                                            .getHabitat()
+                                            .getService(
+                                                SecurityService.class,
+                                                ServerEnvironment.DEFAULT_INSTANCE_NAME);
+
+                    if (securityService == null) {
+                        return null;
+                    }
+
+                    guestUser = securityService.getDefaultPrincipal();
                 } catch (Exception e) {
                     _logger.log(SEVERE, SecurityLoggerInfo.defaultUserLoginError, e);
                 } finally {
@@ -259,12 +230,7 @@ public class SecurityContext extends AbstractSecurityContext {
     private static SecurityContext generateDefaultSecurityContext() {
         synchronized (SecurityContext.class) {
             try {
-                return AppservAccessController.doPrivileged(new PrivilegedExceptionAction<>() {
-                    @Override
-                    public SecurityContext run() throws Exception {
-                        return new SecurityContext();
-                    }
-                });
+                return new SecurityContext();
             } catch (Exception e) {
                 _logger.log(SEVERE, SecurityLoggerInfo.defaultSecurityContextError, e);
             }
@@ -314,25 +280,7 @@ public class SecurityContext extends AbstractSecurityContext {
             return;
         }
 
-        boolean permitted = false;
-        try {
-            java.lang.SecurityManager sm = System.getSecurityManager();
-            if (sm != null) {
-                _logger.fine("permission check done to set SecurityContext");
-                sm.checkPermission(doAsPrivilegedPerm);
-            }
-            permitted = true;
-        } catch (java.lang.SecurityException se) {
-            _logger.log(SEVERE, SecurityLoggerInfo.securityContextPermissionError, se);
-        } catch (Throwable t) {
-            _logger.log(SEVERE, SecurityLoggerInfo.securityContextUnexpectedError, t);
-        }
-
-        if (permitted) {
-            currentSecurityContext.set(securityContext);
-        } else {
-            _logger.severe(SecurityLoggerInfo.securityContextNotChangedError);
-        }
+        currentSecurityContext.set(securityContext);
     }
 
     public static void setUnauthenticatedContext() {
@@ -439,20 +387,18 @@ public class SecurityContext extends AbstractSecurityContext {
     }
 
     // Moved from J2EEInstanceListener.java
-    private SecurityContext getSecurityContextForPrincipal(final Principal p) {
-        if (p == null) {
+    private SecurityContext getSecurityContextForPrincipal(final Principal principal) {
+        if (principal == null) {
             return null;
-        } else if (p instanceof SecurityContextProxy) {
-            return ((SecurityContextProxy) p).getSecurityContext();
-        } else {
-            return AccessController.doPrivileged(new PrivilegedAction<SecurityContext>() {
-                @Override
-                public SecurityContext run() {
-                    Subject s = new Subject();
-                    s.getPrincipals().add(p);
-                    return new SecurityContext(p.getName(), s);
-                }
-            });
         }
+
+        if (principal instanceof SecurityContextProxy securityContextProxy) {
+            return securityContextProxy.getSecurityContext();
+        }
+
+        Subject subject = new Subject();
+        subject.getPrincipals().add(principal);
+
+        return new SecurityContext(principal.getName(), subject);
     }
 }

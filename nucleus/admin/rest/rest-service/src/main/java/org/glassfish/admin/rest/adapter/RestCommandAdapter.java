@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.admin.rest.adapter;
 
 import jakarta.inject.Inject;
+
 import org.glassfish.admin.restconnector.Constants;
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.jvnet.hk2.annotations.Service;
@@ -31,10 +33,10 @@ import org.jvnet.hk2.annotations.Service;
 public class RestCommandAdapter extends RestAdapter {
 
     @Inject
-    protected JerseyContainerCommandService jerseyContainerService;
+    private JerseyContainerCommandService jerseyContainerService;
 
     public RestCommandAdapter() {
-        setRestResourceProvider(new RestCommandResourceProvider());
+        super(new RestCommandResourceProvider());
     }
 
     @Override

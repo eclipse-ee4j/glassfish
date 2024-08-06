@@ -552,6 +552,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-extras</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <optional>true</optional>
@@ -1165,9 +1170,20 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+        
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>soteria</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.exousia</groupId>
+            <artifactId>exousia</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.epicyro</groupId>
+            <artifactId>epicyro</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1175,6 +1191,7 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <optional>true</optional>
         </dependency>
+       
 
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
@@ -1431,21 +1448,6 @@
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>appclient.security</artifactId>
             <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.exousia</groupId>
-            <artifactId>exousia</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.epicyro</groupId>
-            <artifactId>epicyro</artifactId>
             <optional>true</optional>
         </dependency>
 

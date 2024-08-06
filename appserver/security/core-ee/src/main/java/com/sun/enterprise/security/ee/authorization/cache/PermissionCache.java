@@ -17,17 +17,14 @@
 
 package com.sun.enterprise.security.ee.authorization.cache;
 
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.ee.authorization.cache.CachedPermissionImpl.Epoch;
 import com.sun.logging.LogDomains;
 import jakarta.security.jacc.PolicyContext;
 import java.security.AllPermission;
-import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -48,7 +45,7 @@ public class PermissionCache extends Object {
 
     private Permissions cache;
     private final Permission[] protoPerms;
-    private Class[] classes;
+    private Class<?>[] classes;
     private final String name;
     private final String pcID;
     private final Integer factoryKey;
@@ -77,7 +74,7 @@ public class PermissionCache extends Object {
      * value matches the name parameter will be included in the cache. This value may be null, in which case permission name
      * does not factor into the permission caching.
      */
-    public PermissionCache(Integer key, String pcID, CodeSource codesource, Class clazz, String name) {
+    public PermissionCache(Integer key, String pcID, Class<?> clazz, String name) {
         this.factoryKey = key;
         this.cache = null;
         this.pcID = pcID;
@@ -100,8 +97,6 @@ public class PermissionCache extends Object {
      *
      * @param pcID - a string identifying the policy context and which must be set when getPermissions is called
      * (internally). this value may be null, in which case the permisions of the default policy context will be cached.
-     *
-     * @param codesource - the codesource argument to be used in the call to getPermissions. this value may be null.
      *
      * @param perms - an array of permission objects identifying the permission types that will be managed by the cache.
      * This value may be null. When this argument is not null, only permissions of the types passed in the array or that
@@ -306,25 +301,18 @@ public class PermissionCache extends Object {
     }
 
     private void setPolicyContextID(final String newID) throws PrivilegedActionException {
-        AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
-            @Override
-            public java.lang.Object run() throws Exception {
-                PolicyContext.setContextID(newID);
-                return null;
-            }
-        });
+        PolicyContext.setContextID(newID);
     }
 
-    // use implies to resolve unresolved permissions
-    private void resolvePermissions(PermissionCollection pc, Permission p) {
-        // each call to implies will resolve permissions of the
-        // argument permission type
+    // Use implies to resolve unresolved permissions
+    private void resolvePermissions(PermissionCollection permissionCollection, Permission permission) {
+        // Each call to implies will resolve permissions of the argument permission type
         if (this.protoPerms != null && this.protoPerms.length > 0) {
             for (Permission protoPerm : this.protoPerms) {
-                pc.implies(protoPerm);
+                permissionCollection.implies(protoPerm);
             }
         } else {
-            pc.implies(p);
+            permissionCollection.implies(permission);
         }
     }
 }

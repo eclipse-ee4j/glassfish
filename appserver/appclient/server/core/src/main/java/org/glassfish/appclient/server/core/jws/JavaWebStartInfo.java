@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +55,6 @@ import org.glassfish.appclient.server.core.jws.servedcontent.SimpleDynamicConten
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.StreamedAutoSignedStaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
@@ -179,8 +178,7 @@ public class JavaWebStartInfo implements ConfigListener {
 
     private final JavaWebStartState jwsState = new JavaWebStartState();
 
-    private final static String JAVA_WEB_START_ENABLED_PROPERTY_NAME =
-            DeploymentUtils.DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED;
+    private static final String JAVA_WEB_START_ENABLED_PROPERTY_NAME = "java-web-start-enabled";
 
     private AppClientDeployerHelper helper;
 

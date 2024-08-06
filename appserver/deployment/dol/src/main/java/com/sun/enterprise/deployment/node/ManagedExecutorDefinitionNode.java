@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,10 +27,13 @@ import org.w3c.dom.Node;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_MAX_ASYNC;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedExecutorDefinitionDescriptor> {
+
 
     public ManagedExecutorDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
@@ -47,6 +51,8 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
     protected Map<String, String> getDispatchTable() {
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
+        map.put(QUALIFIER, "addQualifier");
+        map.put(VIRTUAL, "setVirtual");
         map.put(MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
         map.put(MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
         map.put(MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
@@ -58,6 +64,10 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
     public Node writeDescriptor(Node parent, String nodeName, ManagedExecutorDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
+        for (String qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier);
+        }
+        appendTextChild(node, VIRTUAL, descriptor.isVirtual());
         appendTextChild(node, MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(descriptor.getMaximumPoolSize()));
         appendTextChild(node, MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(descriptor.getHungAfterSeconds()));
         appendTextChild(node, MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, descriptor.getContext());

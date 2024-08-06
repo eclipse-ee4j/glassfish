@@ -14,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.web;
 
 import com.sun.appserv.web.cache.CacheManager;
@@ -62,10 +61,16 @@ import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.web.LogFacade.CLASS_CAST_EXCEPTION;
 
+import java.io.IOException;
+import org.glassfish.hk2.api.DynamicConfigurationService;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.Populator;
+import org.glassfish.hk2.api.ServiceLocatorFactory;
+import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
+
 /**
  * Startup event listener for a <b>Context</b> that configures the properties of that Jsp Servlet from sun-web.xml
  */
-
 final class WebModuleListener implements LifecycleListener {
 
     /**
@@ -126,10 +131,9 @@ final class WebModuleListener implements LifecycleListener {
     }
 
     // ------------------------------------------------------- Private Methods
-
     /**
-     * Configure all JSP related aspects of the web module, including any relevant TLDs as well as the jsp config settings
-     * of the JspServlet (using the values from sun-web.xml's jsp-config).
+     * Configure all JSP related aspects of the web module, including any relevant TLDs as well as the jsp config
+     * settings of the JspServlet (using the values from sun-web.xml's jsp-config).
      */
     private void configureJsp(WebModule webModule) {
 
@@ -183,9 +187,12 @@ final class WebModuleListener implements LifecycleListener {
         servletContext.setAttribute("com.sun.appserv.tldlistener.map", tldListenerMap);
 
         ServiceLocator defaultServices = webContainer.getServerContext().getDefaultServices();
+        final String servicesName = webModule.getComponentId();
+        ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(servicesName, defaultServices);
+        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
 
         // set services for jsf injection
-        servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, defaultServices);
+        servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, webAppServices);
 
         SunWebAppImpl bean = webModule.getIasWebAppConfigBean();
 
@@ -263,6 +270,17 @@ final class WebModuleListener implements LifecycleListener {
             invocationManager.postInvoke(webComponentInvocation);
         }
 
+    }
+
+    private static void initializeServicesFromClassLoader(ServiceLocator serviceLocator, ClassLoader classLoader) {
+        DynamicConfigurationService dcs =
+                    serviceLocator.getService(DynamicConfigurationService.class);
+            Populator populator = dcs.getPopulator();
+        try {
+            populator.populate(new ClasspathDescriptorFileFinder(classLoader));
+        } catch (IOException | MultiException ex) {
+            _logger.log(Level.SEVERE, ex, ex::getMessage);
+        }
     }
 
     private boolean includeInitialized;

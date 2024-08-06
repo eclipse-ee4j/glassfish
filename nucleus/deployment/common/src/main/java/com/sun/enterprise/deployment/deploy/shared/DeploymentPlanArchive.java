@@ -184,12 +184,20 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
             String prefix = "META-INF/";
             ArchiveType warType = locator.getService(ArchiveType.class, "war");
             boolean isWar = DeploymentUtils.isArchiveOfType(getParentArchive(), warType, locator);
-            if (entryName.indexOf("sun-web.xml")!=-1 ||
+            if (isWar) {
+                prefix = "WEB-INF/classes/" + prefix;
+            }
+            if (entryName.equals("web.xml") ||
+                entryName.indexOf("sun-web.xml")!=-1 ||
                 entryName.indexOf("glassfish-web.xml")!=-1) {
                 prefix = "WEB-INF/";
             } else if (entryName.indexOf("glassfish-resources.xml")!=-1 && isWar) {
                 prefix = "WEB-INF/";
             } else if (entryName.indexOf("glassfish-services.xml")!=-1 && isWar) {
+                prefix = "WEB-INF/";
+            } else if (entryName.indexOf("faces-config.xml")!=-1 && isWar) {
+                prefix = "WEB-INF/";
+            } else if (entryName.indexOf("beans.xml")!=-1 && isWar) {
                 prefix = "WEB-INF/";
             }
             if (subArchiveUri != null && entryName.startsWith(subArchiveUri)) {

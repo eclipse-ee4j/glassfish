@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,8 @@
     <name>TCK: Install Jakarta Authentication TCK</name>
 
     <properties>
-        <tck.test.authentication.file>jakarta-authentication-tck-3.0.0.zip</tck.test.authentication.file>
-        <tck.test.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.authentication.file}</tck.test.authentication.url>
+        <tck.test.authentication.file>jakarta-authentication-tck-3.1.0.zip</tck.test.authentication.file>
+        <tck.test.authentication.url>https://download.eclipse.org/jakartaee/authentication/3.1/${tck.test.authentication.file}</tck.test.authentication.url>
     </properties>
 
     <build>

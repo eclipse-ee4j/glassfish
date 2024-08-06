@@ -127,6 +127,8 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorContext;
 import jakarta.validation.ValidatorFactory;
+import org.glassfish.internal.api.events.CommandInvokedEvent;
+import org.glassfish.internal.api.events.InvokeEventService;
 
 /**
  * Encapsulates the logic needed to execute a server-side command (for example,
@@ -176,6 +178,9 @@ public class CommandRunnerImpl implements CommandRunner {
 
     @Inject
     private CommandSecurityChecker commandSecurityChecker;
+
+    @Inject
+    private InvokeEventService eventService;
 
     /**
      * Returns an initialized ActionReport instance for the passed type or
@@ -1129,6 +1134,8 @@ public class CommandRunnerImpl implements CommandRunner {
     private void doCommand(ExecutionContext inv, AdminCommand command,
             final Subject subject, final Job job) {
 
+        publishCommandInvokedEvent(inv, subject);
+
         boolean fromCheckpoint = job != null &&
                 (job.getState() == AdminCommandState.State.REVERTING ||
                 job.getState() == AdminCommandState.State.FAILED_RETRYABLE);
@@ -1630,6 +1637,15 @@ public class CommandRunnerImpl implements CommandRunner {
     public void executeFromCheckpoint(JobManager.Checkpoint checkpoint, boolean revert, AdminCommandEventBroker eventBroker) {
         ExecutionContext ec = new ExecutionContext(null, null, null, null,false);
         ec.executeFromCheckpoint(checkpoint, revert, eventBroker);
+    }
+
+    private void publishCommandInvokedEvent(ExecutionContext invocation, Subject subject) {
+        final CommandInvokedEvent event = new CommandInvokedEvent(
+                invocation.name(),
+                invocation.parameters(),
+                subject);
+        eventService.getCommandInvokedTopic()
+                .publish(event);
     }
 
     /*

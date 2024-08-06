@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,22 @@
 
 package org.glassfish.admin.rest.provider;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.sun.enterprise.util.StringUtils;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.Provider;
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusEventComplete;
 import org.glassfish.api.admin.progress.ProgressStatusEventCreateChild;
@@ -57,7 +61,7 @@ public class ProgressStatusEventJsonProvider extends BaseProvider<ProgressStatus
     @Override
     public void writeTo(ProgressStatusEvent proxy, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        JsonGenerator out = factory.createJsonGenerator(entityStream, JsonEncoding.UTF8);
+        JsonGenerator out = factory.createGenerator(entityStream, JsonEncoding.UTF8);
         out.writeStartObject();
         writePSEvent(proxy, out);
         out.writeEndObject();
@@ -78,8 +82,9 @@ public class ProgressStatusEventJsonProvider extends BaseProvider<ProgressStatus
             writePSEventComplete((ProgressStatusEventComplete) event, out);
         } else if (event instanceof ProgressStatusEventCreateChild) {
             writePSEventCreateChild((ProgressStatusEventCreateChild) event, out);
-        } else
+        } else {
             out.writeEndObject();
+        }
     }
 
     private void writePSEventSet(ProgressStatusEventSet event, JsonGenerator out) throws IOException {

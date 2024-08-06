@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +27,7 @@ import org.w3c.dom.Node;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_CLEARED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_PROPAGATED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_UNCHANGED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
@@ -47,6 +49,7 @@ public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<Conte
     protected Map<String, String> getDispatchTable() {
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
+        map.put(QUALIFIER, "addQualifier");
         map.put(CONTEXT_SERVICE_PROPAGATED, "addPropagated");
         map.put(CONTEXT_SERVICE_CLEARED, "addCleared");
         map.put(CONTEXT_SERVICE_UNCHANGED, "addUnchanged");
@@ -58,6 +61,9 @@ public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<Conte
     public Node writeDescriptor(Node parent, String nodeName, ContextServiceDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
+        for (String qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier);
+        }
         for (String cleared : descriptor.getCleared()) {
             appendTextChild(node, CONTEXT_SERVICE_CLEARED, cleared);
         }

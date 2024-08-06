@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package com.sun.ejb.containers;
 
 import com.sun.ejb.Container;
 import com.sun.ejb.ContainerFactory;
-import com.sun.enterprise.security.SecurityManager;
 import jakarta.inject.Singleton;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -26,17 +26,13 @@ import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "StatelessContainerFactory")
 @Singleton
-public class StatelessContainerFactory extends BaseContainerFactory implements
-        ContainerFactory {
+public class StatelessContainerFactory extends BaseContainerFactory implements ContainerFactory {
+
     @Override
-    public Container createContainer(EjbDescriptor ejbDescriptor,
-                                     ClassLoader loader,
-                                     DeploymentContext deployContext)
-            throws Exception {
-        SecurityManager sm = getSecurityManager(ejbDescriptor);
-        StatelessSessionContainer slsbContainer = new StatelessSessionContainer(ejbDescriptor,
-                loader, sm);
+    public Container createContainer(EjbDescriptor ejbDescriptor, ClassLoader loader, DeploymentContext deployContext) throws Exception {
+        StatelessSessionContainer slsbContainer = new StatelessSessionContainer(ejbDescriptor, loader, getSecurityManager(ejbDescriptor));
         slsbContainer.initializeHome();
+
         return slsbContainer;
     }
 }

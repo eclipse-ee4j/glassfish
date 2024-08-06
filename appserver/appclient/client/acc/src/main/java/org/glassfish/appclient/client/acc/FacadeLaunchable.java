@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,14 +25,11 @@ import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
 import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.logging.LogDomains;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +38,7 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.appclient.common.ACCAppClientArchivist;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -267,14 +262,7 @@ public class FacadeLaunchable implements Launchable {
              */
             archivist.setAnnotationProcessingRequested( ! isJWSLaunch);
 
-            final ACCClassLoader tempLoader = AccessController.doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-
-                @Override
-                public ACCClassLoader run() {
-                    return new ACCClassLoader(loader.getURLs(), loader.getParent());
-                }
-
-            });
+            final ACCClassLoader tempLoader = new ACCClassLoader(loader.getURLs(), loader.getParent());
 
 
             archivist.setClassLoader(tempLoader);

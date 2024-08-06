@@ -187,6 +187,8 @@ spec:
         container('maven') {
           dumpSysInfo()
           sh '''
+            # validate all modules (catching ie. wrong versions)
+            mvn validate -Ptck,staging -T4C
             # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
             mvn -B -e clean install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles

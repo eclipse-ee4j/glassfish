@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,8 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import jakarta.ws.rs.core.Context;
+
+import jakarta.inject.Inject;
 
 import org.glassfish.admin.rest.adapter.LocatorBridge;
 import org.jvnet.hk2.config.Dom;
@@ -36,10 +38,9 @@ public class GlassFishDomainResource extends TemplateRestResource {
         //otherwise we cannot used jersey injected values in a constructor (which does not have a param)
     }
 
-    //called when jersey is injecting the habitat...
-    @Context
-    public void setBaseServiceLocator(LocatorBridge hab) {
-        Dom dom1 = Dom.unwrap(hab.getRemoteLocator().<Domain>getService(Domain.class));
+    @Inject
+    public void setBaseServiceLocator(LocatorBridge locatorBridge) {
+        Dom dom1 = Dom.unwrap(locatorBridge.getRemoteLocator().<Domain>getService(Domain.class));
         childModel = dom1.document.getRoot().model;
         entity = dom1.document.getRoot();
     }

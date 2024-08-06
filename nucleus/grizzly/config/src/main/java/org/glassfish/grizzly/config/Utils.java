@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,18 @@
 
 package org.glassfish.grizzly.config;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.management.ManagementFactory;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
+import javax.xml.stream.XMLInputFactory;
+
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
@@ -27,25 +40,13 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.DomDocument;
 
-import javax.xml.stream.XMLInputFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.management.ManagementFactory;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.grizzly.Grizzly;
-
 /**
  * Created Dec 18, 2008
  *
  * @author <a href="mailto:justin.lee@sun.com">Justin Lee</a>
  */
 public class Utils {
-    private static final Logger LOGGER = Grizzly.logger(Utils.class);
+    private static final Logger LOG = System.getLogger(Utils.class.getName());
 
     public static ServiceLocator getServiceLocator(final String fileURL) {
         URL url = Utils.class.getClassLoader().getResource(fileURL);
@@ -56,61 +57,58 @@ public class Utils {
                 throw new GrizzlyConfigException(e.getMessage());
             }
         }
-        ServiceLocator habitat;
+        ServiceLocator locator;
         try {
-            habitat = getServiceLocator(url.openStream(), url.toString());
+            locator = getServiceLocator(url.openStream(), url.toString());
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
-        return habitat;
+        return locator;
     }
 
     public static ServiceLocator getServiceLocator(final InputStream inputStream, String name) {
         try {
-            final ServiceLocator habitat = getNewServiceLocator(name);
-            final ConfigParser parser = new ConfigParser(habitat);
+            final ServiceLocator locator = getNewServiceLocator(name);
+            final ConfigParser parser = new ConfigParser(locator);
             XMLInputFactory xif = XMLInputFactory.class.getClassLoader() == null
                     ? XMLInputFactory.newFactory()
                     : XMLInputFactory.newFactory(XMLInputFactory.class.getName(),
                     XMLInputFactory.class.getClassLoader());
             final DomDocument document = parser.parse(xif.createXMLStreamReader(inputStream));
 
-            ServiceLocatorUtilities.addOneConstant(habitat, document);
+            ServiceLocatorUtilities.addOneConstant(locator, document);
 
-            return habitat;
+            return locator;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new GrizzlyConfigException(e.getMessage(), e);
         }
     }
 
     public static ServiceLocator getNewServiceLocator(String name) {
-        ServiceLocator habitat = null;
+        ServiceLocator locator = null;
 
-        if (ServiceLocatorFactory.getInstance().find(name) == null) {
-            ServiceLocator serviceLocator = ServiceLocatorFactory.getInstance()
-                    .create(name);
+        ServiceLocatorFactory locatorFactory = ServiceLocatorFactory.getInstance();
+        if (locatorFactory.find(name) == null) {
+            ServiceLocator serviceLocator = locatorFactory.create(name);
 
             DynamicConfigurationService dcs = serviceLocator.getService(DynamicConfigurationService.class);
             DynamicConfiguration config = dcs.createDynamicConfiguration();
 
             config.commit();
 
-            habitat = ServiceLocatorFactory.getInstance().create(name);
+            locator = locatorFactory.create(name);
 
             try {
                 HK2Populator.populate(serviceLocator,
                         new ClasspathDescriptorFileFinder(Utils.class.getClassLoader()), null);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.log(Level.WARNING, "HK2 Populator failed.", e);
             }
         }
 
-        return (habitat != null) ? habitat : ServiceLocatorFactory.getInstance().create(name);
+        return locator == null ? locatorFactory.create(name) : locator;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public static String composeThreadPoolName(final NetworkListener networkListener) {
         return networkListener.getThreadPool() + '-' + networkListener.getPort();
     }
@@ -118,70 +116,49 @@ public class Utils {
     /**
      * Load or create an Object with the specific service name and class name.
      *
-     * @param habitat the HK2 {@link ServiceLocator}
+     * @param locator the HK2 {@link ServiceLocator}
      * @param clazz the class as mapped within the {@link ServiceLocator}
      * @param name the service name
      * @param realClassName the class name of the service
      * @return a service matching based on name and realClassName input
      *  arguments.
      */
-    @SuppressWarnings({"unchecked"})
-    public static <E> E newInstance(ServiceLocator habitat, Class<E> clazz,
+    public static <E> E newInstance(ServiceLocator locator, Class<E> clazz,
             final String name, final String realClassName) {
-        return newInstance(habitat, clazz, name, realClassName, null, null);
+        return newInstance(locator, clazz, name, realClassName, null, null);
     }
 
+
     /**
-         * Load or create an Object with the specific service name and class name.
-         *
-         * @param habitat the HK2 {@link ServiceLocator}
-         * @param clazz the class as mapped within the {@link ServiceLocator}
-         * @param name the service name
-         * @param realClassName the class name of the service
-         * @return a service matching based on name and realClassName input
-         *  arguments.
-         */
-        @SuppressWarnings({"unchecked"})
-        public static <E> E newInstance(ServiceLocator habitat,
-                                        Class<E> clazz,
-                                        final String name,
-                                        final String realClassName,
-                                        Class<?>[] argTypes,
-                                        Object[] args) {
-            boolean isInitialized = false;
-            E instance = null;
-            if (habitat != null) {
-                instance = habitat.getService(clazz, name);
-            }
-            if (instance == null) {
-                try {
-                    if (argTypes == null || argTypes.length == 0) {
-                        instance = (E) newInstance(realClassName);
-                    } else {
-                        instance = (E) newInstance(realClassName, argTypes, args);
-                    }
-                    isInitialized = true;
-                } catch (Exception ignored) {
-                    if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.log(Level.FINE, ignored.toString(), ignored);
-                    }
-                }
-            } else {
-                isInitialized = true;
-            }
-
-            if (!isInitialized) {
-                LOGGER.log(Level.WARNING, "Instance could not be initialized. "
-                        + "Class={0}, name={1}, realClassName={2}",
-                        new Object[]{clazz, name, realClassName});
-                return null;
-            }
-
+     * Load or create an Object with the specific service name and class name.
+     *
+     * @param locator the HK2 {@link ServiceLocator}
+     * @param clazz the class as mapped within the {@link ServiceLocator}
+     * @param name the service name
+     * @param realClassName the class name of the service
+     * @return a service matching based on name and realClassName input
+     *         arguments.
+     */
+    public static <E> E newInstance(ServiceLocator locator, Class<E> clazz, final String name,
+        final String realClassName, Class<?>[] argTypes, Object[] args) {
+        E instance = locator == null ? null : locator.getService(clazz, name);
+        if (instance != null) {
             return instance;
         }
+        try {
+            if (argTypes == null || argTypes.length == 0) {
+                return (E) newInstance(realClassName);
+            }
+            return (E) newInstance(realClassName, argTypes, args);
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, () -> "Instance could not be initialized. Class=" + clazz.getName() + ", name="
+                + name + ", realClassName=" + realClassName, e);
+            return null;
+        }
+    }
 
     public static Object newInstance(String classname) throws Exception {
-        return loadClass(classname).newInstance();
+        return loadClass(classname).getDeclaredConstructor().newInstance();
     }
 
     public static Object newInstance(String classname,
@@ -200,6 +177,7 @@ public class Utils {
             try {
                 clazz = cl.loadClass(classname);
             } catch (Exception ignored) {
+                LOG.log(Level.DEBUG, "Loading class " + classname + " failed", ignored);
             }
         }
         if (clazz == null) {

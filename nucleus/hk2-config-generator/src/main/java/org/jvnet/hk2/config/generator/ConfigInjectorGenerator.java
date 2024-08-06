@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,8 +65,8 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.SimpleElementVisitor6;
-import javax.lang.model.util.SimpleTypeVisitor6;
+import javax.lang.model.util.SimpleElementVisitor9;
+import javax.lang.model.util.SimpleTypeVisitor9;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
@@ -93,7 +93,6 @@ import static javax.tools.StandardLocation.SOURCE_PATH;
  *
  * @author Kohsuke Kawaguchi
  */
-
 public class ConfigInjectorGenerator extends AbstractProcessor {
 
     private JCodeModel cm;
@@ -145,7 +144,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
     }
 
 
-    private class GeneratorVisitor extends SimpleElementVisitor6<Void, Void> {
+    private class GeneratorVisitor extends SimpleElementVisitor9<Void, Void> {
 
         @Override
         public Void visitType(TypeElement element, Void aVoid) {
@@ -155,10 +154,10 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                  */
                 case INTERFACE: {
                     try {
-                        if(!isSubType(element,configBeanProxy)) {
-                            printError(element.getQualifiedName() + " has @Configured but doesn't extend ConfigBeanProxy", element);
-                        } else {
+                        if (isSubType(element,configBeanProxy)) {
                             new ClassGenerator(element,true).generate();
+                        } else {
+                            printError(element.getQualifiedName() + " has @Configured but doesn't extend ConfigBeanProxy", element);
                         }
                     } catch (JClassAlreadyExistsException ex) {
                         printError(ex.toString(), element);
@@ -225,7 +224,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
         /**
          * Key property that has {@link Element#key()} or {@link Attribute#key()}
          */
-        private Property key=null;
+        private Property key;
 
         /**
          * If true, generate a ConfigInjector that extends from {@link NoopConfigInjector}.
@@ -239,7 +238,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
         private final boolean generateNoopConfigInjector;
 
 
-        public ClassGenerator(TypeElement clz, boolean generateNoopConfigInjector) throws JClassAlreadyExistsException {
+        ClassGenerator(TypeElement clz, boolean generateNoopConfigInjector) throws JClassAlreadyExistsException {
             this.clz = clz;
             this.generateNoopConfigInjector = generateNoopConfigInjector;
             Configured c = clz.getAnnotation(Configured.class);
@@ -366,22 +365,23 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
             Attribute a = p.getAnnotation(Attribute.class);
             Element e = p.getAnnotation(Element.class);
 
-            if(a!=null) {
-                new AttributeMethodGenerator(p,a).generate();
-                if(e!=null) {
-                    printError("Cannot have both @Element and @Attribute at the same time", p.decl());
+            if (a == null) {
+                if (e != null) {
+                    new ElementMethodGenerator(p, e).generate();
                 }
             } else {
-                if(e!=null) {
-                    new ElementMethodGenerator(p,e).generate();
+                new AttributeMethodGenerator(p, a).generate();
+                if (e != null) {
+                    printError("Cannot have both @Element and @Attribute at the same time", p.decl());
                 }
             }
 
             // Updates #key with error check.
-            if(p.isKey()) {
-                if(key!=null) {
+            if (p.isKey()) {
+                if (key != null) {
                     printError("Multiple key properties", p.decl());
-                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Another one is at here", key.decl());
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Another one is at here",
+                        key.decl());
                 }
                 key = p;
             }
@@ -602,7 +602,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                 private final JType componentT;
                 private final ArrayType at;
 
-                public ArrayPacker(ArrayType t) {
+                ArrayPacker(ArrayType t) {
                     this.at = t;
                     this.componentT = toJtype.visit(itemType(), null);
                     this.arrayT = componentT.array();
@@ -639,9 +639,10 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                 private final JClass collectionType,itemType;
                 private final TypeMirror itemT;
 
-                public ListPacker(TypeMirror collectionType, TypeMirror itemType) {
-                    this.collectionType = toJtype.visit(collectionType, null).boxify();
-                    this.itemType       = toJtype.visit(itemType, null).boxify();
+                ListPacker(TypeMirror collectionType, TypeMirror itemType) {
+                    this.collectionType = toJtype.visit(collectionType).boxify();
+                    final JType javaItemType = toJtype.visit(itemType);
+                    this.itemType = javaItemType == null ? null : javaItemType.boxify();
                     this.itemT = itemType;
                 }
 
@@ -684,7 +685,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                 private JVar $map;
                 private final TypeMirror itemT;
 
-                public MapPacker(TypeMirror itemType) {
+                MapPacker(TypeMirror itemType) {
                     this.itemT = itemType;
                 }
 
@@ -816,14 +817,12 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
 
                 @Override
                 void addMetadata(String key,TypeMirror itemType) {
-                   String typeName;
+                    String typeName;
                     if (itemType.getKind() == TypeKind.DECLARED) {
-                        typeName=((DeclaredType)itemType).asElement().toString();
-                   } else {
-                        typeName=itemType.toString();
-                   }
-
-
+                        typeName = ((DeclaredType) itemType).asElement().toString();
+                    } else {
+                        typeName = itemType.toString();
+                    }
                     addToMetadata(metadata, key,makeCollectionIfNecessary(typeName));
                 }
             }
@@ -968,19 +967,17 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
             @Override
             protected JExpression getXmlValue() {
                 String name;
-                if(conv.isLeaf()) {
-                    if(isVariableExpansion()) {
+                if (conv.isLeaf()) {
+                    if (isVariableExpansion()) {
                         name = "leafElement";
                     } else {
                         name = "rawLeafElement";
                     }
                 } else {
-                    assert isVariableExpansion();   // this error is checked earlier.
-                    if(xmlName.equals("*")) {
+                    if (xmlName.equals("*")) {
                         return invokeDom("nodeByTypeElement").arg(toJtype.visit(itemType, null).boxify().dotclass());
-                    } else {
-                        name = "nodeElement";
                     }
+                    name = "nodeElement";
                 }
 
                 return invokeDom(name).arg(xmlName);
@@ -1036,21 +1033,34 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
     /**
      * Takes {@link TypeMirror} and returns the corresponding {@link JType}.
      */
-    final SimpleTypeVisitor6<JType,Void> toJtype = new SimpleTypeVisitor6<>() {
+    final SimpleTypeVisitor9<JType, Void> toJtype = new SimpleTypeVisitor9<>() {
 
         @Override
         public JType visitPrimitive(PrimitiveType type, Void param) {
             switch (type.getKind()) {
-                case BOOLEAN:   return cm.BOOLEAN;
-                case BYTE:      return cm.BYTE;
-                case CHAR:      return cm.CHAR;
-                case DOUBLE:    return cm.DOUBLE;
-                case FLOAT:     return cm.FLOAT;
-                case INT:       return cm.INT;
-                case LONG:      return cm.LONG;
-                case SHORT:     return cm.SHORT;
+                case BOOLEAN:
+                    return cm.BOOLEAN;
+                case BYTE:
+                    return cm.BYTE;
+                case CHAR:
+                    return cm.CHAR;
+                case DOUBLE:
+                    return cm.DOUBLE;
+                case FLOAT:
+                    return cm.FLOAT;
+                case INT:
+                    return cm.INT;
+                case LONG:
+                    return cm.LONG;
+                case SHORT:
+                    return cm.SHORT;
+                case NULL:
+                    return cm.NULL;
+                case VOID:
+                    return cm.VOID;
+                default:
+                    throw new IllegalArgumentException("Unsupported type: " + type);
             }
-            throw new AssertionError();
         }
 
         @Override
@@ -1060,13 +1070,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
 
         @Override
         public JType visitDeclared(DeclaredType type, Void param) {
-            // TODO: generics support
             return cm.ref(((TypeElement) type.asElement()).getQualifiedName().toString());
-        }
-
-        @Override
-        protected JType defaultAction(TypeMirror e, Void aVoid) {
-            throw new UnsupportedOperationException();
         }
 
         @Override

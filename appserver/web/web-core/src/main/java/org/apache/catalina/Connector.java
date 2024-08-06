@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -335,4 +336,12 @@ public interface Connector {
      * during authentication.
      */
     int getMaxSavePostSize();
+
+    /**
+     * Return the proxy scheme for this Connector
+     * @return The scheme or null if not set
+     */
+    default String getProxyScheme() {
+        return null;
+    }
 }

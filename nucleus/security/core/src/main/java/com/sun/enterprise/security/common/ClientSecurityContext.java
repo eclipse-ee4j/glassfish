@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,57 +56,9 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      * @param The Credentials of the user.
      */
     public ClientSecurityContext(String userName, Subject s) {
-
         this.initiator = new UserNameAndPassword(userName);
         this.subject = s;
     }
-
-    /**
-     * Initialize the SecurityContext & handle the unauthenticated principal case
-     *
-     * public static ClientSecurityContext init() { ClientSecurityContext sc = getCurrent(); if (sc == null) { // there is no current
-     * security context // create a default one if sc = generateDefaultSecurityContext(); } return sc; }
-     */
-
-    /*
-    private static ClientSecurityContext generateDefaultSecurityContext() {
-        final String PRINCIPAL_NAME = "auth.default.principal.name";
-        final String PRINCIPAL_PASS = "auth.default.principal.password";
-
-
-        //ServerConfiguration config = ServerConfiguration.getConfiguration();
-        //String username = config.getProperty(PRINCIPAL_NAME, "guest");
-        //String password = config.getProperty(PRINCIPAL_PASS, "guest123");
-
-        //Temporary hardcoding to make V3 code for WebProfile compile
-        String username ="guest";
-        char[] password = new char[]{'g','e','t','s','t','1','2','3'};
-        synchronized (ClientSecurityContext.class) {
-            // login & all that stuff..
-            try {
-                final Subject subject = new Subject();
-                final PasswordCredential pc = new PasswordCredential(username,
-                        password, "default");
-                AppservAccessController.doPrivileged(new PrivilegedAction() {
-                    public java.lang.Object run() {
-                        subject.getPrivateCredentials().add(pc);
-                        return null;
-                    }
-                });
-                // we do not need to generate any credential as authorization
-                // decisions are not being done on the appclient side.
-                ClientSecurityContext defaultCSC =
-                    new ClientSecurityContext(username, subject);
-                setCurrent(defaultCSC);
-                return defaultCSC;
-            } catch(Exception e) {
-                _logger.log(Level.SEVERE,
-                            "java_security.gen_security_context", e);
-                return null;
-            }
-        }
-    }
-    */
 
     /**
      * This method gets the SecurityContext stored here. If using a per-thread authentication model, it gets the context from Thread
@@ -117,9 +69,9 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     public static ClientSecurityContext getCurrent() {
         if (isPerThreadAuth) {
             return (ClientSecurityContext) localCsc.get();
-        } else {
-            return sharedCsc;
         }
+
+        return sharedCsc;
     }
 
     /**
@@ -157,17 +109,20 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     }
 
     //added for CR:6620388
-    public static boolean hasEmtpyCredentials(ClientSecurityContext sc) {
-        if (sc == null) {
+    public static boolean hasEmtpyCredentials(ClientSecurityContext clientSecurityContext) {
+        if (clientSecurityContext == null) {
             return true;
         }
-        Subject s = sc.getSubject();
-        if (s == null) {
+
+        Subject subject = clientSecurityContext.getSubject();
+        if (subject == null) {
             return true;
         }
-        if (s.getPrincipals().isEmpty()) {
+
+        if (subject.getPrincipals().isEmpty()) {
             return true;
         }
+
         return false;
     }
 

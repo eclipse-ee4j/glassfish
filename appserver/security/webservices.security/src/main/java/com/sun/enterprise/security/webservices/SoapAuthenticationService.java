@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,6 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.appclient.ConfigXMLParser;
 import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 import com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy;
@@ -73,9 +72,6 @@ import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.ws.WebServiceException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -165,9 +161,6 @@ public class SoapAuthenticationService extends BaseAuthenticationService {
             if (clientSecurityContext != null) {
                 subject = clientSecurityContext.getSubject();
             }
-            if (subject == null) {
-                subject = Subject.getSubject(AccessController.getContext());
-            }
         } else {
             SecurityContext securityContext = SecurityContext.getCurrent();
             if (securityContext != null && !securityContext.didServerGenerateCredentials()) {
@@ -232,15 +225,12 @@ public class SoapAuthenticationService extends BaseAuthenticationService {
                     final String ejbImplClassName = ejbDescriptor.getEjbImplClassName();
                     if (ejbImplClassName != null) {
                         try {
-                            targetMethod = (Method) AppservAccessController.doPrivileged(new PrivilegedExceptionAction<>() {
-                                @Override
-                                public Object run() throws Exception {
-                                    return Class.forName(ejbImplClassName, true, Thread.currentThread().getContextClassLoader())
+                            targetMethod = Class.forName(ejbImplClassName, true, Thread.currentThread()
+                                                .getContextClassLoader())
                                                 .getMethod("invoke", new Class[] { Object.class });
-                                }
-                            });
-                        } catch (PrivilegedActionException pae) {
-                            throw new RuntimeException(pae.getException());
+
+                        } catch (ReflectiveOperationException pae) {
+                            throw new RuntimeException(pae);
                         }
                     }
                 }

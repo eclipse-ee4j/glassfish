@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,10 @@
 
 package org.glassfish.weld;
 
-import static java.lang.Thread.currentThread;
-
-import java.util.Hashtable;
+import java.lang.System.Logger;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.javaee.full.deployment.EarLibClassLoader;
@@ -29,21 +29,30 @@ import org.jboss.weld.bootstrap.api.Singleton;
 import org.jboss.weld.bootstrap.api.SingletonProvider;
 import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.Thread.currentThread;
+
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications.
- *
  * <p>
  * It is different from {@link org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider}.
- *
  * <p>
- * We can't use TCCLSingletonProvider because thread's context class loader can be different for different modules of a
- * single application (ear). To support Application Scoped beans, Weld needs to be bootstrapped per application as
- * opposed to per module. We rely on the fact that all these module class loaders have a common parent which is per
- * application. We use that parent ApplicationClassLoader to identify the singleton scope.
+ * We can't use TCCLSingletonProvider because thread's context class loader can be different for
+ * different modules of a single application (ear).
+ * To support Application Scoped beans, Weld needs to be bootstrapped per application as
+ * opposed to per module. We rely on the fact that all these module class loaders have a common
+ * parent which is per application. We use that parent ApplicationClassLoader to identify the
+ * singleton scope.
+ * <p>
+ * This class assumes a certain delegation hierarchy of application class loaders. So, deployment
+ * team should be aware of this class and change it if application class loader hierarchy changes.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class ACLSingletonProvider extends SingletonProvider {
+
+    private static final Logger LOG = System.getLogger(ACLSingletonProvider.class.getName());
 
     /**
      * Calls {@link SingletonProvider#initialize(SingletonProvider)} with
@@ -58,19 +67,10 @@ public class ACLSingletonProvider extends SingletonProvider {
         } catch (ClassNotFoundException ignore) {
             earSupport = false;
         }
-        SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
+        SingletonProvider provider = earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider();
+        SingletonProvider.initialize(provider);
+        LOG.log(DEBUG, () -> "SingletonProvider initialized: " + provider);
     }
-
-
-    /*
-     * See https://glassfish.dev.java.net/issues/show_bug.cgi?id=10192
-     * for more details about this class.
-     *
-     * IMPLEMENTATION NOTE:
-     * This class assumes a certain delegation hierarchy of application
-     * class loaders. So, deployment team should be aware of this class
-     * and change it if application class loader hierarchy changes.
-     */
 
     @Override
     public <T> ACLSingleton<T> create(Class<? extends T> expectedType) {
@@ -78,13 +78,13 @@ public class ACLSingletonProvider extends SingletonProvider {
     }
 
     private static class ACLSingleton<T> implements Singleton<T> {
+        private static final Logger LOG = System.getLogger(ACLSingleton.class.getName());
 
-        // use Hashtable for concurrent access
-        private final Map<ClassLoader, T> store = new Hashtable<>();
+        private final Map<ClassLoader, T> store = new ConcurrentHashMap<>();
         private final ClassLoader commonClassLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
 
-        // Can't assume bootstrap loader as null. That's more of a convention.
-        // I think either android or IBM JVM does not use null for bootstap loader
+        // Can't assume bootstrap loader as null. That's more of a convention, but some JVMs do not
+        // use null for bootstap loader
         private static ClassLoader bootstrapCL;
 
         static {
@@ -98,8 +98,25 @@ public class ACLSingletonProvider extends SingletonProvider {
             if (instance == null) {
                 throw new IllegalStateException("Singleton not set for " + appClassLoader);
             }
-
+            LOG.log(DEBUG, () -> "get(" + id + ") - found " + instance + ";  we use ear/war classloader instead of id.");
             return instance;
+        }
+
+        @Override
+        public boolean isSet(String id) {
+            return store.containsKey(getClassLoader());
+        }
+
+        @Override
+        public void set(String id, T object) {
+            LOG.log(DEBUG, () -> "set(id=" + id + ", object=" + object + "); we use ear/war classloader instead of id.");
+            store.put(getClassLoader(), object);
+        }
+
+        @Override
+        public void clear(String id) {
+            LOG.log(DEBUG, () -> "clear(id=" + id + "); we use ear/war classloader instead of id.");
+            store.remove(getClassLoader());
         }
 
         /**
@@ -153,22 +170,8 @@ public class ACLSingletonProvider extends SingletonProvider {
         }
 
         private ClassLoader getParent(ClassLoader classLoader) {
+            LOG.log(TRACE, () -> "getParent(classLoader=" + classLoader + ")");
             return classLoader.getParent();
-        }
-
-        @Override
-        public boolean isSet(String id) {
-            return store.containsKey(getClassLoader());
-        }
-
-        @Override
-        public void set(String id, T object) {
-            store.put(getClassLoader(), object);
-        }
-
-        @Override
-        public void clear(String id) {
-            store.remove(getClassLoader());
         }
     }
 }

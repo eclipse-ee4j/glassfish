@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,38 +14,6 @@
     https://www.gnu.org/software/classpath/license.html.
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-
--->
-
-<!--
-
-Usage:
-
-Run full TCK:
-
-mvn clean clean
-
-
-Run all tests in test class
-
-mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClient.java"
-
-
-Run single test:
-
-mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClient.java#methodExpressionMatchingAmbiguousTest"
-
-
-Run single test via standalone runner: (note, remove _from_standalone marker if pressent)
-
-mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClient.java#methodExpressionMatchingAmbiguousTest" -Dtck.standalone
-
-
-Run single test via standalone runner and suspend on port 9009:
-
-mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClient.java#methodExpressionMatchingAmbiguousTest" -Dtck.standalone -Dmaven.tck.debug
-
-
 
 -->
 
@@ -63,222 +31,57 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
 
     <name>TCK: Expression Language</name>
 
+    <description>Aggregates dependencies and runs the Expression Language TCK using jars from GlassFish</description>
+
     <properties>
-        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
-        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-
-        <tck.home>${project.build.directory}/expression-language-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
-
-        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
-        <glassfish.modules>${glassfish.home}/glassfish/modules</glassfish.modules>
-
+        <!-- 
+            GlassFish properties 
+            
+            Note M6 still has some failures, future M7 passes all
+        -->
+         
         <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-
-        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+        <glassfish.root>${project.build.directory}</glassfish.root>
+        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.distributions</groupId>
-            <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
-            <type>zip</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-expression-language-tck</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
 
+        <!-- Jakarta Expression Language TCK -->
         <dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>javatest</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>tsharness</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>expression-language-tck</artifactId>
+            <version>6.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>download-ant</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>unpack-glassfish</id>
-                        <phase>pre-integration-test</phase>
+                        <id>unpack</id>
                         <goals>
-                            <goal>unpack-dependencies</goal>
+                            <goal>unpack</goal>
                         </goals>
-                        <configuration>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                            <includeArtifactIds>glassfish</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-tck</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>jakarta-expression-language-tck</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>${ant.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant-contrib</groupId>
-                        <artifactId>ant-contrib</artifactId>
-                        <version>1.0b3</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>ant</groupId>
-                                <artifactId>ant</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                </configuration>
-                <executions>
-
-                    <execution>
-                        <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-
-                                <macrodef name="tck-setting">
-                                    <attribute name="key" /> <attribute name="value" />
-                                    <sequential>
-                                      <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                        match="@{key}=.*" replace="@{key}=@{value}" />
-                                    </sequential>
-                                </macrodef>
-
-
-                                <!-- Change configuration -->
-
-                                <tck-setting key="el.classes" value="${tck.home}/lib/javatest.jar:${glassfish.modules}/jakarta.el.jar:${glassfish.modules}/jakarta.el-api.jar:${glassfish.modules}/expressly.jar"/>
-
-                                <tck-setting key="report.dir" value="${tck.home}/expression-languagereport/expression-language"/>
-                                <tck-setting key="work.dir" value="${tck.home}/expression-languagework/expression-language"/>
-
-                                <mkdir dir="${tck.home}/expression-languagereport"/>
-                                <mkdir dir="${tck.home}/expression-languagetckreport/expression-language"/>
-
-                                <replace file="${tck.home}/bin/xml/ts.top.import.xml">
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
-                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
-                                <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
-                                </replace>
-
-                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
-                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
-                                <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008"/>]]></replacevalue>
-                                </replace>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-
-                    <execution>
-                        <id>run-tck-tests</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-
-                                <sequential unless:set="tck.standalone">
-                                    <echo level="info" message="Start running all tests" />
-                                    <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
-                                        <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                        <arg value="run.all" unless:set="run.test"/>
-                                        <arg value="runclient" if:set="run.test" />
-                                        <arg value="-Dkeywords=all" />
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <env key="JAVA_HOME" value="${java.home}"/>
-                                        <env key="LC_ALL" value="C" />
-                                    </exec>
-
-                                    <if>
-                                        <not>
-                                            <equals arg1="${testResult}" arg2="0" />
-                                        </not>
-                                        <then>
-                                            <fail status="${testResult}" message="Running tests failed." />
-                                        </then>
-                                    </if>
-                                </sequential>
-                            </target>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>${glassfish-artifact-id}</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
@@ -286,17 +89,54 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
 
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <systemPropertyVariables>
-                        <tck.home>${tck.home}</tck.home>
-                        <glassfish.home>${glassfish.home}</glassfish.home>
-                        <glassfish.version>${project.version}</glassfish.version>
-                        <maven.tck.debug>${tck.debug}</maven.tck.debug>
-                        <standalone>${tck.standalone}</standalone>
-                    </systemPropertyVariables>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>gf-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${glassfish.home}/glassfish/modules/jakarta.el-api.jar</additionalClasspathElement>
+                                <additionalClasspathElement>${glassfish.home}/glassfish/modules/expressly.jar</additionalClasspathElement>
+                            </additionalClasspathElements>
+
+                            <dependenciesToScan>jakarta.tck:expression-language-tck</dependenciesToScan>
+
+                            <test>${run.test}</test>
+
+                            <systemPropertyVariables>
+                                <el.classes>${glassfish.home}/glassfish/modules/jakarta.el-api.jar:${glassfish.home}/glassfish/modules/expressly.jar</el.classes>
+                                <variable.mapper>org.glassfish.expressly.lang.VariableMapperImpl</variable.mapper>
+                                <junit.log.traceflag>true</junit.log.traceflag>
+                                <harness.log.traceflag>true</harness.log.traceflag>
+                                <cts.harness.debug>true</cts.harness.debug>
+                                <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
+                                <sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.el-api.jar:${glassfish.home}/glassfish/modules/expressly.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</sigTestClasspath>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+            </properties>
+        </profile>
+    </profiles>
 </project>

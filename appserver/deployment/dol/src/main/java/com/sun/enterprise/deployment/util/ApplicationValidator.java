@@ -635,8 +635,8 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
                 if (scope1.equals(scope2) && candidate1.descriptor != candidate2.descriptor) {
                     inValidJndiName = jndiName;
                     LOG.log(Level.WARNING,
-                        "JNDI name {0} is declared by multiple modules of the application {1}: {2}, {3}", jndiName,
-                        application.getAppName(), candidate1.scope, candidate2.scope);
+                        "JNDI name {0} is declared by multiple modules of the application {1}. Scopes: {2}, {3}",
+                        jndiName, application.getAppName(), candidate1.scope, candidate2.scope);
                 }
             }
         }
@@ -660,7 +660,10 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
                 String scope2 = getFirstScopeSegment(removeFirstScopeSegment(candidate1.scope));
                 if (scope1.equals(scope2) && candidate1.descriptor != candidate2.descriptor) {
                     inValidJndiName = jndiName;
-                    LOG.log(Level.ERROR, INVALID_NAMESPACE, jndiName, application.getAppName());
+                    LOG.log(Level.WARNING,
+                        "JNDI name {0} is declared by multiple components of the module {1} of the application {2}."
+                            + " Scopes: {3}, {4}",
+                        jndiName, scope1, application.getAppName(), candidate1.scope, candidate2.scope);
                 }
             }
         }

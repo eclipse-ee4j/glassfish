@@ -9,6 +9,30 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## July 31, 2024 -- Eclipse GlassFish 7.0.16 Available
+
+With much joy we present you Eclipse GlassFish 7.0.16.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In this summer 2024 release of GlassFish we added several new features. Specifically new is an admin command logger, which logs graphical interactions with the admin UI for usage in scripts. GlassFish now also allows resource references in persistence.xml, and we added a great new feature where we are creating temporary snapshots of the external application libraries during application startup, so any update of these is not longer system dependent. We also did a major refactoring of the aging TLS code and optimized the GJULE logging.
+
+
+## May 31, 2024 -- Eclipse GlassFish 7.0.15 Available
+
+We are very happy to bring you Eclipse GlassFish 7.0.15.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In this release we updated and thoroughly tested a lot of important components, including Exousia (Security), Mojarra (Faces), Jersey (REST) and Yasson/Parsson (JSON).
+
+Testing has been improved by fixing a number of issues within the tests itself.
+
+Finally, we fixed a number of errors in the documentation.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+
 ## March 31, 2024 -- Eclipse GlassFish 7.0.14 Available
 
 We are very happy to bring you Eclipse GlassFish 7.0.14.

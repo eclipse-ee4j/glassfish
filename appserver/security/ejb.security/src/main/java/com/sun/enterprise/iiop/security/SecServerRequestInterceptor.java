@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,8 @@
  */
 
 package com.sun.enterprise.iiop.security;
+
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 import com.sun.corba.ee.org.omg.CSI.CompleteEstablishContext;
 import com.sun.corba.ee.org.omg.CSI.ContextError;
@@ -41,10 +43,8 @@ import com.sun.enterprise.common.iiop.security.SecurityContext;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.logging.LogDomains;
-
 import java.io.ByteArrayInputStream;
 import java.net.Socket;
-import java.security.PrivilegedAction;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -52,10 +52,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
-
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.NO_PERMISSION;
@@ -65,8 +63,6 @@ import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-
-import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 /**
  * Security server request interceptor
@@ -317,22 +313,18 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
      *
      * This method currently only works for PasswordCredential tokens.
      */
-    private void createAuthCred(SecurityContext sc, byte[] authtok, ORB orb) throws Exception {
+    private void createAuthCred(SecurityContext securityContext, byte[] authtok, ORB orb) throws Exception {
         LOG.log(Level.FINE, "Constructing a PasswordCredential from client authentication token");
+
         /* create a GSSUPToken from the authentication token */
         GSSUPToken tok = GSSUPToken.getServerSideInstance(orb, codec, authtok);
 
         final PasswordCredential pwdcred = tok.getPwdcred();
-        final SecurityContext fsc = sc;
         LOG.log(Level.FINE, "Password credential = {0}", pwdcred);
         LOG.log(Level.FINE, "Adding PasswordCredential to subject's PrivateCredentials");
-        PrivilegedAction<Void> action = () -> {
-            fsc.subject.getPrivateCredentials().add(pwdcred);
-            return null;
-        };
-        java.security.AccessController.doPrivileged(action);
-        sc = fsc;
-        sc.authcls = PasswordCredential.class;
+
+        securityContext.subject.getPrivateCredentials().add(pwdcred);
+        securityContext.authcls = PasswordCredential.class;
     }
 
     private void handle_null_service_context(ServerRequestInfo ri, ORB orb) {

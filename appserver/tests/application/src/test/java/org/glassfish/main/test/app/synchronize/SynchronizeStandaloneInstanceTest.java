@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023,2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class SynchronizeStandaloneInstanceTest {
 
-    private static final System.Logger LOG = System.getLogger(SynchronizeStandaloneInstanceTest.class.getName());
+    private static final Class<?> TEST_CLASS = SynchronizeStandaloneInstanceTest.class;
+
+    private static final Package TEST_PACKAGE = TEST_CLASS.getPackage();
+
+    private static final System.Logger LOG = System.getLogger(TEST_CLASS.getName());
 
     private static final String APP_NAME = SynchronizeStandaloneInstanceTest.class.getSimpleName();
 
@@ -50,7 +54,13 @@ public class SynchronizeStandaloneInstanceTest {
 
     @BeforeAll
     public static void createInstance() {
-        assertThat(ASADMIN.exec("create-instance", "--node", "localhost-domain1", INSTANCE_NAME), asadminOK());
+        try {
+            assertThat(ASADMIN.exec("create-instance", "--node", "localhost-domain1", INSTANCE_NAME), asadminOK());
+        } catch (AssertionError e) {
+            // cleanup on error, the instance is not going to be deleted otherwise
+            ASADMIN.exec("delete-instance", INSTANCE_NAME);
+            throw e;
+        }
         assertThat(ASADMIN.exec("stop-instance", INSTANCE_NAME), asadminOK());
         assertThat(ASADMIN.exec("deploy", "--target", INSTANCE_NAME, createDeployment().getAbsolutePath()), asadminOK());
     }
@@ -69,10 +79,8 @@ public class SynchronizeStandaloneInstanceTest {
 
     private static File createDeployment() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
-            .addAsWebInfResource(
-                new File("src/main/resources/org/glassfish/main/test/app/synchronize/sample.json"),
-                "resources/sample.json")
-            .addAsWebResource(new File("src/main/resources/org/glassfish/main/test/app/synchronize/index.html"));
+            .addAsWebInfResource(TEST_PACKAGE, "sample.json", "resources/sample.json")
+            .addAsWebResource(TEST_PACKAGE, "index.html");
 
         LOG.log(INFO, webArchive.toString(true));
 

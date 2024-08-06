@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,8 +39,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
  *
  * @author Alexey Stashok
  */
-public class HttpRedirectFilter extends BaseFilter implements
-        ConfigAwareElement {
+public class HttpRedirectFilter extends BaseFilter implements ConfigAwareElement {
 
     private Integer redirectPort;
 
@@ -53,7 +53,7 @@ public class HttpRedirectFilter extends BaseFilter implements
      * @param configuration filter configuration
      */
     @Override
-    public void configure(ServiceLocator habitat, NetworkListener networkListener,
+    public void configure(ServiceLocator locator, NetworkListener networkListener,
             ConfigBeanProxy configuration) {
 
         if (configuration instanceof HttpRedirect) {

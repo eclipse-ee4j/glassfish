@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.iiop.security;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Hashtable;
 
 /**
@@ -37,12 +35,7 @@ import java.util.Hashtable;
 public class ConnectionExecutionContext {
 
     public static final String IIOP_CLIENT_PER_THREAD_FLAG = "com.sun.appserv.iiopclient.perthreadauth";
-    private static final boolean isPerThreadAuth;
-
-    static {
-        PrivilegedAction<Boolean> action = () -> Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG);
-        isPerThreadAuth = AccessController.doPrivileged(action).booleanValue();
-    }
+    private static final boolean isPerThreadAuth = Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG);
 
     // private static final InheritableThreadLocal connCurrent= new InheritableThreadLocal();
     private static final ThreadLocal connCurrent = (isPerThreadAuth) ? new ThreadLocal() : new InheritableThreadLocal();

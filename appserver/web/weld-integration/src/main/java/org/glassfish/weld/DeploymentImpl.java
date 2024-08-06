@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -227,9 +227,13 @@ public class DeploymentImpl implements CDI11Deployment {
             LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
         }
 
+        // Add the new archive to all existing archives
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
             beanDeploymentArchive.getBeanDeploymentArchives().add(newBeanDeploymentArchive);
         }
+
+        // Add the existing archives archives to the new archive
+        newBeanDeploymentArchive.getBeanDeploymentArchives().addAll(beanDeploymentArchives);
 
         if (LOG.isLoggable(FINE)) {
             LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,

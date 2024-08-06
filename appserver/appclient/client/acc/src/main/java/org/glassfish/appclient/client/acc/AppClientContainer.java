@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +17,20 @@
 
 package org.glassfish.appclient.client.acc;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.security.webservices.client.ClientPipeCloser;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.logging.LogDomains;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.transaction.Status;
+import jakarta.transaction.TransactionManager;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.InvocationTargetException;
@@ -43,13 +47,9 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
 import javax.naming.NamingException;
-import jakarta.persistence.EntityManagerFactory;
 import javax.security.auth.callback.CallbackHandler;
 import javax.swing.SwingUtilities;
-import jakarta.transaction.Status;
-import jakarta.transaction.TransactionManager;
 import org.apache.naming.resources.DirContextURLStreamHandlerFactory;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
@@ -59,13 +59,11 @@ import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.TargetServer;
-import org.glassfish.persistence.jpa.PersistenceUnitLoader;
-import com.sun.enterprise.container.common.spi.ManagedBeanManager;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.persistence.jpa.PersistenceUnitLoader;
+import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
 /**
@@ -364,14 +362,7 @@ public class AppClientContainer {
     }
 
     private boolean isEDTRunning() {
-        Map<Thread, StackTraceElement[]> threads = java.security.AccessController
-                .doPrivileged(new java.security.PrivilegedAction<Map<Thread, StackTraceElement[]>>() {
-
-                    @Override
-                    public Map<Thread, StackTraceElement[]> run() {
-                        return Thread.getAllStackTraces();
-                    }
-                });
+        Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
 
         logger.fine("Checking for EDT thread...");
         for (Map.Entry<Thread, StackTraceElement[]> entry : threads.entrySet()) {
@@ -612,13 +603,7 @@ public class AppClientContainer {
      */
     private static void prepareURLStreamHandling() {
         // Set the HTTPS URL stream handler.
-        java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-            @Override
-            public Object run() {
-                URL.setURLStreamHandlerFactory(new DirContextURLStreamHandlerFactory());
-                return null;
-            }
-        });
+        URL.setURLStreamHandlerFactory(new DirContextURLStreamHandlerFactory());
     }
 
     void setClassLoader(ACCClassLoader classLoader) {
@@ -796,14 +781,7 @@ public class AppClientContainer {
         }
 
         void disable() {
-            java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-
-                @Override
-                public Object run() {
-                    Runtime.getRuntime().removeShutdownHook(cleanupThread);
-                    return null;
-                }
-            });
+            Runtime.getRuntime().removeShutdownHook(cleanupThread);
         }
 
         /**

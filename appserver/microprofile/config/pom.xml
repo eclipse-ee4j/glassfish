@@ -17,7 +17,7 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -89,12 +89,20 @@
                             -->
                             groupId=io.helidon.common;artifactId=helidon-common,
                             groupId=io.helidon.common;artifactId=helidon-common-config,
+                            groupId=io.helidon.common;artifactId=helidon-common-configurable,
+                            groupId=io.helidon.common;artifactId=helidon-common-context,
+                            groupId=io.helidon.common;artifactId=helidon-common-mapper,
                             groupId=io.helidon.common;artifactId=helidon-common-media-type,
                             groupId=io.helidon.common;artifactId=helidon-common-service-loader,
+                            groupId=io.helidon.common;artifactId=helidon-common-types,
+                            
                             groupId=io.helidon.config;artifactId=helidon-config,
                             groupId=io.helidon.config;artifactId=helidon-config-mp,
                             groupId=io.helidon.config;artifactId=helidon-config-yaml,
                             groupId=io.helidon.config;artifactId=helidon-config-yaml-mp,
+                            groupId=io.helidon.builder;artifactId=helidon-builder-api,
+                            groupId=io.helidon.inject;artifactId=helidon-inject-api,
+                            groupId=io.helidon.logging;artifactId=helidon-logging-common,
                             artifactId=snakeyaml,
                         </Embed-Dependency>
 

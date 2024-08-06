@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -311,6 +311,13 @@ public class ResponseFacade implements HttpServletResponse {
     }
 
     @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+        checkResponseNull();
+
+        response.sendRedirect(location, sc, clearBuffer);
+    }
+
+    @Override
     public void setDateHeader(String name, long date) {
         checkResponseNull();
 
@@ -453,12 +460,6 @@ public class ResponseFacade implements HttpServletResponse {
         if (isCommitted()) {
             throw new IllegalStateException();
         }
-    }
-
-    @Override
-    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
-        // TODO TODO SERVLET 6.1
-        // TODO Auto-generated method stub
     }
 
 }

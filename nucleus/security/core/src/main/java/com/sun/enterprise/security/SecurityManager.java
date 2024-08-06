@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,7 @@ package com.sun.enterprise.security;
 
 import java.lang.reflect.Method;
 import java.security.Principal;
-import java.security.PrivilegedExceptionAction;
-
 import javax.security.auth.Subject;
-
 import org.glassfish.api.invocation.ComponentInvocation;
 
 /**
@@ -56,7 +54,7 @@ public interface SecurityManager {
      */
     void preInvoke(ComponentInvocation componentInvocation);
 
-    Object invoke(Method beanClassMethod, boolean isLocal, Object bean, Object[] methodParameters) throws Throwable;
+    Object invoke(Object bean, Method beanClassMethod, Object[] methodParameters) throws Throwable;
 
     /**
      * This method is used by the Invocation Manager to remove the run-as identity information that was set up using the preInvoke
@@ -83,11 +81,4 @@ public interface SecurityManager {
      * Purge ThreadLocals held by jakarta.security.jacc.PolicyContext
      */
     void resetPolicyContext();
-
-    /* This method is used by SecurityUtil runMethod to run the
-     * action as the subject encapsulated in the current
-     * SecurityContext.
-     */
-    Object doAsPrivileged(PrivilegedExceptionAction<Object> pea) throws Throwable;
-
 }

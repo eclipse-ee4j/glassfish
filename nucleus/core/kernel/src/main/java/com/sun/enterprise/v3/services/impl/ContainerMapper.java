@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,14 +58,13 @@ import org.glassfish.kernel.KernelLoggerInfo;
  * @author Jeanfrancois Arcand
  * @author Alexey Stashok
  */
-@SuppressWarnings({ "NonPrivateFieldAccessedInSynchronizedContext" })
 public class ContainerMapper extends ADBAwareHttpHandler {
 
     private static final Logger LOGGER = KernelLoggerInfo.getLogger();
     private static final String ROOT = "";
 
     private static final AfterServiceListener afterServiceListener = new AfterServiceListenerImpl();
-    protected static final Note<MappingData> MAPPING_DATA = Request.<MappingData>createNote("MappingData");
+    private static final Note<MappingData> MAPPING_DATA = Request.<MappingData>createNote("MappingData");
 
     // Make sure this value is always aligned with {@link org.apache.catalina.connector.CoyoteAdapter}
     // (@see org.apache.catalina.connector.CoyoteAdapter)
@@ -227,7 +226,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             }
 
             if (LOGGER.isLoggable(FINE)) {
-                LOGGER.log(FINE, "Request: {0} was mapped to Adapter: {1}", new Object[] { decodedURI.toString(), httpHandler });
+                LOGGER.log(FINE, "Request: {0} was mapped to Adapter: {1}", new Object[] { decodedURI, httpHandler });
             }
 
             // The Adapter used for servicing static pages doesn't decode the
@@ -328,9 +327,9 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         }
     }
 
-    HttpHandler map(final Request req, final DataChunk decodedURI, MappingData mappingData) throws Exception {
+    private HttpHandler map(final Request req, final DataChunk decodedURI, MappingData mappingData) throws Exception {
         if (mappingData == null) {
-            mappingData = req.getNote(MAPPING_DATA);
+            mappingData = getNote(req);
         }
 
         // Map the request to its Adapter/Container and also it's Servlet if
@@ -408,13 +407,18 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         unregister(endpoint.getContextRoot());
     }
 
+
+    protected static MappingData getNote(Request request) {
+        return request.getNote(MAPPING_DATA);
+    }
+
     private final static class HttpHandlerCallable implements Callable<Object> {
 
         private final HttpHandler httpHandler;
         private final Request request;
         private final Response response;
 
-        public HttpHandlerCallable(final HttpHandler httpHandler, final Request request, final Response response) {
+        private HttpHandlerCallable(final HttpHandler httpHandler, final Request request, final Response response) {
             this.httpHandler = httpHandler;
             this.request = request;
             this.response = response;
@@ -429,10 +433,10 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     private final class SuperCallable implements Callable<Object> {
 
-        final Request req;
-        final Response res;
+        private final Request req;
+        private final Response res;
 
-        public SuperCallable(Request req, Response res) {
+        private SuperCallable(Request req, Response res) {
             this.req = req;
             this.res = res;
         }
@@ -448,7 +452,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
         @Override
         public void onAfterService(final Request request) {
-            final MappingData mappingData = request.getNote(MAPPING_DATA);
+            final MappingData mappingData = getNote(request);
             if (mappingData != null) {
                 mappingData.recycle();
             }

@@ -18,16 +18,11 @@ package org.glassfish.osgi.felixwebconsoleextension;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-
 import org.apache.felix.webconsole.WebConsoleSecurityProvider;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.osgi.framework.BundleContext;
-
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 
 /**
  *
@@ -77,20 +72,7 @@ public class GlassFishSecurityProvider implements WebConsoleSecurityProvider {
     }
 
     private AuthenticationService getAuthService() throws GlassFishException {
-        // Authentication Service is protected, so we need to access within doPrivileged
-        // It must be done irrespective of security manager, because the permission is enforced
-        // when a security policy file is present.
-        try {
-            return AccessController.doPrivileged(new PrivilegedExceptionAction<AuthenticationService>() {
-                @Override
-                public AuthenticationService run() throws GlassFishException {
-                    return gf.getService(AuthenticationService.class);
-                }
-            });
-        } catch (PrivilegedActionException e) {
-            throw GlassFishException.class.cast(e.getException());
-        }
-
+        return gf.getService(AuthenticationService.class);
     }
 
     @Override

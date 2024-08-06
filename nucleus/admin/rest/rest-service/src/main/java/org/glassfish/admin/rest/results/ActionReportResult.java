@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.admin.rest.results;
 
 import com.sun.enterprise.v3.common.ActionReporter;
+
 import org.glassfish.admin.rest.resources.LeafResource;
 import org.glassfish.admin.rest.resources.LeafResource.LeafContent;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
@@ -29,24 +31,15 @@ import org.jvnet.hk2.config.ConfigBean;
  * @author Ludovic Champenois
  */
 public class ActionReportResult extends Result {
-    private RestActionReporter __message;
-    private OptionsResult __metaData;
-    private ConfigBean __entity;
-    private String commandDisplayName = null;
-    private LeafResource.LeafContent leafContent = null;
-
-    public LeafContent getLeafContent() {
-        return leafContent;
-    }
-
-    public void setLeafContent(LeafContent leafContent) {
-        this.leafContent = leafContent;
-    }
+    private final RestActionReporter message;
+    private final OptionsResult metaData;
+    private ConfigBean entity;
+    private String commandDisplayName;
+    private LeafResource.LeafContent leafContent;
 
     /**
      * Constructor
      */
-
     public ActionReportResult(RestActionReporter r) {
         this(null, r);
     }
@@ -57,7 +50,7 @@ public class ActionReportResult extends Result {
 
     public ActionReportResult(RestActionReporter r, ConfigBean entity, OptionsResult metaData) {
         this(r, metaData);
-        __entity = entity;
+        this.entity = entity;
     }
 
     public ActionReportResult(String name, RestActionReporter r) {
@@ -65,23 +58,23 @@ public class ActionReportResult extends Result {
     }
 
     public ActionReportResult(String name, RestActionReporter r, OptionsResult metaData) {
-        __name = name;
-        __message = r;
-        __metaData = metaData;
+        super(name, false, null);
+        this.message = r;
+        this.metaData = metaData;
     }
 
     public ActionReportResult(String name, RestActionReporter r, OptionsResult metaData, String displayName) {
-        __name = name;
-        __message = r;
-        __metaData = metaData;
-        commandDisplayName = displayName;
+        super(name, false, null);
+        this.message = r;
+        this.metaData = metaData;
+        this.commandDisplayName = displayName;
     }
 
     /**
      * Returns the result string this object represents
      */
     public ActionReporter getActionReport() {
-        return __message;
+        return message;
     }
 
     /**
@@ -102,10 +95,18 @@ public class ActionReportResult extends Result {
      * Returns OptionsResult - the meta-data of this resource.
      */
     public OptionsResult getMetaData() {
-        return __metaData;
+        return metaData;
     }
 
     public ConfigBean getEntity() {
-        return __entity;
+        return entity;
+    }
+
+    public LeafContent getLeafContent() {
+        return leafContent;
+    }
+
+    public void setLeafContent(LeafContent leafContent) {
+        this.leafContent = leafContent;
     }
 }

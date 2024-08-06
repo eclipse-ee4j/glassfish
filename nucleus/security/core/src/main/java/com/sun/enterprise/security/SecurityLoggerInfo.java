@@ -251,13 +251,6 @@ public class SecurityLoggerInfo {
     public static final String usernamePasswordEnteringSecurityError = LOGMSG_PREFIX + "-05039";
 
     @LogMessageInfo(
-            message = "Exception in security AccessController action.",
-            cause = "Running a privileged action.",
-            action = "Check the server logs and contact support.",
-            level = "SEVERE")
-    public static final String securityAccessControllerActionError = LOGMSG_PREFIX + "-05043";
-
-    @LogMessageInfo(
             message = "Audit: Authentication refused for [{0}].",
             level = "INFO")
     public static final String auditAtnRefusedError = LOGMSG_PREFIX + "-05046";
@@ -294,11 +287,6 @@ public class SecurityLoggerInfo {
             message = "Role mapping conflicts found in application {0}. Some roles may not be mapped.",
             level = "INFO")
     public static final String roleMappingConflictError = LOGMSG_PREFIX + "-05055";
-
-    @LogMessageInfo(
-            message = "Error converting certificate {0}: {1}",
-            level = "INFO")
-    public static final String convertingCertError = LOGMSG_PREFIX + "-05056";
 
     @LogMessageInfo(
             message = "Failed to instantiate the SecurityLifeCycle.",

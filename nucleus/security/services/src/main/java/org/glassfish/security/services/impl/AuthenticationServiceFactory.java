@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,20 @@
 
 package org.glassfish.security.services.impl;
 
-import java.security.AccessController;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
-import org.glassfish.hk2.api.Factory;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import org.glassfish.security.services.common.PrivilegedLookup;
-import org.glassfish.security.services.common.Secure;
-import org.glassfish.security.services.common.StateManager;
-import org.glassfish.security.services.common.SecurityScope;
-
-import org.glassfish.security.services.api.authentication.AuthenticationService;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.glassfish.hk2.api.Factory;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.security.services.api.authentication.AuthenticationService;
+import org.glassfish.security.services.common.SecurityScope;
+import org.glassfish.security.services.common.StateManager;
 
 /**
  * The factory of AuthenticationService instances used by the SecurityScopeContext.
  */
 @Singleton
-@Secure(accessPermissionName = "security/service/authentication")
 public class AuthenticationServiceFactory extends ServiceFactory implements Factory<AuthenticationService> {
 
     @Inject
@@ -46,23 +39,22 @@ public class AuthenticationServiceFactory extends ServiceFactory implements Fact
     @Inject
     private ServiceLocator serviceLocator;
 
+    @Override
     @SecurityScope
     public AuthenticationService provide() {
         String currentState = manager.getCurrent();
 
         // Get Service Instance
-        AuthenticationService atnService = AccessController.doPrivileged(
-                new PrivilegedLookup<AuthenticationService>(
-                        serviceLocator, AuthenticationService.class));
+        AuthenticationService authenticationService = serviceLocator.getService(AuthenticationService.class);
 
         // Get Service Configuration
-        org.glassfish.security.services.config.AuthenticationService atnConfiguration =
+        org.glassfish.security.services.config.AuthenticationService authenticationConfiguration =
             serviceLocator.getService(org.glassfish.security.services.config.AuthenticationService.class,currentState);
 
         // Initialize Service
-        atnService.initialize(atnConfiguration);
+        authenticationService.initialize(authenticationConfiguration);
 
-        return atnService;
+        return authenticationService;
     }
 
     @Override
@@ -73,9 +65,9 @@ public class AuthenticationServiceFactory extends ServiceFactory implements Fact
      * Helper function to obtain the Authentication Service configuration from the Domain.
      */
     public static org.glassfish.security.services.config.AuthenticationService getAuthenticationServiceConfiguration(Domain domain) {
-                org.glassfish.security.services.config.AuthenticationService atnConfiguration =
-                ServiceFactory.getSecurityServiceConfiguration(
-                                domain, org.glassfish.security.services.config.AuthenticationService.class);
-        return atnConfiguration;
-        }
+       return ServiceFactory.getSecurityServiceConfiguration(
+                                domain,
+                                org.glassfish.security.services.config.AuthenticationService.class);
+
+    }
 }

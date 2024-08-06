@@ -71,8 +71,6 @@ import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.hk2.api.ActiveDescriptor;
-import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.jvnet.hk2.config.Attribute;
@@ -161,24 +159,10 @@ public class CompositeUtil {
             generatedClasses.put(className, newClass);
         }
         try {
-            return (T) generatedClasses.get(className).newInstance();
+            return (T) generatedClasses.get(className).getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    public Set<Class<?>> getRestModels() {
-        Set<Class<?>> classes = new HashSet<>();
-        for (ActiveDescriptor ad : Globals.getDefaultBaseServiceLocator()
-                .getDescriptors(BuilderHelper.createContractFilter(RestModel.class.getName()))) {
-            try {
-                classes.add(CompositeUtil.instance().getModel(Class.forName(ad.getImplementation())).getClass());
-            } catch (ClassNotFoundException ex) {
-                RestLogging.restLogger.log(Level.SEVERE, null, ex);
-            }
-        }
-
-        return classes;
     }
 
     /**
@@ -190,8 +174,8 @@ public class CompositeUtil {
      */
     public Object getResourceExtensions(Class<?> baseClass, Object data, String method) {
         List<RestExtension> extensions = new ArrayList<>();
-
-        for (RestExtension extension : Globals.getDefaultHabitat().<RestExtension>getAllServices(RestExtension.class)) {
+        for (RestExtension extension : Globals.getDefaultHabitat().getAllServices(RestExtension.class)) {
+            RestLogging.restLogger.info(() -> "Processing detected extension: " + extension);
             if (baseClass.getName().equals(extension.getParent())) {
                 extensions.add(extension);
             }
@@ -225,7 +209,7 @@ public class CompositeUtil {
                     if (value != null) {
                         String currentValue = currentValues.get(basePath + key);
 
-                        if ((currentValue == null) || "".equals(value) || (!currentValue.equals(value))) {
+                        if (currentValue == null || "".equals(value) || !currentValue.equals(value)) {
                             parameters.add("DEFAULT", basePath + "." + key + "=" + value);
                         }
                     }
@@ -695,13 +679,15 @@ public class CompositeUtil {
         return annos;
     }
 
-    private void handleGetExtensions(List<RestExtension> extensions, Object data) {
+    private void handleGetExtensions(final List<RestExtension> extensions, Object data) {
+        RestLogging.restLogger.finest(() -> "Handling detected GET extension: " + extensions);
         for (RestExtension re : extensions) {
             re.get(data);
         }
     }
 
     private ParameterMap handlePostExtensions(List<RestExtension> extensions, Object data) {
+        RestLogging.restLogger.finest(() -> "Handling detected POST extension: " + extensions);
         ParameterMap parameters = new ParameterMap();
         for (RestExtension re : extensions) {
             parameters.mergeAll(re.post(data));

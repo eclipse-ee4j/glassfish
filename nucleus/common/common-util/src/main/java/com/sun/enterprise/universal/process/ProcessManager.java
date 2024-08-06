@@ -49,6 +49,7 @@ public class ProcessManager {
     private String stdout;
     private String stderr;
     private int timeout;
+    private String textToWaitFor;
     private boolean echo = true;
     private String[] stdinLines;
 
@@ -93,6 +94,14 @@ public class ProcessManager {
         echo = newEcho;
     }
 
+    /**
+     * If not null, should wait until this text is found in standard output instead of waiting until the process terminates
+     *
+     * @param textToWaitFor
+     */
+    public void setTextToWaitFor(String textToWaitFor) {
+        this.textToWaitFor = textToWaitFor;
+    }
 
     public int execute() throws ProcessManagerException {
         LOG.log(Level.DEBUG, "Executing command:\n  command={0}  \nenv={1}", builder.command(), builder.environment());
@@ -102,14 +111,28 @@ public class ProcessManager {
         } catch (IOException e) {
             throw new IllegalStateException("Could not execute command: " + builder.command(), e);
         }
-        ReaderThread threadErr = new ReaderThread(process.getErrorStream(), echo, "stderr");
+        ReaderThread threadErr = new ReaderThread(process.getErrorStream(), echo, "stderr", Thread.currentThread(), textToWaitFor);
         threadErr.start();
-        ReaderThread threadOut = new ReaderThread(process.getInputStream(), echo, "stdout");
+        ReaderThread threadOut = new ReaderThread(process.getInputStream(), echo, "stdout", Thread.currentThread(), textToWaitFor);
         threadOut.start();
         try {
             try {
                 writeStdin(process);
-                return await(process);
+                final int result = await(process);
+                if (textToWaitFor != null) {
+                    threadErr.finish(1000L);
+                    threadOut.finish(1000L);
+                    if( !threadOut.isTextFound() && !threadErr.isTextFound()) {
+                        throw new ProcessManagerException("Process finished but text " + textToWaitFor + " not found in output");
+                    }
+                }
+                return result;
+            } catch (InterruptedException e) {
+                if (threadOut.isTextFound() || threadErr.isTextFound()) {
+                    return 0;
+                } else {
+                    throw e;
+                }
             } finally {
                 stderr = threadErr.finish(1000L);
                 stdout = threadOut.finish(1000L);
@@ -119,7 +142,7 @@ public class ProcessManager {
         } catch (Exception e) {
             throw new ProcessManagerException(e);
         } finally {
-            if (process.isAlive()) {
+            if (process.isAlive() && textToWaitFor == null) {
                 destroy(process);
             }
         }
@@ -191,12 +214,21 @@ public class ProcessManager {
         private final StringBuilder sb;
         private final boolean echo;
         private final AtomicBoolean stop = new AtomicBoolean();
+        private final Thread threadWaitingForProcess;
+        private final String textToWaitFor;
+        private volatile boolean textFound = false;
 
         ReaderThread(InputStream stream, boolean echo, String threadName) {
+            this(stream, echo, threadName, null, null);
+        }
+
+        ReaderThread(InputStream stream, boolean echo, String threadName, Thread threadWaitingForProcess, String textToWaitFor) {
             setName(threadName);
             this.reader = new BufferedReader(new InputStreamReader(stream));
             this.sb = new StringBuilder();
             this.echo = echo;
+            this.threadWaitingForProcess = threadWaitingForProcess;
+            this.textToWaitFor = textToWaitFor;
         }
 
 
@@ -213,6 +245,7 @@ public class ProcessManager {
                         Thread.yield();
                         continue;
                     }
+                    interruptWaitingThreadIfTextFound(line);
                     sb.append(line).append('\n');
                     if (echo) {
                         System.out.println(line);
@@ -246,6 +279,17 @@ public class ProcessManager {
                 // nothing to do
             }
             return sb.toString();
+        }
+
+        private void interruptWaitingThreadIfTextFound(String line) {
+            if (threadWaitingForProcess != null && textToWaitFor != null && line.contains(textToWaitFor)) {
+                textFound = true;
+                threadWaitingForProcess.interrupt();
+            }
+        }
+
+        public boolean isTextFound() {
+            return textFound;
         }
     }
 }

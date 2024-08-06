@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,23 +17,6 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import java.net.URI;
-import java.security.AllPermission;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.security.auth.Subject;
-
-import org.glassfish.security.services.api.authorization.AzAction;
-import org.glassfish.security.services.api.authorization.AzAttributeResolver;
-import org.glassfish.security.services.api.authorization.AzAttributes;
-import org.glassfish.security.services.api.authorization.AzEnvironment;
-import org.glassfish.security.services.api.common.Attribute;
-import org.glassfish.security.services.impl.common.AttributeImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.FAILED_INIT;
 import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.NOT_INITIALIZED;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,6 +28,20 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import javax.security.auth.Subject;
+import org.glassfish.security.services.api.authorization.AzAction;
+import org.glassfish.security.services.api.authorization.AzAttributeResolver;
+import org.glassfish.security.services.api.authorization.AzAttributes;
+import org.glassfish.security.services.api.authorization.AzEnvironment;
+import org.glassfish.security.services.api.common.Attribute;
+import org.glassfish.security.services.impl.common.AttributeImpl;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see AuthorizationServiceImpl
@@ -72,15 +69,6 @@ public class AuthorizationServiceImplTest {
         assertSame(FAILED_INIT, impl.getInitializationState(), "FAILED_INIT");
         assertNotNull("getReasonInitializationFailed", impl.getReasonInitializationFailed());
     }
-
-
-    @Test
-    public void testIsPermissionGranted() throws Exception {
-        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
-        // Does not require service initialization
-        impl.isPermissionGranted(new Subject(), new AllPermission());
-    }
-
 
     @Test
     public void testIsAuthorized() throws Exception {

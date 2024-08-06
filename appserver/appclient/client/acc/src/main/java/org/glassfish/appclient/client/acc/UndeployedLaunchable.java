@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,15 +26,11 @@ import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.ModuleDescriptor;
@@ -227,14 +223,7 @@ public class UndeployedLaunchable implements Launchable {
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         this.classLoader = loader;
         if (acDesc == null) {
-            final AppClientArchivist _archivist = getArchivist(
-                    AccessController.doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-
-                        @Override
-                        public ACCClassLoader run() {
-                            return new ACCClassLoader(loader.getURLs(), loader.getParent());
-                        }
-                    }));
+            final AppClientArchivist _archivist = getArchivist(new ACCClassLoader(loader.getURLs(), loader.getParent()));
 
             _archivist.setAnnotationProcessingRequested(true);
             acDesc = _archivist.open(clientRA);

@@ -322,7 +322,7 @@ The following topics are addressed here:
 ==== To Obtain the Sample Application
 
 1. Download a copy of the `hello.war` sample application from
-`https://github.com/eclipse-ee4j/glassfishdownloads/quickstart/hello.war`.
+`https://glassfish.org/downloads/quickstart/hello.war`.
 
 2. Save the `hello.war` file in the directory of your choice.
 +

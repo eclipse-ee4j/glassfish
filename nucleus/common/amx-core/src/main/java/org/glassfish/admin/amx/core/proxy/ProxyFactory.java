@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,31 @@
 
 package org.glassfish.admin.amx.core.proxy;
 
+import java.io.IOException;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.management.Descriptor;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
+import javax.management.MBeanServerNotification;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+import javax.management.relation.MBeanServerNotificationFilter;
+import javax.management.remote.JMXConnectionNotification;
+
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.config.AMXConfigProxy;
 import org.glassfish.admin.amx.core.AMXProxy;
@@ -27,15 +53,6 @@ import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.external.amx.AMXGlassfish;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-
-import javax.management.*;
-import javax.management.relation.MBeanServerNotificationFilter;
-import javax.management.remote.JMXConnectionNotification;
-import java.io.IOException;
-import java.lang.reflect.Proxy;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import static org.glassfish.external.amx.AMX.DESC_STD_IMMUTABLE_INFO;
 import static org.glassfish.external.amx.AMX.NAME_KEY;
@@ -58,7 +75,7 @@ public final class ProxyFactory implements NotificationListener {
      * can cache it once per type? If we could so so, the size of the cache
      * would stay much smaller.
      */
-    private final ConcurrentMap<ObjectName, MBeanInfo> mMBeanInfoCache = new ConcurrentHashMap<ObjectName, MBeanInfo>();
+    private final ConcurrentMap<ObjectName, MBeanInfo> mMBeanInfoCache = new ConcurrentHashMap<>();
     private static final AMXDebugHelper mDebug =
             new AMXDebugHelper(ProxyFactory.class.getName());
 
@@ -115,7 +132,7 @@ public final class ProxyFactory implements NotificationListener {
      * The connection is bad. Tell each proxy its gone and remove it.
      */
     private void connectionBad() {
-        final Set<AMXProxy> proxies = new HashSet<AMXProxy>();
+        final Set<AMXProxy> proxies = new HashSet<>();
 
         for (final AMXProxy amx : proxies) {
             final AMXProxyHandler proxy = AMXProxyHandler.unwrap(amx);
@@ -149,6 +166,7 @@ public final class ProxyFactory implements NotificationListener {
      * internally as callback for {@link javax.management.NotificationListener}.
      * <b>DO NOT CALL THIS METHOD</b>.
      */
+    @Override
     public void handleNotification(
             final Notification notifIn,
             final Object handback) {
@@ -341,7 +359,7 @@ public final class ProxyFactory implements NotificationListener {
         final Descriptor d = info.getDescriptor();
 
         final String value = "" + d.getFieldValue(DESC_STD_IMMUTABLE_INFO);
-        return Boolean.valueOf(value);
+        return Boolean.parseBoolean(value);
     }
 
     /**
@@ -470,7 +488,7 @@ public final class ProxyFactory implements NotificationListener {
      * registered.
      */
     public Set<AMXProxy> toProxySet(final Set<ObjectName> objectNames) {
-        final Set<AMXProxy> s = new HashSet<AMXProxy>();
+        final Set<AMXProxy> s = new HashSet<>();
 
         for (final ObjectName objectName : objectNames) {
             try {
@@ -493,7 +511,7 @@ public final class ProxyFactory implements NotificationListener {
      * registered.
      */
     public Set<AMXProxy> toProxySet(final ObjectName[] objectNames, final Class<? extends AMXProxy> intf) {
-        final Set<AMXProxy> result = new HashSet<AMXProxy>();
+        final Set<AMXProxy> result = new HashSet<>();
         for (final ObjectName objectName : objectNames) {
             final AMXProxy proxy = getProxy(objectName, intf);
             if (proxy != null) {
@@ -510,7 +528,7 @@ public final class ProxyFactory implements NotificationListener {
      * @return a List of AMX from a List of ObjectName.
      */
     public List<AMXProxy> toProxyList(final Collection<ObjectName> objectNames) {
-        final List<AMXProxy> list = new ArrayList<AMXProxy>();
+        final List<AMXProxy> list = new ArrayList<>();
 
         for (final ObjectName objectName : objectNames) {
             try {
@@ -536,7 +554,7 @@ public final class ProxyFactory implements NotificationListener {
      */
     public Map<String, AMXProxy> toProxyMap(
             final Map<String, ObjectName> objectNameMap) {
-        final Map<String, AMXProxy> resultMap = new HashMap<String, AMXProxy>();
+        final Map<String, AMXProxy> resultMap = new HashMap<>();
 
         for (final Map.Entry<String, ObjectName> me : objectNameMap.entrySet()) {
             final ObjectName objectName = me.getValue();
@@ -560,7 +578,7 @@ public final class ProxyFactory implements NotificationListener {
      * registered
      */
     public Map<String, AMXProxy> toProxyMap(final ObjectName[] objectNames, final Class<? extends AMXProxy> intf) {
-        final Map<String, AMXProxy> resultMap = new HashMap<String, AMXProxy>();
+        final Map<String, AMXProxy> resultMap = new HashMap<>();
 
         for (final ObjectName objectName : objectNames) {
             final String key = Util.unquoteIfNeeded(objectName.getKeyProperty(NAME_KEY));
@@ -579,7 +597,7 @@ public final class ProxyFactory implements NotificationListener {
      * registered
      */
     public List<AMXProxy> toProxyList(final ObjectName[] objectNames, final Class<? extends AMXProxy> intf) {
-        final List<AMXProxy> result = new ArrayList<AMXProxy>();
+        final List<AMXProxy> result = new ArrayList<>();
         for (final ObjectName objectName : objectNames) {
             final AMXProxy proxy = getProxy(objectName, intf);
             if (proxy != null) {

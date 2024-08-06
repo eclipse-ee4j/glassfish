@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,19 @@
 package org.glassfish.admin.rest.adapter;
 
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.inject.Inject;
+
 import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
-import jakarta.inject.Inject;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.CommandRunner;
@@ -39,11 +43,12 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.TypeLiteral;
-import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.hk2.extras.ExtrasUtilities;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.util.collection.Ref;
@@ -57,38 +62,31 @@ import org.jvnet.hk2.annotations.Service;
  * @author martinmares
  */
 @Service
-//@RunLevel(value= InitRunLevel.VAL)
-@RunLevel(value = StartupRunLevel.VAL)
+@StartupRunLevel
 public class JerseyContainerCommandService implements PostConstruct {
 
     @Inject
-    protected ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     @Inject
     private InternalSystemAdministrator kernelIdentity;
 
-    private Future<JerseyContainer> future = null;
+    private Future<JerseyContainer> future;
 
     @Override
     public void postConstruct() {
-        if (Boolean.valueOf(System.getenv("AS_INIT_REST_EAGER"))) {
-            ExecutorService executor = Executors.newFixedThreadPool(2);
-            this.future = executor.submit(new Callable<JerseyContainer>() {
-                @Override
-                public JerseyContainer call() throws Exception {
-                    JerseyContainer result = exposeContext();
-                    return result;
-                }
+        if (Boolean.parseBoolean(System.getenv("AS_INIT_REST_EAGER"))) {
+            ExecutorService executor = Executors.newFixedThreadPool(8);
+            this.future = executor.submit(() -> {
+                JerseyContainer result = exposeContext();
+                return result;
             });
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    CommandRunner cr = habitat.getService(CommandRunner.class);
-                    final CommandRunner.CommandInvocation invocation = cr.getCommandInvocation("uptime", new PropsFileActionReporter(),
-                            kernelIdentity.getSubject());
-                    invocation.parameters(new ParameterMap());
-                    invocation.execute();
-                }
+            executor.execute(() -> {
+                CommandRunner cr = serviceLocator.getService(CommandRunner.class);
+                final CommandRunner.CommandInvocation invocation = cr.getCommandInvocation("uptime",
+                    new PropsFileActionReporter(), kernelIdentity.getSubject());
+                invocation.parameters(new ParameterMap());
+                invocation.execute();
             });
             executor.shutdown();
         }
@@ -98,24 +96,22 @@ public class JerseyContainerCommandService implements PostConstruct {
         try {
             if (future == null) {
                 return exposeContext();
-            } else {
-                return future.get();
             }
+            return future.get();
         } catch (InterruptedException ex) {
             return exposeContext();
         } catch (ExecutionException ex) {
             Throwable orig = ex.getCause();
             if (orig instanceof EndpointRegistrationException) {
                 throw (EndpointRegistrationException) orig;
-            } else {
-                RestLogging.restLogger.log(Level.INFO, RestLogging.INIT_FAILED, orig);
             }
+            RestLogging.restLogger.log(Level.SEVERE, RestLogging.INIT_FAILED, orig);
             return null;
         }
     }
 
     private ServerContext getServerContext() {
-        return habitat.getService(ServerContext.class);
+        return serviceLocator.getService(ServerContext.class);
     }
 
     private JerseyContainer exposeContext() throws EndpointRegistrationException {
@@ -127,22 +123,27 @@ public class JerseyContainerCommandService implements PostConstruct {
         // So, we force it to restrict its search space using common class loader.
         ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            ClassLoader apiClassLoader = getServerContext().getCommonClassLoader();
+            ServerContext serverContext = getServerContext();
+            ClassLoader apiClassLoader = serverContext.getCommonClassLoader();
             Thread.currentThread().setContextClassLoader(apiClassLoader);
-            ResourceConfig rc = (new RestCommandResourceProvider()).getResourceConfig(classes, getServerContext(), habitat,
-                    getAdditionalBinders());
+            ResourceConfig rc = new RestCommandResourceProvider().getResourceConfig(classes, serverContext,
+                serviceLocator, getAdditionalBinders());
             return getJerseyContainer(rc);
         } finally {
             Thread.currentThread().setContextClassLoader(originalContextClassLoader);
         }
     }
 
-    private JerseyContainer getJerseyContainer(ResourceConfig rc) {
+    private JerseyContainer getJerseyContainer(ResourceConfig config) {
         AdminJerseyServiceIteratorProvider iteratorProvider = new AdminJerseyServiceIteratorProvider();
         try {
             ServiceFinder.setIteratorProvider(iteratorProvider);
-            final HttpHandler httpHandler = ContainerFactory.createContainer(HttpHandler.class, rc);
-            return new JerseyContainer() {
+            RestLogging.restLogger.log(Level.FINEST,
+                () -> this + ": Creating Jersey container for " + HttpHandler.class + " and " + config);
+            final GrizzlyHttpContainer httpHandler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
+            final ServiceLocator jerseyLocator = httpHandler.getApplicationHandler().getInjectionManager().getInstance(ServiceLocator.class);
+            ExtrasUtilities.enableTopicDistribution(jerseyLocator);
+        return new JerseyContainer() {
                 @Override
                 public void service(Request request, Response response) throws Exception {
                     httpHandler.service(request, response);

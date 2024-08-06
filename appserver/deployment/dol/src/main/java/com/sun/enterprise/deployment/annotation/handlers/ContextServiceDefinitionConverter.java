@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +17,9 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
+
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
 
 import java.lang.System.Logger;
@@ -26,16 +30,32 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author David Matejcek
  */
 @Service
-class ContextServiceDefinitionConverter {
+class ContextServiceDefinitionConverter extends ConcurrencyDefinitionConvertor<ContextServiceDefinitionData, ContextServiceDefinitionDescriptor> {
     private static final Logger LOG = System.getLogger(ContextServiceDefinitionConverter.class.getName());
+
+    ContextServiceDefinitionConverter() {
+        super(ContextServiceDefinitionDescriptor.class, JavaEEResourceType.CSDD);
+    }
+
+
+    @Override
+    ContextServiceDefinitionDescriptor createDescriptor(ContextServiceDefinitionData annotation) {
+        return new ContextServiceDefinitionDescriptor(annotation, MetadataSource.ANNOTATION);
+    }
+
+
+    @Override
+    ContextServiceDefinitionData getData(ContextServiceDefinitionDescriptor descriptor) {
+        return descriptor.getData();
+    }
 
     Set<ContextServiceDefinitionData> convert(ContextServiceDefinition[] definitions) {
         LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
@@ -45,15 +65,17 @@ class ContextServiceDefinitionConverter {
         return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
     }
 
-
-    ContextServiceDefinitionData convert(ContextServiceDefinition definition) {
-        LOG.log(Level.DEBUG, "convert(definition={0})", definition);
-        Set<String> unused = collectUnusedContexts(definition);
+    ContextServiceDefinitionData convert(ContextServiceDefinition annotation) {
+        LOG.log(Level.DEBUG, "convert(definition={0})", annotation);
+        Set<String> unused = collectUnusedContexts(annotation);
         ContextServiceDefinitionData data = new ContextServiceDefinitionData();
-        data.setName(new SimpleJndiName(TranslatedConfigView.expandValue(definition.name())));
-        data.setPropagated(evaluateContexts(definition.propagated(), unused));
-        data.setCleared(evaluateContexts(definition.cleared(), unused));
-        data.setUnchanged(evaluateContexts(definition.unchanged(), unused));
+        data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        data.setPropagated(evaluateContexts(annotation.propagated(), unused));
+        data.setCleared(evaluateContexts(annotation.cleared(), unused));
+        data.setUnchanged(evaluateContexts(annotation.unchanged(), unused));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
         return data;
     }
 
@@ -85,7 +107,6 @@ class ContextServiceDefinitionConverter {
         return allStandardContexts;
     }
 
-
     private Set<String> evaluateContexts(String[] sourceContexts, Set<String> unusedContexts) {
         Set<String> contexts = new HashSet<>();
         for (String context : sourceContexts) {
@@ -97,5 +118,28 @@ class ContextServiceDefinitionConverter {
             }
         }
         return contexts;
+    }
+
+    @Override
+    void merge(ContextServiceDefinitionData annotation, ContextServiceDefinitionData descriptor) {
+        LOG.log(Level.DEBUG, "merge(annotation={0}, descriptor={1})", annotation, descriptor);
+        if (!annotation.getName().equals(descriptor.getName())) {
+            throw new IllegalArgumentException("Cannot merge context services with different names: "
+                + annotation.getName() + " x " + descriptor.getName());
+        }
+
+        if (descriptor.getCleared() == null && annotation.getCleared() != null) {
+            descriptor.setCleared(new HashSet<>(annotation.getCleared()));
+        }
+
+        if (descriptor.getPropagated() == null && annotation.getPropagated() != null) {
+            descriptor.setPropagated(new HashSet<>(annotation.getPropagated()));
+        }
+
+        if (descriptor.getUnchanged() == null && annotation.getUnchanged() != null) {
+            descriptor.setUnchanged(new HashSet<>(annotation.getUnchanged()));
+        }
+
+        mergeQualifiers(annotation, descriptor);
     }
 }

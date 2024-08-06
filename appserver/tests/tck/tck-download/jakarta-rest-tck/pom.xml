@@ -16,7 +16,7 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -31,9 +31,9 @@
     <name>TCK: Install Jakarta REST TCK</name>
 
     <properties>
-        <tck.rest.rest.version>3.1.5</tck.rest.rest.version>
+        <tck.rest.rest.version>4.0.0</tck.rest.rest.version>
         <tck.test.rest.file>jakarta-restful-ws-tck-${tck.rest.rest.version}</tck.test.rest.file>
-        <tck.test.rest.url>https://download.eclipse.org/jakartaee/restful-ws/3.1/${tck.test.rest.file}.zip</tck.test.rest.url>
+        <tck.test.rest.url>https://download.eclipse.org/jakartaee/restful-ws/4.0/${tck.test.rest.file}.zip</tck.test.rest.url>
     </properties>
 
     <build>
@@ -60,14 +60,14 @@
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-authorization-tck</id>
+                        <id>install-rest-tck</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.build.directory}/${tck.test.rest.file}.jar</file>
-                            <sources>${project.build.directory}/${tck.test.rest.file}-sources.jar</sources>
+                            <file>${project.build.directory}/restful-ws-tck/artifacts/${tck.test.rest.file}.jar</file>
+                            <sources>${project.build.directory}/restful-ws-tck/artifacts/${tck.test.rest.file}-sources.jar</sources>
                             <groupId>jakarta.ws.rs</groupId>
                             <artifactId>jakarta-restful-ws-tck</artifactId>
                             <version>${tck.rest.rest.version}</version>

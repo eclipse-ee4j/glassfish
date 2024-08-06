@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,14 @@
  */
 
 package com.sun.ejb.containers;
+
+import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.Container;
@@ -63,7 +71,6 @@ import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.ejb.AccessLocalException;
@@ -95,7 +102,6 @@ import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.UserTransaction;
-
 import java.io.Serializable;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
@@ -124,11 +130,9 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
-
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.GlassfishNamingManager;
@@ -150,11 +154,6 @@ import org.glassfish.flashlight.provider.ProbeProviderFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
-
-import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * This class implements part of the com.sun.ejb.Container interface. It implements the container's side of the
@@ -516,7 +515,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         this.containerInfo = createContainerInfo(type, ejbDesc);
         this.debugDescription = super.toString() + "[ejbName=" + ejbDescriptor.getName() + ", containerId="
             + ejbDescriptor.getUniqueId() + ']';
-        _logger.log(Level.FINE, "Initializing {0} ...", this.debugDescription);
+        _logger.log(FINE, "Initializing {0} ...", this.debugDescription);
         try {
             invocationManager = ejbContainerUtilImpl.getInvocationManager();
             injectionManager = ejbContainerUtilImpl.getInjectionManager();
@@ -739,11 +738,11 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             initEjbInterceptors();
         } catch (Exception ex) {
-            _logger.log(Level.FINE, "Exception creating BaseContainer : [{0}]", containerInfo);
-            _logger.log(Level.FINE, "", ex);
+            _logger.log(FINE, "Exception creating BaseContainer : [{0}]", containerInfo);
+            _logger.log(FINE, "", ex);
             throw ex;
         }
-        _logger.log(Level.FINE, "Successfuly initialized: {0}", debugDescription);
+        _logger.log(FINE, "Successfuly initialized: {0}", debugDescription);
     }
 
     protected ProtocolManager getProtocolManager() {
@@ -996,17 +995,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         final ClassLoader previousClassLoader = currentThread.getContextClassLoader();
         final ClassLoader myClassLoader = loader;
         try {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(myClassLoader);
-            } else {
-                AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                    @Override
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(myClassLoader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(myClassLoader);
             final Remote remoteRef;
             if (generatedRemoteBusinessIntf == null) {
                 remoteRef = remoteHomeRefFactory.createRemoteReference(instanceKey);
@@ -1016,17 +1005,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
             return remoteRef;
         } finally {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(previousClassLoader);
-            } else {
-                AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                    @Override
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(previousClassLoader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(previousClassLoader);
         }
     }
 
@@ -1091,9 +1070,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         }
 
         final Map<String, Object> intfsForPortableJndi = new HashMap<>();
+
         // Root of portable global JNDI name for this bean
         final SimpleJndiName javaGlobalName = getJavaGlobalJndiNamePrefix();
-        _logger.log(Level.FINEST, "javaGlobalName={0}", javaGlobalName);
+        _logger.log(FINEST, "javaGlobalName={0}", javaGlobalName);
         if (isRemote) {
             boolean disableNonPortableJndiName = false;
             Boolean disableInDD = ejbDescriptor.getEjbBundleDescriptor().getDisableNonportableJndiNames();
@@ -1112,6 +1092,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 // This is either the default glassfish-specific (non-portable)
                 // global JNDI name or the one specified via mappedName(), glassfish-ejb-jar.xml, etc.
                 final SimpleJndiName jndiName = ejbDescriptor.getJndiName();
+
                 // If the explicitly specified name is the same as the portable name,
                 // don't register any of the glassfish-specific names to prevent clashes.
                 if (jndiName == null || jndiName.isEmpty() || jndiName.equals(javaGlobalName)) {
@@ -1120,7 +1101,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     glassfishSpecificJndiName = jndiName;
                 }
             }
-            _logger.log(Level.FINEST, "glassfishSpecificJndiName={0}", glassfishSpecificJndiName);
+            _logger.log(FINEST, "glassfishSpecificJndiName={0}", glassfishSpecificJndiName);
 
 
             if (hasRemoteHomeView) {
@@ -1152,7 +1133,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 // references are created.
                 remoteHomeRefFactory.setRepositoryIds(homeIntf, remoteIntf);
 
-                // get a remote ref for the EJBHome
+                // Get a remote ref for the EJBHome
                 ejbHomeStub = (EJBHome) remoteHomeRefFactory.createHomeReference(homeInstanceKey);
 
                 // Add 2.x Home for later portable JNDI name processing.
@@ -1199,7 +1180,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 } else {
                     remoteBusinessHomeJndiName = EJBUtils.getRemote30HomeJndiName(glassfishSpecificJndiName);
                 }
-                _logger.log(Level.FINEST, "remoteBusinessHomeJndiName={0}", remoteBusinessHomeJndiName);
+                _logger.log(FINEST, "remoteBusinessHomeJndiName={0}", remoteBusinessHomeJndiName);
 
                 // Convenience location for common case of 3.0 session bean with only
                 // 1 remote business interface and no adapted remote home. Allows a
@@ -1220,7 +1201,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 // There won't necessarily be a glassfish-specific name specified so
                 // it's cleaner to just always use a separate ones.
                 final SimpleJndiName internalHomeJndiNameForPortableRemoteNames = EJBUtils.getRemote30HomeJndiName(javaGlobalName);
-                _logger.log(Level.FINEST, "internalHomeJndiNameForPortableRemoteNames={0}", internalHomeJndiNameForPortableRemoteNames);
+                _logger.log(FINEST, "internalHomeJndiNameForPortableRemoteNames={0}", internalHomeJndiNameForPortableRemoteNames);
                 final EJBObjectImpl dummyEJBObjectImpl = instantiateRemoteBusinessObjectImpl();
                 for (RemoteBusinessIntfInfo next : remoteBusinessIntfInfo.values()) {
 
@@ -1385,7 +1366,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         }
 
         if (!publishedInternalGlobalJndiNames.isEmpty()) {
-            _logger.log(Level.FINE, "Internal container JNDI names for EJB {0}: {1}",
+            _logger.log(FINE, "Internal container JNDI names for EJB {0}: {1}",
                     new Object[] { this.ejbDescriptor.getName(), publishedInternalGlobalJndiNames });
         }
 
@@ -1521,8 +1502,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             for (int i = 0; i < interceptorClasses.length; i++) {
                 // CDI impl will instantiate and inject the instance, but PostConstruct
                 // is still our responsibility
-                interceptorInstances[i] = cdiService.createInterceptorInstance(interceptorClasses[i], ejbDescriptor,
-                        ejbInterceptorsCDIInjectionContext, context.getContainer().getEjbDescriptor().getInterceptorClasses());
+                interceptorInstances[i] =
+                    cdiService.createInterceptorInstance(
+                                interceptorClasses[i],
+                                ejbDescriptor,
+                                ejbInterceptorsCDIInjectionContext,
+                                context.getContainer().getEjbDescriptor().getInterceptorClasses());
             }
 
             interceptorManager.initializeInterceptorInstances(interceptorInstances);
@@ -1539,7 +1524,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     protected void injectEjbInstance(EJBContextImpl context) throws Exception {
-
         EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
@@ -1591,23 +1575,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     @Override
     public void externalPreInvoke() {
-        BeanContext bc = new BeanContext();
+        BeanContext beanContext = new BeanContext();
         final Thread currentThread = Thread.currentThread();
-        bc.previousClassLoader = currentThread.getContextClassLoader();
-        if (getClassLoader().equals(bc.previousClassLoader) == false) {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(getClassLoader());
-            } else {
-                AccessController.doPrivileged(new java.security.PrivilegedAction() {
-
-                    @Override
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(getClassLoader());
-                        return null;
-                    }
-                });
-            }
-            bc.classLoaderSwitched = true;
+        beanContext.previousClassLoader = currentThread.getContextClassLoader();
+        if (getClassLoader().equals(beanContext.previousClassLoader) == false) {
+            currentThread.setContextClassLoader(getClassLoader());
+            beanContext.classLoaderSwitched = true;
         }
 
         ArrayDeque beanContextStack = (ArrayDeque) threadLocalContext.get();
@@ -1616,7 +1589,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             beanContextStack = new ArrayDeque();
             threadLocalContext.set(beanContextStack);
         }
-        beanContextStack.push(bc);
+        beanContextStack.push(beanContext);
     }
 
     @Override
@@ -1624,22 +1597,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         try {
             ArrayDeque beanContextStack = (ArrayDeque) threadLocalContext.get();
 
-            final BeanContext bc = (BeanContext) beanContextStack.pop();
-            if (bc.classLoaderSwitched == true) {
-                if (System.getSecurityManager() == null) {
-                    Thread.currentThread().setContextClassLoader(bc.previousClassLoader);
-                } else {
-                    AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                        @Override
-                        public java.lang.Object run() {
-                            Thread.currentThread().setContextClassLoader(bc.previousClassLoader);
-                            return null;
-                        }
-                    });
-                }
+            final BeanContext beanContext = (BeanContext) beanContextStack.pop();
+            if (beanContext.classLoaderSwitched == true) {
+                Thread.currentThread().setContextClassLoader(beanContext.previousClassLoader);
             }
         } catch (Exception ex) {
-            _logger.log(Level.FINE, "externalPostInvoke ex", ex);
+            _logger.log(FINE, "externalPostInvoke ex", ex);
         }
     }
 
@@ -1663,8 +1626,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      */
     @Override
     public void preInvoke(EjbInvocation inv) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Entering BaseContainer::preInvoke : " + inv);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Entering BaseContainer::preInvoke : " + inv);
         }
 
         try {
@@ -1730,8 +1693,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
 
         } catch (Exception ex) {
-            _logger.log(Level.FINE, "Exception while running pre-invoke : ejb: [{0}]", containerInfo);
-            _logger.log(Level.FINE, "", ex);
+            _logger.log(FINE, "Exception while running pre-invoke : ejb: [{0}]", containerInfo);
+            _logger.log(FINE, "", ex);
 
             EJBException ejbEx;
             if (ex instanceof EJBException) {
@@ -1807,7 +1770,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     postInvokeTx(inv);
                 }
             } catch (Exception ex) {
-                _logger.log(Level.FINE, "Exception occurred in postInvokeTx  : [{0}]", ex);
+                _logger.log(FINE, "Exception occurred in postInvokeTx  : [{0}]", ex);
                 if (ex instanceof EJBException) {
                     inv.exception = ex;
                 } else {
@@ -1832,9 +1795,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 _logger.log(Level.WARNING, SYSTEM_EXCEPTION, new Object[] { ejbDescriptor.getName(), inv.beanMethod });
                 _logger.log(Level.WARNING, "", inv.exception);
             } else {
-                _logger.log(Level.FINE, "An application exception occurred during an invocation on EJB {0}, method: {1}",
+                _logger.log(FINE, "An application exception occurred during an invocation on EJB {0}, method: {1}",
                         new Object[] { ejbDescriptor.getName(), inv.beanMethod });
-                _logger.log(Level.FINE, "", inv.exception);
+                _logger.log(FINE, "", inv.exception);
             }
 
             if (inv.isRemote) {
@@ -1850,7 +1813,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 // The most useful portion of the system exception is logged
                 // above. Only log mapped form when log level is FINE or
                 // higher.
-                _logger.log(Level.FINE, "", inv.exception);
+                _logger.log(FINE, "", inv.exception);
 
             } else {
 
@@ -1868,8 +1831,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
          * }
          */
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Leaving BaseContainer::postInvoke : " + inv);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Leaving BaseContainer::postInvoke : " + inv);
         }
     }
 
@@ -1929,8 +1892,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             Method m = entry.getKey();
             if (m.getName().equals(ts.getTimerMethodName()) && m.getParameterTypes().length == ts.getMethodParamCount()) {
                 scheduleIds.put(timerId, m);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Adding schedule: " + ts.getScheduleAsString() + " FOR method: " + m);
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, "Adding schedule: " + ts.getScheduleAsString() + " FOR method: " + m);
                 }
             }
         }
@@ -1940,7 +1903,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      * Check timeout method and set it accessable
      */
     private void processEjbTimeoutMethod(Method method) throws Exception {
-        _logger.log(Level.FINEST, "processEjbTimeoutMethod(method={0})", method);
+        _logger.log(FINEST, "processEjbTimeoutMethod(method={0})", method);
         Class<?>[] params = method.getParameterTypes();
         if (method.getReturnType() != Void.TYPE ||
             (params.length != 0 && (params.length != 1 || params[0] != jakarta.ejb.Timer.class))
@@ -2030,9 +1993,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(FINE)) {
 
-            _logger.log(Level.FINE,
+            _logger.log(FINE,
                     "Mapped original remote exception " + originalException + " to exception " + mappedException + " for " + inv);
 
         }
@@ -2716,8 +2679,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
         setConcurrencyInvInfo(method, methodIntf, invInfo);
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, invInfo.toString());
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, invInfo.toString());
         }
 
         adjustInvocationInfo(invInfo, method, txAttr, flushEnabled, methodIntf, originalIntf);
@@ -3455,7 +3418,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      */
     @Override
     public void startApplication(boolean deploy) {
-        _logger.log(Level.FINE, "Application deployment successful : " + this);
+        _logger.log(FINE, "Application deployment successful : " + this);
 
         // By now all existing timers should have been restored.
         if (isTimedObject_) {
@@ -3514,7 +3477,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             if (!isBeanManagedTran && (transactionManager.getStatus() == Status.STATUS_MARKED_ROLLBACK)) {
                 redeliver = true;
-                _logger.log(Level.FINE, "ejbTimeout called setRollbackOnly");
+                _logger.log(FINE, "ejbTimeout called setRollbackOnly");
             }
 
         } catch (InvocationTargetException ite) {
@@ -3524,10 +3487,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             // exception will be destroyed, as per the EJB spec.
             redeliver = true;
             inv.exception = ite.getCause();
-            _logger.log(Level.FINE, "ejbTimeout threw Runtime exception", inv.exception);
+            _logger.log(FINE, "ejbTimeout threw Runtime exception", inv.exception);
         } catch (Throwable c) {
             redeliver = true;
-            _logger.log(Level.FINE, "Exception while processing ejbTimeout", c);
+            _logger.log(FINE, "Exception while processing ejbTimeout", c);
             inv.exception = c;
         } finally {
 
@@ -3597,7 +3560,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             try {
                 interceptor.preInvoke(ejbDescriptor);
             } catch (Throwable th) {
-                _logger.log(Level.SEVERE, INTERNAL_ERROR, th);
+                _logger.log(SEVERE, INTERNAL_ERROR, th);
             }
         }
     }
@@ -3610,7 +3573,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             try {
                 interceptor.postInvoke(ejbDescriptor);
             } catch (Throwable th) {
-                _logger.log(Level.SEVERE, INTERNAL_ERROR, th);
+                _logger.log(SEVERE, INTERNAL_ERROR, th);
             }
         }
     }
@@ -3620,7 +3583,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             ServiceLocator services = ejbContainerUtilImpl.getServices();
             interceptors = services.getAllServices(EjbContainerInterceptor.class);
         } catch (Throwable th) {
-            _logger.log(Level.SEVERE, FAILED_TO_INITIALIZE_INTERCEPTOR, th);
+            _logger.log(SEVERE, FAILED_TO_INITIALIZE_INTERCEPTOR, th);
         }
     }
 
@@ -3650,16 +3613,16 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         // callFlowAgent.ejbMethodEnd(callFlowInfo);
     }
 
-    protected Object invokeTargetBeanMethod(Method beanClassMethod, EjbInvocation inv, Object target, Object[] params,
-            com.sun.enterprise.security.SecurityManager mgr) throws Throwable {
+    protected Object invokeTargetBeanMethod(Method beanClassMethod, EjbInvocation inv, Object target, Object[] params) throws Throwable {
         try {
             onEjbMethodStart(inv.invocationInfo.str_method_sig);
+
             if (inv.useFastPath) {
                 return inv.getBeanMethod().invoke(inv.ejb, inv.methodParams);
-            } else {
-
-                return securityManager.invoke(beanClassMethod, inv.isLocal, target, params);
             }
+
+            return securityManager.invoke(target, beanClassMethod, params);
+
         } catch (InvocationTargetException ite) {
             inv.exception = ite.getCause();
             throw ite;
@@ -3695,7 +3658,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 try {
                     stopTimers();
                 } catch (Exception e) {
-                    _logger.log(Level.FINE, "Error destroying timers for " + ejbDescriptor.getName(), e);
+                    _logger.log(FINE, "Error destroying timers for " + ejbDescriptor.getName(), e);
                 }
 
                 // Shutdown with undeploy
@@ -3707,7 +3670,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         } catch (Throwable t) {
             // Make sure we don't propagate an exception since that could
             // prevent the cleanup of some other component.
-            _logger.log(Level.FINE, "BsaeContainer::undeploy exception", t);
+            _logger.log(FINE, "BsaeContainer::undeploy exception", t);
         }
 
     }
@@ -3728,7 +3691,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 try {
                     stopTimers();
                 } catch (Exception e) {
-                    _logger.log(Level.FINE, "Error stopping timers for " + ejbDescriptor.getName(), e);
+                    _logger.log(FINE, "Error stopping timers for " + ejbDescriptor.getName(), e);
                 }
                 // Cleanup without undeploy
                 doConcreteContainerShutdown(false);
@@ -3739,7 +3702,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         } catch (Throwable t) {
             // Make sure we don't propagate an exception since that could
             // prevent the cleanup of some other component.
-            _logger.log(Level.FINE, "BsaeContainer::onShutdown exception", t);
+            _logger.log(FINE, "BsaeContainer::onShutdown exception", t);
         }
     }
 
@@ -3770,7 +3733,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             // endpoint registry unregisterEndpoint operation
 
         } catch (Exception e) {
-            _logger.log(Level.FINE, "Error unregistering ejb endpoint for " + ejbDescriptor.getName(), e);
+            _logger.log(FINE, "Error unregistering ejb endpoint for " + ejbDescriptor.getName(), e);
         }
 
         if (hasAsynchronousInvocations) {
@@ -3787,23 +3750,13 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             try {
                 jndiInfo.unpublish(this.namingManager);
             } catch (Exception e) {
-                _logger.log(Level.FINE, "Error while unbinding JNDI name " + jndiInfo.name + " for EJB.name: "
+                _logger.log(FINE, "Error while unbinding JNDI name " + jndiInfo.name + " for EJB.name: "
                     + this.ejbDescriptor.getName(), e);
             }
         }
 
         try {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(loader);
-            } else {
-                AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                    @Override
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(loader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(loader);
 
             if (isRemote) {
                 try {
@@ -3850,16 +3803,16 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     }
 
                 } catch (Exception ex) {
-                    _logger.log(Level.FINE, "Exception during undeploy {0}", containerInfo);
-                    _logger.log(Level.FINE, "", ex);
+                    _logger.log(FINE, "Exception during undeploy {0}", containerInfo);
+                    _logger.log(FINE, "", ex);
                 }
             }
 
             try {
                 ejbContainerUtilImpl.getComponentEnvManager().unbindFromComponentNamespace(ejbDescriptor);
             } catch (javax.naming.NamingException namEx) {
-                _logger.log(Level.FINE, "Exception during undeploy: {0}", containerInfo);
-                _logger.log(Level.FINE, "", namEx);
+                _logger.log(FINE, "Exception during undeploy: {0}", containerInfo);
+                _logger.log(FINE, "", namEx);
             }
 
             ejbContainerUtilImpl.unregisterContainer(this);
@@ -3867,22 +3820,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             unregisterProbeListeners();
 
         } finally {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(previousClassLoader);
-            } else {
-                AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                    @Override
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(previousClassLoader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(previousClassLoader);
         }
 
         baseContainerCleanupDone = true;
 
-        _logger.log(Level.FINE, "**** [BaseContainer]: Successfully Undeployed " + ejbDescriptor.getName() + " ...");
+        _logger.log(FINE, "**** [BaseContainer]: Successfully Undeployed " + ejbDescriptor.getName() + " ...");
 
     }
 
@@ -3906,8 +3849,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 }
             }
         } catch (Exception ex) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Error unregistering the ProbeProvider");
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Error unregistering the ProbeProvider");
             }
         }
     }
@@ -4123,8 +4066,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     for (int t : validateTxAttr) {
                         if (lcTxAttr == t) {
                             txAttr = t;
-                            if (_logger.isLoggable(Level.FINE)) {
-                                _logger.log(Level.FINE, "Found callback method " + ejbDescriptor.getEjbClassName() + "<>" + callbackMethod
+                            if (_logger.isLoggable(FINE)) {
+                                _logger.log(FINE, "Found callback method " + ejbDescriptor.getEjbClassName() + "<>" + callbackMethod
                                         + " : " + txAttr);
                             }
                             break;
@@ -4134,8 +4077,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 }
             }
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Returning attr for " + ejbDescriptor.getEjbClassName() + " : " + txAttr);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Returning attr for " + ejbDescriptor.getEjbClassName() + " : " + txAttr);
         }
 
         return txAttr;
@@ -4173,7 +4116,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 onEjbMethodEnd(inv.invocationInfo.str_method_sig, inv.exception);
             }
         } else { // invoke() has the same exc. semantics as Method.invoke
-            result = this.invokeTargetBeanMethod(inv.getBeanMethod(), inv, inv.ejb, inv.methodParams, null);
+            result = this.invokeTargetBeanMethod(inv.getBeanMethod(), inv, inv.ejb, inv.methodParams);
         }
 
         return result;
@@ -4190,7 +4133,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      */
     public Object invokeBeanMethod(EjbInvocation invocation) throws Throwable {
         try {
-            return securityManager.invoke(invocation.getBeanMethod(), invocation.isLocal, invocation.ejb, invocation.getParameters());
+            return securityManager.invoke(invocation.ejb, invocation.getBeanMethod(), invocation.getParameters());
         } catch (InvocationTargetException ite) {
             throw ite.getCause();
         }
@@ -4208,12 +4151,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     getMonitoringMethodsArray());
             ejbProbeListener.register();
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Created MonitoringRegistry: "
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Created MonitoringRegistry: "
                         + EjbMonitoringUtils.getDetailedLoggingName(containerInfo.appName, containerInfo.modName, containerInfo.ejbName));
             }
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, COULD_NOT_CREATE_MONITORREGISTRYMEDIATOR, new Object[] {
+            _logger.log(SEVERE, COULD_NOT_CREATE_MONITORREGISTRYMEDIATOR, new Object[] {
                     EjbMonitoringUtils.getDetailedLoggingName(containerInfo.appName, containerInfo.modName, containerInfo.ejbName), ex });
             if (!isMonitorRegistryMediatorCreated) {
                 registerEjbMonitoringProbeProvider();
@@ -4239,13 +4182,13 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             ProbeProviderFactory probeFactory = ejbContainerUtilImpl.getProbeProviderFactory();
             String invokerId = EjbMonitoringUtils.getInvokerId(containerInfo.appName, containerInfo.modName, containerInfo.ejbName);
             ejbProbeNotifier = probeFactory.getProbeProvider(EjbMonitoringProbeProvider.class, invokerId);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Got ProbeProvider: " + ejbProbeNotifier.getClass().getName());
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Got ProbeProvider: " + ejbProbeNotifier.getClass().getName());
             }
         } catch (Exception ex) {
             ejbProbeNotifier = new EjbMonitoringProbeProvider();
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Error getting the EjbMonitoringProbeProvider");
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Error getting the EjbMonitoringProbeProvider");
             }
         }
 
@@ -4264,9 +4207,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 }
             }
             return methodList.toArray(new String[methodList.size()]);
-        } else {
-            return ejbDescriptor.getMethods().stream().map(EjbMonitoringUtils::stringify).toArray(String[]::new);
         }
+
+        return ejbDescriptor.getMethods().stream().map(EjbMonitoringUtils::stringify).toArray(String[]::new);
     }
 
     protected void doFlush(EjbInvocation inv) {
@@ -4283,19 +4226,20 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             try {
                 ProbeProviderFactory probeFactory = ejbContainerUtilImpl.getProbeProviderFactory();
                 timerProbeNotifier = probeFactory.getProbeProvider(EjbTimedObjectProbeProvider.class, invokerId);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Got TimerProbeProvider: " + timerProbeNotifier.getClass().getName());
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, "Got TimerProbeProvider: " + timerProbeNotifier.getClass().getName());
                 }
             } catch (Exception ex) {
                 timerProbeNotifier = new EjbTimedObjectProbeProvider();
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Error getting the TimerProbeProvider");
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, "Error getting the TimerProbeProvider");
                 }
             }
             timerProbeListener = new EjbTimedObjectStatsProvider(containerInfo.appName, containerInfo.modName, containerInfo.ejbName);
             timerProbeListener.register();
         }
-        _logger.log(Level.FINE, "[BaseContainer] registered timer monitorable");
+
+        _logger.log(FINE, "[BaseContainer] registered timer monitorable");
     }
 
     protected void incrementCreatedTimedObject() {
@@ -4371,7 +4315,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     nm.unpublishObject(name);
                 }
             } else {
-                _logger.log(Level.FINE,
+                _logger.log(FINE,
                         "Skipping unpublish of " + name + " because it was " + "never published successfully in the first place");
             }
         }

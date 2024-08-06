@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,7 @@ public interface FileCache extends ConfigBeanProxy, PropertyBag {
     @Attribute(defaultValue = "" + ENABLED, dataType = Boolean.class)
     String getEnabled();
 
-    void setEnabled(final String enabled);
+    void setEnabled(String enabled);
 
     /**
      * How old files can get before aging out of cache in seconds.
@@ -52,7 +52,7 @@ public interface FileCache extends ConfigBeanProxy, PropertyBag {
     @Attribute(defaultValue = "" + MAX_AGE, dataType = Integer.class)
     String getMaxAgeSeconds();
 
-    void setMaxAgeSeconds(final String maxAge);
+    void setMaxAgeSeconds(String maxAge);
 
     /**
      * Maximum cache size on the disk.
@@ -60,7 +60,7 @@ public interface FileCache extends ConfigBeanProxy, PropertyBag {
     @Attribute(defaultValue = "" + MAX_CACHE_SIZE, dataType = Integer.class)
     String getMaxCacheSizeBytes();
 
-    void setMaxCacheSizeBytes(final String maxCacheSize);
+    void setMaxCacheSizeBytes(String maxCacheSize);
 
     /**
      * Maximum number of files in the file cache.
@@ -68,5 +68,5 @@ public interface FileCache extends ConfigBeanProxy, PropertyBag {
     @Attribute(defaultValue = "" + MAX_FILES, dataType = Integer.class)
     String getMaxFilesCount();
 
-    void setMaxFilesCount(final String maxFilesCount);
+    void setMaxFilesCount(String maxFilesCount);
 }

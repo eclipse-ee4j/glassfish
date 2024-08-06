@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,8 +72,6 @@ public class DeploymentUtils {
 
     @LogMessageInfo(message = "Exception caught {0}", level = "WARNING")
     private static final String EXCEPTION_CAUGHT = "NCLS-DEPLOYMENT-00010";
-
-    public static final String DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentUtils.class);
 

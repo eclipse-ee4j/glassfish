@@ -18,7 +18,7 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -70,8 +70,8 @@
     </issueManagement>
     <properties>
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>6.0.0</jakarta.el-api.version>
-        <expressly.version>6.0.0-M1</expressly.version>
+        <jakarta.el-api.version>6.0.1</jakarta.el-api.version>
+        <expressly.version>6.0.0-M2</expressly.version>
 
         <!-- Jakarta Servlet -->
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
@@ -88,12 +88,12 @@
         <!-- Jakarta SOAP (with Attachments)
        <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
         -->
-        <webservices.version>4.0.3</webservices.version>
+        <webservices.version>4.0.4</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>4.0.0-M2</hk2.version>
-        <hk2.plugin.version>4.0.0-M2</hk2.plugin.version>
+        <hk2.version>4.0.0-M3</hk2.version>
+        <hk2.plugin.version>4.0.0-M3</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
@@ -118,7 +118,7 @@
         <!-- GlassFish Components -->
 
         <glassfish-corba.version>4.2.5</glassfish-corba.version>
-        <grizzly.version>4.0.2</grizzly.version>
+        <grizzly.version>4.1.0-M1</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>
@@ -136,11 +136,11 @@
         <jboss.logging.version>3.6.0.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.7</asm.version>
-        <jsch.version>0.2.17</jsch.version>
+        <jsch.version>0.2.18</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.14</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.17.1</jackson.version>
+        <jackson.version>2.17.2</jackson.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
@@ -148,8 +148,8 @@
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
-        <easymock.version>5.2.0</easymock.version>
-        <junit.version>5.10.2</junit.version>
+        <easymock.version>5.3.0</easymock.version>
+        <junit.version>5.10.3</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -487,7 +487,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.2</version>
+                <version>5.0.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -550,7 +550,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.26.0</version>
+                <version>3.26.2</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -653,6 +653,12 @@
 
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
@@ -673,6 +679,12 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                    </exclusion>
+                </exclusions>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -713,11 +725,6 @@
                 <groupId>com.github.mwiede</groupId>
                 <artifactId>jsch</artifactId>
                 <version>${jsch.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>3.3.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.annotations</groupId>
@@ -807,7 +814,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -825,7 +832,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.3</version>
+                    <version>3.7.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -834,15 +841,15 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -860,12 +867,13 @@
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
+                            <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -901,11 +909,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <configLocation>org/glassfish/qa/config/checkstyle/checkstyle.xml</configLocation>
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
@@ -931,7 +939,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.16.0</version>
+                            <version>10.17.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -947,7 +955,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.cyclonedx</groupId>
+                    <artifactId>cyclonedx-maven-plugin</artifactId>
+                    <version>2.8.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
@@ -956,7 +969,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -964,12 +977,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M13</version>
+                    <version>4.0.0-M15</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -983,7 +996,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
@@ -991,16 +1004,16 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1051,7 +1064,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>8.0.2</version>
+                    <version>9.0.1</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1080,7 +1093,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.15.0</version>
+                    <version>2.16.2</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -1369,6 +1382,21 @@
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>command-security-maven-plugin</artifactId>
             </plugin>
+            <!--
+                Disables sbom generation inherited from parent
+            -->
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase></phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -1425,7 +1453,11 @@
             </dependencies>
         </profile>
         <profile>
-            <id>release-phase2</id>
+            <id>oss-release</id>
+            <properties>
+                <!-- Until we fix everything -->
+                <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -1446,6 +1478,18 @@
                                 <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.cyclonedx</groupId>
+                        <artifactId>cyclonedx-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>makeAggregateBom</goal>
                                 </goals>
                             </execution>
                         </executions>

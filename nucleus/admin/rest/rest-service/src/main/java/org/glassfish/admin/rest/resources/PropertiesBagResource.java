@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +19,6 @@ package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import java.util.*;
-
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -33,33 +32,37 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.utils.Util;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.results.GetResultList;
 import org.glassfish.admin.rest.results.OptionsResult;
+import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  *
  * @author jasonlee
  */
 public class PropertiesBagResource extends AbstractResource {
+
+    public static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PropertiesBagResource.class);
+
     protected List<Dom> entity;
     protected Dom parent;
     protected String tagName;
-    public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PropertiesBagResource.class);
-
-    static public class PropertyResource extends TemplateRestResource {
-        @Override
-        public String getDeleteCommand() {
-            return "GENERIC-DELETE";
-        }
-    }
 
     @Path("{Name}/")
     public PropertyResource getProperty(@PathParam("Name") String id) {
@@ -73,7 +76,9 @@ public class PropertiesBagResource extends AbstractResource {
     public Object get() {
         List<Dom> entities = getEntity();
         if (entities == null) {
-            return new GetResultList(new ArrayList(), "", new String[][] {}, new OptionsResult(Util.getResourceName(uriInfo)));//empty dom list
+            // empty dom list
+            return new GetResultList(new ArrayList<>(), new String[][] {},
+                new OptionsResult(Util.getResourceName(uriInfo)));
         }
 
         RestActionReporter ar = new RestActionReporter();
@@ -82,7 +87,7 @@ public class PropertiesBagResource extends AbstractResource {
         List properties = new ArrayList();
 
         for (Dom child : entities) {
-            Map<String, String> entry = new HashMap<String, String>();
+            Map<String, String> entry = new HashMap<>();
             entry.put("name", child.attribute("name"));
             entry.put("value", child.attribute("value"));
             String description = child.attribute("description");
@@ -149,7 +154,7 @@ public class PropertiesBagResource extends AbstractResource {
         try {
             Map<String, Property> existing = getExistingProperties();
             deleteMissingProperties(existing, properties);
-            Map<String, String> data = new LinkedHashMap<String, String>();
+            Map<String, String> data = new LinkedHashMap<>();
 
             for (Map<String, String> property : properties) {
                 Property existingProp = existing.get(property.get("name"));
@@ -213,14 +218,14 @@ public class PropertiesBagResource extends AbstractResource {
     }
 
     protected void deleteMissingProperties(Map<String, Property> existing, List<Map<String, String>> properties) throws TransactionFailure {
-        Set<String> propNames = new HashSet<String>();
+        Set<String> propNames = new HashSet<>();
         if (properties != null) {
             for (Map<String, String> property : properties) {
                 propNames.add(property.get("name"));
             }
         }
 
-        HashMap<String, String> data = new HashMap<String, String>();
+        HashMap<String, String> data = new HashMap<>();
         for (final Property existingProp : existing.values()) {
             if (!propNames.contains(existingProp.getName())) {
                 String escapedName = getEscapedPropertyName(existingProp.getName());
@@ -247,4 +252,12 @@ public class PropertiesBagResource extends AbstractResource {
             entity = parent.nodeElements(tagName);
         }
     }
+
+    public static class PropertyResource extends TemplateRestResource {
+        @Override
+        public String getDeleteCommand() {
+            return "GENERIC-DELETE";
+        }
+    }
+
 }

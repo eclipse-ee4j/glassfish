@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -519,19 +519,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                         LOG.log(DEBUG, "Injecting dependency with logical name: {0} into method: {1} on class: {2}",
                             next.getComponentEnvName(), method, clazz);
 
-                        if (System.getSecurityManager() != null) {
-                            // Wrap actual value insertion in doPrivileged to
-                            // allow for private/protected field access.
-                            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                                @Override
-                                public java.lang.Object run() throws Exception {
-                                    method.invoke(instance, value);
-                                    return null;
-                                }
-                            });
-                        } else {
-                            method.invoke(instance, value);
-                        }
+                        method.invoke(instance, value);
 
                     }
                 }
@@ -551,16 +539,10 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         try {
             // Wrap actual value insertion in doPrivileged to
             // allow for private/protected field access.
-            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                @Override
-                public java.lang.Object run() throws Exception {
-                    if (!lifecycleMethod.trySetAccessible()) {
-                        throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
-                    }
-                    lifecycleMethod.invoke(instance);
-                    return null;
-                }
-            });
+            if (!lifecycleMethod.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
+            }
+            lifecycleMethod.invoke(instance);
         } catch (Throwable t) {
             InjectionException ie = new InjectionException(
                 "Exception attempting invoke lifecycle method: " + lifecycleMethod);
@@ -570,79 +552,64 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
     }
 
-    private Field getField(InjectionTarget target, Class resourceClass) throws Exception {
+    private Field getField(InjectionTarget target, Class<?> resourceClass) throws Exception {
+        Field targetField = target.getField();
 
-        Field f = target.getField();
-
-        if (f == null) {
+        if (targetField == null) {
             try {
                 // Check for the given field within the resourceClass only.
                 // This does not include super-classes of this class.
-                f = resourceClass.getDeclaredField(target.getFieldName());
+                targetField = resourceClass.getDeclaredField(target.getFieldName());
 
-                final Field finalF = f;
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        if (!finalF.trySetAccessible()) {
-                            throw new InaccessibleObjectException("Unable to make accessible: " + finalF);
-                        }
-                        return null;
-                    }
-                });
+                if (!targetField.trySetAccessible()) {
+                    throw new InaccessibleObjectException("Unable to make accessible: " + targetField);
+                }
 
             } catch (java.lang.NoSuchFieldException nsfe) {
             }
 
-            if (f != null) {
-                target.setField(f);
+            if (targetField != null) {
+                target.setField(targetField);
             }
         }
 
-        if (f == null) {
+        if (targetField == null) {
             throw new Exception(MessageFormat.format("InjectionManager exception.  Field: {0} not found in class: {1}",
                 target.getFieldName(), resourceClass));
         }
 
-        return f;
+        return targetField;
     }
 
-    private Method getMethod(InjectionCapable resource, InjectionTarget target, Class resourceClass) throws Exception {
-        Method m = target.getMethod();
+    private Method getMethod(InjectionCapable resource, InjectionTarget target, Class<?> resourceClass) throws Exception {
+        Method targetMethod = target.getMethod();
 
-        if (m == null) {
+        if (targetMethod == null) {
             // Check for the method within the resourceClass only.
             // This does not include super-classses.
             for (Method next : resourceClass.getDeclaredMethods()) {
                 // Overloading is not supported for setter injection
                 // methods, so matching on method-name is sufficient.
                 if (next.getName().equals(target.getMethodName())) {
-                    m = next;
-                    target.setMethod(m);
+                    targetMethod = next;
+                    target.setMethod(targetMethod);
 
-                    final Method finalM = m;
-                    java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                        @Override
-                        public java.lang.Object run() throws Exception {
-                            if (!finalM.trySetAccessible()) {
-                                throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
-                            }
-                            return null;
-                        }
-                    });
+                    if (!targetMethod.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + targetMethod);
+                    }
 
                     break;
                 }
             }
         }
 
-        if (m == null) {
+        if (targetMethod == null) {
             throw new Exception(
                 MessageFormat.format("InjectionManager exception.  Method: void {0} ({1}) not found in class: {2}",
                     target.getMethodName(), resource.getInjectResourceType(), resourceClass));
         }
 
-        return m;
+        return targetMethod;
     }
 
     private Method getPostConstructMethod(InjectionInfo injInfo, Class resourceClass) throws InjectionException {

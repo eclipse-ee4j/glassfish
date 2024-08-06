@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Timer;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.ErrorManager;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -84,6 +85,8 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
     private static final Logger STDOUT_LOGGER = Logger.getLogger(LOGGER_NAME_STDOUT);
     private static final Logger STDERR_LOGGER = Logger.getLogger(LOGGER_NAME_STDERR);
     private static final MessageResolver MSG_RESOLVER = new MessageResolver();
+
+    private final ReentrantLock lock = new ReentrantLock();
 
     private LoggingPrintStream stdoutStream;
     private LoggingPrintStream stderrStream;
@@ -147,9 +150,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
         // parent StreamHandler already set level, filter, encoding and formatter.
         setLevel(configuration.getLevel());
         setEncoding(configuration.getEncoding());
-
-        this.logRecordBuffer = new LogRecordBuffer(
-            configuration.getBufferCapacity(), configuration.getBufferTimeout());
+        this.logRecordBuffer = new LogRecordBuffer(configuration.getBufferCapacity(), configuration.getBufferTimeout());
 
         reconfigure(configuration);
     }
@@ -187,25 +188,31 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
      *
      * @param newConfiguration
      */
-    public synchronized void reconfigure(final GlassFishLogHandlerConfiguration newConfiguration) {
+    public void reconfigure(final GlassFishLogHandlerConfiguration newConfiguration) {
         trace(GlassFishLogHandler.class, () -> "reconfigure(configuration=" + newConfiguration + ")");
-        // stop using output, but allow collecting records. Logging system can continue to work.
-        this.status = GlassFishLogHandlerStatus.ACCEPTING;
-        if (this.rotationTimerTask != null) {
-            // to avoid another task from last configuration runs it's action.
-            this.rotationTimerTask.cancel();
-            this.rotationTimerTask = null;
-        }
-        // stop pump. If reconfiguration would fail, it is better to leave it down.
-        // records from the buffer will be processed if the last configuration was valid.
-        stopPump();
-        this.configuration = newConfiguration;
-
+        lock.lock();
         try {
-            this.status = startLoggingIfPossible();
-        } catch (final Exception e) {
-            this.status = GlassFishLogHandlerStatus.OFF;
-            throw e;
+            // stop using output, but allow collecting records. Logging system can continue to work.
+            this.status = GlassFishLogHandlerStatus.ACCEPTING;
+            this.logRecordBuffer.reconfigure(newConfiguration.getBufferCapacity(), newConfiguration.getBufferTimeout());
+            if (this.rotationTimerTask != null) {
+                // to avoid another task from last configuration runs it's action.
+                this.rotationTimerTask.cancel();
+                this.rotationTimerTask = null;
+            }
+            // stop pump. If reconfiguration would fail, it is better to leave it down.
+            // records from the buffer will be processed if the last configuration was valid.
+            stopPump();
+            this.configuration = newConfiguration;
+
+            try {
+                this.status = startLoggingIfPossible();
+            } catch (final Exception e) {
+                this.status = GlassFishLogHandlerStatus.OFF;
+                throw e;
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -254,14 +261,19 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
     /**
      * Explicitly rolls the log file.
      */
-    public synchronized void roll() {
+    public void roll() {
         trace(GlassFishLogHandler.class, "roll()");
         final PrivilegedAction<Void> action = () -> {
             this.logFileManager.roll();
             updateRollSchedule();
             return null;
         };
-        AccessController.doPrivileged(action);
+        lock.lock();
+        try {
+            AccessController.doPrivileged(action);
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -271,30 +283,35 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
      * by this handler and finally closes the output stream.
      */
     @Override
-    public synchronized void close() {
+    public void close() {
         trace(GlassFishLogHandler.class, "close()");
-        this.status = GlassFishLogHandlerStatus.OFF;
-        if (this.rotationTimerTask != null) {
-            this.rotationTimerTask.cancel();
-            this.rotationTimerTask = null;
-        }
-        this.rotationTimer.cancel();
+        lock.lock();
         try {
-            LoggingSystemEnvironment.resetStandardOutputs();
-            if (this.stdoutStream != null) {
-                this.stdoutStream.close();
-                this.stdoutStream = null;
+            this.status = GlassFishLogHandlerStatus.OFF;
+            if (this.rotationTimerTask != null) {
+                this.rotationTimerTask.cancel();
+                this.rotationTimerTask = null;
+            }
+            this.rotationTimer.cancel();
+            try {
+                LoggingSystemEnvironment.resetStandardOutputs();
+                if (this.stdoutStream != null) {
+                    this.stdoutStream.close();
+                    this.stdoutStream = null;
+                }
+
+                if (this.stderrStream != null) {
+                    this.stderrStream.close();
+                    this.stderrStream = null;
+                }
+            } catch (final RuntimeException e) {
+                error(GlassFishLogHandler.class, "close partially failed!", e);
             }
 
-            if (this.stderrStream != null) {
-                this.stderrStream.close();
-                this.stderrStream = null;
-            }
-        } catch (final RuntimeException e) {
-            error(GlassFishLogHandler.class, "close partially failed!", e);
+            stopPump();
+        } finally {
+            lock.unlock();
         }
-
-        stopPump();
     }
 
 
@@ -344,8 +361,9 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
     }
 
 
-    private synchronized void stopPump() {
+    private void stopPump() {
         trace(GlassFishLogHandler.class, "stopPump()");
+
         if (this.pump != null) {
             this.pump.interrupt();
             this.pump = null;
@@ -406,9 +424,14 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
     /**
      * If the file is not empty, rolls. Then updates the next roll schedule.
      */
-    private synchronized void scheduledRoll() {
-        this.logFileManager.rollIfFileNotEmpty();
-        updateRollSchedule();
+    private void scheduledRoll() {
+        lock.lock();
+        try {
+            this.logFileManager.rollIfFileNotEmpty();
+            updateRollSchedule();
+        } finally {
+            lock.unlock();
+        }
     }
 
 

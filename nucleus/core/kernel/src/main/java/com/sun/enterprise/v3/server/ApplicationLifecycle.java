@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1838,9 +1838,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 Long start = System.currentTimeMillis();
                 try (WritableArchive expandedArchive = archiveFactory.createArchive(expansionDir)) {
                     archiveHandler.expand(archive, expandedArchive, initial);
-                    if (LOG.isLoggable(FINE)) {
-                        LOG.fine("Deployment expansion took " + (System.currentTimeMillis() - start));
-                    }
+                    LOG.fine(() -> "Deployment expansion took " + (System.currentTimeMillis() - start) + " ms");
 
                     // Close the JAR archive before losing the reference to it or else the JAR remains locked.
                     try {

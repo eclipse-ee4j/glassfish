@@ -46,7 +46,7 @@ Run a specified group:
 mvn clean install -Dgroups=security
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
@@ -61,11 +61,11 @@ mvn clean install -Dgroups=security
    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta REST standalone TCK</description>
 
    <properties>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <tck.version>3.1.5</tck.version>
+        <tck.version>4.0.0</tck.version>
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
@@ -84,19 +84,22 @@ mvn clean install -Dgroups=security
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
+            <version>1.6</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
             <version>1.8.0.Final</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Client libs for doing HTTP requests, specifically done via the REST Client -->
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>glassfish-client-ee10</artifactId>
-            <version>1.4</version>
+            <artifactId>glassfish-client-ee11</artifactId>
+            <version>1.6.1</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -108,19 +111,22 @@ mvn clean install -Dgroups=security
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
-   <build>
+    <build>
         <plugins>
             <!-- Download and installation of the GlassFish server used for testing  -->
             <plugin>
@@ -206,7 +212,7 @@ mvn clean install -Dgroups=security
         </plugins>
     </build>
 
-   <profiles>
+    <profiles>
         <profile>
             <id>full</id>
             <activation>

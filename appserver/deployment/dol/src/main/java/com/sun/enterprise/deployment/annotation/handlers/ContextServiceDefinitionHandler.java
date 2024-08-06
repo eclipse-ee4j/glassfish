@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
@@ -26,10 +26,7 @@ import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.MetadataSource.ANNOTATION;
 
 @Service
 @AnnotationHandlerFor(ContextServiceDefinition.class)
@@ -41,11 +38,9 @@ public class ContextServiceDefinitionHandler extends AbstractResourceHandler {
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
         throws AnnotationProcessorException {
-        ContextServiceDefinitionData data = converter.convert((ContextServiceDefinition) ainfo.getAnnotation());
-        ContextServiceDefinitionDescriptor descriptor = new ContextServiceDefinitionDescriptor(data, ANNOTATION);
-        for (ResourceContainerContext context : rcContexts) {
-            context.getResourceDescriptors(JavaEEResourceType.CSDD).add(descriptor);
-        }
+        ContextServiceDefinition contextServiceDefinition = (ContextServiceDefinition) ainfo.getAnnotation();
+        ContextServiceDefinitionData data = converter.convert(contextServiceDefinition);
+        converter.updateDescriptors(data, rcContexts);
         return getDefaultProcessedResult();
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,37 +17,31 @@
 
 package org.glassfish.security.services.impl.authorization;
 
+import static org.glassfish.security.services.impl.ServiceLogging.SEC_SVCS_LOGGER;
+import static org.glassfish.security.services.impl.ServiceLogging.SHARED_LOGMESSAGE_RESOURCE;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.net.URI;
-import java.security.AccessController;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
-
+import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.security.services.api.authorization.AzAttributeResolver;
 import org.glassfish.security.services.api.authorization.AzResource;
 import org.glassfish.security.services.api.authorization.AzSubject;
 import org.glassfish.security.services.api.authorization.RoleMappingService;
-import org.glassfish.security.services.common.PrivilegedLookup;
-import org.glassfish.security.services.common.Secure;
 import org.glassfish.security.services.config.SecurityConfiguration;
 import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.impl.ServiceFactory;
-import org.glassfish.security.services.impl.ServiceLogging;
 import org.glassfish.security.services.spi.authorization.RoleMappingProvider;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * <code>RoleMappingServiceImpl</code> implements
@@ -57,13 +52,10 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  */
 @Service
 @Singleton
-@Secure(accessPermissionName="security/service/rolemapper")
 public final class RoleMappingServiceImpl implements RoleMappingService, PostConstruct {
     private static final Level DEBUG_LEVEL = Level.FINER;
-    private static final Logger logger =
-        Logger.getLogger(ServiceLogging.SEC_SVCS_LOGGER,ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
-    private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(RoleMappingServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(SEC_SVCS_LOGGER,SHARED_LOGMESSAGE_RESOURCE);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RoleMappingServiceImpl.class);
 
     @Inject
     private Domain domain;
@@ -110,13 +102,11 @@ public final class RoleMappingServiceImpl implements RoleMappingService, PostCon
 
     // Helpers
     private AzSubject makeAzSubject(final Subject subject) {
-        AzSubject azs = new AzSubjectImpl(subject);
-        return azs;
+        return new AzSubjectImpl(subject);
     }
 
     private AzResource makeAzResource(final URI resource) {
-        AzResource azr = new AzResourceImpl(resource);
-        return azr;
+        return new AzResourceImpl(resource);
     }
 
     /**
@@ -127,6 +117,7 @@ public final class RoleMappingServiceImpl implements RoleMappingService, PostCon
         if (InitializationState.NOT_INITIALIZED != initialized) {
             return;
         }
+
         try {
             // Get the Role Mapping Service configuration
             config = (org.glassfish.security.services.config.RoleMappingService) securityServiceConfiguration;
@@ -144,9 +135,8 @@ public final class RoleMappingServiceImpl implements RoleMappingService, PostCon
                     if (isDebug()) {
                         logger.log(DEBUG_LEVEL, "Attempting to get Role Mapping Provider \"{0}\".", providerName );
                     }
-                    provider = AccessController.doPrivileged(
-                        new PrivilegedLookup<>(serviceLocator, RoleMappingProvider.class, providerName) );
 
+                    provider = serviceLocator.getService(RoleMappingProvider.class, providerName);
                     if (provider == null) {
                         throw new IllegalStateException(localStrings.getLocalString("service.role.not_provider",
                             "Role Mapping Provider {0} not found.", providerName));

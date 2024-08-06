@@ -49,7 +49,7 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
    <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M7</version>
     </parent>
 
    <artifactId>glassfish-external-tck-websocket</artifactId>

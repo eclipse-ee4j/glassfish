@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>appserv-rt-pom</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M7</version>
     </parent>
 
     <artifactId>appserv-rt-frag</artifactId>

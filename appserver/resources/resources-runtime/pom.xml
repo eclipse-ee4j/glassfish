@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.resources</groupId>
         <artifactId>resources</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M7</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

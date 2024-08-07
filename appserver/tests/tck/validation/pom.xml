@@ -152,7 +152,7 @@
                         <suiteXmlFile>suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <dependenciesToScan>
-                        <dependency>jakarta.validation:beanvalidation-tck-tests</dependency>
+                        <dependency>jakarta.validation:validation-tck-tests</dependency>
                     </dependenciesToScan>
                     <properties>
                         <property>

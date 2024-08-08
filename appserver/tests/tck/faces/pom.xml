@@ -36,6 +36,12 @@
         <tck.root>${project.build.directory}</tck.root>
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
+        <maven.exec.params>-B -e -s ${maven.settings.xml} -f ${tck.root}/faces-tck-4.1.0/tck/pom.xml</maven.exec.params>
+        <maven.exec.projects></maven.exec.projects>
+        <maven.exec.goals>clean install</maven.exec.goals>
+        <maven.exec.basic.options>-Dglassfish.version=${glassfish.version} -Dmojarra.version=${mojarra.version} -Dfaces.version=4.1.0</maven.exec.basic.options>
+        <maven.exec.options></maven.exec.options>
+        <maven.exec.cmdline>${maven.exec.params} ${maven.exec.projects} ${maven.exec.goals} ${maven.exec.basic.options} ${maven.exec.options}</maven.exec.cmdline>
     </properties>
 
     <dependencies>
@@ -86,19 +92,7 @@
                 </executions>
                 <configuration>
                     <executable>${maven.executable}</executable>
-                    <arguments>
-                        <argument>-B</argument>
-                        <argument>-e</argument>
-                        <argument>-s</argument>
-                        <argument>${maven.settings.xml}</argument>
-                        <argument>-f</argument>
-                        <argument>${tck.root}/faces-tck-4.1.0/tck/pom.xml</argument>
-                        <argument>clean</argument>
-                        <argument>install</argument>
-                        <argument>-Dglassfish.version=${glassfish.version}</argument>
-                        <argument>-Dmojarra.version=${mojarra.version}</argument>
-                        <argument>-Dfaces.version=4.1.0</argument>
-                    </arguments>
+                    <commandlineArgs>${maven.exec.cmdline}</commandlineArgs>
                     <environmentVariables>
                         <LC_ALL>C</LC_ALL>
                     </environmentVariables>
@@ -106,4 +100,61 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        
+        <profile>
+            <!-- Skip old tests with '-DskipOld'.-->
+            <id>skipOld</id>
+            <activation>
+              <property>
+                <name>skipOld</name>
+              </property>
+            </activation>
+            <properties>
+                <maven.exec.projects>-pl -:old-faces-tck-parent,-:old-tck-build,-:old-tck-run -Dtck.old.skip=true</maven.exec.projects>
+            </properties>
+        </profile>
+        
+        
+        <profile>
+            <!-- Skip new tests with '-DskipNew'.-->
+            <id>skipNew</id>
+            <activation>
+              <property>
+                <name>skipNew</name>
+              </property>
+            </activation>
+            <properties>
+                <maven.exec.projects>-pl :old-faces-tck-parent,:old-tck-build,:old-tck-run</maven.exec.projects>
+            </properties>
+        </profile>
+        
+        
+        <profile>
+            <id>old1</id>
+            <activation>
+              <property>
+                <name>old1</name>
+              </property>
+            </activation>
+            <properties>
+                <maven.exec.options>-Drun.test.pattern="^((?!jakarta_faces/component/html).)*$"</maven.exec.options>
+            </properties>
+        </profile>
+        
+         
+        <profile>
+            <id>old2</id>
+            <activation>
+              <property>
+                <name>old2</name>
+              </property>
+            </activation>
+            <properties>
+                <maven.exec.options>-Drun.test.pattern="jakarta_faces/component/html"</maven.exec.options>
+            </properties>
+        </profile>
+    
+    </profiles>
 </project>

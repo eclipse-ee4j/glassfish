@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.api.jdbc;
 
 import java.io.Serializable;
@@ -26,6 +26,7 @@ import java.io.Serializable;
  * @author Shalini M
  */
 public class SQLTraceRecord implements Serializable {
+
     /**
      *
      */
@@ -47,6 +48,16 @@ public class SQLTraceRecord implements Serializable {
     private String poolName;
 
     /**
+     * Application Name which executed the SQL statement
+     */
+    private String applicationName;
+
+    /**
+     * Module Name which executed the SQL statement
+     */
+    private String moduleName;
+
+    /**
      * Type of SQL query. Could be PreparedStatement, CallableStatement or other object types.
      */
     private String className;
@@ -65,6 +76,11 @@ public class SQLTraceRecord implements Serializable {
      * Parameters of the method that executed the SQL query. Includes information like SQL query, arguments and so on.
      */
     private Object[] params;
+
+    /**
+     * The SQL query
+     */
+    private String sqlQuery;
 
     /**
      * Gets the class name of the SQL query expressed as a String.
@@ -194,21 +210,79 @@ public class SQLTraceRecord implements Serializable {
         this.params = params;
     }
 
+    /**
+     * SQL query related to the database operation or null if not applicable
+     *
+     * @return SQL query or null
+     */
+    public String getSqlQuery() {
+        return sqlQuery;
+    }
+
+    /**
+     * Set the SQL query related to the database operation
+     *
+     * @param sqlQuery
+     */
+    public void setSqlQuery(String sqlQuery) {
+        this.sqlQuery = sqlQuery;
+    }
+
+    /**
+     * Application Name which executed the SQL statement
+     *
+     * @return Application name
+     */
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    /**
+     * Set the application name which executed the SQL statement
+     *
+     * @param applicationName
+     */
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    /**
+     * Module name of an application which executed the SQL statement
+     *
+     * @return Module name or null if the application doesn't have modules
+     */
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    /**
+     * Set the module name which executed the SQL statement
+     *
+     * @param moduleName
+     */
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("ThreadID=" + getThreadID() + " | ");
-        sb.append("ThreadName=" + getThreadName() + " | ");
-        sb.append("TimeStamp=" + getTimeStamp() + " | ");
-        sb.append("ClassName=" + getClassName() + " | ");
-        sb.append("MethodName=" + getMethodName() + " | ");
+        StringBuilder sb = new StringBuilder();
+        sb.append("PoolName=").append(getPoolName()).append(" | ");
+        sb.append("ThreadID=").append(getThreadID()).append(" | ");
+        sb.append("ThreadName=").append(getThreadName()).append(" | ");
+        sb.append("TimeStamp=").append(getTimeStamp()).append(" | ");
+        sb.append("SQL=").append(getSqlQuery()).append(" | ");
+        sb.append("AppName=").append(getApplicationName()).append(" | ");
+        sb.append("ModuleName=").append(getModuleName()).append(" | ");
+        sb.append("ClassName=").append(getClassName()).append(" | ");
+        sb.append("MethodName=").append(getMethodName()).append(" | ");
         if (params != null && params.length > 0) {
             int index = 0;
             for (Object param : params) {
-                sb.append("arg[" + index++ + "]=" + (param != null ? param.toString() : "null") + " | ");
+                sb.append("arg[").append(index++).append("]=")
+                        .append(param != null ? param.toString() : "null").append(" | ");
             }
         }
-        // TODO add poolNames and other fields of this record.
         return sb.toString();
     }
 }

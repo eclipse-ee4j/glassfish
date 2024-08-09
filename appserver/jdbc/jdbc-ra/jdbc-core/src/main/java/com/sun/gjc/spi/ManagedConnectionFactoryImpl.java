@@ -84,6 +84,9 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
+import jakarta.inject.Inject;
+import org.glassfish.api.invocation.InvocationManager;
+
 /**
  * <code>ManagedConnectionFactory</code> implementation for Generic JDBC
  * Connector. This class is extended by the DataSource specific
@@ -100,6 +103,9 @@ public abstract class ManagedConnectionFactoryImpl
 
     private static Logger _logger = LogDomains.getLogger(ManagedConnectionFactoryImpl.class, LogDomains.RSR_LOGGER);
     protected static final StringManager localStrings = StringManager.getManager(DataSourceObjectBuilder.class);
+
+    @Inject
+    protected InvocationManager invocationManager;
 
     protected DataSourceSpec spec = new DataSourceSpec();
     protected transient DataSourceObjectBuilder dataSourceObjectBuilder;
@@ -553,7 +559,7 @@ public abstract class ManagedConnectionFactoryImpl
         String delimiter = ",";
 
         if (sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
-            sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), getApplicationName(), getModuleName());
+            sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), invocationManager);
             StringTokenizer st = new StringTokenizer(sqlTraceListeners, delimiter);
 
             while (st.hasMoreTokens()) {

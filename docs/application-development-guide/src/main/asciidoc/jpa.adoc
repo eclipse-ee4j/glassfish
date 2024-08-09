@@ -8,7 +8,7 @@ prev=webservices.html
 = Configuring the Java Persistence Provider
 
 [[configuring-the-java-persistence-provider]]
-== 6 Configuring the Java Persistence Provider
+== Configuring the Java Persistence Provider
 
 This chapter describes Oracle TopLink, the default persistence provider
 in {productName}, and introduces how to use it.

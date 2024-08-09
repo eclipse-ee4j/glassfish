@@ -8,7 +8,7 @@ prev=part-services-and-apis.html
 = Using the JDBC API for Database Access
 
 [[using-the-jdbc-api-for-database-access]]
-== 14 Using the JDBC API for Database Access
+== Using the JDBC API for Database Access
 
 This chapter describes how to use the Java Database Connectivity (JDBC)
 API for database access with the {productName}. This chapter

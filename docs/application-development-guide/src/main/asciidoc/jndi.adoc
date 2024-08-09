@@ -8,7 +8,7 @@ prev=transaction-service.html
 = Using the Java Naming and Directory Interface
 
 [[using-the-java-naming-and-directory-interface]]
-== 16 Using the Java Naming and Directory Interface
+== Using the Java Naming and Directory Interface
 
 A naming service maintains a set of bindings, which relate names to
 objects. The Jakarta EE naming service is based on the Java Naming and

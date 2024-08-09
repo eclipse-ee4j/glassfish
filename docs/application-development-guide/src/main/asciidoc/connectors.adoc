@@ -8,7 +8,7 @@ prev=java-clients.html
 = Developing Connectors
 
 [[developing-connectors]]
-== 11 Developing Connectors
+== Developing Connectors
 
 This chapter describes {productName} support for the Jakarta EE
 Connector Architecture, also known as

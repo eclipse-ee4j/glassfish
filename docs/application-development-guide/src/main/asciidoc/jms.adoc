@@ -8,7 +8,7 @@ prev=jndi.html
 = Using the Java Message Service
 
 [[using-the-java-message-service]]
-== 17 Using the Java Message Service
+== Using the Java Message Service
 
 This chapter describes how to use the Java Message Service (JMS) API.
 The {productName} has a fully integrated JMS provider: the

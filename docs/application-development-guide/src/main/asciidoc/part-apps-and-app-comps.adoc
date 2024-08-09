@@ -1,16 +1,17 @@
 type=page
 status=published
 title=Developing Applications and Application Components
-next=securing-apps.html
+next=glassfish-api.html
 prev=debugging-apps.html
 ~~~~~~
 
 = Developing Applications and Application Components
 
+:sectnums!:
 [[part-ii]]
-
 == Part II
 
+:sectnums:
 [[developing-applications-and-application-components]]
 == Developing Applications and Application Components
 

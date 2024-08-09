@@ -8,7 +8,7 @@ prev=class-loaders.html
 = Debugging Applications
 
 [[debugging-applications]]
-== 3 Debugging Applications
+== Debugging Applications
 
 This chapter gives guidelines for debugging applications in the {productName}.
 

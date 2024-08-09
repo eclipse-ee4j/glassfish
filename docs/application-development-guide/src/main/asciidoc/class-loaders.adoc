@@ -8,7 +8,7 @@ prev=setting-up-dev-env.html
 = Class Loaders
 
 [[class-loaders]]
-== 2 Class Loaders
+== Class Loaders
 
 Understanding {productName} class loaders can help you
 determine where to place supporting JAR and resource files for your

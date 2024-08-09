@@ -28,4 +28,18 @@
     <artifactId>application-development-guide</artifactId>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish Application Development Guide, Release 7</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <configuration>
+                    <attributes>
+                        <sectnums>true</sectnums>
+                        <sectnumlevels>1</sectnumlevels>
+                    </attributes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -83,7 +83,8 @@ public class SQLTraceRecord implements Serializable {
     private String sqlQuery;
 
     /**
-     * Gets the class name of the SQL query expressed as a String.
+     * Gets the class name in the application which executed the SQL query, expressed as a String.
+     * If it's not possible to detect the application, it will be the class name which directly invoked the connection.
      *
      * @return The class name of the SQL query expressed as a String.
      */
@@ -92,7 +93,7 @@ public class SQLTraceRecord implements Serializable {
     }
 
     /**
-     * Sets the class name of the SQL query expressed as a String.
+     * Set the class name which executed the SQL query.
      *
      * @param className class name of the SQL query.
      */
@@ -101,7 +102,8 @@ public class SQLTraceRecord implements Serializable {
     }
 
     /**
-     * Gets the method name that executed the SQL query.
+     * Gets the method name in the application which executed the SQL query, expressed as a String.
+     * If it's not possible to detect the application, it will be the method name which directly invoked the connection.
      *
      * @return methodName that executed the SQL query.
      */

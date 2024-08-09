@@ -17,6 +17,7 @@
 package org.glassfish.api.jdbc;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Information related to SQL operations executed by the applications are stored in this object.
@@ -264,6 +265,37 @@ public class SQLTraceRecord implements Serializable {
      */
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
+    }
+
+    /**
+     * Get the stack trace element for the method call in the application that triggered SQL execution.
+     *
+     * This call analyzes the stacktrace on the current thread and finds the first element that
+     * represents a call in the application (the class is loaded by the application classloader).
+     *
+     * @return Stack trace element that represents a call to a server component that triggered SQL execution
+     */
+    public StackTraceElement getCallingApplicationMethod() {
+        return Arrays.stream(Thread.currentThread().getStackTrace())
+                .skip(1)
+        .filter(this::isMethodFromApplication)
+        .findFirst().orElse(null);
+    }
+
+    private boolean isMethodFromApplication(StackTraceElement ste) {
+        try {
+            ClassLoader appClassLoader = Thread.currentThread().getContextClassLoader();
+            Class<?> cls = appClassLoader.loadClass(ste.getClassName());
+            ClassLoader classLoader = cls.getClassLoader();
+            while (classLoader != null) {
+                if (classLoader.equals(appClassLoader)) {
+                    return true;
+                }
+                classLoader = classLoader.getParent();
+            }
+        } catch (ClassNotFoundException ex) {
+        }
+        return false;
     }
 
     @Override

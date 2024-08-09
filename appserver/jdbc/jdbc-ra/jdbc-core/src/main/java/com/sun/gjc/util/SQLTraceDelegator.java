@@ -30,7 +30,6 @@ import org.glassfish.api.naming.SimpleJndiName;
 
 import static java.util.logging.Level.FINEST;
 
-import java.util.Arrays;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 
@@ -89,11 +88,6 @@ public class SQLTraceDelegator implements SQLTraceListener {
             }
 
             if (sqlTraceListenersList != null && !sqlTraceListenersList.isEmpty()) {
-                StackTraceElement callingElement = findCallingApplicationMethod();
-                if (callingElement != null) {
-                    record.setClassName(callingElement.getClassName());
-                    record.setMethodName(callingElement.getMethodName());
-                }
                 for (SQLTraceListener listener : sqlTraceListenersList) {
                     try {
                         listener.sqlTrace(record);
@@ -150,30 +144,6 @@ public class SQLTraceDelegator implements SQLTraceListener {
      */
     private boolean isMethodValidForCaching(String methodName) {
         return JdbcRAConstants.validSqlTracingMethodNames.contains(methodName);
-    }
-
-    private StackTraceElement findCallingApplicationMethod() {
-        return Arrays.stream(Thread.currentThread().getStackTrace())
-                .skip(1)
-        .filter(this::isMethodFromApplication)
-        .findFirst().orElse(null);
-
-    }
-
-    private boolean isMethodFromApplication(StackTraceElement ste) {
-        try {
-            ClassLoader appClassLoader = Thread.currentThread().getContextClassLoader();
-            Class<?> cls = appClassLoader.loadClass(ste.getClassName());
-            ClassLoader classLoader = cls.getClassLoader();
-            while (classLoader != null) {
-                if (classLoader.equals(appClassLoader)) {
-                    return true;
-                }
-                classLoader = classLoader.getParent();
-            }
-        } catch (ClassNotFoundException ex) {
-        }
-        return false;
     }
 
 }

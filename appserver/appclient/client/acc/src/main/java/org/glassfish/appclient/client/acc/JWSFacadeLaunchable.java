@@ -19,6 +19,7 @@ package org.glassfish.appclient.client.acc;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.jar.Attributes;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
 

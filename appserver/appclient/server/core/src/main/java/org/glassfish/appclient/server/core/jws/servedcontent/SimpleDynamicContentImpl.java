@@ -17,6 +17,7 @@
 package org.glassfish.appclient.server.core.jws.servedcontent;
 
 import java.util.Properties;
+
 import org.glassfish.appclient.server.core.jws.Util;
 
 /**

@@ -22,11 +22,13 @@ import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ResourceBundle;
+
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
 import org.glassfish.appclient.client.acc.UserError;
 
 /**

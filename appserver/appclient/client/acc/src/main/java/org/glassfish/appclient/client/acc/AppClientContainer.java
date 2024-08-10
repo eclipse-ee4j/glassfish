@@ -17,16 +17,22 @@
 
 package org.glassfish.appclient.client.acc;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.security.webservices.client.ClientPipeCloser;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.transaction.Status;
+import jakarta.transaction.TransactionManager;
+
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.InvocationTargetException;
@@ -43,13 +49,11 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import javax.naming.NamingException;
-import jakarta.persistence.EntityManagerFactory;
 import javax.security.auth.callback.CallbackHandler;
 import javax.swing.SwingUtilities;
-import jakarta.transaction.Status;
-import jakarta.transaction.TransactionManager;
+
 import org.apache.naming.resources.DirContextURLStreamHandlerFactory;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
@@ -59,13 +63,11 @@ import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.TargetServer;
-import org.glassfish.persistence.jpa.PersistenceUnitLoader;
-import com.sun.enterprise.container.common.spi.ManagedBeanManager;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.persistence.jpa.PersistenceUnitLoader;
+import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
 /**

@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-import java.io.File;
-
-import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.File;
 
 /**
  * This class performs the file related validations such as

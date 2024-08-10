@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
@@ -35,8 +37,6 @@ import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

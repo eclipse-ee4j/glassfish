@@ -16,16 +16,18 @@
 
 package com.sun.enterprise.admin.util;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.URLConnection;
 import com.sun.enterprise.universal.GFBase64Encoder;
-import javax.net.ssl.SSLSocketFactory;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 public final class HttpConnectorAddress {

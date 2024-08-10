@@ -16,7 +16,8 @@
 
 package com.sun.enterprise.config.util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *

@@ -21,13 +21,14 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import org.jvnet.hk2.annotations.Service;
+
 import org.glassfish.api.monitoring.ContainerMonitoring;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.internal.api.*;
+import org.glassfish.internal.api.PostStartupRunLevel;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

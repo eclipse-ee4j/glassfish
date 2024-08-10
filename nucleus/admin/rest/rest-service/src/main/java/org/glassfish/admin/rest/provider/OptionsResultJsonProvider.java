@@ -16,18 +16,19 @@
 
 package org.glassfish.admin.rest.provider;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.admin.rest.results.OptionsResult;
-
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
+
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.RestLogging;
+import org.glassfish.admin.rest.results.OptionsResult;
 
 /**
  * JSON provider for OptionsResult.

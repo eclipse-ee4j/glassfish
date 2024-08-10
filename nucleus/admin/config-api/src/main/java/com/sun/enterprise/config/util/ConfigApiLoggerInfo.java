@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.config.util;
 
+import java.text.MessageFormat;
+import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
-
-import java.text.MessageFormat;
-import java.util.logging.Logger;
 
 /**
  * Logger information for the config-api module.

@@ -22,10 +22,10 @@
 
 package com.sun.enterprise.backup;
 
-import java.io.*;
-
 import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.File;
 
 /**
  * This class holds all of the values that the caller needs.

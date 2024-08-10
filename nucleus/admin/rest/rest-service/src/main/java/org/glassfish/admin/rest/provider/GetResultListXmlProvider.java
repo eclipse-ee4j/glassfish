@@ -16,17 +16,25 @@
 
 package org.glassfish.admin.rest.provider;
 
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.Provider;
+
+import java.util.List;
+import java.util.Map;
+
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.results.GetResultList;
 import org.jvnet.hk2.config.Dom;
 
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.ext.Provider;
-import java.util.List;
-import java.util.Map;
-
-import static org.glassfish.admin.rest.provider.ProviderUtil.*;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_CHILD_RESOURCE;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_CHILD_RESOURCES;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_COMMANDS;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_ENTITY;
+import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_METHODS;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getEndXmlElement;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getStartXmlElement;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getXmlForMethodMetaData;
 
 /**
  *

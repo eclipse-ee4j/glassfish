@@ -16,14 +16,14 @@
 
 package org.glassfish.config.support;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ExecuteOn;
 import org.jvnet.hk2.config.GenerateServiceFromMethod;
 import org.jvnet.hk2.config.GeneratedServiceName;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

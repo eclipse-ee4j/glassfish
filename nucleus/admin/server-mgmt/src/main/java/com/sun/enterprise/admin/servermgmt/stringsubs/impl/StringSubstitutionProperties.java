@@ -16,13 +16,13 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
 
 /**
  * Load and retrieves the string substitution properties.

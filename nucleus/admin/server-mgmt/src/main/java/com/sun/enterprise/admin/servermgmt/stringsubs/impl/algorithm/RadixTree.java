@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements the operation of a radix tree. A radix tree is a specialized set data structure based on the

@@ -16,10 +16,11 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-
 import jakarta.validation.constraints.NotNull;
+
 import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
 
 /**
  * This is an abstraction for a resource that refers a resource-pool. Samples are jdbc-resource and connector-resource.

@@ -16,10 +16,12 @@
 
 package org.glassfish.admin.rest.model;
 
-import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
+
 import org.glassfish.admin.rest.composite.RestModel;
 import org.glassfish.admin.rest.composite.metadata.AttributeReference;
 import org.glassfish.admin.rest.composite.metadata.CreateOnly;

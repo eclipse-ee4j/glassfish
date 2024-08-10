@@ -16,21 +16,21 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import java.util.ArrayList;
-import java.util.WeakHashMap;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Dom;
-
 // config imports
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.Result;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
+
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Dom;
 
 /**
  * Does basic level verification of domain.xml. This is helpful as there is no DTD to validate the domain's config i.e.

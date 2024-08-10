@@ -22,7 +22,7 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.util.net.*;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;

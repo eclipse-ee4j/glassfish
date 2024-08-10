@@ -16,14 +16,15 @@
 
 package org.glassfish.admin.rest.provider;
 
-import org.glassfish.admin.rest.Constants;
-import org.glassfish.admin.rest.results.OptionsResult;
-
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
 import java.util.Iterator;
 import java.util.Set;
+
+import org.glassfish.admin.rest.Constants;
+import org.glassfish.admin.rest.results.OptionsResult;
 
 import static org.glassfish.admin.rest.provider.ProviderUtil.getEndXmlElement;
 import static org.glassfish.admin.rest.provider.ProviderUtil.quote;

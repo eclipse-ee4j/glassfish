@@ -24,17 +24,17 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.DomainExtension;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.admin.config.ConfigExtension;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Service;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.config.ConfigExtension;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Masoud Kalali

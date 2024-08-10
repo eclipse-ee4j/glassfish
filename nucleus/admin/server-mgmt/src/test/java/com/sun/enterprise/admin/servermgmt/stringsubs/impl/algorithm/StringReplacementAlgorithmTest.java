@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import java.util.Map;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
+
+import java.util.Map;
 
 /**
  * Unit test class for {@link StringReplacementAlgo}.

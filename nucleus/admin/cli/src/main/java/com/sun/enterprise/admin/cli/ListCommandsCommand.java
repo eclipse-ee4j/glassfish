@@ -16,17 +16,19 @@
 
 package com.sun.enterprise.admin.cli;
 
-import java.util.*;
-import java.util.regex.*;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.hk2.api.PerLookup;
-
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.EOL;
 

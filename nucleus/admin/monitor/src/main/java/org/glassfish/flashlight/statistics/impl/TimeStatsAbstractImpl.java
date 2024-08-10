@@ -16,11 +16,12 @@
 
 package org.glassfish.flashlight.statistics.impl;
 
-import org.glassfish.flashlight.datatree.impl.AbstractTreeNode;
-import org.glassfish.flashlight.statistics.*;
-import org.glassfish.flashlight.statistics.factory.AverageFactory;
-
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.glassfish.flashlight.datatree.impl.AbstractTreeNode;
+import org.glassfish.flashlight.statistics.Average;
+import org.glassfish.flashlight.statistics.TimeStats;
+import org.glassfish.flashlight.statistics.factory.AverageFactory;
 
 /**
  * @author Harpreet Singh

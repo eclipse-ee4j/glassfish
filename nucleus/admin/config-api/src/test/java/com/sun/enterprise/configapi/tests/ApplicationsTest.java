@@ -20,6 +20,8 @@ package com.sun.enterprise.configapi.tests;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 
 import org.glassfish.api.admin.config.ApplicationName;
@@ -30,8 +32,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

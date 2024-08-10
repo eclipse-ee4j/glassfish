@@ -20,9 +20,12 @@ import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.admin.JobManagerService;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.ws.rs.core.MediaType;
+
 import java.io.IOException;
 import java.util.logging.Level;
-import jakarta.ws.rs.core.MediaType;
+
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.resources.admin.CommandResource;
 import org.glassfish.api.ActionReport;

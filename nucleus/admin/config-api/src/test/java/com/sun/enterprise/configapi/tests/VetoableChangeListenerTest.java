@@ -20,6 +20,8 @@ package com.sun.enterprise.configapi.tests;
 import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
@@ -33,8 +35,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ConstrainedBeanListener;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

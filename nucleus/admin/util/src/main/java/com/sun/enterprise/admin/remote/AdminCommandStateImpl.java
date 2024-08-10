@@ -17,6 +17,7 @@
 package com.sun.enterprise.admin.remote;
 
 import java.io.Serializable;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandState;
 

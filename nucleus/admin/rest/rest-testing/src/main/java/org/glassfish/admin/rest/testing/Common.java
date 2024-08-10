@@ -16,8 +16,9 @@
 
 package org.glassfish.admin.rest.testing;
 
-import java.util.Iterator;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.util.Iterator;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;

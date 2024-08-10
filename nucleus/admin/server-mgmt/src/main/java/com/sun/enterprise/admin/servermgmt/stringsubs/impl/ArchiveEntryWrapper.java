@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import java.util.List;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Group;
+
+import java.util.List;
 
 /**
  * Wraps the processing of an {@link Archive} of a {@link Group}.

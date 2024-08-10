@@ -17,7 +17,8 @@
 package com.sun.enterprise.backup;
 
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
+
+import java.io.File;
 
 /**
  * Baseclass for BackupManager and RestoreManager.  Common code between

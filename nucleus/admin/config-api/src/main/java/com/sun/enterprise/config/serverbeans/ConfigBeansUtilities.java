@@ -20,13 +20,13 @@ package com.sun.enterprise.config.serverbeans;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Objects;
 
 import org.glassfish.api.admin.config.ApplicationName;

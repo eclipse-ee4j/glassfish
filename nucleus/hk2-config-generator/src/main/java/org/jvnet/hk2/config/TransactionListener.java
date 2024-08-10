@@ -17,10 +17,10 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.beans.PropertyChangeEvent;
 import java.util.List;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Listener interface for objects interested in transaction events on the config beans.

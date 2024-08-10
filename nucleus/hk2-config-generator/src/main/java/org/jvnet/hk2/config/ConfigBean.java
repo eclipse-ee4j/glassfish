@@ -17,19 +17,26 @@
 
 package org.jvnet.hk2.config;
 
-import javax.xml.stream.XMLStreamReader;
-import java.beans.*;
-import java.lang.reflect.Type;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.Condition;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
 
 import javax.management.ObjectName;
+import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.hk2.api.ServiceLocator;
 

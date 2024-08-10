@@ -17,9 +17,9 @@
 
 package org.jvnet.hk2.config;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Collects change events that could not be processed.

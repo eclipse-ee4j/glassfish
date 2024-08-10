@@ -17,10 +17,10 @@
 
 package org.jvnet.hk2.config.tiger;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.Arrays;
 
 /**

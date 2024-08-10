@@ -17,8 +17,11 @@
 
 package org.jvnet.hk2.config.generator.apt;
 
-import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.annotations.ContractsProvided;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
@@ -27,11 +30,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import org.jvnet.hk2.annotations.Contract;
+import org.jvnet.hk2.annotations.ContractsProvided;
 
 /**
  * Given a {@link TypeElement},

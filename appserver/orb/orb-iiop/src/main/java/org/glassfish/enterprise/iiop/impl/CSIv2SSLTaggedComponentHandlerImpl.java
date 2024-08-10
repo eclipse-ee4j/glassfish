@@ -24,7 +24,6 @@ import com.sun.corba.ee.spi.orb.DataCollector;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.corba.ee.spi.orb.ORBConfigurator;
 import com.sun.corba.ee.spi.transport.SocketInfo;
-
 import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 import org.glassfish.internal.api.Globals;
 import org.omg.CORBA.ORBPackage.InvalidName;

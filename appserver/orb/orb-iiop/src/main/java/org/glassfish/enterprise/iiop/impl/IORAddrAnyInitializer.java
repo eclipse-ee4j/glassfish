@@ -18,12 +18,14 @@ package org.glassfish.enterprise.iiop.impl;
 
 
 import com.sun.logging.LogDomains;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.omg.IOP.Codec;
 import org.omg.IOP.CodecFactory;
-import org.omg.IOP.Encoding;
 import org.omg.IOP.ENCODING_CDR_ENCAPS;
+import org.omg.IOP.Encoding;
 import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 

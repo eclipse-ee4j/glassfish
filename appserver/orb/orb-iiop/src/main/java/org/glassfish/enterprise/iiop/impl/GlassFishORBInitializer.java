@@ -17,6 +17,11 @@
 package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.logging.LogDomains;
+
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.glassfish.enterprise.iiop.util.IIOPUtils;
 import org.omg.IOP.Codec;
@@ -26,10 +31,6 @@ import org.omg.IOP.Encoding;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This file implements an initializer class for all portable interceptors

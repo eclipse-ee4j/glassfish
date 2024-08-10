@@ -17,13 +17,14 @@
 
 package com.sun.enterprise.security.auth.realm.file;
 
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.User;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.glassfish.security.common.FileRealmHelper;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.User;
-import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 
 /**
  * Represents a FileRealm user.

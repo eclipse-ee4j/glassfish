@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,9 +36,6 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
 import org.glassfish.internal.api.Globals;
-
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This implementation of LoginDialog If these are not set, then it queries the user in the command window.

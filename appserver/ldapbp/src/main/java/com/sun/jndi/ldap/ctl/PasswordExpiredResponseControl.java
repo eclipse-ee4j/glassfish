@@ -16,6 +16,8 @@
 
 package com.sun.jndi.ldap.ctl;
 
+import java.io.IOException;
+
 import javax.naming.ldap.BasicControl;
 
 /**

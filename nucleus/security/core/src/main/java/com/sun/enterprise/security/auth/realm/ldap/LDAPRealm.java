@@ -17,21 +17,12 @@
 
 package com.sun.enterprise.security.auth.realm.ldap;
 
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static java.util.Collections.enumeration;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static javax.naming.Context.SECURITY_CREDENTIALS;
-import static javax.naming.Context.SECURITY_PRINCIPAL;
-import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
-
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -41,6 +32,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
+
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
@@ -54,8 +46,19 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.login.LoginException;
+
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static javax.naming.Context.SECURITY_CREDENTIALS;
+import static javax.naming.Context.SECURITY_PRINCIPAL;
+import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
 /**
  * Realm wrapper for supporting LDAP authentication.

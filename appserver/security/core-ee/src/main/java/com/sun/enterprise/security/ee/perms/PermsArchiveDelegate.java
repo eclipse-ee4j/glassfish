@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security.ee.perms;
 
+import com.sun.enterprise.security.integration.DDPermissionsLoader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.PermissionCollection;
@@ -25,8 +27,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-
-import com.sun.enterprise.security.integration.DDPermissionsLoader;
 
 public class PermsArchiveDelegate {
 

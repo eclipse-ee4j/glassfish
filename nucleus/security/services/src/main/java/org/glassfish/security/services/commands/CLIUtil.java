@@ -17,6 +17,7 @@
 package org.glassfish.security.services.commands;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.security.services.config.SecurityConfiguration;
 import org.glassfish.security.services.config.SecurityConfigurations;

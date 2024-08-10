@@ -17,6 +17,7 @@
 package com.sun.enterprise.security.ee.authorize.cache;
 
 import com.sun.enterprise.security.ee.J2EESecurityManager;
+
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.Policy;

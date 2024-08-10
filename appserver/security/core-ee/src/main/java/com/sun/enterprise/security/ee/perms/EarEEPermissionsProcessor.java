@@ -18,6 +18,7 @@
 package com.sun.enterprise.security.ee.perms;
 
 import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil.CommponentType;
+
 import java.net.MalformedURLException;
 import java.security.Permission;
 import java.security.PermissionCollection;

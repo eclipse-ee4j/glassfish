@@ -18,6 +18,7 @@ package org.glassfish.security.services.impl;
 
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.Utility;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -27,7 +28,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.crypto.SecretKey;
+
 import org.glassfish.api.admin.PasswordAliasStore;
 
 /**

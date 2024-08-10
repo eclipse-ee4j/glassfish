@@ -17,9 +17,6 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.jdbc;
 
-import static com.sun.enterprise.security.common.Util.getDefaultHabitat;
-import static java.util.logging.Level.FINEST;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.digest.api.Password;
@@ -30,6 +27,7 @@ import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.DigestRealmBase;
 import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.Utility;
+
 import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
 import java.security.MessageDigest;
@@ -49,12 +47,17 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
+
 import javax.security.auth.login.LoginException;
 import javax.sql.DataSource;
+
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.security.common.Util.getDefaultHabitat;
+import static java.util.logging.Level.FINEST;
 
 /**
  * Realm for supporting JDBC authentication.

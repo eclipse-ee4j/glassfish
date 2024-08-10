@@ -25,9 +25,9 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * represents HttpServlet request parameter

@@ -17,18 +17,14 @@
 
 package com.sun.enterprise.security;
 
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyConfigFactoryNotDefined;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyFactoryOverride;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyInstallError;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyLoading;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyNoSuchName;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyNotLoadingWarning;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyProviderConfigOverrideMsg;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static javassist.Modifier.PUBLIC;
+//V3:Commented import com.sun.enterprise.server.ApplicationServer;
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.util.i18n.StringManager;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 import java.lang.reflect.Method;
 import java.security.Permission;
@@ -45,19 +41,24 @@ import org.glassfish.hk2.api.IterableProvider;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
-//V3:Commented import com.sun.enterprise.server.ApplicationServer;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.util.i18n.StringManager;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
+
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyConfigFactoryNotDefined;
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyFactoryOverride;
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyInstallError;
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyLoading;
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyNoSuchName;
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyNotLoadingWarning;
+import static com.sun.enterprise.security.SecurityLoggerInfo.policyProviderConfigOverrideMsg;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static javassist.Modifier.PUBLIC;
 
 /**
  * Loads the Default Policy File into the system.

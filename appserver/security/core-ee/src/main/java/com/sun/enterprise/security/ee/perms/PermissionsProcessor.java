@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security.ee.perms;
 
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.FilePermission;
 import java.net.MalformedURLException;
@@ -27,8 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeploymentContext;
-
-import com.sun.logging.LogDomains;
 
 public class PermissionsProcessor {
 

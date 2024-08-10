@@ -20,9 +20,8 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import org.glassfish.security.services.api.SecurityService;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * The AuthenticationService provides basic authentication functions.

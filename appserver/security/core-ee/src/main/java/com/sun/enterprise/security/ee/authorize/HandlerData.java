@@ -16,12 +16,13 @@
 
 package com.sun.enterprise.security.ee.authorize;
 
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory;
+
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.internal.api.Globals;
 
 /**
  * This class implements a thread scoped data used for PolicyContext.

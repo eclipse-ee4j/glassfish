@@ -16,10 +16,10 @@
 
 package org.glassfish.security.services.impl.authorization;
 
+import java.text.MessageFormat;
+
 import org.glassfish.security.services.api.authorization.AzObligations;
 import org.glassfish.security.services.api.authorization.AzResult;
-
-import java.text.MessageFormat;
 
 public final class AzResultImpl implements AzResult {
 

@@ -17,13 +17,14 @@
 
 package com.sun.enterprise.security.ee.perms;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.FilePermission;
 import java.security.AllPermission;
 import java.security.Permission;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VoidPermissionTest {
 

@@ -18,7 +18,6 @@ package org.glassfish.security.services.api.context;
 
 
 import org.glassfish.security.services.api.common.Attributes;
-
 import org.jvnet.hk2.annotations.Contract;
 
 /**

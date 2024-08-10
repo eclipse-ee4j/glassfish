@@ -17,19 +17,21 @@
 
 package com.sun.enterprise.security.auth.realm.solaris;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector;
+
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Realm wrapper for supporting Solaris authentication.

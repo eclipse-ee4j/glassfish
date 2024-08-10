@@ -16,9 +16,9 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import javax.naming.ldap.BasicControl;
-
 import java.io.IOException;
+
+import javax.naming.ldap.BasicControl;
 
 /**
  * This class implements the LDAP response control for Authorization Identity

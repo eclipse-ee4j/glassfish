@@ -17,44 +17,57 @@
 package org.glassfish.security.services.commands;
 
 //import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.security.auth.login.LDAPLoginModule;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import org.glassfish.security.services.impl.ServiceLogging;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.internal.api.Target;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
+import com.sun.enterprise.util.i18n.StringManager;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.naming.AuthenticationNotSupportedException;
-import org.glassfish.api.admin.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
-
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.Target;
 import org.glassfish.security.services.config.AuthenticationService;
 import org.glassfish.security.services.config.LoginModuleConfig;
 import org.glassfish.security.services.config.SecurityConfigurations;
 import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.config.SecurityProviderConfig;
-import com.sun.enterprise.security.auth.login.LDAPLoginModule;
+import org.glassfish.security.services.impl.ServiceLogging;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
 
 /**  A convenience command to configure LDAP for administration. There are several properties and attributes that
  *   user needs to remember and that's rather user unfriendly. That's why this command is being developed.

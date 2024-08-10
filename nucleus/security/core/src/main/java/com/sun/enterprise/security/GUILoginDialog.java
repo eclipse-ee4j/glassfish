@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -43,9 +46,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.glassfish.internal.api.Globals;
-
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * An implementation of a LoginDialog that presents a swing based GUI for querying username and password.

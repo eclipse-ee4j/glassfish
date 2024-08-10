@@ -16,16 +16,6 @@
 
 package com.sun.enterprise.security.ee.authentication;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.security.ProgrammaticLoginPermission;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;
@@ -37,6 +27,16 @@ import com.sun.logging.LogDomains;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implement programmatic login.

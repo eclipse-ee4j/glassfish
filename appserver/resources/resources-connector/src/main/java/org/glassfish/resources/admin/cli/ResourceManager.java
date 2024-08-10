@@ -18,11 +18,12 @@ package org.glassfish.resources.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.jvnet.hk2.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.Properties;
+
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract for all ResourceManagers

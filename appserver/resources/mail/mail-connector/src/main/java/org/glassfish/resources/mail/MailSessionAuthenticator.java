@@ -16,9 +16,10 @@
 
 package org.glassfish.resources.mail;
 
-import java.util.Properties;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
+
+import java.util.Properties;
 
 /**
  *

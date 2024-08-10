@@ -17,17 +17,20 @@
 package org.glassfish.resourcebase.resources.api;
 
 import com.sun.enterprise.config.serverbeans.Resource;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.naming.NamingException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
-import org.glassfish.logging.annotation.LoggerInfo;
+
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**

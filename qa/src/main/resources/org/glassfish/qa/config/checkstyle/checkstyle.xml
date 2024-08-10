@@ -80,8 +80,18 @@
         <module name="PackageName" />
 
         <!-- Checks for imports                              -->
-        <!-- See http://checkstyle.sf.net/config_import.html -->
-        <module name="IllegalImport" /> <!-- defaults to sun.* packages -->
+        <!-- See https://checkstyle.sourceforge.io/checks/imports/index.html -->
+        <module name="AvoidStarImport"/>
+        <!-- defaults to sun.* packages -->
+        <module name="IllegalImport" />
+        <module name="ImportOrder">
+            <property name="groups" value="com,jakarta,java,javax,org" />
+            <property name="option" value="bottom"/>
+            <property name="ordered" value="true" />
+            <property name="separated" value="true" />
+            <property name="separatedStaticGroups" value="true" />
+            <property name="sortStaticImportsAlphabetically" value="true" />
+        </module>
         <module name="RedundantImport" />
         <module name="UnusedImports" />
 

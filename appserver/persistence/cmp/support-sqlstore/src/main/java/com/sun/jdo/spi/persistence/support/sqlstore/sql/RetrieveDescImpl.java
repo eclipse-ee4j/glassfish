@@ -35,11 +35,12 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFie
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectQueryPlan;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.spi.persistence.utility.ParameterInfo;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  */

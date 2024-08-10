@@ -22,31 +22,55 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CheckVersionOfAccessedInstances;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmpFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmrFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.ColumnPair;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.Consistency;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.EntityMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.FetchedWith;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SecondaryTable;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMappings;
+import com.sun.jdo.api.persistence.model.ModelException;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.model.jdo.impl.PersistenceClassElementImpl;
+import com.sun.jdo.api.persistence.model.jdo.impl.PersistenceFieldElementImpl;
+import com.sun.jdo.api.persistence.model.jdo.impl.RelationshipElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingReferenceKeyElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingTableElement;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.File;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.Iterator;
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
-import org.netbeans.modules.dbschema.*;
-
-import com.sun.jdo.api.persistence.mapping.ejb.beans.*;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.api.persistence.model.*;
-import com.sun.jdo.api.persistence.model.mapping.*;
-import com.sun.jdo.api.persistence.model.mapping.impl.*;
-import com.sun.jdo.api.persistence.model.jdo.*;
-import com.sun.jdo.api.persistence.model.jdo.impl.*;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import org.glassfish.persistence.common.I18NHelper;
-
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.DBException;
+import org.netbeans.modules.dbschema.DBIdentifier;
+import org.netbeans.modules.dbschema.ForeignKeyElement;
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.TableElement;
+import org.netbeans.modules.dbschema.UniqueKeyElement;
 import org.netbeans.modules.schema2beans.Schema2BeansException;
 
 /** This class supports the conversion between the iAS mapping file

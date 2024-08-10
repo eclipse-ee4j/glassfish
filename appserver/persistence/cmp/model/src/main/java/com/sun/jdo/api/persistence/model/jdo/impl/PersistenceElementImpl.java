@@ -27,7 +27,11 @@ import com.sun.jdo.api.persistence.model.ModelVetoException;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceElementProperties;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.beans.VetoableChangeSupport;
 
 /* TODO:
     1. way to get to declaring class from here?

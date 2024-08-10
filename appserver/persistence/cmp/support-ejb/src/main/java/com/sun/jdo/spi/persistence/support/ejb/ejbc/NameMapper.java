@@ -22,14 +22,15 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
 import org.glassfish.ejb.deployment.descriptor.CMRFieldInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;

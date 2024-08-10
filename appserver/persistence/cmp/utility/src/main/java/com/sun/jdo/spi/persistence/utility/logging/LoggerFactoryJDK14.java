@@ -16,15 +16,16 @@
 
 package com.sun.jdo.spi.persistence.utility.logging;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Formatter;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.SimpleFormatter;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

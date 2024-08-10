@@ -22,16 +22,16 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.enhancer.meta;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sun.jdo.api.persistence.enhancer.meta.ExtendedJDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataFatalError;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataModelImpl;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataUserException;
-import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

@@ -23,8 +23,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
-
 import com.sun.jdo.api.persistence.support.JDOFatalDataStoreException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
@@ -34,14 +32,16 @@ import com.sun.jdo.spi.persistence.support.sqlstore.model.TableDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.RetrieveDescImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintField;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintJoin;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintNode;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintOperation;
-import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintJoin;
-import org.glassfish.persistence.common.I18NHelper;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.SQLException;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
 
 
 /**

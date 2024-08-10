@@ -16,6 +16,27 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
+import com.sun.ejb.ComponentContext;
+import com.sun.ejb.EjbInvocation;
+import com.sun.ejb.InvocationInfo;
+import com.sun.ejb.containers.EJBContextImpl;
+import com.sun.ejb.containers.EJBContextImpl.BeanState;
+import com.sun.ejb.containers.EJBHomeInvocationHandler;
+import com.sun.ejb.containers.EJBLocalHomeInvocationHandler;
+import com.sun.ejb.containers.EJBLocalRemoteObject;
+import com.sun.ejb.spi.container.BeanStateSynchronization;
+import com.sun.enterprise.security.SecurityManager;
+
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityBean;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.NoSuchEntityException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
+
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -25,37 +46,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBLocalObject;
-import jakarta.ejb.EJBObject;
-import jakarta.ejb.EntityBean;
-import jakarta.ejb.FinderException;
-import jakarta.ejb.RemoveException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
-import com.sun.ejb.ComponentContext;
-import com.sun.ejb.EjbInvocation;
-import com.sun.ejb.InvocationInfo;
-import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.ejb.containers.EJBHomeInvocationHandler;
-import com.sun.ejb.containers.EJBLocalHomeInvocationHandler;
-import com.sun.ejb.containers.EJBLocalRemoteObject;
-import com.sun.enterprise.security.SecurityManager;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.glassfish.ejb.deployment.descriptor.EjbEntityDescriptor;
 import org.glassfish.persistence.ejb.entitybean.container.cache.EJBObjectCache;
 import org.glassfish.persistence.ejb.entitybean.container.cache.FIFOEJBObjectCache;
 import org.glassfish.persistence.ejb.entitybean.container.cache.UnboundedEJBObjectCache;
-import com.sun.ejb.spi.container.BeanStateSynchronization;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbEntityDescriptor;
 import org.glassfish.persistence.ejb.entitybean.container.distributed.DistributedEJBServiceFactory;
 import org.glassfish.persistence.ejb.entitybean.container.distributed.DistributedReadOnlyBeanService;
 import org.glassfish.persistence.ejb.entitybean.container.distributed.ReadOnlyBeanRefreshEventHandler;
-
-import static com.sun.ejb.containers.EJBContextImpl.BeanState;
-import jakarta.ejb.CreateException;
-import jakarta.ejb.NoSuchEntityException;
-import jakarta.ejb.NoSuchObjectLocalException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 /**
  * The Container that manages instances of ReadOnly Beans. This container

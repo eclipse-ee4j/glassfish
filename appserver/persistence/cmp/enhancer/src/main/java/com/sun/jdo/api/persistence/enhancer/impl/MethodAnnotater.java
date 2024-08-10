@@ -16,16 +16,29 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Vector;
-import java.util.Stack;
-import com.sun.jdo.api.persistence.enhancer.classfile.*;
-
-import com.sun.jdo.api.persistence.enhancer.util.Support;
-import com.sun.jdo.api.persistence.enhancer.util.InternalError;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassMethod;
+import com.sun.jdo.api.persistence.enhancer.classfile.CodeAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstClass;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstFieldRef;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstMethodRef;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstNameAndType;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstantPool;
+import com.sun.jdo.api.persistence.enhancer.classfile.Descriptor;
+import com.sun.jdo.api.persistence.enhancer.classfile.Insn;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnConstOp;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnInterfaceInvoke;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnTarget;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnUtils;
+import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
 //@olsen: added import
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import com.sun.jdo.api.persistence.enhancer.util.InternalError;
+import com.sun.jdo.api.persistence.enhancer.util.Support;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.Vector;
 
 
 //@olsen: cosmetics

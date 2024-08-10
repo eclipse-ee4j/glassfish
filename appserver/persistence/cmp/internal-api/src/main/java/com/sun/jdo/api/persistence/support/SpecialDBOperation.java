@@ -16,10 +16,10 @@
 
 package com.sun.jdo.api.persistence.support;
 
-import java.util.List;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
+import java.util.List;
 
 /**
  * SpecialDBOperation interface is defined for database specific operations.

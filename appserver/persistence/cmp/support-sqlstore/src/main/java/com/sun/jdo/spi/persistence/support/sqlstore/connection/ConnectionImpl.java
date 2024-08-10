@@ -24,13 +24,26 @@ package com.sun.jdo.spi.persistence.support.sqlstore.connection;
 
 import com.sun.jdo.api.persistence.support.JDODataStoreException;
 import com.sun.jdo.api.persistence.support.Transaction;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.utility.Linkable;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 
-
-import java.sql.*;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.NClob;
+import java.sql.PreparedStatement;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.sql.Struct;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 

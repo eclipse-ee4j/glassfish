@@ -24,16 +24,27 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.sql;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.spi.persistence.support.sqlstore.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.UpdateObjectDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * Stores the update information for the associated state manager.

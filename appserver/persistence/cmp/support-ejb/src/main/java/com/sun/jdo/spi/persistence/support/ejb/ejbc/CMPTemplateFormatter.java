@@ -22,13 +22,14 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.io.*;
+import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 
 /*
  * This is the helper class for JDO specific generation of

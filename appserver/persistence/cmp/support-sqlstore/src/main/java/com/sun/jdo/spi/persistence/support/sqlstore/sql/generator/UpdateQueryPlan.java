@@ -23,21 +23,27 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
-import org.netbeans.modules.dbschema.TableElement;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.Transaction;
-import com.sun.jdo.spi.persistence.support.sqlstore.model.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.KeyDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ReferenceKeyDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.TableDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.UpdateJoinTableDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.UpdateObjectDescImpl;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.TableElement;
 
 
 /**

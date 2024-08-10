@@ -25,20 +25,18 @@ package com.sun.jdo.api.persistence.enhancer.meta;
 //***************** import ************************************************
 
 import java.lang.reflect.Modifier;
-
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.List;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import java.text.MessageFormat;
 
 
 //#########################################################################

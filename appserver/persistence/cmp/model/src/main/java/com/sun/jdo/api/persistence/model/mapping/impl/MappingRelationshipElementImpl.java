@@ -22,17 +22,21 @@
 
 package com.sun.jdo.api.persistence.model.mapping.impl;
 
-import java.util.*;
-import java.beans.PropertyVetoException;
-
-import org.netbeans.modules.dbschema.*;
-import org.netbeans.modules.dbschema.util.NameUtil;
-
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.api.persistence.model.ModelVetoException;
-import com.sun.jdo.api.persistence.model.mapping.*;
 import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.DBMemberElement;
+import org.netbeans.modules.dbschema.util.NameUtil;
 
 /**
  *

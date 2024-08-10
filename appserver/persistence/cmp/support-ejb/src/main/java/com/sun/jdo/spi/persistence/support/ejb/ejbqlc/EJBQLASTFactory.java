@@ -22,11 +22,12 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-import antlr.collections.AST;
-import antlr.ASTFactory;
-
 import java.util.ResourceBundle;
+
 import org.glassfish.persistence.common.I18NHelper;
+
+import antlr.ASTFactory;
+import antlr.collections.AST;
 
 /**
  * Factory to create and connect EJBQLAST nodes.

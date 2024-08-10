@@ -16,11 +16,11 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
-import static org.glassfish.persistence.jpa.schemageneration.EclipseLinkSchemaGenerationProcessor.isSupportedPersistenceProvider;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 import org.glassfish.persistence.jpa.PersistenceUnitInfoImpl;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import static org.glassfish.persistence.jpa.schemageneration.EclipseLinkSchemaGenerationProcessor.isSupportedPersistenceProvider;
 
 /**
  * Factory for creating SchemaGenerationProcessor

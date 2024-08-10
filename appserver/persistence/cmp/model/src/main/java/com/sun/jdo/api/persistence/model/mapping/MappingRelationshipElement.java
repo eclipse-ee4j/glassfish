@@ -22,11 +22,11 @@
 
 package com.sun.jdo.api.persistence.model.mapping;
 
+import com.sun.jdo.api.persistence.model.ModelException;
+
 import java.util.ArrayList;
 
 import org.netbeans.modules.dbschema.ColumnPairElement;
-
-import com.sun.jdo.api.persistence.model.ModelException;
 
 /**
  * This is a specialized field element which represents a relationship

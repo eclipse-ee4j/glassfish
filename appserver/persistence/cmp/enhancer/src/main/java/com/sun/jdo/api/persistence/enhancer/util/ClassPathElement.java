@@ -16,13 +16,13 @@
 
 package com.sun.jdo.api.persistence.enhancer.util;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import java.io.File;
-import java.io.IOException;
-import java.io.FilenameFilter;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Abstract base class for components of a class path.

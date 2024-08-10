@@ -22,10 +22,16 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.sql.Types;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,17 +42,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.sql.Types;
 
-import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
-
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-
-import org.glassfish.persistence.common.database.DBVendorTypeHelper;
 import org.glassfish.persistence.common.DatabaseConstants;
+import org.glassfish.persistence.common.I18NHelper;
+import org.glassfish.persistence.common.database.DBVendorTypeHelper;
 
 // XXX Capitalization of acronyms such as Jdbc vs. JDBC is inconsistent
 // throught out this package.

@@ -22,6 +22,8 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.model.util;
 
+import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;

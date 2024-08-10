@@ -24,14 +24,17 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
 
-import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
-import com.sun.jdo.spi.persistence.support.sqlstore.*;
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.SCO;
+import com.sun.jdo.spi.persistence.support.sqlstore.SCODate;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTimestamp;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.netbeans.modules.dbschema.ColumnElement;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -39,6 +42,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  *

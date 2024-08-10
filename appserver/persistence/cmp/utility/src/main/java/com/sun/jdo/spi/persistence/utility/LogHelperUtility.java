@@ -17,8 +17,8 @@
 package com.sun.jdo.spi.persistence.utility;
 
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /** LogHelper for utility package.
  * @author Dave Bristor

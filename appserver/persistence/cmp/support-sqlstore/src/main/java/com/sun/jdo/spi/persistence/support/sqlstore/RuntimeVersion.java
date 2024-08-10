@@ -23,7 +23,6 @@
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
 import com.sun.jdo.api.persistence.support.JDOException;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -31,6 +30,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 public class RuntimeVersion {
     private static Properties _properties = new Properties();

@@ -16,13 +16,13 @@
 
 package org.glassfish.flashlight.impl.core;
 
-import org.glassfish.flashlight.provider.FlashlightProbe;
-import org.glassfish.flashlight.provider.ProbeRegistry;
-
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.glassfish.flashlight.provider.FlashlightProbe;
+import org.glassfish.flashlight.provider.ProbeRegistry;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan

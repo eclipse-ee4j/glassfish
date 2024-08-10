@@ -16,12 +16,12 @@
 
 package org.glassfish.flashlight.provider;
 
-import org.jvnet.hk2.annotations.Service;
-
-import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan

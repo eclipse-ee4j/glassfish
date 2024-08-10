@@ -16,10 +16,10 @@
 
 package org.glassfish.flashlight.impl.core;
 
-import org.jvnet.hk2.annotations.Service;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan

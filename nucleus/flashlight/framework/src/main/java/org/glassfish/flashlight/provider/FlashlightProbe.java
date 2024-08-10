@@ -16,24 +16,25 @@
 
 package org.glassfish.flashlight.provider;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.*;
+import org.glassfish.api.monitoring.ProbeInfo;
+import org.glassfish.flashlight.FlashlightLoggerInfo;
 import org.glassfish.flashlight.client.ProbeClientInvoker;
 import org.glassfish.flashlight.client.ProbeHandle;
 import org.glassfish.flashlight.client.StatefulProbeClientInvoker;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import org.glassfish.api.monitoring.ProbeInfo;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.flashlight.FlashlightLoggerInfo;
 
 public class FlashlightProbe
         implements ProbeHandle, ProbeInfo{

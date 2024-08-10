@@ -23,15 +23,22 @@ package org.glassfish.flashlight.impl.core;
  * Fixed a bunch of FindBugs problem, 2/2012, Byron Nevins
  */
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.flashlight.FlashlightLoggerInfo;
-import java.security.*;
-import org.objectweb.asm.*;
 
 import java.io.InputStream;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.flashlight.FlashlightLoggerInfo;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import static org.objectweb.asm.Opcodes.ASM9;
 

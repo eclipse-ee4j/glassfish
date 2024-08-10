@@ -31,25 +31,54 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
+import com.sun.jts.codegen.otsidl.CoordinatorResource;
+import com.sun.jts.codegen.otsidl.JCoordinator;
+import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
 import com.sun.jts.jtsxa.OTSResourceImpl;
 //import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
 //import com.sun.jts.codegen.otsidl.JCoordinatorOperations;
 //import java.io.PrintStream;
 //import java.util.Vector;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.Vector;
+import java.util.logging.Level;
 
 //import com.sun.enterprise.transaction.OTSResourceImpl;
 //import com.sun.enterprise.transaction.SynchronizationImpl;
 
 import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
+
+import org.omg.CORBA.Any;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.COMM_FAILURE;
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CORBA.TRANSIENT;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.CoordinatorHelper;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.Inactive;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.NotSubtransaction;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.RecoveryCoordinator;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.SubtransactionAwareResource;
+import org.omg.CosTransactions.Synchronization;
+import org.omg.CosTransactions.SynchronizationUnavailable;
+import org.omg.CosTransactions.TransIdentity;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.Vote;
+import org.omg.CosTransactions.otid_t;
 
 /**
  * The TopCoordinator interface is our implementation of the standard

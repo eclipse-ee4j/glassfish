@@ -30,19 +30,24 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.util.*;
-import java.io.*;
-
-import org.omg.CORBA.*;
-
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Stack;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.MARSHAL;
+import org.omg.CORBA.ORB;
 
 /**The CoordinatorLog interface provides operations to record transaction-
  * specific information that needs to be persistently stored at a particular

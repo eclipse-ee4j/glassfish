@@ -30,9 +30,7 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes
-
-import java.io.*;
+import java.io.Serializable;
 
 /**A class containing ending information for a log record.
  *

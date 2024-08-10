@@ -30,11 +30,14 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
 
 import com.sun.enterprise.util.i18n.StringManager;
-import java.util.*;
-import java.io.*;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**A class containing attributes of an open log file.
  *

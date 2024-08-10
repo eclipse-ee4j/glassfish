@@ -30,15 +30,14 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.io.*;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
+
+import java.io.File;
+
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**This class holds the top level information for an instance of the log,
  *

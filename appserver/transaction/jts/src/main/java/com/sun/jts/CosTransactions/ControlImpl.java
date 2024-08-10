@@ -30,19 +30,38 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
-import org.omg.CosTransactions.*;
-import org.omg.PortableServer.POAPackage.ServantNotActive;
-import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
-
-import com.sun.jts.codegen.otsidl.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import com.sun.jts.codegen.otsidl.JControl;
+import com.sun.jts.codegen.otsidl.JControlPOA;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.Context;
+import org.omg.CORBA.ContextList;
+import org.omg.CORBA.ExceptionList;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.NVList;
+import org.omg.CORBA.NamedValue;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+import org.omg.CORBA.Request;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.ControlHelper;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.StatusHolder;
+import org.omg.CosTransactions.Terminator;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.otid_t;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
 /**The ControlImpl interface is our implementation of the standard Control
  * interface. It provides operations to set and subsequently obtain the
  * Terminator and Coordinator objects from the given context. Our

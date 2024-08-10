@@ -16,31 +16,30 @@
 
 package com.sun.jts.jta;
 
-import java.io.File;
-import java.util.Properties;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import com.sun.enterprise.transaction.config.TransactionService;
-import com.sun.jts.CosTransactions.Configuration;
-import com.sun.jts.CosTransactions.RecoveryManager;
-import com.sun.jts.utils.RecoveryHooks.FailureInducer;
-
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
+import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
+import com.sun.enterprise.transaction.config.TransactionService;
 import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.CosTransactions.RecoveryManager;
+import com.sun.jts.utils.RecoveryHooks.FailureInducer;
 import com.sun.logging.LogDomains;
-import org.glassfish.api.admin.ServerEnvironment;
 
+import java.io.File;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
+import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.config.types.Property;
 
 /**

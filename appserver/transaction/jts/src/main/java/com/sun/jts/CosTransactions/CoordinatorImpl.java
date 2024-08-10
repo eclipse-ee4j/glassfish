@@ -30,17 +30,44 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import com.sun.jts.codegen.otsidl.JCoordinator;
+import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
+import com.sun.jts.codegen.otsidl.JCoordinatorPOA;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.Context;
+import org.omg.CORBA.ContextList;
+import org.omg.CORBA.ExceptionList;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.NVList;
+import org.omg.CORBA.NamedValue;
+import org.omg.CORBA.Request;
+import org.omg.CORBA.SystemException;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.CoordinatorHelper;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.Inactive;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.NotSubtransaction;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.RecoveryCoordinator;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.SubtransactionAwareResource;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.Synchronization;
+import org.omg.CosTransactions.SynchronizationUnavailable;
+import org.omg.CosTransactions.TransIdentity;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.Vote;
+import org.omg.CosTransactions.otid_t;
+import org.omg.PortableServer.POA;
 
 /**The CoordinatorImpl interface is an extension to the standard Coordinator
  * interface that provides the common operations for top-level transactions and

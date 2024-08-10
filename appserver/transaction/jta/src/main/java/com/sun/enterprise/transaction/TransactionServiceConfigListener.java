@@ -17,8 +17,15 @@
 
 package com.sun.enterprise.transaction;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.config.TransactionService;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -37,15 +44,8 @@ import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.transaction.config.TransactionService;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 
 /**
  * ConfigListener class for TransactionService and TransactionService monitoring level changes

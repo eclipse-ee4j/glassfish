@@ -30,10 +30,10 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
+import java.util.Vector;
 
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CosTransactions.Unavailable;
 
 /**
  * The RegisteredStatics class provides operations that manage the set of

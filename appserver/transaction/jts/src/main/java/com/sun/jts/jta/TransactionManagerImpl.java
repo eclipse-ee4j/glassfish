@@ -17,34 +17,53 @@
 
 package com.sun.jts.jta;
 
-import java.util.*;
-import jakarta.transaction.*;
-import java.io.File;
-import org.omg.CosTransactions.*;
-import org.omg.CORBA.*;
-import org.omg.CORBA.ORBPackage.InvalidName;
-
-import com.sun.jts.CosTransactions.*;
-import com.sun.jts.codegen.otsidl.*;
-
-import jakarta.transaction.SystemException;
-import org.omg.CosTransactions.Status;
-import org.omg.CosTransactions.Current;
-import org.omg.CosTransactions.NoTransaction;
-import org.omg.CosTransactions.HeuristicMixed;
-import org.omg.CosTransactions.HeuristicHazard;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.CosTransactions.ControlImpl;
+import com.sun.jts.CosTransactions.CurrentTransaction;
+import com.sun.jts.CosTransactions.DefaultTransactionService;
 import com.sun.jts.CosTransactions.GlobalTID;
+import com.sun.jts.CosTransactions.MinorCode;
+import com.sun.jts.CosTransactions.RecoveryManager;
+import com.sun.jts.CosTransactions.XATerminatorImpl;
+import com.sun.jts.codegen.otsidl.JControlHelper;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.work.WorkCompletedException;
+import jakarta.resource.spi.work.WorkException;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.transaction.xa.Xid;
-import jakarta.resource.spi.work.WorkException;
-import jakarta.resource.spi.work.WorkCompletedException;
 
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 import org.glassfish.internal.api.Globals;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.NO_PERMISSION;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Current;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.Unavailable;
 
 /**
  * An implementation of jakarta.transaction.TransactionManager using JTA.

@@ -16,21 +16,26 @@
 
 package com.sun.jts.pi;
 
-import org.omg.IOP.*;
-import org.omg.IOP.CodecFactoryPackage.UnknownEncoding;
+import com.sun.jts.CosTransactions.MinorCode;
 
-import org.omg.CORBA.*;
-
-import org.omg.CosTransactions.OTS_POLICY_TYPE;
+import org.omg.CORBA.BAD_INV_ORDER;
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.LocalObject;
+import org.omg.CORBA.TSIdentification;
 import org.omg.CosTransactions.INVOCATION_POLICY_TYPE;
-
+import org.omg.CosTransactions.OTS_POLICY_TYPE;
+import org.omg.IOP.Codec;
+import org.omg.IOP.CodecFactory;
+import org.omg.IOP.ENCODING_CDR_ENCAPS;
+import org.omg.IOP.Encoding;
+import org.omg.IOP.CodecFactoryPackage.UnknownEncoding;
 import org.omg.PortableInterceptor.Current;
-import org.omg.PortableInterceptor.*;
+import org.omg.PortableInterceptor.ORBInitInfo;
+import org.omg.PortableInterceptor.ORBInitializer;
+import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 //import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.InvalidName;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
-
-import com.sun.jts.CosTransactions.MinorCode;
 
 /**
  * This class implements the ORBInitializer for JTS. When an instance of this

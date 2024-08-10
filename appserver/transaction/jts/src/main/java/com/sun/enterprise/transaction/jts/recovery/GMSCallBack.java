@@ -17,19 +17,6 @@
 
 package com.sun.enterprise.transaction.jts.recovery;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
-
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import org.glassfish.gms.bootstrap.GMSAdapter;
-import org.glassfish.gms.bootstrap.GMSAdapterService;
-import org.glassfish.hk2.api.ServiceLocator;
-
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.ee.cms.core.CallBack;
@@ -42,6 +29,19 @@ import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.jta.TransactionServiceProperties;
 import com.sun.logging.LogDomains;
+
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.glassfish.gms.bootstrap.GMSAdapter;
+import org.glassfish.gms.bootstrap.GMSAdapterService;
+import org.glassfish.hk2.api.ServiceLocator;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 public class GMSCallBack implements CallBack {
 

@@ -16,9 +16,8 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Stack;
 
 
 /**

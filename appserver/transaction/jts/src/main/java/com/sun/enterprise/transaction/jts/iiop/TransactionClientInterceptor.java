@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-import static com.sun.corba.ee.spi.presentation.rmi.StubAdapter.isLocal;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import static com.sun.corba.ee.spi.presentation.rmi.StubAdapter.isLocal;
 
 public class TransactionClientInterceptor extends LocalObject implements ClientRequestInterceptor, Comparable<TransactionClientInterceptor> {
 

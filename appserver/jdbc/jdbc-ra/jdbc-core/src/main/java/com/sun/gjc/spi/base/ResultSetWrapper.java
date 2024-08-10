@@ -16,6 +16,10 @@
 
 package com.sun.gjc.spi.base;
 
+import com.sun.gjc.util.MethodExecutor;
+import com.sun.gjc.util.ResultSetClosedEventListener;
+import com.sun.logging.LogDomains;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -35,10 +39,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import com.sun.gjc.util.MethodExecutor;
-import com.sun.gjc.util.ResultSetClosedEventListener;
-import com.sun.logging.LogDomains;
 
 /**
  * Abstract class for ResultSet Wrapper <br>

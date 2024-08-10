@@ -17,9 +17,13 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
+import com.sun.gjc.spi.ManagedConnectionImpl;
+import com.sun.gjc.spi.base.ConnectionHolder;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -38,13 +42,9 @@ import java.sql.Struct;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
-import com.sun.gjc.spi.ManagedConnectionImpl;
-import com.sun.gjc.spi.base.ConnectionHolder;
-
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ConnectionRequestInfo;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Holds the java.sql.Connection object, which is to be passed to the

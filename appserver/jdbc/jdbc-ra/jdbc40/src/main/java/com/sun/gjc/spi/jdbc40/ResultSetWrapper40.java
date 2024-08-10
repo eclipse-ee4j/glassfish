@@ -17,7 +17,11 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
+import com.sun.gjc.spi.base.ResultSetWrapper;
+
+import jakarta.resource.ResourceException;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -29,11 +33,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLXML;
 import java.sql.Statement;
 
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
-import com.sun.gjc.spi.base.ResultSetWrapper;
-
-import jakarta.resource.ResourceException;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Wrapper for ResultSet

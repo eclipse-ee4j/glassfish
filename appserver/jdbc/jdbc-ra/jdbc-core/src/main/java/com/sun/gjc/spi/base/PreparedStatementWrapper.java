@@ -18,6 +18,8 @@
 package com.sun.gjc.spi.base;
 
 
+import com.sun.gjc.util.ResultSetClosedEventListener;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -36,8 +38,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.logging.Level;
-
-import com.sun.gjc.util.ResultSetClosedEventListener;
 
 /**
  * Abstract class for wrapping PreparedStatement<br>

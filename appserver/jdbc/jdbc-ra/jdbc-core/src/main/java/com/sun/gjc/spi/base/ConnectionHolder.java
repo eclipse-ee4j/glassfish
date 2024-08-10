@@ -16,18 +16,6 @@
 
 package com.sun.gjc.spi.base;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.ManagedConnectionImpl;
@@ -39,6 +27,18 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.LazyAssociatableConnectionManager;
 import jakarta.resource.spi.LazyEnlistableConnectionManager;
 import jakarta.resource.spi.ManagedConnectionFactory;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Holds the java.sql.Connection object, which is to be passed to the

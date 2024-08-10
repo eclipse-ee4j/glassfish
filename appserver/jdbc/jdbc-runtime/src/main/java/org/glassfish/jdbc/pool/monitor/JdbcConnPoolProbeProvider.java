@@ -16,11 +16,11 @@
 
 package org.glassfish.jdbc.pool.monitor;
 
+import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProvider;
+
 import org.glassfish.external.probe.provider.annotations.Probe;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.probe.provider.annotations.ProbeProvider;
-
-import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProvider;
 
 /**
  * Probe provider interface for JDBC connection pool related events to provide

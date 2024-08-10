@@ -16,14 +16,6 @@
 
 package com.sun.gjc.spi;
 
-import static jakarta.resource.spi.AuthenticationMechanism.CredentialInterface.PasswordCredential;
-import static java.util.logging.Level.SEVERE;
-
-import java.util.Timer;
-import java.util.logging.Logger;
-
-import javax.transaction.xa.XAResource;
-
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.NotSupportedException;
@@ -34,6 +26,14 @@ import jakarta.resource.spi.Connector;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.UnavailableException;
 import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+
+import java.util.Timer;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAResource;
+
+import static jakarta.resource.spi.AuthenticationMechanism.CredentialInterface.PasswordCredential;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * <code>ResourceAdapterImpl</code> implementation for Generic JDBC Connector.

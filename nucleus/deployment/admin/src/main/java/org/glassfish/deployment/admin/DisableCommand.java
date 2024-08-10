@@ -16,59 +16,62 @@
 
 package org.glassfish.deployment.admin;
 
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.admin.FailurePolicy;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.admin.util.ClusterOperationUtil;
-import com.sun.enterprise.config.serverbeans.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.event.Events;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.internal.deployment.DeploymentTargetResolver;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.common.util.admin.ParameterMapExtractor;
-import org.glassfish.deployment.common.DeploymentUtils;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.TransactionFailure;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.FailurePolicy;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
-
-import org.glassfish.deployment.versioning.VersioningService;
+import org.glassfish.api.deployment.UndeployCommandParameters;
+import org.glassfish.api.event.Events;
+import org.glassfish.common.util.admin.ParameterMapExtractor;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.versioning.VersioningException;
+import org.glassfish.deployment.versioning.VersioningService;
 import org.glassfish.deployment.versioning.VersioningUtils;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.DeploymentTargetResolver;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Disable command

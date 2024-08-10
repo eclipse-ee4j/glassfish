@@ -16,16 +16,17 @@
 
 package com.sun.enterprise.deployment.node.runtime.application.wls;
 
-import org.glassfish.deployment.common.Descriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
+import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling application-param.

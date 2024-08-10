@@ -16,13 +16,13 @@
 
 package com.sun.enterprise.deployment.io;
 
-import org.glassfish.hk2.api.Metadata;
+import jakarta.inject.Qualifier;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import jakarta.inject.Qualifier;
+import org.glassfish.hk2.api.Metadata;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

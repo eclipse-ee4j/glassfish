@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.deployment.node;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
-
 import java.io.File;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
 /**
  *Provides the appropriate implementation depending on the current

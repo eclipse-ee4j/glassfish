@@ -17,10 +17,7 @@
 
 package com.sun.enterprise.deployment.deploy.shared;
 
-import static com.sun.enterprise.util.io.FileUtils.deleteFile;
-import static com.sun.enterprise.util.io.FileUtils.renameFile;
-import static java.util.jar.JarFile.MANIFEST_NAME;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -49,7 +46,10 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.util.i18n.StringManager;
+import static com.sun.enterprise.util.io.FileUtils.deleteFile;
+import static com.sun.enterprise.util.io.FileUtils.renameFile;
+import static java.util.jar.JarFile.MANIFEST_NAME;
+import static java.util.logging.Level.WARNING;
 
 /**
  * This implementation of the Archive deal with reading jar files either from a JarFile or from a JarInputStream

@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.deployment.util;
 
-import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 public class ConnectorTracerVisitor extends DefaultDOLVisitor implements ConnectorVisitor {
 

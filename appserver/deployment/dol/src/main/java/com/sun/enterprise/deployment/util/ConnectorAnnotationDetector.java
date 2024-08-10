@@ -17,14 +17,15 @@
 package com.sun.enterprise.deployment.util;
 
 import com.sun.enterprise.deployment.annotation.introspection.AnnotationScanner;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.Enumeration;
-import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
  * Subclass for connector annotation detection.

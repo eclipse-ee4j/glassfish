@@ -23,11 +23,15 @@
 
 package org.glassfish.deployment.autodeploy;
 
-import java.io.*;
+import java.io.File;
 import java.net.URI;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**

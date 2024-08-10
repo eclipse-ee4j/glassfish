@@ -17,6 +17,10 @@
 
 package org.glassfish.deployment.admin;
 
+import com.sun.enterprise.config.serverbeans.Application;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -41,10 +45,6 @@ import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.data.EngineRef;
 import org.glassfish.internal.data.ModuleInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.Application;
-
-import jakarta.inject.Inject;
 
 /**
  * Get deployment configurations command

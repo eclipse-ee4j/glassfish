@@ -20,11 +20,12 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.MultipartConfig;
 import com.sun.enterprise.deployment.web.SecurityRoleReference;
-import org.glassfish.deployment.common.Descriptor;
 
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
 
 
 /**

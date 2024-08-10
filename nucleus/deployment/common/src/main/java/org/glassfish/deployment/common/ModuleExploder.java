@@ -18,22 +18,24 @@
 package org.glassfish.deployment.common;
 
 
-import org.glassfish.api.deployment.archive.Archive;
-import java.io.*;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.jar.JarFile;
-import java.util.jar.JarEntry;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.util.zip.ZipFile;
-import com.sun.enterprise.util.zip.ZipFileException;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.util.zip.ZipFile;
+import com.sun.enterprise.util.zip.ZipFileException;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**

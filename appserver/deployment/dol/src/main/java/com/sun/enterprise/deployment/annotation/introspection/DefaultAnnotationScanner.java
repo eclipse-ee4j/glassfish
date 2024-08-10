@@ -16,15 +16,15 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
-import java.util.Set;
-
-import org.glassfish.hk2.api.PostConstruct;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.deployment.annotation.factory.SJSASFactory;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.Set;
+
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class contains the list of all annotations types name which can be present at the class level (Type.TYPE).

@@ -17,12 +17,17 @@
 
 package org.glassfish.deployment.common;
 
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.io.FileUtils.makeFriendlyFilenameExtension;
-import static com.sun.enterprise.util.io.FileUtils.makeLegalNoBlankFileName;
-import static com.sun.enterprise.util.io.FileUtils.safeIsDirectory;
-import static java.util.jar.JarFile.MANIFEST_NAME;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,17 +56,12 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.io.FileUtils.makeFriendlyFilenameExtension;
+import static com.sun.enterprise.util.io.FileUtils.makeLegalNoBlankFileName;
+import static com.sun.enterprise.util.io.FileUtils.safeIsDirectory;
+import static java.util.jar.JarFile.MANIFEST_NAME;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Utility methods for deployment.

@@ -18,10 +18,11 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.internal.api.RelativePathResolver;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.internal.api.RelativePathResolver;
 
 public class ConnectorConfigProperty extends EnvironmentProperty {
 

@@ -17,15 +17,16 @@
 
 package com.sun.enterprise.deployment.node;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  *

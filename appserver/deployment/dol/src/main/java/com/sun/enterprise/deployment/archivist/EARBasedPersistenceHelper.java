@@ -19,10 +19,12 @@ package com.sun.enterprise.deployment.archivist;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.archivist.PersistenceArchivist.SubArchivePURootScanner;
-import org.glassfish.deployment.common.ModuleDescriptor;
+
 import java.util.Map;
 import java.util.Set;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.ModuleDescriptor;
 
 /**
  * Common logic supporting persistence archivists that deal with EARs.

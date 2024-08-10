@@ -18,12 +18,14 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 
-import javax.xml.namespace.QName;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Information about a single WSDL port or port type in a service reference.

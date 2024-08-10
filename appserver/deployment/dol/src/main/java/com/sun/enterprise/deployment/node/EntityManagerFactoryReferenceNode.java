@@ -19,9 +19,10 @@ package com.sun.enterprise.deployment.node;
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This node handles all persistence-unit-ref xml tag elements

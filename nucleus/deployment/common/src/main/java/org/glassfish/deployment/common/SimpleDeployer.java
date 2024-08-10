@@ -16,11 +16,10 @@
 
 package org.glassfish.deployment.common;
 
-import org.glassfish.api.deployment.DeploymentContext;
-
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.Deployer;
+import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.OpsParams;
 

@@ -17,9 +17,9 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import java.net.URL;
-
 import com.sun.enterprise.loader.ASURLClassLoader;
+
+import java.net.URL;
 
 /**
  * Classloader that is responsible to load the ear libraries (lib/*.jar etc)

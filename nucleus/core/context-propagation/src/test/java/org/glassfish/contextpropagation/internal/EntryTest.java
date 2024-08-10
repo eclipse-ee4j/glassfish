@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.glassfish.contextpropagation.PropagationMode;
 import org.glassfish.contextpropagation.internal.Entry.ContextType;
 import org.junit.jupiter.api.Test;
+
 import static org.glassfish.contextpropagation.internal.Entry.ContextType.ASCII_STRING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

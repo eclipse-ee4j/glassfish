@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.v3.common;
 
-import static com.sun.enterprise.util.StringUtils.ok;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,7 +28,7 @@ import java.util.Properties;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
  *

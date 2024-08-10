@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.module.common_impl.LogHelper;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,8 +26,6 @@ import java.util.logging.Level;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-
-import com.sun.enterprise.module.common_impl.LogHelper;
 
 /**
  * DTD resolver used when parsing the domain.xml and resolve to local DTD copies

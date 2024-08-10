@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.v3.admin;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,9 +28,6 @@ import org.glassfish.api.admin.JobLocator;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * This service will scan for all jobs.xml

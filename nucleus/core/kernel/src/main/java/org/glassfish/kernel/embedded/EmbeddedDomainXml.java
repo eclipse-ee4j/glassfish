@@ -20,14 +20,15 @@ package org.glassfish.kernel.embedded;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.v3.server.GFDomainXml;
 
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.server.ServerEnvironmentImpl;
 import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.server.ServerEnvironmentImpl;
 
 /**
  * Embedded domain.xml, can use externally pointed domain.xml

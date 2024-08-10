@@ -16,6 +16,14 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AccessRequired;
@@ -25,14 +33,6 @@ import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleState;
-import com.sun.enterprise.module.ModulesRegistry;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * List the modules available to this instance and their status

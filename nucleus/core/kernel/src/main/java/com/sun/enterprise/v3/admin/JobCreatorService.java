@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.admin;
 
+import jakarta.inject.Inject;
+
 import javax.security.auth.Subject;
 
 import org.glassfish.api.admin.Job;
@@ -23,8 +25,6 @@ import org.glassfish.api.admin.JobCreator;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
 
 /**
  * This service implements the <code>JobCreator</code> and is used for creating Jobs

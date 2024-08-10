@@ -17,7 +17,11 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -34,11 +38,7 @@ import org.glassfish.internal.config.UnprocessedConfigListener;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 
 /**
  * Locations command to indicate where this server is installed.

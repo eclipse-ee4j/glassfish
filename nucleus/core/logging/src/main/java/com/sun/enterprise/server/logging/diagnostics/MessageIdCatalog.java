@@ -17,8 +17,8 @@
 package com.sun.enterprise.server.logging.diagnostics;
 
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Simple catalog class to locate Diagnostic Information based on

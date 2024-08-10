@@ -17,6 +17,11 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.Async;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -28,11 +33,6 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.module.ModulesRegistry;
-
-import jakarta.inject.Inject;
 
 /**
  * For non-verbose mode: Stop this server, spawn a new JVM that will wait for this JVM to die. The new JVM then starts

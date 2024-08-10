@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.kernel.KernelLoggerInfo.exceptionWhileParsing;
-import static org.glassfish.kernel.KernelLoggerInfo.invalidInputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -37,6 +33,10 @@ import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.hk2.classmodel.reflect.Parser.Result;
 import org.glassfish.hk2.classmodel.reflect.util.AbstractAdapter;
 import org.glassfish.kernel.KernelLoggerInfo;
+
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionWhileParsing;
+import static org.glassfish.kernel.KernelLoggerInfo.invalidInputStream;
 
 /**
  * ArchiveAdapter for DOL readable archive instances

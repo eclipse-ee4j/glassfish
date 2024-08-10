@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.v3.server;
 
-import static java.util.Arrays.asList;
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.kernel.KernelLoggerInfo.exceptionDRS;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.DasConfig;
+
+import jakarta.inject.Inject;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -39,10 +40,9 @@ import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.DasConfig;
-
-import jakarta.inject.Inject;
+import static java.util.Arrays.asList;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionDRS;
 
 /**
  * A service wrapper around the dynamic reload processor.

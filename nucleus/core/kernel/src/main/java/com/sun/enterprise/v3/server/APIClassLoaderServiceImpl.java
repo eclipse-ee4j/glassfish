@@ -17,11 +17,13 @@
 
 package com.sun.enterprise.v3.server;
 
-import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
-import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
-import static java.util.Collections.enumeration;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleLifecycleListener;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.common_impl.CompositeEnumeration;
+
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,13 +41,11 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleLifecycleListener;
-import com.sun.enterprise.module.ModuleState;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.common_impl.CompositeEnumeration;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This class is responsible for creating a ClassLoader that can load classes exported by the system for public use. We

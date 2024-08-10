@@ -17,11 +17,12 @@
 package com.sun.enterprise.v3.services.impl;
 
 import com.sun.enterprise.util.Result;
-import java.io.IOException;
-import org.glassfish.grizzly.http.server.HttpHandler;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.Future;
+
+import org.glassfish.grizzly.http.server.HttpHandler;
 
 /**
  * Generic interface used by the GrizzlyService to start the tcp/udp/tcl stack.

@@ -16,10 +16,10 @@
 
 package org.glassfish.admin.amx.j2ee;
 
-import org.glassfish.external.amx.AMX;
-import org.glassfish.admin.amx.util.SetUtil;
-
 import java.util.Set;
+
+import org.glassfish.admin.amx.util.SetUtil;
+import org.glassfish.external.amx.AMX;
 
 /**
  * See JSR 77.3-1.<br>

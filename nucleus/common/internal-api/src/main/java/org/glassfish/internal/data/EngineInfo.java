@@ -17,8 +17,6 @@
 
 package org.glassfish.internal.data;
 
-import static java.util.logging.Level.FINE;
-
 import java.util.logging.Logger;
 
 import org.glassfish.api.container.Container;
@@ -27,6 +25,8 @@ import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.Deployer;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * This class holds information about a particular container such as a reference to the sniffer, the container itself

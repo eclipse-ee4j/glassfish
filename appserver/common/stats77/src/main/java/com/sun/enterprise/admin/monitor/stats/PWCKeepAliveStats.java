@@ -16,13 +16,14 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
+import org.glassfish.j2ee.statistics.CountStatistic;
+
 /**
  *
  * @author  nsegura
  */
 
 import org.glassfish.j2ee.statistics.Stats;
-import org.glassfish.j2ee.statistics.CountStatistic;
 
 /**
  * Provides statistical information about the HttpService HTTP-level keep-alive

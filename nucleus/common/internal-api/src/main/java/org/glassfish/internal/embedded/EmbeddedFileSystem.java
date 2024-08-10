@@ -16,10 +16,10 @@
 
 package org.glassfish.internal.embedded;
 
-import org.glassfish.hk2.api.PreDestroy;
-
 import java.io.File;
-import java.util.logging.*;
+import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.PreDestroy;
 
 /**
  * Abstraction for a virtual filesystem that be used by the server to store important files.

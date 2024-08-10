@@ -18,9 +18,12 @@ package com.sun.enterprise.util.io;
 
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import java.io.*;
+
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+
+import org.glassfish.api.admin.CommandException;
 
 /**
  * A class for keeping track of the directories that an instance lives in and under.

@@ -16,12 +16,13 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.J2EELogicalServer;
+import java.io.Serializable;
+import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.ObjectName;
-import java.io.Serializable;
-import java.util.Map;
+
+import org.glassfish.admin.amx.j2ee.J2EELogicalServer;
 
 /**
 Base interface only (for cluster and standalone server)

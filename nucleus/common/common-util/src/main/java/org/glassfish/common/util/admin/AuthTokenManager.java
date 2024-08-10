@@ -18,14 +18,18 @@ package org.glassfish.common.util.admin;
 
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Singleton;
+
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Singleton;
+
 import javax.security.auth.Subject;
+
 import org.jvnet.hk2.annotations.Service;
 
 /**

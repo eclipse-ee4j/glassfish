@@ -16,12 +16,6 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.ListUtil;
-import org.glassfish.admin.amx.util.StringUtil;
-import org.glassfish.admin.amx.util.TypeCast;
-import org.glassfish.admin.amx.util.stringifier.Stringifier;
-
-import javax.management.ObjectName;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,6 +23,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.util.ListUtil;
+import org.glassfish.admin.amx.util.StringUtil;
+import org.glassfish.admin.amx.util.TypeCast;
+import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 /**
 Stringifier for an ObjectName which sorts the properties in the ObjectName

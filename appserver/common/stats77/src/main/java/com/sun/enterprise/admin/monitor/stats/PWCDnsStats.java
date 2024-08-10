@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
+import org.glassfish.j2ee.statistics.CountStatistic;
 /**
  *
  * @author  nsegura
  */
 import org.glassfish.j2ee.statistics.Stats;
-import org.glassfish.j2ee.statistics.CountStatistic;
 
 /**
  * The DNS Cache caches IP addresses and DNS names. The server’s DNS cache is

@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.security.store;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,6 +30,8 @@ import java.util.Enumeration;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 
 /**
  * This class implements an adapter for password manipulation a JCEKS. Note that although it uses locks ('synchronized'), it

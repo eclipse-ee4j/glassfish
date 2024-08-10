@@ -16,13 +16,14 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
-import org.glassfish.admin.amx.util.stringifier.Stringifier;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;
-import java.util.Iterator;
-import java.util.Set;
+
+import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
+import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 public class CompositeDataStringifier implements Stringifier
 {

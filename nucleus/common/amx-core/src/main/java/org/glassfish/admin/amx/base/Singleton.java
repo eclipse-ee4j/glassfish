@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.base;
 
+import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-import org.glassfish.admin.amx.core.AMXProxy;
 
 /**
 A marker interface which indicates that this MBean is one-of-a-kind *within its scope*.

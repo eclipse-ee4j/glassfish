@@ -16,10 +16,9 @@
 
 package com.sun.enterprise.naming;
 
-import static com.sun.enterprise.naming.util.LogFacade.logger;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.naming.impl.SerialInitContextFactory;
+
+import jakarta.inject.Inject;
 
 import java.lang.reflect.Field;
 import java.security.AccessController;
@@ -43,9 +42,10 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.naming.impl.SerialInitContextFactory;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.naming.util.LogFacade.logger;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 /**
  * This is both a init run level service as well as our implementation of {@link InitialContextFactoryBuilder}. When GlassFish

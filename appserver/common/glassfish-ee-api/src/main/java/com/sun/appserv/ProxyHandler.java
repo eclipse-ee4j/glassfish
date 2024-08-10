@@ -17,9 +17,10 @@
 
 package com.sun.appserv;
 
-import java.security.cert.X509Certificate;
-import java.security.cert.CertificateException;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 /**
  * Abstract class allowing a backend appserver instance to retrieve information about the original client request that

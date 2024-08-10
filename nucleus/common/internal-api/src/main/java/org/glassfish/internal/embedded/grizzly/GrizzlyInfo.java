@@ -16,9 +16,9 @@
 
 package org.glassfish.internal.embedded.grizzly;
 
-import org.glassfish.internal.embedded.ContainerBuilder;
-
 import java.util.Properties;
+
+import org.glassfish.internal.embedded.ContainerBuilder;
 
 /**
  *

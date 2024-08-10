@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.AppClientModule;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.AppClientModule;
 
 public final class AppClientModuleImpl extends J2EEModuleImplBase {
     public static final Class<AppClientModule> INTF = AppClientModule.class;

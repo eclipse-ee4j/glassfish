@@ -16,20 +16,19 @@
 
 package org.glassfish.admin.amx.impl.util;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-
-import org.glassfish.api.Async;
-
-import jakarta.inject.Inject;
-import javax.management.MBeanServer;
-import org.glassfish.server.ServerEnvironmentImpl;
-
-import org.glassfish.internal.config.UnprocessedConfigListener;
+import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.ModulesRegistry;
 
-import com.sun.enterprise.config.serverbeans.Domain;
+import jakarta.inject.Inject;
+
+import javax.management.MBeanServer;
+
+import org.glassfish.api.Async;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.config.UnprocessedConfigListener;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
 
 /**
 Utility class that gets various useful values injected into it for use

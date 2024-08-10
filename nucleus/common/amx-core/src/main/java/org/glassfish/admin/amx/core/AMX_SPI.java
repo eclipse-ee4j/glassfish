@@ -16,12 +16,12 @@
 
 package org.glassfish.admin.amx.core;
 
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.annotation.Description;
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-
-import javax.management.ObjectName;
 
 /**
  * @deprecated MBean implementations can 'implements AMX_SPI', though it is only behavior

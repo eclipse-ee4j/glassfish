@@ -19,13 +19,19 @@ package com.sun.enterprise.naming.impl;
 
 
 import com.sun.enterprise.util.Utility;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import javax.naming.*;
+
+import javax.naming.CompositeName;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.Reference;
+
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.omg.CORBA.ORB;
 

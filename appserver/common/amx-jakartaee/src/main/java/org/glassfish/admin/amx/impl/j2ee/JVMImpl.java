@@ -16,10 +16,10 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.JVM;
-
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.j2ee.J2EEManagedObject;
+import org.glassfish.admin.amx.j2ee.JVM;
 
 /**
 Identifies a Java VM being utilized by a server.

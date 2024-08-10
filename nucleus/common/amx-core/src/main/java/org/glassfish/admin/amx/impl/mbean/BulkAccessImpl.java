@@ -16,13 +16,13 @@
 
 package org.glassfish.admin.amx.impl.mbean;
 
-import org.glassfish.admin.amx.base.BulkAccess;
-import org.glassfish.admin.amx.util.jmx.JMXUtil;
-
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanInfo;
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.base.BulkAccess;
+import org.glassfish.admin.amx.util.jmx.JMXUtil;
 
 /**
  */

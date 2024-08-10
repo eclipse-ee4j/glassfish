@@ -19,11 +19,16 @@ package org.glassfish.admin.amx.impl.j2ee;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.impl.util.Issues;
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
-import org.glassfish.admin.amx.j2ee.*;
-import static org.glassfish.admin.amx.j2ee.StateManageable.*;
+import org.glassfish.admin.amx.j2ee.J2EETypes;
+
+import static org.glassfish.admin.amx.j2ee.StateManageable.STATE_FAILED;
+import static org.glassfish.admin.amx.j2ee.StateManageable.STATE_RUNNING;
+import static org.glassfish.admin.amx.j2ee.StateManageable.STATE_STARTING;
+import static org.glassfish.admin.amx.j2ee.StateManageable.STATE_STOPPED;
 
 /**
 JSR 77 extension representing an Appserver standalone server (non-clustered)

@@ -16,11 +16,11 @@
 
 package org.glassfish.internal.embedded.admin;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.internal.embedded.ContainerBuilder;
 import org.glassfish.internal.embedded.Server;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
 
 /**
  * So far, the admin container does not require much configuration but we

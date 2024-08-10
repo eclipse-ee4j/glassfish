@@ -18,14 +18,21 @@ package org.glassfish.admin.amx.impl.j2ee;
 
 import java.util.Set;
 
-import org.glassfish.admin.amx.j2ee.J2EEServer;
-import org.glassfish.admin.amx.util.SetUtil;
-import org.glassfish.admin.amx.impl.util.Issues;
-
 import javax.management.ObjectName;
 
+import org.glassfish.admin.amx.impl.util.Issues;
+import org.glassfish.admin.amx.j2ee.J2EEServer;
+import org.glassfish.admin.amx.util.SetUtil;
 
-import static org.glassfish.admin.amx.j2ee.J2EETypes.*;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JAVA_MAIL_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JCA_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JDBC_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JMS_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JNDI_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JTA_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.JVM;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.RMI_IIOP_RESOURCE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.URL_RESOURCE;
 
 /**
 JSR 77 extension representing an Appserver standalone server (non-clustered).

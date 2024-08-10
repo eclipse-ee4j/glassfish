@@ -16,14 +16,6 @@
 
 package com.sun.enterprise.container.common.spi;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import javax.naming.NamingException;
-
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
@@ -31,6 +23,14 @@ import com.sun.enterprise.deployment.EjbInterceptor;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.servlet.ServletContext;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import javax.naming.NamingException;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  */

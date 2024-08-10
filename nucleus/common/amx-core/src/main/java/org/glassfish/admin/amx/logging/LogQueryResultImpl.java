@@ -16,11 +16,11 @@
 
 package org.glassfish.admin.amx.logging;
 
-import org.glassfish.admin.amx.util.ArrayUtil;
-import org.glassfish.admin.amx.util.ObjectUtil;
-
 import java.io.Serializable;
 import java.util.List;
+
+import org.glassfish.admin.amx.util.ArrayUtil;
+import org.glassfish.admin.amx.util.ObjectUtil;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 

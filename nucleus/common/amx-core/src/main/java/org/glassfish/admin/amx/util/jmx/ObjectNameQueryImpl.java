@@ -16,14 +16,15 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
-import org.glassfish.admin.amx.util.EnumerationIterator;
-
-import javax.management.ObjectName;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.util.EnumerationIterator;
 
 public class ObjectNameQueryImpl implements ObjectNameQuery
 {

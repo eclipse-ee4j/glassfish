@@ -21,9 +21,12 @@
 package com.sun.enterprise.util;
 //
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Vector;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ObjectAnalyzer {
     /**

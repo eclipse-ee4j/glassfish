@@ -18,14 +18,22 @@
 package org.apache.catalina.valves;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.session.PersistentManager;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
+
+import org.apache.catalina.Context;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Logger;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.Session;
+import org.apache.catalina.Store;
+import org.apache.catalina.session.PersistentManager;
 
 /**
  * Valve that implements the default basic behavior for the

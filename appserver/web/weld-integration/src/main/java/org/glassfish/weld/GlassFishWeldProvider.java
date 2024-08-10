@@ -16,6 +16,9 @@
 
 package org.glassfish.weld;
 
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDIProvider;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -24,9 +27,6 @@ import org.jboss.weld.Container;
 import org.jboss.weld.SimpleCDI;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.manager.BeanManagerImpl;
-
-import jakarta.enterprise.inject.spi.CDI;
-import jakarta.enterprise.inject.spi.CDIProvider;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>

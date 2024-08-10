@@ -16,9 +16,15 @@
 
 package org.glassfish.cdi.transaction;
 
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
@@ -35,15 +41,9 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
-import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.interceptor.InvocationContext;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
-import jakarta.transaction.TransactionManager;
-import jakarta.transaction.Transactional;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Base class for all interceptors providing common logic for exception handling, etc.

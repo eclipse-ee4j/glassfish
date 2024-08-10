@@ -18,16 +18,6 @@
 package org.apache.catalina.startup;
 
 
-import org.apache.catalina.core.*;
-import org.glassfish.web.util.IntrospectionUtils;
-import org.apache.catalina.*;
-import org.apache.catalina.loader.WebappLoader;
-import org.apache.catalina.net.ServerSocketFactory;
-import org.apache.catalina.security.SecurityConfig;
-import org.apache.catalina.util.LifecycleSupport;
-import org.apache.catalina.util.ServerInfo;
-import org.glassfish.web.valve.GlassFishValve;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -38,6 +28,30 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Authenticator;
+import org.apache.catalina.Connector;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Loader;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Realm;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.core.StandardEngine;
+import org.apache.catalina.core.StandardHost;
+import org.apache.catalina.core.StandardService;
+import org.apache.catalina.loader.WebappLoader;
+import org.apache.catalina.net.ServerSocketFactory;
+import org.apache.catalina.security.SecurityConfig;
+import org.apache.catalina.util.LifecycleSupport;
+import org.apache.catalina.util.ServerInfo;
+import org.glassfish.web.util.IntrospectionUtils;
+import org.glassfish.web.valve.GlassFishValve;
 
 /**
  * Convenience class to embed a Catalina servlet container environment

@@ -16,17 +16,17 @@
 
 package org.glassfish.weld.services;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.jboss.weld.injection.spi.InjectionContext;
-import org.jboss.weld.injection.spi.InjectionServices;
-
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 
 import jakarta.enterprise.inject.spi.AnnotatedType;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.jboss.weld.injection.spi.InjectionContext;
+import org.jboss.weld.injection.spi.InjectionServices;
 
 /**
  * The InjectionServices for a non-module bda (library or rar). A non-module bda has no associated bundle so we cannot

@@ -25,19 +25,24 @@ package org.glassfish.web.ha.session.management;
 
 import com.sun.appserv.util.cache.BaseCache;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.util.logging.Level;
+import java.util.zip.GZIPInputStream;
+
 import org.apache.catalina.Container;
-import org.apache.catalina.Session;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Loader;
+import org.apache.catalina.Session;
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.api.Storeable;
 import org.glassfish.ha.store.util.SimpleMetadata;
 import org.glassfish.web.ha.LogFacade;
-
-import java.io.*;
-import java.util.logging.Level;
-import java.util.zip.GZIPInputStream;
 
 /**
  *

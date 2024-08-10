@@ -23,11 +23,12 @@
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.descriptor.LoginConfigurationImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
-
-import java.util.Map;
 
 /**
  * This node handles the login-config xml tag

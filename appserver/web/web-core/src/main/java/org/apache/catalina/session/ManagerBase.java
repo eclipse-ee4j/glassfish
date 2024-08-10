@@ -19,15 +19,14 @@ package org.apache.catalina.session;
 
 import com.sun.enterprise.util.uuid.UuidGenerator;
 import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
-import org.apache.catalina.*;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.core.StandardHost;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import javax.management.ObjectName;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.DataInputStream;
@@ -37,11 +36,32 @@ import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //end HERCULES:added
+
+import javax.management.ObjectName;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
+import org.apache.catalina.SessionLocker;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.core.StandardHost;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 
 /**

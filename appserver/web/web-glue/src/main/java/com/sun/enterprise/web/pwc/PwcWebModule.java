@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.web.pwc;
 
+import com.sun.enterprise.web.session.SessionCookieConfig;
+import com.sun.enterprise.web.session.WebSessionCookieConfig;
+
 import java.util.Enumeration;
 
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardWrapper;
-
-import com.sun.enterprise.web.session.SessionCookieConfig;
-import com.sun.enterprise.web.session.WebSessionCookieConfig;
 
 /**
  * Class representing a web module (servlet context).

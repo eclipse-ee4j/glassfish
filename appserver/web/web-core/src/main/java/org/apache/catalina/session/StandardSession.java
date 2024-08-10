@@ -21,27 +21,55 @@
 package org.apache.catalina.session;
 
 import com.sun.enterprise.spi.io.BaseIndirectlySerializable;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.*;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.security.SecurityUtil;
-import org.apache.catalina.util.Enumerator;
-import org.apache.tomcat.util.security.PrivilegedSetTccl;
 
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.*;
-import java.io.*;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionActivationListener;
+import jakarta.servlet.http.HttpSessionAttributeListener;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionIdListener;
+import jakarta.servlet.http.HttpSessionListener;
+
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //end HERCULES:add
+
+import org.apache.catalina.ContainerEvent;
+import org.apache.catalina.Context;
+import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
+import org.apache.catalina.SessionEvent;
+import org.apache.catalina.SessionListener;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.security.SecurityUtil;
+import org.apache.catalina.util.Enumerator;
+import org.apache.tomcat.util.security.PrivilegedSetTccl;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 
 

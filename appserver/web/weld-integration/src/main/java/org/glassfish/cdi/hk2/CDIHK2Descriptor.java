@@ -16,6 +16,13 @@
 
 package org.glassfish.cdi.hk2;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Singleton;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -27,13 +34,6 @@ import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
-
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.Any;
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Singleton;
 
 /**
  * This is an HK2 Descriptor that is backed by a CDI bean

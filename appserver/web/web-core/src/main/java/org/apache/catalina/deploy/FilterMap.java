@@ -17,12 +17,13 @@
 
 package org.apache.catalina.deploy;
 
-import org.apache.catalina.util.RequestUtil;
-
 import jakarta.servlet.DispatcherType;
+
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.Set;
+
+import org.apache.catalina.util.RequestUtil;
 
 /**
  * Representation of a filter mapping for a web application, as represented

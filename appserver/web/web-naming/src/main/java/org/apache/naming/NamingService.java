@@ -17,15 +17,16 @@
 
 package org.apache.naming;
 
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import javax.naming.Context;
+import java.util.logging.Logger;
+
+import javax.management.AttributeChangeNotification;
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.ObjectName;
-import javax.management.MBeanServer;
-import javax.management.MBeanRegistration;
-import javax.management.AttributeChangeNotification;
-import javax.management.Notification;
+import javax.naming.Context;
 
 /**
  * Implementation of the NamingService JMX MBean.

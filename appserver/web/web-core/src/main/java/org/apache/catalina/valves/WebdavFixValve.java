@@ -17,13 +17,14 @@
 
 package org.apache.catalina.valves;
 
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
 
 /**
  * Valve that attempts to force MS WebDAV clients connecting on port 80 to use

@@ -17,12 +17,12 @@
 
 package org.glassfish.sse.api;
 
+import jakarta.inject.Qualifier;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import jakarta.inject.Qualifier;
 
 /**
  * Qualifier for ServerSentEventHandlerContext. If there is Server-Sent Event

@@ -19,13 +19,14 @@ package org.glassfish.web.deployment.node.runtime.gf;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.runtime.CacheMapping;
 import org.glassfish.web.deployment.runtime.ConstraintField;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
-
-import java.util.Map;
 
 /**
 * node for cache-mapping tag

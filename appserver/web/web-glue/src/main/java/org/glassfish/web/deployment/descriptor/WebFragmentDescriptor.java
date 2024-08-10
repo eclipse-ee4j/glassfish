@@ -39,12 +39,12 @@ import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.ServletFilter;
+
 import java.util.Collections;
 import java.util.Enumeration;
-
 import java.util.Set;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**

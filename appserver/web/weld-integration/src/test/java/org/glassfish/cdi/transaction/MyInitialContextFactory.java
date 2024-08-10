@@ -16,11 +16,12 @@
 
 package org.glassfish.cdi.transaction;
 
+import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
-import java.util.Hashtable;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>

@@ -16,13 +16,14 @@
 
 package org.glassfish.web.valve;
 
+import jakarta.servlet.ServletException;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 import org.apache.catalina.Valve;
-
-import jakarta.servlet.ServletException;
-import java.io.IOException;
-import java.lang.reflect.Method;
 
 /**
  * Adapter valve for wrapping a GlassFish-style valve that was compiled

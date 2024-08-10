@@ -17,14 +17,7 @@
 
 package org.apache.catalina.core;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
-import static java.util.Collections.unmodifiableMap;
-import static org.apache.catalina.LogFacade.SESSION_COOKIE_CONFIG_ALREADY_INIT;
-import static org.apache.catalina.core.Constants.COOKIE_DOMAIN_ATTR;
-import static org.apache.catalina.core.Constants.COOKIE_HTTP_ONLY_ATTR;
-import static org.apache.catalina.core.Constants.COOKIE_MAX_AGE_ATTR;
-import static org.apache.catalina.core.Constants.COOKIE_PATH_ATTR;
-import static org.apache.catalina.core.Constants.COOKIE_SECURE_ATTR;
+import jakarta.servlet.SessionCookieConfig;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -33,7 +26,14 @@ import java.util.TreeMap;
 
 import org.apache.catalina.LogFacade;
 
-import jakarta.servlet.SessionCookieConfig;
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Collections.unmodifiableMap;
+import static org.apache.catalina.LogFacade.SESSION_COOKIE_CONFIG_ALREADY_INIT;
+import static org.apache.catalina.core.Constants.COOKIE_DOMAIN_ATTR;
+import static org.apache.catalina.core.Constants.COOKIE_HTTP_ONLY_ATTR;
+import static org.apache.catalina.core.Constants.COOKIE_MAX_AGE_ATTR;
+import static org.apache.catalina.core.Constants.COOKIE_PATH_ATTR;
+import static org.apache.catalina.core.Constants.COOKIE_SECURE_ATTR;
 
 /**
  * Class that may be used to configure various properties of cookies used for session tracking purposes.

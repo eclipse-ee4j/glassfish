@@ -17,20 +17,22 @@
 
 package org.apache.catalina.startup;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.net.URL;
+import java.util.logging.Logger;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.catalina.LogFacade;
 import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomcat.util.digester.RuleSet;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.net.URL;
-import java.util.logging.Logger;
 
 /**
  * Wrapper class around the Digester that hide Digester's initialization details

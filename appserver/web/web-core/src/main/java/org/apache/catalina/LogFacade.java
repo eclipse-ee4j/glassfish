@@ -17,10 +17,11 @@
 
 package org.apache.catalina;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import java.util.logging.Logger;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  *

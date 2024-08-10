@@ -19,6 +19,15 @@ package com.sun.enterprise.web;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.deployment.Application;
+
+import jakarta.inject.Inject;
+
+import java.io.File;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.container.RequestDispatcher;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -30,16 +39,9 @@ import org.glassfish.internal.deployment.GenericHandler;
 import org.glassfish.javaee.core.deployment.JavaEEDeployer;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.web.LogFacade;
-import org.glassfish.web.jsp.JSPCompiler;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
-import jakarta.inject.Inject;
+import org.glassfish.web.jsp.JSPCompiler;
 import org.jvnet.hk2.annotations.Service;
-
-import java.io.File;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Web module deployer.

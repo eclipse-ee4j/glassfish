@@ -16,17 +16,17 @@
 
 package org.glassfish.cdi.transaction;
 
-import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
-import static jakarta.transaction.Transactional.TxType.SUPPORTS;
-import static java.util.logging.Level.INFO;
-
-import java.util.logging.Logger;
-
 import jakarta.annotation.Priority;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Transactional;
+
+import java.util.logging.Logger;
+
+import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
+import static jakarta.transaction.Transactional.TxType.SUPPORTS;
+import static java.util.logging.Level.INFO;
 
 /**
  * Transactional annotation Interceptor class for Supports transaction type, ie

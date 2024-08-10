@@ -18,18 +18,25 @@
 package org.glassfish.web.ha.authenticator;
 
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import org.apache.catalina.Container;
-import org.apache.catalina.core.StandardContext;
 
-import org.apache.catalina.Session;
-import org.apache.catalina.authenticator.SingleSignOn;
-import org.apache.catalina.authenticator.SingleSignOnEntry;
-import org.glassfish.web.ha.LogFacade;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Session;
+import org.apache.catalina.authenticator.SingleSignOn;
+import org.apache.catalina.authenticator.SingleSignOnEntry;
+import org.apache.catalina.core.StandardContext;
+import org.glassfish.web.ha.LogFacade;
 
 /**
  * @author Shing Wai Chan

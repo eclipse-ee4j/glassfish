@@ -23,6 +23,7 @@ import java.lang.System.Logger;
 import java.lang.ref.Reference;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.security.AccessController;
@@ -43,8 +44,6 @@ import static java.text.MessageFormat.format;
 import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS;
 import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_KEY;
 import static org.glassfish.web.loader.LogFacade.getString;
-
-import java.lang.reflect.InaccessibleObjectException;
 
 class ReferenceCleaner {
     private static final Logger LOG = LogFacade.getSysLogger(ReferenceCleaner.class);

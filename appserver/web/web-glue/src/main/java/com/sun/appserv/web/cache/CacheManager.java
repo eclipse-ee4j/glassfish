@@ -18,14 +18,23 @@ package com.sun.appserv.web.cache;
 
 import com.sun.appserv.util.cache.Cache;
 import com.sun.appserv.web.cache.mapping.CacheMapping;
-import org.apache.catalina.LifecycleException;
-import org.glassfish.web.LogFacade;
 
 import jakarta.servlet.ServletContext;
+
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LifecycleException;
+import org.glassfish.web.LogFacade;
 
 public class CacheManager {
 

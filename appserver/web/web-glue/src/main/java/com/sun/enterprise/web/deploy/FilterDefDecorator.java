@@ -18,10 +18,11 @@ package com.sun.enterprise.web.deploy;
 
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.ServletFilter;
-import org.apache.catalina.deploy.FilterDef;
 
 import java.util.Map;
 import java.util.Vector;
+
+import org.apache.catalina.deploy.FilterDef;
 
 
 /**

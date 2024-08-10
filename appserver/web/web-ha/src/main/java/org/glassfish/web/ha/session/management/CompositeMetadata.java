@@ -17,10 +17,19 @@
 package org.glassfish.web.ha.session.management;
 
 
-import org.glassfish.ha.store.api.Storeable;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.glassfish.ha.store.api.Storeable;
 
 /**
  * A class to hold a collection of children SessionAttributeMetadata. This class is

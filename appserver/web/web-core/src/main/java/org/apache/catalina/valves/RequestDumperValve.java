@@ -18,16 +18,22 @@
 package org.apache.catalina.valves;
 
 
-import org.apache.catalina.*;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.logging.Level;
+
+import org.apache.catalina.HttpRequest;
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.Logger;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * <p>Implementation of a Valve that logs interesting contents from the

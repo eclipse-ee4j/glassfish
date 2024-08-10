@@ -24,8 +24,8 @@ import org.easymock.Capture;
 import org.glassfish.grizzly.http.util.DataChunk;
 import org.glassfish.web.valve.GlassFishValve;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.easymock.EasyMock.captureInt;
 import static org.easymock.EasyMock.createNiceMock;

@@ -29,7 +29,16 @@ import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -51,7 +60,10 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static java.util.zip.ZipFile.OPEN_READ;
-import static org.glassfish.web.loader.LogFacade.*;
+import static org.glassfish.web.loader.LogFacade.CLASS_LOADING_ERROR;
+import static org.glassfish.web.loader.LogFacade.INVALID_URL_CLASS_LOADER_PATH;
+import static org.glassfish.web.loader.LogFacade.IO_ERROR;
+import static org.glassfish.web.loader.LogFacade.WRONG_CLASSLOADER_TYPE;
 
 /**
  * Utility class - contains util methods used for implementation of

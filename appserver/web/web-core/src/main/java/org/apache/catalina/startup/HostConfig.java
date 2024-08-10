@@ -18,20 +18,40 @@
 package org.apache.catalina.startup;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.core.StandardHost;
-import org.apache.naming.resources.ResourceAttributes;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Deployer;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.StandardHost;
+import org.apache.naming.resources.ResourceAttributes;
 
 
 /**

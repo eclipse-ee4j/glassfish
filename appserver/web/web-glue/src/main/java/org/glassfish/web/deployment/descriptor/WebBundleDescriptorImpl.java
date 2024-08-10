@@ -58,8 +58,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;

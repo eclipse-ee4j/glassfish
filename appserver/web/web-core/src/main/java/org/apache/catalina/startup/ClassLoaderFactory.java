@@ -17,9 +17,6 @@
 
 package org.apache.catalina.startup;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.loader.StandardClassLoader;
-
 import java.io.File;
 import java.net.URL;
 import java.security.AccessController;
@@ -29,6 +26,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.loader.StandardClassLoader;
 
 
 /**

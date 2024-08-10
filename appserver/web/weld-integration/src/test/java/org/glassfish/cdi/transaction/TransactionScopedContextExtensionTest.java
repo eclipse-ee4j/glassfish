@@ -17,15 +17,15 @@
 
 package org.glassfish.cdi.transaction;
 
-import org.easymock.EasyMockSupport;
-import org.junit.jupiter.api.Test;
-
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.InjectionTargetFactory;
+
+import org.easymock.EasyMockSupport;
+import org.junit.jupiter.api.Test;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;

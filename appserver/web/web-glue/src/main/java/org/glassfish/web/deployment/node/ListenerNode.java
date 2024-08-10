@@ -17,12 +17,13 @@
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
-import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
 
 /**
  * This node handles the web listener xml fragment

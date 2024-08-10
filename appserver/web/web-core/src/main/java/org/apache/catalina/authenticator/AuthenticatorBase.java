@@ -18,22 +18,10 @@
 
 package org.apache.catalina.authenticator;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static org.apache.catalina.LogFacade.CONFIG_ERROR_MUST_ATTACH_TO_CONTEXT;
-import static org.apache.catalina.LogFacade.GETTING_DEBUG_VALUE_EXCEPTION;
-import static org.apache.catalina.LogFacade.LOGIN_FAIL;
-import static org.apache.catalina.Realm.AUTHENTICATED_NOT_AUTHORIZED;
-import static org.apache.catalina.Realm.AUTHENTICATE_NEEDED;
-import static org.apache.catalina.Realm.AUTHENTICATE_NOT_NEEDED;
-import static org.apache.catalina.authenticator.Constants.FORM_ACTION;
-import static org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE;
-import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
-import static org.apache.catalina.authenticator.Constants.SESS_PASSWORD_NOTE;
-import static org.apache.catalina.authenticator.Constants.SESS_USERNAME_NOTE;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -63,10 +51,22 @@ import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.valves.ValveBase;
 import org.glassfish.web.valve.GlassFishValve;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.LogFacade.CONFIG_ERROR_MUST_ATTACH_TO_CONTEXT;
+import static org.apache.catalina.LogFacade.GETTING_DEBUG_VALUE_EXCEPTION;
+import static org.apache.catalina.LogFacade.LOGIN_FAIL;
+import static org.apache.catalina.Realm.AUTHENTICATED_NOT_AUTHORIZED;
+import static org.apache.catalina.Realm.AUTHENTICATE_NEEDED;
+import static org.apache.catalina.Realm.AUTHENTICATE_NOT_NEEDED;
+import static org.apache.catalina.authenticator.Constants.FORM_ACTION;
+import static org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE;
+import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
+import static org.apache.catalina.authenticator.Constants.SESS_PASSWORD_NOTE;
+import static org.apache.catalina.authenticator.Constants.SESS_USERNAME_NOTE;
 
 /**
  * Basic implementation of the <b>Valve</b> interface that enforces the <code>&lt;security-constraint&gt;</code>

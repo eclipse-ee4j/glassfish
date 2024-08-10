@@ -18,6 +18,9 @@
 
 package org.apache.catalina.authenticator;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -30,9 +33,6 @@ import org.apache.catalina.HttpResponse;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.util.DigestEncoder;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * An <b>Authenticator</b> and <b>Valve</b> implementation of HTTP DIGEST Authentication (see RFC 2069).

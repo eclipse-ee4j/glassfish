@@ -18,25 +18,8 @@
 
 package org.apache.catalina.connector;
 
-import static org.apache.catalina.Globals.IS_SECURITY_ENABLED;
-import static org.apache.catalina.security.SecurityUtil.isPackageProtectionEnabled;
-
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.security.SecurityPermission;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.core.RequestFacadeHelper;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
@@ -54,6 +37,25 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 import jakarta.servlet.http.PushBuilder;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.SecurityPermission;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.RequestFacadeHelper;
+
+import static org.apache.catalina.Globals.IS_SECURITY_ENABLED;
+import static org.apache.catalina.security.SecurityUtil.isPackageProtectionEnabled;
 
 /**
  * Facade class that wraps a Catalina connector request object. All methods are delegated to the wrapped request.

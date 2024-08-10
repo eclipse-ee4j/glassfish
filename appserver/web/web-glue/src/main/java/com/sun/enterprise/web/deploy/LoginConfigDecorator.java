@@ -17,6 +17,7 @@
 package com.sun.enterprise.web.deploy;
 
 import com.sun.enterprise.deployment.web.LoginConfiguration;
+
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.util.RequestUtil;
 

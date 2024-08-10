@@ -18,14 +18,14 @@ package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 
+import jakarta.servlet.DispatcherType;
+
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.glassfish.deployment.common.Descriptor;
-
-import jakarta.servlet.DispatcherType;
 
 /**
  * Deployment object representing the servlet filter mapping spec

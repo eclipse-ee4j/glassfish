@@ -15,7 +15,9 @@
  */
 package org.glassfish.web.deployment.descriptor;
 
-import static java.util.Collections.enumeration;
+import com.sun.enterprise.deployment.SecurityRoleDescriptor;
+import com.sun.enterprise.deployment.web.AuthorizationConstraint;
+import com.sun.enterprise.deployment.web.SecurityRole;
 
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -23,9 +25,7 @@ import java.util.Set;
 
 import org.glassfish.deployment.common.Descriptor;
 
-import com.sun.enterprise.deployment.SecurityRoleDescriptor;
-import com.sun.enterprise.deployment.web.AuthorizationConstraint;
-import com.sun.enterprise.deployment.web.SecurityRole;
+import static java.util.Collections.enumeration;
 
 /**
  * This descriptor represents an authorization contraint on a security constraint in a web application.

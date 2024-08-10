@@ -18,8 +18,9 @@ package org.glassfish.embeddable.web;
 
 import java.io.File;
 import java.util.Collection;
-import org.glassfish.embeddable.web.config.VirtualServerConfig;
+
 import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.web.config.VirtualServerConfig;
 
 /**
  * Representation of a virtual server.

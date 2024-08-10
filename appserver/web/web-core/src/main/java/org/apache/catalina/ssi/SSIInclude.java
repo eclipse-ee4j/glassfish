@@ -17,10 +17,10 @@
 
 package org.apache.catalina.ssi;
 
-import org.glassfish.web.util.HtmlEntityEncoder;
-
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.glassfish.web.util.HtmlEntityEncoder;
 /**
  * Implements the Server-side #include command
  *

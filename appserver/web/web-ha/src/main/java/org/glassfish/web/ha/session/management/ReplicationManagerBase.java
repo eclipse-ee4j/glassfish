@@ -16,17 +16,17 @@
 
 package org.glassfish.web.ha.session.management;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.catalina.Session;
 import org.apache.catalina.session.PersistentManagerBase;
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.api.Storeable;
 import org.glassfish.web.ha.LogFacade;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Rajiv Mordani

@@ -16,8 +16,8 @@
 
 package org.glassfish.embeddable.web;
 
-import org.glassfish.embeddable.web.config.WebListenerConfig;
 import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.web.config.WebListenerConfig;
 
 /**
  * Base implementation of the <b>WebListener</b> interface

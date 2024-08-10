@@ -22,20 +22,22 @@
 
 package org.glassfish.web.ha.session.management;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.valves.ValveBase;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.catalina.Globals;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 import org.apache.catalina.Session;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.valves.ValveBase;
 import org.glassfish.ha.common.HACookieManager;
 
 /**

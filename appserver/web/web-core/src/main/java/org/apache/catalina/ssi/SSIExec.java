@@ -18,13 +18,13 @@
 package org.apache.catalina.ssi;
 
 
-import org.apache.catalina.util.IOTools;
-import org.glassfish.web.util.HtmlEntityEncoder;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
+import org.apache.catalina.util.IOTools;
+import org.glassfish.web.util.HtmlEntityEncoder;
 /**
  * Implements the Server-side #exec command
  *

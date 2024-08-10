@@ -40,12 +40,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
-/*V3:Commented
-import com.sun.enterprise.config.serverbeans.ServerBeansFactory;
-import com.sun.enterprise.config.serverbeans.ElementProperty;
-import com.sun.enterprise.config.ConfigContext;
-import com.sun.enterprise.server.ApplicationServer;
- */
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;

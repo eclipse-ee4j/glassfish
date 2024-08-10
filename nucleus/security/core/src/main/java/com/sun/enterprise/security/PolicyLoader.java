@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.security;
 
-//V3:Commented import com.sun.enterprise.server.ApplicationServer;
 import com.sun.enterprise.config.serverbeans.JaccProvider;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.i18n.StringManager;
@@ -35,8 +34,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
-//V3:Commented import com.sun.enterprise.config.serverbeans.ElementProperty;
-//V3:Commented import com.sun.enterprise.config.ConfigContext;
 import org.glassfish.hk2.api.IterableProvider;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;

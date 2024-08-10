@@ -17,19 +17,23 @@
 package com.sun.ejb.containers;
 
 import com.sun.ejb.EjbInvocation;
+import com.sun.ejb.containers.StatefulSessionContainer.EEMRefInfo;
 import com.sun.ejb.spi.container.StatefulEJBContext;
 import com.sun.enterprise.container.common.impl.PhysicalEntityManagerWrapper;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
-import org.glassfish.api.invocation.ComponentInvocation;
 
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.TimerService;
 import jakarta.persistence.EntityManagerFactory;
-import java.util.*;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static com.sun.ejb.containers.StatefulSessionContainer.EEMRefInfo;
+import org.glassfish.api.invocation.ComponentInvocation;
 
 /**
  * Implementation of EJBContext for SessionBeans

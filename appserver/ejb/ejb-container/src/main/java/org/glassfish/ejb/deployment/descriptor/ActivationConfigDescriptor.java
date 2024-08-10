@@ -16,10 +16,11 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.util.Set;
-
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.OrderedSet;
+
+import java.util.Set;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**

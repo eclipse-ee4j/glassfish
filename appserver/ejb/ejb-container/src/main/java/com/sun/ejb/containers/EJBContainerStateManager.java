@@ -16,10 +16,10 @@
 
 package com.sun.ejb.containers;
 
-import jakarta.ejb.EJBObject;
-
 import com.sun.ejb.Container;
 import com.sun.ejb.EjbInvocation;
+
+import jakarta.ejb.EJBObject;
 
 /**
  *

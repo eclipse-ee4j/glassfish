@@ -17,14 +17,14 @@
 
 package org.glassfish.ejb.api;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Kenneth Saks
  */
 
 import org.jvnet.hk2.annotations.Contract;
-
-import java.io.Serializable;
 
 /**
  * Various container services needed by other modules. E.g., the CDI integration module.

@@ -17,12 +17,13 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import org.glassfish.deployment.common.Descriptor;
 
 /**

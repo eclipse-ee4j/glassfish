@@ -17,7 +17,10 @@
 package com.sun.ejb.containers.util.cache;
 
 import com.sun.appserv.util.cache.LruCache;
-import java.util.logging.*;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.logging.annotation.LogMessageInfo;
 

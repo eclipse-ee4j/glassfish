@@ -17,36 +17,43 @@
 
 package org.glassfish.ejb.embedded;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.module.bootstrap.Which;
+import com.sun.enterprise.security.EmbeddedSecurity;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 import jakarta.ejb.EJBException;
 import jakarta.ejb.embeddable.EJBContainer;
 import jakarta.ejb.spi.EJBContainerProvider;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.embeddable.*;
-
-import org.glassfish.deployment.common.GenericAnnotationDetector;
 import org.glassfish.deployment.common.DeploymentUtils;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import org.glassfish.deployment.common.GenericAnnotationDetector;
+import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.ejb.deployment.io.EjbDeploymentDescriptorFile;
+import org.glassfish.embeddable.BootstrapProperties;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-import com.sun.enterprise.security.EmbeddedSecurity;
-
-import com.sun.enterprise.module.bootstrap.Which;
 
 /**
  * GlassFish implementation of the EJBContainerProvider.

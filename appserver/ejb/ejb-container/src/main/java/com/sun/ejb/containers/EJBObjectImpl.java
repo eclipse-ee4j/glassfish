@@ -16,18 +16,18 @@
 
 package com.sun.ejb.containers;
 
-import java.lang.reflect.Method;
-import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.ejb.portable.HandleImpl;
 
 import jakarta.ejb.EJBHome;
 import jakarta.ejb.EJBObject;
 import jakarta.ejb.Handle;
 import jakarta.ejb.RemoveException;
+
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * EJBObjectImpl implements EJBObject methods for EJBs.

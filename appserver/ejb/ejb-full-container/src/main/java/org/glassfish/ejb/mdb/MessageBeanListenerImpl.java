@@ -17,13 +17,13 @@
 
 package org.glassfish.ejb.mdb;
 
-import static org.glassfish.ejb.mdb.MessageBeanContainer.MessageDeliveryType.Message;
+import com.sun.appserv.connectors.internal.api.ResourceHandle;
 
 import java.lang.reflect.Method;
 
 import org.glassfish.ejb.api.MessageBeanListener;
 
-import com.sun.appserv.connectors.internal.api.ResourceHandle;
+import static org.glassfish.ejb.mdb.MessageBeanContainer.MessageDeliveryType.Message;
 
 /**
  *

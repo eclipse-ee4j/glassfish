@@ -17,8 +17,6 @@
 
 package org.glassfish.ejb.mdb;
 
-import org.glassfish.api.invocation.ComponentInvocation;
-
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
@@ -32,6 +30,8 @@ import jakarta.ejb.EJBObject;
 import jakarta.ejb.MessageDrivenContext;
 import jakarta.ejb.TimerService;
 import jakarta.transaction.UserTransaction;
+
+import org.glassfish.api.invocation.ComponentInvocation;
 
 /**
  * Implementation of EJBContext for message-driven beans

@@ -16,21 +16,23 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.handlers.PostProcessor;
+import com.sun.enterprise.deployment.util.TypeUtil;
+
+import jakarta.ejb.AccessTimeout;
+import jakarta.ejb.ConcurrencyManagement;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateful;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.ejb.AccessTimeout;
-import jakarta.ejb.ConcurrencyManagement;
-import jakarta.ejb.Singleton;
-import jakarta.ejb.Stateful;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.handlers.PostProcessor;
-import com.sun.enterprise.deployment.util.TypeUtil;
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

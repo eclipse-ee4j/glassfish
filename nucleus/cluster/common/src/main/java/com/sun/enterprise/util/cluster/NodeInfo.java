@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.util.cluster;
 
-import java.util.*;
+import java.util.List;
 
 public final class NodeInfo {
 

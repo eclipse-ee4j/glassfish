@@ -30,8 +30,8 @@ import org.omg.CosTransactions.InvocationPolicy;
 import org.omg.CosTransactions.OTSPolicy;
 import org.omg.CosTransactions.OTS_POLICY_TYPE;
 import org.omg.IOP.Codec;
-import org.omg.IOP.TaggedComponent;
 import org.omg.IOP.CodecPackage.InvalidTypeForEncoding;
+import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.IORInterceptor;
 

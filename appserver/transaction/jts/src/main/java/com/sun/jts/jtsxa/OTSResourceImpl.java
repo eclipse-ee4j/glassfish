@@ -20,7 +20,6 @@ import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.codegen.jtsxa.OTSResource;
 import com.sun.jts.codegen.jtsxa.OTSResourceHelper;
 import com.sun.jts.codegen.jtsxa.OTSResourcePOA;
-//import com.sun.jts.etsjdbc.odbc.NativeXAResourceImpl;
 import com.sun.jts.jta.TransactionState;
 import com.sun.jts.utils.LogFormatter;
 import com.sun.logging.LogDomains;
@@ -52,10 +51,10 @@ import org.omg.CosTransactions.Vote;
 import org.omg.CosTransactions.otid_t;
 import org.omg.PortableServer.POA;
 
- /* An implementation of org.omg.CosTransactions.Resource to support
+/**
+ * An implementation of org.omg.CosTransactions.Resource to support
  * X/Open XA compliant resource managers.
  */
-
 public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
 
     private static POA poa = null;

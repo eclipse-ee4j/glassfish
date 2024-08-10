@@ -35,19 +35,11 @@ import com.sun.jts.codegen.otsidl.CoordinatorResource;
 import com.sun.jts.codegen.otsidl.JCoordinator;
 import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
 import com.sun.jts.jtsxa.OTSResourceImpl;
-//import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
-//import com.sun.jts.codegen.otsidl.JCoordinatorOperations;
-//import java.io.PrintStream;
-//import java.util.Vector;
 import com.sun.jts.utils.LogFormatter;
 import com.sun.logging.LogDomains;
 
 import java.util.Vector;
 import java.util.logging.Level;
-
-//import com.sun.enterprise.transaction.OTSResourceImpl;
-//import com.sun.enterprise.transaction.SynchronizationImpl;
-
 import java.util.logging.Logger;
 
 import org.omg.CORBA.Any;

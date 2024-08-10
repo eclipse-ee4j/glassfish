@@ -34,8 +34,6 @@ import com.sun.jts.utils.LogFormatter;
 import com.sun.logging.LogDomains;
 
 import java.util.logging.Level;
-
-
 import java.util.logging.Logger;
 
 

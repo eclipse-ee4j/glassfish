@@ -34,7 +34,6 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
 import java.io.File;
-
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -35,7 +35,6 @@ import com.sun.logging.LogDomains;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,9 +43,9 @@ import org.omg.CORBA.CompletionStatus;
 import org.omg.CORBA.INTERNAL;
 import org.omg.CORBA.LocalObject;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CORBA.Policy;
 import org.omg.CORBA.TSIdentification;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContext;
 import org.omg.CosNaming.NamingContextHelper;

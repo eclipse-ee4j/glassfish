@@ -17,12 +17,6 @@
 
 package com.sun.enterprise.resource.rm;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-
-import java.util.logging.Logger;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
@@ -31,6 +25,12 @@ import com.sun.logging.LogDomains;
 
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
+
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * SystemResourceManagerImpl manages the resource requests from system

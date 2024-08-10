@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.connectors.module;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.logging.LogDomains;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,9 +28,6 @@ import org.glassfish.api.deployment.Deployer;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.logging.LogDomains;
 
 
 /**

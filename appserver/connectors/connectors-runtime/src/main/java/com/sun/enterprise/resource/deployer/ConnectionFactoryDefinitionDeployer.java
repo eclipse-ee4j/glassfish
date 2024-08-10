@@ -20,6 +20,7 @@ package com.sun.enterprise.resource.deployer;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 

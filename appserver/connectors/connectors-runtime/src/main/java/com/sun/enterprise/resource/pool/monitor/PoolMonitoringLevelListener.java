@@ -17,6 +17,16 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
+import com.sun.enterprise.config.serverbeans.MonitoringService;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.beans.PropertyChangeEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,16 +42,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
-import com.sun.enterprise.config.serverbeans.MonitoringService;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 @Service
 @Singleton

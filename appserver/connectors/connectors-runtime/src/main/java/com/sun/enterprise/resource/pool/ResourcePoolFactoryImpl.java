@@ -17,17 +17,17 @@
 
 package com.sun.enterprise.resource.pool;
 
-import static java.util.logging.Level.FINE;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.logging.LogDomains;
 
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINE;
 
 /**
  * Factory to create appropriate connection pool.

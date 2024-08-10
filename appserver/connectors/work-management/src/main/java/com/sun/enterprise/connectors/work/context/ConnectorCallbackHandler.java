@@ -17,9 +17,12 @@
 
 package com.sun.enterprise.connectors.work.context;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.connectors.work.LogFacade;
+import com.sun.enterprise.security.SecurityContext;
+
+import jakarta.security.auth.message.callback.CallerPrincipalCallback;
+import jakarta.security.auth.message.callback.GroupPrincipalCallback;
+import jakarta.security.auth.message.callback.PasswordValidationCallback;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -34,18 +37,15 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.glassfish.epicyro.config.helper.Caller;
+import org.glassfish.epicyro.config.helper.CallerPrincipal;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
-import org.glassfish.epicyro.config.helper.Caller;
-import org.glassfish.epicyro.config.helper.CallerPrincipal;
 
-import com.sun.enterprise.connectors.work.LogFacade;
-import com.sun.enterprise.security.SecurityContext;
-
-import jakarta.security.auth.message.callback.CallerPrincipalCallback;
-import jakarta.security.auth.message.callback.GroupPrincipalCallback;
-import jakarta.security.auth.message.callback.PasswordValidationCallback;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Connector callback handler to intercept the callbacks provided by the work instance in order to map the security

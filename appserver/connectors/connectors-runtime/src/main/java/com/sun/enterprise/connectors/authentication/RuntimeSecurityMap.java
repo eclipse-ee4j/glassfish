@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.connectors.authentication;
 
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
 import java.util.HashMap;
 import java.util.Objects;
-
-import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
 /**
  * @author Kanwar Oberoi

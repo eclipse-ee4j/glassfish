@@ -20,16 +20,18 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.I18n;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceConstants;
-import org.glassfish.resources.admin.cli.ResourceManager;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.resource.ResourceException;
+
 import java.util.HashMap;
 import java.util.Properties;
+
+import org.glassfish.api.I18n;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceConstants;
+import org.glassfish.resources.admin.cli.ResourceManager;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * PMF Resource is removed from v3. <BR>

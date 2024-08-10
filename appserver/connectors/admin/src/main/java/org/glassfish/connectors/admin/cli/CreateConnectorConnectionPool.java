@@ -20,24 +20,56 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.glassfish.resources.admin.cli.ResourceConstants;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.*;
-import static org.glassfish.connectors.admin.cli.CLIConstants.*;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceConstants;
+import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
+import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
+import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_ASSOC_WITH_THREAD;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_CON_CREATION_RETRY_ATTEMPTS;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_CON_CREATION_RETRY_INTERVAL;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_CON_DEFN_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_CREATE_COMMAND_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_FAIL_ALL_CONNS;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_IDLE_TIMEOUT;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_IS_VALIDATION_REQUIRED;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_LAZY_CON_ASSOC;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_LAZY_CON_ENLISTMENT;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_LEAK_RECLAIM;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_LEAK_TIMEOUT;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_MATCH_CONNECTIONS;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_MAX_CON_USAGE_COUNT;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_MAX_POOL_SIZE;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_MAX_WAIT_TIME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_PING;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_POOLING;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_POOL_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_POOL_RESIZE_QTY;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_RA_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_STEADY_POOL_SIZE;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_TXN_SUPPORT;
+import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_VALIDATE_ATMOST_PERIOD;
 
 /**
  * Create Connector Connection Pool Command

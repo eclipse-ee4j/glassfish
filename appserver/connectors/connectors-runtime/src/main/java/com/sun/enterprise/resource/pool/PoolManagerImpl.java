@@ -17,27 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static javax.transaction.xa.XAResource.TMSUCCESS;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.InvocationException;
-import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -68,6 +47,27 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transaction;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ComponentInvocationHandler;
+import org.glassfish.api.invocation.InvocationException;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static javax.transaction.xa.XAResource.TMSUCCESS;
 
 /**
  * @author Tony Ng, Aditya Gore

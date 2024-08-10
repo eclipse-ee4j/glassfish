@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.logging.LogDomains;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -27,10 +31,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.logging.LogDomains;
 
 /**
  * A simple class to get the properties of a ConnectionDefinition class , that

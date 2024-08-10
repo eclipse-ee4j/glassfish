@@ -16,9 +16,11 @@
 
 package com.sun.enterprise.connectors.work;
 
+import jakarta.resource.spi.work.Work;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.resource.spi.work.Work;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**

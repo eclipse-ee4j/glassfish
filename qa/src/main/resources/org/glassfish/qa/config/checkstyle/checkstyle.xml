@@ -85,7 +85,7 @@
         <!-- defaults to sun.* packages -->
         <module name="IllegalImport" />
         <module name="ImportOrder">
-            <property name="groups" value="com,jakarta,java,javax,org" />
+            <property name="groups" value="com,io,jakarta,java,javax,org" />
             <property name="option" value="bottom"/>
             <property name="ordered" value="true" />
             <property name="separated" value="true" />

@@ -16,6 +16,10 @@
 
 package org.glassfish.webservices.monitoring;
 
+import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
+
+import jakarta.servlet.ServletContext;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +37,6 @@ import org.glassfish.gmbal.ManagedData;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.gmbal.ManagedOperation;
 import org.glassfish.webservices.deployment.DeployedEndpointData;
-
-import jakarta.servlet.ServletContext;
-import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 
 /**

@@ -17,9 +17,11 @@
 package org.glassfish.webservices.transport.tcp;
 
 import com.sun.xml.ws.transport.tcp.util.TCPConstants;
+
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.grizzly.Buffer;
 import org.glassfish.grizzly.filterchain.FilterChainContext;
 import org.glassfish.grizzly.portunif.PUContext;

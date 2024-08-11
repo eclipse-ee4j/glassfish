@@ -19,9 +19,10 @@ package org.glassfish.webservices.transport.tcp;
 import com.sun.istack.NotNull;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.server.WSEndpoint;
-import com.sun.xml.ws.transport.tcp.util.ChannelContext;
 import com.sun.xml.ws.transport.tcp.server.TCPAdapter;
+import com.sun.xml.ws.transport.tcp.util.ChannelContext;
 import com.sun.xml.ws.transport.tcp.util.WSTCPException;
+
 import java.io.IOException;
 
 /**

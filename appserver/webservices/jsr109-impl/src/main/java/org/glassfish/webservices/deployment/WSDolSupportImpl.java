@@ -16,15 +16,16 @@
 
 package org.glassfish.webservices.deployment;
 
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.xml.ws.http.HTTPBinding;
-import jakarta.xml.ws.soap.SOAPBinding;
-import jakarta.xml.ws.WebServiceClient;
-import javax.xml.namespace.QName;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WSDolSupport;
+
+import jakarta.xml.ws.WebServiceClient;
+import jakarta.xml.ws.http.HTTPBinding;
+import jakarta.xml.ws.soap.SOAPBinding;
+
+import javax.xml.namespace.QName;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *Implementation of jaxws dependent services for the DOL

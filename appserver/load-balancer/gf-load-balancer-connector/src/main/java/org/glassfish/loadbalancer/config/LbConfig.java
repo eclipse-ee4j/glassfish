@@ -17,10 +17,10 @@
 
 package org.glassfish.loadbalancer.config;
 
+import com.sun.enterprise.config.serverbeans.ClusterRef;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Ref;
 import com.sun.enterprise.config.serverbeans.ServerRef;
-import com.sun.enterprise.config.serverbeans.ClusterRef;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
 

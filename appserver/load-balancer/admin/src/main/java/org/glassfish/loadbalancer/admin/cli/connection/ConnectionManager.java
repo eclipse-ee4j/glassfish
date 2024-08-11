@@ -16,17 +16,19 @@
 
 package org.glassfish.loadbalancer.admin.cli.connection;
 
+import com.sun.enterprise.security.ssl.SSLUtils;
+
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
-import javax.net.ssl.HttpsURLConnection;
+
 import javax.net.ssl.HostnameVerifier;
-import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import com.sun.enterprise.security.ssl.SSLUtils;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;

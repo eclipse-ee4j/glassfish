@@ -16,25 +16,25 @@
 
 package org.glassfish.loadbalancer.upgrade;
 
-import java.beans.PropertyVetoException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.loadbalancer.config.LoadBalancer;
-import org.glassfish.loadbalancer.config.LoadBalancers;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
-
-import java.util.List;
-import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
 
 import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
+import org.glassfish.loadbalancer.config.LoadBalancer;
+import org.glassfish.loadbalancer.config.LoadBalancers;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  *

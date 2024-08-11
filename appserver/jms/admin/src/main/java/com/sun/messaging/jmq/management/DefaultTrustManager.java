@@ -20,10 +20,9 @@
 
 package com.sun.messaging.jmq.management;
 
-import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
 
-//import com.sun.messaging.jmq.util.log.Logger;
+import javax.net.ssl.X509TrustManager;
 
 /*
  *  IMPORTANT NOTE: Please do not modify this file directly. This source code is owned and shipped as a part of MQ but has only been included here

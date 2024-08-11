@@ -17,8 +17,6 @@
 
 package org.glassfish.jms.injection;
 
-import java.io.Serializable;
-
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.jms.BytesMessage;
@@ -39,6 +37,8 @@ import jakarta.jms.TemporaryQueue;
 import jakarta.jms.TemporaryTopic;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Topic;
+
+import java.io.Serializable;
 
 // Delegate all business methods to JMSContext API
 public abstract class ForwardingJMSContext implements JMSContext {

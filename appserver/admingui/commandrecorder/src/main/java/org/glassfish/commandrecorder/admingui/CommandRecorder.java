@@ -15,18 +15,20 @@
  */
 package org.glassfish.commandrecorder.admingui;
 
-import static org.glassfish.extras.commandlogger.AdminCommandLogger.LogMode.NO_COMMAND;
-import static org.glassfish.extras.commandlogger.AdminCommandLogger.LogMode.WRITE_COMMANDS;
-
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.extras.commandlogger.AdminCommandLogger;
+
+import static org.glassfish.extras.commandlogger.AdminCommandLogger.LogMode.NO_COMMAND;
+import static org.glassfish.extras.commandlogger.AdminCommandLogger.LogMode.WRITE_COMMANDS;
 
 @Named
 @RequestScoped

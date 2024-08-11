@@ -26,10 +26,6 @@
 
 package org.glassfish.admingui.common.handlers;
 
-import org.glassfish.admingui.common.util.GuiUtil;
-import org.glassfish.admingui.common.util.JSONUtil;
-import org.glassfish.admingui.common.util.RestUtil;
-
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
@@ -39,6 +35,8 @@ import com.sun.jsftemplating.layout.descriptors.LayoutElement;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerDefinition;
 import com.sun.jsftemplating.util.FileUtil;
+
+import jakarta.faces.component.UIViewRoot;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,12 +52,14 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Map;
 import java.util.logging.Level;
 
-import jakarta.faces.component.UIViewRoot;
+import org.glassfish.admingui.common.util.GuiUtil;
+import org.glassfish.admingui.common.util.JSONUtil;
+import org.glassfish.admingui.common.util.RestUtil;
 
 /**
  *

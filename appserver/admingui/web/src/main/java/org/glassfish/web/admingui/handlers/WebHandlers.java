@@ -17,8 +17,6 @@
 package org.glassfish.web.admingui.handlers;
 
 
-import java.util.Map;
-
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
@@ -26,6 +24,8 @@ import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.glassfish.admingui.common.util.GuiUtil;
 
 /**

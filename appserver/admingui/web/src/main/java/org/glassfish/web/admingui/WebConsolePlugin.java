@@ -21,9 +21,10 @@
 
 package org.glassfish.web.admingui;
 
+import java.net.URL;
+
 import org.glassfish.api.admingui.ConsoleProvider;
 import org.jvnet.hk2.annotations.Service;
-import java.net.URL;
 
 /**
  *

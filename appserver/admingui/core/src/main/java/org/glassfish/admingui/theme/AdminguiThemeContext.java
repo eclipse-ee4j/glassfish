@@ -20,10 +20,11 @@ import com.sun.webui.jsf.theme.JSFThemeContext;
 import com.sun.webui.theme.ServletThemeContext;
 import com.sun.webui.theme.ThemeContext;
 
+import jakarta.faces.context.FacesContext;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import jakarta.faces.context.FacesContext;
 
 
 /**

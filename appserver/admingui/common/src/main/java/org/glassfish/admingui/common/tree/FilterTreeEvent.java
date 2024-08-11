@@ -15,11 +15,12 @@
  */
 
 package org.glassfish.admingui.common.tree;
-//
 
 import com.sun.jsftemplating.layout.event.EventObjectBase;
-import java.util.List;
+
 import jakarta.faces.component.UIComponent;
+
+import java.util.List;
 
 /**
  *

@@ -15,11 +15,7 @@
  */
 package com.sun.ts.run;
 
-import static java.lang.String.join;
-import static java.lang.System.getProperty;
-import static java.nio.file.Files.writeString;
-import static java.nio.file.Paths.get;
-import static org.junit.jupiter.api.Assertions.fail;
+import com.sun.ts.lib.harness.ExecTSTestCmd;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -29,8 +25,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.sun.javatest.Status;
-import com.sun.ts.lib.harness.ExecTSTestCmd;
+import static java.lang.String.join;
+import static java.lang.System.getProperty;
+import static java.nio.file.Files.writeString;
+import static java.nio.file.Paths.get;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class StandaloneRunnerITest {
 

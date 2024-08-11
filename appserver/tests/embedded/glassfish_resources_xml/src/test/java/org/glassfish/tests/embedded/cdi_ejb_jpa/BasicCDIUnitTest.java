@@ -16,17 +16,6 @@
 
 package org.glassfish.tests.embedded.cdi_ejb_jpa;
 
-import org.junit.jupiter.api.Assertions;
-import org.glassfish.embeddable.Deployer;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.BootstrapProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
-import org.glassfish.embeddable.archive.ScatteredArchive;
-import org.glassfish.embeddable.web.HttpListener;
-import org.glassfish.embeddable.web.WebContainer;
-import org.junit.jupiter.api.Test;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +27,17 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import org.glassfish.embeddable.BootstrapProperties;
+import org.glassfish.embeddable.Deployer;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.archive.ScatteredArchive;
+import org.glassfish.embeddable.web.HttpListener;
+import org.glassfish.embeddable.web.WebContainer;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author bhavanishankar@dev.java.net

@@ -18,12 +18,22 @@
 package org.glassfish.tests.embedded.web;
 
 import java.io.File;
-import java.util.logging.Level;
 import java.util.HashSet;
 import java.util.Set;
-import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;
-import org.glassfish.embeddable.web.config.*;
+import java.util.logging.Level;
+
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.web.Context;
+import org.glassfish.embeddable.web.WebContainer;
+import org.glassfish.embeddable.web.config.AuthMethod;
+import org.glassfish.embeddable.web.config.FormLoginConfig;
+import org.glassfish.embeddable.web.config.LoginConfig;
+import org.glassfish.embeddable.web.config.SecurityConfig;
+import org.glassfish.embeddable.web.config.SecurityConstraint;
+import org.glassfish.embeddable.web.config.WebContainerConfig;
+import org.glassfish.embeddable.web.config.WebResourceCollection;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

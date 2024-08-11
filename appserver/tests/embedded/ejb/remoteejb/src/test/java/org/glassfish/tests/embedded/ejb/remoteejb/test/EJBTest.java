@@ -17,6 +17,11 @@
 
 package org.glassfish.tests.embedded.ejb.remoteejb.test;
 
+import java.io.File;
+import java.net.URI;
+
+import javax.naming.InitialContext;
+
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishRuntime;
@@ -25,10 +30,6 @@ import org.glassfish.tests.embedded.ejb.remoteejb.SampleEjb;
 import org.glassfish.tests.embedded.ejb.remoteejb.TimerEjb;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.naming.InitialContext;
-import java.io.File;
-import java.net.URI;
 
 /**
  * @author bhavanishankar@java.net

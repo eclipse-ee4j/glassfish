@@ -22,8 +22,6 @@ package com.sun.ts.tests.common.vehicle;
 
 import java.util.Properties;
 
-import com.sun.javatest.Status;
-
 public interface VehicleRunnable {
     Status run(String[] argv, Properties properties);
 }

@@ -20,7 +20,12 @@
 
 package com.sun.ts.tests.common.vehicle.ejbembed;
 
-import static com.sun.ts.tests.common.vehicle.ejbliteshare.EJBLiteClientIF.TEST_PASSED;
+import com.sun.ts.lib.util.TestUtil;
+import com.sun.ts.tests.common.vehicle.VehicleRunnable;
+import com.sun.ts.tests.common.vehicle.ejbliteshare.EJBLiteClientIF;
+import com.sun.ts.tests.common.vehicle.ejbliteshare.ReasonableStatus;
+
+import jakarta.ejb.embeddable.EJBContainer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,13 +34,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.sun.javatest.Status;
-import com.sun.ts.lib.util.TestUtil;
-import com.sun.ts.tests.common.vehicle.VehicleRunnable;
-import com.sun.ts.tests.common.vehicle.ejbliteshare.EJBLiteClientIF;
-import com.sun.ts.tests.common.vehicle.ejbliteshare.ReasonableStatus;
-
-import jakarta.ejb.embeddable.EJBContainer;
+import static com.sun.ts.tests.common.vehicle.ejbliteshare.EJBLiteClientIF.TEST_PASSED;
 
 public class EJBEmbedRunner implements VehicleRunnable {
 

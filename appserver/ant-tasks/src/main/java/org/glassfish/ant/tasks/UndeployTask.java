@@ -16,9 +16,11 @@
 
 package org.glassfish.ant.tasks;
 
-import org.apache.tools.ant.Project;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
-import java.util.*;
+import org.apache.tools.ant.Project;
 
 public class UndeployTask extends AdminTask {
 

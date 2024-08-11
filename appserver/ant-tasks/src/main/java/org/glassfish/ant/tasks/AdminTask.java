@@ -16,11 +16,13 @@
 
 package org.glassfish.ant.tasks;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 
-import java.io.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 public class AdminTask extends Task {
 

@@ -15,15 +15,15 @@
  */
 package org.glassfish.main.admin.test;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ConnectionUtils {
     /**

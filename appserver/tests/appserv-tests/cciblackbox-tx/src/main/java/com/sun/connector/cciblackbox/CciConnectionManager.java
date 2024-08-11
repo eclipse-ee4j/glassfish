@@ -16,13 +16,13 @@
 
 package com.sun.connector.cciblackbox;
 
-import java.io.Serializable;
-
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionManager;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
+
+import java.io.Serializable;
 
 /**
  * The default ConnectionManager implementation for the

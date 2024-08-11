@@ -19,7 +19,6 @@ package com.sun.jdo.api.persistence.enhancer.impl;
 import com.sun.jdo.api.persistence.enhancer.classfile.ClassField;
 import com.sun.jdo.api.persistence.enhancer.classfile.Descriptor;
 import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
-//@olsen: added import
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.InternalError;
 import com.sun.jdo.api.persistence.enhancer.util.Support;

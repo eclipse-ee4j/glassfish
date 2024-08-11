@@ -28,7 +28,6 @@ import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataModelImpl;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataPropertyImpl;
 import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
-//@olsen: added: support for I18N
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 import com.sun.jdo.api.persistence.enhancer.util.UserException;
 import com.sun.jdo.api.persistence.model.Model;

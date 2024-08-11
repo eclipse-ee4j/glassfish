@@ -21,8 +21,6 @@ import com.sun.enterprise.security.ee.authorize.cache.PermissionCache;
 import com.sun.enterprise.security.ssl.SSLUtils;
 
 import java.net.SocketPermission;
-// IASRI 4660742 START
-// IASRI 4660742 END
 import java.util.PropertyPermission;
 
 /**

@@ -18,7 +18,6 @@ package com.sun.jdo.api.persistence.enhancer.impl;
 
 import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
 import com.sun.jdo.api.persistence.enhancer.classfile.ConstClass;
-//@olsen: added import
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 import com.sun.jdo.api.persistence.enhancer.util.Support;

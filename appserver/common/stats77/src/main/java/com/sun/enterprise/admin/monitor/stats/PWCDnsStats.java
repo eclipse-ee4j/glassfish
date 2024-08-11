@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,14 @@
 package com.sun.enterprise.admin.monitor.stats;
 
 import org.glassfish.j2ee.statistics.CountStatistic;
-/**
- *
- * @author  nsegura
- */
 import org.glassfish.j2ee.statistics.Stats;
 
 /**
  * The DNS Cache caches IP addresses and DNS names. The server’s DNS cache is
  * disabled by default. A single cache entry represents a single IP address or DNS
  * name lookup
+ *
+ * @author nsegura
  */
 public interface PWCDnsStats extends Stats {
 

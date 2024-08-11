@@ -16,14 +16,12 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-//@olsen: added import
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 import com.sun.jdo.api.persistence.enhancer.util.ClassPath;
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 
 import java.io.File;
-//@olsen: added import
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -18,7 +18,6 @@ package com.sun.enterprise.universal.xml;
 
 import com.sun.enterprise.universal.collections.CollectionUtils;
 
-//import static com.sun.enterprise.util.StringUtils.ok;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

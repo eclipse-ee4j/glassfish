@@ -37,7 +37,6 @@ import static org.glassfish.admin.amx.logging.LogRecordFields.OBJECTNAME_KEY;
 import static org.glassfish.admin.amx.logging.LogRecordFields.PRODUCT_NAME_INDEX;
 import static org.glassfish.admin.amx.logging.LogRecordFields.RECORD_NUMBER_INDEX;
 
-//import static org.glassfish.admin.amx.logging.LogRecordFields;
 
 /**
  * <b>INTERNAL USE ONLY--not part of the API</b>

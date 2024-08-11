@@ -43,9 +43,6 @@ import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 
-import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
-import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
-import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_ASSOC_WITH_THREAD;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_CON_CREATION_RETRY_ATTEMPTS;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_CON_CREATION_RETRY_INTERVAL;
@@ -70,6 +67,9 @@ import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_RA_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_STEADY_POOL_SIZE;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_TXN_SUPPORT;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_VALIDATE_ATMOST_PERIOD;
+import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
+import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
+import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
 
 /**
  * Create Connector Connection Pool Command

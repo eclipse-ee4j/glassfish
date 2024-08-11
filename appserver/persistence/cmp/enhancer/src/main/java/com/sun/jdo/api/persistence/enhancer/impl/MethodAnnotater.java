@@ -30,7 +30,6 @@ import com.sun.jdo.api.persistence.enhancer.classfile.InsnInterfaceInvoke;
 import com.sun.jdo.api.persistence.enhancer.classfile.InsnTarget;
 import com.sun.jdo.api.persistence.enhancer.classfile.InsnUtils;
 import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
-//@olsen: added import
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.InternalError;
 import com.sun.jdo.api.persistence.enhancer.util.Support;

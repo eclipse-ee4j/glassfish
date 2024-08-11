@@ -15,12 +15,12 @@
  */
 package org.glassfish.microprofile.config;
 
+import java.net.JarURLConnection;
+
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeploymentContext;
-
-import java.net.JarURLConnection;
 
 public class ConfigApplicationContainer implements ApplicationContainer<Object> {
 

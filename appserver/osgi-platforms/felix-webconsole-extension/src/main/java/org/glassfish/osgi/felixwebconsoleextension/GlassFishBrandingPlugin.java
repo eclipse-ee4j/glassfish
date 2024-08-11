@@ -17,14 +17,14 @@
 
 package org.glassfish.osgi.felixwebconsoleextension;
 
-import org.apache.felix.webconsole.BrandingPlugin;
-import org.apache.felix.webconsole.DefaultBrandingPlugin;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.felix.webconsole.BrandingPlugin;
+import org.apache.felix.webconsole.DefaultBrandingPlugin;
 
 /**
  * This is a customization of {@link BrandingPlugin} for GlassFish.

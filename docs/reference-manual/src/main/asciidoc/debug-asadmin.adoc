@@ -40,6 +40,6 @@ debug-asadmin [--host host]
 Use the `debug-asadmin` utility to debug local admin commands and the launching of the {productName}. See the `asadmin` command for full documentation.
 
 
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]
 
 '''''

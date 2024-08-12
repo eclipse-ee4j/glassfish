@@ -865,17 +865,17 @@ Before You Begin
 To run the `create-service` subcommand, you must have `solaris.smf.*`
 authorization. For information about how to set the authorizations, see
 the
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)]
 man page and the
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
 man page. You must also have write permission in the directory tree:
 `/var/svc/manifest/application/SUNWappserver`. Usually, the superuser
 has both of these permissions. Additionally, Oracle Solaris
 administration commands such as
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`],
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`],
 and
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`]
 must be available in the PATH.
 
 If a particular {productName} domain or instance should not have
@@ -926,19 +926,19 @@ See Also
 For information about administering the service, see the following
 Oracle Solaris documentation:
 
-* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing
+* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing
 Services (Overview)]" in System Administration Guide: Basic
 Administration
-* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
+* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
 Services (Tasks)]" in System Administration Guide: Basic Administration
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvcadm-1m[`svcadm`(1M)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`(1M)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5rbac-5[`rbac`(5)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5smf-security-5[`smf_security`(5)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvcadm-1m[`svcadm`(1M)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`(1M)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5rbac-5[`rbac`(5)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5smf-security-5[`smf_security`(5)]
 
 [[to-prevent-service-shutdown-when-a-user-logs-out-on-windows]]
 

@@ -1,8 +1,6 @@
-# Contributing to Eclipse GlassFish
+# Eclipse GlassFish Project and Community
 
-Thanks for your interest in this project.
-
-## Project description
+## Project description {#description}
 
 Eclipse GlassFish is a complete application server that implements the Jakarta
 EE specification. GlassFish includes implementations of all required and
@@ -10,9 +8,27 @@ optional Jakarta EE APIs, and passes all Jakarta EE TCKs. GlassFish also
 includes a complete administration console, clustering support, and other
 developer and production focused tools and features.
 
-* [https://projects.eclipse.org/projects/ee4j.glassfish](https://projects.eclipse.org/projects/ee4j.glassfish)
+* [Eclipse GlassFish project](https://projects.eclipse.org/projects/ee4j.glassfish) at *eclipse.org*
 
-## How To Contribute
+## Contact {#contact}
+
+### Raise questions or discuss
+
+* [GlassFish discussion forum](https://github.com/eclipse-ee4j/glassfish/discussions)
+* [Questions and answers](https://stackoverflow.com/questions/tagged/glassfish) at StackOverflow
+* Chat in the **#glassfish** channel on the [Jakarta EE Slack workspace](https://jakarta.ee/connect/)
+
+### Social media
+
+* X.com: [@glassfish](https://x.com/glassfish) 
+
+### Contact developers
+
+Contact the project developers via the project's "dev" list.
+
+* [https://accounts.eclipse.org/mailing-list/glassfish-dev](https://accounts.eclipse.org/mailing-list/glassfish-dev)
+
+## How To Contribute {#contribute}
 
 The Eclipse GlassFish Project is open for contributions and your help is
 greatly appreciated.
@@ -44,7 +60,7 @@ For more information, please see the Eclipse Committer Handbook:
 
 
 
-## Developer resources
+## Developer resources {#dev-resources}
 
 Information regarding source code management, builds, coding standards, and
 more.
@@ -79,8 +95,3 @@ The project maintains the following source code repositories
 * [https://github.com/eclipse-ee4j/glassfish-firstcup](https://github.com/eclipse-ee4j/glassfish-firstcup)
 * [https://github.com/eclipse-ee4j/glassfish-tutorial](https://github.com/eclipse-ee4j/glassfish-tutorial)
 
-## Contact
-
-Contact the project developers via the project's "dev" list.
-
-* [https://accounts.eclipse.org/mailing-list/glassfish-dev](https://accounts.eclipse.org/mailing-list/glassfish-dev)

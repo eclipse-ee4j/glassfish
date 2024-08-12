@@ -32,8 +32,8 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import jakarta.inject.Inject;
 
+import jakarta.inject.Inject;
 import jakarta.resource.spi.ManagedConnectionFactory;
 
 import java.util.Set;

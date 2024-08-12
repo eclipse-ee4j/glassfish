@@ -77,14 +77,14 @@ public class SQLTraceDelegator implements SQLTraceListener {
         if (record != null) {
             record.setPoolName(poolName.toString());
 
-            String sqlQuery = null;
-            record.setSqlQuery(findSqlQuery(record, sqlQuery));
+            String sqlQuery = findSqlQuery(record);
+            record.setSqlQuery(sqlQuery);
             record.setApplicationName(getAppName());
             record.setModuleName(getModuleName());
 
-            if (record.getSqlQuery() != null) {
+            if (sqlQuery != null) {
                 probeProvider.traceSQLEvent(poolName.toString(), record.getApplicationName(),
-                        record.getModuleName(), record.getSqlQuery());
+                        record.getModuleName(), sqlQuery);
             }
 
             if (sqlTraceListenersList != null && !sqlTraceListenersList.isEmpty()) {
@@ -106,9 +106,10 @@ public class SQLTraceDelegator implements SQLTraceListener {
         }
     }
 
-    private String findSqlQuery(SQLTraceRecord record, String sqlQuery) {
+    private String findSqlQuery(SQLTraceRecord record) {
         // Check if the method name is one in which sql query is used
         String methodName = record.getMethodName();
+        String sqlQuery = null;
 
         if (isMethodValidForCaching(methodName)) {
             Object[] params = record.getParams();

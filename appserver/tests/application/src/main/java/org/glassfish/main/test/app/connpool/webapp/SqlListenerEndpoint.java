@@ -24,6 +24,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.ws.rs.core.MediaType;
+import java.util.Optional;
 import org.glassfish.api.jdbc.SQLTraceRecord;
 import org.glassfish.main.test.app.connpool.lib.LastTraceSQLTraceListener;
 
@@ -63,6 +64,14 @@ public class SqlListenerEndpoint {
         StackTraceElement caller = LastTraceSQLTraceListener.lastCallingApplicationMethod;
         assertTrue("application class should be " + SqlListenerEndpoint.class, caller.getClassName().equals(SqlListenerEndpoint.class.getName()));
         assertTrue("application method should be callSomeQuery", caller.getMethodName().equals("callSomeQuery"));
+    }
+
+    private void assertValueSet(String valueDescription, Optional<String> applicationName) {
+        if (applicationName.isPresent()) {
+            assertValueSet(valueDescription, applicationName.get());
+        } else {
+            throw new AssertionError(valueDescription + " has no value");
+        }
     }
 
     private void assertValueSet(String valueDescription, String applicationName) {

@@ -18,6 +18,7 @@ package org.glassfish.api.jdbc;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Information related to SQL operations executed by the applications are stored in this object.
@@ -214,12 +215,12 @@ public class SQLTraceRecord implements Serializable {
     }
 
     /**
-     * SQL query related to the database operation or null if not applicable
+     * SQL query related to the database operation if applicable.
      *
-     * @return SQL query or null
+     * @return SQL query
      */
-    public String getSqlQuery() {
-        return sqlQuery;
+    public Optional<String> getSqlQuery() {
+        return Optional.ofNullable(sqlQuery);
     }
 
     /**
@@ -250,9 +251,10 @@ public class SQLTraceRecord implements Serializable {
     }
 
     /**
-     * Module name of an application which executed the SQL statement
+     * Module name of an application which executed the SQL statement.
+     * If the application doesn't have modules it will be equal to the application name
      *
-     * @return Module name or null if the application doesn't have modules
+     * @return Module name
      */
     public String getModuleName() {
         return moduleName;
@@ -270,16 +272,16 @@ public class SQLTraceRecord implements Serializable {
     /**
      * Get the stack trace element for the method call in the application that triggered SQL execution.
      *
-     * This call analyzes the stacktrace on the current thread and finds the first element that
+     * This call analyzes the stacktrace of the current thread and finds the first element that
      * represents a call in the application (the class is loaded by the application classloader).
      *
      * @return Stack trace element that represents a call to a server component that triggered SQL execution
      */
-    public StackTraceElement getCallingApplicationMethod() {
+    public Optional<StackTraceElement> getCallingApplicationMethod() {
         return Arrays.stream(Thread.currentThread().getStackTrace())
                 .skip(1)
         .filter(this::isMethodFromApplication)
-        .findFirst().orElse(null);
+        .findFirst();
     }
 
     private boolean isMethodFromApplication(StackTraceElement ste) {

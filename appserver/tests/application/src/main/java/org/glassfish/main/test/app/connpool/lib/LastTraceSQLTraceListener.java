@@ -27,15 +27,19 @@ public class LastTraceSQLTraceListener implements SQLTraceListener {
 
     @Override
     public void sqlTrace(SQLTraceRecord sqltr) {
-        logger.fine("Trace record: " + sqltr);
-        if (sqltr.getSqlQuery() != null) {
+        logger.fine(() -> "Trace record: " + sqltr);
+        boolean shouldRememberRecord = sqltr.getSqlQuery().isPresent();
+        if (shouldRememberRecord) {
             lastTraceRecord = sqltr;
         }
-        StackTraceElement caller = sqltr.getCallingApplicationMethod();
-        logger.fine("Method calling SQL: " + caller);
-        if (sqltr.getSqlQuery() != null) {
-            lastCallingApplicationMethod = caller;
-        }
+        // We need to remember the calling method explicitly because getCallingApplicationMethod()
+        // is based on the context of the current thread
+        sqltr.getCallingApplicationMethod().ifPresent(caller -> {
+            logger.fine(() -> "Method calling SQL: " + caller);
+            if (shouldRememberRecord) {
+                lastCallingApplicationMethod = caller;
+            }
+        });
     }
 
 }

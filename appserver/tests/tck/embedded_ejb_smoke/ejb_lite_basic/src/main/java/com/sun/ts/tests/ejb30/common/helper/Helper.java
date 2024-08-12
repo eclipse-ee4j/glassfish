@@ -19,12 +19,12 @@
  */
 package com.sun.ts.tests.ejb30.common.helper;
 
-import static com.sun.ts.lib.util.TestUtil.NEW_LINE;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.sun.ts.lib.util.TestUtil.NEW_LINE;
 
 public final class Helper {
     private static Logger logger = Logger.getLogger("com.sun.ts.tests.ejb30");

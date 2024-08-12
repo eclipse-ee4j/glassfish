@@ -18,7 +18,6 @@ package org.glassfish.admin.restconnector;
 
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
-
 import org.jvnet.hk2.config.Configured;
 
 /**

@@ -16,6 +16,10 @@
 
 package org.glassfish.osgi.felixwebconsoleextension;
 
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 
@@ -24,10 +28,6 @@ import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.osgi.framework.BundleContext;
-
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 
 /**
  *

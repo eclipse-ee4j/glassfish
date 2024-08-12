@@ -17,7 +17,16 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.ProviderConfig;
+import com.sun.enterprise.config.serverbeans.RequestPolicy;
+import com.sun.enterprise.config.serverbeans.ResponsePolicy;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
@@ -33,16 +42,7 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.ProviderConfig;
-import com.sun.enterprise.config.serverbeans.RequestPolicy;
-import com.sun.enterprise.config.serverbeans.ResponsePolicy;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Adds the needed message-security-config information to domain.xml

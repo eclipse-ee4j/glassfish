@@ -18,9 +18,12 @@ package org.glassfish.admin.rest.cli;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import java.beans.PropertyVetoException;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.beans.PropertyVetoException;
+
 import org.glassfish.admin.restconnector.RestConfig;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;

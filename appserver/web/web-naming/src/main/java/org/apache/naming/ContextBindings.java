@@ -20,8 +20,9 @@ package org.apache.naming;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.ResourceBundle;
-import javax.naming.NamingException;
+
 import javax.naming.Context;
+import javax.naming.NamingException;
 
 /**
  * Handles the associations :

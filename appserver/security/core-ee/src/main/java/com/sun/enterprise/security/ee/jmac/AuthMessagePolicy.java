@@ -17,19 +17,6 @@
 
 package com.sun.enterprise.security.ee.jmac;
 
-import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.AUTH_LAYER;
-import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.PROVIDER_ID;
-import static org.glassfish.epicyro.config.helper.HttpServletConstants.SOAP;
-
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
@@ -41,6 +28,19 @@ import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.security.common.AppservAccessController;
 
 import jakarta.security.auth.message.MessagePolicy;
+
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.List;
+import java.util.Map;
+
+import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.internal.api.Globals;
+
+import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.AUTH_LAYER;
+import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.PROVIDER_ID;
+import static org.glassfish.epicyro.config.helper.HttpServletConstants.SOAP;
 
 /**
  * Utility class for Jakarta Authentication appserver implementation.

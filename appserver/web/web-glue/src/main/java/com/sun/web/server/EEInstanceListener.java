@@ -17,22 +17,20 @@
 
 package com.sun.web.server;
 
-import static com.sun.enterprise.security.integration.SecurityConstants.WEB_PRINCIPAL_CLASS;
-import static com.sun.enterprise.util.Utility.isOneOf;
-import static java.security.Policy.getPolicy;
-import static java.text.MessageFormat.format;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_DESTROY_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_FILTER_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_INIT_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_SERVICE_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.BEFORE_FILTER_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.BEFORE_SERVICE_EVENT;
-import static org.glassfish.web.LogFacade.EXCEPTION_DURING_HANDLE_EVENT;
-import static org.glassfish.web.LogFacade.NO_SERVER_CONTEXT;
-import static org.glassfish.web.LogFacade.SECURITY_CONTEXT_FAILED;
-import static org.glassfish.web.LogFacade.SECURITY_CONTEXT_OBTAINED;
+import com.sun.enterprise.container.common.spi.util.InjectionException;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.security.integration.AppServSecurityContext;
+import com.sun.enterprise.security.integration.RealmInitializer;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.web.WebComponentInvocation;
+import com.sun.enterprise.web.WebModule;
+
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestWrapper;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.security.AccessControlException;
 import java.security.AccessController;
@@ -59,20 +57,22 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.wasp.servlet.JspServlet;
 import org.glassfish.web.LogFacade;
 
-import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.security.integration.AppServSecurityContext;
-import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.web.WebComponentInvocation;
-import com.sun.enterprise.web.WebModule;
-
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestWrapper;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static com.sun.enterprise.security.integration.SecurityConstants.WEB_PRINCIPAL_CLASS;
+import static com.sun.enterprise.util.Utility.isOneOf;
+import static java.security.Policy.getPolicy;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_DESTROY_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_FILTER_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_INIT_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_SERVICE_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_FILTER_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_SERVICE_EVENT;
+import static org.glassfish.web.LogFacade.EXCEPTION_DURING_HANDLE_EVENT;
+import static org.glassfish.web.LogFacade.NO_SERVER_CONTEXT;
+import static org.glassfish.web.LogFacade.SECURITY_CONTEXT_FAILED;
+import static org.glassfish.web.LogFacade.SECURITY_CONTEXT_OBTAINED;
 
 /**
  * This class implements the Tomcat InstanceListener interface and handles the INIT,DESTROY and SERVICE, FILTER events.

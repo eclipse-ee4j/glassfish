@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.management.support;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * See also com.sun.enterprise.management.support.SystemInfoImpl

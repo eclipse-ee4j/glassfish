@@ -28,6 +28,10 @@ import com.sun.jsftemplating.layout.descriptors.LayoutDefinition;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 import com.sun.jsftemplating.util.FileUtil;
 
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,14 +43,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
-import jakarta.faces.component.UIComponent;
-import jakarta.faces.context.FacesContext;
-import jakarta.servlet.ServletContext;
 
 import org.glassfish.admingui.common.factories.NavigationNodeFactory;
 import org.glassfish.admingui.common.util.GuiUtil;
-import org.glassfish.admingui.plugin.ConsolePluginService;
 import org.glassfish.admingui.connector.IntegrationPoint;
+import org.glassfish.admingui.plugin.ConsolePluginService;
 import org.glassfish.admingui.plugin.IntegrationPointComparator;
 import org.glassfish.hk2.api.ServiceLocator;
 

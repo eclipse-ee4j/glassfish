@@ -19,8 +19,8 @@ package org.glassfish.security.services.impl.common;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.TreeSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.glassfish.security.services.api.common.Attribute;
 

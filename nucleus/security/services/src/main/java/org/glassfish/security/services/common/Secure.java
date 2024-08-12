@@ -16,14 +16,16 @@
 
 package org.glassfish.security.services.common;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import jakarta.inject.Qualifier;
+
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import jakarta.inject.Qualifier;
 import org.glassfish.hk2.api.Metadata;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Qualifier used to enable a security check at the point of service injection or lookup.

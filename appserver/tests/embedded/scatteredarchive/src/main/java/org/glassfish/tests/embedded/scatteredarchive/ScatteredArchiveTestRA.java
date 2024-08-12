@@ -22,8 +22,10 @@ import jakarta.resource.spi.BootstrapContext;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterInternalException;
 import jakarta.resource.spi.endpoint.MessageEndpointFactory;
-import javax.transaction.xa.XAResource;
+
 import java.util.logging.Logger;
+
+import javax.transaction.xa.XAResource;
 
 /**
  * @author bhavanishankar@java.net

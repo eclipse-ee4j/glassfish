@@ -20,6 +20,7 @@ package org.glassfish.jdbcruntime.service;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
+
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;

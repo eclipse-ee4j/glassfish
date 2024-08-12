@@ -17,36 +17,6 @@
 
 package com.sun.enterprise.transaction;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.transaction.xa.XAException;
-import javax.transaction.xa.XAResource;
-import javax.transaction.xa.Xid;
-
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationException;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.invocation.ResourceHandler;
-import org.glassfish.common.util.Constants;
-import org.glassfish.external.probe.provider.PluginPoint;
-import org.glassfish.external.probe.provider.StatsProviderManager;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.Rank;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.ContractsProvided;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.util.cache.BaseCache;
 import com.sun.appserv.util.cache.Cache;
 import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
@@ -76,6 +46,36 @@ import jakarta.transaction.Synchronization;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
+
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationException;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.invocation.ResourceHandler;
+import org.glassfish.common.util.Constants;
+import org.glassfish.external.probe.provider.PluginPoint;
+import org.glassfish.external.probe.provider.StatsProviderManager;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.Rank;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.ContractsProvided;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implementation of jakarta.transaction.TransactionManager interface. This class provides non-XA local transaction

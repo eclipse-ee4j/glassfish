@@ -16,6 +16,11 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,11 +37,6 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * Simple admin command to list all existing commands.

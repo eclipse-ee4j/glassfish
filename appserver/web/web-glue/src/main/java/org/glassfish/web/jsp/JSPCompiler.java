@@ -33,6 +33,11 @@
 
 package org.glassfish.web.jsp;
 
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.web.InitializationParameter;
+import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -49,11 +54,6 @@ import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.JspConfig;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.runtime.WebProperty;
-
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.web.InitializationParameter;
-import com.sun.enterprise.util.io.FileUtils;
 
 public final class JSPCompiler {
 

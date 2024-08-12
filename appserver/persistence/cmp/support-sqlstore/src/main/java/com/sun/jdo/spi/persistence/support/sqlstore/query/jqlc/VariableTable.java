@@ -22,12 +22,19 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
-import java.util.*;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.glassfish.persistence.common.I18NHelper;
-
-import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 
 /**
  * The variable table

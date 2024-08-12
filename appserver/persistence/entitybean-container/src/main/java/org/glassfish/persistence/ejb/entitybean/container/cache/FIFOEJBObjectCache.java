@@ -18,14 +18,14 @@
 package org.glassfish.persistence.ejb.entitybean.container.cache;
 
 import com.sun.ejb.containers.util.cache.LruEJBCache;
+import com.sun.logging.LogDomains;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-
-import java.util.logging.*;
-import com.sun.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A FIFO EJB(Local)Object cache that maintains reference count

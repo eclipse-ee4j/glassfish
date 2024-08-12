@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.logging.LogDomains;
+
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.logging.LogDomains;
 
 public class ConnectorTimerProxy extends Timer {
 

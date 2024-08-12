@@ -25,11 +25,16 @@ package com.sun.jdo.api.persistence.model.mapping.impl;
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.api.persistence.model.ModelVetoException;
 import com.sun.jdo.api.persistence.model.mapping.MappingElement;
-import org.glassfish.persistence.common.I18NHelper;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.beans.VetoableChangeSupport;
 import java.text.Collator;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  *

@@ -17,16 +17,24 @@
 
 package com.sun.enterprise.web.connector;
 
-import javax.management.*;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.web.WebContainer;
+
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.sun.enterprise.web.WebContainer;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import org.apache.catalina.*;
+
+import javax.management.MBeanServerNotification;
+import javax.management.Notification;
+import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Engine;
 import org.apache.catalina.core.ContainerBase;
 import org.apache.catalina.core.ContextsAdapterUtility;
 import org.apache.catalina.core.StandardContext;

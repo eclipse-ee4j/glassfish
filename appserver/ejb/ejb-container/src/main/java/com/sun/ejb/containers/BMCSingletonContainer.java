@@ -17,13 +17,13 @@
 
 package com.sun.ejb.containers;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.EjbInvocation;
 import com.sun.enterprise.security.SecurityManager;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 
 /**
  * @author Mahesh Kannan

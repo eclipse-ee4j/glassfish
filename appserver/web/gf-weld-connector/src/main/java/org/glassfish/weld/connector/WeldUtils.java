@@ -17,6 +17,22 @@
 
 package org.glassfish.weld.connector;
 
+import com.sun.enterprise.config.serverbeans.Config;
+
+import jakarta.decorator.Decorator;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.NormalScope;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
+import jakarta.interceptor.Interceptor;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -44,22 +60,6 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.sun.enterprise.config.serverbeans.Config;
-
-import jakarta.decorator.Decorator;
-import jakarta.ejb.MessageDriven;
-import jakarta.ejb.Stateful;
-import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.NormalScope;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.enterprise.inject.Stereotype;
-import jakarta.inject.Scope;
-import jakarta.inject.Singleton;
-import jakarta.interceptor.Interceptor;
 
 public class WeldUtils {
 

@@ -19,10 +19,17 @@ package com.sun.enterprise.admin.servermgmt;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
-import java.beans.PropertyVetoException;
-import java.util.*;
-import java.util.logging.Level;
+
 import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
@@ -31,7 +38,8 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.*;
+import static com.sun.enterprise.admin.servermgmt.SLogger.JVM_OPTION_UPGRADE_FAILURE;
+import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 
 /**
  * Change the jvm-options from v2 to v3

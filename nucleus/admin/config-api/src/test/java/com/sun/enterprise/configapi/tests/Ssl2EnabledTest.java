@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
@@ -26,8 +28,6 @@ import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

@@ -17,19 +17,21 @@
 
 package org.apache.naming.factory;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Enumeration;
 import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimePartDataSource;
-import javax.naming.Name;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+
 import javax.naming.Context;
-import javax.naming.Reference;
+import javax.naming.Name;
 import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 /**

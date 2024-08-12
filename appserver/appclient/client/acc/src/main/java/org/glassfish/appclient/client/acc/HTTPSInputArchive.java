@@ -17,8 +17,8 @@
 package org.glassfish.appclient.client.acc;
 
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implements ReadableArchive for the https protocol to support

@@ -16,13 +16,12 @@
 
 package com.sun.enterprise.security.ee;
 
-import java.net.SocketPermission;
-// IASRI 4660742 START
-// IASRI 4660742 END
-import java.util.PropertyPermission;
 import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCache;
 import com.sun.enterprise.security.ssl.SSLUtils;
+
+import java.net.SocketPermission;
+import java.util.PropertyPermission;
 
 /**
  * Java 2 security manager that enforces code security.

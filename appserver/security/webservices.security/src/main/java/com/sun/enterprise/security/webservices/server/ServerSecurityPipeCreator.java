@@ -17,6 +17,24 @@
 
 package com.sun.enterprise.security.webservices.server;
 
+import com.sun.xml.ws.api.model.SEIModel;
+import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
+import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.ws.api.pipe.Pipe;
+import com.sun.xml.ws.api.server.WSEndpoint;
+import com.sun.xml.ws.policy.Policy;
+import com.sun.xml.ws.policy.PolicyException;
+import com.sun.xml.ws.policy.PolicyMap;
+import com.sun.xml.ws.policy.PolicyMapKey;
+
+import jakarta.inject.Singleton;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.glassfish.webservices.ServerPipeCreator;
+import org.jvnet.hk2.annotations.Service;
+
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlEndpointScopeKey;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlOperationScopeKey;
@@ -27,21 +45,6 @@ import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.SEI_MODEL;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_ENDPOINT;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
-
-import com.sun.xml.ws.api.model.SEIModel;
-import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
-import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.api.server.WSEndpoint;
-import com.sun.xml.ws.policy.Policy;
-import com.sun.xml.ws.policy.PolicyException;
-import com.sun.xml.ws.policy.PolicyMap;
-import com.sun.xml.ws.policy.PolicyMapKey;
-import jakarta.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import org.glassfish.webservices.ServerPipeCreator;
-import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is used by JAXWSContainer to return proper Jakarta Authentication security and app server monitoring pipes to

@@ -18,13 +18,13 @@
 
 package org.apache.catalina.connector;
 
-import static org.apache.catalina.LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ResourceBundle;
 
 import org.apache.catalina.LogFacade;
+
+import static org.apache.catalina.LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION;
 
 /**
  * Coyote implementation of the servlet writer.

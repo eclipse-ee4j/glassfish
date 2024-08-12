@@ -18,6 +18,7 @@
 package org.glassfish.ejb.deployment.descriptor.runtime;
 
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**

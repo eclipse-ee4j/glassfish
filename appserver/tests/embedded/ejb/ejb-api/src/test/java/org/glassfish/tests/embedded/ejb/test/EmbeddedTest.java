@@ -17,15 +17,17 @@
 
 package org.glassfish.tests.embedded.ejb.test;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-import org.glassfish.tests.embedded.ejb.SampleEjb;
-
 import jakarta.ejb.embeddable.EJBContainer;
-import javax.naming.Context;
-import java.util.Map;
+
+import java.io.File;
 import java.util.HashMap;
-import java.io.*;
+import java.util.Map;
+
+import javax.naming.Context;
+
+import org.glassfish.tests.embedded.ejb.SampleEjb;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * this test will use the ejb API testing.

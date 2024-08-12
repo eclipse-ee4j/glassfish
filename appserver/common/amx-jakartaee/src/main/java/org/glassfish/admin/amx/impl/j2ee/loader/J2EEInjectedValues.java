@@ -16,12 +16,13 @@
 
 package org.glassfish.admin.amx.impl.j2ee.loader;
 
-import org.glassfish.admin.amx.impl.util.InjectedValues;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.internal.data.ApplicationRegistry;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
+
+import jakarta.inject.Inject;
+
+import org.glassfish.admin.amx.impl.util.InjectedValues;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.jvnet.hk2.annotations.Service;
 
 /**
    Supplies the needed values for other classes such as MBeans that do not have access to

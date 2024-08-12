@@ -16,17 +16,18 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.io.*;
-
 import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
 import com.sun.jdo.api.persistence.enhancer.classfile.ConstClass;
-
+import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 import com.sun.jdo.api.persistence.enhancer.util.UserException;
-import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 
-//@olsen: added import
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 //@olsen: cosmetics

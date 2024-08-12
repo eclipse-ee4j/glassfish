@@ -17,6 +17,11 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.UsernamePasswordStore;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,11 +38,6 @@ import javax.security.auth.spi.LoginModule;
 
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.common.UserPrincipal;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.UsernamePasswordStore;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This sample LoginModule authenticates users with a password.

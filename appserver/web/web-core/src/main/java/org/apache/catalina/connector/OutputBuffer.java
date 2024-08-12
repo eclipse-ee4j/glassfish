@@ -17,6 +17,10 @@
 
 package org.apache.catalina.connector;
 
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.channels.InterruptedByTimeoutException;
@@ -26,9 +30,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.servlet.WriteListener;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Context;

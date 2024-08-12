@@ -16,6 +16,10 @@
 
 package com.sun.enterprise.admin.cli.schemadoc;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -31,19 +35,20 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
-
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
 import org.objectweb.asm.ClassReader;
-
-import jakarta.inject.Inject;
 
 @Service(name = "generate-domain-schema")
 @PerLookup

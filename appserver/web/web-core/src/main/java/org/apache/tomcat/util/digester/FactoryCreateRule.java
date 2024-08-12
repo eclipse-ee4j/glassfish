@@ -17,9 +17,9 @@
 
 package org.apache.tomcat.util.digester;
 
-import org.xml.sax.Attributes;
-
 import java.util.logging.Level;
+
+import org.xml.sax.Attributes;
 
 
 /**

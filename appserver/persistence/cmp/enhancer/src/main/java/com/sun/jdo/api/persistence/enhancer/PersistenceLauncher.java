@@ -22,11 +22,11 @@
 
 package com.sun.jdo.api.persistence.enhancer;
 
+import com.sun.jdo.api.persistence.enhancer.util.Support;
+
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import com.sun.jdo.api.persistence.enhancer.util.Support;
 
 /**
  * Application launcher for persistence-capable classes.

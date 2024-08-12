@@ -17,12 +17,14 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.jdbc;
 
+import com.sun.enterprise.security.BasePasswordLoginModule;
+
+import java.util.Arrays;
+
+import javax.security.auth.login.LoginException;
+
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.logging.Level.FINEST;
-
-import com.sun.enterprise.security.BasePasswordLoginModule;
-import java.util.Arrays;
-import javax.security.auth.login.LoginException;
 
 /**
  * This class implement a JDBC Login module for Glassfish. The work is derivated from Sun's sample JDBC login module.

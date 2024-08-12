@@ -16,11 +16,13 @@
 
 package org.glassfish.admin.amx.impl.mbean;
 
-import static org.glassfish.admin.amx.base.SystemInfo.*;
-
 import javax.management.MBeanServer;
 
 import org.glassfish.admin.amx.impl.util.Issues;
+
+import static org.glassfish.admin.amx.base.SystemInfo.CLUSTERS_FEATURE;
+import static org.glassfish.admin.amx.base.SystemInfo.MULTIPLE_SERVERS_FEATURE;
+import static org.glassfish.admin.amx.base.SystemInfo.RUNNING_IN_DAS_FEATURE;
 
 /**
 Single-use utility class to contain the  details of initializing various

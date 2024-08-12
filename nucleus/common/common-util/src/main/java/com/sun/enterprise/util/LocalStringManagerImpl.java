@@ -19,8 +19,7 @@ package com.sun.enterprise.util;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.*;
-//END OF IASRI 4660742
+import java.util.logging.Level;
 
 
 /**

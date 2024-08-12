@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security.auth.login.common;
 
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,8 +27,6 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 
 /**
  * This is the default callback handler provided by the application client container. The container tries to use the application

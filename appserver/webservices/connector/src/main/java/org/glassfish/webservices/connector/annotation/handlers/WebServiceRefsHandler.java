@@ -16,17 +16,16 @@
 
 package org.glassfish.webservices.connector.annotation.handlers;
 
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.WebServiceRefs;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.xml.ws.WebServiceRefs;
-import jakarta.xml.ws.WebServiceRef;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-
 import org.jvnet.hk2.annotations.Service;
 
 /**

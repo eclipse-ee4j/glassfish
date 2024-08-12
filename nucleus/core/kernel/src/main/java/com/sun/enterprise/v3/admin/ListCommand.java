@@ -16,7 +16,11 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static com.sun.enterprise.admin.util.ClusterOperationUtil.replicateCommand;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,11 +49,7 @@ import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Dom;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.admin.util.ClusterOperationUtil.replicateCommand;
 
 /**
  * User: Jerome Dochez Date: Jul 12, 2008 Time: 1:27:53 AM

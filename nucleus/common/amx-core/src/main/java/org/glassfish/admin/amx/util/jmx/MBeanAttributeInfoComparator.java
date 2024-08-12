@@ -17,7 +17,9 @@
 package org.glassfish.admin.amx.util.jmx;
 
 import java.io.Serializable;
+
 import javax.management.MBeanAttributeInfo;
+
 import org.glassfish.admin.amx.util.jmx.stringifier.MBeanAttributeInfoStringifier;
 import org.glassfish.admin.amx.util.jmx.stringifier.MBeanFeatureInfoStringifierOptions;
 

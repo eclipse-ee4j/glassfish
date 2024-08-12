@@ -17,18 +17,18 @@
 
 package com.sun.enterprise.resource.recovery;
 
+import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
+import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
+import com.sun.enterprise.transaction.spi.RecoveryResourceListener;
+
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.Set;
 
 import javax.transaction.xa.XAResource;
 
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
-import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
-import com.sun.enterprise.transaction.spi.RecoveryResourceListener;
-
-import jakarta.inject.Inject;
 
 /**
  * RecoveryResourceHandler for third party resources

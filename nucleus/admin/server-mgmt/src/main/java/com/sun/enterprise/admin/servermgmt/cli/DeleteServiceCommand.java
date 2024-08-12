@@ -16,23 +16,24 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import com.sun.enterprise.admin.util.ServerDirsSelector;
-import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
-import java.util.logging.*;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import com.sun.enterprise.admin.cli.*;
-import com.sun.enterprise.admin.servermgmt.services.ServiceFactory;
-import com.sun.enterprise.admin.servermgmt.services.Service;
+import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.servermgmt.services.AppserverServiceType;
 import com.sun.enterprise.admin.servermgmt.services.PlatformServicesInfo;
+import com.sun.enterprise.admin.servermgmt.services.Service;
+import com.sun.enterprise.admin.servermgmt.services.ServiceFactory;
+import com.sun.enterprise.admin.util.ServerDirsSelector;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
+
+import java.io.File;
+import java.util.logging.Level;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.hk2.api.PerLookup;
 
 /**
  * Delete a "service" in the operating system.

@@ -19,12 +19,14 @@ package com.sun.enterprise.container.common.impl;
 import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.ContainerUtil;
-import org.glassfish.api.invocation.InvocationManager;
+
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PreDestroy;
 
 import java.util.Timer;
+
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.PreDestroy;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 public class ContainerUtilImpl

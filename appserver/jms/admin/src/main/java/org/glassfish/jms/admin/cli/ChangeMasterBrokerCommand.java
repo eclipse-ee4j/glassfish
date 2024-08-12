@@ -28,8 +28,11 @@ import com.sun.enterprise.connectors.jms.config.JmsService;
 import com.sun.enterprise.connectors.jms.util.JmsRaUtil;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
+
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
@@ -52,8 +55,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 
 /**

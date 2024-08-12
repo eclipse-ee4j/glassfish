@@ -17,19 +17,20 @@
 package org.glassfish.admin.rest.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.inject.Inject;
+
 import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import jakarta.inject.Inject;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

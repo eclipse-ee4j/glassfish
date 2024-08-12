@@ -17,8 +17,8 @@
 package com.sun.enterprise.v3.services.impl;
 
 import java.util.logging.Logger;
-import org.glassfish.grizzly.config.dom.NetworkListener;
 
+import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.ThreadPool;
 import org.glassfish.grizzly.config.dom.Transport;

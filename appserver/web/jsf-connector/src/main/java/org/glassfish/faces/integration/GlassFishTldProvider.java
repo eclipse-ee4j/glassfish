@@ -17,14 +17,11 @@
 
 package org.glassfish.faces.integration;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.enterprise.util.net.JarURIPattern.getJarEntries;
-import static java.text.MessageFormat.format;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.logging.Level.WARNING;
-import static java.util.regex.Pattern.compile;
-import static org.glassfish.web.loader.LogFacade.TLD_PROVIDER_IGNORE_URL;
-import static org.glassfish.web.loader.LogFacade.UNABLE_TO_DETERMINE_TLD_RESOURCES;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,11 +39,14 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.web.loader.LogFacade;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModulesRegistry;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.enterprise.util.net.JarURIPattern.getJarEntries;
+import static java.text.MessageFormat.format;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.logging.Level.WARNING;
+import static java.util.regex.Pattern.compile;
+import static org.glassfish.web.loader.LogFacade.TLD_PROVIDER_IGNORE_URL;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_DETERMINE_TLD_RESOURCES;
 
 /**
  * Implementation of TldProvider for JSF.

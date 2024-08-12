@@ -18,7 +18,8 @@ package com.sun.enterprise.admin.servermgmt.services;
 
 import com.sun.enterprise.universal.PropertiesDecoder;
 import com.sun.enterprise.util.io.ServerDirs;
-import java.io.*;
+
+import java.io.File;
 import java.util.Map;
 
 /**

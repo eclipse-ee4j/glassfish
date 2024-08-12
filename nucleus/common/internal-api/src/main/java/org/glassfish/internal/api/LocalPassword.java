@@ -16,7 +16,7 @@
 
 package org.glassfish.internal.api;
 
-import org.jvnet.hk2.annotations.*;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Manage a local password, which is a cryptographically secure random number

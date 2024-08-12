@@ -18,8 +18,10 @@ package org.glassfish.admingui.cdi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.security.enterprise.SecurityContext;
+
 import java.security.Principal;
 import java.util.Set;
+
 import javax.security.auth.Subject;
 
 @ApplicationScoped

@@ -16,14 +16,10 @@
 
 package com.sun.enterprise.web;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
-import org.apache.catalina.core.StandardPipeline;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,9 +30,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.core.StandardPipeline;
 import org.glassfish.common.util.InputValidationUtil;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.web.LogFacade;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Pipeline associated with a virtual server.

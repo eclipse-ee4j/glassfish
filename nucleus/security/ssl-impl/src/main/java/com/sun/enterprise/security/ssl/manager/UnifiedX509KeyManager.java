@@ -17,10 +17,11 @@
 package com.sun.enterprise.security.ssl.manager;
 
 import java.net.Socket;
-import java.util.ArrayList;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509KeyManager;
 

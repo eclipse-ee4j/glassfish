@@ -18,6 +18,8 @@ package org.glassfish.admin.rest;
 
 import com.sun.enterprise.v3.common.ActionReporter;
 
+import jakarta.ws.rs.core.MediaType;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -27,8 +29,6 @@ import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.MessagePart;
 import org.junit.jupiter.api.Test;
-
-import jakarta.ws.rs.core.MediaType;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.common.iiop.security;
 
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.common.Util;
+
+import java.util.StringTokenizer;
+import java.util.logging.Level;
 
 /**
  * This class implements the GSSAPI exported name functionality as required by CSIV2.

@@ -21,7 +21,10 @@ package org.apache.catalina;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 //END OF 6364900

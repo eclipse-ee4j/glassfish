@@ -17,7 +17,18 @@
 
 package org.glassfish.sse.impl;
 
-import static java.util.logging.Level.FINE;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.WithAnnotations;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -34,18 +45,7 @@ import org.glassfish.sse.api.ServerSentEventContext;
 import org.glassfish.sse.api.ServerSentEventHandler;
 import org.glassfish.sse.api.ServerSentEventHandlerContext;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
-import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
-import jakarta.enterprise.inject.spi.WithAnnotations;
-import jakarta.enterprise.util.AnnotationLiteral;
+import static java.util.logging.Level.FINE;
 
 /**
  * A CDI extension that creates ServerSentEventHandlerContext beans so that they can be injected into other EE

@@ -21,11 +21,17 @@
 
 package org.glassfish.admingui.common.util;
 
-import org.glassfish.admingui.common.handlers.RestUtilHandlers;
-
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
+
+import org.glassfish.admingui.common.handlers.RestUtilHandlers;
 
 /**
  *

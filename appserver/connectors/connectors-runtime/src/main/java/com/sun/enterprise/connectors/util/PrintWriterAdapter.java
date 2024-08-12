@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.enterprise.connectors.ConnectorRuntime;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.PrintWriter;
 import java.util.Locale;
-
-import com.sun.enterprise.connectors.ConnectorRuntime;
 
 /**
  * PrintWriter adapter that will be used by resource adapters

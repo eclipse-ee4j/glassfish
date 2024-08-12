@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.security.ee.perms;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.File;
 import java.io.FilePermission;
 import java.net.MalformedURLException;
@@ -36,8 +31,14 @@ import java.security.Policy;
 import java.security.URIParameter;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SMGlobalPolicyUtilTest {
 

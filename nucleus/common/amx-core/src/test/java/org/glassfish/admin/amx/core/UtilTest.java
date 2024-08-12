@@ -18,11 +18,11 @@
 package org.glassfish.admin.amx.core;
 
 import org.glassfish.admin.amx.base.DomainRoot;
+import org.glassfish.admin.amx.test.AmxTestExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.glassfish.admin.amx.test.AmxTestExtension;
 
 @ExtendWith(AmxTestExtension.class)
 public final class UtilTest {

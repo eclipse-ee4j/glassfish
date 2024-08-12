@@ -17,25 +17,23 @@
 
 package com.sun.enterprise.connectors.jms.config;
 
-import org.glassfish.api.admin.config.ConfigExtension;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.RestRedirect;
-
+import org.glassfish.api.admin.RestRedirects;
+import org.glassfish.api.admin.config.ConfigExtension;
+import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.Payload;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
  *

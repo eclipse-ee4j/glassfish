@@ -16,11 +16,15 @@
 
 package org.glassfish.uberjar.uninstaller;
 
-import org.osgi.framework.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 
 /**
  * @author bhavanishankar@dev.java.net

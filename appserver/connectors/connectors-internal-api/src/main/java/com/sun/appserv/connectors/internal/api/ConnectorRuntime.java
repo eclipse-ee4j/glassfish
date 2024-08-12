@@ -17,6 +17,17 @@
 
 package com.sun.appserv.connectors.internal.api;
 
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ResourceAdapterAssociation;
+
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -27,22 +38,11 @@ import javax.security.auth.callback.CallbackHandler;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.WorkSecurityMap;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Contract;
-
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.resource.spi.ResourceAdapterAssociation;
-import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import org.glassfish.api.naming.SimpleJndiName;
 
 
 /**

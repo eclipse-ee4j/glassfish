@@ -1,5 +1,11 @@
 package org.glassfish.main.test.app.ejb;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.RandomGenerator;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -11,12 +17,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.hamcrest.MatcherAssert.assertThat;

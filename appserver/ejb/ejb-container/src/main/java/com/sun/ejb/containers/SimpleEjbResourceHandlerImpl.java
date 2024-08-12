@@ -16,16 +16,17 @@
 
 package com.sun.ejb.containers;
 
-import org.glassfish.api.invocation.ResourceHandler;
-
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+
+import org.glassfish.api.invocation.ResourceHandler;
 
 /*
 //This class was originally an inner class of AbstractSingletonContainer. I have moved this to a top level

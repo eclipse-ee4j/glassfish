@@ -17,13 +17,14 @@
 
 package com.sun.enterprise.deployment.node;
 
-import org.glassfish.deployment.common.ModuleDescriptor;
-import com.sun.enterprise.deployment.xml.ApplicationTagNames;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.w3c.dom.Node;
+import com.sun.enterprise.deployment.xml.ApplicationTagNames;
 
 import java.util.Map;
 import java.util.Objects;
+
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling the module xml fragment from application.xml files

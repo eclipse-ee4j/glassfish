@@ -17,9 +17,9 @@
 package org.glassfish.admin.rest.utils;
 
 import java.io.Serializable;
-import org.jvnet.hk2.config.Dom;
-
 import java.util.Comparator;
+
+import org.jvnet.hk2.config.Dom;
 
 public class DomConfigurator implements Comparator<Dom>, Serializable {
 

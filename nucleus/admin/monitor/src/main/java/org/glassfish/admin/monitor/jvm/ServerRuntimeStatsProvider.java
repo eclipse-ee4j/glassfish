@@ -18,6 +18,7 @@ package org.glassfish.admin.monitor.jvm;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+
 import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;

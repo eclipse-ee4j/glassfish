@@ -16,6 +16,7 @@
 package org.glassfish.microprofile.config;
 
 import jakarta.annotation.Priority;
+
 import org.eclipse.microprofile.config.spi.Converter;
 
 /**

@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.connectors;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ResourceAdapter;
+
+import org.jvnet.hk2.annotations.Contract;
 
 
 /**

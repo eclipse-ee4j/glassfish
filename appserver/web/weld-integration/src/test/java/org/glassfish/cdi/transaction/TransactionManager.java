@@ -16,7 +16,12 @@
 
 package org.glassfish.cdi.transaction;
 
-import jakarta.transaction.*;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 
 public class TransactionManager implements jakarta.transaction.TransactionManager {
     ThreadLocal transactionThreadLocal = new ThreadLocal();

@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.config.modularity.command;
 
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
-
 import com.sun.enterprise.config.modularity.ConfigModularityUtils;
 import com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue;
 import com.sun.enterprise.config.modularity.customization.ConfigCustomizationToken;
@@ -27,6 +25,18 @@ import com.sun.enterprise.config.serverbeans.DomainExtension;
 import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.beans.PropertyVetoException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -50,17 +60,8 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import java.beans.PropertyVetoException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.DELETE_MODULE_CONFIG_FAILED_DELETING_DEPENDENT;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
 
 /**
  * A remote command to delete a module's configuration.

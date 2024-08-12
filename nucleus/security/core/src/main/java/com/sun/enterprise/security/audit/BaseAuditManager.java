@@ -22,6 +22,14 @@
 
 package com.sun.enterprise.security.audit;
 
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.BaseAuditModule;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,23 +40,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
-/*V3:Commented
-import com.sun.enterprise.config.serverbeans.ServerBeansFactory;
-import com.sun.enterprise.config.serverbeans.ElementProperty;
-import com.sun.enterprise.config.ConfigContext;
-import com.sun.enterprise.server.ApplicationServer;
- */
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.BaseAuditModule;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * Basic implementation of audit manager.
@@ -76,7 +70,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     // access to the specified audit modules which the subclass audit manager
     // deals with.
     protected List<T> typedModules = Collections.synchronizedList(new ArrayList<T>());
-    private Class<T> typedModuleClass = null; // typically set by postConstruct of a subclass invoking setTypeClass
+    private final Class<T> typedModuleClass = null; // typically set by postConstruct of a subclass invoking setTypeClass
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
@@ -86,8 +80,8 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     // just a copy of names of the audit classes - helpful for log messages
     // since we will not have a lot of audit classes, keeping a duplicate copy
     // seems reasonable.
-    private Map<BaseAuditModule, String> moduleToNameMap = new HashMap<BaseAuditModule, String>();
-    private Map<String, BaseAuditModule> nameToModuleMap = new HashMap<String, BaseAuditModule>();
+    private final Map<BaseAuditModule, String> moduleToNameMap = new HashMap<>();
+    private final Map<String, BaseAuditModule> nameToModuleMap = new HashMap<>();
     // make this accessible to the containers so that the cost of non-audit case,
     // is just a comparision.
     protected boolean auditOn = false;
@@ -188,14 +182,14 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     }
 
     private <U extends BaseAuditModule> List<U> copyAndAdd(final List<U> orig, final U am) {
-        final List<U> list = new ArrayList<U>();
+        final List<U> list = new ArrayList<>();
         Collections.copy(orig, list);
         list.add(am);
         return list;
     }
 
     private <U extends BaseAuditModule> List<U> copyAndRemove(final List<U> orig, final U am) {
-        final List<U> list = new ArrayList<U>();
+        final List<U> list = new ArrayList<>();
         Collections.copy(orig, list);
         list.remove(am);
         return list;
@@ -321,7 +315,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     }
 
     protected List<T> instances(final Class<T> c) {
-        final List<T> result = new ArrayList<T>();
+        final List<T> result = new ArrayList<>();
         for (BaseAuditModule am : instances) {
             if (c.isAssignableFrom(c)) {
                 result.add((T) am);

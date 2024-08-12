@@ -17,8 +17,8 @@
 @Taxonomy(stability = Stability.UNCOMMITTED)
 package org.glassfish.admin.amx.core.proxy;
 
-import org.glassfish.external.arc.Taxonomy;
 import org.glassfish.external.arc.Stability;
+import org.glassfish.external.arc.Taxonomy;
 
 
 

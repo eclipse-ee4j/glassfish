@@ -16,13 +16,13 @@
 
 package org.glassfish.admingui.common.servlet;
 
-import java.io.InputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Response;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.core.Response;
 
 import org.glassfish.admingui.common.util.RestUtil;
 

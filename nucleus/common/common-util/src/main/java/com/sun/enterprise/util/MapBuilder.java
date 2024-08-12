@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.util;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Convenience class for building a literal map.

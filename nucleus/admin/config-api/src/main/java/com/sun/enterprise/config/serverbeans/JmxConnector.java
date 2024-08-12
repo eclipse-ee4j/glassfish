@@ -19,9 +19,9 @@ package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
 
+import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.Payload;
 
 import java.beans.PropertyVetoException;
 import java.util.List;

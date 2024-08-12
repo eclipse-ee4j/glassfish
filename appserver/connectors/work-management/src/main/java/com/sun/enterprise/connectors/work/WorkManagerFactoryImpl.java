@@ -16,24 +16,24 @@
 
 package com.sun.enterprise.connectors.work;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.WorkManagerFactory;
-
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import jakarta.resource.spi.work.WorkManager;
+
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * WorkManagerFactoryImpl allows other customized WorkManager implementation

@@ -16,15 +16,15 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.glassfish.api.Param;
 import jakarta.validation.Payload;
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+
+import org.glassfish.api.Param;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
-
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.constraints.Pattern;
-import java.beans.PropertyVetoException;
 
 /**
  * This config bean will define parameters for Managed jobs A Managed job is a commands which is annotated with

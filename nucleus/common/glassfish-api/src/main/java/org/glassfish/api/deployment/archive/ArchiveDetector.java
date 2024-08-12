@@ -16,11 +16,11 @@
 
 package org.glassfish.api.deployment.archive;
 
+import jakarta.inject.Singleton;
+
 import java.io.IOException;
 
 import org.jvnet.hk2.annotations.Contract;
-
-import jakarta.inject.Singleton;
 
 /**
  * {@link ArchiveHandler}s are considered part of container implementation, hence are not available until the

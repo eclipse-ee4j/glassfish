@@ -17,6 +17,15 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.admin.util.ClusterOperationUtil;
+import com.sun.enterprise.config.modularity.ConfigModularityUtils;
+import com.sun.enterprise.config.modularity.GetSetModularityHelper;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -60,15 +69,6 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.WriteableView;
 import org.jvnet.hk2.config.tiger.Types;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.admin.util.ClusterOperationUtil;
-import com.sun.enterprise.config.modularity.ConfigModularityUtils;
-import com.sun.enterprise.config.modularity.GetSetModularityHelper;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
 
 /**
  * User: Jerome Dochez Date: Jul 11, 2008 Time: 4:39:05 AM

@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.util;
 
-import java.io.File;
-
 import com.sun.enterprise.util.i18n.StringManager;
+
+import java.io.File;
 
 public class SystemPropertyConstants {
 

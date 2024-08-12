@@ -16,35 +16,35 @@
 
 package org.glassfish.deployment.admin;
 
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.deployment.common.DeploymentContextImpl;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+
 import jakarta.inject.Inject;
 
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.Transaction;
-
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import java.util.logging.Logger;
 import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.deployment.common.DeploymentContextImpl;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Transaction;
 
 /**
  * The command to create application ref for lifecycle module on instance

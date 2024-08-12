@@ -18,18 +18,19 @@
 package org.apache.catalina.util;
 
 
-import org.apache.catalina.InstanceEvent;
-import org.apache.catalina.InstanceListener;
-import org.apache.catalina.Wrapper;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 // END SJSAS 6374619
+
+import org.apache.catalina.InstanceEvent;
+import org.apache.catalina.InstanceListener;
+import org.apache.catalina.Wrapper;
 
 /**
  * Support class to assist in firing InstanceEvent notifications to

@@ -16,25 +16,25 @@
 
 package org.glassfish.security.services.common;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.Iterator;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Permission;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.glassfish.hk2.api.ActiveDescriptor;
+import org.glassfish.hk2.api.Descriptor;
+import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.ValidationInformation;
 import org.glassfish.hk2.api.Validator;
-import org.glassfish.hk2.api.ActiveDescriptor;
-import org.glassfish.hk2.api.Injectee;
-import org.glassfish.hk2.api.Descriptor;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 
 public class SecurityAccessValidator implements Validator {

@@ -16,14 +16,13 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-import java.util.HashMap;
-import java.util.Properties;
-
-import java.util.Map;
-
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * This class defines the keys that are used to create the domain config object. Almost all the methods of

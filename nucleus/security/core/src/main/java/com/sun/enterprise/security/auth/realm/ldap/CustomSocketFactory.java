@@ -17,8 +17,9 @@
 
 package com.sun.enterprise.security.auth.realm.ldap;
 
-import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -33,9 +34,8 @@ import javax.net.ssl.SSLContext;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.SharedSecureRandom;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.i18n.StringManager;
+import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Custom socket factory for ldaps (SSL).

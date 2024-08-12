@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.utility;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  * Helper class for breaking up a string.

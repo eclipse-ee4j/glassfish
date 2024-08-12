@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import org.glassfish.api.admin.RuntimeType;
+
 import static org.glassfish.api.admin.RuntimeType.DAS;
 import static org.glassfish.api.admin.RuntimeType.EMBEDDED;
 import static org.glassfish.api.admin.RuntimeType.INSTANCE;
-
-import org.glassfish.api.admin.RuntimeType;
 
 /**
  *

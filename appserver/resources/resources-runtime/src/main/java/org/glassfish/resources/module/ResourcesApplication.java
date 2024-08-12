@@ -16,19 +16,24 @@
 
 package org.glassfish.resources.module;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+
 import java.util.logging.Level;
-import org.glassfish.api.deployment.*;
+import java.util.logging.Logger;
+
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.ApplicationContext;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.resources.listener.ApplicationScopedResourcesManager;
 import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
-
-import java.util.logging.Logger;
-
-import jakarta.inject.Inject;
 
 @Service
 @PerLookup

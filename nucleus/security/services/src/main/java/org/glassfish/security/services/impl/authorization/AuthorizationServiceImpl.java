@@ -16,49 +16,49 @@
 
 package org.glassfish.security.services.impl.authorization;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.net.URI;
+import java.security.AccessController;
+import java.security.CodeSigner;
+import java.security.CodeSource;
 import java.security.Permission;
+import java.security.Policy;
+import java.security.Principal;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.security.AccessController;
-import java.security.Principal;
-import java.security.ProtectionDomain;
-import java.security.Policy;
-import java.security.CodeSource;
-import java.security.CodeSigner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.security.services.api.authorization.AuthorizationService;
 import org.glassfish.security.services.api.authorization.AzAction;
+import org.glassfish.security.services.api.authorization.AzAttributeResolver;
+import org.glassfish.security.services.api.authorization.AzEnvironment;
 import org.glassfish.security.services.api.authorization.AzResource;
 import org.glassfish.security.services.api.authorization.AzResult;
 import org.glassfish.security.services.api.authorization.AzSubject;
+import org.glassfish.security.services.api.common.Attributes;
 import org.glassfish.security.services.api.context.SecurityContextService;
 import org.glassfish.security.services.common.PrivilegedLookup;
 import org.glassfish.security.services.common.Secure;
 import org.glassfish.security.services.config.SecurityConfiguration;
+import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.impl.ServiceFactory;
 import org.glassfish.security.services.impl.ServiceLogging;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.logging.annotation.LogMessageInfo;
-
-import org.glassfish.security.services.api.authorization.*;
-import org.glassfish.security.services.api.common.Attributes;
-import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.spi.authorization.AuthorizationProvider;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * <code>AuthorizationServiceImpl</code> implements

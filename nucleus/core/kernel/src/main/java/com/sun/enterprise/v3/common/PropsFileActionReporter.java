@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.common;
 
+import com.sun.enterprise.util.StringUtils;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -28,8 +30,6 @@ import java.util.jar.Manifest;
 
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.util.StringUtils;
 
 /**
  * Action reporter to a manifest file

@@ -16,10 +16,9 @@
 
 package org.glassfish.admin.amx.base;
 
-import org.glassfish.admin.amx.annotation.*;
-
-import org.glassfish.admin.amx.core.AMXProxy;
+import org.glassfish.admin.amx.annotation.ManagedAttribute;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
+import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 

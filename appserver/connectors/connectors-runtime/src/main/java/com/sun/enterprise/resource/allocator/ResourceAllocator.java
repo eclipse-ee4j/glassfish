@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.resource.allocator;
 
-import java.util.Set;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.Set;
 
 /**
  * @author Tony Ng

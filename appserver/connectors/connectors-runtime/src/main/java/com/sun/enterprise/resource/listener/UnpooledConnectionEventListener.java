@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.resource.listener;
 
-import java.util.logging.Logger;
-
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.logging.Logger;
 
 /**
  * This class is a ConnectionEventListener for handling the "close" of a ManagedConnection that is not acquired through

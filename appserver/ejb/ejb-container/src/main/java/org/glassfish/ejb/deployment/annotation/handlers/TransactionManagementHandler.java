@@ -17,11 +17,13 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.lang.annotation.Annotation;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+
 import jakarta.ejb.TransactionManagement;
 import jakarta.ejb.TransactionManagementType;
 
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import java.lang.annotation.Annotation;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

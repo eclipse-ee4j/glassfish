@@ -18,9 +18,6 @@
 package org.apache.catalina.ssi;
 
 
-import org.apache.catalina.util.Strftime;
-import org.apache.catalina.util.URLEncoder;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
@@ -29,6 +26,9 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
+
+import org.apache.catalina.util.Strftime;
+import org.apache.catalina.util.URLEncoder;
 import org.glassfish.grizzly.http.util.HttpUtils;
 
 /**

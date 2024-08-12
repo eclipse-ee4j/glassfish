@@ -16,7 +16,12 @@
 
 package com.sun.enterprise.universal;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.ByteBuffer;
 
 public class GFBase64Encoder { // java.util.Base64 is private constructor and so moving/reusing sun.misc.BASE64Encoder

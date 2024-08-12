@@ -17,12 +17,6 @@
 
 package com.sun.enterprise.security.auth.realm.file;
 
-import static com.sun.enterprise.security.common.Util.isEmbeddedServer;
-import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
-import static java.util.Arrays.asList;
-import static java.util.Collections.enumeration;
-import static java.util.logging.Level.FINE;
-
 import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.auth.realm.Realm;
@@ -32,15 +26,23 @@ import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationExcepti
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.util.IASSecurityException;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+
 import org.glassfish.internal.api.RelativePathResolver;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.security.common.Util.isEmbeddedServer;
+import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
+import static java.util.Arrays.asList;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
 
 /**
  * Realm implementation for supporting file password authentication.

@@ -40,7 +40,27 @@ import org.glassfish.ejb.deployment.descriptor.TimeoutValueDescriptor;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
-import static org.glassfish.ejb.deployment.EjbTagNames.*;
+import static org.glassfish.ejb.deployment.EjbTagNames.AFTER_BEGIN_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.AFTER_COMPLETION_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.AROUND_INVOKE_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.AROUND_TIMEOUT_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.ASYNC_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.BEFORE_COMPLETION_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.CONCURRENCY_MANAGEMENT_TYPE;
+import static org.glassfish.ejb.deployment.EjbTagNames.CONCURRENT_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.DEPENDS_ON;
+import static org.glassfish.ejb.deployment.EjbTagNames.INIT_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.INIT_ON_STARTUP;
+import static org.glassfish.ejb.deployment.EjbTagNames.LOCAL_BEAN;
+import static org.glassfish.ejb.deployment.EjbTagNames.PASSIVATION_CAPABLE;
+import static org.glassfish.ejb.deployment.EjbTagNames.POST_ACTIVATE_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.PRE_PASSIVATE_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.REMOVE_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.SESSION_TYPE;
+import static org.glassfish.ejb.deployment.EjbTagNames.STATEFUL_TIMEOUT;
+import static org.glassfish.ejb.deployment.EjbTagNames.TIMEOUT_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.TIMER;
+import static org.glassfish.ejb.deployment.EjbTagNames.TRANSACTION_TYPE;
 
 /**
  * This class handles all information pertinent to session beans

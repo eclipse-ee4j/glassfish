@@ -20,21 +20,20 @@
  */
 package org.glassfish.admingui.common.util;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import jakarta.ws.rs.core.Cookie;
-import jakarta.ws.rs.core.MediaType;
-
-import jakarta.faces.context.FacesContext;
-
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+
+import jakarta.faces.context.FacesContext;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * This class is intended to replace, eventually, RestUtil. Whether or not that happens depends in large part on how the

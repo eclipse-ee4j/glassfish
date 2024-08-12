@@ -17,13 +17,14 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
+
+import java.util.Properties;
+
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import java.util.Properties;
 import org.glassfish.hk2.extras.ExtrasUtilities;
 
 /**

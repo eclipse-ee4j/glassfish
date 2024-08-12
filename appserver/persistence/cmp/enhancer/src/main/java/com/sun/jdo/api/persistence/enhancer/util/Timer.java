@@ -16,14 +16,12 @@
 
 package com.sun.jdo.api.persistence.enhancer.util;
 
-import java.util.HashMap;
+import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-
-import java.text.DecimalFormat;
-
-import java.io.PrintWriter;
+import java.util.HashMap;
 
 
 /**

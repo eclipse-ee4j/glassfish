@@ -24,11 +24,12 @@ import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.glassfish.deployment.common.Descriptor;
-import org.w3c.dom.Node;
 
 import java.util.Map;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Node;
 
 /**
  * This node handles resource-description in weblogic.xml

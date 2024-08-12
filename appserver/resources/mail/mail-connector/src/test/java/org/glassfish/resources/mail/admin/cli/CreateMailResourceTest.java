@@ -27,6 +27,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
@@ -45,8 +47,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

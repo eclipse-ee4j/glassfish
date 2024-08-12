@@ -16,13 +16,14 @@
 
 package org.glassfish.sse.impl;
 
-import org.glassfish.sse.api.ServerSentEventHandler;
-
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.glassfish.sse.api.ServerSentEventHandler;
 
 /**
  * ServerSentEventApplicationImpl class.

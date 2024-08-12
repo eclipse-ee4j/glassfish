@@ -17,12 +17,15 @@
 package org.glassfish.admin.rest.provider;
 
 import com.sun.enterprise.v3.common.ActionReporter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.composite.CompositeUtil;

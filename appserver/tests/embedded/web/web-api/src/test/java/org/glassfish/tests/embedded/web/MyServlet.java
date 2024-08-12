@@ -16,10 +16,13 @@
 
 package org.glassfish.tests.embedded.web;
 
-import java.io.*;
-import java.util.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class MyServlet extends HttpServlet {
 

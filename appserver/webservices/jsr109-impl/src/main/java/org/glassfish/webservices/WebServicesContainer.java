@@ -17,22 +17,24 @@
 package org.glassfish.webservices;
 
 import com.sun.xml.ws.api.server.LazyMOMProvider;
+
+import jakarta.inject.Singleton;
+
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+
+import javax.management.ObjectName;
+
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.Deployer;
 import org.glassfish.external.amx.AMXGlassfish;
 import org.glassfish.external.amx.MBeanListener;
 import org.glassfish.gmbal.ManagedObjectManager;
 import org.glassfish.gmbal.ManagedObjectManagerFactory;
-import org.glassfish.webservices.deployment.WebServicesDeploymentMBean;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
-import jakarta.inject.Singleton;
-
-import javax.management.ObjectName;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
+import org.glassfish.webservices.deployment.WebServicesDeploymentMBean;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Web services container service

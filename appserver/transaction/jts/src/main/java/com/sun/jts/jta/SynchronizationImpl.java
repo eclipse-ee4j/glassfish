@@ -19,6 +19,8 @@ package com.sun.jts.jta;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.logging.LogDomains;
 
+import jakarta.transaction.Synchronization;
+
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -34,8 +36,6 @@ import org.omg.CosTransactions.Status;
 import org.omg.CosTransactions.SynchronizationHelper;
 import org.omg.CosTransactions.SynchronizationPOA;
 import org.omg.PortableServer.POA;
-
-import jakarta.transaction.Synchronization;
 
 /**
  * An implementation of org.omg.CosTransactions.Synchronization

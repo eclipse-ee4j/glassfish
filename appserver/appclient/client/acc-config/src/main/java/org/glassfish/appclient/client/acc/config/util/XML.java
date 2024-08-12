@@ -19,6 +19,7 @@ package org.glassfish.appclient.client.acc.config.util;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.glassfish.appclient.client.acc.config.Property;
 
 /**

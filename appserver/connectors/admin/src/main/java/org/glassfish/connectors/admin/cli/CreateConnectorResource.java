@@ -46,12 +46,12 @@ import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 
-import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
-import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
-import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CR.CR_JNDI_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CR.CR_OBJECT_TYPE;
 import static org.glassfish.connectors.admin.cli.CLIConstants.CR.CR_POOL_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
+import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
+import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
 

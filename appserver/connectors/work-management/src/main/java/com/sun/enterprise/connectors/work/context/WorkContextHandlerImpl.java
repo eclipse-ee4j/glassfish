@@ -38,9 +38,6 @@ import jakarta.resource.spi.work.WorkContextProvider;
 import jakarta.resource.spi.work.WorkException;
 import jakarta.resource.spi.work.WorkRejectedException;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.WARNING;
-
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -66,6 +63,9 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
 
 
 /**

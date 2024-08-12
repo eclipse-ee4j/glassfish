@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import static com.sun.enterprise.util.Utility.isEmpty;
 
 /**
  *

@@ -15,6 +15,8 @@
  */
 package org.glassfish.microprofile.config;
 
+import java.util.ServiceLoader;
+
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.ApplicationContainer;
@@ -22,8 +24,6 @@ import org.glassfish.api.deployment.Deployer;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
 import org.jvnet.hk2.annotations.Service;
-
-import java.util.ServiceLoader;
 
 @Service
 public class ConfigDeployer implements Deployer {

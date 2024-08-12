@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.security.ee.perms;
 
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,8 +40,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.sun.logging.LogDomains;
 
 /**
  * Utility class to load the EE permissions, EE restrictions, and check restrictions for a given permission set

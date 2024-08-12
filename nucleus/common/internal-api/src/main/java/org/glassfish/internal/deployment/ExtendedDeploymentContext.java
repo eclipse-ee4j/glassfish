@@ -17,17 +17,17 @@
 
 package org.glassfish.internal.deployment;
 
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ArchiveHandler;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Properties;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveHandler;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
 
 /**
  * Semi-private interface to the deployment context.

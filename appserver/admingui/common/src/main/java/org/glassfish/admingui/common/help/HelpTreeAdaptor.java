@@ -19,16 +19,17 @@ package org.glassfish.admingui.common.help;
 import com.sun.jsftemplating.component.factory.tree.TreeAdaptor;
 import com.sun.jsftemplating.component.factory.tree.TreeAdaptorBase;
 import com.sun.jsftemplating.layout.descriptors.LayoutComponent;
+
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.Serializable;
-import jakarta.faces.component.UIComponent;
-import jakarta.faces.context.FacesContext;
 
 import org.glassfish.admingui.connector.TOC;
 import org.glassfish.admingui.connector.TOCItem;

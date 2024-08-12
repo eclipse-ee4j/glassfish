@@ -22,12 +22,16 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-import java.util.*;
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+
+import java.util.HashSet;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.jdo.*;
-import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
 
 /**
  * Helper class to support type info access.

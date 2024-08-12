@@ -16,14 +16,17 @@
 
 package org.glassfish.common.util.admin;
 
+import jakarta.inject.Singleton;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import javax.security.auth.Subject;
+
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 
 /**
  * Manages Rest Sessions.

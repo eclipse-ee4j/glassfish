@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
+import com.sun.enterprise.admin.servermgmt.DomainConfig;
+import com.sun.enterprise.admin.servermgmt.DomainException;
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.util.net.NetUtils;
+
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.text.MessageFormat.format;
-
-import com.sun.enterprise.admin.servermgmt.DomainConfig;
-import com.sun.enterprise.admin.servermgmt.DomainException;
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.util.net.NetUtils;
 
 public class DomainPortValidator {
 

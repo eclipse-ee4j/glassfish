@@ -17,9 +17,9 @@
 package com.sun.ejb.containers;
 
 
-import java.util.logging.Logger;
+import com.sun.ejb.Container;
 
-import com.sun.ejb.*;
+import java.util.logging.Logger;
 
 /**
  * Implementation common to EJBObjects and EJBLocalObjects.

@@ -17,7 +17,9 @@
 package com.sun.enterprise.universal.glassfish;
 
 import com.sun.enterprise.universal.collections.CollectionUtils;
-import java.util.*;
+
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

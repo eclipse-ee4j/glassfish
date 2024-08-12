@@ -17,11 +17,11 @@
 
 package org.glassfish.ha.store.adapter.cache;
 
+import jakarta.inject.Inject;
+
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jakarta.inject.Inject;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.event.EventListener;

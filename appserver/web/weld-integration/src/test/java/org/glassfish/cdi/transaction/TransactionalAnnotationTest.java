@@ -17,16 +17,16 @@
 
 package org.glassfish.cdi.transaction;
 
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-
-import org.junit.jupiter.api.Test;
-
 import jakarta.transaction.InvalidTransactionException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.TransactionRequiredException;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
+
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;

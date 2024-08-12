@@ -18,6 +18,7 @@
 package org.glassfish.sse.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.Closeable;
 import java.io.IOException;
 

@@ -16,10 +16,13 @@
 
 package org.glassfish.config.support;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.Charset;
-import javax.xml.stream.*;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Instances and DAS' are quite different

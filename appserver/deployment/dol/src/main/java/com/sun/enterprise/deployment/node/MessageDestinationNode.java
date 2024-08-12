@@ -19,9 +19,10 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This class handles all information related to the message-destination xml tag

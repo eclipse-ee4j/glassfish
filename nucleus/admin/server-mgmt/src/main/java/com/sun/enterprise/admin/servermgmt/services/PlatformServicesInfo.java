@@ -21,9 +21,11 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.ServerDirs;
+
 import java.io.File;
 import java.util.Date;
-import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
+
+import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICE_NAME_PREFIX;
 
 /**
  * A place to keep platform services info...

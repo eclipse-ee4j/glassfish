@@ -16,9 +16,9 @@
 
 package org.glassfish.common.util.admin;
 
-import java.util.StringTokenizer;
-
 import jakarta.inject.Singleton;
+
+import java.util.StringTokenizer;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Descriptor;

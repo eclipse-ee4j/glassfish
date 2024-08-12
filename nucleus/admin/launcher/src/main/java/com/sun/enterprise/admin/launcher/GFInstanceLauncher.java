@@ -16,13 +16,13 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import com.sun.enterprise.universal.io.SmartFile;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.enterprise.universal.io.SmartFile;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
 /**
  *

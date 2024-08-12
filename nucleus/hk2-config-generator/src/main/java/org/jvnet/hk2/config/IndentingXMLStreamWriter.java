@@ -17,9 +17,10 @@
 
 package org.jvnet.hk2.config;
 
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.stream.XMLStreamException;
 import java.util.Stack;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * @author Kohsuke Kawaguchi

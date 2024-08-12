@@ -23,6 +23,11 @@ package org.glassfish.flashlight.impl.client;
  * @author Byron Nevins, August 2009
  */
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Collection;
+
 import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.glassfish.flashlight.provider.ProbeRegistry;
 import org.objectweb.asm.AnnotationVisitor;
@@ -31,10 +36,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Collection;
 
 import static org.objectweb.asm.Opcodes.V11;
 

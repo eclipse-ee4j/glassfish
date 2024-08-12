@@ -17,11 +17,13 @@
 package org.apache.catalina.core;
 
 import jakarta.servlet.ServletRegistration;
+
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.ResourceBundle;
+import java.util.Set;
+
 import org.apache.catalina.LogFacade;
 
 public class ServletRegistrationImpl implements ServletRegistration {

@@ -18,18 +18,27 @@
 package org.glassfish.web.ha.session.management;
 
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import org.glassfish.ha.store.api.BackingStore;
-import org.glassfish.ha.store.api.BackingStoreException;
-import org.apache.catalina.*;
-import org.apache.catalina.session.*;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Loader;
+import org.apache.catalina.Session;
+import org.apache.catalina.session.StandardSession;
+import org.glassfish.ha.store.api.BackingStore;
+import org.glassfish.ha.store.api.BackingStoreException;
 
 /**
  *

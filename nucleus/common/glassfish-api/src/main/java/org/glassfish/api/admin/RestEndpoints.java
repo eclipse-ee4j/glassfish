@@ -16,10 +16,10 @@
 
 package org.glassfish.api.admin;
 
+import jakarta.inject.Qualifier;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import jakarta.inject.Qualifier;
 
 /**
  *

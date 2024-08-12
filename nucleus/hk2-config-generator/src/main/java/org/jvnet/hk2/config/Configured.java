@@ -17,14 +17,14 @@
 
 package org.jvnet.hk2.config;
 
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import org.jvnet.hk2.annotations.Contract;
 
 import static java.lang.annotation.ElementType.TYPE;
-
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
 
 /**
  * Marks inhabitants that require configuration for instantiation.

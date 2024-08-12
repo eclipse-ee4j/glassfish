@@ -18,24 +18,46 @@
 package org.apache.catalina.core;
 
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.*;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.deploy.*;
-import org.apache.naming.*;
-
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.StringTokenizer;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.ContainerEvent;
+import org.apache.catalina.ContainerListener;
+import org.apache.catalina.Context;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Server;
+import org.apache.catalina.deploy.ContextEjb;
+import org.apache.catalina.deploy.ContextEnvironment;
+import org.apache.catalina.deploy.ContextLocalEjb;
+import org.apache.catalina.deploy.ContextResource;
+import org.apache.catalina.deploy.ContextResourceLink;
+import org.apache.catalina.deploy.NamingResources;
+import org.apache.catalina.deploy.ResourceParams;
+import org.apache.naming.ContextAccessController;
+import org.apache.naming.ContextBindings;
+import org.apache.naming.EjbRef;
+import org.apache.naming.NamingContext;
+import org.apache.naming.ResourceEnvRef;
+import org.apache.naming.ResourceLinkRef;
+import org.apache.naming.ResourceRef;
+import org.apache.naming.TransactionRef;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Helper class used to initialize and populate the JNDI context associated

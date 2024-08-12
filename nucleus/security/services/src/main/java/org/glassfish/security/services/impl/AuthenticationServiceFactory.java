@@ -16,22 +16,20 @@
 
 package org.glassfish.security.services.impl;
 
-import java.security.AccessController;
+import com.sun.enterprise.config.serverbeans.Domain;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.security.AccessController;
+
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.ServiceLocator;
-
+import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.glassfish.security.services.common.PrivilegedLookup;
 import org.glassfish.security.services.common.Secure;
-import org.glassfish.security.services.common.StateManager;
 import org.glassfish.security.services.common.SecurityScope;
-
-import org.glassfish.security.services.api.authentication.AuthenticationService;
-
-import com.sun.enterprise.config.serverbeans.Domain;
+import org.glassfish.security.services.common.StateManager;
 
 /**
  * The factory of AuthenticationService instances used by the SecurityScopeContext.

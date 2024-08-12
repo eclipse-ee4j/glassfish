@@ -18,22 +18,20 @@ package org.glassfish.loadbalancer.admin.cli.reader.impl;
 
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.enterprise.config.serverbeans.HealthChecker;
 import com.sun.enterprise.config.serverbeans.Server;
-
-import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
-import org.glassfish.loadbalancer.admin.cli.transform.ClusterVisitor;
-
-import org.glassfish.loadbalancer.admin.cli.reader.api.ClusterReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.InstanceReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.WebModuleReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.HealthCheckerReader;
+import com.sun.enterprise.config.serverbeans.ServerRef;
 
 import java.util.List;
-import org.glassfish.internal.data.ApplicationRegistry;
 
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.loadbalancer.admin.cli.reader.api.ClusterReader;
+import org.glassfish.loadbalancer.admin.cli.reader.api.HealthCheckerReader;
+import org.glassfish.loadbalancer.admin.cli.reader.api.InstanceReader;
 import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
+import org.glassfish.loadbalancer.admin.cli.reader.api.WebModuleReader;
+import org.glassfish.loadbalancer.admin.cli.transform.ClusterVisitor;
+import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
 
 /**
  * Impl class for ClusterReader. This provides loadbalancer

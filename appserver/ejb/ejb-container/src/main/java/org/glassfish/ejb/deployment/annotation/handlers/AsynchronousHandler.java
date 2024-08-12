@@ -16,10 +16,10 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.handlers.PostProcessor;
+
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.Local;
 import jakarta.ejb.Remote;
@@ -27,9 +27,11 @@ import jakarta.ejb.Singleton;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.Stateless;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.handlers.PostProcessor;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

@@ -16,13 +16,6 @@
 
 package org.glassfish.cdi.transaction;
 
-import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
-import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
-import static jakarta.transaction.Transactional.TxType.REQUIRED;
-import static java.util.logging.Level.INFO;
-
-import java.util.logging.Logger;
-
 import com.sun.enterprise.transaction.TransactionManagerHelper;
 
 import jakarta.annotation.Priority;
@@ -32,6 +25,13 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
+
+import java.util.logging.Logger;
+
+import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Transactional.TxType.REQUIRED;
+import static java.util.logging.Level.INFO;
 
 /**
  * Transactional annotation Interceptor class for Required transaction type, ie

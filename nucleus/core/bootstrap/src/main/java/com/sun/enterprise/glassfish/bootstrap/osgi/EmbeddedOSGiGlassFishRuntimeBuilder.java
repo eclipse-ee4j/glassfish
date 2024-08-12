@@ -20,6 +20,7 @@ package com.sun.enterprise.glassfish.bootstrap.osgi;
 import com.sun.enterprise.glassfish.bootstrap.Constants;
 
 import java.util.Hashtable;
+
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;

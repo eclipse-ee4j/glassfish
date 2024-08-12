@@ -16,14 +16,15 @@
 
 package com.sun.jts.pi;
 
-import org.omg.IOP.Codec;
-import org.omg.IOP.ServiceContext;
-import org.omg.IOP.TaggedComponent;
-import org.omg.IOP.CodecPackage.*;
-
+import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
+import com.sun.corba.ee.spi.misc.ORBConstants;
+import com.sun.corba.ee.spi.oa.rfm.ReferenceFactoryManager;
 import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
-import org.omg.CORBA.portable.InputStream;
-import org.omg.PortableInterceptor.Current;
+import com.sun.jts.CosTransactions.CurrentTransaction;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.omg.CORBA.Any;
 import org.omg.CORBA.BAD_OPERATION;
@@ -36,27 +37,37 @@ import org.omg.CORBA.INV_POLICY;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.SystemException;
 import org.omg.CORBA.TCKind;
-import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 import org.omg.CORBA.TRANSACTION_REQUIRED;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 import org.omg.CORBA.TRANSACTION_UNAVAILABLE;
 import org.omg.CORBA.TSIdentification;
 import org.omg.CORBA.TypeCode;
-import org.omg.CosTransactions.*;
-import org.omg.PortableInterceptor.*;
-
-import org.omg.CosTSPortability.Sender;
-import org.omg.CosTSPortability.Receiver;
-
+import org.omg.CORBA.portable.InputStream;
 import org.omg.CosTSInteroperation.TAG_OTS_POLICY;
-
-import com.sun.jts.CosTransactions.CurrentTransaction;
-import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
-import com.sun.corba.ee.spi.oa.rfm.ReferenceFactoryManager;
-import com.sun.corba.ee.spi.misc.ORBConstants;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import org.omg.CosTSPortability.Receiver;
+import org.omg.CosTSPortability.Sender;
+import org.omg.CosTransactions.FORBIDS;
+import org.omg.CosTransactions.OTSPolicy;
+import org.omg.CosTransactions.OTSPolicyValueHelper;
+import org.omg.CosTransactions.OTS_POLICY_TYPE;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.PropagationContextHelper;
+import org.omg.CosTransactions.PropagationContextHolder;
+import org.omg.CosTransactions.REQUIRES;
+import org.omg.CosTransactions.TransIdentity;
+import org.omg.CosTransactions.otid_t;
+import org.omg.IOP.Codec;
+import org.omg.IOP.CodecPackage.FormatMismatch;
+import org.omg.IOP.CodecPackage.InvalidTypeForEncoding;
+import org.omg.IOP.CodecPackage.TypeMismatch;
+import org.omg.IOP.ServiceContext;
+import org.omg.IOP.TaggedComponent;
+import org.omg.PortableInterceptor.ClientRequestInfo;
+import org.omg.PortableInterceptor.ClientRequestInterceptor;
+import org.omg.PortableInterceptor.Current;
+import org.omg.PortableInterceptor.ForwardRequest;
+import org.omg.PortableInterceptor.ServerRequestInfo;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 /**
  * This is the implementation of the JTS PI-based client/server interceptor.

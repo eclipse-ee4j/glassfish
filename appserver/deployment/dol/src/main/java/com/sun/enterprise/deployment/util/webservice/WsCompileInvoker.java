@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.deployment.util.webservice;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.IOException;
 import java.util.HashMap;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This interface is used by the deploytool to generate webservice artifacts.

@@ -20,26 +20,32 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.connectors.config.BackendPrincipal;
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.connectors.config.ConnectorConnectionPool;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
+import jakarta.inject.Inject;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.connectors.config.BackendPrincipal;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.RelativePathResolver;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBean;
 
 /**

@@ -22,12 +22,16 @@
 
 package org.glassfish.web.ha.session.management;
 
-import org.apache.catalina.Manager;
-import org.apache.catalina.util.Enumerator;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Manager;
+import org.apache.catalina.util.Enumerator;
 
 
 /**

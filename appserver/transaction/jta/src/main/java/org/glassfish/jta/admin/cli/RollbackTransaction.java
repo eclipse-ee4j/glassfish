@@ -17,12 +17,11 @@
 
 package org.glassfish.jta.admin.cli;
 
-import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
-import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
-import static org.glassfish.api.admin.RuntimeType.INSTANCE;
-import static org.glassfish.config.support.CommandTarget.CLUSTERED_INSTANCE;
-import static org.glassfish.config.support.CommandTarget.DAS;
-import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.i18n.StringManager;
+
+import jakarta.inject.Inject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -34,11 +33,12 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.i18n.StringManager;
-
-import jakarta.inject.Inject;
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.glassfish.api.admin.RuntimeType.INSTANCE;
+import static org.glassfish.config.support.CommandTarget.CLUSTERED_INSTANCE;
+import static org.glassfish.config.support.CommandTarget.DAS;
+import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
 
 @Service(name = "rollback-transaction")
 @TargetType({ DAS, STANDALONE_INSTANCE, CLUSTERED_INSTANCE })

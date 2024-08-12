@@ -17,11 +17,11 @@
 
 package org.glassfish.jms.injection;
 
+import jakarta.jms.JMSContext;
+
 import java.io.Serializable;
 
 import org.glassfish.api.invocation.ComponentInvocation;
-
-import jakarta.jms.JMSContext;
 
 public class JMSContextEntry implements Serializable {
 

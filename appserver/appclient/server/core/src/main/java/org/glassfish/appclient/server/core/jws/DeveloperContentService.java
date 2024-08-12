@@ -17,14 +17,16 @@
 package org.glassfish.appclient.server.core.jws;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.util.List;
-import jakarta.inject.Inject;
-import org.glassfish.api.admin.ServerEnvironment;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Maintains the in-memory representation for the customization points of

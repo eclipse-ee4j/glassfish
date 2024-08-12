@@ -17,10 +17,16 @@
 package com.sun.enterprise.container.common.impl;
 
 
-import jakarta.persistence.*;
-import java.util.List;
-import java.util.Date;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.TypedQuery;
+
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Wrapper class for jakarta.persistence.TypedQuery objects returned from

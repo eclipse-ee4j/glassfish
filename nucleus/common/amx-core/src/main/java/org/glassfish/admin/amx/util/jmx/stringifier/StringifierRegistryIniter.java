@@ -16,9 +16,18 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.stringifier.StringifierRegistry;
-
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.AttributeChangeNotification;
+import javax.management.AttributeList;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
+import javax.management.MBeanServerNotification;
+import javax.management.Notification;
+import javax.management.ObjectName;
 import javax.management.modelmbean.ModelMBeanAttributeInfo;
 import javax.management.modelmbean.ModelMBeanConstructorInfo;
 import javax.management.modelmbean.ModelMBeanInfo;
@@ -28,6 +37,8 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeDataSupport;
 import javax.management.openmbean.TabularData;
 import javax.management.openmbean.TabularDataSupport;
+
+import org.glassfish.admin.amx.util.stringifier.StringifierRegistry;
 
 /**
 Registers all included stringifiers with the default registry.

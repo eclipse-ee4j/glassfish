@@ -18,6 +18,7 @@ package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
 import com.sun.enterprise.deployment.MetadataSource;
+
 import jakarta.enterprise.concurrent.ManagedScheduledExecutorDefinition;
 
 import java.lang.System.Logger;

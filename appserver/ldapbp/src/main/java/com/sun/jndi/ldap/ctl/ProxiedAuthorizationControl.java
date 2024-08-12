@@ -16,9 +16,11 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
-import javax.naming.ldap.BasicControl;
 import com.sun.jndi.ldap.BerEncoder;
+
+import java.io.IOException;
+
+import javax.naming.ldap.BasicControl;
 
 /**
  * This class implements the LDAP request control for proxied authorization.

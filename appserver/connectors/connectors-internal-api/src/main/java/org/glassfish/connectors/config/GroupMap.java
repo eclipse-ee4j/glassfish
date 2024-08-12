@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotNull;
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 @Configured
 public interface GroupMap extends ConfigBeanProxy {

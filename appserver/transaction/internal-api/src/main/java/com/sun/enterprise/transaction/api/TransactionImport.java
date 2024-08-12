@@ -16,10 +16,11 @@
 
 package com.sun.enterprise.transaction.api;
 
+import jakarta.resource.spi.XATerminator;
 import jakarta.transaction.SystemException;
+
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
-import jakarta.resource.spi.XATerminator;
 
 /**
  * Transaction Manager extensions to support transaction inflow w/o resource adapter.

@@ -16,9 +16,9 @@
 
 package com.sun.jts.CosTransactions;
 
-import org.omg.CosTransactions.Status;
-import org.omg.CosTransactions.Resource;
 import org.omg.CosTransactions.RecoveryCoordinator;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.Status;
 
 /**
  * This used for mimicking a RecoveryCoordinator behavior.

@@ -16,12 +16,17 @@
 
 package org.glassfish.security.services.spi.authorization;
 
-import org.glassfish.security.services.api.authorization.*;
-import org.glassfish.security.services.spi.SecurityProvider;
-
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.List;
+
+import org.glassfish.security.services.api.authorization.AuthorizationService;
+import org.glassfish.security.services.api.authorization.AzAction;
+import org.glassfish.security.services.api.authorization.AzAttributeResolver;
+import org.glassfish.security.services.api.authorization.AzEnvironment;
+import org.glassfish.security.services.api.authorization.AzResource;
+import org.glassfish.security.services.api.authorization.AzResult;
+import org.glassfish.security.services.api.authorization.AzSubject;
+import org.glassfish.security.services.spi.SecurityProvider;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * <code>AuthorizationProvider</code> instances are used by a

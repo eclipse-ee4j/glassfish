@@ -16,15 +16,19 @@
 
 package com.sun.enterprise.admin.monitor.jndi;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.NameNotFoundException;
-import javax.naming.InitialContext;
+import com.sun.enterprise.util.i18n.StringManager;
+
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.ArrayList;
-import com.sun.enterprise.util.i18n.StringManager;
-import static org.glassfish.admin.monitor.MLogger.*;
+
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+
+import static org.glassfish.admin.monitor.MLogger.UNHANDLED_EXCEPTION;
+import static org.glassfish.admin.monitor.MLogger.getLogger;
 
 public class JndiNameLookupHelper {
     private InitialContext context;

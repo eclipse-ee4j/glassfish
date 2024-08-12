@@ -22,12 +22,12 @@
 
 package com.sun.jdo.api.persistence.model.mapping;
 
+import com.sun.jdo.api.persistence.model.ModelException;
+
 import java.util.ArrayList;
 
-import org.netbeans.modules.dbschema.TableElement;
 import org.netbeans.modules.dbschema.ColumnElement;
-
-import com.sun.jdo.api.persistence.model.ModelException;
+import org.netbeans.modules.dbschema.TableElement;
 
 /**
  * This is an element which represents a database table. It exists (separately

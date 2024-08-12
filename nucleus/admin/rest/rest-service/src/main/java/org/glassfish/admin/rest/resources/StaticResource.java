@@ -16,13 +16,13 @@
 
 package org.glassfish.admin.rest.resources;
 
-import java.io.InputStream;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+
+import java.io.InputStream;
 
 /**
  * @author Ludovic Champenois ludo@dev.java.net

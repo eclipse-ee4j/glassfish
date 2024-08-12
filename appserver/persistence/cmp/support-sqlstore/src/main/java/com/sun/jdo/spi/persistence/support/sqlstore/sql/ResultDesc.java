@@ -25,24 +25,41 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.sql;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.spi.persistence.support.sqlstore.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.SCOCollection;
+import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.ColumnRef;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 
 /**

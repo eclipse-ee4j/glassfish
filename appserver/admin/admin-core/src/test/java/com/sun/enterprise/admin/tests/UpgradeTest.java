@@ -25,6 +25,8 @@ import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,7 +40,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;

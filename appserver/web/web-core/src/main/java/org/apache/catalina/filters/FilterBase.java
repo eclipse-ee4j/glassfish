@@ -20,15 +20,15 @@
 
 package org.apache.catalina.filters;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
 
 import org.apache.catalina.LogFacade;
 import org.glassfish.web.util.IntrospectionUtils;

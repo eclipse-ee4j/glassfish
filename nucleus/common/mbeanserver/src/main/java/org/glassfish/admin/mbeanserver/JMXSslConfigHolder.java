@@ -16,9 +16,10 @@
 
 package org.glassfish.admin.mbeanserver;
 
-import org.glassfish.grizzly.config.dom.Ssl;
 import javax.net.ssl.SSLException;
+
 import org.glassfish.grizzly.config.SSLConfigurator;
+import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**

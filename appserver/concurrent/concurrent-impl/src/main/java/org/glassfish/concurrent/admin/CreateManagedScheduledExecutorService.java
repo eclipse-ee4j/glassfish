@@ -17,6 +17,11 @@
 package org.glassfish.concurrent.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AdminCommand;
@@ -28,9 +33,6 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.HashMap;
 
 
 /**

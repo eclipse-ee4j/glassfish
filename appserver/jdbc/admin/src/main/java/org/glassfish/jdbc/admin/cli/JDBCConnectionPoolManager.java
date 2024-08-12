@@ -27,6 +27,7 @@ import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.ResourceException;
+
 import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,7 +46,41 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ALLOW_NON_COMPONENT_CALLERS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ASSOCIATE_WITH_THREAD;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_CREATION_RETRY_ATTEMPTS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_LEAK_RECLAIM;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_LEAK_TIMEOUT_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_POOL_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_VALIDATION_METHOD;
+import static org.glassfish.resources.admin.cli.ResourceConstants.DATASOURCE_CLASS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.DRIVER_CLASSNAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.FAIL_ALL_CONNECTIONS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.IDLE_TIME_OUT_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.INIT_SQL;
+import static org.glassfish.resources.admin.cli.ResourceConstants.IS_CONNECTION_VALIDATION_REQUIRED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.IS_ISOLATION_LEVEL_GUARANTEED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.LAZY_CONNECTION_ASSOCIATION;
+import static org.glassfish.resources.admin.cli.ResourceConstants.LAZY_CONNECTION_ENLISTMENT;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MATCH_CONNECTIONS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAX_CONNECTION_USAGE_COUNT;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAX_POOL_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAX_WAIT_TIME_IN_MILLIS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.NON_TRANSACTIONAL_CONNECTIONS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.PING;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOLING;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_SIZE_QUANTITY;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_TYPE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.SQL_TRACE_LISTENERS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.STATEMENT_CACHE_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.STATEMENT_TIMEOUT_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.STEADY_POOL_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.TRANS_ISOLATION_LEVEL;
+import static org.glassfish.resources.admin.cli.ResourceConstants.VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.VALIDATION_CLASSNAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.VALIDATION_TABLE_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.WRAP_JDBC_OBJECTS;
 
 
 /**

@@ -18,14 +18,20 @@ package org.glassfish.config.support;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-
-import jakarta.inject.Inject;
-import java.beans.PropertyVetoException;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Resolver for an un-named type. If the type instance is not found, it will create an instance of it under the domain

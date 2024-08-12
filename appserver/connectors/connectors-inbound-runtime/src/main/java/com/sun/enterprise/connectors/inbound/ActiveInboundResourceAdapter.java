@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.connectors.inbound;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.connectors.ActiveResourceAdapter;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.runtime.BeanPoolDescriptor;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 
 import jakarta.resource.spi.ActivationSpec;
 

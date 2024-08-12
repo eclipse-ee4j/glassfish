@@ -17,14 +17,15 @@
 package org.glassfish.orb.admin.config;
 
 import com.sun.enterprise.config.serverbeans.SslClientConfig;
-import org.glassfish.api.admin.config.ConfigExtension;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
+
+import org.glassfish.api.admin.config.ConfigExtension;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 
 
 /* @XmlType(name = "", propOrder = {

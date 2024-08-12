@@ -17,36 +17,39 @@
 package org.glassfish.webservices.connector.annotation.handlers;
 
 
-import java.lang.reflect.AnnotatedElement;
-import java.lang.annotation.Annotation;
-import java.util.logging.Logger;
-
-import org.glassfish.apf.*;
-
-import org.glassfish.apf.impl.HandlerProcessingResultImpl;
-
-import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
-
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import com.sun.enterprise.deployment.annotation.context.EjbsContext;
+import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.util.logging.Level;
+
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Stateless;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.xml.namespace.QName;
 
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
+import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.web.deployment.descriptor.WebComponentDescriptorImpl;
 import org.glassfish.webservices.connector.LogUtils;

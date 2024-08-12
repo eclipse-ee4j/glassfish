@@ -16,6 +16,13 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.universal.collections.ManifestUtils;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.inject.Inject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -28,13 +35,6 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.universal.collections.ManifestUtils;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
-
-import jakarta.inject.Inject;
 
 /**
  * Dumps the currently configured HK2 modules and their contents.

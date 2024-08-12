@@ -16,7 +16,12 @@
 
 package org.glassfish.deployment.common;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A class that can answer the following queries WITHOUT loading any classes

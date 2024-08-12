@@ -16,10 +16,21 @@
 
 package org.glassfish.resources.custom.factory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
-import javax.naming.*;
-import java.io.*;
-import java.util.*;
 
 
 public class PropertiesFactory implements Serializable, ObjectFactory {

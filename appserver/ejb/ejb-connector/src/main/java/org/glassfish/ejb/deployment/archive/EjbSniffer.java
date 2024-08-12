@@ -16,20 +16,18 @@
 
 package org.glassfish.ejb.deployment.archive;
 
-import org.glassfish.internal.deployment.GenericSniffer;
-
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-
-
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.internal.deployment.GenericSniffer;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implementation of the Sniffer for the Ejb container.

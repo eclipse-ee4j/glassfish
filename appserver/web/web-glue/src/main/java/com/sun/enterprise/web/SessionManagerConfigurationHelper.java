@@ -18,15 +18,16 @@ package com.sun.enterprise.web;
 
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.web.session.PersistenceType;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.ManagerProperties;
 import org.glassfish.web.deployment.runtime.SessionManager;
 import org.glassfish.web.deployment.runtime.StoreProperties;
 import org.glassfish.web.deployment.runtime.WebProperty;
-
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author  lwhite

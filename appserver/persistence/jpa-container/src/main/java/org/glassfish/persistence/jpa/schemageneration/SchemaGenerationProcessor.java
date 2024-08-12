@@ -16,11 +16,11 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+
 import java.util.Map;
 
 import org.glassfish.api.deployment.DeploymentContext;
-
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 /**
  * Processor for schema generation

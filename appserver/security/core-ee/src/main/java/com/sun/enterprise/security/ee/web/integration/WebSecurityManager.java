@@ -17,32 +17,6 @@
 
 package com.sun.enterprise.security.ee.web.integration;
 
-import static com.sun.enterprise.security.ee.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
-import static com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory.createPermissionCache;
-import static com.sun.enterprise.security.ee.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
-import static com.sun.enterprise.security.ee.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.stream.Collectors.toSet;
-import static org.glassfish.api.web.Constants.ADMIN_VS;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.Permission;
-import java.security.Principal;
-import java.security.cert.Certificate;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import org.glassfish.exousia.AuthorizationService;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.UserNameAndPassword;
-
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
@@ -61,11 +35,38 @@ import com.sun.enterprise.security.ee.authorize.cache.CachedPermission;
 import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCache;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory;
+
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.Principal;
+import java.security.cert.Certificate;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import org.glassfish.exousia.AuthorizationService;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserNameAndPassword;
+
+import static com.sun.enterprise.security.ee.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
+import static com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory.createPermissionCache;
+import static com.sun.enterprise.security.ee.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
+import static com.sun.enterprise.security.ee.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.stream.Collectors.toSet;
+import static org.glassfish.api.web.Constants.ADMIN_VS;
 
 /**
  * The class implements the JSR 115 - JavaTM Authorization Contract for Containers. This class is a companion class of

@@ -39,13 +39,14 @@ import org.omg.CORBA.INVALID_TRANSACTION;
 import org.omg.CORBA.TRANSACTION_REQUIRED;
 import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 import org.omg.CORBA.TSIdentification;
-import org.omg.CORBA.WrongTransaction;
 import org.omg.CORBA.TSIdentificationPackage.AlreadyIdentified;
 import org.omg.CORBA.TSIdentificationPackage.NotAvailable;
+import org.omg.CORBA.WrongTransaction;
 import org.omg.CosTSPortability.Receiver;
 import org.omg.CosTSPortability.Sender;
 import org.omg.CosTransactions.PropagationContext;
 import org.omg.CosTransactions.PropagationContextHolder;
+
 /**
  * The SenderRecevier class is our implemention of the OTS Sender and Receiver
  * classes.

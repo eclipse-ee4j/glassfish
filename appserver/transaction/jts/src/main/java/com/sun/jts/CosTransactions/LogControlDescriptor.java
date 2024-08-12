@@ -30,9 +30,7 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes
-
-import java.io.*;
+import java.io.Serializable;
 
 /**A class containing control information relating to an open log file.
  *

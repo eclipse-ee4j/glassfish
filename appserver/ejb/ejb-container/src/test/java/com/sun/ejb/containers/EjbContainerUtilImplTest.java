@@ -16,26 +16,26 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.ejb.config.EjbContainer;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-
+import org.glassfish.kernel.KernelLoggerInfo;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 
-import java.lang.reflect.Field;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 
 public class EjbContainerUtilImplTest {
     private static final String LINE_SEP = System.getProperty("line.separator");

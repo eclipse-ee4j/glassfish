@@ -22,9 +22,10 @@
 
 package com.sun.jdo.api.persistence.support;
 
+import jakarta.transaction.Synchronization;
+
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.transaction.Synchronization;
 
 /** This class allows for multiple instances to be called at transaction
  * completion, which JDO does not currently provide.  JDO only provides

@@ -17,15 +17,16 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.deployment.common.Descriptor;
-
 import jakarta.persistence.SharedCacheMode;
 import jakarta.persistence.ValidationMode;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * A persistence.xml file can contain one or more <persistence-unit>s

@@ -16,12 +16,13 @@
 
 package com.sun.enterprise.config.serverbeans.customvalidators;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.ElementType;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * NotTargetKeyword constraint to verify a name attribute is not a reserved word like 'domain'.

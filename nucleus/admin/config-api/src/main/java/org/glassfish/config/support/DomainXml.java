@@ -63,7 +63,10 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.startupClass;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.successfulCleanupWith;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.successfulUpgrade;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.totalTimeToParseDomain;
-import static java.util.logging.Level.*;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Locates and parses the portion of <tt>domain.xml</tt> that we care.

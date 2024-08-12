@@ -17,8 +17,7 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
-import static com.sun.enterprise.util.Utility.isAllNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
+import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +27,8 @@ import java.lang.reflect.Method;
 
 import org.glassfish.api.admin.CommandException;
 
-import com.sun.enterprise.util.i18n.StringManager;
+import static com.sun.enterprise.util.Utility.isAllNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
 
 /**
  * This class uses Java reflection to invoke Derby NetworkServerControl class.

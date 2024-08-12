@@ -17,6 +17,33 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.util.i18n.StringManager;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+
+import java.lang.reflect.Method;
+import java.security.Permission;
+import java.security.Policy;
+import java.security.ProtectionDomain;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.hk2.api.IterableProvider;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
+
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyConfigFactoryNotDefined;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyFactoryOverride;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyInstallError;
@@ -29,35 +56,6 @@ import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static javassist.Modifier.PUBLIC;
-
-import java.lang.reflect.Method;
-import java.security.Permission;
-import java.security.Policy;
-import java.security.ProtectionDomain;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.glassfish.api.admin.ServerEnvironment;
-//V3:Commented import com.sun.enterprise.config.serverbeans.ElementProperty;
-//V3:Commented import com.sun.enterprise.config.ConfigContext;
-import org.glassfish.hk2.api.IterableProvider;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
-//V3:Commented import com.sun.enterprise.server.ApplicationServer;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.util.i18n.StringManager;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
 
 /**
  * Loads the Default Policy File into the system.

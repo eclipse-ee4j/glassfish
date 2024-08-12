@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.J2EEResource;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.J2EEResource;
 
 public class J2EEResourceImplBase
         extends J2EEManagedObjectImplBase {

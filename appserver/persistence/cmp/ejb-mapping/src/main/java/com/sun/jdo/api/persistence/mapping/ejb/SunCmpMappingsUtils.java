@@ -16,14 +16,18 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmpFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmrFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.EntityMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMappings;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import org.netbeans.modules.schema2beans.BaseBean;
 import org.netbeans.modules.schema2beans.GraphManager;
-
-import com.sun.jdo.api.persistence.mapping.ejb.beans.*;
 
 
 /** Finder utilities for elements of the SunCmpMappings

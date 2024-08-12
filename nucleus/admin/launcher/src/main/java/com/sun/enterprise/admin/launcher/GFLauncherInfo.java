@@ -16,11 +16,8 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static com.sun.enterprise.admin.launcher.ArgumentManager.argsToMap;
-import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
-import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.safeExists;
-import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.safeIsDirectory;
-import static com.sun.enterprise.universal.io.SmartFile.sanitize;
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
+import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,8 +27,11 @@ import java.util.Map;
 
 import org.glassfish.api.admin.RuntimeType;
 
-import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
-import com.sun.enterprise.util.HostAndPort;
+import static com.sun.enterprise.admin.launcher.ArgumentManager.argsToMap;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.safeExists;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.safeIsDirectory;
+import static com.sun.enterprise.universal.io.SmartFile.sanitize;
 
 /**
  * @author Byron Nevins

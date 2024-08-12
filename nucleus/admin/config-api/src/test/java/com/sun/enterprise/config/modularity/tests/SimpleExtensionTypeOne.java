@@ -16,12 +16,13 @@
 
 package com.sun.enterprise.config.modularity.tests;
 
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
 
 /**
  * @author Masoud Kalali

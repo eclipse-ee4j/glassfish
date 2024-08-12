@@ -30,8 +30,8 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-import java.text.*;
+import java.text.MessageFormat;
+import java.util.ListResourceBundle;
 
 /**
  * This class provides a ListResourceBundle which contains the message formats

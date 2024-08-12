@@ -19,6 +19,8 @@ package org.glassfish.admin.rest;
 
 import com.sun.enterprise.admin.remote.reader.ProgressStatusEventJsonProprietaryReader;
 
+import jakarta.ws.rs.core.MediaType;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,8 +32,6 @@ import org.glassfish.api.admin.progress.ProgressStatusEventCreateChild;
 import org.glassfish.api.admin.progress.ProgressStatusEventProgress;
 import org.glassfish.api.admin.progress.ProgressStatusEventSet;
 import org.junit.jupiter.api.Test;
-
-import jakarta.ws.rs.core.MediaType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

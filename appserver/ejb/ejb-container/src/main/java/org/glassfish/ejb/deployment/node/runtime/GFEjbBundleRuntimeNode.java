@@ -17,11 +17,12 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Map;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 
 

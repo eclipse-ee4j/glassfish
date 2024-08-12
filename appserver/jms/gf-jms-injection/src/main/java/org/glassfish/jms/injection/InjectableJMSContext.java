@@ -17,19 +17,6 @@
 
 package org.glassfish.jms.injection;
 
-import java.io.Serializable;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.logging.annotation.LoggerInfo;
-
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -46,6 +33,19 @@ import jakarta.jms.JMSPasswordCredential;
 import jakarta.jms.JMSSessionMode;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
+
+import java.io.Serializable;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * This bean is the JMSContext wrapper which user gets by injection. It can read metadata of injection point for it is

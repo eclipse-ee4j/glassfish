@@ -16,10 +16,9 @@
 
 package org.glassfish.webservices;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.xml.ws.api.server.Container;
 import com.sun.xml.ws.api.server.ContainerResolver;
-
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 
 /**
  * App Server container resolver for registering client side

@@ -16,12 +16,13 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
-import javax.management.NotificationFilter;
-import javax.management.NotificationListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
 
 /**
  */

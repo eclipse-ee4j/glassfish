@@ -17,14 +17,13 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.LogFacade;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
 
 /**
  * Coyote implementation of the buffered reader.

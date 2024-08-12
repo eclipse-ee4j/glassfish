@@ -17,24 +17,31 @@
 
 package com.sun.enterprise.security.web;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.*;
-import org.apache.catalina.authenticator.Constants;
-import org.apache.catalina.authenticator.SingleSignOn;
-import org.apache.catalina.authenticator.SingleSignOnEntry;
-
-import org.glassfish.web.LogFacade;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.HttpRequest;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Realm;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.Session;
+import org.apache.catalina.SessionEvent;
+import org.apache.catalina.authenticator.Constants;
+import org.apache.catalina.authenticator.SingleSignOn;
+import org.apache.catalina.authenticator.SingleSignOnEntry;
+import org.glassfish.web.LogFacade;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * A <strong>Valve</strong> that supports a "single sign on" user experience,

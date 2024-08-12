@@ -19,14 +19,9 @@ package com.sun.enterprise.config.serverbeans;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.config.support.GenericCrudCommand;
-import org.glassfish.server.ServerEnvironmentImpl;
-import org.jvnet.hk2.config.TransactionFailure;
 
 import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +29,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.GenericCrudCommand;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * This is the abstract class which will be used by the config beans {@link Cluster} and {@link Server} classes to copy

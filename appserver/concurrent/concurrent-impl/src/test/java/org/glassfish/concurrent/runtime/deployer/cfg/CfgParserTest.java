@@ -21,11 +21,14 @@ import com.sun.enterprise.deployment.types.StandardContextType;
 
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.deployment.types.StandardContextType.Classloader;
+import static com.sun.enterprise.deployment.types.StandardContextType.JNDI;
+import static com.sun.enterprise.deployment.types.StandardContextType.Security;
+import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseContextInfo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static com.sun.enterprise.deployment.types.StandardContextType.*;
 
 /**
  * @author David Matejcek

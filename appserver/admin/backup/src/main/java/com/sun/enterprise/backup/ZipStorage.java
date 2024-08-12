@@ -22,10 +22,12 @@
 
 package com.sun.enterprise.backup;
 
-import com.sun.enterprise.util.io.*;
-import com.sun.enterprise.util.zip.*;
+import com.sun.enterprise.util.io.FileListerRelative;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.util.zip.ZipFileException;
+import com.sun.enterprise.util.zip.ZipWriter;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * This class implements storing backups as zip files.

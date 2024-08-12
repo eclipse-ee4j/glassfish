@@ -16,12 +16,18 @@
 
 package com.sun.enterprise.universal.glassfish;
 
-import com.sun.enterprise.util.net.NetUtils;
-import static com.sun.enterprise.util.SystemPropertyConstants.*;
 import com.sun.enterprise.universal.io.SmartFile;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import com.sun.enterprise.util.net.NetUtils;
+
+import java.io.File;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
 /**
  * Package private static utility methods

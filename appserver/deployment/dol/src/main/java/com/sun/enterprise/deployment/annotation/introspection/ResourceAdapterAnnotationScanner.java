@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
+import jakarta.inject.Singleton;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 @Service(name = "rar")
 @Singleton

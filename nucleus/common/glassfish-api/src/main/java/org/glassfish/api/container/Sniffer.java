@@ -17,6 +17,8 @@
 
 package org.glassfish.api.container;
 
+import com.sun.enterprise.module.HK2Module;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -26,8 +28,6 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.jvnet.hk2.annotations.Contract;
-
-import com.sun.enterprise.module.HK2Module;
 
 /**
  * A sniffer implementation is responsible for identifying a particular application type and/or a particular file type.

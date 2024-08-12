@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.extras.ExtrasUtilities;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.server.ServerEnvironmentImpl;
@@ -71,8 +72,6 @@ import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import org.glassfish.hk2.extras.ExtrasUtilities;
 
 /**
  * This JUnit5 extension allows to use HK2 services in tests.

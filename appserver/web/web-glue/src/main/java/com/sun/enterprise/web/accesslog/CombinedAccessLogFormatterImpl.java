@@ -17,12 +17,13 @@
 
 package com.sun.enterprise.web.accesslog;
 
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.nio.CharBuffer;
+
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
 
 /**
  * Access log formatter using the <i>combined</i> access log format from Apache.

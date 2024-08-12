@@ -16,8 +16,8 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.codegen;
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /**
  *

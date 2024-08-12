@@ -16,25 +16,23 @@
 
 package org.glassfish.persistence.common.database;
 
-import org.glassfish.persistence.common.I18NHelper;
+import com.sun.logging.LogDomains;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
-import java.security.PrivilegedActionException;
-
-import com.sun.logging.LogDomains;
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * @author Mitesh Meswani

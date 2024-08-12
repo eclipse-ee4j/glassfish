@@ -16,11 +16,11 @@
 
 package org.glassfish.admin.amx.util.stringifier;
 
-import org.glassfish.admin.amx.util.StringUtil;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+
+import org.glassfish.admin.amx.util.StringUtil;
 
 /**
  * Stringifies an X509CertificateStringifier.

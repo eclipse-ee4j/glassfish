@@ -16,6 +16,19 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.v3.common.HTMLActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.beans.PropertyChangeEvent;
 import java.util.Calendar;
 import java.util.List;
@@ -37,19 +50,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.v3.common.HTMLActionReporter;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 @Service
 @RunLevel(PostStartupRunLevel.VAL)

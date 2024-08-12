@@ -22,8 +22,8 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The symbol table handling declared identifies.

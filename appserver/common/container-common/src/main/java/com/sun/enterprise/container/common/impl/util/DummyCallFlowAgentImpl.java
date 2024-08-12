@@ -16,12 +16,13 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
 import com.sun.enterprise.container.common.spi.util.EntityManagerMethod;
 import com.sun.enterprise.container.common.spi.util.EntityManagerQueryMethod;
+
+import jakarta.inject.Singleton;
+
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 @Singleton

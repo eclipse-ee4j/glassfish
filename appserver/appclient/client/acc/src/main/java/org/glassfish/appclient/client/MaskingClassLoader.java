@@ -18,7 +18,11 @@ package org.glassfish.appclient.client;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * {@link ClassLoader} that masks a specified set of classes from its parent class loader.

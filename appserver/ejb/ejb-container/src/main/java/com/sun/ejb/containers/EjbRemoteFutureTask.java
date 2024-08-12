@@ -16,16 +16,14 @@
 
 package com.sun.ejb.containers;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.TimeUnit;
-
-import java.rmi.RemoteException;
+import jakarta.ejb.EJBException;
 
 import java.io.Serializable;
-
-import jakarta.ejb.EJBException;
+import java.rmi.RemoteException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Ken Saks

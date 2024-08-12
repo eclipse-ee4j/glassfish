@@ -16,16 +16,17 @@
 
 package com.sun.connector.cciblackbox;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Iterator;
-import java.util.Set;
-
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.SecurityException;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.security.auth.Subject;
 
 /**

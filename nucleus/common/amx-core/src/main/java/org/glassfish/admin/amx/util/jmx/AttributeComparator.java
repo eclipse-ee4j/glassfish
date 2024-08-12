@@ -17,6 +17,7 @@
 package org.glassfish.admin.amx.util.jmx;
 
 import java.io.Serializable;
+
 import javax.management.Attribute;
 
 public final class AttributeComparator implements java.util.Comparator<Attribute>, Serializable

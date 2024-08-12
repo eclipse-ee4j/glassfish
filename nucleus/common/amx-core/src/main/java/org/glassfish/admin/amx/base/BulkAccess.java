@@ -20,12 +20,11 @@ import javax.management.Attribute;
 import javax.management.ObjectName;
 
 import org.glassfish.admin.amx.annotation.ManagedOperation;
-import org.glassfish.external.arc.Stability;
-import org.glassfish.external.arc.Taxonomy;
+import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.admin.amx.core.Util;
-
-import org.glassfish.admin.amx.core.AMXMBeanMetadata;
+import org.glassfish.external.arc.Stability;
+import org.glassfish.external.arc.Taxonomy;
 
 /**
 Bulk access to various JMX constructs. The term "bulk" refers to the fact the multiple

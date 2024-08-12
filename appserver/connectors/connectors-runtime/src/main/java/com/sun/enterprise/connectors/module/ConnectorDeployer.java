@@ -17,6 +17,34 @@
 
 package com.sun.enterprise.connectors.module;
 
+import com.sun.appserv.connectors.internal.api.ConnectorClassFinder;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.validation.Configuration;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.bootstrap.GenericBootstrap;
+
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -59,34 +87,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import com.sun.appserv.connectors.internal.api.ConnectorClassFinder;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Module;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.connectors.ConnectorRegistry;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.util.ResourcesUtil;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.validation.Configuration;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorContext;
-import jakarta.validation.ValidatorFactory;
-import jakarta.validation.bootstrap.GenericBootstrap;
 
 /**
  * Deployer for a resource-adapter.

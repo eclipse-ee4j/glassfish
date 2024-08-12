@@ -16,18 +16,18 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NATIVE_LIB_PREFIX;
-import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NATIVE_LIB_SUFFIX;
-import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
+import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NATIVE_LIB_PREFIX;
+import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NATIVE_LIB_SUFFIX;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 /**
  *

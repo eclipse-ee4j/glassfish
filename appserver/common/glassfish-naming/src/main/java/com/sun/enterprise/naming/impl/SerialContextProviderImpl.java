@@ -17,10 +17,11 @@
 
 package com.sun.enterprise.naming.impl;
 
-import javax.naming.Context;
-import javax.naming.NamingException;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
 
 public class SerialContextProviderImpl implements SerialContextProvider {
 

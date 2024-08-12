@@ -21,16 +21,39 @@
 
 package org.glassfish.flashlight.xml;
 
-import java.io.*;
-import java.util.*;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
-import static org.glassfish.flashlight.xml.XmlConstants.*;
+
 import org.glassfish.flashlight.FlashlightLoggerInfo;
-import static org.glassfish.flashlight.FlashlightLoggerInfo.*;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_PROVIDER_IDENTIFIED_FROM_XML;
+import static org.glassfish.flashlight.xml.XmlConstants.METHOD;
+import static org.glassfish.flashlight.xml.XmlConstants.MODULE_NAME;
+import static org.glassfish.flashlight.xml.XmlConstants.MODULE_PROVIDER_NAME;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_HIDDEN;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_NAME;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PARAM;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PARAM_NAME;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PARAM_TYPE;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PROFILE_NAMES;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PROVIDER;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PROVIDER_CLASS;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_PROVIDER_NAME;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_SELF;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_STATEFUL;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_STATEFUL_EXCEPTION;
+import static org.glassfish.flashlight.xml.XmlConstants.PROBE_STATEFUL_RETURN;
 
 /**
  * Read the XML file, parse it and return a list of ProbeProvider objects

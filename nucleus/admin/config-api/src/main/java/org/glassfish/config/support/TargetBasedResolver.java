@@ -16,9 +16,14 @@
 
 package org.glassfish.config.support;
 
+import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Cluster;
+
+import jakarta.inject.Inject;
+
+import java.util.Collection;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -26,9 +31,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
-
-import jakarta.inject.Inject;
-import java.util.Collection;
 
 /**
  * Resolver based on a supplied target parameter (with a possible default value).

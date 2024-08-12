@@ -22,9 +22,9 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 
-import org.glassfish.apf.context.AnnotationContext;
-import org.glassfish.apf.ProcessingContext;
 import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.ProcessingContext;
+import org.glassfish.apf.context.AnnotationContext;
 
 public class RarBundleContext extends AnnotationContext {
 

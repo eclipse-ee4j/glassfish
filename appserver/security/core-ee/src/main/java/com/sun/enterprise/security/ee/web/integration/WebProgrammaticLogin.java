@@ -21,10 +21,10 @@
 
 package com.sun.enterprise.security.ee.web.integration;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Web specific Programmatic Login An implementation of this will be injected into

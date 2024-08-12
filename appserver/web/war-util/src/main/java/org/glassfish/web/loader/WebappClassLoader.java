@@ -65,6 +65,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 import org.apache.naming.JndiPermission;
+import org.apache.naming.resources.BaseDirContext;
 import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.JarFileResourcesProvider;
 import org.apache.naming.resources.ProxyDirContext;
@@ -84,8 +85,6 @@ import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
 import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
 import static org.glassfish.web.loader.LogFacade.getString;
-
-import org.apache.naming.resources.BaseDirContext;
 
 /**
  * Specialized web application class loader.

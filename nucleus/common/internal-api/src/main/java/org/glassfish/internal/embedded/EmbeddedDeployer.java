@@ -16,11 +16,12 @@
 
 package org.glassfish.internal.embedded;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.*;
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.File;
+
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.UndeployCommandParameters;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Service to deploy applications to the embedded server.

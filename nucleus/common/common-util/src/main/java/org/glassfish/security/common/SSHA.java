@@ -16,13 +16,13 @@
 
 package org.glassfish.security.common;
 
-import java.io.*;
-import java.util.*;
-import java.security.*;
-
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.universal.GFBase64Decoder;
 import com.sun.enterprise.universal.GFBase64Encoder;
+import com.sun.enterprise.util.i18n.StringManager;
+
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.util.Arrays;
 
 /**
  * Util class for salted SHA processing.

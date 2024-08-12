@@ -20,10 +20,10 @@
 
 package com.sun.ts.tests.common.vehicle.ejbliteshare;
 
+import jakarta.ejb.embeddable.EJBContainer;
+
 import java.io.File;
 import java.util.Map;
-
-import jakarta.ejb.embeddable.EJBContainer;
 
 public interface EJBLiteClientIF {
     public static final String TEST_PASSED = "[TEST PASSED] ";

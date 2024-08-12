@@ -16,8 +16,8 @@
 
 package org.glassfish.tests.embedded.web;
 
-import java.io.*;
-import jakarta.servlet.*;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
 
 public class NewServletRequestListener implements ServletRequestListener {
 

@@ -16,10 +16,9 @@
 
 package org.glassfish.loadbalancer.admin.cli.transform;
 
+import org.glassfish.loadbalancer.admin.cli.beans.WebModule;
 import org.glassfish.loadbalancer.admin.cli.reader.api.BaseReader;
 import org.glassfish.loadbalancer.admin.cli.reader.api.IdempotentUrlPatternReader;
-
-import org.glassfish.loadbalancer.admin.cli.beans.WebModule;
 
 /**
  * Provides transform capabilites for IdempotentUrlPattern

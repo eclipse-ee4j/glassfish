@@ -22,11 +22,6 @@ import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import static java.util.logging.Level.CONFIG;
-import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
-import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
-import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,6 +41,11 @@ import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.xml.sax.SAXException;
+
+import static java.util.logging.Level.CONFIG;
+import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
+import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
+import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
 
 /**
  * Implements a builder for accumulating configuration information for the app client container and then starting the

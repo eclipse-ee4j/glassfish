@@ -16,7 +16,12 @@
 
 package org.glassfish.tests.embedded.localejbs;
 
-import jakarta.ejb.*;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.Timeout;
+import jakarta.ejb.Timer;
+import jakarta.ejb.TimerService;
+
 import javax.naming.InitialContext;
 
 @Stateless

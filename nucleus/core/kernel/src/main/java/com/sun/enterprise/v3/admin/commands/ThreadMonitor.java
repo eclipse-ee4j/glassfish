@@ -23,6 +23,7 @@
 package com.sun.enterprise.v3.admin.commands;
 
 import com.sun.enterprise.util.i18n.StringManager;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
@@ -30,6 +31,7 @@ import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.Arrays;
+
 import javax.management.MBeanServerConnection;
 
 /**

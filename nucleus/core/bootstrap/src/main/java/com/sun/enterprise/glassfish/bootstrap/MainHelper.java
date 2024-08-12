@@ -41,6 +41,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+// WARNING: There must not be any references to java.util.logging.* instances in static initialization except levels.
+//          They would cause initialization of the JVM logging which we do AFTER this.
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
@@ -48,8 +50,6 @@ import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI
 import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.glassfish.bootstrap.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
-// WARNING: There must not be any references to java.util.logging.* instances in static initialization except levels.
-//          They would cause initialization of the JVM logging which we do AFTER this.
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;

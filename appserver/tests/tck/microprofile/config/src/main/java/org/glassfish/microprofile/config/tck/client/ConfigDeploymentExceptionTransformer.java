@@ -16,6 +16,7 @@
 package org.glassfish.microprofile.config.tck.client;
 
 import jakarta.enterprise.inject.spi.DeploymentException;
+
 import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;
 
 /**

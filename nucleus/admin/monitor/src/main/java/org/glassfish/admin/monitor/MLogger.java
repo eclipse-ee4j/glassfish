@@ -16,10 +16,11 @@
 
 package org.glassfish.admin.monitor;
 
-import java.util.logging.*;
+import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * A POL (plain old logger).

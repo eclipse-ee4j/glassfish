@@ -16,16 +16,16 @@
 
 package org.glassfish.extras.grizzly;
 
-import org.glassfish.api.deployment.ApplicationContainer;
-import org.glassfish.api.deployment.ApplicationContext;
-import org.glassfish.api.container.RequestDispatcher;
-import org.glassfish.api.container.EndpointRegistrationException;
-
 import com.sun.logging.LogDomains;
-import org.glassfish.grizzly.http.server.HttpHandler;
 
 import java.util.Collection;
 import java.util.logging.Level;
+
+import org.glassfish.api.container.EndpointRegistrationException;
+import org.glassfish.api.container.RequestDispatcher;
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.ApplicationContext;
+import org.glassfish.grizzly.http.server.HttpHandler;
 
 /**
  * Deployed grizzly application.

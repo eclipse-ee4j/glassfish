@@ -16,12 +16,13 @@
 
 package com.sun.jdo.api.persistence.model;
 
-import java.util.List;
-import java.io.IOException;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import java.util.List;
 
 /**
  *

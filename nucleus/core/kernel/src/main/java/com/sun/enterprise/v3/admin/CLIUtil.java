@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.v3.admin;
 
-import org.glassfish.internal.api.Target;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
+
+import org.glassfish.internal.api.Target;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  *

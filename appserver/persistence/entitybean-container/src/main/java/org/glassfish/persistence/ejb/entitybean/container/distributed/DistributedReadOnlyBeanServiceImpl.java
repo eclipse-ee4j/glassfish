@@ -16,6 +16,8 @@
 
 package org.glassfish.persistence.ejb.entitybean.container.distributed;
 
+import com.sun.logging.LogDomains;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,8 +27,6 @@ import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.logging.LogDomains;
 
 
 class DistributedReadOnlyBeanServiceImpl

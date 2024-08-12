@@ -21,10 +21,6 @@
  */
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
-import java.util.ResourceBundle;
-
-import org.glassfish.persistence.common.I18NHelper;
-
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
@@ -36,6 +32,10 @@ import jakarta.ejb.EJBContext;
 import jakarta.ejb.EJBLocalObject;
 import jakarta.ejb.EJBObject;
 import jakarta.ejb.EntityContext;
+
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
   /** Provides helper methods for CMP support implementation with the
    * application server specific information. Calls corresponding methods

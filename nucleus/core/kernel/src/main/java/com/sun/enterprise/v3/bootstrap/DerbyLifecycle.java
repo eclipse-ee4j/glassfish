@@ -25,12 +25,12 @@
 
 package com.sun.enterprise.v3.bootstrap;
 
-import java.util.logging.Level;
-
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.LifecyclePolicy;
 import com.sun.enterprise.module.ModuleState;
 import com.sun.enterprise.module.common_impl.LogHelper;
+
+import java.util.logging.Level;
 
 /**
  *

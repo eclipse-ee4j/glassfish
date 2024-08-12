@@ -16,10 +16,11 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
-import javax.management.Notification;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.management.Notification;
 
 /**
 Base class for building AMX Notifications.  AMX Notifications

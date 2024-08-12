@@ -19,9 +19,9 @@ package org.apache.naming;
 
 import java.util.Iterator;
 
-import javax.naming.NamingException;
-import javax.naming.NamingEnumeration;
 import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
 /**
  * Naming enumeration implementation.

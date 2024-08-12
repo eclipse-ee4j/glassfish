@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import org.glassfish.embeddable.GlassFishException;
-
 import java.util.Properties;
+
+import org.glassfish.embeddable.GlassFishException;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM

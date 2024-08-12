@@ -16,9 +16,9 @@
 
 package org.glassfish.extras.grizzly;
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.Deployer;
+import org.jvnet.hk2.annotations.Service;
 
 
 @Service(name="grizzly")

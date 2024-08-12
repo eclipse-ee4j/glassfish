@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.security.ee.authorize;
 
-import java.security.SecurityPermission;
-
 import jakarta.security.jacc.PolicyContextHandler;
+
+import java.security.SecurityPermission;
 
 /**
  * This class is created by the container and handed over to the JACC provider. This lets the jacc provider to use the

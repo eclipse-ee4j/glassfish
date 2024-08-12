@@ -16,18 +16,20 @@
 
 package org.glassfish.sse.impl;
 
+import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncEvent;
 import jakarta.servlet.AsyncListener;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.enterprise.context.spi.CreationalContext;
-
-import org.glassfish.sse.api.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
+import org.glassfish.sse.api.ServerSentEventConnection;
+import org.glassfish.sse.api.ServerSentEventData;
+import org.glassfish.sse.api.ServerSentEventHandler;
 
 /**
  * ServerSentEventClientImpl class.

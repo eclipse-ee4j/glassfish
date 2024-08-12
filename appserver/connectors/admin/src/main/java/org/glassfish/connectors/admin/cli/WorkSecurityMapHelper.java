@@ -19,9 +19,10 @@ package org.glassfish.connectors.admin.cli;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
-import org.glassfish.connectors.config.WorkSecurityMap;
 
 import java.util.List;
+
+import org.glassfish.connectors.config.WorkSecurityMap;
 
 public class WorkSecurityMapHelper {
     static boolean doesResourceAdapterNameExist(String raName, Resources resources) {

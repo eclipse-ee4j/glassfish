@@ -16,12 +16,12 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.database;
 
-import java.util.List;
+import com.sun.jdo.api.persistence.support.SpecialDBOperation;
+
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
-
-import com.sun.jdo.api.persistence.support.SpecialDBOperation;
+import java.util.List;
 
 /**
  * BaseSpecialDBOperation is the base class for all classes implementing

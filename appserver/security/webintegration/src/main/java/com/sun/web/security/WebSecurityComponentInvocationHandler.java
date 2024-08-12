@@ -16,7 +16,8 @@
 
 package com.sun.web.security;
 
-import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.apache.catalina.Realm;
 import org.apache.catalina.core.ContainerBase;
@@ -28,8 +29,7 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
 
 @Service(name = "webSecurityCIH")
 @Singleton

@@ -17,8 +17,10 @@
 
 package com.sun.enterprise.v3.server;
 
-import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
-import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+
+import jakarta.inject.Inject;
 
 import java.util.logging.Logger;
 
@@ -27,10 +29,8 @@ import org.glassfish.api.event.Events;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.module.bootstrap.ModuleStartup;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-
-import jakarta.inject.Inject;
+import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
  * Created by IntelliJ IDEA.

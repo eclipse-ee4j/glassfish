@@ -17,13 +17,14 @@
 package org.glassfish.config.support;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import jakarta.inject.Inject;
 
 /**
  * Resolver based on type + name.

@@ -19,6 +19,8 @@ package org.glassfish.admin.rest.composite;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
 
+import jakarta.validation.ConstraintViolation;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Locale;
@@ -28,8 +30,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.model.BaseModel;
 import org.junit.jupiter.api.Test;
-
-import jakarta.validation.ConstraintViolation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringStartsWith.startsWith;

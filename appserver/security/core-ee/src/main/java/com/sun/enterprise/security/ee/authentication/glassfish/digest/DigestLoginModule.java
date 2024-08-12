@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest;
 
-import static java.util.logging.Level.SEVERE;
-
 import com.sun.enterprise.security.PrincipalGroupFactory;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.realm.Realm;
@@ -43,6 +41,8 @@ import javax.security.auth.spi.LoginModule;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserPrincipal;
+
+import static java.util.logging.Level.SEVERE;
 
 /**
  *

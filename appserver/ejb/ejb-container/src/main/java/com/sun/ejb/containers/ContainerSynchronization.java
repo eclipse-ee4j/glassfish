@@ -16,6 +16,13 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.logging.LogDomains;
+
+import jakarta.ejb.EJBException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -23,14 +30,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.ejb.EJBException;
-import jakarta.transaction.Synchronization;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
-
 import org.glassfish.ejb.config.EjbContainerAvailability;
-
-import com.sun.logging.LogDomains;
 
 
 /**

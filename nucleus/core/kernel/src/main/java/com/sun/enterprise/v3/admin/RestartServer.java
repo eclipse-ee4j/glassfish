@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
@@ -33,6 +25,14 @@ import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.internal.api.Globals;
 
 /**
  * For non-verbose mode: Stop this server, spawn a new JVM that will wait for this JVM to die. The new JVM then starts

@@ -23,6 +23,8 @@ import com.sun.enterprise.config.serverbeans.Profiler;
 import com.sun.enterprise.v3.common.PlainTextActionReporter;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -43,8 +45,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
 import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;

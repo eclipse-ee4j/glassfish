@@ -18,6 +18,7 @@ package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
+
 import org.glassfish.web.deployment.descriptor.OrderingDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;

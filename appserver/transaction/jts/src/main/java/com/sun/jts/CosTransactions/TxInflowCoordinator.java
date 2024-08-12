@@ -16,9 +16,9 @@
 
 package com.sun.jts.CosTransactions;
 
+import org.omg.CosTransactions.RecoveryCoordinator;
 import org.omg.CosTransactions.Resource;
 import org.omg.CosTransactions.Synchronization;
-import org.omg.CosTransactions.RecoveryCoordinator;
 
 /**
  * This used for mimicking a superior TopCoordinator behavior.

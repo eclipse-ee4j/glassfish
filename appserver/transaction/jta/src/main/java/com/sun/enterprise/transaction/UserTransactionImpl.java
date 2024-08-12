@@ -17,7 +17,18 @@
 
 package com.sun.enterprise.transaction;
 
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -32,18 +43,7 @@ import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.transaction.HeuristicMixedException;
-import jakarta.transaction.HeuristicRollbackException;
-import jakarta.transaction.NotSupportedException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.UserTransaction;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This class implements jakarta.transaction.UserTransaction . Its methods are called from TX_BEAN_MANAGED EJB code.

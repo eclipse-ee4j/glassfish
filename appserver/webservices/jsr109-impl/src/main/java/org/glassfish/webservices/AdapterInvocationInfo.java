@@ -16,8 +16,9 @@
 
 package org.glassfish.webservices;
 
-import org.glassfish.api.invocation.ComponentInvocation;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
+
+import org.glassfish.api.invocation.ComponentInvocation;
 
 /**
  * This class stores information for EjbRuntimeInfo

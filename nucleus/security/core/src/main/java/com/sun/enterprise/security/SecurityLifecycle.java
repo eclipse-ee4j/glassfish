@@ -16,9 +16,13 @@
 
 package com.sun.enterprise.security;
 
-import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
-import static java.util.logging.Level.INFO;
-import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import com.sun.enterprise.security.audit.AuditManager;
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.ssl.SSLUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,13 +36,9 @@ import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.ssl.SSLUtils;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
+import static java.util.logging.Level.INFO;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
  * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup

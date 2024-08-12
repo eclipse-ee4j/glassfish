@@ -23,8 +23,6 @@ import com.sun.enterprise.iiop.security.SecClientRequestInterceptor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import static java.lang.System.Logger.Level.ERROR;
-
 import java.lang.System.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
@@ -36,6 +34,7 @@ import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 import static com.sun.enterprise.iiop.security.AlternateSecurityInterceptorFactory.SEC_INTEROP_INTFACTORY_PROP;
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  * @author Kumar

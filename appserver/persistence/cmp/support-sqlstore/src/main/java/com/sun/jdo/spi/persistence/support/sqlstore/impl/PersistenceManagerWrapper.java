@@ -22,12 +22,17 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 
-import com.sun.jdo.api.persistence.support.*;
-import org.glassfish.persistence.common.I18NHelper;
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.api.persistence.support.PersistenceManager;
+import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
+import com.sun.jdo.api.persistence.support.Query;
+import com.sun.jdo.api.persistence.support.Transaction;
 
 import java.util.Collection;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /** PersistenceManagerWrapper is ....
  */

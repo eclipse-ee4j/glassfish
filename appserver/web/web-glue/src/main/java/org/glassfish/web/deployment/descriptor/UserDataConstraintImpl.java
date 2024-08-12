@@ -18,6 +18,7 @@ package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import org.glassfish.deployment.common.Descriptor;
 
 

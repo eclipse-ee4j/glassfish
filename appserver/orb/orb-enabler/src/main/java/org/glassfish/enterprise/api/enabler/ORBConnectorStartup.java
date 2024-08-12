@@ -16,10 +16,14 @@
 
 package org.glassfish.enterprise.api.enabler;
 
-import java.util.List;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.v3.services.impl.DummyNetworkListener;
+import com.sun.enterprise.v3.services.impl.GrizzlyService;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.util.List;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -29,10 +33,6 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.IiopService;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.v3.services.impl.DummyNetworkListener;
-import com.sun.enterprise.v3.services.impl.GrizzlyService;
 
 /**
  */

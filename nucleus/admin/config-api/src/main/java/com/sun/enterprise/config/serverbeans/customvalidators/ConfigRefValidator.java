@@ -23,12 +23,14 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.util.logging.Logger;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.config.Named;
 
 public class ConfigRefValidator implements ConstraintValidator<ConfigRefConstraint, Named>, Payload {

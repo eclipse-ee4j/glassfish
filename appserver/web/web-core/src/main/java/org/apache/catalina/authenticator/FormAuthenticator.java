@@ -18,17 +18,11 @@
 
 package org.apache.catalina.authenticator;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.LogFacade.UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE;
-import static org.apache.catalina.authenticator.Constants.FORM_ACTION;
-import static org.apache.catalina.authenticator.Constants.FORM_METHOD;
-import static org.apache.catalina.authenticator.Constants.FORM_PRINCIPAL_NOTE;
-import static org.apache.catalina.authenticator.Constants.FORM_REQUEST_NOTE;
-import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
-import static org.apache.catalina.authenticator.Constants.SESS_PASSWORD_NOTE;
-import static org.apache.catalina.authenticator.Constants.SESS_USERNAME_NOTE;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,11 +42,17 @@ import org.glassfish.grizzly.http.util.ByteChunk;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.MessageBytes;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.LogFacade.UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE;
+import static org.apache.catalina.authenticator.Constants.FORM_ACTION;
+import static org.apache.catalina.authenticator.Constants.FORM_METHOD;
+import static org.apache.catalina.authenticator.Constants.FORM_PRINCIPAL_NOTE;
+import static org.apache.catalina.authenticator.Constants.FORM_REQUEST_NOTE;
+import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
+import static org.apache.catalina.authenticator.Constants.SESS_PASSWORD_NOTE;
+import static org.apache.catalina.authenticator.Constants.SESS_USERNAME_NOTE;
 
 /**
  * An <b>Authenticator</b> and <b>Valve</b> implementation of FORM BASED Authentication, as described in the Servlet API

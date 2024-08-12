@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.v3.services.impl;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.kernel.KernelLoggerInfo.exceptionMapper;
-import static org.glassfish.kernel.KernelLoggerInfo.exceptionMapper2;
-
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -49,6 +44,11 @@ import org.glassfish.grizzly.http.util.DataChunk;
 import org.glassfish.grizzly.http.util.MimeType;
 import org.glassfish.internal.grizzly.ContextMapper;
 import org.glassfish.kernel.KernelLoggerInfo;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionMapper;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionMapper2;
 
 /**
  * Container's mapper which maps {@link ByteBuffer} bytes representation to an {@link HttpHandler},

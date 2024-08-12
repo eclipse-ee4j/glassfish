@@ -16,10 +16,14 @@
 
 package org.glassfish.common.util;
 
-import org.jvnet.hk2.annotations.Service;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.StreamCorruptedException;
 import java.lang.reflect.Array;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This subclass of ObjectInputStream delegates loading of classes to

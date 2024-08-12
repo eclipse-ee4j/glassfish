@@ -35,6 +35,8 @@ import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.policy.PolicyMap;
 import com.sun.xml.ws.wsdl.OperationDispatcher;
 
+import jakarta.xml.ws.EndpointReference;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,8 +47,6 @@ import javax.xml.namespace.QName;
 import org.glassfish.gmbal.ManagedObjectManager;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
-
-import jakarta.xml.ws.EndpointReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

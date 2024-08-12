@@ -16,7 +16,9 @@
 
 package org.glassfish.internal.embedded.admin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.api.admin.ParameterMap;
 
 /**

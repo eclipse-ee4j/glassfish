@@ -17,6 +17,15 @@
 
 package com.sun.enterprise.resource.pool;
 
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.ResourceState;
+import com.sun.enterprise.transaction.api.JavaEETransaction;
+import com.sun.logging.LogDomains;
+
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,15 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.ResourceState;
-import com.sun.enterprise.transaction.api.JavaEETransaction;
-import com.sun.logging.LogDomains;
-
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
 
 /**
  * Transaction helper for the pool to check various states of a resource that is taking part in the transaction.

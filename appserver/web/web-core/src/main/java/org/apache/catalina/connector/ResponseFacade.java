@@ -18,7 +18,9 @@
 
 package org.apache.catalina.connector;
 
-import static org.apache.catalina.LogFacade.NULL_RESPONSE_OBJECT;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,9 +39,7 @@ import java.util.function.Supplier;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.security.SecurityUtil;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import static org.apache.catalina.LogFacade.NULL_RESPONSE_OBJECT;
 
 /**
  * Facade class that wraps a Coyote response object. All methods are delegated to the wrapped response.

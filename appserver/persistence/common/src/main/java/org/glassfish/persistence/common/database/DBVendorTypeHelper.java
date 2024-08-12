@@ -16,6 +16,8 @@
 
 package org.glassfish.persistence.common.database;
 
+import com.sun.logging.LogDomains;
+
 import java.io.IOException;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -30,7 +32,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.logging.LogDomains;
 
 /**
  * @author Mitesh Meswani

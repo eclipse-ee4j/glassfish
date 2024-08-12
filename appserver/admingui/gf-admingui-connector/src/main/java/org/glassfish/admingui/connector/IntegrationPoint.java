@@ -16,12 +16,11 @@
 
 package org.glassfish.admingui.connector;
 
-import org.glassfish.api.admingui.ConsoleProvider;
+import java.io.Serializable;
 
+import org.glassfish.api.admingui.ConsoleProvider;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
-
-import java.io.Serializable;
 
 
 /**

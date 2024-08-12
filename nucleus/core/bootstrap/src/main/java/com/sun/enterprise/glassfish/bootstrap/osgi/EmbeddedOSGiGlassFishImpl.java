@@ -17,15 +17,15 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.GlassFishDecorator;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishException;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
+import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 /**
  * A specialized implementation of GlassFish which takes care of calling

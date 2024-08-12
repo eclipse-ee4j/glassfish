@@ -16,8 +16,10 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import java.util.ResourceBundle;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.util.ResourceBundle;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 

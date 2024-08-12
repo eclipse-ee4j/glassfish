@@ -17,13 +17,15 @@
 package org.glassfish.loadbalancer.config.customvalidators;
 
 import com.sun.enterprise.config.serverbeans.ClusterRef;
-import org.glassfish.loadbalancer.config.LbConfig;
 import com.sun.enterprise.config.serverbeans.ServerRef;
-import java.util.List;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
+
+import java.util.List;
+
+import org.glassfish.loadbalancer.config.LbConfig;
 
 /**
  * A simple constraint that validates lb-config children.

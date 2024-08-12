@@ -30,7 +30,11 @@
 
 package com.sun.jts.CosTransactions;
 
-import org.omg.CosTransactions.*;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.RecoveryCoordinator;
+import org.omg.CosTransactions.RecoveryCoordinatorHelper;
+import org.omg.CosTransactions.SubtransactionAwareResource;
+import org.omg.CosTransactions.SubtransactionAwareResourceHelper;
 
 /**
  * The SuperiorInfo interface provides operations that record the local

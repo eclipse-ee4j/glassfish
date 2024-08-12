@@ -17,7 +17,13 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
@@ -35,13 +41,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 @Service
 @ResourceDeployerInfo(JMSDestinationDefinitionDescriptor.class)

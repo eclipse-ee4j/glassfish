@@ -16,9 +16,10 @@
 
 package org.glassfish.ejb.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-import org.glassfish.ejb.api.EjbEndpointFacade;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
+
+import org.glassfish.ejb.api.EjbEndpointFacade;
+import org.jvnet.hk2.annotations.Contract;
 
 /*
  * This interface is the contract for the service WebServiceEjbEndpointRegistry

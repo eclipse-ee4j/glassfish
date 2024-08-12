@@ -16,14 +16,14 @@
 
 package com.sun.enterprise.security;
 
-import java.security.PrivilegedAction;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.security.auth.login.ClientPasswordLoginModule;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.SecurityConstants;
+
+import java.security.PrivilegedAction;
+import java.util.logging.Logger;
 
 /**
  * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:

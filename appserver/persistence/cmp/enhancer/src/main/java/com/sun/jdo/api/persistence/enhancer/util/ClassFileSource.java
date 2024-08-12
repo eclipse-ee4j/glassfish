@@ -16,18 +16,19 @@
 
 package com.sun.jdo.api.persistence.enhancer.util;
 
-//@lars: removed openide-dependencies
-//@olsen: not needed
-//import com.sun.jdo.api.persistence.enhancer.FilterEnv;
-//@olsen: added: support for I18N
-//@olsen: subst: FilterError -> UserException, assert()
-
-import java.util.zip.ZipFile;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
-import java.io.*;
-import java.util.*;
-//@yury: added ability to get the class bytecode from the Forte4J archive entry
-//import org.openidex.jarpackager.ArchiveEntry;
+import java.util.zip.ZipFile;
 
 /**
  * ClassFileSource provides a mechanism for associating a class

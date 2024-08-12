@@ -29,16 +29,6 @@ import com.sun.enterprise.transaction.TransactionServiceConfigListener;
 import com.sun.enterprise.transaction.TransactionSynchronizationRegistryImpl;
 import com.sun.enterprise.transaction.UserTransactionImpl;
 import com.sun.enterprise.transaction.spi.JavaEETransactionManagerDelegate;
-import java.beans.PropertyChangeEvent;
-import javax.transaction.xa.XAException;
-import javax.transaction.xa.XAResource;
-import javax.transaction.xa.Xid;
-
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.SimpleJndiName;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
@@ -52,6 +42,18 @@ import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.TransactionSynchronizationRegistry;
 import jakarta.transaction.UserTransaction;
+
+import java.beans.PropertyChangeEvent;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

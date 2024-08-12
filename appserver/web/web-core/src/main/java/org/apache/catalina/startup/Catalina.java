@@ -17,6 +17,15 @@
 
 package org.apache.catalina.startup;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.text.MessageFormat;
+import java.util.logging.Level;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleException;
@@ -27,11 +36,6 @@ import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomcat.util.digester.Rule;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
-
-import java.io.*;
-import java.net.Socket;
-import java.text.MessageFormat;
-import java.util.logging.Level;
 
 /**
  * Startup/Shutdown shell program for Catalina.  The following command line

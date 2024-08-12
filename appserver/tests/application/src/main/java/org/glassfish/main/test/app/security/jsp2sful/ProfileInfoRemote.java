@@ -17,8 +17,9 @@
 
 package org.glassfish.main.test.app.security.jsp2sful;
 
-import java.rmi.RemoteException;
 import jakarta.ejb.EJBObject;
+
+import java.rmi.RemoteException;
 
 /**
  * ProfileInfo Stateful Session Bean. Test JSR 115 authorization.

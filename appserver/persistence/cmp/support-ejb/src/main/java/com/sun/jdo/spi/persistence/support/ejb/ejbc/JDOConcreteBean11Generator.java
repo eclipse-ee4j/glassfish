@@ -22,14 +22,14 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
+import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.jdo.*;
-
-import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
-import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
 
 /*
  * This is the JDO specific generator for the concrete CMP beans for EJB1.1.

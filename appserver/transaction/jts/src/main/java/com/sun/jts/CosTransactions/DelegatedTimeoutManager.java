@@ -17,14 +17,17 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-
-import org.omg.CosTransactions.*;
 import com.sun.jts.jtsxa.XID;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
+
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CosTransactions.Status;
 
 /**
  * This class records state for timing out transactions, and runs a thread

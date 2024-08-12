@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.transaction.monitoring;
 
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.api.TransactionAdminBean;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -30,9 +33,6 @@ import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
-
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.transaction.api.TransactionAdminBean;
 
 /**
  * Collects the Transaction Service monitoring data and provides it to the callers.

@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.spec.AlgorithmParameterSpec;
-
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 
 /**
  * This Factory provides DigestParameterGenerator instances to generate DigestAlgorithmParameter objects from Http and

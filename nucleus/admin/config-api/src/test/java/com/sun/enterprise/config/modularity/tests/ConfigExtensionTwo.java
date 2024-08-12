@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.config.modularity.tests;
 
+import java.beans.PropertyVetoException;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
-
-import java.beans.PropertyVetoException;
 
 /**
  * @author Masoud Kalali

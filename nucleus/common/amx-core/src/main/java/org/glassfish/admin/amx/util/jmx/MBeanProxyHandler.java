@@ -16,14 +16,28 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.logging.Logger;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
+import javax.management.MBeanServerInvocationHandler;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+
 import org.glassfish.admin.amx.util.AMXDebug;
 import org.glassfish.admin.amx.util.ObjectUtil;
 import org.glassfish.admin.amx.util.Output;
 import org.glassfish.admin.amx.util.StringUtil;
-import javax.management.*;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 /**
 Implementation of a proxy <i>handler</i> that supports Attribute names which are not legal

@@ -16,12 +16,14 @@
 
 package org.glassfish.web.deployment.descriptor;
 
-import java.util.EnumSet;
-import java.util.Set;
-import jakarta.servlet.SessionTrackingMode;
-
 import com.sun.enterprise.deployment.web.CookieConfig;
 import com.sun.enterprise.deployment.web.SessionConfig;
+
+import jakarta.servlet.SessionTrackingMode;
+
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**

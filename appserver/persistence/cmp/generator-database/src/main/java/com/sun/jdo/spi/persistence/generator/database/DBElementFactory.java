@@ -23,8 +23,22 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
-import org.netbeans.modules.dbschema.*;
-import org.netbeans.modules.dbschema.jdbcimpl.*;
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.DBException;
+import org.netbeans.modules.dbschema.DBIdentifier;
+import org.netbeans.modules.dbschema.ForeignKeyElement;
+import org.netbeans.modules.dbschema.IndexElement;
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.TableElement;
+import org.netbeans.modules.dbschema.UniqueKeyElement;
+import org.netbeans.modules.dbschema.jdbcimpl.ColumnElementImpl;
+import org.netbeans.modules.dbschema.jdbcimpl.ColumnPairElementImpl;
+import org.netbeans.modules.dbschema.jdbcimpl.ForeignKeyElementImpl;
+import org.netbeans.modules.dbschema.jdbcimpl.IndexElementImpl;
+import org.netbeans.modules.dbschema.jdbcimpl.SchemaElementImpl;
+import org.netbeans.modules.dbschema.jdbcimpl.TableElementImpl;
+import org.netbeans.modules.dbschema.jdbcimpl.UniqueKeyElementImpl;
 import org.netbeans.modules.dbschema.util.NameUtil;
 
 /*

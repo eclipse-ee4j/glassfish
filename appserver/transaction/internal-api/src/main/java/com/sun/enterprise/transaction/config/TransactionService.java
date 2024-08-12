@@ -16,23 +16,20 @@
 
 package com.sun.enterprise.transaction.config;
 
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.Container;
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.api.admin.config.PropertyDesc;
+import org.glassfish.config.support.datatypes.PositiveInteger;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import java.util.List;
-
-import java.beans.PropertyVetoException;
-
-
-import org.glassfish.config.support.datatypes.PositiveInteger;
-import org.glassfish.api.admin.config.PropertyDesc;
-import org.glassfish.api.admin.config.PropertiesDesc;
 /**
  * Configuration for Transaction Manager
  */

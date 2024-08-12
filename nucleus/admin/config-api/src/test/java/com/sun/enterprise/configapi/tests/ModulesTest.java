@@ -19,6 +19,8 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Applications;
 
+import jakarta.inject.Inject;
+
 import java.util.Collection;
 import java.util.logging.Logger;
 
@@ -28,8 +30,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

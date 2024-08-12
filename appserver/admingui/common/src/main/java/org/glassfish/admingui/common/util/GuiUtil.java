@@ -24,34 +24,30 @@
  */
 package org.glassfish.admingui.common.util;
 
-import com.sun.jsftemplating.resource.ResourceBundleManager;
-
-import jakarta.faces.context.FacesContext;
-// FIXME: 7-31-08 -- FIX by importing woodstock api's:
-//import com.sun.webui.jsf.model.Option;
-
-import java.util.Locale;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.text.MessageFormat;
-import java.net.URLEncoder;
-
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-import java.io.File;
+import com.sun.jsftemplating.resource.ResourceBundleManager;
 
-import java.io.UnsupportedEncodingException;
 import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.admingui.common.security.AdminConsoleAuthModule;
 import org.glassfish.hk2.api.ServiceLocator;

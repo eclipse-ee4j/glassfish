@@ -17,6 +17,12 @@
 
 package org.glassfish.jms.injection;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.annotation.PreDestroy;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSContext;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +34,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.annotation.PreDestroy;
-import jakarta.jms.ConnectionFactory;
-import jakarta.jms.JMSContext;
 
 /**
  * This bean has a map to store JMSContext instances based on the injection point, that makes sure in one class, the

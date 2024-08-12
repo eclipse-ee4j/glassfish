@@ -16,30 +16,6 @@
 
 package com.sun.gjc.spi;
 
-import static jakarta.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
-
-import java.io.PrintWriter;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.sql.PooledConnection;
-import javax.sql.XAConnection;
-import javax.transaction.xa.XAResource;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.spi.BadConnectionEventListener;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
@@ -65,6 +41,30 @@ import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ManagedConnectionMetaData;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.io.PrintWriter;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.PooledConnection;
+import javax.sql.XAConnection;
+import javax.transaction.xa.XAResource;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import static jakarta.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 /**
  * <code>ManagedConnection</code> implementation for Generic JDBC Connector.

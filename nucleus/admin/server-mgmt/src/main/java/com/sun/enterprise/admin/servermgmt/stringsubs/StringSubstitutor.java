@@ -16,9 +16,6 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs;
 
-import java.io.File;
-import java.util.List;
-
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Component;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
@@ -26,6 +23,9 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Group;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Property;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.PropertyType;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * An object which allows to set the custom behavior for string substitution operation and facilitate String

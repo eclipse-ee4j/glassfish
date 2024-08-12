@@ -16,8 +16,9 @@
 
 package com.sun.ejb.containers;
 
-import org.glassfish.enterprise.iiop.spi.EjbService;
 import com.sun.enterprise.deployment.EjbDescriptor;
+
+import org.glassfish.enterprise.iiop.spi.EjbService;
 import org.jvnet.hk2.annotations.Service;
 
 /**

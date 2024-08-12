@@ -17,23 +17,27 @@
 
 package org.glassfish.tests.embedded.web;
 
-import static org.hamcrest.CoreMatchers.both;
-import static org.hamcrest.CoreMatchers.containsString;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.logging.Level;
 
-import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;
-import org.glassfish.embeddable.web.config.*;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.web.Context;
+import org.glassfish.embeddable.web.WebContainer;
+import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.hamcrest.MatcherAssert;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.containsString;
 
 public class EmbeddedClassLoaderTest {
 

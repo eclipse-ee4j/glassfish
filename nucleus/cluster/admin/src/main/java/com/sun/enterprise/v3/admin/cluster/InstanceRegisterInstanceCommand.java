@@ -16,24 +16,6 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import java.util.Map;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.ActionReport;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import java.beans.PropertyVetoException;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
@@ -43,7 +25,27 @@ import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.config.util.InstanceRegisterInstanceCommandParameters;
-import org.glassfish.api.admin.*;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.beans.PropertyVetoException;
+import java.util.Map;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
 
 /**

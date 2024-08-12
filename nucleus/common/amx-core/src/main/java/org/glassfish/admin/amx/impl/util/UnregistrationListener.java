@@ -17,9 +17,15 @@
 
 package org.glassfish.admin.amx.impl.util;
 
-import javax.management.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanServerConnection;
+import javax.management.MBeanServerNotification;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
 
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 

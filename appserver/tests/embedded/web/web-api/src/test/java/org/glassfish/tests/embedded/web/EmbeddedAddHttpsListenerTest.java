@@ -17,18 +17,27 @@
 
 package org.glassfish.tests.embedded.web;
 
-import java.io.*;
-import java.net.*;
-import java.security.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.*;
-
 import java.util.logging.Level;
 
-import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;
-import org.glassfish.embeddable.web.config.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
+import org.glassfish.embeddable.Deployer;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.web.HttpsListener;
+import org.glassfish.embeddable.web.WebContainer;
+import org.glassfish.embeddable.web.config.SslConfig;
+import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

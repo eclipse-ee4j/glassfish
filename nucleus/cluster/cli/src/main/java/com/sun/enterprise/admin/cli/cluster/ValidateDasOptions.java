@@ -16,13 +16,12 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import java.io.*;
+import java.io.File;
 
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Validate DAS host, port, secure options.

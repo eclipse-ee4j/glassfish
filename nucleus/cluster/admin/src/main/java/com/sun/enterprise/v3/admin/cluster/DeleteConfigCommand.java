@@ -18,23 +18,30 @@ package com.sun.enterprise.v3.admin.cluster;
 
 
 
-import java.beans.PropertyVetoException;
-import java.util.List;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
 
+import java.beans.PropertyVetoException;
+import java.util.List;
 
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-import org.glassfish.api.Param;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.admin.config.ReferenceContainer;
 import org.glassfish.hk2.api.PerLookup;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.config.serverbeans.*;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  *  This is a remote command that deletes a destination config.

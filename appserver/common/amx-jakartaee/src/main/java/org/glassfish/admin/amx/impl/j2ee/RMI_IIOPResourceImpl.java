@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.RMI_IIOPResource;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.RMI_IIOPResource;
 
 public final class RMI_IIOPResourceImpl
         extends J2EEResourceImplBase {

@@ -17,20 +17,22 @@
 
 package org.apache.catalina.core;
 
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_FILTER_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.BEFORE_FILTER_EVENT;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.util.InstanceSupport;
+
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_FILTER_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_FILTER_EVENT;
 
 /**
  * Implementation of <code>jakarta.servlet.FilterChain</code> used to manage the execution of a set of filters for a

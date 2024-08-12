@@ -23,15 +23,22 @@ import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.net.URLPattern;
-import org.glassfish.apf.*;
-import org.glassfish.web.deployment.descriptor.WebComponentDescriptorImpl;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
+
 import java.util.Arrays;
 import java.util.logging.Level;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
+import org.glassfish.web.deployment.descriptor.WebComponentDescriptorImpl;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This handler is responsible in handling

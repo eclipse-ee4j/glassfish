@@ -16,15 +16,17 @@
 
 package org.glassfish.distributions.test;
 
-import org.glassfish.distributions.test.ejb.SampleEjb;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.embeddable.EJBContainer;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Map;
 import java.util.HashMap;
-import jakarta.ejb.*;
-import jakarta.ejb.embeddable.EJBContainer;
+import java.util.Map;
+
 import javax.naming.Context;
+
+import org.glassfish.distributions.test.ejb.SampleEjb;
 
 public class UnitTest {
 

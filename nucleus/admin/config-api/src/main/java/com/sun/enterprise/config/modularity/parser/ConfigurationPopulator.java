@@ -17,19 +17,20 @@
 package com.sun.enterprise.config.modularity.parser;
 
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigParser;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.DomDocument;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigParser;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
 
 /**
  * populate the a DomDocument from the given configuration snippet file containing a config bean configuration.

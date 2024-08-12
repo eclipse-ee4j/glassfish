@@ -16,18 +16,18 @@
 
 package com.sun.appserv.ejb;
 
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
 
-import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBLocalHome;
-import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
-
 import org.glassfish.persistence.ejb.entitybean.container.ReadOnlyBeanNotifierImpl;
-
-import java.util.logging.*;
-
-import com.sun.logging.*;
+import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
+import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBLocalHome;
 
 /**
  * Class that is used to obtain ReadOnlyBeanNotifier

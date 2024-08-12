@@ -17,6 +17,18 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
+import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
+import com.sun.corba.ee.spi.legacy.interceptor.ORBInitInfoExt;
+import com.sun.corba.ee.spi.logging.POASystemException;
+import com.sun.corba.ee.spi.misc.ORBConstants;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.CosTransactions.DefaultTransactionService;
+import com.sun.jts.jta.TransactionServiceProperties;
+import com.sun.jts.pi.InterceptorImpl;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,18 +45,6 @@ import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.Current;
 import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-
-import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
-import com.sun.corba.ee.spi.legacy.interceptor.ORBInitInfoExt;
-import com.sun.corba.ee.spi.logging.POASystemException;
-import com.sun.corba.ee.spi.misc.ORBConstants;
-import com.sun.jts.CosTransactions.Configuration;
-import com.sun.jts.CosTransactions.DefaultTransactionService;
-import com.sun.jts.jta.TransactionServiceProperties;
-import com.sun.jts.pi.InterceptorImpl;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
 
 /**
  *

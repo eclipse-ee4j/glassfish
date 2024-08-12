@@ -16,11 +16,11 @@
 
 package org.glassfish.security.services.common;
 
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Context;

@@ -17,11 +17,11 @@
 package com.sun.appserv.util.cache;
 
 import com.sun.enterprise.util.CULoggerInfo;
-import java.text.MessageFormat;
 
-import java.util.Properties;
-import java.util.Map;
+import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * MultiLruCache -- in-memory bounded LRU cache with multiple LRU lists

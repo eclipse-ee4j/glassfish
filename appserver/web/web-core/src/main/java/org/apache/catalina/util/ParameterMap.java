@@ -17,16 +17,16 @@
 
 package org.apache.catalina.util;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 /* START PWC 6057385
 import java.util.HashMap;
 */
 // START PWC 6057385
 
 import org.apache.catalina.LogFacade;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 
 /**

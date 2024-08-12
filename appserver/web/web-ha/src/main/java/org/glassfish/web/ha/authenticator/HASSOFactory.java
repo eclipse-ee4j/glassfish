@@ -24,21 +24,20 @@ package org.glassfish.web.ha.authenticator;
 
 
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-
+import com.sun.enterprise.security.web.GlassFishSingleSignOn;
 import com.sun.enterprise.web.SSOFactory;
 import com.sun.enterprise.web.session.PersistenceType;
-import com.sun.enterprise.security.web.GlassFishSingleSignOn;
+
+import jakarta.inject.Inject;
 
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreConfiguration;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.api.BackingStoreFactory;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

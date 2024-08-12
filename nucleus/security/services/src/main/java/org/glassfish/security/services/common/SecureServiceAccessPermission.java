@@ -16,6 +16,8 @@
 
 package org.glassfish.security.services.common;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,8 +32,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 
 public class SecureServiceAccessPermission extends BasicPermission {

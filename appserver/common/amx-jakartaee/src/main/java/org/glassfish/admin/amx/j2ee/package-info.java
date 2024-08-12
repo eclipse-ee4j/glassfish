@@ -19,5 +19,5 @@
 @Taxonomy(stability = Stability.COMMITTED, description = "Jakarta EE Management interfaces")
 package org.glassfish.admin.amx.j2ee;
 
-import org.glassfish.external.arc.Taxonomy;
 import org.glassfish.external.arc.Stability;
+import org.glassfish.external.arc.Taxonomy;

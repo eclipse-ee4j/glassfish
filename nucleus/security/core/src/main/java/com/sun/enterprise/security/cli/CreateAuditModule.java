@@ -16,6 +16,17 @@
 
 package com.sun.enterprise.security.cli;
 
+import com.sun.enterprise.config.serverbeans.AuditModule;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.SecurityConfigListener;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -37,17 +48,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.AuditModule;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.SecurityConfigListener;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * Create Audit Module Command

@@ -16,20 +16,19 @@
 
 package org.glassfish.webservices;
 
-import java.util.Set;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.deployment.NameValuePairDescriptor;
+import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.xml.ws.api.client.ServiceInterceptor;
+import com.sun.xml.ws.developer.WSBindingProvider;
 
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.soap.SOAPBinding;
 
-import com.sun.xml.ws.api.client.ServiceInterceptor;
-import com.sun.xml.ws.developer.WSBindingProvider;
-
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.ServiceRefPortInfo;
-import com.sun.enterprise.deployment.NameValuePairDescriptor;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is way port creation calls are going to be intercepted in JAXWS2.1

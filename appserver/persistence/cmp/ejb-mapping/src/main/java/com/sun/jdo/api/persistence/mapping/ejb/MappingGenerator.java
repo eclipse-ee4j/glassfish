@@ -22,28 +22,39 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
-import java.util.*;
-import java.sql.Types;
-import java.io.IOException;
-
-import com.sun.jdo.api.persistence.mapping.ejb.beans.*;
-
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmpFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmrFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.ColumnPair;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.EntityMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMappings;
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.ModelException;
-import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
-import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
-
-import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
-
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.spi.persistence.generator.database.DatabaseGenerator;
 import com.sun.jdo.spi.persistence.generator.database.MappingPolicy;
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
 
-import org.netbeans.modules.dbschema.*;
+import java.io.IOException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.DBException;
+import org.netbeans.modules.dbschema.DBIdentifier;
+import org.netbeans.modules.dbschema.SchemaElement;
 import org.netbeans.modules.dbschema.jdbcimpl.SchemaElementImpl;
-
 import org.netbeans.modules.schema2beans.Schema2BeansException;
 
 /*

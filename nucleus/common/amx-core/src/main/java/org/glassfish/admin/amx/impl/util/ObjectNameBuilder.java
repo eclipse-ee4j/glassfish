@@ -20,13 +20,16 @@ package org.glassfish.admin.amx.impl.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.core.proxy.ProxyFactory;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
-import static org.glassfish.external.amx.AMX.*;
+
+import static org.glassfish.external.amx.AMX.PARENT_PATH_KEY;
 
 /**
 Class used to build ObjectNameBuilder for AMX MBeans.

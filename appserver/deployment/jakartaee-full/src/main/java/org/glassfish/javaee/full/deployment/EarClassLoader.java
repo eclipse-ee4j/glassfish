@@ -17,13 +17,13 @@
 
 package org.glassfish.javaee.full.deployment;
 
+import com.sun.enterprise.loader.ASURLClassLoader;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.api.DelegatingClassLoader;
-
-import com.sun.enterprise.loader.ASURLClassLoader;
 
 /**
  * Simplistic class loader which will delegate to each module class loader in the order they were added to the instance

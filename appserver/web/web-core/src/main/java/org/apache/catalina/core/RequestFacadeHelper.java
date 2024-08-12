@@ -16,15 +16,16 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.ServletRequest;
+
+import java.util.ResourceBundle;
+
 import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.connector.SessionTracker;
-
-import java.util.ResourceBundle;
-import jakarta.servlet.ServletRequest;
 
 /**
  * This class exposes some of the functionality of

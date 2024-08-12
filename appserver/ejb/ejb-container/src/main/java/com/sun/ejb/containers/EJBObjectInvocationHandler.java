@@ -16,21 +16,19 @@
 
 package com.sun.ejb.containers;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import java.util.logging.Level;
-
-import java.rmi.RemoteException;
-
-import jakarta.ejb.EJBObject;
-
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.InvocationInfo;
 import com.sun.ejb.containers.util.MethodMap;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
+
+import jakarta.ejb.EJBObject;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
 
 /**
  * Handler for EJBObject invocations through EJBObject proxy.

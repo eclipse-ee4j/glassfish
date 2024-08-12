@@ -23,20 +23,30 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
-import org.netbeans.modules.dbschema.TableElement;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.DBVendorType;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
-import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.*;
-import org.glassfish.persistence.common.I18NHelper;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.Constraint;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintConstant;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintField;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldName;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintNode;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintOperation;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintParamIndex;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintSubquery;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintValue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.TableElement;
 
 /**
  * This class is used to represent a SQL statement.

@@ -16,8 +16,11 @@
 
 package com.sun.gjc.spi.base.datastructure;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.common.DataSourceObjectBuilder;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -25,11 +28,8 @@ import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.ResourceException;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Creates an appropriate statement cache datastructure used in the Resource

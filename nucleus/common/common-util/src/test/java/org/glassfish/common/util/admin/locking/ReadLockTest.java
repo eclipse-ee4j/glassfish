@@ -17,11 +17,6 @@
 
 package org.glassfish.common.util.admin.locking;
 
-import org.glassfish.common.util.admin.ManagedFile;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,6 +27,11 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
+
+import org.glassfish.common.util.admin.ManagedFile;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for ManagedFile.accessRead() method

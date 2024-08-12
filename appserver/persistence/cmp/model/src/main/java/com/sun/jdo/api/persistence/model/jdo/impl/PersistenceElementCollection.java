@@ -22,12 +22,14 @@
 
 package com.sun.jdo.api.persistence.model.jdo.impl;
 
-import java.util.*;
-import java.beans.PropertyVetoException;
-
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.api.persistence.model.ModelVetoException;
-import com.sun.jdo.api.persistence.model.jdo.*;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceElement;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *

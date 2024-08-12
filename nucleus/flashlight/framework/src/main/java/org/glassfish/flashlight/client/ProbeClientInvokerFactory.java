@@ -16,14 +16,14 @@
 
 package org.glassfish.flashlight.client;
 
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.glassfish.flashlight.FlashlightUtils;
+import org.glassfish.flashlight.impl.client.DTraceClientInvoker;
 import org.glassfish.flashlight.impl.client.ReflectiveClientInvoker;
 import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.jvnet.hk2.annotations.Service;
-
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.glassfish.flashlight.impl.client.DTraceClientInvoker;
 
 /**
  * @author Mahesh Kannan

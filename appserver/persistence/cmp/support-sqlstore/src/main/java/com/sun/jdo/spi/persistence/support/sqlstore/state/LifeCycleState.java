@@ -21,11 +21,12 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.state;
 
 import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperStateManager;
-import org.glassfish.persistence.common.I18NHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 
 public abstract class LifeCycleState {

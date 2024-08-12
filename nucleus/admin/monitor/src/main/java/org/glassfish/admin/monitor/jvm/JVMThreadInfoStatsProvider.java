@@ -17,6 +17,7 @@
 package org.glassfish.admin.monitor.jvm;
 
 import java.lang.management.ThreadInfo;
+
 import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.StringStatistic;
 import org.glassfish.external.statistics.impl.CountStatisticImpl;

@@ -21,22 +21,24 @@ import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.servlet.ServletContextAttributeListener;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRequestAttributeListener;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.annotation.WebListener;
+import jakarta.servlet.http.HttpSessionAttributeListener;
+import jakarta.servlet.http.HttpSessionIdListener;
+import jakarta.servlet.http.HttpSessionListener;
+
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.ServletContextAttributeListener;
-import jakarta.servlet.ServletRequestListener;
-import jakarta.servlet.ServletRequestAttributeListener;
-import jakarta.servlet.annotation.WebListener;
-import jakarta.servlet.http.HttpSessionAttributeListener;
-import jakarta.servlet.http.HttpSessionIdListener;
-import jakarta.servlet.http.HttpSessionListener;
-import java.util.logging.Level;
 
 /**
  * This handler is responsible in handling

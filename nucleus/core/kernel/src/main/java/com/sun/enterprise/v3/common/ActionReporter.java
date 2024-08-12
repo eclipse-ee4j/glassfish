@@ -17,6 +17,8 @@
 package com.sun.enterprise.v3.common;
 
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,8 +30,6 @@ import java.util.List;
 import java.util.Queue;
 
 import org.glassfish.api.ActionReport;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * Superclass for common ActionReport extension.

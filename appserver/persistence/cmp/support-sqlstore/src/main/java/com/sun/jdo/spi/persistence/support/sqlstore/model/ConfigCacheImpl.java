@@ -16,6 +16,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
+import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.spi.persistence.support.sqlstore.ConfigCache;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceConfig;
@@ -23,10 +24,13 @@ import com.sun.jdo.spi.persistence.support.sqlstore.VersionConsistencyCache;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.ApplicationLifeCycleEventListener;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.TypeTable;
-import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Caches SQLStore config information.

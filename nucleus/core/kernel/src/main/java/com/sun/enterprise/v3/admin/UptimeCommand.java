@@ -16,7 +16,11 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.universal.Duration;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -33,11 +37,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.universal.Duration;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 
 /**
  * Uptime command Reports on how long the server has been running.

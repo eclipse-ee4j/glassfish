@@ -17,8 +17,9 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.WARNING;
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.pool.ResourceHandler;
+import com.sun.logging.LogDomains;
 
 import java.lang.reflect.Constructor;
 import java.security.AccessController;
@@ -26,9 +27,8 @@ import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.resource.pool.ResourceHandler;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Factory to create appropriate datastructure type for the pool<br>

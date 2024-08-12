@@ -16,14 +16,8 @@
 
 package org.jvnet.libpam;
 
-import static com.sun.jna.Native.POINTER_SIZE;
-import static java.util.logging.Level.FINE;
-import static org.jvnet.libpam.impl.CLibrary.libc;
-import static org.jvnet.libpam.impl.PAMLibrary.PAM_CONV_ERR;
-import static org.jvnet.libpam.impl.PAMLibrary.PAM_PROMPT_ECHO_OFF;
-import static org.jvnet.libpam.impl.PAMLibrary.PAM_SUCCESS;
-import static org.jvnet.libpam.impl.PAMLibrary.PAM_USER;
-import static org.jvnet.libpam.impl.PAMLibrary.libpam;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
 
 import java.util.Set;
 import java.util.logging.Logger;
@@ -35,8 +29,14 @@ import org.jvnet.libpam.impl.PAMLibrary.pam_handle_t;
 import org.jvnet.libpam.impl.PAMLibrary.pam_message;
 import org.jvnet.libpam.impl.PAMLibrary.pam_response;
 
-import com.sun.jna.Pointer;
-import com.sun.jna.ptr.PointerByReference;
+import static com.sun.jna.Native.POINTER_SIZE;
+import static java.util.logging.Level.FINE;
+import static org.jvnet.libpam.impl.CLibrary.libc;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_CONV_ERR;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_PROMPT_ECHO_OFF;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_SUCCESS;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_USER;
+import static org.jvnet.libpam.impl.PAMLibrary.libpam;
 
 /**
  * PAM authenticator.

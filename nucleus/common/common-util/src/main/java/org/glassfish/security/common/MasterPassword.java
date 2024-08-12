@@ -18,10 +18,12 @@
 package org.glassfish.security.common;
 
 import com.sun.enterprise.security.store.PasswordAdapter;
+
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**

@@ -19,29 +19,35 @@ package org.glassfish.connectors.admin.cli;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.BackendPrincipal;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.SecurityMap;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
-import java.util.Collection;
-import java.util.List;
-
-import jakarta.inject.Inject;
-
-import static org.glassfish.connectors.admin.cli.CLIConstants.SM.*;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_CREATE_COMMAND_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_MAPPED_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_MAPPED_PASSWORD;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_MAP_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_POOL_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_PRINCIPALS;
+import static org.glassfish.connectors.admin.cli.CLIConstants.SM.SM_USER_GROUPS;
 
 /**
  * Create Connector SecurityMap command

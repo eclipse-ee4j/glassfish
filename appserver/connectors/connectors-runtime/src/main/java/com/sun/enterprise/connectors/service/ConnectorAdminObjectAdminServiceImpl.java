@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.connectors.service;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.connectors.ActiveOutboundResourceAdapter;
+import com.sun.enterprise.connectors.ActiveResourceAdapter;
+
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -25,10 +29,6 @@ import javax.naming.NamingException;
 
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.connectors.ActiveOutboundResourceAdapter;
-import com.sun.enterprise.connectors.ActiveResourceAdapter;
 
 /**
  * AdminObject administration service. It performs the functionality of

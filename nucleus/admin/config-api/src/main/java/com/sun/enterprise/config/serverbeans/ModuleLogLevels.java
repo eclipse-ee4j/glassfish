@@ -18,9 +18,9 @@
 package com.sun.enterprise.config.serverbeans;
 
 import java.beans.PropertyVetoException;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;

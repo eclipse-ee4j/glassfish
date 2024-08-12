@@ -18,26 +18,12 @@
 
 package org.apache.catalina.connector;
 
-import static org.apache.catalina.Globals.JREPLICA_PARAMETER;
-import static org.apache.catalina.Globals.JREPLICA_SESSION_NOTE;
-import static org.apache.catalina.Globals.SESSION_PARAMETER_NAME;
-import static org.apache.catalina.Globals.SESSION_VERSION_PARAMETER;
-import static org.apache.catalina.LogFacade.CANNOT_CALL_SEND_ERROR_EXCEPTION;
-import static org.apache.catalina.LogFacade.CANNOT_CALL_SEND_REDIRECT_EXCEPTION;
-import static org.apache.catalina.LogFacade.CANNOT_CHANGE_BUFFER_SIZE_EXCEPTION;
-import static org.apache.catalina.LogFacade.CANNOT_RESET_BUFFER_EXCEPTION;
-import static org.apache.catalina.LogFacade.ERROR_DURING_FINISH_RESPONSE;
-import static org.apache.catalina.LogFacade.GET_WRITER_BEEN_CALLED_EXCEPTION;
-import static org.apache.catalina.Logger.WARNING;
-import static org.apache.catalina.connector.Constants.PROXY_JROUTE;
-import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderName;
-import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderValue;
-import static org.glassfish.web.util.HtmlEntityEncoder.encodeXSS;
-
 import com.sun.appserv.ProxyHandler;
+
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -54,6 +40,7 @@ import java.util.TimeZone;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
 import org.apache.catalina.HttpResponse;
@@ -66,6 +53,22 @@ import org.glassfish.grizzly.http.util.CookieHeaderGenerator;
 import org.glassfish.grizzly.http.util.FastHttpDateFormat;
 import org.glassfish.grizzly.http.util.MimeHeaders;
 import org.glassfish.grizzly.http.util.UEncoder;
+
+import static org.apache.catalina.Globals.JREPLICA_PARAMETER;
+import static org.apache.catalina.Globals.JREPLICA_SESSION_NOTE;
+import static org.apache.catalina.Globals.SESSION_PARAMETER_NAME;
+import static org.apache.catalina.Globals.SESSION_VERSION_PARAMETER;
+import static org.apache.catalina.LogFacade.CANNOT_CALL_SEND_ERROR_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_CALL_SEND_REDIRECT_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_CHANGE_BUFFER_SIZE_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_RESET_BUFFER_EXCEPTION;
+import static org.apache.catalina.LogFacade.ERROR_DURING_FINISH_RESPONSE;
+import static org.apache.catalina.LogFacade.GET_WRITER_BEEN_CALLED_EXCEPTION;
+import static org.apache.catalina.Logger.WARNING;
+import static org.apache.catalina.connector.Constants.PROXY_JROUTE;
+import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderName;
+import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderValue;
+import static org.glassfish.web.util.HtmlEntityEncoder.encodeXSS;
 
 /**
  * Wrapper object for the Coyote response.

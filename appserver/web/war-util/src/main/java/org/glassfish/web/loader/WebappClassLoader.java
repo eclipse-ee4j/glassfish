@@ -18,17 +18,9 @@
 
 package org.glassfish.web.loader;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.Logger.Level.WARNING;
-import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
-import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
-import static org.glassfish.web.loader.LogFacade.getString;
-
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -54,11 +46,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+
 import org.apache.naming.resources.BaseDirContext;
 import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.JarFileResourcesProvider;
@@ -70,6 +64,15 @@ import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
+import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
+import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
  * Specialized web application class loader.

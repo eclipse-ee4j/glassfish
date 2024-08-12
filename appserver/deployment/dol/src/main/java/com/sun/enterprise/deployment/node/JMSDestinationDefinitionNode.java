@@ -21,11 +21,11 @@ import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.w3c.dom.Node;
-
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.w3c.dom.Node;
 
 public class JMSDestinationDefinitionNode extends DeploymentDescriptorNode<JMSDestinationDefinitionDescriptor> {
 

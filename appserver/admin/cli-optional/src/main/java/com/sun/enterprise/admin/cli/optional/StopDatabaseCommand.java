@@ -17,12 +17,10 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
-import static com.sun.enterprise.admin.cli.CLIUtil.readPasswordFileOptions;
-import static com.sun.enterprise.admin.cli.ProgramOptions.PASSWORDFILE;
-import static com.sun.enterprise.universal.io.SmartFile.sanitize;
-import static com.sun.enterprise.util.Utility.isAllNull;
-import static java.io.File.pathSeparator;
-import static java.io.File.separator;
+import com.sun.enterprise.admin.cli.CLIProcessExecutor;
+import com.sun.enterprise.admin.cli.Environment;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.OS;
 
 import java.io.File;
 import java.util.HashMap;
@@ -33,10 +31,12 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.admin.cli.CLIProcessExecutor;
-import com.sun.enterprise.admin.cli.Environment;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.OS;
+import static com.sun.enterprise.admin.cli.CLIUtil.readPasswordFileOptions;
+import static com.sun.enterprise.admin.cli.ProgramOptions.PASSWORDFILE;
+import static com.sun.enterprise.universal.io.SmartFile.sanitize;
+import static com.sun.enterprise.util.Utility.isAllNull;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
 
 /**
  * stop-database command This command class will not invoke DerbyControl to stop the database.

@@ -35,7 +35,6 @@ import com.sun.jts.codegen.otsidl.JControlHelper;
 import com.sun.jts.utils.LogFormatter;
 import com.sun.logging.LogDomains;
 
-// Import required classes.
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;

@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.container.common.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+
+import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface JavaEEContainer {

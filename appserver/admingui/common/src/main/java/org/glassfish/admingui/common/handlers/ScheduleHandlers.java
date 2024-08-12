@@ -16,16 +16,13 @@
 
 package org.glassfish.admingui.common.handlers;
 
-//import java.util.*;
-
-
+import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
-import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 
-import org.glassfish.admingui.common.util.GuiUtil;
-import java.text.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -33,7 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestUtil;
+
 /**
  *
  * @author Siraj

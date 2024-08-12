@@ -17,15 +17,17 @@
 package com.sun.enterprise.naming.impl;
 
 import com.sun.enterprise.naming.util.NamingUtilsImpl;
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.omg.CORBA.ORB;
+
+import java.rmi.RemoteException;
+import java.util.Hashtable;
+import java.util.logging.Level;
 
 import javax.naming.CompositeName;
 import javax.naming.NamingException;
 import javax.naming.Reference;
-import java.rmi.RemoteException;
-import java.util.Hashtable;
-import java.util.logging.Level;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.omg.CORBA.ORB;
 
 import static com.sun.enterprise.naming.util.LogFacade.logger;
 

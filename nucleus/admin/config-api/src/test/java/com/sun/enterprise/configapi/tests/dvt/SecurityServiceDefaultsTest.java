@@ -18,12 +18,13 @@
 package com.sun.enterprise.configapi.tests.dvt;
 
 import com.sun.enterprise.config.serverbeans.SecurityService;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.tests.utils.junit.DomainXml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

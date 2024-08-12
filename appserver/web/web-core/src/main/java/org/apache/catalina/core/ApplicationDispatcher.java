@@ -17,14 +17,6 @@
 
 package org.apache.catalina.core;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static jakarta.servlet.DispatcherType.ASYNC;
-import static jakarta.servlet.DispatcherType.ERROR;
-import static jakarta.servlet.DispatcherType.FORWARD;
-import static jakarta.servlet.DispatcherType.INCLUDE;
-import static java.util.logging.Level.FINE;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_DISPATCH_EVENT;
-
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
@@ -38,12 +30,14 @@ import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServletMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
 import org.apache.catalina.HttpResponse;
@@ -60,6 +54,14 @@ import org.glassfish.grizzly.http.server.util.Mapper;
 import org.glassfish.grizzly.http.server.util.MappingData;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.MessageBytes;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static jakarta.servlet.DispatcherType.ASYNC;
+import static jakarta.servlet.DispatcherType.ERROR;
+import static jakarta.servlet.DispatcherType.FORWARD;
+import static jakarta.servlet.DispatcherType.INCLUDE;
+import static java.util.logging.Level.FINE;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_DISPATCH_EVENT;
 
 /**
  * Standard implementation of <code>RequestDispatcher</code> that allows a request to be forwarded to a different

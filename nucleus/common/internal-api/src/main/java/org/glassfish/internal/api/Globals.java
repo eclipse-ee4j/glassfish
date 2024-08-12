@@ -17,16 +17,16 @@
 
 package org.glassfish.internal.api;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Very sensitive class, anything stored here cannot be garbage collected

@@ -19,10 +19,10 @@ package com.sun.enterprise.glassfish.bootstrap;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * This encapsulates the behavior of the properties object that's part of

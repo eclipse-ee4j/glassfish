@@ -17,12 +17,11 @@
 
 package com.sun.enterprise.loader;
 
-import static java.util.logging.Level.INFO;
-
 import com.sun.appserv.server.util.PreprocessorUtil;
 import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.i18n.StringManager;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,9 +65,12 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+
+import static java.util.logging.Level.INFO;
 
 /**
  * Class loader used by the ejbs of an application or stand-alone module.

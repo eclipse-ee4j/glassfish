@@ -16,6 +16,17 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ManifestConstants;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.Repository;
+import com.sun.enterprise.module.ResolveError;
+import com.sun.enterprise.module.common_impl.DirectoryBasedRepository;
+import com.sun.enterprise.module.common_impl.Tokenizer;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -40,17 +51,6 @@ import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.TranslationException;
 import org.jvnet.hk2.config.VariableResolver;
-
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ManifestConstants;
-import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.Repository;
-import com.sun.enterprise.module.ResolveError;
-import com.sun.enterprise.module.common_impl.DirectoryBasedRepository;
-import com.sun.enterprise.module.common_impl.Tokenizer;
-
-import jakarta.inject.Inject;
 
 
 /**

@@ -22,24 +22,44 @@
 
 package com.sun.jdo.api.persistence.model;
 
-import java.io.*;
-import java.util.*;
-import java.lang.reflect.Modifier;
-
-import org.netbeans.modules.dbschema.migration.archiver.XMLInputStream;
-import org.netbeans.modules.dbschema.migration.archiver.XMLOutputStream;
-
-import org.netbeans.modules.dbschema.SchemaElement;
-import com.sun.jdo.api.persistence.model.util.LogHelperModel;
-import com.sun.jdo.api.persistence.model.util.ModelValidator;
-import com.sun.jdo.api.persistence.model.jdo.*;
-import com.sun.jdo.api.persistence.model.jdo.impl.*;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.model.jdo.impl.PersistenceClassElementImpl;
+import com.sun.jdo.api.persistence.model.jdo.impl.PersistenceFieldElementImpl;
+import com.sun.jdo.api.persistence.model.jdo.impl.RelationshipElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
-import com.sun.jdo.spi.persistence.utility.*;
+import com.sun.jdo.api.persistence.model.util.LogHelperModel;
+import com.sun.jdo.api.persistence.model.util.ModelValidator;
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.utility.WeakHashSet;
+import com.sun.jdo.spi.persistence.utility.WeakValueHashMap;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+
 import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.migration.archiver.XMLInputStream;
+import org.netbeans.modules.dbschema.migration.archiver.XMLOutputStream;
 
 /* TODO:
     1. think about moving illegal lists of static info out to a properties file

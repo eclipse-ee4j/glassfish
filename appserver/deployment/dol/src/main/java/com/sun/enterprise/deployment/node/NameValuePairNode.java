@@ -19,10 +19,11 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This class handles a name-value property

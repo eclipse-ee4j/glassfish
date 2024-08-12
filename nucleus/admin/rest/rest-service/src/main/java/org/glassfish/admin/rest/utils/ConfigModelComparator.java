@@ -17,9 +17,9 @@
 package org.glassfish.admin.rest.utils;
 
 import java.io.Serializable;
-import org.jvnet.hk2.config.ConfigModel;
-
 import java.util.Comparator;
+
+import org.jvnet.hk2.config.ConfigModel;
 
 public class ConfigModelComparator implements Comparator<ConfigModel>, Serializable {
     @Override

@@ -16,10 +16,9 @@
 
 package org.glassfish.loadbalancer.admin.cli.transform;
 
+import org.glassfish.loadbalancer.admin.cli.beans.Property;
 import org.glassfish.loadbalancer.admin.cli.reader.api.BaseReader;
 import org.glassfish.loadbalancer.admin.cli.reader.api.PropertyReader;
-
-import org.glassfish.loadbalancer.admin.cli.beans.Property;
 
 /**
  * Provides transform capabilites for properties

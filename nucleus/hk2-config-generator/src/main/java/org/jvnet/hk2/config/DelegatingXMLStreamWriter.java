@@ -17,9 +17,9 @@
 
 package org.jvnet.hk2.config;
 
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * Delegating {@link XMLStreamWriter}.

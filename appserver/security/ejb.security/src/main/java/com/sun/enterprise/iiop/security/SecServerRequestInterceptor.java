@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.iiop.security;
 
-import static com.sun.logging.LogDomains.SECURITY_LOGGER;
-
 import com.sun.corba.ee.org.omg.CSI.CompleteEstablishContext;
 import com.sun.corba.ee.org.omg.CSI.ContextError;
 import com.sun.corba.ee.org.omg.CSI.EstablishContext;
@@ -43,6 +41,7 @@ import com.sun.enterprise.common.iiop.security.SecurityContext;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.logging.LogDomains;
+
 import java.io.ByteArrayInputStream;
 import java.net.Socket;
 import java.security.cert.Certificate;
@@ -52,8 +51,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
+
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.NO_PERMISSION;
@@ -63,6 +64,8 @@ import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
+
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 /**
  * Security server request interceptor

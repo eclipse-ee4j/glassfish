@@ -17,8 +17,9 @@
 
 package com.sun.enterprise.v3.server;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.module.HK2Module;
+
+import jakarta.inject.Inject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,9 +38,8 @@ import org.glassfish.internal.data.EngineInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.module.HK2Module;
-
-import jakarta.inject.Inject;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This class is responsible for starting containers.

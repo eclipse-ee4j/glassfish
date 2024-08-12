@@ -17,8 +17,8 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.glassfish.api.I18n;
 import org.glassfish.config.support.Create;

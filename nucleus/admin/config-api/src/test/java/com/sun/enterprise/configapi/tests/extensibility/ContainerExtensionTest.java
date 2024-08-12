@@ -25,6 +25,8 @@ import com.sun.enterprise.configapi.tests.example.RandomContainer;
 import com.sun.enterprise.configapi.tests.example.RandomElement;
 import com.sun.enterprise.configapi.tests.example.RandomExtension;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 
 import org.glassfish.api.admin.config.Container;
@@ -33,8 +35,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.tests.utils.junit.DomainXml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

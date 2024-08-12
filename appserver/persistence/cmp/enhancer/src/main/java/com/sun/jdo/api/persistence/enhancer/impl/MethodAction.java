@@ -16,8 +16,7 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import com.sun.jdo.api.persistence.enhancer.classfile.*;
-
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassMethod;
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 
 //@olsen: cosmetics

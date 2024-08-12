@@ -17,11 +17,11 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import jakarta.inject.Singleton;
+
 import org.glassfish.connectors.config.WorkSecurityMap;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 @Service
 @Singleton

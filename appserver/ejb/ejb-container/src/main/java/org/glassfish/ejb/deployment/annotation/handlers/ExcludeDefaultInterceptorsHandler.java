@@ -16,14 +16,16 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+
+import jakarta.interceptor.ExcludeDefaultInterceptors;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import jakarta.interceptor.ExcludeDefaultInterceptors;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

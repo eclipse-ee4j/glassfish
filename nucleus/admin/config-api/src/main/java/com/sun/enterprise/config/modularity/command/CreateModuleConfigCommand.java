@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.config.modularity.command;
 
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
-
 import com.sun.enterprise.config.modularity.ConfigModularityUtils;
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue;
@@ -28,6 +26,17 @@ import com.sun.enterprise.config.serverbeans.DomainExtension;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -49,16 +58,11 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Dom;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.CREATE_MODULE_CONFIG_CREATING_ALL_FAILED;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.CREATE_MODULE_CONFIG_CREATING_FOR_SERVICE_NAME_FAILED;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.CREATE_MODULE_CONFIG_FAILURE;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.CREATE_MODULE_CONFIG_SHOW_ALL_FAILED;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
 
 /**
  * A remote command to create the default configuration for a given service using the snippets available in the relevant

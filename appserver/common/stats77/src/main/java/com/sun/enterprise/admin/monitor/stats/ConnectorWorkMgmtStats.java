@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
-import org.glassfish.j2ee.statistics.RangeStatistic;
 import org.glassfish.j2ee.statistics.CountStatistic;
+import org.glassfish.j2ee.statistics.RangeStatistic;
 import org.glassfish.j2ee.statistics.Stats;
 
 /**

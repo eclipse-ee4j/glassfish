@@ -20,14 +20,14 @@ import com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 
-
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 /**
  * This is the callback object that gets called when a protected resource

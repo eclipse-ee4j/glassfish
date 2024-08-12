@@ -17,24 +17,30 @@
 package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.servermgmt.cli.LocalServerCommand;
+import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.InstanceDirs;
-import java.io.*;
+import com.sun.enterprise.util.io.ServerDirs;
+import com.sun.enterprise.util.net.NetUtils;
+
+import java.io.BufferedOutputStream;
+import java.io.Console;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-
-import com.sun.enterprise.admin.servermgmt.cli.LocalServerCommand;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.net.NetUtils;
-import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.io.ServerDirs;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
 
 /**
  * A base class for local commands that manage a local server instance.

@@ -19,6 +19,10 @@ package com.sun.enterprise.configapi.tests.validation;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.ServerRef;
+
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,9 +35,6 @@ import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-import jakarta.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

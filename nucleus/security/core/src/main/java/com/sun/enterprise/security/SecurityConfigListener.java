@@ -17,6 +17,21 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.config.serverbeans.AuditModule;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.audit.BaseAuditManager;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Properties;
@@ -34,20 +49,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.AuditModule;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.audit.BaseAuditManager;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 
 /**
  *

@@ -17,6 +17,7 @@
 package org.glassfish.admin.rest.model;
 
 import java.net.URI;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 

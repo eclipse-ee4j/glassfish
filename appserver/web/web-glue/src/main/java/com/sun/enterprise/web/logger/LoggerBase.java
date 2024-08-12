@@ -16,15 +16,16 @@
 
 package com.sun.enterprise.web.logger;
 
-import org.apache.catalina.Container;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.Logger;
-
 import jakarta.servlet.ServletException;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Logger;
 
 /**
  * Convenience base class for <b>Logger</b> implementations.  The only

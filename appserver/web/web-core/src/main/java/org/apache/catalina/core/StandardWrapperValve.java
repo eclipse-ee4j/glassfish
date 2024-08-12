@@ -17,24 +17,12 @@
 
 package org.apache.catalina.core;
 
-import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
-import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
-import static java.text.MessageFormat.format;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.Globals.DISPATCHER_REQUEST_PATH_ATTR;
-import static org.apache.catalina.Globals.JSP_FILE_ATTR;
-import static org.apache.catalina.LogFacade.APP_UNAVAILABLE;
-import static org.apache.catalina.LogFacade.DEALLOCATE_EXCEPTION;
-import static org.apache.catalina.LogFacade.RELEASE_FILTERS_EXCEPTION;
-import static org.apache.catalina.LogFacade.SEND_ACKNOWLEDGEMENT_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_ALLOCATE_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_NOT_FOUND;
-import static org.apache.catalina.LogFacade.SERVLET_SERVICE_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_UNAVAILABLE;
-import static org.apache.catalina.LogFacade.STANDARD_WRAPPER_VALVE;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -54,12 +42,24 @@ import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.valves.ValveBase;
 import org.glassfish.grizzly.http.util.DataChunk;
 
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.UnavailableException;
-import jakarta.servlet.http.HttpServletResponse;
+import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.Globals.DISPATCHER_REQUEST_PATH_ATTR;
+import static org.apache.catalina.Globals.JSP_FILE_ATTR;
+import static org.apache.catalina.LogFacade.APP_UNAVAILABLE;
+import static org.apache.catalina.LogFacade.DEALLOCATE_EXCEPTION;
+import static org.apache.catalina.LogFacade.RELEASE_FILTERS_EXCEPTION;
+import static org.apache.catalina.LogFacade.SEND_ACKNOWLEDGEMENT_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_ALLOCATE_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_NOT_FOUND;
+import static org.apache.catalina.LogFacade.SERVLET_SERVICE_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_UNAVAILABLE;
+import static org.apache.catalina.LogFacade.STANDARD_WRAPPER_VALVE;
 
 /**
  * Valve that implements the default basic behavior for the <code>StandardWrapper</code> container implementation.

@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.admin.remote;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.collections.ManifestUtils;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  *

@@ -19,16 +19,16 @@
  */
 package com.sun.ts.tests.ejb30.lite.basic.common;
 
-import static com.sun.ts.tests.ejb30.lite.basic.common.GlobalJNDITest.getAppJNDIName;
-import static com.sun.ts.tests.ejb30.lite.basic.common.GlobalJNDITest.getGlobalJNDIName;
-import static com.sun.ts.tests.ejb30.lite.basic.common.GlobalJNDITest.getModuleJNDIName;
-
-import javax.naming.Context;
-
 import com.sun.ts.tests.ejb30.common.helper.Helper;
 import com.sun.ts.tests.ejb30.common.helper.ServiceLocator;
 
 import jakarta.ejb.EJBContext;
+
+import javax.naming.Context;
+
+import static com.sun.ts.tests.ejb30.lite.basic.common.GlobalJNDITest.getAppJNDIName;
+import static com.sun.ts.tests.ejb30.lite.basic.common.GlobalJNDITest.getGlobalJNDIName;
+import static com.sun.ts.tests.ejb30.lite.basic.common.GlobalJNDITest.getModuleJNDIName;
 
 public class BasicBeanHelper {
     private static int x = -2;

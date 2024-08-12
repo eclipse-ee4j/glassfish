@@ -16,9 +16,11 @@
 
 package org.glassfish.web.config.serverbeans;
 
+import jakarta.validation.constraints.Max;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
-import jakarta.validation.constraints.Max;
+
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
 import org.jvnet.hk2.config.Attribute;

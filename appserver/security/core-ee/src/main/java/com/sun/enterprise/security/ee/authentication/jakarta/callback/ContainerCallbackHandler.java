@@ -23,6 +23,8 @@
 
 package com.sun.enterprise.security.ee.authentication.jakarta.callback;
 
+import com.sun.enterprise.security.SecurityServicesUtil;
+
 import java.io.IOException;
 
 import javax.security.auth.callback.Callback;
@@ -32,8 +34,6 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.SecurityServicesUtil;
 
 /**
  * @author Shing Wai Chan

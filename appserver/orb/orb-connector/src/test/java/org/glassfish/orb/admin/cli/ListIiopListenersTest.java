@@ -20,6 +20,8 @@ package org.glassfish.orb.admin.cli;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -39,8 +41,6 @@ import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

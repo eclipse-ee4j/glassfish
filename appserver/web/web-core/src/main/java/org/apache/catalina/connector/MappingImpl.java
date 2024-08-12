@@ -16,16 +16,15 @@
 
 package org.apache.catalina.connector;
 
+import jakarta.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.MappingMatch;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import jakarta.servlet.http.MappingMatch;
-import jakarta.servlet.http.HttpServletMapping;
-
-import org.glassfish.grizzly.http.server.util.MappingData;
-
 import org.apache.catalina.LogFacade;
+import org.glassfish.grizzly.http.server.util.MappingData;
 
 public class MappingImpl implements HttpServletMapping, Serializable {
 

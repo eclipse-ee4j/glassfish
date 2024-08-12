@@ -21,8 +21,6 @@
 
 package org.apache.catalina.servlets;
 
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -32,6 +30,7 @@ import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -57,6 +56,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
@@ -70,6 +70,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.core.ContextsAdapterUtility;
@@ -85,6 +86,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.EntityResolver2;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * <p>

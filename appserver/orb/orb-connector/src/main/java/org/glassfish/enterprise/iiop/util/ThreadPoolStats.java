@@ -16,8 +16,8 @@
 
 package org.glassfish.enterprise.iiop.util;
 
-import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.BoundedRangeStatistic;
+import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.RangeStatistic;
 import org.glassfish.external.statistics.Stats;
 

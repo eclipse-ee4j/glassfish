@@ -18,9 +18,9 @@
 package org.apache.catalina.ssi;
 
 
-import org.glassfish.web.util.HtmlEntityEncoder;
-
 import java.io.PrintWriter;
+
+import org.glassfish.web.util.HtmlEntityEncoder;
 /**
  * Return the result associated with the supplied Server Variable.
  *

@@ -16,11 +16,12 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.stringifier.IteratorStringifier;
-import org.glassfish.admin.amx.util.stringifier.Stringifier;
+import java.util.Iterator;
 
 import javax.management.AttributeList;
-import java.util.Iterator;
+
+import org.glassfish.admin.amx.util.stringifier.IteratorStringifier;
+import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 public final class AttributeListStringifier implements Stringifier
 {

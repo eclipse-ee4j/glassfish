@@ -22,15 +22,6 @@
 
 package com.sun.enterprise.security.ee.authentication.jakarta.callback;
 
-import java.io.IOException;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.ChoiceCallback;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;
 
@@ -41,6 +32,15 @@ import jakarta.security.auth.message.callback.PasswordValidationCallback;
 import jakarta.security.auth.message.callback.PrivateKeyCallback;
 import jakarta.security.auth.message.callback.SecretKeyCallback;
 import jakarta.security.auth.message.callback.TrustStoreCallback;
+
+import java.io.IOException;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.ChoiceCallback;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
 
 /**
  * Appclient side Callback Handler for WSS.

@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.monitor;
 
-import org.glassfish.flashlight.client.ProbeClientMethodHandle;
-
 import java.util.Collection;
+
+import org.glassfish.flashlight.client.ProbeClientMethodHandle;
 
 public class StatsProviderUtil {
 

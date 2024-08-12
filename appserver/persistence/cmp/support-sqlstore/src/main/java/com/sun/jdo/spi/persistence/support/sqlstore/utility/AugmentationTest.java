@@ -23,15 +23,19 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.utility;
 
 
-import java.lang.reflect.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.PrintStream;
-
 // note the use of the public vs. the internal interfaces by this class
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
+
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility class for testing a class file for correct augmentation.

@@ -19,6 +19,8 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 
+import jakarta.inject.Inject;
+
 import java.util.Set;
 
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
@@ -28,8 +30,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;

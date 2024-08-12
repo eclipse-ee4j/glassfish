@@ -16,17 +16,15 @@
 
 package com.sun.enterprise.security.ee;
 
-import static com.sun.enterprise.deployment.util.DOLUtils.earType;
-import static com.sun.enterprise.deployment.util.DOLUtils.ejbType;
-import static com.sun.enterprise.deployment.util.DOLUtils.warType;
-import static org.glassfish.deployment.common.DeploymentUtils.isArchiveOfType;
-
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.security.SecurityLifecycle;
+
 import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -34,6 +32,11 @@ import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.deployment.util.DOLUtils.earType;
+import static com.sun.enterprise.deployment.util.DOLUtils.ejbType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
+import static org.glassfish.deployment.common.DeploymentUtils.isArchiveOfType;
 
 /**
  * SecuritySniffer for security related activities

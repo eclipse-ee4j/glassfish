@@ -21,7 +21,7 @@
 
 package org.glassfish.flashlight.xml;
 
-import java.util.*;
+import java.util.List;
 
 /**
  *

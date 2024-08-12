@@ -16,10 +16,11 @@
 
 package com.sun.ejb;
 
-import java.lang.reflect.Method;
-
 import com.sun.ejb.containers.interceptors.InterceptorManager;
 import com.sun.enterprise.security.ee.authorization.cache.CachedPermission;
+
+import java.lang.reflect.Method;
+
 import org.glassfish.ejb.deployment.descriptor.EjbRemovalInfo;
 
 /**
@@ -94,6 +95,7 @@ public class InvocationInfo {
         return asyncMethodFlag;
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Invocation Info for ejb " + ejbName + "\t");

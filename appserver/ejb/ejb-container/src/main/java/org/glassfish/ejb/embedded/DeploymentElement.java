@@ -16,21 +16,22 @@
 
 package org.glassfish.ejb.embedded;
 
+import com.sun.ejb.containers.EjbContainerUtilImpl;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
+
+import jakarta.ejb.EJBException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import jakarta.ejb.EJBException;
-
-import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.glassfish.deployment.common.ModuleExploder;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
-import com.sun.ejb.containers.EjbContainerUtilImpl;
+import org.glassfish.embeddable.archive.ScatteredArchive;
 
 /**
  * Wrapper that allows to distinguish between an EJB module and a library reference.

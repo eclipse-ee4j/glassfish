@@ -26,10 +26,10 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
+import com.sun.enterprise.deployment.util.DOLUtils;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 /**
  *

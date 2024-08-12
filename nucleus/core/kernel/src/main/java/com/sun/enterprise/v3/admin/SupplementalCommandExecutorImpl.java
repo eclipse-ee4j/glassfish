@@ -16,11 +16,9 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.Collections.emptyList;
-import static org.glassfish.api.admin.RuntimeType.DAS;
-import static org.glassfish.api.admin.RuntimeType.INSTANCE;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,8 +59,11 @@ import org.jvnet.hk2.component.MultiMap;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import jakarta.inject.Inject;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.Collections.emptyList;
+import static org.glassfish.api.admin.RuntimeType.DAS;
+import static org.glassfish.api.admin.RuntimeType.INSTANCE;
 
 /**
  * An executor that executes Supplemental commands means for current command

@@ -18,6 +18,7 @@ package com.sun.enterprise.admin.monitor.stats;
 
 import java.util.List;
 import java.util.Map;
+
 import org.glassfish.j2ee.statistics.JTAStats;
 
 /** Defines additional Sun ONE Application Server specific statistic to transaction service.

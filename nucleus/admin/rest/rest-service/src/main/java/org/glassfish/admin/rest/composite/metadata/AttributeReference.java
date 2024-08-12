@@ -16,12 +16,13 @@
 
 package org.glassfish.admin.rest.composite.metadata;
 
+import jakarta.inject.Qualifier;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import jakarta.inject.Qualifier;
 
 /**
  * Many, if not all, <code>RestModel</code> instances will expose properties that mirror similarly-named properties on

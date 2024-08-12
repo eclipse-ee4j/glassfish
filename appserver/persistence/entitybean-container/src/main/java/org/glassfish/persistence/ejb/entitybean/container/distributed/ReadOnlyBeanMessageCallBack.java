@@ -17,20 +17,20 @@
 package org.glassfish.persistence.ejb.entitybean.container.distributed;
 
 import com.sun.ejb.containers.EjbContainerUtil;
-
-import org.glassfish.gms.bootstrap.GMSAdapter;
-import org.glassfish.gms.bootstrap.GMSAdapterService;
 import com.sun.enterprise.ee.cms.core.CallBack;
 import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
+import com.sun.logging.LogDomains;
 
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
 
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import java.util.logging.Logger;
+
+import org.glassfish.gms.bootstrap.GMSAdapter;
+import org.glassfish.gms.bootstrap.GMSAdapterService;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnlyBeanNotifier {

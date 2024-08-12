@@ -23,9 +23,11 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
-import org.netbeans.modules.dbschema.TableElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+
 import java.util.ArrayList;
+
+import org.netbeans.modules.dbschema.TableElement;
 
 /**
  * This class is used to represent a database table.

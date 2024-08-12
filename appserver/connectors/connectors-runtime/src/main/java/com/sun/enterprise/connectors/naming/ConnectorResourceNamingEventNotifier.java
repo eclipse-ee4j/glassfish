@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.connectors.naming;
 
-import java.util.ArrayList;
-
 import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
 import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
+
+import java.util.ArrayList;
 
 /**
  * Notifier for connector resource naming events

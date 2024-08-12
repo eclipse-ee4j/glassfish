@@ -30,10 +30,10 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
+import java.util.Vector;
 
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
+import org.omg.CORBA.SystemException;
+import org.omg.CosTransactions.Coordinator;
 
 /**
  * The NestingInfo interface provides operations that record all nesting

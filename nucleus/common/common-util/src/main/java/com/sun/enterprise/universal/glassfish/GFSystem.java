@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.universal.glassfish;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A replacement for System Properties

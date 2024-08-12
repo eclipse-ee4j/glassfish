@@ -16,24 +16,35 @@
 
 package com.sun.enterprise.admin.cli;
 
-import java.io.*;
-import java.util.*;
+import com.sun.enterprise.admin.util.CommandModelData;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
-import org.jvnet.hk2.annotations.Service;
+import jakarta.inject.Inject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel.ParamModel;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
-
-import com.sun.enterprise.admin.util.*;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
-import jakarta.inject.Inject;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * A scaled-down implementation of multi-mode command.

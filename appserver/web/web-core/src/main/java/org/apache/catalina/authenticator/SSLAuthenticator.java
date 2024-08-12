@@ -18,6 +18,18 @@
 
 package org.apache.catalina.authenticator;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.security.Principal;
+import java.security.cert.X509Certificate;
+import java.text.MessageFormat;
+
+import org.apache.catalina.HttpRequest;
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.deploy.LoginConfig;
+
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -30,18 +42,6 @@ import static org.apache.catalina.LogFacade.NO_CLIENT_CERTIFICATE_CHAIN;
 import static org.apache.catalina.LogFacade.PRINCIPAL_BEEN_AUTHENTICATED_INFO;
 import static org.apache.catalina.authenticator.Constants.CERT_METHOD;
 import static org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.security.cert.X509Certificate;
-import java.text.MessageFormat;
-
-import org.apache.catalina.HttpRequest;
-import org.apache.catalina.HttpResponse;
-import org.apache.catalina.deploy.LoginConfig;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * An <b>Authenticator</b> and <b>Valve</b> implementation of authentication that utilizes SSL certificates to identify

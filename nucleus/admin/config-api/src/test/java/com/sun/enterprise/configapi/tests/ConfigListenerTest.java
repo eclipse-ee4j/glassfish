@@ -19,6 +19,8 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.configapi.tests.example.HttpListenerContainer;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.ConfigConfigBeanListener;
 import org.glassfish.grizzly.config.dom.NetworkListener;
@@ -35,8 +37,6 @@ import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

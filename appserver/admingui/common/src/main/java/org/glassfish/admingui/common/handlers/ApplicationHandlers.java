@@ -21,29 +21,30 @@
  */
 package org.glassfish.admingui.common.handlers;
 
+import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
-import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-import java.net.URLEncoder;
-import java.net.InetAddress;
 
+import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.TreeSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import org.glassfish.admingui.common.util.GuiUtil;
+import java.util.TreeSet;
+import java.util.logging.Level;
+
+import org.glassfish.admingui.common.util.AppUtil;
 import org.glassfish.admingui.common.util.DeployUtil;
+import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.admingui.common.util.TargetUtil;
-import org.glassfish.admingui.common.util.AppUtil;
 
 
 public class ApplicationHandlers {

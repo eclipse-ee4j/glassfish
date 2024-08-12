@@ -20,7 +20,9 @@ package org.glassfish.grizzly.config.portunif;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.net.ssl.SSLEngine;
+
 import org.glassfish.grizzly.Connection;
 import org.glassfish.grizzly.config.ConfigAwareElement;
 import org.glassfish.grizzly.config.dom.HttpRedirect;

@@ -17,6 +17,11 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.logging.LogDomains;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,11 +47,6 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.logging.LogDomains;
 
 /**
  * Driver Loader to load the jdbc drivers and get driver/datasource classnames

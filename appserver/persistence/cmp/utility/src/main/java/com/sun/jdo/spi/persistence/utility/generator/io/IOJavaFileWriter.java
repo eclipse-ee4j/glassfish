@@ -22,12 +22,17 @@
 
 package com.sun.jdo.spi.persistence.utility.generator.io;
 
-import java.io.*;
-import java.util.*;
+import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
+import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
-import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
 
 /**
  * This implementation of the {@link JavaFileWriter} interface is based on

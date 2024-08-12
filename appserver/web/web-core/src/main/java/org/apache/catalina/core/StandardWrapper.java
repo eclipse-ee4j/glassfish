@@ -18,6 +18,47 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+
+import javax.management.Notification;
+import javax.management.NotificationBroadcasterSupport;
+import javax.management.ObjectName;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.ContainerServlet;
+import org.apache.catalina.Context;
+import org.apache.catalina.InstanceListener;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Loader;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.util.Enumerator;
+import org.apache.catalina.util.InstanceSupport;
+import org.glassfish.web.valve.GlassFishValve;
+
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
@@ -36,44 +77,6 @@ import static org.apache.catalina.LogFacade.ERROR_LOADING_INFO;
 import static org.apache.catalina.LogFacade.PARENT_CONTAINER_MUST_BE_CONTEXT_EXCEPTION;
 import static org.apache.catalina.LogFacade.WRAPPER_CONTAINER_NO_CHILD_EXCEPTION;
 import static org.apache.catalina.core.Constants.JSP_SERVLET_CLASS;
-
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.UnavailableException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import javax.management.Notification;
-import javax.management.NotificationBroadcasterSupport;
-import javax.management.ObjectName;
-import org.apache.catalina.Container;
-import org.apache.catalina.ContainerServlet;
-import org.apache.catalina.Context;
-import org.apache.catalina.InstanceListener;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.Loader;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Wrapper;
-import org.apache.catalina.util.Enumerator;
-import org.apache.catalina.util.InstanceSupport;
-import org.glassfish.web.valve.GlassFishValve;
 
 /**
  * Standard implementation of the <b>Wrapper</b> interface that represents an individual servlet definition. No child

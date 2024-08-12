@@ -18,13 +18,12 @@
 package org.apache.catalina.ssi;
 
 
-import org.apache.catalina.util.RequestUtil;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -35,6 +34,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
+
+import org.apache.catalina.util.RequestUtil;
 import org.glassfish.grizzly.utils.Charsets;
 
 /**

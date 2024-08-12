@@ -16,17 +16,9 @@
 
 package org.glassfish.config.support;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.AnnotationUtil;
-
-import java.util.logging.Level;
-
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.*;
-import org.glassfish.common.util.admin.GenericCommandModel;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.*;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
 
@@ -34,10 +26,26 @@ import java.beans.PropertyVetoException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
 
-import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ManagedJob;
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.common.util.admin.GenericCommandModel;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.WriteableView;
 
 /**
  * Implementation of the generic delete command

@@ -25,8 +25,12 @@
 
 package com.sun.enterprise.transaction.jts.recovery;
 
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
+import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.CosTransactions.LogControl;
+import com.sun.jts.CosTransactions.RecoveryManager;
+import com.sun.logging.LogDomains;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,12 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
-import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
-import com.sun.jts.CosTransactions.Configuration;
-import com.sun.jts.CosTransactions.LogControl;
-import com.sun.jts.CosTransactions.RecoveryManager;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 /**
  * This class manages lock file required for delegated recovery.

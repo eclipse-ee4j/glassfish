@@ -36,7 +36,6 @@ import com.sun.logging.LogDomains;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// Import required classes.
 import org.omg.CORBA.CompletionStatus;
 import org.omg.CORBA.INTERNAL;
 import org.omg.CORBA.INVALID_TRANSACTION;

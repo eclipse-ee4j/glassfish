@@ -16,13 +16,14 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.DefaultResourcePrincipalNode;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Map;
+
 import org.glassfish.ejb.deployment.descriptor.runtime.MdbConnectionFactoryDescriptor;
 import org.w3c.dom.Node;
 

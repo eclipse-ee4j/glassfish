@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.naming.impl;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class TransientContext implements Context, Serializable {
     private static NameParser myParser = new SerialNameParser();
 
     private Hashtable<Object, Object> myEnv;
-    private final Map<String, Object> bindings = new HashMap<>();
+    private final Map<String, Object> bindings = new BindingMap();
 
     // Issue 7067: lots of lookup failures in a heavily concurrent client.
     // So add a read/write lock, which allows unlimited concurrent readers,
@@ -807,6 +808,21 @@ public class TransientContext implements Context, Serializable {
         @Override
         public void close() {
             //no-op since no steps needed to free up resources
+        }
+    }
+
+    /**
+     * A map that excludes non-serializable values from serialization.
+     */
+    static class BindingMap extends HashMap<String, Object> {
+
+        private static final long serialVersionUID = 1L;
+
+        public Object writeReplace() throws ObjectStreamException {
+            BindingMap bindingMap = (BindingMap) clone();
+            // Skip non-serializable values for remote client
+            bindingMap.entrySet().removeIf(binding -> !(binding.getValue() instanceof Serializable));
+            return bindingMap;
         }
     }
 }

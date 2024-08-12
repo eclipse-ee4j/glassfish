@@ -17,14 +17,15 @@
 package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.config.serverbeans.Server;
+
+import java.util.List;
+import java.util.concurrent.Future;
+
 import org.glassfish.api.admin.InstanceCommand;
 import org.glassfish.api.admin.InstanceCommandResult;
 import org.glassfish.api.admin.InstanceState;
 import org.glassfish.api.admin.ParameterMap;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * Interface for service that parses the instance state file.

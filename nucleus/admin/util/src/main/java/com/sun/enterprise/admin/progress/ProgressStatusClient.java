@@ -18,8 +18,10 @@ package com.sun.enterprise.admin.progress;
 
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.api.admin.progress.ProgressStatusBase;

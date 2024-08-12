@@ -18,19 +18,9 @@
 package org.apache.catalina.core;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.authenticator.SingleSignOn;
-import org.apache.catalina.deploy.ErrorPage;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.util.RequestUtil;
-import org.apache.catalina.valves.ValveBase;
-import org.glassfish.web.valve.GlassFishValve;
-
-import javax.management.Notification;
-import javax.management.NotificationBroadcasterSupport;
-import javax.management.ObjectName;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -39,6 +29,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+
+import javax.management.Notification;
+import javax.management.NotificationBroadcasterSupport;
+import javax.management.ObjectName;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Deployer;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Pipeline;
+import org.apache.catalina.authenticator.SingleSignOn;
+import org.apache.catalina.deploy.ErrorPage;
+import org.apache.catalina.util.RequestUtil;
+import org.apache.catalina.valves.ValveBase;
+import org.glassfish.web.valve.GlassFishValve;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Standard implementation of the <b>Host</b> interface.  Each

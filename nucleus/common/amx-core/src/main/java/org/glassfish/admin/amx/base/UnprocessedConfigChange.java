@@ -17,6 +17,7 @@
 package org.glassfish.admin.amx.base;
 
 import java.beans.PropertyChangeEvent;
+
 import org.glassfish.admin.amx.util.ObjectUtil;
 import org.glassfish.admin.amx.util.StringUtil;
 import org.glassfish.external.arc.Stability;

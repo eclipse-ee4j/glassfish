@@ -17,8 +17,14 @@
 
 package com.sun.enterprise.security.ee.authentication.jakarta;
 
-import static java.util.logging.Level.FINE;
-import static java.util.regex.Matcher.quoteReplacement;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.ProviderConfig;
+import com.sun.enterprise.config.serverbeans.RequestPolicy;
+import com.sun.enterprise.config.serverbeans.ResponsePolicy;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.auth.message.MessagePolicy;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,14 +44,8 @@ import org.glassfish.epicyro.data.AuthModulesLayerConfig;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.ProviderConfig;
-import com.sun.enterprise.config.serverbeans.RequestPolicy;
-import com.sun.enterprise.config.serverbeans.ResponsePolicy;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.auth.message.MessagePolicy;
+import static java.util.logging.Level.FINE;
+import static java.util.regex.Matcher.quoteReplacement;
 
 /**
  * Parser for message-security-config in domain.xml

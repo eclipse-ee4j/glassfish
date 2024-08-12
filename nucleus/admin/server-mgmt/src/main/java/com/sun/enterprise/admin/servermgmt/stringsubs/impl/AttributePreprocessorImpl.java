@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import java.util.Map;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.AttributePreprocessor;
+
+import java.util.Map;
 
 /**
  * Implementation of {@link AttributePreprocessor}

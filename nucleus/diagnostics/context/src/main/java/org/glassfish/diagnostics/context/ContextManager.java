@@ -16,12 +16,11 @@
 
 package org.glassfish.diagnostics.context;
 
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-import org.jvnet.hk2.annotations.Contract;
-
-import org.glassfish.logging.annotation.LoggerInfo;
-
 import java.util.logging.Logger;
+
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * The ContextManager provides access to diagnostics Contexts.

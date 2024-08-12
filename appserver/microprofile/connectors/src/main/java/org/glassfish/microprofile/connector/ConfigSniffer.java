@@ -15,6 +15,9 @@
  */
 package org.glassfish.microprofile.connector;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -24,9 +27,6 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
 
 @Service
 public class ConfigSniffer extends GenericSniffer {

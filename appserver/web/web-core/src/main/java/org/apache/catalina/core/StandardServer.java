@@ -18,12 +18,6 @@
 package org.apache.catalina.core;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.deploy.NamingResources;
-import org.apache.catalina.util.LifecycleSupport;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
-import javax.management.ObjectName;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -33,11 +27,25 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.AccessControlException;
 import java.security.SecureRandom;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.ObjectName;
+
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Server;
+import org.apache.catalina.ServerFactory;
+import org.apache.catalina.Service;
+import org.apache.catalina.deploy.NamingResources;
+import org.apache.catalina.util.LifecycleSupport;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 
 /**

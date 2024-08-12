@@ -16,8 +16,10 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import java.util.*;
-import java.lang.ref.*;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * A weak HashSet. An element stored in the WeakHashSet might be garbage collected,

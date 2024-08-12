@@ -16,12 +16,12 @@
 
 package org.glassfish.security.services.impl;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+
 import java.util.List;
 
-import org.glassfish.security.services.config.SecurityConfigurations;
 import org.glassfish.security.services.config.SecurityConfiguration;
-
-import com.sun.enterprise.config.serverbeans.Domain;
+import org.glassfish.security.services.config.SecurityConfigurations;
 
 /**
  * The base security service factory class.

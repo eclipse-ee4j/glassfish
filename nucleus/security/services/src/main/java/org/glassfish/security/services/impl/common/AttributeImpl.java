@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+
 import org.glassfish.security.services.api.common.Attribute;
 
 public class AttributeImpl implements Attribute {

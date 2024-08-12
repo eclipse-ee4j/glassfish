@@ -16,6 +16,16 @@
 
 package org.glassfish.distributions.test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Collection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.glassfish.distributions.test.ejb.SampleEjb;
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
@@ -23,17 +33,9 @@ import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
-import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.HttpListener;
+import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.WebListener;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Collection;
 
 public class EmbeddedTest {
 

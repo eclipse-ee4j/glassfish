@@ -17,6 +17,8 @@
 
 package org.jvnet.hk2.config.test.example;
 
+import jakarta.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +41,6 @@ import org.jvnet.hk2.config.DomDecorator;
 import org.jvnet.hk2.config.InjectionTarget;
 import org.jvnet.hk2.config.Populator;
 import org.jvnet.hk2.config.Transactions;
-
-import jakarta.inject.Singleton;
 
 /**
  * TODO:  This should be done via auto-depends (via Service and contract

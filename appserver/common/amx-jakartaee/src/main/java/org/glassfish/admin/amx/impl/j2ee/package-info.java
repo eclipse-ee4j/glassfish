@@ -19,8 +19,8 @@
 @Taxonomy(stability = Stability.PRIVATE)
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.external.arc.Taxonomy;
 import org.glassfish.external.arc.Stability;
+import org.glassfish.external.arc.Taxonomy;
 
 
 

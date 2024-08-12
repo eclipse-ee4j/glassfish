@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.connectors;
 
+import jakarta.resource.spi.XATerminator;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -24,8 +26,6 @@ import java.io.ObjectOutput;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
-
-import jakarta.resource.spi.XATerminator;
 
 /**
  * Proxy for XATerminator.

@@ -17,10 +17,11 @@
 package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.WebResourceCollection;
-import org.glassfish.deployment.common.Descriptor;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This descriptor represents a description of a portion of a web app

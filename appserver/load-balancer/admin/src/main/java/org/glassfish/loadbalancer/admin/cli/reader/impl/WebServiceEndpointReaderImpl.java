@@ -19,13 +19,12 @@ package org.glassfish.loadbalancer.admin.cli.reader.impl;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-import org.glassfish.loadbalancer.admin.cli.reader.api.WebModuleReader;
+
 import org.glassfish.loadbalancer.admin.cli.reader.api.IdempotentUrlPatternReader;
+import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
+import org.glassfish.loadbalancer.admin.cli.reader.api.WebModuleReader;
 import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
 import org.glassfish.loadbalancer.admin.cli.transform.WebModuleVisitor;
-
-
-import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
 
 /**
  * Provides web module information relavant to Load balancer tier.

@@ -22,13 +22,14 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ResourceBundle;
 
-import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
-import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

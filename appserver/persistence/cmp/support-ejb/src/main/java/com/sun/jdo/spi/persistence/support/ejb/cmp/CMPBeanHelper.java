@@ -21,22 +21,21 @@
  */
 package com.sun.jdo.spi.persistence.support.ejb.cmp;
 
-import java.util.Collection;
-import java.util.ResourceBundle;
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOHelper;
+import com.sun.jdo.api.persistence.support.PersistenceCapable;
+import com.sun.jdo.api.persistence.support.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.ejb.DuplicateKeyException;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.ObjectNotFoundException;
 
-import com.sun.jdo.api.persistence.support.JDOHelper;
-import com.sun.jdo.api.persistence.support.JDOException;
-import com.sun.jdo.api.persistence.support.PersistenceCapable;
-import com.sun.jdo.api.persistence.support.PersistenceManager;
-
-import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
+import java.util.Collection;
+import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /** Provides static helper methods for CMP bean implementation to simplify
  * the generated code.

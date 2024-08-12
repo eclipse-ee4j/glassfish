@@ -17,13 +17,14 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import com.sun.enterprise.security.BasePasswordLoginModule;
+import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
+
+import javax.security.auth.login.LoginException;
+
 import static com.sun.enterprise.security.auth.realm.ldap.LDAPRealm.MODE_FIND_BIND;
 import static com.sun.enterprise.security.auth.realm.ldap.LDAPRealm.PARAM_MODE;
 import static com.sun.enterprise.util.Utility.isEmpty;
-
-import javax.security.auth.login.LoginException;
-import com.sun.enterprise.security.BasePasswordLoginModule;
-import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
 
 /**
  * GlassFish JAAS LoginModule for an LDAP Realm.

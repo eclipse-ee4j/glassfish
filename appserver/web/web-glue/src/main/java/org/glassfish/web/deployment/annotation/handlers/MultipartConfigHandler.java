@@ -19,12 +19,18 @@ package org.glassfish.web.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
-import org.glassfish.web.deployment.descriptor.MultipartConfigDescriptor;
-import org.glassfish.apf.*;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.servlet.annotation.MultipartConfig;
+
 import java.lang.annotation.Annotation;
+
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
+import org.glassfish.web.deployment.descriptor.MultipartConfigDescriptor;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This handler is responsible in handling

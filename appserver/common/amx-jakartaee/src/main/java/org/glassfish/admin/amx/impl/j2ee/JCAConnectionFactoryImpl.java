@@ -16,10 +16,10 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.JCAConnectionFactory;
-
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.j2ee.J2EEManagedObject;
+import org.glassfish.admin.amx.j2ee.JCAConnectionFactory;
 
 /**
  */

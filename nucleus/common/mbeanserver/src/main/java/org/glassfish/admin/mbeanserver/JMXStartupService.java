@@ -17,51 +17,42 @@
 
 package org.glassfish.admin.mbeanserver;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.JmxConnector;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
 import javax.management.MBeanRegistrationException;
-
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.jvnet.hk2.annotations.Service;
-
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
-import org.glassfish.external.amx.BootAMXMBean;
-
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import java.lang.management.ManagementFactory;
-
-import com.sun.enterprise.config.serverbeans.AdminService;
-import com.sun.enterprise.config.serverbeans.JmxConnector;
-import com.sun.enterprise.config.serverbeans.Domain;
-
-import org.glassfish.grizzly.config.dom.Ssl;
-
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXServiceURL;
 
-
-import java.io.IOException;
-import java.util.Set;
-import javax.management.JMException;
-import org.glassfish.api.admin.*;
-
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
+import org.glassfish.external.amx.BootAMXMBean;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.PostStartupRunLevel;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Responsible for creating the {@link BootAMXMBean}, and starting JMXConnectors,

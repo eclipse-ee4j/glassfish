@@ -17,18 +17,14 @@
 
 package org.apache.catalina.core;
 
-import static jakarta.servlet.DispatcherType.ERROR;
-import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
-import static jakarta.servlet.RequestDispatcher.ERROR_REQUEST_URI;
-import static jakarta.servlet.RequestDispatcher.ERROR_SERVLET_NAME;
-import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
-import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-import static java.util.Locale.ENGLISH;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.Globals.DISPATCHER_REQUEST_PATH_ATTR;
-import static org.apache.catalina.LogFacade.NO_CONTEXT_TO_PROCESS;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -52,14 +48,18 @@ import org.apache.catalina.util.ResponseUtil;
 import org.apache.catalina.valves.ValveBase;
 import org.glassfish.web.valve.GlassFishValve;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static jakarta.servlet.DispatcherType.ERROR;
+import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
+import static jakarta.servlet.RequestDispatcher.ERROR_REQUEST_URI;
+import static jakarta.servlet.RequestDispatcher.ERROR_SERVLET_NAME;
+import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static java.util.Locale.ENGLISH;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.Globals.DISPATCHER_REQUEST_PATH_ATTR;
+import static org.apache.catalina.LogFacade.NO_CONTEXT_TO_PROCESS;
 
 /**
  * Valve that implements the default basic behavior for the <code>StandardHost</code> container implementation.

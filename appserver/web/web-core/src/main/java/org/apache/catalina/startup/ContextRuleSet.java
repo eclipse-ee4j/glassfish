@@ -18,14 +18,14 @@
 package org.apache.catalina.startup;
 
 
+import java.lang.reflect.Constructor;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.Loader;
 import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomcat.util.digester.Rule;
 import org.apache.tomcat.util.digester.RuleSetBase;
 import org.xml.sax.Attributes;
-
-import java.lang.reflect.Constructor;
 
 
 /**

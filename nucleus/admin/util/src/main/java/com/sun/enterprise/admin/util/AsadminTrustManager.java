@@ -18,6 +18,7 @@ package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.security.store.AsadminTruststore;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.Console;
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -25,6 +26,7 @@ import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Map;
+
 import javax.net.ssl.X509TrustManager;
 
 /**

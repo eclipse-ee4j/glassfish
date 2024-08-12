@@ -16,7 +16,8 @@
 
 package org.jvnet.libpam;
 
-import static org.jvnet.libpam.impl.CLibrary.libc;
+import com.sun.jna.Memory;
+import com.sun.jna.ptr.IntByReference;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,8 +26,7 @@ import java.util.Set;
 import org.jvnet.libpam.impl.CLibrary.Group;
 import org.jvnet.libpam.impl.CLibrary.Passwd;
 
-import com.sun.jna.Memory;
-import com.sun.jna.ptr.IntByReference;
+import static org.jvnet.libpam.impl.CLibrary.libc;
 
 /**
  * Represents an Unix user. Immutable.

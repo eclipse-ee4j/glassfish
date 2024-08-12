@@ -17,9 +17,10 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
+import com.sun.enterprise.admin.cli.CLICommand;
+import com.sun.enterprise.admin.cli.ClassPathBuilder;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.OS;
 
 import java.io.File;
 
@@ -27,10 +28,9 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
-import com.sun.enterprise.admin.cli.CLICommand;
-import com.sun.enterprise.admin.cli.ClassPathBuilder;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.OS;
+import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 
 /**
  * This is an abstract class to be inherited by StartDatabaseCommand and StopDatabaseCommand. This classes prepares the

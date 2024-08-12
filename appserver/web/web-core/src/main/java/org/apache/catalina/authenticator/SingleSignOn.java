@@ -18,10 +18,10 @@
 
 package org.apache.catalina.authenticator;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static org.apache.catalina.LogFacade.ASSOCIATE_SSO_WITH_SESSION_INFO;
-import static org.apache.catalina.LogFacade.START_COMPONENT_INFO;
-import static org.apache.catalina.LogFacade.STOP_COMPONENT_INFO;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -42,10 +42,10 @@ import org.apache.catalina.SessionEvent;
 import org.apache.catalina.SessionListener;
 import org.apache.catalina.valves.ValveBase;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static org.apache.catalina.LogFacade.ASSOCIATE_SSO_WITH_SESSION_INFO;
+import static org.apache.catalina.LogFacade.START_COMPONENT_INFO;
+import static org.apache.catalina.LogFacade.STOP_COMPONENT_INFO;
 
 /**
  * A <strong>Valve</strong> that supports a "single sign on" user experience, where the security identity of a user who

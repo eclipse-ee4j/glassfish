@@ -16,8 +16,6 @@
  */
 package org.glassfish.persistence.common;
 
-import static java.lang.System.Logger.Level.DEBUG;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
@@ -30,6 +28,8 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * Contains helper methods for persistence module

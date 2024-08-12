@@ -25,6 +25,8 @@ import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,8 +40,6 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.types.Property;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

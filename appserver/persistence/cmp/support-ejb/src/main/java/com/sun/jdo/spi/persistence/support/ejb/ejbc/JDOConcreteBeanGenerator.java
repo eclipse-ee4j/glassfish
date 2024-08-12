@@ -22,27 +22,35 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.util.*;
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
+import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
+import com.sun.jdo.spi.persistence.support.ejb.model.DeploymentDescriptorModel;
+import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
+import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
+import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
+import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaClassWriter;
+import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaFileWriter;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
-
-import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.jdo.*;
-import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
-import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
-
-import com.sun.jdo.spi.persistence.support.ejb.model.DeploymentDescriptorModel;
-import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
-import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.generator.*;
-import com.sun.jdo.spi.persistence.utility.generator.io.*;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /*
  * This is the base class for JDO specific generator for the concrete CMP

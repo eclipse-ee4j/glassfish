@@ -22,9 +22,14 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
-import jakarta.transaction.*;
-
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
+
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.UserTransaction;
 
     /** Provide a Forte for Java implementation with information about the distributed
      * transaction environment.  This is an interface that a helper class

@@ -15,11 +15,11 @@
  */
 package org.glassfish.tests.embedded.scatteredarchive.contextInitialized;
 
-import static java.lang.System.Logger.Level.INFO;
-
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+
+import static java.lang.System.Logger.Level.INFO;
 
 @WebListener
 public class DispatcherListener implements ServletContextListener {

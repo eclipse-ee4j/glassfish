@@ -26,7 +26,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.management.*;
+
+import javax.management.MBeanServer;
+import javax.management.MBeanServerNotification;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.core.AMXValidator;
 import org.glassfish.admin.amx.util.AMXLoggerInfo;

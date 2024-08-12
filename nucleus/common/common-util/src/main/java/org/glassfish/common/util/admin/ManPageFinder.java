@@ -16,19 +16,19 @@
 
 package org.glassfish.common.util.admin;
 
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.List;
-import java.util.Collections;
 import java.util.ArrayList;
-import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  A utility class that gets the plain text man page for the

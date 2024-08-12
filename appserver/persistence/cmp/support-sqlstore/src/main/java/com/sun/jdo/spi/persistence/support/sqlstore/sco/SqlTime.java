@@ -21,12 +21,12 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sco;
 
-import java.io.ObjectStreamException;
-
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
-import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.SCODate;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.SCODate;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
+
+import java.io.ObjectStreamException;
 
 /**
  * A mutable 2nd class object date.

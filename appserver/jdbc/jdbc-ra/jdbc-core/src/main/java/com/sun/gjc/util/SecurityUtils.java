@@ -16,14 +16,6 @@
 
 package com.sun.gjc.util;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.security.auth.Subject;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.ConnectionRequestInfoImpl;
@@ -32,6 +24,14 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.security.auth.Subject;
 
 /**
  * SecurityUtils for Generic JDBC Connector.

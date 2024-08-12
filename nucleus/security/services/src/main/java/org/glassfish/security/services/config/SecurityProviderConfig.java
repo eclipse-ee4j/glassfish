@@ -19,8 +19,8 @@ package org.glassfish.security.services.config;
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /**
  * Base interface for all security provider implementation configuration.

@@ -16,10 +16,10 @@
 
 package com.sun.jdo.api.persistence.enhancer;
 
+import com.sun.jdo.api.persistence.enhancer.util.Support;
+
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.sun.jdo.api.persistence.enhancer.util.Support;
 
 
 //@lars: changes to reflect to new ByteCodeEnhancer interface

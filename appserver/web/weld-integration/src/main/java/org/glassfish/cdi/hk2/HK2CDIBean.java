@@ -17,7 +17,11 @@
 
 package org.glassfish.cdi.hk2;
 
-import static java.util.Collections.emptySet;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -29,11 +33,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.InjectionPoint;
+import static java.util.Collections.emptySet;
 
 /**
  * This is a CDI bean that is backed by an HK2 service

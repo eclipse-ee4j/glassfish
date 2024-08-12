@@ -16,6 +16,19 @@
 
 package com.sun.enterprise.security.admin.cli;
 
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecureAdminHelper;
+import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.security.admin.cli.SecureAdminCommand.ConfigLevelContext;
+import com.sun.enterprise.security.admin.cli.SecureAdminCommand.TopLevelContext;
+import com.sun.enterprise.security.admin.cli.SecureAdminCommand.Work;
+import com.sun.enterprise.security.ssl.SSLUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.util.Iterator;
@@ -30,19 +43,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecureAdminHelper;
-import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.security.admin.cli.SecureAdminCommand.ConfigLevelContext;
-import com.sun.enterprise.security.admin.cli.SecureAdminCommand.TopLevelContext;
-import com.sun.enterprise.security.admin.cli.SecureAdminCommand.Work;
-import com.sun.enterprise.security.ssl.SSLUtils;
-
-import jakarta.inject.Inject;
 
 /**
  * Common logic for formal upgrade (i.e., start-domain --upgrade) and silent upgrade (starting a newer version of GlassFish using

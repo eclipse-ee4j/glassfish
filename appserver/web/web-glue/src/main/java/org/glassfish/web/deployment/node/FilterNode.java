@@ -18,12 +18,13 @@ package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
 import java.util.Vector;
+
+import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
 
 /**
  * This class is responsible for handling filter xml node

@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.connectors.util;
 
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.logging.LogDomains;
+
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class ConnectionPoolReconfigHelper {
 

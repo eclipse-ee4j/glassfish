@@ -17,6 +17,8 @@
 
 package org.glassfish.ejb.config;
 
+import jakarta.validation.constraints.Min;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -30,8 +32,6 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.constraints.Min;
 
 @Configured
 public interface MdbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtension {

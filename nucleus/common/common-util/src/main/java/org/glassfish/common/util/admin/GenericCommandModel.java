@@ -17,21 +17,22 @@
 package org.glassfish.common.util.admin;
 
 import com.sun.enterprise.util.LocalStringManager;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.CommandModel;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.DomDocument;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
 import org.glassfish.api.ParamDefaultCalculator;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.ExecuteOn;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.DomDocument;
 
 public class GenericCommandModel extends CommandModel {
 

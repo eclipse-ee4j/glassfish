@@ -16,6 +16,10 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
+import com.sun.enterprise.admin.servermgmt.test.ServerMgmgtTestFiles;
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,10 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
-import com.sun.enterprise.admin.servermgmt.test.ServerMgmgtTestFiles;
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
 
 /**
  * Unit test class to test {@link StringSubstitutionParser} functionality.

@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.util.Properties;
 
 import org.glassfish.api.ActionReport;
@@ -30,10 +34,6 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * Return the version and build number

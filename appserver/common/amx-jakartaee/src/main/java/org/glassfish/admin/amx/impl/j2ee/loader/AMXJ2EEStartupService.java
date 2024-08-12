@@ -20,6 +20,19 @@ package org.glassfish.admin.amx.impl.j2ee.loader;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyChangeEvent;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.management.JMException;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.config.AMXConfigConstants;
 import org.glassfish.admin.amx.core.proxy.ProxyFactory;
@@ -31,25 +44,21 @@ import org.glassfish.admin.amx.impl.j2ee.MetadataImpl;
 import org.glassfish.admin.amx.impl.util.ImplUtil;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
+import org.glassfish.admin.amx.j2ee.AMXEELoggerInfo;
 import org.glassfish.admin.amx.j2ee.J2EEDomain;
 import org.glassfish.admin.amx.j2ee.J2EETypes;
 import org.glassfish.admin.amx.util.FeatureAvailability;
 import org.glassfish.api.amx.AMXLoader;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.data.ApplicationRegistry;
-import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-
-import javax.management.JMException;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import java.beans.PropertyChangeEvent;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.admin.amx.j2ee.AMXEELoggerInfo;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.ObservableBean;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 
 /**

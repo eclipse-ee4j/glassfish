@@ -16,25 +16,39 @@
 
 package com.sun.jts.jta;
 
-import java.util.*;
-import javax.transaction.xa.*;
-import org.omg.CosTransactions.*;
-import com.sun.jts.jtsxa.XID;
-import com.sun.jts.codegen.jtsxa.OTSResource;
-import com.sun.jts.jtsxa.OTSResourceImpl;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.Synchronization;
-import com.sun.jts.jtsxa.Utility;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.ControlImpl;
-import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 import com.sun.jts.CosTransactions.GlobalTID;
-
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import com.sun.jts.codegen.jtsxa.OTSResource;
+import com.sun.jts.jtsxa.OTSResourceImpl;
+import com.sun.jts.jtsxa.Utility;
+import com.sun.jts.jtsxa.XID;
 import com.sun.logging.LogDomains;
+
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Inactive;
+import org.omg.CosTransactions.Unavailable;
 /**
  * keep track of per-transaction state
  *

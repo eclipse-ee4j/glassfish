@@ -16,8 +16,6 @@
 
 package org.glassfish.admin.rest.resources;
 
-import java.util.List;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -26,14 +24,15 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
+
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.results.ActionReportResult;
-
-import org.glassfish.jersey.media.sse.SseFeature;
-
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.jersey.media.sse.SseFeature;
 
 /**
  *

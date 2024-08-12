@@ -23,26 +23,26 @@ import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.net.URISyntaxException;
-import java.net.URI;
 
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.quality.ToDo;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 import static java.util.logging.Logger.getAnonymousLogger;
 

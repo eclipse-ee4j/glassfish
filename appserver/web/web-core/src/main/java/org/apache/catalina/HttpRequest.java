@@ -18,9 +18,10 @@
 package org.apache.catalina;
 
 
+import jakarta.servlet.http.Cookie;
+
 import java.security.Principal;
 import java.util.Locale;
-import jakarta.servlet.http.Cookie;
 
 import org.glassfish.grizzly.http.util.DataChunk;
 

@@ -30,20 +30,31 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
+import com.sun.jts.codegen.otsidl.CoordinatorResource;
+import com.sun.jts.codegen.otsidl.CoordinatorResourceHelper;
+import com.sun.jts.codegen.otsidl.CoordinatorResourcePOA;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
 
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.Vote;
+import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 
 /**The CoordinatorResourceImpl interface provides operations that allow a
  * Coordinator to be represented among the registered Resources of a

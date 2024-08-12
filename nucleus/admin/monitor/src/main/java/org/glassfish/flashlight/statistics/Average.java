@@ -16,8 +16,8 @@
 
 package org.glassfish.flashlight.statistics;
 
-import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.external.statistics.RangeStatistic;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * @author Harpreet SIngh

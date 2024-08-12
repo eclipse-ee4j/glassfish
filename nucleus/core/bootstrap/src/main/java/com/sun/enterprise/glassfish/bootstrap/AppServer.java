@@ -16,12 +16,13 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import org.glassfish.hk2.api.Proxiable;
-
 import jakarta.inject.Scope;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import org.glassfish.hk2.api.Proxiable;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

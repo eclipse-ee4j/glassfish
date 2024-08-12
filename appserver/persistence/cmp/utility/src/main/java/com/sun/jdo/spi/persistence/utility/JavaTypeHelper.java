@@ -22,8 +22,8 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /** This is a helper class which provides some basic java type convenience
  * methods: extraction of a package from a fully qualified class name,

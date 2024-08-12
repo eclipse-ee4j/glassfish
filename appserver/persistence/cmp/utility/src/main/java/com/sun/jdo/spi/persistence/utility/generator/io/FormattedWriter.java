@@ -22,7 +22,9 @@
 
 package com.sun.jdo.spi.persistence.utility.generator.io;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
 
 /**

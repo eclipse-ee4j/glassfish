@@ -16,13 +16,14 @@
 
 package com.sun.enterprise.transaction.api;
 
-import org.jvnet.hk2.annotations.Contract;
+import com.sun.enterprise.transaction.spi.TransactionalResource;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.transaction.Transaction;
+
 import java.util.Set;
 
-import com.sun.enterprise.transaction.spi.TransactionalResource;
+import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface JavaEETransaction

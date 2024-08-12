@@ -16,19 +16,19 @@
 
 package org.glassfish.cdi.transaction;
 
-import static org.glassfish.cdi.transaction.TransactionScopedCDIUtil.DESTORYED_EVENT;
-import static org.glassfish.cdi.transaction.TransactionScopedCDIUtil.log;
-import static org.glassfish.cdi.transaction.TransactionScopedContextImpl.TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import java.util.Set;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.transaction.Synchronization;
-import jakarta.transaction.TransactionSynchronizationRegistry;
+import static org.glassfish.cdi.transaction.TransactionScopedCDIUtil.DESTORYED_EVENT;
+import static org.glassfish.cdi.transaction.TransactionScopedCDIUtil.log;
+import static org.glassfish.cdi.transaction.TransactionScopedContextImpl.TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME;
 
 /**
  * A wrapper for contextual instances of {@link jakarta.transaction.TransactionScoped} beans. We need this wrapper so

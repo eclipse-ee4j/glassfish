@@ -16,14 +16,15 @@
 
 package org.glassfish.web.ha;
 
-import com.sun.enterprise.web.PEWebContainerFeatureFactoryImpl;
 import com.sun.enterprise.web.PESSOFactory;
-import com.sun.enterprise.web.ServerConfigLookup;
+import com.sun.enterprise.web.PEWebContainerFeatureFactoryImpl;
 import com.sun.enterprise.web.SSOFactory;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.web.ha.authenticator.HASSOFactory;
+import com.sun.enterprise.web.ServerConfigLookup;
 
 import jakarta.inject.Inject;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.web.ha.authenticator.HASSOFactory;
 import org.jvnet.hk2.annotations.Service;
 
 /**

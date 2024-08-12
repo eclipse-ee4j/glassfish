@@ -17,7 +17,9 @@
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
 import java.lang.reflect.Array;
+
 import javax.management.MBeanParameterInfo;
+
 import org.glassfish.admin.amx.util.ClassUtil;
 import org.glassfish.admin.amx.util.stringifier.ArrayStringifier;
 

@@ -18,6 +18,10 @@ package org.glassfish.deployment.autodeploy;
 
 import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,13 +30,9 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.deployment.autodeploy.AutoDeployer.AutodeploymentStatus;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Manages retrying of autodeployed files in case a file is copied slowly.

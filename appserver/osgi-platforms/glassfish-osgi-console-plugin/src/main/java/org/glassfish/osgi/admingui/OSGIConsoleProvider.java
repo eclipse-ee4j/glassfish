@@ -16,9 +16,10 @@
 
 package org.glassfish.osgi.admingui;
 
+import java.net.URL;
+
 import org.glassfish.api.admingui.ConsoleProvider;
 import org.jvnet.hk2.annotations.Service;
-import java.net.URL;
 
 /**
  * @author Mohit

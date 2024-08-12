@@ -17,6 +17,13 @@
 
 package com.sun.gjc.spi.base;
 
+import com.sun.gjc.util.MethodExecutor;
+import com.sun.gjc.util.StatementLeakDetector;
+import com.sun.gjc.util.StatementLeakListener;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,13 +33,6 @@ import java.sql.Statement;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.gjc.util.MethodExecutor;
-import com.sun.gjc.util.StatementLeakDetector;
-import com.sun.gjc.util.StatementLeakListener;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.ResourceException;
 
 /**
  * Abstract class for wrapping Statement<br>

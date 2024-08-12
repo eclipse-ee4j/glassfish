@@ -16,14 +16,14 @@
 
 package com.sun.ejb.portable;
 
-import java.util.Properties;
+import jakarta.ejb.spi.HandleDelegate;
+
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import jakarta.ejb.spi.HandleDelegate;
 
 /**
  * Common code for looking up the java:comp/HandleDelegate.

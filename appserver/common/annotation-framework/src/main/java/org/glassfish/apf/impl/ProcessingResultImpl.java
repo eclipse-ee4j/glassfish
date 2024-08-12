@@ -16,13 +16,13 @@
 
 package org.glassfish.apf.impl;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.reflect.AnnotatedElement;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.apf.ProcessingResult;
 import org.glassfish.apf.ResultType;
-import org.glassfish.apf.HandlerProcessingResult;
 
 /**
  * Implementation of the ProcessingResult interface

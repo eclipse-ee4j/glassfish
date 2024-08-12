@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
@@ -24,8 +26,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

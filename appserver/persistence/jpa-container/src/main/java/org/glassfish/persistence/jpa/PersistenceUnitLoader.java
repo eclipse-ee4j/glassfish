@@ -17,9 +17,16 @@
 
 package org.glassfish.persistence.jpa;
 
-import static java.util.Collections.unmodifiableMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.ValidationMode;
+import jakarta.persistence.spi.PersistenceProvider;
+import jakarta.persistence.spi.PersistenceUnitInfo;
+import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,16 +39,9 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessorFactory;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.ValidationMode;
-import jakarta.persistence.spi.PersistenceProvider;
-import jakarta.persistence.spi.PersistenceUnitInfo;
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 
 /**
  * Loads emf corresponding to a PersistenceUnit. Executes java2db if required.

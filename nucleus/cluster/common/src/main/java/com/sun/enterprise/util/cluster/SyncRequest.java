@@ -16,9 +16,11 @@
 
 package com.sun.enterprise.util.cluster;
 
-import java.util.*;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-import jakarta.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Request message to synchronize files.

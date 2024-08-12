@@ -16,6 +16,10 @@
 
 package org.glassfish.appclient.client.acc;
 
+import com.sun.enterprise.util.LocalStringManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,10 +34,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
 
 /**
  * Encapsulates handling of appclient script command arguments and options.

@@ -26,9 +26,9 @@ import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.assembler.metro.ServerPipelineHook;
 import com.sun.xml.ws.policy.PolicyMap;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import jakarta.xml.ws.http.HTTPBinding;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This is used by JAXWSContainer to return proper 196 security and

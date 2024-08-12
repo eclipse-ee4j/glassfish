@@ -20,16 +20,17 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sco;
 
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.SCOCollection;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
-import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
-import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.SCOCollection;
-import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import org.glassfish.persistence.common.I18NHelper;
 
 

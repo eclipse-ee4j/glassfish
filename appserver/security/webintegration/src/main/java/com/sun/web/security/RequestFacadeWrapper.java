@@ -16,18 +16,6 @@
 
 package com.sun.web.security;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
-
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.RequestFacade;
-
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
@@ -42,6 +30,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.RequestFacade;
 
 class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
 

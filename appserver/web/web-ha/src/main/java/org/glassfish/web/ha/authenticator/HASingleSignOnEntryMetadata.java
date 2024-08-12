@@ -16,7 +16,7 @@
 
 package org.glassfish.web.ha.authenticator;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 

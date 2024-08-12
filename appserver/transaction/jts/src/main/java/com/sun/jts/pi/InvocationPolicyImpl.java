@@ -16,12 +16,11 @@
 
 package com.sun.jts.pi;
 
-import org.omg.CORBA.Policy;
 import org.omg.CORBA.LocalObject;
-
+import org.omg.CORBA.Policy;
 import org.omg.CosTransactions.EITHER;
-import org.omg.CosTransactions.InvocationPolicy;
 import org.omg.CosTransactions.INVOCATION_POLICY_TYPE;
+import org.omg.CosTransactions.InvocationPolicy;
 
 /**
  * This is the InvocationPolicy object which holds an appropriate policy value.

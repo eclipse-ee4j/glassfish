@@ -20,9 +20,9 @@
  */
 package org.glassfish.admin.amx.core;
 
+import org.glassfish.admin.amx.base.Pathnames;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-import org.glassfish.admin.amx.base.Pathnames;
 
 /**
  * Constants and regex related to pathnames.

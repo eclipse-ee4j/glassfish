@@ -16,6 +16,16 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
+import com.sun.enterprise.admin.cli.CLIConstants;
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.servermgmt.KeystoreManager;
+import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
+import com.sun.enterprise.security.store.PasswordAdapter;
+import com.sun.enterprise.universal.glassfish.TokenResolver;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -31,16 +41,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.admin.cli.CLIConstants;
-import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.admin.servermgmt.KeystoreManager;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.io.FileUtils;
 
 
 /**

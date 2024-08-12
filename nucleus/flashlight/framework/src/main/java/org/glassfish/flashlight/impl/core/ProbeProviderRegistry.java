@@ -16,8 +16,11 @@
 
 package org.glassfish.flashlight.impl.core;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import org.glassfish.flashlight.FlashlightUtils;
 
 /**

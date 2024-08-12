@@ -17,6 +17,8 @@
 
 package org.apache.catalina.util;
 
+import jakarta.servlet.http.Cookie;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import jakarta.servlet.http.Cookie;
 
 import org.apache.naming.Util;
 import org.glassfish.grizzly.http.util.ByteChunk;

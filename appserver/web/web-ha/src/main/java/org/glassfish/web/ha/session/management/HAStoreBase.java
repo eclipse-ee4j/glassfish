@@ -23,15 +23,21 @@
 
 package org.glassfish.web.ha.session.management;
 
-import java.io.*;
+import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
-import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import org.apache.catalina.*;
+import org.apache.catalina.Container;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
 import org.apache.catalina.session.StoreBase;
 import org.glassfish.web.ha.LogFacade;
 

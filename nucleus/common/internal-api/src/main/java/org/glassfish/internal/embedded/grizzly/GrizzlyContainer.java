@@ -16,9 +16,9 @@
 
 package org.glassfish.internal.embedded.grizzly;
 
+import org.glassfish.api.container.Adapter;
 import org.glassfish.internal.embedded.EmbeddedContainer;
 import org.glassfish.internal.embedded.Port;
-import org.glassfish.api.container.Adapter;
 
 /**
  * Grizzly container, should probably be implemented using the GrizzlyWebServer object.

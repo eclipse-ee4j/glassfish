@@ -17,11 +17,17 @@
 
 package org.apache.catalina.deploy;
 
-import org.apache.catalina.util.Enumerator;
-
 import jakarta.servlet.Filter;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.catalina.util.Enumerator;
 
 /**
  * Representation of a filter definition for a web application, as represented

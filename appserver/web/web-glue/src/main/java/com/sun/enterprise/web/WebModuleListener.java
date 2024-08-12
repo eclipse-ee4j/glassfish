@@ -28,6 +28,7 @@ import com.sun.enterprise.web.jsp.ResourceInjectorImpl;
 
 import jakarta.servlet.ServletContext;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +50,12 @@ import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Wrapper;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.web.TldProvider;
+import org.glassfish.hk2.api.DynamicConfigurationService;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.Populator;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.api.ServiceLocatorFactory;
+import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
@@ -60,13 +66,6 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.web.LogFacade.CLASS_CAST_EXCEPTION;
-
-import java.io.IOException;
-import org.glassfish.hk2.api.DynamicConfigurationService;
-import org.glassfish.hk2.api.MultiException;
-import org.glassfish.hk2.api.Populator;
-import org.glassfish.hk2.api.ServiceLocatorFactory;
-import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 
 /**
  * Startup event listener for a <b>Context</b> that configures the properties of that Jsp Servlet from sun-web.xml

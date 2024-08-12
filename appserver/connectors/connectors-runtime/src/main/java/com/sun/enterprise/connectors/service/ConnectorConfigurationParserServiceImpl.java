@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.connectors.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.connectors.util.AdminObjectConfigParser;
 import com.sun.enterprise.connectors.util.ConnectorConfigParser;
@@ -33,6 +25,14 @@ import com.sun.enterprise.connectors.util.MCFConfigParser;
 import com.sun.enterprise.connectors.util.MessageListenerConfigParser;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.SecurityPermission;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
 
 
 /**

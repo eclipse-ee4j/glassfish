@@ -16,9 +16,9 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import jakarta.transaction.Transaction;
+
+import org.jvnet.hk2.annotations.Contract;
 
 
 /**

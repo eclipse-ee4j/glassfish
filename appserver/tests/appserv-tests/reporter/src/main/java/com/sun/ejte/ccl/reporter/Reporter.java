@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,30 @@
 
 package com.sun.ejte.ccl.reporter;
 
-/**
- * @Class : Reporter
-   @Description : Main class used for Uniform reporting of results
-   @Author : Ramesh Mandava
-   @Last Modified : Initial Creation by Ramesh Mandava after taking input from
-        Jeanfrancois and other Team members
-   @Last Modified : By Ramesh on 1/20/2002 , Added code to use new testIdVector and
-                testCaseIdVector for  preserving order of entry of them and now <tests>
-                element is added around multiple tests
-   @Last Modified : By Ramesh on 4/5/2002, Taken care of machine name unavailability
-                under J2EE. And allowed having . in the path of result file
-
- *
- */
-
-
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Date;
-import java.util.Calendar;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-
-
+/**
+ * Main class used for Uniform reporting of results
+ *
+ * @author : Ramesh Mandava
+ */
 public class Reporter extends Thread implements Serializable {
 
     /* FIELDS */

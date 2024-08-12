@@ -17,11 +17,6 @@
 
 package com.sun.ejb;
 
-import static com.sun.ejb.codegen.Generator.getBaseName;
-import static com.sun.ejb.codegen.Generator.getFullClassName;
-import static com.sun.ejb.codegen.Generator.getPackageName;
-import static java.util.logging.Level.FINE;
-
 import com.sun.ejb.codegen.AsmSerializableBeanGenerator;
 import com.sun.ejb.codegen.EjbClassGeneratorFactory;
 import com.sun.ejb.codegen.GeneratorException;
@@ -34,6 +29,7 @@ import com.sun.ejb.containers.RemoteBusinessWrapperBase;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.logging.LogDomains;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -48,9 +44,16 @@ import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
+
 import org.glassfish.api.naming.SimpleJndiName;
+
+import static com.sun.ejb.codegen.Generator.getBaseName;
+import static com.sun.ejb.codegen.Generator.getFullClassName;
+import static com.sun.ejb.codegen.Generator.getPackageName;
+import static java.util.logging.Level.FINE;
 
 /**
  * A handy class with static utility methods.

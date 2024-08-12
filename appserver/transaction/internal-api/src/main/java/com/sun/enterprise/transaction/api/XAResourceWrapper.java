@@ -16,11 +16,14 @@
 
 package com.sun.enterprise.transaction.api;
 
-import javax.transaction.xa.*;
-import javax.security.auth.Subject;
+import com.sun.enterprise.util.i18n.StringManager;
+
 import jakarta.resource.spi.ManagedConnection;
 
-import com.sun.enterprise.util.i18n.StringManager;
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
 
 /**
  * Wrappers over XAResources extend from this class. This class simply implements the

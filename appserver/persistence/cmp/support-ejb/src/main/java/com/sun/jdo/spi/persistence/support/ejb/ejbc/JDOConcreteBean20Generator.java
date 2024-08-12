@@ -22,25 +22,29 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.util.*;
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.ModelException;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.EJBQLC;
+import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.EJBQLException;
+import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
+import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
-
-import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.ModelException;
-import com.sun.jdo.api.persistence.model.jdo.*;
-
-import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
-import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.EJBQLC;
-import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
-import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.EJBQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.generator.*;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /*
  * This is the JDO specific generator for the concrete CMP beans for EJB2.0

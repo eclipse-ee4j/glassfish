@@ -22,9 +22,10 @@
 
 package com.sun.jdo.api.persistence.model.mapping.impl;
 
-import java.beans.PropertyVetoException;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingMemberElement;
 
-import com.sun.jdo.api.persistence.model.mapping.*;
+import java.beans.PropertyVetoException;
 
 /**
  *

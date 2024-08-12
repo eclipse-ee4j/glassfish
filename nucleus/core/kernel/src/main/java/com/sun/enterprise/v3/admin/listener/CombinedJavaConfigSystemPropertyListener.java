@@ -23,6 +23,9 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Profiler;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.PostConstruct;

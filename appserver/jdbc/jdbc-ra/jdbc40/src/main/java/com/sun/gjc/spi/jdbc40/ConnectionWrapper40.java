@@ -16,8 +16,10 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.sql.ResultSet.CONCUR_READ_ONLY;
-import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
+import com.sun.gjc.spi.ManagedConnectionImpl;
+import com.sun.gjc.spi.base.ConnectionWrapper;
+
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -26,10 +28,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.sun.gjc.spi.ManagedConnectionImpl;
-import com.sun.gjc.spi.base.ConnectionWrapper;
-
-import jakarta.resource.spi.ConnectionRequestInfo;
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 
 /**
  * Wrapper class that aids to provide wrapper for the following JDBC objects :

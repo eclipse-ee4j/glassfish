@@ -16,19 +16,27 @@
 
 package org.glassfish.loadbalancer.config;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.modularity.annotation.HasNoDefaultConfiguration;
+import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.config.support.DeletionDecorator;
-import org.glassfish.quality.ToDo;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
@@ -37,13 +45,6 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  */

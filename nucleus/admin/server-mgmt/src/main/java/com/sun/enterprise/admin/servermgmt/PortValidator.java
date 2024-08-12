@@ -23,7 +23,6 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import com.sun.enterprise.util.i18n.StringManager;
-
 import com.sun.enterprise.util.net.NetUtils;
 
 /**

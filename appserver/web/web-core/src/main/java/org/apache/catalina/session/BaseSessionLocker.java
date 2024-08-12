@@ -23,11 +23,11 @@
 
 package org.apache.catalina.session;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.SessionLocker;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
+
+import org.apache.catalina.Context;
+import org.apache.catalina.SessionLocker;
 
 /**
  *

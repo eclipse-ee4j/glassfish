@@ -15,8 +15,11 @@
  */
 package com.sun.ejb.portable;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * This class is necessary because neither Vector nor Hashtable return a Serializable Enumeration, which can be sent

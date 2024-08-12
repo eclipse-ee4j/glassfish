@@ -18,9 +18,9 @@ package com.sun.enterprise.admin.cli;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Builds up a classpath.

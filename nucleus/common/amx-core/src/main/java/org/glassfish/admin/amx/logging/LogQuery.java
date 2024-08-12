@@ -16,13 +16,16 @@
 
 package org.glassfish.admin.amx.logging;
 
-import javax.management.Attribute;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import java.io.Serializable;
+
+import javax.management.Attribute;
 import javax.management.MBeanOperationInfo;
-import org.glassfish.admin.amx.annotation.*;
+
+import org.glassfish.admin.amx.annotation.ManagedOperation;
+import org.glassfish.admin.amx.annotation.Param;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 

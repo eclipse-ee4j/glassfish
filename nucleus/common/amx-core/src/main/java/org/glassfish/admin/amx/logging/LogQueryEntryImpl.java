@@ -16,18 +16,27 @@
 
 package org.glassfish.admin.amx.logging;
 
-import static org.glassfish.admin.amx.logging.LogRecordFields.*;
-import org.glassfish.admin.amx.util.ArrayUtil;
-import org.glassfish.admin.amx.util.ObjectUtil;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.glassfish.admin.amx.util.ArrayUtil;
+import org.glassfish.admin.amx.util.ObjectUtil;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
-//import static org.glassfish.admin.amx.logging.LogRecordFields;
+import static org.glassfish.admin.amx.logging.LogRecordFields.DATE_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.LEVEL_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.MESSAGE_ID_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.MESSAGE_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.MODULE_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.NAME_VALUE_PAIRS_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.NUM_FIELDS;
+import static org.glassfish.admin.amx.logging.LogRecordFields.OBJECTNAME_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordFields.PRODUCT_NAME_INDEX;
+import static org.glassfish.admin.amx.logging.LogRecordFields.RECORD_NUMBER_INDEX;
+
 
 /**
  * <b>INTERNAL USE ONLY--not part of the API</b>

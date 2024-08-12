@@ -17,18 +17,18 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
-import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
-import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
+import com.sun.enterprise.admin.servermgmt.DomainConfig;
+import com.sun.enterprise.admin.servermgmt.MasterPasswordFileManager;
+import com.sun.enterprise.admin.servermgmt.RepositoryException;
+import com.sun.enterprise.security.store.PasswordAdapter;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.glassfish.security.common.FileRealmHelper;
 
-import com.sun.enterprise.admin.servermgmt.DomainConfig;
-import com.sun.enterprise.admin.servermgmt.MasterPasswordFileManager;
-import com.sun.enterprise.admin.servermgmt.RepositoryException;
-import com.sun.enterprise.security.store.PasswordAdapter;
+import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
+import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
 
 public class DomainSecurity extends MasterPasswordFileManager {
 

@@ -23,6 +23,8 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 
 import javax.security.auth.Subject;
@@ -41,8 +43,6 @@ import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

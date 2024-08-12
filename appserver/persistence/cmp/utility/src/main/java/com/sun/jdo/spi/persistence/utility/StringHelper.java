@@ -22,7 +22,9 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * NOTE: These utilities have been moved from another (more specific

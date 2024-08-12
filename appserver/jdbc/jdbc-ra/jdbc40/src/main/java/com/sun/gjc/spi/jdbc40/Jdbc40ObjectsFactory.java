@@ -16,14 +16,6 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.lang.reflect.Modifier.isAbstract;
-
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.util.logging.Level;
-
-import javax.sql.DataSource;
-
 import com.sun.gjc.spi.JdbcObjectsFactory;
 import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
 import com.sun.gjc.spi.ManagedConnectionImpl;
@@ -31,6 +23,14 @@ import com.sun.gjc.spi.base.ConnectionHolder;
 import com.sun.gjc.util.SQLTraceDelegator;
 
 import jakarta.resource.spi.ConnectionManager;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.util.logging.Level;
+
+import javax.sql.DataSource;
+
+import static java.lang.reflect.Modifier.isAbstract;
 
 /**
  * Factory to create jdbc40 connection & datasource

@@ -17,6 +17,12 @@
 
 package org.glassfish.admin.rest.composite.resource;
 
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilderException;
+import jakarta.ws.rs.core.UriInfo;
+
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,12 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.PathSegment;
-import jakarta.ws.rs.core.UriBuilder;
-import jakarta.ws.rs.core.UriBuilderException;
-import jakarta.ws.rs.core.UriInfo;
 
 /**
  * This Dummy class is meant to do the bare minimum to make the tests pass. It is not meant as a full-featured implementation

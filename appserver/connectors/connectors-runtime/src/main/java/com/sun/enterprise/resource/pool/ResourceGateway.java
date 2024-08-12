@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.resource.pool;
 
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.logging.LogDomains;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.logging.LogDomains;
 
 /**
  * Resource gateway used to restrict the resource access. eg: based on priority.

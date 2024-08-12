@@ -16,10 +16,12 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
-import javax.naming.ldap.BasicControl;
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
+
+import java.io.IOException;
+
+import javax.naming.ldap.BasicControl;
 
 /**
  * This class implements the LDAPv3 Response Control for directory

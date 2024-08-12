@@ -17,12 +17,19 @@
 package org.glassfish.config.support;
 
 import com.sun.enterprise.util.StringUtils;
-import java.net.*;
+
+import java.net.URL;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.config.support.DomainXmlPreParser.DomainXmlPreParserException;
-import static org.glassfish.config.support.Constants.*;
+
+import static org.glassfish.config.support.Constants.CLUSTER;
+import static org.glassfish.config.support.Constants.CONFIG;
+import static org.glassfish.config.support.Constants.NAME;
+import static org.glassfish.config.support.Constants.SERVER;
 
 /**
  * The "pre-parser" goes through the domain.xml and finds all the 'special' elements that should be retained. This

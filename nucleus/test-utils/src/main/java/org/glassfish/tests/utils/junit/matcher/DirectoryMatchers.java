@@ -16,12 +16,12 @@
 
 package org.glassfish.tests.utils.junit.matcher;
 
+import java.io.File;
+import java.nio.file.NotDirectoryException;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-
-import java.io.File;
-import java.nio.file.NotDirectoryException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.fail;

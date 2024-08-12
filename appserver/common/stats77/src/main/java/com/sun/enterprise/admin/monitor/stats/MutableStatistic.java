@@ -15,8 +15,9 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
-import org.glassfish.j2ee.statistics.Statistic;
 import java.io.Serializable;
+
+import org.glassfish.j2ee.statistics.Statistic;
 
 /**
  * An interface that gives a flexibility to set various values for a particular Statistic.

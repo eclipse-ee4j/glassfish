@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.connectors.util;
 
-import java.util.List;
-import java.util.Properties;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
+
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Interface class of connector configuration parser methods.

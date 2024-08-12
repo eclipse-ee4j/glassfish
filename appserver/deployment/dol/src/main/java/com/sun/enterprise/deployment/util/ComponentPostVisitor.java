@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.deployment.util;
 
-import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This class does the necessary post processing for J2EE Component DOL

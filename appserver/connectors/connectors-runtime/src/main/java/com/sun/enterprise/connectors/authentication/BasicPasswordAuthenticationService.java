@@ -17,11 +17,14 @@
 
 package com.sun.enterprise.connectors.authentication;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.SECURITYMAPMETACHAR;
-import static com.sun.logging.LogDomains.RSR_LOGGER;
-import static java.util.logging.Level.FINE;
-import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
-import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.ejb.EJBContext;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -39,14 +42,11 @@ import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.ejb.api.EJBInvocation;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.enterprise.connectors.ConnectorRegistry;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.ejb.EJBContext;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.SECURITYMAPMETACHAR;
+import static com.sun.logging.LogDomains.RSR_LOGGER;
+import static java.util.logging.Level.FINE;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
 
 /**
  * This class does the functionality of security mapping of the principal and userGroup to the backendPrincipal.

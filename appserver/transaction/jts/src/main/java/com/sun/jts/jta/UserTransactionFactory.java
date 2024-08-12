@@ -16,8 +16,10 @@
 
 package com.sun.jts.jta;
 
-import javax.naming.*;
-import javax.naming.spi.*;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
 
 /**
  * Factory for producing the UserTransactionImpl objects.

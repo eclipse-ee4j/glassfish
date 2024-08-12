@@ -19,6 +19,12 @@ package com.sun.enterprise.config.modularity;
 import com.sun.enterprise.config.modularity.parser.ModuleConfigurationLoader;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 
+import jakarta.inject.Inject;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.logging.LogHelper;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -26,12 +32,6 @@ import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigExtensionHandler;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This is to integrate the whole getExtensionByType with the config modularity irrelevant of the invocation point. More

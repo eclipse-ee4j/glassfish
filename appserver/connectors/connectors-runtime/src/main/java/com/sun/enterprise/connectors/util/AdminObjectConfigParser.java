@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.connectors.util;
 
-import java.util.Properties;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
+
+import java.util.Properties;
 
 /** Interface class of admin object interface parser methods.
  *  @author Srikanth P

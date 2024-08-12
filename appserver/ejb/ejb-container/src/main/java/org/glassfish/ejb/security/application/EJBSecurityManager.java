@@ -17,14 +17,6 @@
 
 package org.glassfish.ejb.security.application;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static java.util.stream.Collectors.toSet;
-import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.convertEJBMethodPermissions;
-import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.createEnterpriseBeansRoleRefPermission;
-
 import com.sun.ejb.EjbInvocation;
 import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
@@ -36,8 +28,10 @@ import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
 import com.sun.enterprise.security.ee.authorization.cache.PermissionCache;
 import com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory;
 import com.sun.logging.LogDomains;
+
 import jakarta.security.jacc.EJBMethodPermission;
 import jakarta.security.jacc.PolicyContext;
+
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -48,7 +42,9 @@ import java.security.cert.Certificate;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.api.invocation.InvocationManager;
@@ -59,6 +55,14 @@ import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.security.common.Role;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static java.util.stream.Collectors.toSet;
+import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.convertEJBMethodPermissions;
+import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.createEnterpriseBeansRoleRefPermission;
 
 /**
  * This class is used by the Enterprise Beans server to manage security. All the container object only call into this object for managing

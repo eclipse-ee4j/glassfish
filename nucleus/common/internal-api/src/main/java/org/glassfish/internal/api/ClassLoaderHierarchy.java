@@ -17,14 +17,14 @@
 
 package org.glassfish.internal.api;
 
-import org.glassfish.api.deployment.DeploymentContext;
-import org.jvnet.hk2.annotations.Contract;
+import com.sun.enterprise.module.ResolveError;
 
-import java.net.URI;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.List;
 
-import com.sun.enterprise.module.ResolveError;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This class is responsible for creation of class loader hierarchy

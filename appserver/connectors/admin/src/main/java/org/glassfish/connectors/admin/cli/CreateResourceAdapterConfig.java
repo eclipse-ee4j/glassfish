@@ -49,10 +49,10 @@ import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.connectors.admin.cli.CLIConstants.OBJECT_TYPE;
 import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
-import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
 import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.RAC_CREATE_RAC_COMMAND;
 import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.RAC_RA_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.RAC_THREAD_POOL_ID;
+import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
 import static org.glassfish.resources.admin.cli.ResourceConstants.RESOURCE_ADAPTER_CONFIG_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_POOL_IDS;
 

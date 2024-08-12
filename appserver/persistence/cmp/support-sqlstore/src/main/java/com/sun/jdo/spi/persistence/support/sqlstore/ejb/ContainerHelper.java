@@ -22,10 +22,13 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
-import jakarta.ejb.*;
-
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
+
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityContext;
 
     /** Provide an implementation that supports CMP integration with information
      * required for such support.  This is an interface that a helper class

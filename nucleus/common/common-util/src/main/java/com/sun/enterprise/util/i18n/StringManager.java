@@ -17,8 +17,8 @@
 package com.sun.enterprise.util.i18n;
 
 import com.sun.enterprise.util.CULoggerInfo;
-import java.util.Hashtable;
 
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

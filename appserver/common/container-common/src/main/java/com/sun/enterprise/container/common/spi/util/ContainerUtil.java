@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
+import java.util.Timer;
+
 import org.glassfish.api.invocation.InvocationManager;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.util.Timer;
 
 @Contract
 public interface ContainerUtil {

@@ -19,6 +19,7 @@ package org.glassfish.admin.rest.utils.xml;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

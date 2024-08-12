@@ -16,13 +16,13 @@
 
 package com.sun.enterprise.config.modularity.tests;
 
+import java.util.List;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.Named;
 import org.jvnet.hk2.config.ConfigExtensionMethod;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-
-import java.util.List;
 
 /**
  * @author Masoud Kalali

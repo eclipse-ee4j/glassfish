@@ -30,16 +30,14 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.io.*;
-
-import org.omg.CosTransactions.*;
-
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CosTransactions.otid_t;
 
 /**This class provides a wrapper for the otid_t class in the
  * org.omg.CosTSInteroperation package to allow us to add operations.

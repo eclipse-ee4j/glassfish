@@ -17,11 +17,13 @@
 package org.glassfish.jdbc.config.validators;
 
 import com.sun.enterprise.config.serverbeans.ResourcePool;
-import org.glassfish.config.support.Constants;
-import org.glassfish.jdbc.config.JdbcConnectionPool;
-import org.glassfish.connectors.config.validators.ConnectionPoolErrorMessages;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+
+import org.glassfish.config.support.Constants;
+import org.glassfish.connectors.config.validators.ConnectionPoolErrorMessages;
+import org.glassfish.jdbc.config.JdbcConnectionPool;
 
 /**
  * Implementation for Connection Pool validation.

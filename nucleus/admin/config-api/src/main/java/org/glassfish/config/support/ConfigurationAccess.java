@@ -16,11 +16,11 @@
 
 package org.glassfish.config.support;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Service to lock the configuration elements for a particular domain configuration. All changes to the domain

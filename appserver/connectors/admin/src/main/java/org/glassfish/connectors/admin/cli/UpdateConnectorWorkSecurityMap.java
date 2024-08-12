@@ -18,26 +18,32 @@ package org.glassfish.connectors.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
 import org.glassfish.connectors.config.GroupMap;
 import org.glassfish.connectors.config.PrincipalMap;
 import org.glassfish.connectors.config.WorkSecurityMap;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import java.beans.PropertyVetoException;
-import java.util.*;
-import org.glassfish.api.admin.*;
-
-import jakarta.inject.Inject;
 
 /**
  * Update Connector Work Security Map command

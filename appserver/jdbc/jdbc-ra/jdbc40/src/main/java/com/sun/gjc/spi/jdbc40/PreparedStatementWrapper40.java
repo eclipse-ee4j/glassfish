@@ -16,6 +16,8 @@
 
 package com.sun.gjc.spi.jdbc40;
 
+import com.sun.gjc.spi.base.PreparedStatementWrapper;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
@@ -26,8 +28,6 @@ import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLXML;
-
-import com.sun.gjc.spi.base.PreparedStatementWrapper;
 
 /**
  * Wrapper for JDBC 4.0 PreparedStatement

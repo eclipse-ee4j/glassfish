@@ -20,6 +20,8 @@ package com.sun.enterprise.configapi.tests;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -27,8 +29,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;

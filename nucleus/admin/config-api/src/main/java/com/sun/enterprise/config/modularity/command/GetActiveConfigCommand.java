@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.config.modularity.command;
 
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
-
 import com.sun.enterprise.config.modularity.ConfigModularityUtils;
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue;
@@ -27,6 +25,18 @@ import com.sun.enterprise.config.serverbeans.DomainExtension;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -48,17 +58,8 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.GET_ACTIVE_CONFIG_FOR_SERVICE_FAILED;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
 
 /**
  * Get the current active configuration of a service and print it out for the user's review.

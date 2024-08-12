@@ -17,9 +17,11 @@
 package com.sun.enterprise.util;
 
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.logging.*;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

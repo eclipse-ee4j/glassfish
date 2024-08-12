@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.util;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
 

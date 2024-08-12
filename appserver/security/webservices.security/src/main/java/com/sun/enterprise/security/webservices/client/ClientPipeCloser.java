@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.security.webservices.client;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
-
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 
 public class ClientPipeCloser {
 

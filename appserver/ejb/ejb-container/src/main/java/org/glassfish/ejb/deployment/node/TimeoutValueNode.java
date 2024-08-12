@@ -17,13 +17,14 @@
 package org.glassfish.ejb.deployment.node;
 
 
+import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+import com.sun.enterprise.deployment.node.XMLElement;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
-import com.sun.enterprise.deployment.node.XMLElement;
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.TimeoutValueDescriptor;
 import org.w3c.dom.Node;

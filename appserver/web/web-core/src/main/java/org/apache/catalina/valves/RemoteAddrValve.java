@@ -18,11 +18,12 @@
 package org.apache.catalina.valves;
 
 
+import jakarta.servlet.ServletException;
+
+import java.io.IOException;
+
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
-
-import jakarta.servlet.ServletException;
-import java.io.IOException;
 
 
 /**

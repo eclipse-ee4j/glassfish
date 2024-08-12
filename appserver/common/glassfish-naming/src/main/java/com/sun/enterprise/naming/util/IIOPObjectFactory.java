@@ -16,10 +16,15 @@
 
 package com.sun.enterprise.naming.util;
 
-import javax.naming.*;
-import javax.naming.spi.ObjectFactory;
 import java.util.Hashtable;
 import java.util.logging.Level;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
 
 import static com.sun.enterprise.naming.util.LogFacade.logger;
 

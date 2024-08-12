@@ -16,7 +16,8 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static com.sun.enterprise.util.StringUtils.ok;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +27,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.StringUtils;
+import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
  *

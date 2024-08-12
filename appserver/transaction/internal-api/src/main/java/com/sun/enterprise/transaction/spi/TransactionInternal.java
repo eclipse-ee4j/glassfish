@@ -16,7 +16,11 @@
 
 package com.sun.enterprise.transaction.spi;
 
-import jakarta.transaction.*;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 public interface TransactionInternal extends Transaction {
 

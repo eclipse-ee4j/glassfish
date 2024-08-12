@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.TRACE;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
-
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
@@ -30,7 +26,9 @@ import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.InjectionInfo;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
+
 import jakarta.inject.Inject;
+
 import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
@@ -40,7 +38,9 @@ import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.naming.NamingException;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
@@ -49,6 +49,10 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
 /**
  * Implementation of InjectionManager.

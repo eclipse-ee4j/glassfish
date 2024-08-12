@@ -17,6 +17,10 @@
 
 package org.glassfish.jdbc.config;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.validation.ConstraintViolationException;
+
 import java.beans.PropertyVetoException;
 
 import org.glassfish.hk2.api.ServiceLocator;
@@ -27,10 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;

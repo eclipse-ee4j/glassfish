@@ -17,17 +17,18 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletRequest;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
 import org.apache.catalina.Globals;
 import org.apache.catalina.Request;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.deploy.FilterMap;
-
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletRequest;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Factory for the creation and caching of Filters and creation of Filter Chains.

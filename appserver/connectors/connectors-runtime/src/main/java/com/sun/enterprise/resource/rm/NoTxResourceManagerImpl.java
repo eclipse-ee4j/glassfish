@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.resource.rm;
 
-import java.util.logging.Logger;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.logging.LogDomains;
 
 import jakarta.transaction.Transaction;
+
+import java.util.logging.Logger;
 
 /**
  * Resource Manager for a resource request from a component that is not to be associated with a transaction.

@@ -17,13 +17,12 @@
 
 package com.sun.enterprise.security.appclient;
 
-import static java.lang.System.Logger.Level.ERROR;
-import static java.util.regex.Matcher.quoteReplacement;
-
 import com.sun.enterprise.security.common.Util;
+
 import jakarta.security.auth.message.MessagePolicy;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.glassfish.appclient.client.acc.config.ClientContainer;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
@@ -48,6 +48,9 @@ import org.glassfish.epicyro.config.helper.AuthMessagePolicy;
 import org.glassfish.epicyro.data.AuthModuleConfig;
 import org.glassfish.epicyro.data.AuthModulesLayerConfig;
 import org.glassfish.internal.api.Globals;
+
+import static java.lang.System.Logger.Level.ERROR;
+import static java.util.regex.Matcher.quoteReplacement;
 
 /**
  * Parser for message-security-config in glassfish-acc.xml

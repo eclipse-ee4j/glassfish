@@ -16,7 +16,7 @@
 
 package org.glassfish.internal.api;
 
-import org.jvnet.hk2.annotations.*;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Such service implementations are invoked when the domain directory

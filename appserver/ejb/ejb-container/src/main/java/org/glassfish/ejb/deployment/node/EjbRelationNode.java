@@ -16,10 +16,11 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
+
+import java.util.Map;
+
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.RelationRoleDescriptor;
 import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;

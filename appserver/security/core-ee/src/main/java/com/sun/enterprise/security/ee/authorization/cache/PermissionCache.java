@@ -19,7 +19,9 @@ package com.sun.enterprise.security.ee.authorization.cache;
 
 import com.sun.enterprise.security.ee.authorization.cache.CachedPermissionImpl.Epoch;
 import com.sun.logging.LogDomains;
+
 import jakarta.security.jacc.PolicyContext;
+
 import java.security.AllPermission;
 import java.security.Permission;
 import java.security.PermissionCollection;

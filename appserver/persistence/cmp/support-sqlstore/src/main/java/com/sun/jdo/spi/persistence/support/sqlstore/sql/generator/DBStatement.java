@@ -23,7 +23,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.DBVendorType;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
@@ -33,7 +32,17 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.sql.Types;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  */

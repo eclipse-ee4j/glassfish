@@ -17,20 +17,20 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import static java.util.Collections.synchronizedList;
-import static org.glassfish.security.services.impl.ServiceLogging.SEC_SVCS_LOGGER;
-import static org.glassfish.security.services.impl.ServiceLogging.SHARED_LOGMESSAGE_RESOURCE;
-
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
@@ -48,6 +48,10 @@ import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.impl.ServiceFactory;
 import org.glassfish.security.services.spi.authorization.AuthorizationProvider;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.Collections.synchronizedList;
+import static org.glassfish.security.services.impl.ServiceLogging.SEC_SVCS_LOGGER;
+import static org.glassfish.security.services.impl.ServiceLogging.SHARED_LOGMESSAGE_RESOURCE;
 
 /**
  * <code>AuthorizationServiceImpl</code> implements

@@ -16,10 +16,11 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.Iterator;
-import java.util.ArrayList;
 //@olsen: added general support
 import com.sun.jdo.api.persistence.enhancer.util.Support;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 //@olsen: disabled feature
 /*

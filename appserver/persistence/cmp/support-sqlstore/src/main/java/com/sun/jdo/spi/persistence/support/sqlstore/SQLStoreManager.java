@@ -24,20 +24,36 @@
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
 // use internal version: import com.sun.jdo.api.persistence.support.Transaction;
-
-import com.sun.jdo.api.persistence.support.*;
+import com.sun.jdo.api.persistence.support.JDODataStoreException;
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.DBVendorType;
-import com.sun.jdo.spi.persistence.support.sqlstore.model.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ConfigCacheImpl;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.RetrieveDescImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.UpdateObjectDescImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
-import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.DBStatement;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectQueryPlan;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectStatement;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateStatement;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * <P>This class connects to a persistent store. It supports

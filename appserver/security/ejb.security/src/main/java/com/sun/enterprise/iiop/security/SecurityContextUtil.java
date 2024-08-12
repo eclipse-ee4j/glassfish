@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.iiop.security;
 
-import static java.util.logging.Level.FINE;
-
 import com.sun.corba.ee.spi.ior.IOR;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
@@ -26,16 +24,22 @@ import com.sun.enterprise.common.iiop.security.SecurityContext;
 import com.sun.enterprise.security.CORBAObjectPermission;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.PolicyFactory;
+
 import java.net.Socket;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * This class provides has the helper methods to deal with the SecurityContext. This represents the SecurityServiceImpl

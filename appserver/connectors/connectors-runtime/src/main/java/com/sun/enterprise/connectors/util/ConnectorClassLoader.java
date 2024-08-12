@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.enterprise.loader.ASURLClassLoader;
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.security.AccessController;
@@ -28,9 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.logging.LogDomains;
 
 
 /**

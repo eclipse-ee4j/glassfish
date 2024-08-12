@@ -17,14 +17,14 @@
 
 package org.glassfish.tests.embedded.basic.lifecycle;
 
+import java.io.File;
+import java.util.logging.Logger;
+
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.logging.Logger;
 
 /**
  * @author bhavanishankar@dev.java.net

@@ -22,15 +22,18 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.cmp;
 
-import java.util.*;
+import com.sun.jdo.api.persistence.support.PersistenceManager;
+import com.sun.jdo.api.persistence.support.Transaction;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.ejb.JDOEJB20Helper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.ejb.EJBLocalObject;
 
-import com.sun.jdo.api.persistence.support.PersistenceManager;
-import com.sun.jdo.api.persistence.support.Transaction;
-import com.sun.jdo.spi.persistence.support.sqlstore.ejb.JDOEJB20Helper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
+import java.util.HashSet;
+import java.util.Iterator;
 /*
  * This is the implementation of the java.util.Set interface for the CMP
  * fields of the Collection type. Represents many side of the relationships.

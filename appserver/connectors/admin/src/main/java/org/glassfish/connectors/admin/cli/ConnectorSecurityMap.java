@@ -16,14 +16,13 @@
 
 package org.glassfish.connectors.admin.cli;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.api.I18n;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.SecurityMap;
-
 import org.glassfish.hk2.api.PerLookup;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Create Connector SecurityMap command

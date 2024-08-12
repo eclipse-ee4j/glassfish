@@ -16,13 +16,14 @@
 
 package com.sun.enterprise.connectors.inbound;
 
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import org.glassfish.ejb.spi.MessageBeanClientFactory;
-import org.glassfish.ejb.spi.MessageBeanClient;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 
 import jakarta.inject.Inject;
+
+import org.glassfish.ejb.spi.MessageBeanClient;
+import org.glassfish.ejb.spi.MessageBeanClientFactory;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * MessageBeanClientFactory for connector message bean clients.

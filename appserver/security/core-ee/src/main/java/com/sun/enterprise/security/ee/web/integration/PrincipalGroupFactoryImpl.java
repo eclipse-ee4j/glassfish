@@ -18,7 +18,9 @@
 package com.sun.enterprise.security.ee.web.integration;
 
 import com.sun.enterprise.security.PrincipalGroupFactory;
+
 import java.lang.ref.WeakReference;
+
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;

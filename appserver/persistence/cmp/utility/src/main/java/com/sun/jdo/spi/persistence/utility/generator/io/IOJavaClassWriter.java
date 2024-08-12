@@ -22,11 +22,14 @@
 
 package com.sun.jdo.spi.persistence.utility.generator.io;
 
-import java.util.*;
-import java.lang.reflect.Modifier;
-
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This implementation of the {@link JavaClassWriter} interface is based on

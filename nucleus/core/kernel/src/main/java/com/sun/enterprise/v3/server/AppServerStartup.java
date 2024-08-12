@@ -17,13 +17,18 @@
 
 package com.sun.enterprise.v3.server;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.NO_FORCED_SHUTDOWN;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Embedded;
-import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Server;
-import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
-import static org.glassfish.api.admin.ServerEnvironment.Status.stopping;
-import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.Result;
+import com.sun.enterprise.v3.common.DoNothingActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -73,18 +78,13 @@ import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleState;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.ModuleStartup;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.Result;
-import com.sun.enterprise.v3.common.DoNothingActionReporter;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.NO_FORCED_SHUTDOWN;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Embedded;
+import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Server;
+import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
+import static org.glassfish.api.admin.ServerEnvironment.Status.stopping;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
  * Main class for Glassfish startup This class spawns a non-daemon Thread when the start() is called. Having a

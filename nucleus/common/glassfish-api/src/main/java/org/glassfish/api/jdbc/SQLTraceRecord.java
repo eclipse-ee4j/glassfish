@@ -314,6 +314,11 @@ public class SQLTraceRecord implements Serializable {
                         .append(param != null ? param.toString() : "null").append(" | ");
             }
         }
+        if (callingApplicationMethod != null) {
+            sb.append("CallingMethod=").append(callingApplicationMethod).append(" | ");
+        } else {
+            sb.append("CallingMethod=(null)").append(" | ");
+        }
         return sb.toString();
     }
 }

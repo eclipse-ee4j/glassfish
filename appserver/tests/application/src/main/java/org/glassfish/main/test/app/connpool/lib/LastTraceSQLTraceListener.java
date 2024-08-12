@@ -27,8 +27,8 @@ public class LastTraceSQLTraceListener implements SQLTraceListener {
 
     @Override
     public void sqlTrace(SQLTraceRecord sqltr) {
-        logger.fine(() -> "Trace record: " + sqltr);
-        if (sqltr.getSqlQuery().isPresent()) {
+        logger.info(() -> "Trace record: " + sqltr);
+        if (sqltr.getSqlQuery().isPresent() && sqltr.getCallingApplicationMethod().isPresent()) {
             lastTraceRecord = sqltr;
         }
         sqltr.getCallingApplicationMethod().ifPresent(caller -> {

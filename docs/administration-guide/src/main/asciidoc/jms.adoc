@@ -1376,7 +1376,7 @@ WebLogic JMS]
 WebLogic Server provides several different clients for use by standalone
 applications that run outside of WebLogic Server. These client are
 summarized in
-"http://www.oracle.com/pls/as1111/lookup?id=SACLT117[Overview of
+"https://www.oracle.com/pls/as1111/lookup?id=SACLT117[Overview of
 Stand-alone Clients"] in Programming Stand-alone Clients for Oracle
 WebLogic Server. When connecting from {productName} to WebLogic JMS
 resources you must use the WebLogic Thin T3 client,
@@ -1412,11 +1412,11 @@ The example code snippets in this section refer to a WebLogic JMS
 connection factory named `WLoutboundQueueFactory` and queue destination
 named `WLoutboundQueue`. For conceptual overviews on configuring
 WebLogic JMS resources, refer to
-"http://www.oracle.com/pls/as1111/lookup?id=JMSAD123[Understanding JMS
+"https://www.oracle.com/pls/as1111/lookup?id=JMSAD123[Understanding JMS
 Resource Configuration]" in Configuring and Managing JMS for Oracle
 WebLogic Server. For detailed instructions on configuring WebLogic JMS
 resources, refer to
-"http://www.oracle.com/pls/as1111/lookup?id=WLACH01854[Configure JMS
+"https://www.oracle.com/pls/as1111/lookup?id=WLACH01854[Configure JMS
 system modules and add JMS resources]" in the WebLogic Administration
 Console Online Help.
 
@@ -1610,9 +1610,9 @@ GenericJMSRA Properties for WebLogic JMS]. +
 Make sure to use the appropriate WebLogic administration tools, such as
 the WebLogic Administration Console or the WebLogic Scripting Tool (WLST).
 For more information, see
-"http://www.oracle.com/pls/as1111/lookup?id=WLACH01853[Configure
+"https://www.oracle.com/pls/as1111/lookup?id=WLACH01853[Configure
 Messaging]" in WebLogic Server Administration Console Online Help and
-http://www.oracle.com/pls/as1111/lookup?id=WLSTC112[WebLogic Server WLST
+https://www.oracle.com/pls/as1111/lookup?id=WLSTC112[WebLogic Server WLST
 Online and Offline Command Reference].
 
 [[accessing-connections-and-destinations-directly]]

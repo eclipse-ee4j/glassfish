@@ -15,7 +15,6 @@
  */
 package org.glassfish.main.test.app.connpool;
 
-import org.glassfish.main.test.app.connpool.lib.LastTraceSQLTraceListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,10 +23,16 @@ import java.net.HttpURLConnection;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.test.app.connpool.lib.LastTraceSQLTraceListener;
+import org.glassfish.main.test.app.connpool.webapp.Employee;
+import org.glassfish.main.test.app.connpool.webapp.SqlListenerApplication;
+import org.glassfish.main.test.app.connpool.webapp.SqlListenerEndpoint;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -37,12 +42,6 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
-import org.glassfish.main.test.app.connpool.webapp.Employee;
-import org.glassfish.main.test.app.connpool.webapp.SqlListenerApplication;
-import org.glassfish.main.test.app.connpool.webapp.SqlListenerEndpoint;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 
 public class SQLTraceListenerTest {
 

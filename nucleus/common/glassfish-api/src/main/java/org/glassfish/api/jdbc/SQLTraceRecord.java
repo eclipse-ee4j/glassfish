@@ -17,7 +17,6 @@
 package org.glassfish.api.jdbc;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -83,6 +82,11 @@ public class SQLTraceRecord implements Serializable {
      * The SQL query
      */
     private String sqlQuery;
+
+    /**
+     * Info about the method in the application that triggered the SQL query
+     */
+    private StackWalker.StackFrame callingApplicationMethod;
 
     /**
      * Gets the class name in the application which executed the SQL query, expressed as a String.
@@ -270,35 +274,26 @@ public class SQLTraceRecord implements Serializable {
     }
 
     /**
-     * Get the stack trace element for the method call in the application that triggered SQL execution.
+     * Get the stack frame for the method call in the application that triggered SQL execution, if the call comes from a deployed application.
      *
-     * This call analyzes the stacktrace of the current thread and finds the first element that
-     * represents a call in the application (the class is loaded by the application classloader).
+     * This returns a frame which returns a class from the {@link StackWalker.StackFrame#getDeclaringClass()} method
+     * ({@link StackWalker.Option.RETAIN_CLASS_REFERENCE} is enabled).
      *
-     * @return Stack trace element that represents a call to a server component that triggered SQL execution
+     * @return Stack frame that represents a call to a server component that triggered SQL execution
      */
-    public Optional<StackTraceElement> getCallingApplicationMethod() {
-        return Arrays.stream(Thread.currentThread().getStackTrace())
-                .skip(1)
-        .filter(this::isMethodFromApplication)
-        .findFirst();
+    public Optional<StackWalker.StackFrame> getCallingApplicationMethod() {
+        return Optional.ofNullable(callingApplicationMethod);
     }
 
-    private boolean isMethodFromApplication(StackTraceElement ste) {
-        try {
-            ClassLoader appClassLoader = Thread.currentThread().getContextClassLoader();
-            Class<?> cls = appClassLoader.loadClass(ste.getClassName());
-            ClassLoader classLoader = cls.getClassLoader();
-            while (classLoader != null) {
-                if (classLoader.equals(appClassLoader)) {
-                    return true;
-                }
-                classLoader = classLoader.getParent();
-            }
-        } catch (ClassNotFoundException ex) {
-        }
-        return false;
+    /**
+     * Set the stack frame for the method call in the application that triggered SQL execution.
+     * The {@link StackWalker.StackFrame#getDeclaringClass()} should return a class and never throw {@link UnsupportedOperationException}.
+     */
+    public void setCallingApplicationMethod(StackWalker.StackFrame callingApplicationMethod) {
+        this.callingApplicationMethod = callingApplicationMethod;
     }
+
+
 
     @Override
     public String toString() {

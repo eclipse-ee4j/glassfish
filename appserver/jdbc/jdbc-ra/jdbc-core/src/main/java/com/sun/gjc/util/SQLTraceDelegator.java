@@ -21,17 +21,19 @@ import com.sun.gjc.monitoring.SQLTraceProbeProvider;
 import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.SQLTraceRecord;
 import org.glassfish.api.naming.SimpleJndiName;
 
 import static java.util.logging.Level.FINEST;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
 
 /**
  * Implementation of SQLTraceListener to listen to events related to a sql
@@ -88,6 +90,7 @@ public class SQLTraceDelegator implements SQLTraceListener {
             }
 
             if (sqlTraceListenersList != null && !sqlTraceListenersList.isEmpty()) {
+                getCallingApplicationStackFrame().ifPresent(record::setCallingApplicationMethod);
                 for (SQLTraceListener listener : sqlTraceListenersList) {
                     try {
                         listener.sqlTrace(record);
@@ -104,6 +107,36 @@ public class SQLTraceDelegator implements SQLTraceListener {
                 }
             }
         }
+    }
+
+    private Optional<StackWalker.StackFrame> getCallingApplicationStackFrame() {
+        Set<Class<?>> checkedClasses = new HashSet<>();
+        checkedClasses.add(this.getClass());
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+                .walk(traces -> {
+                    return traces
+                            .filter(trace -> {
+                                Class<?> declaringClass = trace.getDeclaringClass();
+                                final ClassLoader appClassLoader = Thread.currentThread().getContextClassLoader();
+                                boolean result = !checkedClasses.contains(declaringClass) && isClassFromApplication(declaringClass, appClassLoader);
+                                if (!result) {
+                                    checkedClasses.add(declaringClass);
+                                }
+                                return result;
+                            })
+                            .findFirst();
+                });
+    }
+
+    private boolean isClassFromApplication(Class<?> cls, ClassLoader appClassLoader) {
+        ClassLoader clsClassLoader = cls.getClassLoader();
+        while (clsClassLoader != null) {
+            if (clsClassLoader.equals(appClassLoader)) {
+                return true;
+            }
+            clsClassLoader = clsClassLoader.getParent();
+        }
+        return false;
     }
 
     private String findSqlQuery(SQLTraceRecord record) {

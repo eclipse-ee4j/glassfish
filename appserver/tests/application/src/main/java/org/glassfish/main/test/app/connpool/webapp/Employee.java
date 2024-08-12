@@ -15,16 +15,16 @@
  */
 package org.glassfish.main.test.app.connpool.webapp;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+
+import java.io.Serializable;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * @author Arun Gupta

@@ -15,6 +15,7 @@
  */package org.glassfish.main.test.app.connpool.lib;
 
 import java.util.logging.Logger;
+
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
@@ -23,22 +24,15 @@ public class LastTraceSQLTraceListener implements SQLTraceListener {
     private static final Logger logger = Logger.getLogger(LastTraceSQLTraceListener.class.getName());
 
     public static SQLTraceRecord lastTraceRecord;
-    public static StackTraceElement lastCallingApplicationMethod;
 
     @Override
     public void sqlTrace(SQLTraceRecord sqltr) {
         logger.fine(() -> "Trace record: " + sqltr);
-        boolean shouldRememberRecord = sqltr.getSqlQuery().isPresent();
-        if (shouldRememberRecord) {
+        if (sqltr.getSqlQuery().isPresent()) {
             lastTraceRecord = sqltr;
         }
-        // We need to remember the calling method explicitly because getCallingApplicationMethod()
-        // is based on the context of the current thread
         sqltr.getCallingApplicationMethod().ifPresent(caller -> {
             logger.fine(() -> "Method calling SQL: " + caller);
-            if (shouldRememberRecord) {
-                lastCallingApplicationMethod = caller;
-            }
         });
     }
 

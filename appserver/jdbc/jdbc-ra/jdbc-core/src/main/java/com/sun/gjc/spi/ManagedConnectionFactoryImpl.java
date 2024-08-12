@@ -25,6 +25,7 @@ import com.sun.gjc.monitoring.JdbcStatsProvider;
 import com.sun.gjc.util.SQLTraceDelegator;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConfigProperty;
 import jakarta.resource.spi.ConnectionManager;
@@ -65,6 +66,7 @@ import javax.security.auth.Subject;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.jdbc.ConnectionValidation;
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.objects.TxIsolationLevel;
@@ -83,9 +85,6 @@ import static com.sun.gjc.util.SecurityUtils.isPasswordCredentialEqual;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
-
-import jakarta.inject.Inject;
-import org.glassfish.api.invocation.InvocationManager;
 
 /**
  * <code>ManagedConnectionFactory</code> implementation for Generic JDBC

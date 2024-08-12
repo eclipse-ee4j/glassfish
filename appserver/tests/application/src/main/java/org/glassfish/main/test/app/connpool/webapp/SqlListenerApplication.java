@@ -16,7 +16,6 @@
 
 package org.glassfish.main.test.app.connpool.webapp;
 
-import org.glassfish.main.test.app.applib.webapp.*;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 

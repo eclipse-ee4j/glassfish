@@ -15,16 +15,17 @@
  */
 package org.glassfish.main.test.app.connpool.webapp;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+
 import java.util.Optional;
+
 import org.glassfish.api.jdbc.SQLTraceRecord;
 import org.glassfish.main.test.app.connpool.lib.LastTraceSQLTraceListener;
 
@@ -61,7 +62,8 @@ public class SqlListenerEndpoint {
         assertTrue("threadID > 0", sqlTr.getThreadID() > 0);
         assertTrue("timeStamp > 0", sqlTr.getTimeStamp() > 0);
 
-        StackTraceElement caller = LastTraceSQLTraceListener.lastCallingApplicationMethod;
+        assertTrue("application method stack frame should be present", sqlTr.getCallingApplicationMethod().isPresent());
+        StackWalker.StackFrame caller = sqlTr.getCallingApplicationMethod().get();
         assertTrue("application class should be " + SqlListenerEndpoint.class, caller.getClassName().equals(SqlListenerEndpoint.class.getName()));
         assertTrue("application method should be callSomeQuery", caller.getMethodName().equals("callSomeQuery"));
     }

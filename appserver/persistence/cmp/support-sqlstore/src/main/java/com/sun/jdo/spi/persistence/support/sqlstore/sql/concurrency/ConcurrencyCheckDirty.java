@@ -23,7 +23,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency;
 
-import org.netbeans.modules.dbschema.ColumnElement;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.UpdateObjectDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
@@ -35,6 +34,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPla
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Iterator;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  */

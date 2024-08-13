@@ -16,25 +16,32 @@
 
 package com.sun.enterprise.web;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.AvailabilityService;
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.web.session.PersistenceType;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.config.serverbeans.*;
-import org.glassfish.web.config.serverbeans.WebContainer;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.types.Property;
 
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.config.serverbeans.ManagerProperties;
+import org.glassfish.web.config.serverbeans.SessionConfig;
+import org.glassfish.web.config.serverbeans.SessionManager;
+import org.glassfish.web.config.serverbeans.SessionProperties;
+import org.glassfish.web.config.serverbeans.StoreProperties;
+import org.glassfish.web.config.serverbeans.WebContainer;
+import org.glassfish.web.config.serverbeans.WebContainerAvailability;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 @Service
 @PerLookup

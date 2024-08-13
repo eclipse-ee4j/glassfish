@@ -16,20 +16,20 @@
 
 package org.glassfish.web.sniffer;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.deployment.GenericSniffer;
-import org.glassfish.web.WarType;
 import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.deployment.GenericSniffer;
+import org.glassfish.web.WarType;
+import org.jvnet.hk2.annotations.Service;
 
 
 

@@ -15,12 +15,8 @@
  */
 package org.glassfish.tests.tck.rest.cdi;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static java.lang.System.getProperty;
-import static java.util.logging.Level.INFO;
-import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
 
 import java.io.File;
 import java.net.URI;
@@ -36,8 +32,12 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.core.Response;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static java.lang.System.getProperty;
+import static java.util.logging.Level.INFO;
+import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(ArquillianExtension.class)
 @RunAsClient
 public class RestCdiIT {

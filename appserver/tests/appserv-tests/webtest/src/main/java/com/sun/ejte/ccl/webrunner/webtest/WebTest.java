@@ -16,8 +16,8 @@
 
 package com.sun.ejte.ccl.webrunner.webtest;
 
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 
 /**
 *This is the main class for Web Test.It takes a text script file as an argument.

@@ -20,11 +20,12 @@ package org.glassfish.web.deployment.descriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.ServletFilter;
-import org.glassfish.deployment.common.Descriptor;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Vector;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Deployment object representing the servlet filter spec

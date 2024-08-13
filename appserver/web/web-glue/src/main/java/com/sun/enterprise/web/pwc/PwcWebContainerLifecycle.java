@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.web.pwc;
 
+import com.sun.appserv.server.ServerLifecycleException;
+
 import org.apache.catalina.Logger;
 
 public interface PwcWebContainerLifecycle {

@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import java.util.Map;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
 import com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm.RadixTreeSubstitutionAlgo;
+
+import java.util.Map;
 
 /**
  * A factory to retrieve the algorithm used to perform String substitution.

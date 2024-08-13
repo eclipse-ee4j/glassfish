@@ -16,14 +16,14 @@
 
 package com.sun.jdo.api.persistence.enhancer.generator;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.sun.jdo.api.persistence.enhancer.meta.ExtendedJDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.Assertion;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *

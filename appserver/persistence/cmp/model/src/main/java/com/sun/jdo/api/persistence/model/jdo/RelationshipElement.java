@@ -24,6 +24,7 @@ package com.sun.jdo.api.persistence.model.jdo;
 
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.ModelException;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 /* TODO:

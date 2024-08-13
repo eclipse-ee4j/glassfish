@@ -16,11 +16,11 @@
 
 package com.sun.connector.cciblackbox;
 
-import java.util.Vector;
-
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ConnectionEventListener;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.Vector;
 
 /**
  * The connector architecture provides an event callback mechanism that

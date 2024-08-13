@@ -17,8 +17,22 @@
 package org.glassfish.connectors.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -29,24 +43,17 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.connectors.config.GroupMap;
 import org.glassfish.connectors.config.PrincipalMap;
 import org.glassfish.connectors.config.WorkSecurityMap;
-import com.sun.enterprise.config.serverbeans.Module;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jakarta.inject.Inject;
-
 import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
-import static org.glassfish.connectors.admin.cli.CLIConstants.WSM.*;
+import static org.glassfish.connectors.admin.cli.CLIConstants.WSM.WSM_GROUPS_MAP;
+import static org.glassfish.connectors.admin.cli.CLIConstants.WSM.WSM_MAP_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.WSM.WSM_PRINCIPALS_MAP;
+import static org.glassfish.connectors.admin.cli.CLIConstants.WSM.WSM_RA_NAME;
 
 /**
  * Create Connector Work Security Map

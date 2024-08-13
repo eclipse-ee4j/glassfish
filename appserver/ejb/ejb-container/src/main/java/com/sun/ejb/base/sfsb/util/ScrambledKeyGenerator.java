@@ -17,9 +17,9 @@
 package com.sun.ejb.base.sfsb.util;
 
 
-import org.glassfish.security.common.SharedSecureRandomImpl;
-
 import com.sun.enterprise.util.Utility;
+
+import org.glassfish.security.common.SharedSecureRandomImpl;
 
 /**
  * A utility class that generates stateful session keys using two longs

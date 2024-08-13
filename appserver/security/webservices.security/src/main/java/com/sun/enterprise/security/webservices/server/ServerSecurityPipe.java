@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.security.webservices.server;
 
-import static com.sun.enterprise.security.webservices.LogUtils.ERROR_RESPONSE_SECURING;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_PIPE;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-
 import com.sun.enterprise.security.ee.authentication.jakarta.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.webservices.LogUtils;
 import com.sun.enterprise.security.webservices.SoapAuthenticationService;
@@ -36,13 +28,24 @@ import com.sun.xml.ws.api.pipe.helper.AbstractFilterPipeImpl;
 import com.sun.xml.wss.provider.wsit.PacketMapMessageInfo;
 import com.sun.xml.wss.provider.wsit.PacketMessageInfo;
 import com.sun.xml.wss.provider.wsit.PipeConstants;
+
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.xml.ws.WebServiceException;
+
 import java.util.Map;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
+import static com.sun.enterprise.security.webservices.LogUtils.ERROR_RESPONSE_SECURING;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_PIPE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This pipe uses Jakarta Authentication to authenticate messages / packages.

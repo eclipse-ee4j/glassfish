@@ -16,14 +16,14 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ChangePairRef;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Group;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class provides method to process {@link ModeType}. The ModeType is predefined set of values use to alter the

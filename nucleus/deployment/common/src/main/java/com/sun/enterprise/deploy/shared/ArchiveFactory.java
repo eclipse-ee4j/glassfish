@@ -17,7 +17,8 @@
 
 package com.sun.enterprise.deploy.shared;
 
-import static java.util.logging.Level.SEVERE;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,8 +39,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This implementation of the ArchiveFactory interface is capable of creating the right abstraction of the Archive

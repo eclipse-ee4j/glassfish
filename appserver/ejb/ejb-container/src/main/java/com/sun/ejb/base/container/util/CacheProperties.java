@@ -16,13 +16,15 @@
 
 package com.sun.ejb.base.container.util;
 
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import com.sun.logging.LogDomains;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -30,7 +32,6 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.glassfish.ejb.deployment.descriptor.runtime.BeanCacheDescriptor;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbExtraDescriptors;
 import org.glassfish.hk2.api.PostConstruct;
-import com.sun.enterprise.config.serverbeans.Config;
 import org.jvnet.hk2.annotations.Service;
 
 /**

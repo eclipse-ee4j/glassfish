@@ -18,8 +18,10 @@ package org.glassfish.appclient.server.core.jws.servedcontent;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.net.URI;
 import java.util.Properties;
+
 import org.glassfish.appclient.server.core.AppClientDeployerHelper;
 import org.glassfish.appclient.server.core.NestedAppClientDeployerHelper;
 import org.glassfish.appclient.server.core.StandaloneAppClientDeployerHelper;

@@ -18,10 +18,15 @@ package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.admin.util.ClusterOperationUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
-import java.util.logging.Logger;
-import java.util.List;
+
+import jakarta.inject.Inject;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.ExecuteOn;
@@ -34,14 +39,11 @@ import org.glassfish.api.admin.Supplemental;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext.Phase;
-import jakarta.inject.Inject;
-import org.glassfish.api.admin.AccessRequired;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext.Phase;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Causes InstanceDeployCommand executions on the correct remote instances.

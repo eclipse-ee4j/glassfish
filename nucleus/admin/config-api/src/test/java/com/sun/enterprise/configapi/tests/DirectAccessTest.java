@@ -18,6 +18,10 @@
 package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.JavaConfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
@@ -28,9 +32,6 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * User: Jerome Dochez

@@ -16,9 +16,9 @@
 
 package org.glassfish.webservices.transport.tcp;
 
-import javax.xml.namespace.QName;
-
 import com.sun.enterprise.deployment.WebServiceEndpoint;
+
+import javax.xml.namespace.QName;
 
 /**
  * @author Alexey Stashok

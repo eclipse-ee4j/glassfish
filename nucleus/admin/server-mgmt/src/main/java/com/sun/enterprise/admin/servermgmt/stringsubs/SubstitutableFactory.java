@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs;
 
-import java.util.List;
-
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
+
+import java.util.List;
 
 /**
  * Factory to retrieve all the {@link Substitutable} entries from a {@link FileEntry} or an {@link Archive}.

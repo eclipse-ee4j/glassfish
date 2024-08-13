@@ -17,8 +17,11 @@
 package com.sun.enterprise.web;
 
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.web.ConfigException;
 import org.glassfish.embeddable.web.Context;

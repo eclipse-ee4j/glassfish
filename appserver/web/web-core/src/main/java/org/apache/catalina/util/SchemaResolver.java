@@ -18,15 +18,15 @@
 package org.apache.catalina.util;
 
 
-import org.apache.tomcat.util.digester.Digester;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 // END PWC 6457880
+
+import org.apache.tomcat.util.digester.Digester;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * This class implements a local SAX's <code>EntityResolver</code>. All

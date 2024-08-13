@@ -16,14 +16,14 @@
 
 package com.sun.gjc.spi.base;
 
+import com.sun.gjc.util.MethodExecutor;
+import com.sun.logging.LogDomains;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-
-import com.sun.gjc.util.MethodExecutor;
-import com.sun.logging.LogDomains;
 
 /**
  * Abstract class for wrapping DatabaseMetaData<br>

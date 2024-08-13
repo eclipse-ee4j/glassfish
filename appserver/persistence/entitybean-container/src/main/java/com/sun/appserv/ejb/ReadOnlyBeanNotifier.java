@@ -17,9 +17,9 @@
 package com.sun.appserv.ejb;
 
 import java.rmi.RemoteException;
-import org.jvnet.hk2.annotations.Contract;
 
 import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * ReadOnlyBeanNotifier is used to force refresh of ReadOnly beans

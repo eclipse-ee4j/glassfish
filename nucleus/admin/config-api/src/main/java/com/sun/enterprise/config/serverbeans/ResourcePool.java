@@ -19,11 +19,11 @@ package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ResourceNameConstraint;
 
+import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
-import jakarta.validation.Payload;
 
 import org.jvnet.hk2.config.Attribute;
 

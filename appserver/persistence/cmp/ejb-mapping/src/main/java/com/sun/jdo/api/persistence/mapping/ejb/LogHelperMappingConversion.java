@@ -23,8 +23,8 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /**
  *

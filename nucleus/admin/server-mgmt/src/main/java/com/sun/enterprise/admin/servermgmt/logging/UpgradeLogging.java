@@ -19,15 +19,21 @@ package com.sun.enterprise.admin.servermgmt.logging;
 import com.sun.common.util.logging.LoggingConfigImpl;
 import com.sun.enterprise.admin.servermgmt.RepositoryConfig;
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.LogService;
+import com.sun.enterprise.config.serverbeans.ModuleLogLevels;
 import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
@@ -35,7 +41,10 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.*;
+import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_CREATE_LOG_PROPS;
+import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_UPDATE_LOG_PROPS;
+import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_UPGRADE_LOG_SERVICE;
+import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 
 /**
  * Startup service to update existing domain.xml to move log-service entries to logging.properties file.

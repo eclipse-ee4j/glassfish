@@ -22,9 +22,9 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.scope;
 
-import org.glassfish.persistence.common.I18NHelper;
-
 import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.FieldInfo;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * An object of class Field is used if an identifier

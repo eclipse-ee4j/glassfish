@@ -22,8 +22,9 @@
 package org.glassfish.flashlight.datatree.factory;
 
 import java.lang.reflect.Method;
-import org.glassfish.flashlight.datatree.TreeNode;
+
 import org.glassfish.flashlight.datatree.MethodInvoker;
+import org.glassfish.flashlight.datatree.TreeNode;
 import org.glassfish.flashlight.datatree.impl.MethodInvokerImpl;
 import org.glassfish.flashlight.datatree.impl.TreeNodeImpl;
 

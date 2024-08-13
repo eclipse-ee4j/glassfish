@@ -17,9 +17,9 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.security.common.Role;
-
 import java.util.Set;
+
+import org.glassfish.security.common.Role;
 
 /**
  * @author Danny Coward

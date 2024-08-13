@@ -30,10 +30,12 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
 
 import com.sun.enterprise.util.i18n.StringManager;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.RandomAccessFile;
 
 /**This class encapsulates file I/O operations and the file handle.
  *

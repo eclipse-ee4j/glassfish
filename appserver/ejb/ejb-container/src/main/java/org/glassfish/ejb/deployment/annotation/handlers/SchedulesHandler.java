@@ -16,12 +16,14 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Schedules;
 
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

@@ -16,21 +16,17 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.ArrayList;
-
-import java.io.File;
-//@olsen: added import
-import java.io.PrintWriter;
-
-import com.sun.jdo.api.persistence.enhancer.util.ClassPath;
+import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
+import com.sun.jdo.api.persistence.enhancer.util.ClassPath;
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 
-//@olsen: added import
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 
 //@lars added: field for last error message

@@ -16,12 +16,11 @@
 
 package com.sun.ejb.base.io;
 
-import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 import com.sun.enterprise.container.common.spi.util.GlassFishInputStreamHandler;
-
+import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 import com.sun.logging.LogDomains;
 
-import java.io.*;
+import java.io.IOException;
 import java.rmi.Remote;
 import java.util.logging.Level;
 import java.util.logging.Logger;

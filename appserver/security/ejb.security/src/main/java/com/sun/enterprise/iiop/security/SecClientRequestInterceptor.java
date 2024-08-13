@@ -17,9 +17,6 @@
 
 package com.sun.enterprise.iiop.security;
 
-import static com.sun.logging.LogDomains.SECURITY_LOGGER;
-import static java.util.Arrays.asList;
-
 import com.sun.corba.ee.org.omg.CSI.AuthorizationElement;
 import com.sun.corba.ee.org.omg.CSI.EstablishContext;
 import com.sun.corba.ee.org.omg.CSI.GSS_NT_ExportedNameHelper;
@@ -37,13 +34,16 @@ import com.sun.enterprise.common.iiop.security.SecurityContext;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.logging.LogDomains;
+
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.x500.X500Principal;
+
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.LocalObject;
@@ -58,6 +58,9 @@ import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.omg.PortableInterceptor.TRANSPORT_RETRY;
 import org.omg.PortableInterceptor.USER_EXCEPTION;
+
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
+import static java.util.Arrays.asList;
 
 /**
  * This class implements a client side security request interceptor for CSIV2. It is used to send and receive the

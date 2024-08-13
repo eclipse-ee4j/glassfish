@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.connectors.authentication;
 
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
 import java.security.Principal;
 import java.util.Set;
-
-import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
 /**
  * Interface class consisting of methods for securityMap functionality. For a given principal/userGrooup, a mapping is

@@ -18,13 +18,15 @@ package org.glassfish.admin.amx.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
-import javax.management.MBeanOperationInfo;
-import static java.lang.annotation.ElementType.METHOD;
 
-import org.glassfish.external.arc.Taxonomy;
+import javax.management.MBeanOperationInfo;
+
 import org.glassfish.external.arc.Stability;
+import org.glassfish.external.arc.Taxonomy;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
     Annotation used to generate MBeanInfo using a Java interface.

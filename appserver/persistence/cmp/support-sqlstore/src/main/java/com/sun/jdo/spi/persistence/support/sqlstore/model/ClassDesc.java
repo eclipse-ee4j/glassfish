@@ -23,9 +23,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
-import org.netbeans.modules.dbschema.ColumnElement;
-import org.netbeans.modules.dbschema.ColumnPairElement;
-import org.netbeans.modules.dbschema.TableElement;
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.jdo.ConcurrencyGroupElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
@@ -34,20 +31,49 @@ import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
-import com.sun.jdo.api.persistence.model.mapping.impl.*;
-import com.sun.jdo.api.persistence.support.*;
-import com.sun.jdo.spi.persistence.support.sqlstore.*;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingReferenceKeyElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingTableElementImpl;
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOFatalUserException;
+import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
+import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.ConfigCache;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.RetrieveDescImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.UpdateObjectDescImpl;
-import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.ConcurrencyCheckDirty;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.ConcurrencyDBExplicit;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.ConcurrencyDBNative;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.ConcurrencyOptVerify;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.TableElement;
 
 /**
  *

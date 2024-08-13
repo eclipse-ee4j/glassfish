@@ -21,13 +21,13 @@ import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 
+import java.util.Locale;
+
 import org.glassfish.admingui.common.handlers.PluginHandlers;
-import org.glassfish.admingui.plugin.ConsolePluginService;
 import org.glassfish.admingui.connector.Index;
 import org.glassfish.admingui.connector.IntegrationPoint;
 import org.glassfish.admingui.connector.TOC;
-
-import java.util.Locale;
+import org.glassfish.admingui.plugin.ConsolePluginService;
 
 
 /**

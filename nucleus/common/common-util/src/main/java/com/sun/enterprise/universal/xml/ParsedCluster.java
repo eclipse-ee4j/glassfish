@@ -17,8 +17,11 @@
 package com.sun.enterprise.universal.xml;
 
 import com.sun.enterprise.universal.collections.CollectionUtils;
-import java.util.*;
-//import static com.sun.enterprise.util.StringUtils.ok;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Normally I'd have named this class "Cluster" but we don't want it to clash

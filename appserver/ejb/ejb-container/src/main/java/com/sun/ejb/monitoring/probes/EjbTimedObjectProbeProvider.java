@@ -16,7 +16,8 @@
 
 package com.sun.ejb.monitoring.probes;
 
-import org.glassfish.external.probe.provider.annotations.*;
+import org.glassfish.external.probe.provider.annotations.Probe;
+import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 
 /**
  * Probe emitter for the Ejb Timed Object monitoring events.

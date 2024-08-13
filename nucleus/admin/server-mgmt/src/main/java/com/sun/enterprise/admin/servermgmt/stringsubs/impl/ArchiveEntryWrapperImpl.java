@@ -16,6 +16,11 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,11 +42,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.logging.LogHelper;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Handles the operation related with an archive string substitution process. i.e extracting the substitutable entries

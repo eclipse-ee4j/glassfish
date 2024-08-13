@@ -16,14 +16,14 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.stringifier.ArrayStringifier;
-import org.glassfish.admin.amx.util.stringifier.Stringifier;
-
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
+
+import org.glassfish.admin.amx.util.stringifier.ArrayStringifier;
+import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 public class MBeanInfoStringifier extends MBeanFeatureInfoStringifier implements Stringifier
 {

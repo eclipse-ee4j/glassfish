@@ -21,10 +21,6 @@
  */
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
-import java.util.ResourceBundle;
-
-import org.glassfish.persistence.common.I18NHelper;
-
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
@@ -34,6 +30,10 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.UserTransaction;
+
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
   /** Provides helper methods for a Forte for Java implementation with the
    * application server specific information in the distributed transaction

@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,8 +39,6 @@ import org.jvnet.hk2.config.IndentingXMLStreamWriter;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import jakarta.inject.Inject;
 
 /**
  * User: Jerome Dochez

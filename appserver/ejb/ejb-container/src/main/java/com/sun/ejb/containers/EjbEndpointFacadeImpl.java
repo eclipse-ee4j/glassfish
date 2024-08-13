@@ -18,17 +18,15 @@
 package com.sun.ejb.containers;
 
 
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-
-import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.Container;
-
-import org.glassfish.ejb.api.EjbEndpointFacade;
-
+import com.sun.ejb.EjbInvocation;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.ejb.api.EjbEndpointFacade;
 
 
 /**

@@ -16,12 +16,13 @@
 
 package com.sun.enterprise.naming.impl;
 
+import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.spi.NamingManager;
-import java.util.Hashtable;
 
 /**
  * This is a Wrapper for {@link SerialContext}.

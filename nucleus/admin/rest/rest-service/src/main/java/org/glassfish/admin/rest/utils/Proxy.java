@@ -20,10 +20,10 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 
-import org.glassfish.hk2.api.ServiceLocator;
-
 import java.net.URL;
 import java.util.Properties;
+
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Implements

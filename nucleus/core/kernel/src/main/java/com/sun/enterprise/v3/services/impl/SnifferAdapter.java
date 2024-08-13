@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.v3.services.impl;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.kernel.KernelLoggerInfo.snifferAdapterContainerStarted;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.v3.server.ContainerStarter;
+
+import jakarta.inject.Inject;
 
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -37,10 +37,10 @@ import org.glassfish.internal.data.EngineInfo;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.v3.server.ContainerStarter;
-
-import jakarta.inject.Inject;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.kernel.KernelLoggerInfo.snifferAdapterContainerStarted;
 
 /**
  * These adapters are temporarily registered to the mapper to handle static pages request that a container would like to

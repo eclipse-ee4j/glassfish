@@ -16,7 +16,8 @@
 
 package com.sun.ejb.monitoring.stats;
 
-import org.glassfish.gmbal.*;
+import org.glassfish.gmbal.AMXMetadata;
+import org.glassfish.gmbal.ManagedObject;
 
 /**
  * Defines SingletonBeanStatsProvider

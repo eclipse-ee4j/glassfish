@@ -17,11 +17,11 @@
 
 package org.jvnet.hk2.config.test.example;
 
+import jakarta.inject.Singleton;
+
 import org.glassfish.hk2.api.ErrorInformation;
 import org.glassfish.hk2.api.ErrorService;
 import org.glassfish.hk2.api.MultiException;
-
-import jakarta.inject.Singleton;
 
 /**
  * @author jwells

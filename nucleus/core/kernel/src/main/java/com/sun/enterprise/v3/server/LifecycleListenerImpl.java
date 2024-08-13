@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.v3.server;
 
-import java.util.Properties;
-
 import com.sun.appserv.server.LifecycleEvent;
 import com.sun.appserv.server.LifecycleEventContext;
 import com.sun.appserv.server.LifecycleListener;
 import com.sun.appserv.server.ServerLifecycleException;
+
+import java.util.Properties;
 
 /**
  *  LifecycleListenerImpl is a dummy implementation for the LifecycleListener interface.

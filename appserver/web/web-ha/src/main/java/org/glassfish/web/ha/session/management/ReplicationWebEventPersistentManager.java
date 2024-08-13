@@ -23,6 +23,13 @@
 
 package org.glassfish.web.ha.session.management;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.apache.catalina.Session;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.ha.common.GlassFishHAReplicaPredictor;
@@ -33,17 +40,10 @@ import org.glassfish.ha.store.api.BackingStoreConfiguration;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.api.BackingStoreFactory;
 import org.glassfish.ha.store.api.Storeable;
-import org.glassfish.web.ha.LogFacade;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.PerLookup;
-
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import java.util.Map;
-import java.util.logging.Level;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.web.ha.LogFacade;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

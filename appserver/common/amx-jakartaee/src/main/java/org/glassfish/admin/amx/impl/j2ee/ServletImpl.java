@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.Servlet;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.Servlet;
 
 public final class ServletImpl
         extends J2EEManagedObjectImplBase //  implements Servlet

@@ -17,11 +17,13 @@
 package org.glassfish.ejb.startup;
 
 import com.sun.ejb.containers.EjbContainerUtil;
-import org.glassfish.api.container.Container;
+
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
+
+import org.glassfish.api.container.Container;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**

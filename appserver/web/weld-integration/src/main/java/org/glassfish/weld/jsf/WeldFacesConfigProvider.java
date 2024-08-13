@@ -17,9 +17,11 @@
 
 package org.glassfish.weld.jsf;
 
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.cdi.CDILoggerInfo.SEVERE_ERROR_CREATING_URI_FOR_FACES_CONFIG_XML;
-import static org.glassfish.weld.WeldDeployer.WELD_EXTENSION;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.web.WebModule;
+import com.sun.faces.spi.FacesConfigResourceProvider;
+
+import jakarta.servlet.ServletContext;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,11 +35,9 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.cdi.CDILoggerInfo;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.web.WebModule;
-import com.sun.faces.spi.FacesConfigResourceProvider;
-
-import jakarta.servlet.ServletContext;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.cdi.CDILoggerInfo.SEVERE_ERROR_CREATING_URI_FOR_FACES_CONFIG_XML;
+import static org.glassfish.weld.WeldDeployer.WELD_EXTENSION;
 
 /**
  * This provider returns the Web Beans faces-config.xml to the Faces runtime. It will only return the configuration file

@@ -17,6 +17,7 @@
 package org.glassfish.security.common;
 
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**

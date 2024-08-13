@@ -16,11 +16,11 @@
 
 package org.glassfish.admin.amx.core;
 
+import javax.management.MBeanServerConnection;
+
 import org.glassfish.admin.amx.core.proxy.ProxyFactory;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-
-import javax.management.MBeanServerConnection;
 
 
 /**

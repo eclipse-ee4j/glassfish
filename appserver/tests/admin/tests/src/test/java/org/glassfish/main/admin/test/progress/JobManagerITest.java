@@ -17,10 +17,10 @@
 
 package org.glassfish.main.admin.test.progress;
 
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.DetachedTerseAsadminResult;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;

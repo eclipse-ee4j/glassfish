@@ -23,12 +23,12 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.Transaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.Transaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.UpdateObjectDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
-import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectQueryPlan;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 
 /**
  */

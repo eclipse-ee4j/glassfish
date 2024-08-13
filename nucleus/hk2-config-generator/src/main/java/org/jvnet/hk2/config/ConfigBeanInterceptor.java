@@ -17,8 +17,8 @@
 
 package org.jvnet.hk2.config;
 
-import java.beans.PropertyVetoException;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
 
 /**
  * Interceptor interface to be notified of read/write operations on a ConfigBean.

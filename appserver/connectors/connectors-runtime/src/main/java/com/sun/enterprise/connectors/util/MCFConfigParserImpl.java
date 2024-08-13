@@ -17,6 +17,13 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.ConnectionDefDescriptor;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.OutboundResourceAdapter;
+import com.sun.logging.LogDomains;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,13 +31,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.deployment.ConnectionDefDescriptor;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.OutboundResourceAdapter;
-import com.sun.logging.LogDomains;
 
 /**
  *  This is managed connection factory configuration parser. It parses the

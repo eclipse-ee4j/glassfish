@@ -22,8 +22,8 @@
 
 package com.sun.jdo.api.persistence.support;
 
-import java.util.ResourceBundle;
 import java.util.Collection;
+import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 

@@ -17,12 +17,14 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-
 import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.realm.solaris.SolarisRealm;
+
 import java.util.logging.Level;
+
 import javax.security.auth.login.LoginException;
+
+import static com.sun.enterprise.util.Utility.isEmpty;
 
 /**
  * Solaris realm login module.

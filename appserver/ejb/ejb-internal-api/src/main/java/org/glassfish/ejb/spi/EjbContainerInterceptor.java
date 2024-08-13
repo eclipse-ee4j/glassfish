@@ -16,9 +16,9 @@
 
 package org.glassfish.ejb.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract interface for registering EjbContainerInterceptor to

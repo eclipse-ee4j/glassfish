@@ -16,8 +16,8 @@
 
 package org.apache.naming.resources;
 
-import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.internal.api.InitRunLevel;
 import org.jvnet.hk2.annotations.Service;
 
 /**

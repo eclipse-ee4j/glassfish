@@ -18,15 +18,16 @@ package com.sun.enterprise.web;
 
 import com.sun.enterprise.util.uuid.UuidGenerator;
 import com.sun.enterprise.web.session.PersistenceType;
+
+import java.text.MessageFormat;
+import java.util.logging.Level;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.session.StandardManager;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.SessionManager;
 import org.jvnet.hk2.annotations.Service;
-
-import java.text.MessageFormat;
-import java.util.logging.Level;
 
 @Service(name="memory")
 public class MemoryStrategyBuilder extends BasePersistenceStrategyBuilder {

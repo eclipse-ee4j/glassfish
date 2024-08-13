@@ -26,6 +26,22 @@
 
 package org.glassfish.admingui.common.handlers;
 
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.jsftemplating.annotation.Handler;
+import com.sun.jsftemplating.annotation.HandlerInput;
+import com.sun.jsftemplating.annotation.HandlerOutput;
+import com.sun.jsftemplating.el.PageSessionResolver;
+import com.sun.jsftemplating.handlers.NavigationHandlers;
+import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+import com.sun.jsftemplating.util.Util;
+
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -39,27 +55,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.jsftemplating.el.PageSessionResolver;
 import org.glassfish.admingui.common.tree.FilterTreeEvent;
 import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.MiscUtil;
 import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.admingui.common.util.TargetUtil;
-
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.jsftemplating.annotation.Handler;
-import com.sun.jsftemplating.annotation.HandlerInput;
-import com.sun.jsftemplating.annotation.HandlerOutput;
-import com.sun.jsftemplating.handlers.NavigationHandlers;
-import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-import com.sun.jsftemplating.util.Util;
-
-import jakarta.faces.component.UIComponent;
-import jakarta.faces.component.UIInput;
-import jakarta.faces.component.UIViewRoot;
-import jakarta.faces.context.FacesContext;
-import jakarta.servlet.http.HttpServletResponse;
 
 
 public class CommonHandlers {

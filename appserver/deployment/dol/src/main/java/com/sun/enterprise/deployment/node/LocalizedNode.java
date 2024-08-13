@@ -19,15 +19,15 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import org.glassfish.deployment.common.Descriptor;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.Attributes;
-
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.Attributes;
 
 /**
  * This class is responsible for handling the xml lang attribute of an xml element

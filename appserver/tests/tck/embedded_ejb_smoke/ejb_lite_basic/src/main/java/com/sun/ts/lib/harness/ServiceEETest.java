@@ -17,6 +17,11 @@
 
 package com.sun.ts.lib.harness;
 
+import com.sun.javatest.Status;
+import com.sun.ts.lib.util.TestUtil;
+import com.sun.ts.tests.common.vehicle.VehicleRunnable;
+import com.sun.ts.tests.common.vehicle.VehicleRunnerFactory;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -24,11 +29,6 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import com.sun.javatest.Status;
-import com.sun.ts.lib.util.TestUtil;
-import com.sun.ts.tests.common.vehicle.VehicleRunnable;
-import com.sun.ts.tests.common.vehicle.VehicleRunnerFactory;
 
 /**
  * This abstract class must be extended by all clients of tests of J2EE service apis; for example,

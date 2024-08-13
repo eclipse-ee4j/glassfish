@@ -17,11 +17,11 @@
 
 package org.glassfish.admin.rest.adapter;
 
-import org.glassfish.admin.restconnector.Constants;
-import org.glassfish.hk2.api.ServiceLocator;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import org.glassfish.admin.restconnector.Constants;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * ReST adapter for monitoring requests via HttpServlet interface

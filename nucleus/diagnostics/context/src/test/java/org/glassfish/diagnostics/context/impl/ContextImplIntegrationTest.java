@@ -16,12 +16,12 @@
 
 package org.glassfish.diagnostics.context.impl;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.diagnostics.context.ContextManager;
 import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

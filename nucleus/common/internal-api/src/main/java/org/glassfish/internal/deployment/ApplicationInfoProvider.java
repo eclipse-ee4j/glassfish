@@ -16,9 +16,9 @@
 
 package org.glassfish.internal.deployment;
 
-import org.jvnet.hk2.annotations.Contract;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface ApplicationInfoProvider {

@@ -20,9 +20,9 @@
 
 package com.sun.ts.tests.ejb30.lite.basic.common;
 
-import java.util.logging.Level;
-
 import com.sun.ts.tests.ejb30.common.helper.Helper;
+
+import java.util.logging.Level;
 
 public class GlobalJNDITest {
 

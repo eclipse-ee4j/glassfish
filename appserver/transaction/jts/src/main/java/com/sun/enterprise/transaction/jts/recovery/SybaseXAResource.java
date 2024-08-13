@@ -19,14 +19,14 @@
 
 package com.sun.enterprise.transaction.jts.recovery;
 
-import javax.transaction.xa.XAException;
-import javax.transaction.xa.XAResource;
-import javax.transaction.xa.Xid;
-
 import com.sun.enterprise.transaction.api.XAResourceWrapper;
 import com.sun.enterprise.util.i18n.StringManager;
 
 import jakarta.resource.ResourceException;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
 
 /**
  * XA Resource wrapper class for sybase XA Resource with jConnect 5.2.

@@ -16,13 +16,13 @@
 
 package org.glassfish.web.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.descriptor.CookieConfigDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
-
 import org.w3c.dom.Node;
 
 /**

@@ -19,8 +19,10 @@
 
 package com.sun.enterprise.transaction.jts.recovery;
 
-import static com.sun.logging.LogDomains.JTA_LOGGER;
-import static java.util.logging.Level.FINEST;
+import com.sun.enterprise.transaction.JavaEETransactionManagerSimplified;
+import com.sun.enterprise.transaction.api.XAResourceWrapper;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,10 +35,8 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import com.sun.enterprise.transaction.JavaEETransactionManagerSimplified;
-import com.sun.enterprise.transaction.api.XAResourceWrapper;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
+import static com.sun.logging.LogDomains.JTA_LOGGER;
+import static java.util.logging.Level.FINEST;
 
 /**
  * This implements workaround for Oracle XAResource. Oracle's 8.1.7 XAResource implementation doesn't work fine while

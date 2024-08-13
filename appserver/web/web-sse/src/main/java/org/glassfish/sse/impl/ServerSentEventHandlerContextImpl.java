@@ -17,7 +17,9 @@
 package org.glassfish.sse.impl;
 
 import java.util.Set;
-import org.glassfish.sse.api.*;
+
+import org.glassfish.sse.api.ServerSentEventHandler;
+import org.glassfish.sse.api.ServerSentEventHandlerContext;
 
 /**
  * WebCommunicationContextImpl class

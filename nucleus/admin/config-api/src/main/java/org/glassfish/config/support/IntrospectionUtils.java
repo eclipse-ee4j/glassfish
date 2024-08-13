@@ -16,14 +16,14 @@
 
 package org.glassfish.config.support;
 
+import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 
 public final class IntrospectionUtils {
     private static final Logger logger = ConfigApiLoggerInfo.getLogger();

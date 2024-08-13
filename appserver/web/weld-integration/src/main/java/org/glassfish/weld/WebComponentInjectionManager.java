@@ -17,14 +17,6 @@
 
 package org.glassfish.weld;
 
-import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
-import static org.glassfish.weld.WeldDeployer.WELD_DEPLOYMENT;
-import static org.glassfish.weld.WeldDeployer.WELD_EXTENSION;
-
-import org.glassfish.api.deployment.DeploymentContext;
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.web.WebComponentDecorator;
 import com.sun.enterprise.web.WebModule;
 
@@ -32,6 +24,14 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTargetFactory;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
+import static org.glassfish.weld.WeldDeployer.WELD_DEPLOYMENT;
+import static org.glassfish.weld.WeldDeployer.WELD_EXTENSION;
 
 /**
  * This is a decorator which calls Weld implementation to do necessary injection of a web component. It is called by

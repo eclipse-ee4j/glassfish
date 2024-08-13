@@ -23,13 +23,14 @@
 
 package org.glassfish.admingui.common.handlers;
 
-import java.util.Arrays;
-import java.util.Vector;
-
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+
+import java.util.Arrays;
+import java.util.Vector;
+
 import org.glassfish.admingui.common.util.GuiUtil;
 
 /**

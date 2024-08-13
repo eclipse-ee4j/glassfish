@@ -17,11 +17,11 @@
 
 package com.sun.enterprise.connectors;
 
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.enterprise.resource.pool.monitor.ConnectionPoolAppProbeProvider;
 import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProvider;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * @author Shalini M

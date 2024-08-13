@@ -19,6 +19,14 @@
  */
 package com.sun.ts.tests.ejb30.common.lite;
 
+import com.sun.ts.lib.harness.ServiceEETest;
+import com.sun.ts.lib.util.TestUtil;
+import com.sun.ts.tests.common.vehicle.ejbliteshare.EJBLiteClientIF;
+import com.sun.ts.tests.ejb30.common.helper.Helper;
+
+import jakarta.ejb.EJBException;
+import jakarta.ejb.embeddable.EJBContainer;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,14 +35,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.NamingException;
-
-import com.sun.ts.lib.harness.ServiceEETest;
-import com.sun.ts.lib.util.TestUtil;
-import com.sun.ts.tests.common.vehicle.ejbliteshare.EJBLiteClientIF;
-import com.sun.ts.tests.ejb30.common.helper.Helper;
-
-import jakarta.ejb.EJBException;
-import jakarta.ejb.embeddable.EJBContainer;
 
 public class EJBLiteClientBase extends ServiceEETest
     implements EJBLiteClientIF {

@@ -16,13 +16,13 @@
 
 package com.sun.gjc.util;
 
+import com.sun.logging.LogDomains;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.SQLTraceRecord;
-
-import com.sun.logging.LogDomains;
 
 /**
  * Implementation of SQLTraceListener to listen to events related to a sql

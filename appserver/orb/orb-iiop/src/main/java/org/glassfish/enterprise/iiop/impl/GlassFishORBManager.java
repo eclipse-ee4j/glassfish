@@ -18,9 +18,9 @@
 package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.corba.ee.impl.folb.InitialGroupInfoService ;
-import com.sun.corba.ee.impl.javax.rmi.PortableRemoteObject;
 import com.sun.corba.ee.impl.javax.rmi.CORBA.StubDelegateImpl;
 import com.sun.corba.ee.impl.javax.rmi.CORBA.Util;
+import com.sun.corba.ee.impl.javax.rmi.PortableRemoteObject;
 import com.sun.corba.ee.impl.orb.ORBImpl;
 import com.sun.corba.ee.impl.orb.ORBSingleton;
 import com.sun.corba.ee.spi.misc.ORBConstants;

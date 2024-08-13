@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.web;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+
 import java.lang.reflect.Method;
 
 import org.glassfish.api.invocation.ComponentInvocation;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.Servlet;
 
 public class WebComponentInvocation extends ComponentInvocation {
 

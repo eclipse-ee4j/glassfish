@@ -17,14 +17,6 @@
 
 package org.apache.catalina.core;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static java.text.MessageFormat.format;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static org.apache.catalina.LogFacade.ERROR_REGISTER_SERVICE_EXCEPTION;
-import static org.apache.catalina.LogFacade.FAILED_SERVICE_INIT_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVICE_STARTED;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
@@ -45,6 +37,14 @@ import org.apache.catalina.Server;
 import org.apache.catalina.ServerFactory;
 import org.apache.catalina.Service;
 import org.apache.catalina.util.LifecycleSupport;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.LogFacade.ERROR_REGISTER_SERVICE_EXCEPTION;
+import static org.apache.catalina.LogFacade.FAILED_SERVICE_INIT_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVICE_STARTED;
 
 /**
  * Standard implementation of the <code>Service</code> interface. The associated Container is generally an instance of

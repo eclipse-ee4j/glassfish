@@ -19,6 +19,8 @@ package com.sun.enterprise.configapi.tests.concurrent;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 
+import jakarta.inject.Inject;
+
 import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
@@ -29,8 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.security.ee.authentication;
 
-import static com.sun.enterprise.security.common.Util.isEmbeddedServer;
-
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;
 import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
@@ -25,13 +23,19 @@ import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.ee.web.integration.WebProgrammaticLogin;
 import com.sun.logging.LogDomains;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.callback.CallbackHandler;
+
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.security.common.Util.isEmbeddedServer;
 
 /**
  * Implement programmatic login.

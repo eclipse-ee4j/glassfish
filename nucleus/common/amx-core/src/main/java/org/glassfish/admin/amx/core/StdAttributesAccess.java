@@ -16,11 +16,18 @@
 
 package org.glassfish.admin.amx.core;
 
+import java.io.IOException;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanException;
+import javax.management.ReflectionException;
+
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-
-import javax.management.*;
-import java.io.IOException;
 
 /**
  * @deprecated Direct access to JMX attributes and methods,

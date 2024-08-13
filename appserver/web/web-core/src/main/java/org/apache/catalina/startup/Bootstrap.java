@@ -17,9 +17,6 @@
 
 package org.apache.catalina.startup;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.security.SecurityClassLoad;
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -28,6 +25,9 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.security.SecurityClassLoad;
 
 
 /**

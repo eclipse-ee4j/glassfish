@@ -16,12 +16,12 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.JDBCDataSource;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
 import org.glassfish.admin.amx.j2ee.J2EEManagedObject;
 import org.glassfish.admin.amx.j2ee.J2EETypes;
-import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
+import org.glassfish.admin.amx.j2ee.JDBCDataSource;
 
 public final class JDBCDataSourceImpl extends J2EEManagedObjectImplBase {
     public static final Class<? extends J2EEManagedObject> INTF = JDBCDataSource.class;

@@ -15,7 +15,8 @@
  */
 
 package com.sun.enterprise.v3.admin.commands;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 class StringBuilderNewLineAppender {
 

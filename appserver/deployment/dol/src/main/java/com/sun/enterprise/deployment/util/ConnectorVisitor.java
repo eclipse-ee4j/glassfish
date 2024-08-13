@@ -22,6 +22,7 @@
 package com.sun.enterprise.deployment.util;
 
 import com.sun.enterprise.deployment.ConnectorDescriptor;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**

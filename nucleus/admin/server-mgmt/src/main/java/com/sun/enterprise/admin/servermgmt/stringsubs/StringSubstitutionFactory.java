@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs;
 
-import java.io.InputStream;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.impl.StringSubstitutionEngine;
+
+import java.io.InputStream;
 
 /**
  * Factory class to create {@link StringSubstitutor} object.

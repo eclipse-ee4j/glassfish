@@ -16,7 +16,9 @@
 
 package com.sun.ejte.ccl.webrunner.proxy;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 /**
 * MIME is an internet standard for communicating multimedia content over e-mail systems.MimeHeader extends HashTable so that it can store key value pairs.

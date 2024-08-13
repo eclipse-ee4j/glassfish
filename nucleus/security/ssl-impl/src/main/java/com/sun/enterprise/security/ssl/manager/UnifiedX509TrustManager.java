@@ -16,10 +16,11 @@
 
 package com.sun.enterprise.security.ssl.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import javax.net.ssl.X509TrustManager;
 
 /**

@@ -16,13 +16,27 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import java.io.*;
-import java.util.*;
-import java.util.jar.*;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
-import java.nio.channels.ReadableByteChannel;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 
 /**
  * Created by IntelliJ IDEA.

@@ -16,20 +16,23 @@
 
 package org.glassfish.diagnostics.context.impl;
 
-import org.glassfish.contextpropagation.*;
-import org.glassfish.diagnostics.context.Context;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
 
+import org.glassfish.contextpropagation.ContextMap;
+import org.glassfish.contextpropagation.ContextViewFactory;
+import org.glassfish.contextpropagation.InsufficientCredentialException;
+import org.glassfish.contextpropagation.Location;
+import org.glassfish.contextpropagation.PropagationMode;
+import org.glassfish.contextpropagation.View;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
+import org.glassfish.diagnostics.context.Context;
 import org.glassfish.diagnostics.context.ContextManager;
 import org.glassfish.hk2.api.Rank;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
-
-import java.util.logging.Level;
 
 
 /**

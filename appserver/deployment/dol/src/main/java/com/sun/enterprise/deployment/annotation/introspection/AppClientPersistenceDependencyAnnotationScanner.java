@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
-import org.jvnet.hk2.annotations.Service;
-
 import jakarta.inject.Singleton;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Scans for annotations relevant to persistence units that indicate an app client depends on at least one persistence unit.

@@ -20,31 +20,25 @@
 
 package com.sun.jdo.api.persistence.enhancer;
 
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
+import com.sun.jdo.api.persistence.enhancer.impl.ClassControl;
+import com.sun.jdo.api.persistence.enhancer.impl.EnhancerControl;
+import com.sun.jdo.api.persistence.enhancer.impl.Environment;
+import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataModelImpl;
+import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataPropertyImpl;
+import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
+import com.sun.jdo.api.persistence.enhancer.util.Support;
+import com.sun.jdo.api.persistence.enhancer.util.UserException;
+import com.sun.jdo.api.persistence.model.Model;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
 import java.util.Properties;
-
-import com.sun.jdo.api.persistence.model.Model;
-
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataModelImpl;
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataPropertyImpl;
-
-import com.sun.jdo.api.persistence.enhancer.impl.EnhancerControl;
-import com.sun.jdo.api.persistence.enhancer.impl.Environment;
-import com.sun.jdo.api.persistence.enhancer.impl.ClassControl;
-
-import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
-
-//@olsen: added: support for I18N
-import com.sun.jdo.api.persistence.enhancer.util.Support;
-import com.sun.jdo.api.persistence.enhancer.util.UserException;
-import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 
 
 //@lars: the output stream is always written with the class - even if it hasn't been enhanced

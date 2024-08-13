@@ -32,9 +32,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.resource.ResourceException;
 
-import java.util.Map.Entry;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.security.auth.Subject;

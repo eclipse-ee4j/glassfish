@@ -16,6 +16,11 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -27,11 +32,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.glassfish.api.logging.LogHelper;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Factory class to get the files that has to undergo string substitution.

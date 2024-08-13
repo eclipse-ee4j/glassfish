@@ -22,20 +22,21 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query;
 
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOQueryException;
+import com.sun.jdo.api.persistence.support.Query;
+import com.sun.jdo.api.persistence.support.Transaction;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.JQLC;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.ParameterTable;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.sun.jdo.api.persistence.support.Query;
-import com.sun.jdo.api.persistence.support.Transaction;
-import com.sun.jdo.api.persistence.support.JDOException;
-import com.sun.jdo.api.persistence.support.JDOQueryException;
-import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.JQLC;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.ParameterTable;
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

@@ -18,21 +18,7 @@
 
 package org.apache.catalina.connector;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static jakarta.servlet.http.HttpServletResponse.SC_MOVED_PERMANENTLY;
-import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static org.apache.catalina.Globals.SESSION_PARAMETER_NAME;
-import static org.apache.catalina.LogFacade.FAILED_TO_INITIALIZE_THE_INTERCEPTOR;
-import static org.apache.catalina.LogFacade.HTTP_LISTENER_DISABLED;
-import static org.apache.catalina.LogFacade.INTERNAL_ERROR;
-import static org.apache.catalina.LogFacade.NO_HOST_MATCHES_SERVER_NAME_INFO;
-import static org.apache.catalina.LogFacade.PARSING_CLIENT_CERT_EXCEPTION;
-import static org.apache.catalina.LogFacade.REQUEST_PROCESSING_EXCEPTION;
-import static org.apache.catalina.connector.Constants.USE_CUSTOM_STATUS_MSG_IN_HEADER;
-import static org.glassfish.internal.api.Globals.getDefaultHabitat;
+import com.sun.appserv.ProxyHandler;
 
 import java.io.CharConversionException;
 import java.nio.charset.Charset;
@@ -63,7 +49,21 @@ import org.glassfish.grizzly.http.util.DataChunk;
 import org.glassfish.web.valve.GlassFishValve;
 import org.glassfish.web.valve.ServletContainerInterceptor;
 
-import com.sun.appserv.ProxyHandler;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_MOVED_PERMANENTLY;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.Globals.SESSION_PARAMETER_NAME;
+import static org.apache.catalina.LogFacade.FAILED_TO_INITIALIZE_THE_INTERCEPTOR;
+import static org.apache.catalina.LogFacade.HTTP_LISTENER_DISABLED;
+import static org.apache.catalina.LogFacade.INTERNAL_ERROR;
+import static org.apache.catalina.LogFacade.NO_HOST_MATCHES_SERVER_NAME_INFO;
+import static org.apache.catalina.LogFacade.PARSING_CLIENT_CERT_EXCEPTION;
+import static org.apache.catalina.LogFacade.REQUEST_PROCESSING_EXCEPTION;
+import static org.apache.catalina.connector.Constants.USE_CUSTOM_STATUS_MSG_IN_HEADER;
+import static org.glassfish.internal.api.Globals.getDefaultHabitat;
 
 /**
  * Implementation of a request processor which delegates the processing to a Coyote processor.

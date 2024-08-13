@@ -16,13 +16,14 @@
 
 package com.sun.enterprise.connectors.jms.system;
 
-import java.beans.PropertyVetoException;
-
 import com.sun.enterprise.connectors.jms.config.JmsHost;
-import org.jvnet.hk2.config.types.Property;
+
+import java.beans.PropertyVetoException;
 import java.util.List;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
 /** A wrapper class for the JmsHost serverbean since you cannot clone JmsHost
  * elements without being a part of a transaction
  * This class is primaritly used to create copies of the default jmshost element

@@ -23,10 +23,11 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
-import java.util.ResourceBundle;
-
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ValueFetcher;
+
+import java.util.ResourceBundle;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

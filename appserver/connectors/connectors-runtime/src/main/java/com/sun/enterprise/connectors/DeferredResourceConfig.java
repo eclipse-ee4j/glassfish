@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.connectors;
 
-import org.glassfish.connectors.config.AdminObjectResource;
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
+
+import org.glassfish.connectors.config.AdminObjectResource;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
 
 public class DeferredResourceConfig {
 

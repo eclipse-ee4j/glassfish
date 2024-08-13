@@ -17,14 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
-
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.Container;
 import com.sun.ejb.EJBUtils;
@@ -71,6 +63,7 @@ import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.ejb.AccessLocalException;
@@ -102,6 +95,7 @@ import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.UserTransaction;
+
 import java.io.Serializable;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
@@ -130,9 +124,11 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.GlassfishNamingManager;
@@ -154,6 +150,14 @@ import org.glassfish.flashlight.provider.ProbeProviderFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * This class implements part of the com.sun.ejb.Container interface. It implements the container's side of the

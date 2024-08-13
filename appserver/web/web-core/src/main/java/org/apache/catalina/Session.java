@@ -19,8 +19,10 @@ package org.apache.catalina;
 
 
 import jakarta.servlet.http.HttpSession;
+
 import java.security.Principal;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**

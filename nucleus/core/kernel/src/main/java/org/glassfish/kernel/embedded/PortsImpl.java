@@ -16,20 +16,21 @@
 
 package org.glassfish.kernel.embedded;
 
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.embedded.Port;
 import org.glassfish.internal.embedded.Ports;
-
-import java.io.IOException;
-import java.util.*;
-import org.glassfish.api.admin.ServerEnvironment;
-
-import org.glassfish.grizzly.config.dom.NetworkConfig;
-import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Jerome Dochez

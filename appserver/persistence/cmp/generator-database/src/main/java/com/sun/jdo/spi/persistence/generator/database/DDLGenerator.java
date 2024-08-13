@@ -22,11 +22,20 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.netbeans.modules.dbschema.*;
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.DBException;
+import org.netbeans.modules.dbschema.ForeignKeyElement;
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.TableElement;
+import org.netbeans.modules.dbschema.UniqueKeyElement;
 
 // XXX Instead of only static methods, generateDDL could create an
 // instance of this class with the parameters that are currently passed

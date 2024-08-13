@@ -17,6 +17,7 @@
 package com.sun.enterprise.transaction.spi;
 
 import jakarta.transaction.Transaction;
+
 import javax.transaction.xa.XAResource;
 
 /**

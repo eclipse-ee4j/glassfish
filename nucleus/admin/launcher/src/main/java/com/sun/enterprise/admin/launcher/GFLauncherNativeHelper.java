@@ -16,6 +16,12 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.AMD64;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.JAVA_NATIVE_SYSPROP_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBDIR;
@@ -24,12 +30,6 @@ import static com.sun.enterprise.admin.launcher.GFLauncherConstants.SPARC;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.SPARCV9;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.X86;
 import static com.sun.enterprise.universal.io.SmartFile.sanitize;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 
 /**
  * The platform-specific code is ugly. That's why it is concentrated here.

@@ -16,16 +16,18 @@
 
 package org.glassfish.web.upgrade;
 
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.web.LogFacade;
-import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
 

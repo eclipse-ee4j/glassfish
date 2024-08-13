@@ -19,8 +19,11 @@ package com.sun.enterprise.security.ee.authentication.jakarta;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
+
 import jakarta.security.auth.message.MessageInfo;
+
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**

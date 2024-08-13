@@ -22,10 +22,10 @@
 
 package com.sun.jdo.api.persistence.model.jdo.impl;
 
-import java.beans.PropertyVetoException;
-
-import com.sun.jdo.api.persistence.model.jdo.PersistenceMemberElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceMemberElement;
+
+import java.beans.PropertyVetoException;
 
 /**
  *

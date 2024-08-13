@@ -17,6 +17,7 @@
 package com.sun.enterprise.transaction.spi;
 
 import javax.naming.NameNotFoundException;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**

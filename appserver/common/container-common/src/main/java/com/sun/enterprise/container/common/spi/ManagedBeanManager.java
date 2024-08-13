@@ -17,11 +17,11 @@
 
 package com.sun.enterprise.container.common.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * ManagedBeanManager provides an interface to various Jakarta EE Managed Bean component operations.

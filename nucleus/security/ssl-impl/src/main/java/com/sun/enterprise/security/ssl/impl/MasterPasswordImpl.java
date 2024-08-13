@@ -19,12 +19,15 @@ package com.sun.enterprise.security.ssl.impl;
 
 import com.sun.enterprise.security.store.IdentityManagement;
 import com.sun.enterprise.security.store.PasswordAdapter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+
 import org.glassfish.security.common.MasterPassword;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;

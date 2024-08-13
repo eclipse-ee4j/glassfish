@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import java.util.Hashtable;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.AssocWithThreadResourceHandle;
 import com.sun.enterprise.resource.ResourceHandle;
@@ -31,6 +27,10 @@ import com.sun.enterprise.resource.pool.resizer.AssocWithThreadPoolResizer;
 import com.sun.enterprise.resource.pool.resizer.Resizer;
 
 import jakarta.transaction.Transaction;
+
+import java.util.Hashtable;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * Associates a resource with the thread. When the same thread is used again, it checks whether the resource associated

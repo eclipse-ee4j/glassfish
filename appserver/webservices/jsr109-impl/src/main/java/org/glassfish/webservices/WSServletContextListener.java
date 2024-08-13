@@ -16,17 +16,6 @@
 
 package org.glassfish.webservices;
 
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.webservices.LogUtils.DEPLOYMENT_FAILED;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
@@ -63,6 +52,17 @@ import jakarta.xml.ws.WebServiceFeature;
 import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.soap.AddressingFeature;
 import jakarta.xml.ws.soap.MTOMFeature;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.webservices.LogUtils.DEPLOYMENT_FAILED;
 
 /**
  * This class serves for initialization of JAX-WS WSEndpoints when the context is initialized on deployment.

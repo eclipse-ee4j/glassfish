@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
-import org.glassfish.j2ee.statistics.Statistic;
 import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
+import org.glassfish.j2ee.statistics.Statistic;
 
 /**
  * An implementation of AverageRangeStatistic that provides ways to change the state externally

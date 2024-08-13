@@ -16,6 +16,13 @@
 
 package org.glassfish.main.web.jersey.server.mvc.jsp.integration;
 
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.util.net.JarURIPattern;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,19 +36,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
-import org.glassfish.hk2.api.PostConstruct;
-
-import org.jvnet.hk2.annotations.Service;
-
 import org.glassfish.api.web.TldProvider;
+import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.web.loader.LogFacade;
-
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.util.net.JarURIPattern;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * {@link TldProvider TLD Provider} suited for Jersey MVC *.tld.

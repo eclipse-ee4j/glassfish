@@ -17,17 +17,18 @@
 
 package org.glassfish.resourcebase.resources.util;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import java.lang.reflect.Proxy;
+import java.util.List;
+
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import java.lang.reflect.Proxy;
-import java.util.List;
 
 /**
  * @author Jagadish Ramu

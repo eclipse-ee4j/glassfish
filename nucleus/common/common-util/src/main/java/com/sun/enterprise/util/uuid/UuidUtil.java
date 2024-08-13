@@ -23,9 +23,7 @@
 package com.sun.enterprise.util.uuid;
 
 import java.net.InetAddress;
-
 import java.rmi.server.UID;
-
 import java.security.SecureRandom;
 
 /**

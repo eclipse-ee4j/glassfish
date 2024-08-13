@@ -16,9 +16,9 @@
 
 package org.glassfish.enterprise.iiop.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Provides general EJB container services needed by iiop glue code.

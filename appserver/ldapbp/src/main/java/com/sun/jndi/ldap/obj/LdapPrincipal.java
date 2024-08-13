@@ -16,9 +16,11 @@
 
 package com.sun.jndi.ldap.obj;
 
-import java.security.Principal;
-import javax.naming.NamingException;
 import com.sun.jndi.ldap.LdapName;
+
+import java.security.Principal;
+
+import javax.naming.NamingException;
 
 /**
  * A principal from the LDAP directory.

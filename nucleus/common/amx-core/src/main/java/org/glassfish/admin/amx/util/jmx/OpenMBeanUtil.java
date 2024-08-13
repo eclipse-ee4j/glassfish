@@ -16,16 +16,6 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
-import javax.management.ObjectName;
-import javax.management.openmbean.ArrayType;
-import javax.management.openmbean.CompositeData;
-import javax.management.openmbean.CompositeDataSupport;
-import javax.management.openmbean.CompositeType;
-import javax.management.openmbean.InvalidOpenTypeException;
-import javax.management.openmbean.OpenDataException;
-import javax.management.openmbean.OpenType;
-import javax.management.openmbean.SimpleType;
-import javax.management.openmbean.TabularData;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -36,9 +26,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.admin.amx.util.TypeCast;
+import javax.management.ObjectName;
+import javax.management.openmbean.ArrayType;
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.CompositeType;
+import javax.management.openmbean.InvalidOpenTypeException;
+import javax.management.openmbean.OpenDataException;
+import javax.management.openmbean.OpenType;
+import javax.management.openmbean.SimpleType;
+import javax.management.openmbean.TabularData;
+
 import org.glassfish.admin.amx.util.ArrayConversion;
 import org.glassfish.admin.amx.util.IteratorUtil;
+import org.glassfish.admin.amx.util.TypeCast;
 
 /**
 Utilities dealing with OpenMBeans

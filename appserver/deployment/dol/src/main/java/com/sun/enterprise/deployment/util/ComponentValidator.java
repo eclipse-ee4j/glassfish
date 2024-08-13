@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.deployment.util;
 
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
@@ -40,6 +35,7 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.Principal;
@@ -53,10 +49,17 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * @author  dochez

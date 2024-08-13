@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.admin.progress.CommandProgressImpl;
+import com.sun.enterprise.admin.progress.ProgressStatusClient;
+
 import java.util.UUID;
 
 import org.glassfish.api.admin.AdminCommand;
@@ -32,9 +35,6 @@ import org.glassfish.api.admin.progress.ProgressStatusBase;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 import org.glassfish.config.support.GenericCrudCommand;
-
-import com.sun.enterprise.admin.progress.CommandProgressImpl;
-import com.sun.enterprise.admin.progress.ProgressStatusClient;
 
 /** Helper class for {@code ProgressStatus} manipulation during
  * {@code CommandRunner} execution.<br/><br/>

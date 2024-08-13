@@ -17,9 +17,6 @@
 
 package com.sun.enterprise.security.ssl;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.auth.login.common.LoginException;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
@@ -28,6 +25,7 @@ import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.common.Util;
 import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
+
 import java.net.Socket;
 import java.security.Principal;
 import java.security.PrivateKey;
@@ -37,12 +35,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509ExtendedKeyManager;
 import javax.net.ssl.X509KeyManager;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginContext;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
 
 /**
  * This an EE specific Key Manager class that is used to select user certificates for SSL client authentication. It

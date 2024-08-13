@@ -31,8 +31,7 @@
 package com.sun.jts.CosTransactions;
 
 // Import required definitions.
-
-import java.io.*;
+import java.io.File;
 
 //------------------------------------------------------------------------------
 // LogExtent class

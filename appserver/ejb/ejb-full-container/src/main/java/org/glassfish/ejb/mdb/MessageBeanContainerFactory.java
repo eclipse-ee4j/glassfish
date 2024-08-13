@@ -17,15 +17,15 @@
 
 package org.glassfish.ejb.mdb;
 
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.ejb.Container;
 import com.sun.ejb.ContainerFactory;
 import com.sun.ejb.containers.BaseContainerFactory;
 
 import jakarta.inject.Singleton;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "MessageBeanContainerFactory")
 @Singleton

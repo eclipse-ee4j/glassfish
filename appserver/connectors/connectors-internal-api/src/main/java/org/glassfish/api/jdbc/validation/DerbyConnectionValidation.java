@@ -16,10 +16,11 @@
 
 package org.glassfish.api.jdbc.validation;
 
-import org.glassfish.api.jdbc.ConnectionValidation;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.glassfish.api.jdbc.ConnectionValidation;
 
 /**
  * Provide custom implementation of connection validation for Derby dbvendor

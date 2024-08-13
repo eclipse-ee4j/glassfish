@@ -15,14 +15,10 @@
  */
 package org.glassfish.main.admin.test.webapp;
 
-import static org.glassfish.main.admin.test.ConnectionUtils.getContent;
-import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.stringContainsInOrder;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.glassfish.main.admin.test.TestResources;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -32,6 +28,11 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.glassfish.main.admin.test.ConnectionUtils.getContent;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 
 public class HttpServerNameITest {
 

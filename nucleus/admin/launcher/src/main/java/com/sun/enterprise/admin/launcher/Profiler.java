@@ -16,16 +16,16 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
-import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.stringToFiles;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
+import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.stringToFiles;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 
 /**
  * This class wraps the profiler element in java-config Note that the V2 dtd says that there can be generic property

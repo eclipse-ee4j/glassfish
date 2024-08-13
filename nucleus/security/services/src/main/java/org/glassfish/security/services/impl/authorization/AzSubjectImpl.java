@@ -16,9 +16,9 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import org.glassfish.security.services.api.authorization.AzSubject;
-
 import javax.security.auth.Subject;
+
+import org.glassfish.security.services.api.authorization.AzSubject;
 
 public final class AzSubjectImpl extends AzAttributesImpl implements AzSubject {
 

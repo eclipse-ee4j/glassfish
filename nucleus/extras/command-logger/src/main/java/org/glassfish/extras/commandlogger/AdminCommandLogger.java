@@ -15,13 +15,10 @@
  */
 package org.glassfish.extras.commandlogger;
 
-import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.WARNING;
-import static java.util.stream.Collectors.joining;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.config.support.TranslatedConfigView;
@@ -31,6 +28,10 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.events.CommandInvokedEvent;
 import org.glassfish.security.common.UserPrincipal;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
+import static java.util.stream.Collectors.joining;
 
 /**
  *
@@ -74,7 +75,7 @@ public class AdminCommandLogger {
                 .collect(joining(" "));
     }
 
-    public static enum LogMode {
+    public enum LogMode {
         ALL_COMMANDS, INTERNAL_COMMANDS, WRITE_COMMANDS, READ_WRITE_COMMANDS, NO_COMMAND;
 
         public static final LogMode DEFAULT = LogMode.NO_COMMAND;

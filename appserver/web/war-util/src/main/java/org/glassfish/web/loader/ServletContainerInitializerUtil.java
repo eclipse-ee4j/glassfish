@@ -17,18 +17,9 @@
 
 package org.glassfish.web.loader;
 
-import static java.lang.Runtime.version;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static java.util.zip.ZipFile.OPEN_READ;
-import static org.glassfish.web.loader.LogFacade.CLASS_LOADING_ERROR;
-import static org.glassfish.web.loader.LogFacade.INVALID_URL_CLASS_LOADER_PATH;
-import static org.glassfish.web.loader.LogFacade.IO_ERROR;
-import static org.glassfish.web.loader.LogFacade.WRONG_CLASSLOADER_TYPE;
-
 import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.annotation.HandlesTypes;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,6 +41,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.ClassDependencyBuilder;
 import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;
@@ -60,6 +52,16 @@ import org.glassfish.hk2.classmodel.reflect.Member;
 import org.glassfish.hk2.classmodel.reflect.Parameter;
 import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
+
+import static java.lang.Runtime.version;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static java.util.zip.ZipFile.OPEN_READ;
+import static org.glassfish.web.loader.LogFacade.CLASS_LOADING_ERROR;
+import static org.glassfish.web.loader.LogFacade.INVALID_URL_CLASS_LOADER_PATH;
+import static org.glassfish.web.loader.LogFacade.IO_ERROR;
+import static org.glassfish.web.loader.LogFacade.WRONG_CLASSLOADER_TYPE;
 
 /**
  * Utility class - contains util methods used for implementation of pluggable Shared Library features.

@@ -16,6 +16,13 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.config.modularity.ConfigModularityUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,13 +47,6 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
-
-import com.sun.enterprise.config.modularity.ConfigModularityUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * domain.xml persistence.

@@ -16,22 +16,22 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Marshaller;
-
-import org.glassfish.api.logging.LogHelper;
-
 import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.DomainInfo;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.ObjectFactory;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.TemplateRef;
 import com.sun.enterprise.admin.servermgmt.xml.templateinfo.TemplateInfo;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.logging.LogHelper;
 
 public class DomainInfoManager {
 

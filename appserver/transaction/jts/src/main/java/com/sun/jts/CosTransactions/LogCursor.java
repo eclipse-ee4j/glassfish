@@ -30,7 +30,6 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
 
 import com.sun.enterprise.util.i18n.StringManager;
 

@@ -24,12 +24,14 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.common.MessageSecurityBindingNode;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
-import javax.xml.namespace.QName;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling runtime info for

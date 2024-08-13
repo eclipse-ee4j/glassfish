@@ -17,10 +17,15 @@
 package org.glassfish.internal.api;
 
 import com.sun.enterprise.config.serverbeans.Server;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.*;
 
 import java.util.List;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.FailurePolicy;
+import org.glassfish.api.admin.IfFailure;
+import org.glassfish.api.admin.ParameterMap;
 
 /**
  * Interface that augment the AdminCommand responsibilities by adding the ability

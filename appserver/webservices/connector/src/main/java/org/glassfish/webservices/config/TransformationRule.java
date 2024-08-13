@@ -16,13 +16,13 @@
 
 package org.glassfish.webservices.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
+import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
 
-import jakarta.validation.constraints.NotNull;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /**
  * Specifies configuration for a XSLT transformation rule

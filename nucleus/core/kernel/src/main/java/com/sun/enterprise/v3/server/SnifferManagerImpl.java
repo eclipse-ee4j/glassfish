@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,10 +40,6 @@ import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.deployment.SnifferManager;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
 
 /**
  * Provide convenience methods to deal with {@link Sniffer}s in the system.

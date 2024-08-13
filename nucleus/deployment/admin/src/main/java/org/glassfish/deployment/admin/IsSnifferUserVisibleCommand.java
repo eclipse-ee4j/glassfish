@@ -17,8 +17,12 @@
 package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.config.serverbeans.Application;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
@@ -26,13 +30,10 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.container.Sniffer;
-import org.glassfish.internal.deployment.SnifferManager;
-import jakarta.inject.Inject;
-import org.glassfish.api.admin.AccessRequired;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.deployment.SnifferManager;
+import org.jvnet.hk2.annotations.Service;
 
 @Service(name="_is-sniffer-user-visible")
 @org.glassfish.api.admin.ExecuteOn(value={RuntimeType.DAS})

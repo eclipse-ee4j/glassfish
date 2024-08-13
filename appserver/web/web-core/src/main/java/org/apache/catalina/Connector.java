@@ -18,9 +18,10 @@
 
 package org.apache.catalina;
 
+import com.sun.appserv.ProxyHandler;
+
 import java.security.cert.X509Certificate;
 
-import com.sun.appserv.ProxyHandler;
 import org.apache.catalina.net.ServerSocketFactory;
 import org.glassfish.grizzly.http.server.HttpHandler;
 

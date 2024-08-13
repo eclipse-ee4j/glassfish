@@ -20,9 +20,8 @@
 
 package org.apache.catalina.session;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
 import com.sun.enterprise.spi.io.BaseIndirectlySerializable;
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionActivationListener;
@@ -32,6 +31,7 @@ import jakarta.servlet.http.HttpSessionBindingListener;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
+
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
@@ -52,6 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
@@ -62,6 +63,8 @@ import org.apache.catalina.SessionEvent;
 import org.apache.catalina.SessionListener;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.util.Enumerator;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Standard implementation of the <b>Session</b> interface. This object is serializable, so that it can be stored in

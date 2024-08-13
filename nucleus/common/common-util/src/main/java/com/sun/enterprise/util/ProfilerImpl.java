@@ -21,7 +21,9 @@
  */
 package com.sun.enterprise.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /** Simple class for profiling code.  beginItem/endItem pairs start and stop the timing for an item.
  *

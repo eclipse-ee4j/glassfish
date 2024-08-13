@@ -22,10 +22,10 @@
 
 package com.sun.jdo.api.persistence.model.mapping;
 
+import com.sun.jdo.api.persistence.model.ModelException;
+
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
-
-import com.sun.jdo.api.persistence.model.ModelException;
 
 /**
  *

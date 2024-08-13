@@ -17,20 +17,20 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Wrapper;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
 import com.sun.gjc.spi.base.AbstractDataSource;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionManager;
+
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Wrapper;
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Holds the <code>java.sql.Connection</code> object, which is to be passed to

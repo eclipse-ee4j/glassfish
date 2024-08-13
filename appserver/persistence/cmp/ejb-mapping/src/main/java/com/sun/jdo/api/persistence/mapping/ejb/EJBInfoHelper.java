@@ -22,11 +22,11 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
+import com.sun.jdo.api.persistence.model.Model;
+
 import java.util.Collection;
 
 import org.netbeans.modules.dbschema.SchemaElement;
-
-import com.sun.jdo.api.persistence.model.Model;
 
 /** This is an interface which represents information found in the
  * ejb-jar.xml descriptor and provides a variety of other information

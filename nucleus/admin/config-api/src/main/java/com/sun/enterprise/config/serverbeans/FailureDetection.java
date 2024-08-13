@@ -23,8 +23,8 @@ import jakarta.validation.constraints.Min;
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /**
  * <ul>

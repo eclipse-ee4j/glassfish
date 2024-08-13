@@ -16,10 +16,10 @@
 
 package org.glassfish.admingui.connector;
 
+import java.util.List;
+
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-
-import java.util.List;
 
 
 /**

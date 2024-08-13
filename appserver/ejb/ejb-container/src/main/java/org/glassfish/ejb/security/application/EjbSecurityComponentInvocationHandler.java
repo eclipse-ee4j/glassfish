@@ -16,8 +16,11 @@
 
 package org.glassfish.ejb.security.application;
 
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
+import com.sun.ejb.EjbInvocation;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.logging.Logger;
 
@@ -29,11 +32,8 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.ejb.EjbInvocation;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
 
 @Service(name = "ejbSecurityCIH")
 @Singleton

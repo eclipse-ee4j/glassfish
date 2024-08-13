@@ -18,7 +18,9 @@ package com.sun.enterprise.admin.remote;
 
 import com.sun.enterprise.universal.NameValue;
 import com.sun.enterprise.universal.glassfish.AdminCommandResponse;
-import java.util.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *

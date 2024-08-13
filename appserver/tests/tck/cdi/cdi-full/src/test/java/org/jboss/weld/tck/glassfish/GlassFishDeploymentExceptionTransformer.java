@@ -17,13 +17,13 @@
 
 package org.jboss.weld.tck.glassfish;
 
+import jakarta.enterprise.inject.spi.DefinitionException;
+import jakarta.enterprise.inject.spi.DeploymentException;
+
 import java.util.List;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;
-
-import jakarta.enterprise.inject.spi.DefinitionException;
-import jakarta.enterprise.inject.spi.DeploymentException;
 
 /**
  *

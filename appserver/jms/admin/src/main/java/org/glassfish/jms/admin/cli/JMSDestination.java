@@ -17,39 +17,45 @@
 
 package org.glassfish.jms.admin.cli;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.connectors.ConnectorRegistry;
 import com.sun.enterprise.connectors.jms.config.JmsHost;
 import com.sun.enterprise.connectors.jms.config.JmsService;
 import com.sun.enterprise.connectors.jms.system.ActiveJmsResourceAdapter;
 import com.sun.enterprise.connectors.jms.system.MQAddressList;
 import com.sun.enterprise.connectors.jms.util.JmsRaUtil;
-import com.sun.enterprise.connectors.ConnectorRegistry;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 
 import jakarta.resource.spi.ResourceAdapter;
-import javax.management.AttributeList;
-import javax.management.Attribute;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.*;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
-import java.io.StringWriter;
-import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.enterprise.config.serverbeans.Cluster;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ServerContext;
 
 import static com.sun.enterprise.connectors.jms.system.ActiveJmsResourceAdapter.ADMINPASSWORD;
 import static com.sun.enterprise.connectors.jms.system.ActiveJmsResourceAdapter.ADMINUSERNAME;
-
-import org.glassfish.internal.api.Globals;
-import org.glassfish.config.support.CommandTarget;
 
 /**
  * Common parent for JMS Destination admin commands

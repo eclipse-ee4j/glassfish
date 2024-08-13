@@ -15,6 +15,11 @@
  */
 package org.glassfish.microprofile.config.tck.client;
 
+import java.net.URL;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.logging.Logger;
+
 import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.api.annotation.Observes;
@@ -24,11 +29,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
-
-import java.net.URL;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 import static java.lang.String.format;
 

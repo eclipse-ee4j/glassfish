@@ -17,7 +17,8 @@
 
 package com.sun.enterprise.admin.remote;
 
-import static com.sun.enterprise.util.StringUtils.ok;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,8 +28,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.io.FileUtils;
+import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
  * This class is responsible for handling the Remote Server response. Note that an unusul paradigm is used here. Success

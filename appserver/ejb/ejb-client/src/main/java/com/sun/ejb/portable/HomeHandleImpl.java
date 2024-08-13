@@ -15,12 +15,18 @@
  */
 package com.sun.ejb.portable;
 
-import java.io.*;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.HomeHandle;
+import jakarta.ejb.spi.HandleDelegate;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-import jakarta.ejb.*;
-import jakarta.ejb.spi.HandleDelegate;
-import javax.naming.*;
+import javax.naming.NamingException;
 
 /**
  * A portable implementation of HomeHandle using the HandleDelegate SPI. This class can potentially be instantiated in

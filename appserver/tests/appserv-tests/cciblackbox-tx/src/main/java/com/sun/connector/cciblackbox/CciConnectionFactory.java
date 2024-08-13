@@ -16,9 +16,6 @@
 
 package com.sun.connector.cciblackbox;
 
-import java.io.Serializable;
-
-import javax.naming.Reference;
 import jakarta.resource.Referenceable;
 import jakarta.resource.ResourceException;
 import jakarta.resource.cci.ConnectionFactory;
@@ -28,6 +25,10 @@ import jakarta.resource.cci.ResourceAdapterMetaData;
 import jakarta.resource.spi.ConnectionManager;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnectionFactory;
+
+import java.io.Serializable;
+
+import javax.naming.Reference;
 
 /**
  * This implementation class provides provides an inteface for getting

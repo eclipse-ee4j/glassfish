@@ -16,17 +16,22 @@
 
 package com.sun.ejb.containers;
 
-import com.sun.ejb.*;
-import com.sun.ejb.portable.*;
+import com.sun.ejb.Container;
+import com.sun.ejb.portable.HomeHandleImpl;
+
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBMetaData;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.Handle;
+import jakarta.ejb.HomeHandle;
+import jakarta.ejb.RemoveException;
 
 import java.lang.reflect.Method;
-
-import jakarta.ejb.*;
-
-import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
-
-import java.util.logging.*;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements the EJBHome interface.

@@ -57,7 +57,6 @@ import org.glassfish.external.arc.Taxonomy;
 import static org.glassfish.external.amx.AMX.DESC_STD_IMMUTABLE_INFO;
 import static org.glassfish.external.amx.AMX.NAME_KEY;
 
-//import org.glassfish.api.amx.AMXUtil;
 /**
  * @deprecated Factory for {@link AMXProxy} proxies.
  */

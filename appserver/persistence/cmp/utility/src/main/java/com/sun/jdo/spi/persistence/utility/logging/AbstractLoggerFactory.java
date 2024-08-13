@@ -22,8 +22,8 @@
 
 package com.sun.jdo.spi.persistence.utility.logging;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *

@@ -15,12 +15,12 @@
  */
 package org.glassfish.main.test.app.concurrency.executor;
 
+import jakarta.ejb.EJB;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import jakarta.ejb.EJB;
 import java.io.IOException;
 
 @WebServlet("/")

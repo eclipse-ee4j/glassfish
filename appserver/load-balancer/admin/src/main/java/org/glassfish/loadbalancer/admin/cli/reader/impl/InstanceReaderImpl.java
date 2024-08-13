@@ -16,30 +16,30 @@
 
 package org.glassfish.loadbalancer.admin.cli.reader.impl;
 
-import java.net.UnknownHostException;
-import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
-import org.glassfish.loadbalancer.admin.cli.transform.InstanceVisitor;
-
-import org.glassfish.loadbalancer.admin.cli.reader.api.InstanceReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
-import com.sun.enterprise.config.serverbeans.ServerRef;
-import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Iterator;
+
+import org.glassfish.config.support.GlassFishConfigBean;
+import org.glassfish.config.support.PropertyResolver;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Protocols;
-import java.net.InetAddress;
-import java.util.Iterator;
-import org.glassfish.config.support.GlassFishConfigBean;
-import org.glassfish.config.support.PropertyResolver;
 import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
+import org.glassfish.loadbalancer.admin.cli.reader.api.InstanceReader;
+import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
 import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
+import org.glassfish.loadbalancer.admin.cli.transform.InstanceVisitor;
+import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
 
 /**
  * Provides instance information relavant to Load balancer tier.

@@ -22,14 +22,13 @@
 
 package org.glassfish.webservices.monitoring;
 
-import org.glassfish.webservices.SOAPMessageContext;
-
-import java.util.logging.Level;
 import java.io.ByteArrayOutputStream;
-
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.glassfish.webservices.LogUtils;
+import org.glassfish.webservices.SOAPMessageContext;
 
 /**
  * An invocation trace contains the timestamp os a particular

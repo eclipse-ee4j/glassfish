@@ -16,9 +16,6 @@
 
 package org.glassfish.webservices;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.xml.ws.api.server.Container;
 import com.sun.xml.ws.api.server.Module;
@@ -27,6 +24,9 @@ import com.sun.xml.ws.api.server.ServerPipelineHook;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 import jakarta.servlet.ServletContext;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
 
 public class JAXWSContainer extends Container {
 

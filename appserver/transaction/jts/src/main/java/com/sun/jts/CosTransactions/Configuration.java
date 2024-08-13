@@ -34,7 +34,6 @@ import com.sun.enterprise.transaction.api.TransactionConstants;
 import com.sun.jts.utils.LogFormatter;
 import com.sun.logging.LogDomains;
 
-// Import required classes.
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Properties;

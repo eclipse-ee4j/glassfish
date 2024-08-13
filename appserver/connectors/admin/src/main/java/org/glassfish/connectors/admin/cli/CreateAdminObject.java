@@ -44,13 +44,13 @@ import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 
-import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
-import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
 import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_CLASS_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_CREATE_COMMAND_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_JNDI_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_RA_NAME;
 import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_RES_TYPE;
+import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
+import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ADMIN_OBJECT_CLASS_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER;

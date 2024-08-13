@@ -17,11 +17,12 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
+import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import org.glassfish.ejb.deployment.descriptor.runtime.PersistenceManagerInUse;
 import org.w3c.dom.Node;
 

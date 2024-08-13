@@ -16,13 +16,12 @@
 
 package org.glassfish.admin.mbeanserver;
 
-import org.glassfish.hk2.api.Factory;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.jvnet.hk2.annotations.Service;
-
 import javax.management.MBeanServer;
 
+import org.glassfish.hk2.api.Factory;
+import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
+import org.jvnet.hk2.annotations.Service;
 
 /**
     Factory for the MBeanServer.  Required so that HK2 can find an MBeanServer

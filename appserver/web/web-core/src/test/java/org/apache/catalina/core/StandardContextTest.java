@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
@@ -28,12 +29,13 @@ import org.apache.catalina.LifecycleException;
 import org.apache.naming.resources.FileDirContext;
 import org.apache.naming.resources.Resource;
 import org.apache.naming.resources.UrlResource;
+import org.junit.jupiter.api.Test;
+
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.Test;
 
 public class StandardContextTest {
 

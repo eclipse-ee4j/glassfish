@@ -20,15 +20,15 @@ package org.glassfish.web.ha.authenticator;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
 import com.sun.enterprise.security.web.GlassFishSingleSignOn;
 
+import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.catalina.Session;
 import org.apache.catalina.authenticator.SingleSignOnEntry;
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.web.ha.LogFacade;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.security.Principal;
 
 /**
  * @author Shing Wai Chan

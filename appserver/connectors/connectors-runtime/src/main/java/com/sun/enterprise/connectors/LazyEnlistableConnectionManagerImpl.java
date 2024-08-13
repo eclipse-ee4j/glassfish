@@ -18,11 +18,11 @@
 package com.sun.enterprise.connectors;
 
 
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.LazyEnlistableConnectionManager;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 /**
  * @author Aditya Gore

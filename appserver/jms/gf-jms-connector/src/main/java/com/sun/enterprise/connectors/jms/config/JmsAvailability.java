@@ -18,20 +18,20 @@
 package com.sun.enterprise.connectors.jms.config;
 
 import com.sun.enterprise.config.serverbeans.AvailabilityServiceExtension;
-import org.glassfish.api.admin.config.ConfigExtension;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.types.Property;
+
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.PropertiesDesc;
-import org.jvnet.hk2.config.types.PropertyBag;
-import jakarta.validation.constraints.Pattern;
-
 import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
  *

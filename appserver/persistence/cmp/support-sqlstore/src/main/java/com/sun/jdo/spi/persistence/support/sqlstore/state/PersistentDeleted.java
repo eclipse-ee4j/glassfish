@@ -22,9 +22,10 @@ package com.sun.jdo.spi.persistence.support.sqlstore.state;
 
 import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 public class PersistentDeleted extends LifeCycleState {
     /**

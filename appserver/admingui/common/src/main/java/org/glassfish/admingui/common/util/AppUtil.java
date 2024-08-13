@@ -21,6 +21,8 @@
 
 package org.glassfish.admingui.common.util;
 
+import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 
 
 /**

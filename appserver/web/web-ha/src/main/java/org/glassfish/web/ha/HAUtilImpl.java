@@ -19,15 +19,16 @@ package org.glassfish.web.ha;
 
 import com.sun.enterprise.config.serverbeans.AvailabilityService;
 import com.sun.enterprise.config.serverbeans.Config;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.gms.bootstrap.GMSAdapterService;
-import org.glassfish.security.common.HAUtil;
+
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Optional;
 import jakarta.inject.Named;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.security.common.HAUtil;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

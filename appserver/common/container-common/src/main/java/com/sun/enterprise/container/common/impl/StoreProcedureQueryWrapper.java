@@ -17,7 +17,15 @@
 package com.sun.enterprise.container.common.impl;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureQuery;
+import jakarta.persistence.TemporalType;
+
 import java.util.Calendar;
 import java.util.Date;
 

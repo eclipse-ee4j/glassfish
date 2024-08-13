@@ -17,15 +17,15 @@
 
 package com.sun.enterprise.resource.listener;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.pool.PoolManager;
 
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 /**
  * @author Binod P.G

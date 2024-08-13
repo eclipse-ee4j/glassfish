@@ -17,9 +17,6 @@
 
 package org.glassfish.ejb.startup;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-
 import com.sun.ejb.codegen.StaticRmiStubGenerator;
 import com.sun.ejb.containers.EJBTimerService;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
@@ -35,8 +32,10 @@ import com.sun.enterprise.security.ee.authorization.PolicyLoader;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +43,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.config.ReferenceContainer;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -70,6 +70,9 @@ import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.JavaEEDeployer;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Ejb module deployer.

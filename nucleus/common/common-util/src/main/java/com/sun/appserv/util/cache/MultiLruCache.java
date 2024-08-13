@@ -16,8 +16,8 @@
 
 package com.sun.appserv.util.cache;
 
-import java.util.Properties;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * MultiLruCache -- in-memory bounded LRU cache with multiple LRU lists

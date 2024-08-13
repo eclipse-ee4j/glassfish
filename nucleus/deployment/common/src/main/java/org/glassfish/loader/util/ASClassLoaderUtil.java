@@ -17,13 +17,9 @@
 
 package org.glassfish.loader.util;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.enterprise.util.io.FileUtils.isJar;
-import static com.sun.enterprise.util.io.FileUtils.isZip;
-import static java.io.File.pathSeparator;
-import static java.io.File.separator;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.deployment.deploy.shared.Util;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModulesRegistry;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,9 +49,13 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
-import com.sun.enterprise.deployment.deploy.shared.Util;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModulesRegistry;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.enterprise.util.io.FileUtils.isJar;
+import static com.sun.enterprise.util.io.FileUtils.isZip;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 public class ASClassLoaderUtil {
 

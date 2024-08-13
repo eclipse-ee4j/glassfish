@@ -17,17 +17,11 @@
 
 package com.sun.web.server;
 
-import static java.text.MessageFormat.format;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
-import static org.apache.catalina.ContainerEvent.AFTER_FILTER_DESTROYED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
-import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
-import static org.glassfish.web.LogFacade.EXCEPTION_DURING_DESTROY_MANAGED_OBJECT;
-import static org.glassfish.web.LogFacade.EXCEPTION_DURING_HANDLE_EVENT;
-import static org.glassfish.web.LogFacade.EXCEPTION_GETTING_VALIDATOR_FACTORY;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.web.WebComponentInvocation;
+import com.sun.enterprise.web.WebModule;
+
+import jakarta.validation.ValidatorFactory;
 
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -44,11 +38,17 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.web.LogFacade;
 
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.web.WebComponentInvocation;
-import com.sun.enterprise.web.WebModule;
-
-import jakarta.validation.ValidatorFactory;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
+import static org.apache.catalina.ContainerEvent.AFTER_FILTER_DESTROYED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
+import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.web.LogFacade.EXCEPTION_DURING_DESTROY_MANAGED_OBJECT;
+import static org.glassfish.web.LogFacade.EXCEPTION_DURING_HANDLE_EVENT;
+import static org.glassfish.web.LogFacade.EXCEPTION_GETTING_VALIDATOR_FACTORY;
 
 /**
  * This class implements the Tomcat ContainerListener interface and handles Context and Session related events.

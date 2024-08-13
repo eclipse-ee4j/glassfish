@@ -16,13 +16,13 @@
 
 package org.glassfish.admin.amx.core;
 
-import org.glassfish.external.arc.Stability;
-import org.glassfish.external.arc.Taxonomy;
-
 import javax.management.Descriptor;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
+
+import org.glassfish.external.arc.Stability;
+import org.glassfish.external.arc.Taxonomy;
 
 
 /**

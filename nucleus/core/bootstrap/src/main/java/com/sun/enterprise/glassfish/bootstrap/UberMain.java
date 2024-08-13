@@ -16,14 +16,14 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 /**
  * This is main class for the uber jars viz., glassfish-embedded-all.jar and

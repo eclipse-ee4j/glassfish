@@ -17,6 +17,9 @@
 
 package org.glassfish.internal.data;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +28,6 @@ import java.util.Map;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * The container Registry holds references to the currently running containers.

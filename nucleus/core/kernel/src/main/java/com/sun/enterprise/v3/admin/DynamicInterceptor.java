@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -51,8 +53,6 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This Interceptor wraps the real MBeanServer so that additional interceptor code can be "turned on" at a later point.

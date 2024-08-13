@@ -17,13 +17,13 @@
 
 package org.glassfish.embeddable;
 
-import org.glassfish.embeddable.spi.RuntimeBuilder;
-
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.embeddable.spi.RuntimeBuilder;
 
 /**
  * This is the entry point API to bootstrap GlassFish.

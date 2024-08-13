@@ -16,20 +16,22 @@
 
 package org.glassfish.webservices.deployment;
 
-import org.glassfish.gmbal.ManagedData;
-import org.glassfish.gmbal.Description;
-import org.glassfish.gmbal.ManagedAttribute;
-import org.glassfish.external.statistics.impl.StatisticImpl;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
-import javax.xml.namespace.QName;
 import java.util.Collection;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import org.glassfish.external.statistics.impl.StatisticImpl;
+import org.glassfish.gmbal.Description;
+import org.glassfish.gmbal.ManagedAttribute;
+import org.glassfish.gmbal.ManagedData;
 
 /**
  * 109 and sun-jaxws.xml style deployed endpoint's info.

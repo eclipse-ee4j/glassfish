@@ -22,20 +22,21 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import com.sun.enterprise.config.serverbeans.JavaConfig;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "test-upgrade", metadata = "mode=debug")
 @PerLookup

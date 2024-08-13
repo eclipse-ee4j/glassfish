@@ -17,12 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.rmi.RemoteException;
-import java.util.HashMap;
-
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 
@@ -30,6 +24,12 @@ import jakarta.ejb.EJBException;
 import jakarta.ejb.EJBLocalHome;
 import jakarta.ejb.EJBLocalObject;
 import jakarta.ejb.RemoveException;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.rmi.RemoteException;
+import java.util.HashMap;
 
 /**
  * Implementation of the EJBLocalObject interface.

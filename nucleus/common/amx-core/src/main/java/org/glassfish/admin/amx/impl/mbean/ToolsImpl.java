@@ -19,20 +19,21 @@ package org.glassfish.admin.amx.impl.mbean;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.management.MBeanInfo;
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.base.Pathnames;
 import org.glassfish.admin.amx.base.Tools;
 import org.glassfish.admin.amx.core.AMXValidator;
+import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.util.SetUtil;
 import org.glassfish.admin.amx.util.StringUtil;
 import org.glassfish.admin.amx.util.jmx.MBeanInterfaceGenerator;
-import org.glassfish.admin.amx.core.Util;
 
 public class ToolsImpl extends AMXImplBase // implements Tools
 {

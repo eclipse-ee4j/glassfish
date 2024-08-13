@@ -17,8 +17,11 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.beans.PropertyVetoException;
 import java.util.logging.Logger;
@@ -34,11 +37,8 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Adds the needed http.setEncodedSlashEnabled  to domain.xml

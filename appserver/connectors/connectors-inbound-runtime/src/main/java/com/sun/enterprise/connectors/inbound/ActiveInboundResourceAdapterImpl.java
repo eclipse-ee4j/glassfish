@@ -16,25 +16,25 @@
 
 package com.sun.enterprise.connectors.inbound;
 
-import com.sun.enterprise.connectors.*;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.connectors.ActiveOutboundResourceAdapter;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.runtime.BeanPoolDescriptor;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 
-import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ActivationSpec;
-import java.util.Hashtable;
+import jakarta.resource.spi.ResourceAdapter;
+
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.jvnet.hk2.annotations.Service;
-
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Represents the active (runtime) inbound resource-adapter

@@ -16,17 +16,25 @@
 
 package com.sun.enterprise.transaction.spi;
 
-import java.util.concurrent.locks.Lock;
-
-import jakarta.transaction.*;
-import javax.transaction.xa.*;
-import jakarta.resource.spi.XATerminator;
-import jakarta.resource.spi.work.WorkException;
-
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.transaction.api.TransactionAdminBean;
 import com.sun.enterprise.transaction.api.XAResourceWrapper;
+
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.work.WorkException;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+
+import java.util.concurrent.locks.Lock;
+
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
 import org.jvnet.hk2.annotations.Contract;
 
 @Contract

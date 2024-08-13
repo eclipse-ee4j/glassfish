@@ -16,9 +16,7 @@
 
 package com.sun.enterprise.v3.services.impl;
 
-import org.glassfish.grizzly.config.dom.NetworkListener;
-import org.glassfish.api.container.EndpointRegistrationException;
-import org.glassfish.api.deployment.ApplicationContainer;
+import com.sun.enterprise.util.Result;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -26,15 +24,18 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.sun.enterprise.util.Result;
-import java.util.concurrent.Callable;
+
+import org.glassfish.api.container.EndpointRegistrationException;
+import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.logging.LogHelper;
 import org.glassfish.grizzly.Grizzly;
 import org.glassfish.grizzly.config.GenericGrizzlyListener;
 import org.glassfish.grizzly.config.GrizzlyListener;
+import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.impl.FutureImpl;
 import org.glassfish.grizzly.utils.Futures;

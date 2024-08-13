@@ -16,14 +16,16 @@
 
 package com.sun.enterprise.config.serverbeans.customvalidators;
 
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.annotation.Documented;
+
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
 
 /**
  * User-defined constraint to check if an attribute is a valid Java class name The class name can be a fully qualified

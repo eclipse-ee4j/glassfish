@@ -16,16 +16,16 @@
 
 package org.glassfish.extras.osgicontainer;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.NoSuchElementException;
+
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
 
 public class OSGiDeployedBundle implements ApplicationContainer<OSGiContainer> {
 

@@ -17,19 +17,25 @@
 
 package com.sun.enterprise.connectors.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
-import com.sun.enterprise.deployment.annotation.handlers.*;
+import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
-import com.sun.enterprise.deployment.ConnectionDefDescriptor;
+import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.spi.ConnectionDefinition;
 import jakarta.resource.spi.ManagedConnectionFactory;
+
 import java.lang.annotation.Annotation;
 import java.util.logging.Level;
 
-import org.glassfish.apf.*;
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 import org.jvnet.hk2.annotations.Service;
 

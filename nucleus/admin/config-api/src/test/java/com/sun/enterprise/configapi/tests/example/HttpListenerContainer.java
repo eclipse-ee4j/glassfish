@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.configapi.tests.example;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.beans.PropertyChangeEvent;
 
 import org.glassfish.grizzly.config.dom.NetworkListener;
@@ -24,9 +27,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

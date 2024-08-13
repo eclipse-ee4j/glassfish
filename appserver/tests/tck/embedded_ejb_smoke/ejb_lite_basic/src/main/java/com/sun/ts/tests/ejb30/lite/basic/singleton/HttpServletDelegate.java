@@ -16,13 +16,13 @@
 
 package com.sun.ts.tests.ejb30.lite.basic.singleton;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.logging.Logger;
 
 public class HttpServletDelegate extends HttpServlet {
 

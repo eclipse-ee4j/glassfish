@@ -22,16 +22,17 @@
  */
 package com.sun.ejb.containers.util.pool;
 
-import static com.sun.enterprise.util.Utility.setContextClassLoader;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
+
+import static com.sun.enterprise.util.Utility.setContextClassLoader;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * <p>

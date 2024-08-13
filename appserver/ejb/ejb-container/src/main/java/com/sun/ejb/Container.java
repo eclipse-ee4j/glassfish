@@ -17,10 +17,6 @@
 
 package com.sun.ejb;
 
-import java.rmi.Remote;
-
-import javax.naming.spi.NamingManager;
-
 import com.sun.enterprise.security.SecurityManager;
 
 import jakarta.ejb.CreateException;
@@ -32,6 +28,10 @@ import jakarta.ejb.EJBMetaData;
 import jakarta.ejb.EJBObject;
 import jakarta.ejb.FinderException;
 import jakarta.transaction.TransactionManager;
+
+import java.rmi.Remote;
+
+import javax.naming.spi.NamingManager;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;

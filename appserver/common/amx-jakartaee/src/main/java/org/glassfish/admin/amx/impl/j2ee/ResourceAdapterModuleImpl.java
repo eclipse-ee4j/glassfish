@@ -16,10 +16,10 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.ResourceAdapterModule;
-
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.j2ee.J2EETypes;
+import org.glassfish.admin.amx.j2ee.ResourceAdapterModule;
 
 public final class ResourceAdapterModuleImpl extends J2EEModuleImplBase {
     public static final Class<ResourceAdapterModule> INTF = ResourceAdapterModule.class;

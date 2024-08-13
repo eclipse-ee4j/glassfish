@@ -18,11 +18,13 @@ package com.sun.enterprise.config.modularity;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.config.support.Singleton;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
+
 import java.util.StringTokenizer;
+
+import org.glassfish.config.support.Singleton;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * The main driver to make the getset commands compatible with the config modularity.

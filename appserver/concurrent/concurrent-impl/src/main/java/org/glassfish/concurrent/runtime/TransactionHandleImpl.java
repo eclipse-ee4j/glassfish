@@ -18,9 +18,9 @@
 package org.glassfish.concurrent.runtime;
 
 
-import org.glassfish.concurro.spi.TransactionHandle;
-
 import jakarta.transaction.Transaction;
+
+import org.glassfish.concurro.spi.TransactionHandle;
 
 public class TransactionHandleImpl implements TransactionHandle {
 

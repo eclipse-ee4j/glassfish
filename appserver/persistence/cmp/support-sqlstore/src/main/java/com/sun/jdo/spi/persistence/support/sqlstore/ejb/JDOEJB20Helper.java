@@ -22,13 +22,13 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
+import com.sun.jdo.api.persistence.support.PersistenceManager;
+
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBLocalObject;
+
 import java.util.Collection;
 import java.util.Set;
-
-import jakarta.ejb.EJBLocalObject;
-import jakarta.ejb.EJBContext;
-
-import com.sun.jdo.api.persistence.support.PersistenceManager;
 
 /*
  * This is the helper interface for conversion of persistence-capable instances

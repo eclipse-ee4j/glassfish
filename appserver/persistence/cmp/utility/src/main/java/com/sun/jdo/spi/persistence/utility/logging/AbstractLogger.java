@@ -22,12 +22,22 @@
 
 package com.sun.jdo.spi.persistence.utility.logging;
 
-import java.io.*;
-import java.util.*;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
 
 /**
  * This class provides a default implementation of the

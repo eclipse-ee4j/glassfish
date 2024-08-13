@@ -17,8 +17,6 @@
 
 package org.apache.catalina.startup;
 
-import org.apache.catalina.LogFacade;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -27,6 +25,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
 
 /**
  * Utility class to read the bootstrap Catalina configuration.

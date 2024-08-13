@@ -30,24 +30,33 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
+import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
+import com.sun.logging.LogDomains;
 
-import java.util.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import org.omg.CORBA.*;
-import org.omg.CORBA.ORBPackage.InvalidName;
-import org.omg.CosTransactions.*;
-import org.omg.CosNaming.*;
-import org.omg.PortableServer.*;
-import org.omg.CORBA.LocalObject;
-
-import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
-
-import java.util.logging.Logger;
+import java.util.Properties;
 import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.LocalObject;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CORBA.Policy;
+import org.omg.CORBA.TSIdentification;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContext;
+import org.omg.CosNaming.NamingContextHelper;
+import org.omg.CosTransactions.TransactionFactory;
+import org.omg.CosTransactions.TransactionFactoryHelper;
+import org.omg.PortableServer.AdapterActivator;
+import org.omg.PortableServer.LifespanPolicyValue;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.RequestProcessingPolicyValue;
+import org.omg.PortableServer.Servant;
+import org.omg.PortableServer.ServantActivator;
 
 /**The DefaultTransactionService is our implemention of the
  * com.sun.CosTransactions.TransactionService class.

@@ -22,20 +22,20 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.connection;
 
-import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.api.persistence.support.Transaction;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.utility.StringScanner;
 import com.sun.jdo.spi.persistence.utility.DoubleLinkedList;
 import com.sun.jdo.spi.persistence.utility.Linkable;
-import com.sun.jdo.spi.persistence.support.sqlstore.utility.StringScanner;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
-
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * <P>This class represents a connection manager, which creates a

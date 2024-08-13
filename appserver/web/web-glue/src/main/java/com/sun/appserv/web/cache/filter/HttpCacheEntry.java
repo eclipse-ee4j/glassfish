@@ -16,10 +16,11 @@
 
 package com.sun.appserv.web.cache.filter;
 
+import jakarta.servlet.http.Cookie;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import jakarta.servlet.http.Cookie;
 
 /** HttpCacheEntry
  *  Each entry holds cached (HTTP) response:

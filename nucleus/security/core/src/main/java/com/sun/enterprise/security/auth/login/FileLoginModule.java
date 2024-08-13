@@ -17,11 +17,12 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import static java.util.logging.Level.FINE;
-
 import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
+
 import javax.security.auth.login.LoginException;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * File realm login module.

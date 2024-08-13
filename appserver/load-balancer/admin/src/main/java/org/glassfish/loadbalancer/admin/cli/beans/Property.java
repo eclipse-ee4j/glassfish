@@ -21,8 +21,9 @@
  */
 package org.glassfish.loadbalancer.admin.cli.beans;
 
-import org.netbeans.modules.schema2beans.*;
-import java.util.*;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.Common;
 
 // BEGIN_NOI18N
 public class Property extends org.netbeans.modules.schema2beans.BaseBean {

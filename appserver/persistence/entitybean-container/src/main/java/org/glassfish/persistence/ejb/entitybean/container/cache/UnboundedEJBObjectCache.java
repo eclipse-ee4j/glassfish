@@ -17,8 +17,9 @@
 package org.glassfish.persistence.ejb.entitybean.container.cache;
 
 import com.sun.appserv.util.cache.BaseCache;
-import java.util.Map;
+
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**

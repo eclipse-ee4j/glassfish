@@ -19,6 +19,7 @@ package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.web.SecurityRole;
 import com.sun.enterprise.deployment.web.SecurityRoleReference;
+
 import org.glassfish.security.common.Role;
 
 /**

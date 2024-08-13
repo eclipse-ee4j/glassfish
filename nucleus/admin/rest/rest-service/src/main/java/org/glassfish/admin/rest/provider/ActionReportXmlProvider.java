@@ -17,11 +17,19 @@
 package org.glassfish.admin.rest.provider;
 
 import com.sun.enterprise.v3.common.ActionReporter;
-import java.lang.reflect.Type;
-import java.util.*;
+
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.admin.rest.utils.xml.XmlArray;
 import org.glassfish.admin.rest.utils.xml.XmlMap;

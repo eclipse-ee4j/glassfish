@@ -22,8 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.io.*;
-
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Properties;
 

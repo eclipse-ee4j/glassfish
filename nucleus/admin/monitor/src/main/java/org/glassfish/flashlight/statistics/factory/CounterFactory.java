@@ -21,7 +21,7 @@
 
 package org.glassfish.flashlight.statistics.factory;
 
-import org.glassfish.flashlight.statistics.*;
+import org.glassfish.flashlight.statistics.Counter;
 import org.glassfish.flashlight.statistics.impl.CounterImpl;
 
 /**

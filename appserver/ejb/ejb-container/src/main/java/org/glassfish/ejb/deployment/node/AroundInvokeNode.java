@@ -16,12 +16,13 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+
+import java.util.Map;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.w3c.dom.Node;

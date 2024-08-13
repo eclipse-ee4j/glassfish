@@ -19,11 +19,13 @@ package com.sun.enterprise.web;
 import com.sun.appserv.ProxyHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+
 import org.apache.catalina.connector.Constants;
 
 /**

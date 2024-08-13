@@ -16,8 +16,9 @@
 
 package com.sun.enterprise.security;
 
-import java.util.Arrays;
 import com.sun.enterprise.security.common.ClientSecurityContext;
+
+import java.util.Arrays;
 
 /**
  * This class is used to share information between either of the following scenarios 1. Different points of execution of a single

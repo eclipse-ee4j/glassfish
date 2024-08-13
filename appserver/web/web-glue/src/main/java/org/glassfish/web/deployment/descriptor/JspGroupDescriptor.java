@@ -18,10 +18,12 @@
 package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.OrderedSet;
-import org.glassfish.deployment.common.Descriptor;
+
+import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 
 import java.util.Set;
-import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
+
+import org.glassfish.deployment.common.Descriptor;
 
 public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDescriptor {
 

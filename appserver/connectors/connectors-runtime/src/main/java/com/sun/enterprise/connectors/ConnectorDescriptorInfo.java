@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.connectors;
 
+import com.sun.enterprise.connectors.util.ConnectionPoolReconfigHelper.ReconfigAction;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import com.sun.enterprise.connectors.util.ConnectionPoolReconfigHelper.ReconfigAction;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
 
 /**
  * This class abstract the ra.xml values pertaining to the connection

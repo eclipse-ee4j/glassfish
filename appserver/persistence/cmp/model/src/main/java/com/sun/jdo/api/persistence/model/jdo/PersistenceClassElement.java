@@ -22,11 +22,12 @@
 
 package com.sun.jdo.api.persistence.model.jdo;
 
-import java.util.ArrayList;
-
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
+
+import java.util.ArrayList;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 /* TODO:

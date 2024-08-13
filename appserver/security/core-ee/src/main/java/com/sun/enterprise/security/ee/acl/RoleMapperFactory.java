@@ -16,14 +16,14 @@
 
 package com.sun.enterprise.security.ee.acl;
 
+import jakarta.inject.Singleton;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 /**
  *

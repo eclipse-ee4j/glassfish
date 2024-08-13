@@ -16,14 +16,14 @@
 
 package org.glassfish.config.support;
 
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.glassfish.api.admin.AdminCommandContext;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import org.glassfish.api.admin.AdminCommandContext;
+import org.jvnet.hk2.annotations.Contract;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
  * A config resolver is responsible for finding the target object of a specified type on which a creation command

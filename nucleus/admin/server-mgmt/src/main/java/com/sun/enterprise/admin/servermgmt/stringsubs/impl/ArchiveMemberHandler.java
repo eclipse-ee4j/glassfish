@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.io.Writer;
-
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
 
 /**
  * Handles the creation of {@link Reader} and {@link Writer} for a {@link MemberEntry} of an archive.

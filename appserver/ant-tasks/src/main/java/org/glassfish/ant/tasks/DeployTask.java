@@ -16,10 +16,11 @@
 
 package org.glassfish.ant.tasks;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 public class DeployTask extends AdminTask {
 

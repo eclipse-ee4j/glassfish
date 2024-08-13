@@ -17,16 +17,16 @@
 
 package com.sun.gjc.spi.jdbc40;
 
+import com.sun.gjc.spi.base.DatabaseMetaDataWrapper;
+
+import jakarta.resource.ResourceException;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.util.logging.Level;
-
-import com.sun.gjc.spi.base.DatabaseMetaDataWrapper;
-
-import jakarta.resource.ResourceException;
 
 /**
  * Wrapper class for DatabaseMetaData for JDBC 4.0 <br>

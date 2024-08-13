@@ -17,18 +17,6 @@
 
 package com.sun.enterprise.security.webservices;
 
-import static com.sun.xml.wss.provider.wsit.PipeConstants.BINDING;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT_ADDRESS;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SEI_MODEL;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_ENDPOINT;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_REF;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
-import static jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
@@ -59,6 +47,7 @@ import com.sun.xml.ws.api.model.SEIModel;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.wss.provider.wsit.PipeConstants;
+
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
@@ -70,19 +59,34 @@ import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.ws.WebServiceException;
+
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
 import org.glassfish.epicyro.services.BaseAuthenticationService;
 import org.glassfish.internal.api.Globals;
+
+import static com.sun.xml.wss.provider.wsit.PipeConstants.BINDING;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT_ADDRESS;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SEI_MODEL;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_ENDPOINT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_REF;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
+import static jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST;
 
 public class SoapAuthenticationService extends BaseAuthenticationService {
 

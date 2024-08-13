@@ -16,12 +16,12 @@
 
 package org.glassfish.webservices;
 
+import java.util.Enumeration;
+import java.util.NoSuchElementException;
+
 import org.glassfish.grizzly.servlet.ServletConfigImpl;
 import org.glassfish.grizzly.servlet.ServletHandler;
 import org.glassfish.grizzly.servlet.WebappContext;
-
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
 
 
 /**

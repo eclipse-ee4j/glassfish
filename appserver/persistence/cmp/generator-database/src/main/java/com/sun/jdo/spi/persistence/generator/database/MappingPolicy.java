@@ -25,6 +25,7 @@ package com.sun.jdo.spi.persistence.generator.database;
 
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+
 import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.I18NHelper;
 import org.glassfish.persistence.common.database.DBVendorTypeHelper;

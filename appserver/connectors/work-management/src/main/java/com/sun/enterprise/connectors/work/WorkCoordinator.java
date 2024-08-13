@@ -16,24 +16,30 @@
 
 package com.sun.enterprise.connectors.work;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.corba.ee.spi.threadpool.WorkQueue;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.connectors.work.context.WorkContextHandlerImpl;
 import com.sun.enterprise.connectors.work.monitor.WorkManagementProbeProvider;
 import com.sun.enterprise.security.SecurityContext;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ResourceAdapterAssociation;
-import jakarta.resource.spi.work.*;
+import jakarta.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.work.Work;
+import jakarta.resource.spi.work.WorkCompletedException;
+import jakarta.resource.spi.work.WorkEvent;
+import jakarta.resource.spi.work.WorkException;
+import jakarta.resource.spi.work.WorkListener;
+import jakarta.resource.spi.work.WorkRejectedException;
+
+import java.util.logging.Logger;
 
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 import static jakarta.resource.spi.work.WorkException.UNDEFINED;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-
-import java.util.logging.Logger;
 
 /**
  * WorkCoordinator : Coordinates one work's execution. Handles all exception conditions and does JTS coordination.

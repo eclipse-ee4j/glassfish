@@ -17,27 +17,6 @@
 
 package com.sun.gjc.spi;
 
-import static com.sun.gjc.common.DataSourceSpec.CLASSNAME;
-import static com.sun.gjc.common.DataSourceSpec.LOGINTIMEOUT;
-import static com.sun.gjc.common.DataSourceSpec.PASSWORD;
-import static com.sun.gjc.common.DataSourceSpec.URL;
-import static com.sun.gjc.common.DataSourceSpec.USERNAME;
-import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.sql.DataSource;
-
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.base.AbstractDataSource;
 import com.sun.gjc.spi.base.ConnectionHolder;
@@ -50,6 +29,27 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ResourceAllocationException;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.DataSource;
+
+import static com.sun.gjc.common.DataSourceSpec.CLASSNAME;
+import static com.sun.gjc.common.DataSourceSpec.LOGINTIMEOUT;
+import static com.sun.gjc.common.DataSourceSpec.PASSWORD;
+import static com.sun.gjc.common.DataSourceSpec.URL;
+import static com.sun.gjc.common.DataSourceSpec.USERNAME;
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Driver Manager <code>ManagedConnectionFactory</code> implementation for

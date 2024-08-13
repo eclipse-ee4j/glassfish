@@ -23,9 +23,11 @@ import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.easymock.EasyMock;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;

@@ -17,8 +17,8 @@
 
 package org.apache.catalina.startup;
 
-import org.glassfish.web.util.IntrospectionUtils;
 import org.apache.tomcat.util.digester.Rule;
+import org.glassfish.web.util.IntrospectionUtils;
 import org.xml.sax.Attributes;
 
 /**

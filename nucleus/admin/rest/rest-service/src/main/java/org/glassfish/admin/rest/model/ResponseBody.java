@@ -19,6 +19,7 @@ package org.glassfish.admin.rest.model;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

@@ -18,15 +18,6 @@
 
 package org.glassfish.web.loader;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.Logger.Level.WARNING;
-import static java.text.MessageFormat.format;
-import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS;
-import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_KEY;
-import static org.glassfish.web.loader.LogFacade.getString;
-
 import java.beans.Introspector;
 import java.lang.System.Logger;
 import java.lang.ref.Reference;
@@ -40,7 +31,17 @@ import java.sql.DriverManager;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
 import org.glassfish.web.util.IntrospectionUtils;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+import static java.text.MessageFormat.format;
+import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS;
+import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_KEY;
+import static org.glassfish.web.loader.LogFacade.getString;
 
 class ReferenceCleaner {
     private static final Logger LOG = LogFacade.getSysLogger(ReferenceCleaner.class);

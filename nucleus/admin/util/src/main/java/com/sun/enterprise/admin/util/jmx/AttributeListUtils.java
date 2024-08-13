@@ -27,7 +27,13 @@
  */
 package com.sun.enterprise.admin.util.jmx;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+
 import javax.management.Attribute;
 import javax.management.AttributeList;
 

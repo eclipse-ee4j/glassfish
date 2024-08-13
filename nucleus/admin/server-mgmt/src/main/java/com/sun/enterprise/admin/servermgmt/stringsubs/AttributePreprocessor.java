@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs;
 
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ChangePair;
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
+
 /**
  * An object to pre-process the input string. This input string can either b
  */

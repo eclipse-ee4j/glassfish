@@ -17,12 +17,12 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Node;
-import org.glassfish.internal.api.ServerContext;
 import com.sun.enterprise.util.io.InstanceDirs;
-
 
 import java.io.File;
 import java.io.IOException;
+
+import org.glassfish.internal.api.ServerContext;
 
 
 final class InstanceDirUtils{

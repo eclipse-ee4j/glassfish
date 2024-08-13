@@ -17,9 +17,10 @@
 
 package org.glassfish.tests.embedded.localejbs;
 
+import javax.naming.InitialContext;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import javax.naming.InitialContext;
 
 /**
  * @author bhavanishankar@dev.java.net

@@ -18,10 +18,11 @@
 package org.apache.catalina;
 
 
-import org.glassfish.web.valve.GlassFishValve;
-
 import jakarta.servlet.ServletException;
+
 import java.io.IOException;
+
+import org.glassfish.web.valve.GlassFishValve;
 
 /**
  * <p>Interface describing a collection of Valves that should be executed

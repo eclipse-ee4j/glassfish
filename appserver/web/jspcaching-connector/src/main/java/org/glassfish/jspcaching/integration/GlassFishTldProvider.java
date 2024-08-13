@@ -16,18 +16,28 @@
 
 package org.glassfish.jspcaching.integration;
 
-import java.net.*;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.logging.*;
-import java.util.regex.Pattern;
 import com.sun.appserv.web.taglibs.cache.CacheTag;
 import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.util.net.JarURIPattern;
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.util.net.JarURIPattern;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.web.TldProvider;
 import org.glassfish.hk2.api.PostConstruct;

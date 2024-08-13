@@ -17,8 +17,6 @@
 
 package org.apache.catalina.util;
 
-import org.apache.catalina.LogFacade;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -26,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
 
 /**
  *

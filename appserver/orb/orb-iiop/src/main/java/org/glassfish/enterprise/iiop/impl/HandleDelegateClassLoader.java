@@ -16,7 +16,9 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class HandleDelegateClassLoader
     extends ClassLoader

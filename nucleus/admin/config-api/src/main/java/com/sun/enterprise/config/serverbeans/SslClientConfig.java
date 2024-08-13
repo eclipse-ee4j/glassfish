@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.beans.PropertyVetoException;
+
 import org.glassfish.grizzly.config.dom.Ssl;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-
-import java.beans.PropertyVetoException;
 
 /**
  * Specifies the SSL configuration when the Application Server is making outbound IIOP/SSL connections.

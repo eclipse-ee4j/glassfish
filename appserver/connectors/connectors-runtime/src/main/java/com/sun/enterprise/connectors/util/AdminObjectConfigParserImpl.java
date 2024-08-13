@@ -17,6 +17,13 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.AdminObject;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,13 +32,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.deployment.AdminObject;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
 
 /**
  * This is AdminObject configuration parser. It parses the ra.xml file

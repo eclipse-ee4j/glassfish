@@ -17,11 +17,11 @@
 
 package com.sun.common.util.logging;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Interface for Logging Commands

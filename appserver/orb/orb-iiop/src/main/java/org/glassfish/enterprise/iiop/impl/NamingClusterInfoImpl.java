@@ -18,17 +18,8 @@
 package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.corba.ee.spi.folb.GroupInfoService;
-import org.glassfish.api.naming.NamingClusterInfo;
-import org.glassfish.api.naming.NamingObjectsProvider;
-import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.internal.api.ORBLocator;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
 
-import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.FAILED_TO_RESOLVE_GROUPINFOSERVICE;
-import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.NO_ENDPOINT_SELECTED;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -36,7 +27,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Singleton;
+import org.glassfish.api.naming.NamingClusterInfo;
+import org.glassfish.api.naming.NamingObjectsProvider;
+import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ORBLocator;
+import org.jvnet.hk2.annotations.Service;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.FAILED_TO_RESOLVE_GROUPINFOSERVICE;
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.NO_ENDPOINT_SELECTED;
 
 /**
  * This class is responsible for setting up naming load-balancing including RoundRobinPolicy.

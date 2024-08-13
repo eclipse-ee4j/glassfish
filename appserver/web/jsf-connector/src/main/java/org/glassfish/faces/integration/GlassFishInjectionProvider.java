@@ -17,9 +17,6 @@
 
 package org.glassfish.faces.integration;
 
-import static java.util.logging.Level.FINE;
-import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
-
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
@@ -34,7 +31,9 @@ import com.sun.faces.spi.DiscoverableInjectionProvider;
 import com.sun.faces.spi.HighAvailabilityEnabler;
 import com.sun.faces.spi.InjectionProviderException;
 import com.sun.faces.util.FacesLogger;
+
 import jakarta.servlet.ServletContext;
+
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,9 +41,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.ServiceLocator;
+
+import static java.util.logging.Level.FINE;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
 
 /**
  * <p>

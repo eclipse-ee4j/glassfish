@@ -16,15 +16,15 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
+import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
+import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
+import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
-import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
-import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
 
 /**
  * Perform's String substitution by replacing the matching target sequence with the specified literal replacement

@@ -17,6 +17,15 @@
 
 package com.sun.enterprise.connectors.service;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
+import com.sun.enterprise.connectors.ConnectorConnectionPool;
+import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
+import com.sun.enterprise.connectors.naming.ConnectorNamingEventNotifier;
+import com.sun.enterprise.connectors.naming.ConnectorResourceNamingEventNotifier;
+
 import java.util.Hashtable;
 import java.util.logging.Level;
 
@@ -31,15 +40,6 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.glassfish.resources.naming.SerializableObjectRefAddr;
-
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
-import com.sun.enterprise.connectors.ConnectorConnectionPool;
-import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
-import com.sun.enterprise.connectors.naming.ConnectorNamingEventNotifier;
-import com.sun.enterprise.connectors.naming.ConnectorResourceNamingEventNotifier;
 
 /**
  * This is connector resource admin service. It creates and deletes the

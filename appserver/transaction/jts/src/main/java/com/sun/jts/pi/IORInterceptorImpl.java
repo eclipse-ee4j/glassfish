@@ -16,21 +16,22 @@
 
 package com.sun.jts.pi;
 
-import org.omg.IOP.Codec;
-import org.omg.IOP.TaggedComponent;
-import org.omg.IOP.CodecPackage.InvalidTypeForEncoding;
-
-import org.omg.CORBA.ORB;
 import org.omg.CORBA.Any;
-import org.omg.CORBA.LocalObject;
-import org.omg.CORBA.INV_POLICY;
 import org.omg.CORBA.INTERNAL;
-
-import org.omg.CosTransactions.*;
-
-import org.omg.CosTSInteroperation.TAG_OTS_POLICY;
+import org.omg.CORBA.INV_POLICY;
+import org.omg.CORBA.LocalObject;
+import org.omg.CORBA.ORB;
 import org.omg.CosTSInteroperation.TAG_INV_POLICY;
-
+import org.omg.CosTSInteroperation.TAG_OTS_POLICY;
+import org.omg.CosTransactions.EITHER;
+import org.omg.CosTransactions.FORBIDS;
+import org.omg.CosTransactions.INVOCATION_POLICY_TYPE;
+import org.omg.CosTransactions.InvocationPolicy;
+import org.omg.CosTransactions.OTSPolicy;
+import org.omg.CosTransactions.OTS_POLICY_TYPE;
+import org.omg.IOP.Codec;
+import org.omg.IOP.CodecPackage.InvalidTypeForEncoding;
+import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.IORInterceptor;
 

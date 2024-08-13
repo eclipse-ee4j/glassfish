@@ -17,12 +17,6 @@
 
 package com.sun.ejb.containers.interceptors;
 
-import static com.sun.ejb.EJBUtils.loadGeneratedSerializableClass;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_ACTIVATE;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_PASSIVATE;
-import static java.util.logging.Level.CONFIG;
-import static java.util.logging.Level.FINE;
-
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
@@ -31,9 +25,11 @@ import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MethodDescriptor;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJBException;
 import jakarta.interceptor.InvocationContext;
+
 import java.io.Serializable;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +44,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
+
+import static com.sun.ejb.EJBUtils.loadGeneratedSerializableClass;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_ACTIVATE;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_PASSIVATE;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
 
 /**
  * UserInterceptorsManager manages UserInterceptors. There is one instance of InterceptorManager per container.

@@ -16,14 +16,10 @@
 
 package org.glassfish.admin.rest.composite;
 
-import java.util.ArrayList;
-import java.util.List;
 import jakarta.ws.rs.GET;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -36,6 +32,11 @@ import org.glassfish.admin.rest.model.ModelExt1;
 import org.glassfish.admin.rest.model.ModelExt2;
 import org.glassfish.admin.rest.model.RelatedModel;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jdlee

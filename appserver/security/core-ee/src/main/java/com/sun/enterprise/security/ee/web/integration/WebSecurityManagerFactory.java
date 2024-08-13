@@ -17,23 +17,26 @@
 
 package com.sun.enterprise.security.ee.web.integration;
 
-import static java.util.logging.Level.FINE;
-
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
 import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
 import com.sun.enterprise.security.factory.SecurityManagerFactory;
+
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.PolicyContextException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserPrincipal;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * @author JeanFrancois Arcand

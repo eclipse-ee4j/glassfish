@@ -22,6 +22,9 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
+import com.sun.jdo.api.persistence.mapping.ejb.ConversionHelper;
+import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,8 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.sun.jdo.api.persistence.mapping.ejb.ConversionHelper;
-import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.IASEjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;

@@ -16,8 +16,10 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
-import java.sql.*;
-import jakarta.transaction.*;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+
+import java.sql.Connection;
 
 public interface Transaction extends com.sun.jdo.api.persistence.support.Transaction, Synchronization
 {

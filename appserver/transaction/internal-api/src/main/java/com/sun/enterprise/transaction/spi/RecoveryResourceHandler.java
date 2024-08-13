@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.transaction.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.List;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * RecoveryResourceHandler will be used by transaction-manager to get resource instances.<br>

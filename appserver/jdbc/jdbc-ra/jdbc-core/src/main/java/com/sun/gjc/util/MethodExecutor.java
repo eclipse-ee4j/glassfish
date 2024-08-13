@@ -17,7 +17,11 @@
 
 package com.sun.gjc.util;
 
-import static java.util.logging.Level.FINEST;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.common.DataSourceObjectBuilder;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -34,11 +38,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.ResourceException;
+import static java.util.logging.Level.FINEST;
 
 /**
  * Execute the methods based on the parameters.

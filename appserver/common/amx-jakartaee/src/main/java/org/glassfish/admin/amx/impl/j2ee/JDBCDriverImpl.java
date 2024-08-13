@@ -16,10 +16,10 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.JDBCDriver;
-
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.j2ee.J2EEManagedObject;
+import org.glassfish.admin.amx.j2ee.JDBCDriver;
 
 public final class JDBCDriverImpl
         extends J2EEManagedObjectImplBase {

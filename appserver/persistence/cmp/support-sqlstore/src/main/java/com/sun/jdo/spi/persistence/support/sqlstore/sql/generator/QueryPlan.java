@@ -23,17 +23,18 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.TableElement;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ReferenceKeyDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.TableDesc;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.TableElement;
 
 
 /**

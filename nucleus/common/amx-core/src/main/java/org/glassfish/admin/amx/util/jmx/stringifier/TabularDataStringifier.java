@@ -18,6 +18,7 @@ package org.glassfish.admin.amx.util.jmx.stringifier;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
+
 import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 public class TabularDataStringifier implements Stringifier

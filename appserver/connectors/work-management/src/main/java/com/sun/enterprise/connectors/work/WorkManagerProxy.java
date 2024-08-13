@@ -17,8 +17,16 @@
 package com.sun.enterprise.connectors.work;
 
 
-import jakarta.resource.spi.work.*;
-import java.io.*;
+import jakarta.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.work.Work;
+import jakarta.resource.spi.work.WorkException;
+import jakarta.resource.spi.work.WorkListener;
+import jakarta.resource.spi.work.WorkManager;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * Proxy for WorkManager.<br>

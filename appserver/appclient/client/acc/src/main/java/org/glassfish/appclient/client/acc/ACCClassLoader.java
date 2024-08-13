@@ -17,10 +17,9 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static org.glassfish.appclient.common.ClassPathUtils.getJavaClassPathForAppClient;
-
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +32,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
+
 import org.glassfish.common.util.GlassfishUrlClassLoader;
+
+import static org.glassfish.appclient.common.ClassPathUtils.getJavaClassPathForAppClient;
 
 /**
  * Application client classloader

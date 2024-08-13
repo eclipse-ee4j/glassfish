@@ -16,9 +16,10 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
+import jakarta.ejb.spi.HandleDelegate;
+
 import org.glassfish.enterprise.iiop.api.HandleDelegateFacade;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.ejb.spi.HandleDelegate;
 
 @Service
 public class HandleDelegateFacadeImpl implements HandleDelegateFacade {

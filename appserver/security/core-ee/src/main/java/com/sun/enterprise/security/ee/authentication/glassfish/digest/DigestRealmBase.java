@@ -17,19 +17,20 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest;
 
-import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
-import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
-import static java.util.logging.Level.SEVERE;
-
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.digest.api.Key;
 import com.sun.enterprise.security.auth.digest.api.Password;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestProcessor;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
+
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Base class for all realms wanting to support Digest based authentication.

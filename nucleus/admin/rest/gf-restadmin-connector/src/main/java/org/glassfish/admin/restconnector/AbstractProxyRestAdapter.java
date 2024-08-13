@@ -18,12 +18,13 @@ package org.glassfish.admin.restconnector;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
-import org.glassfish.api.container.Adapter;
-import org.glassfish.grizzly.http.server.HttpHandler;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import java.net.InetAddress;
 import java.util.List;
+
+import org.glassfish.api.container.Adapter;
+import org.glassfish.grizzly.http.server.HttpHandler;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Base class for our implementation of Adapter proxies. To avoid early loading of adapter implentations, use a

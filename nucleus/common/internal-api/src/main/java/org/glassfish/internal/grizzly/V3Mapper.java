@@ -19,8 +19,8 @@ package org.glassfish.internal.grizzly;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.glassfish.grizzly.http.server.naming.NamingContext;
 
+import org.glassfish.grizzly.http.server.naming.NamingContext;
 import org.glassfish.grizzly.http.server.util.Mapper;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;

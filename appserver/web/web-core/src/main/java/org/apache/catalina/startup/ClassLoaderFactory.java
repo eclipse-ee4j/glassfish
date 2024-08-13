@@ -18,16 +18,17 @@
 
 package org.apache.catalina.startup;
 
-import static java.util.logging.Level.FINE;
-
 import java.io.File;
 import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Logger;
+
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.loader.StandardClassLoader;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * <p>

@@ -16,6 +16,16 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -23,21 +33,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * This class parses the string substitution XML.

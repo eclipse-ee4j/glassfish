@@ -17,14 +17,22 @@
 
 package com.sun.enterprise.util;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 
 /**
@@ -36,6 +44,28 @@ public class FelixPrettyPrinter {
 
     public static void main(String[] args) {
         System.out.println(prettyPrintExceptionMessage("Unable to resolve org.glassfish.main.concurrent.impl [138](R 138.0): missing requirement [org.glassfish.main.concurrent.impl [138](R 138.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.enterprise.concurrent.spi)(version>=2.0.0)(!(version>=3.0.0))) [caused by: Unable to resolve org.glassfish.jakarta.enterprise.concurrent [190](R 190.0): missing requirement [org.glassfish.jakarta.enterprise.concurrent [190](R 190.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.annotation)(version>=2.1.0)(!(version>=3.0.0)))] Unresolved requirements: [[org.glassfish.main.concurrent.impl [138](R 138.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.enterprise.concurrent.spi)(version>=2.0.0)(!(version>=3.0.0)))]"));
+    }
+
+    public static String prettyPrintFelixMessage(BundleContext context, final String bundleMessage) {
+        final String prettyMessage = FelixPrettyPrinter.prettyPrintExceptionMessage(bundleMessage);
+        List<Integer> bundleIDs = FelixPrettyPrinter.findBundleIds(prettyMessage);
+        if (bundleIDs.isEmpty()) {
+            return prettyMessage;
+        }
+
+        final StringBuilder bundleBuilder = new StringBuilder(1024);
+        bundleBuilder.append(prettyMessage);
+        for (Integer bundleId : bundleIDs) {
+            Bundle bundle = context.getBundle(bundleId);
+            if (bundle != null) {
+                bundleBuilder.append('[').append(bundleId).append("] \n");
+                bundleBuilder.append("jar = ").append(bundle.getLocation());
+                tryAddPomProperties(bundle, bundleBuilder);
+                bundleBuilder.append('\n');
+            }
+        }
+
+        return bundleBuilder.toString();
     }
 
     /**
@@ -76,14 +106,22 @@ public class FelixPrettyPrinter {
                     // use that as a delimiter here
                     int indexPackage = message.indexOf("osgi.wiring.package; ", index);
                     int indexHost = message.indexOf("osgi.wiring.host; ", index);
+                    int indexEE = message.indexOf("osgi.ee; ", index);
+                    String match = "";
 
                     boolean isPackage;
-                    if (indexHost == -1 || indexPackage < indexHost) {
+                    if (indexPackage != -1 && (indexHost == -1 || indexPackage < indexHost) && (indexEE == -1 || indexPackage < indexEE)) {
                         index = indexPackage;
                         isPackage = true;
                     } else {
-                        index = indexHost;
                         isPackage = false;
+                        if (indexHost != -1 && (indexEE == -1 || indexHost < indexEE)) {
+                            index = indexHost;
+                            match = "osgi.wiring.host; ";
+                        } else {
+                            index = indexEE;
+                            match = "osgi.ee; ";
+                        }
                     }
 
                     if (index >= 0) {
@@ -134,10 +172,12 @@ public class FelixPrettyPrinter {
                             // Remainder of input now looks like this:
 
                             // osgi.wiring.host; (&(osgi.wiring.host=org.hibernate.validator)(bundle-version>=0.0.0)
+                            // or
+                            // osgi.ee; (&(osgi.ee=JavaSE)(version=1.6))
 
-                            // Skip over "osgi.wiring.host; ", we're already searching for this so
+                            // Skip over "match", we're already searching for this so
                             // no need to print it.
-                            index += "osgi.wiring.host; ".length();
+                            index += match.length();
 
                             index2 = message.indexOf("]", index);
 
@@ -194,6 +234,20 @@ public class FelixPrettyPrinter {
             bundleIds.add(Integer.valueOf(number));
         }
         return new ArrayList<>(bundleIds);
+    }
+
+    private static void tryAddPomProperties(Bundle bundle, StringBuilder bundleBuilder) {
+        Enumeration<URL> entries = bundle.findEntries("META-INF/maven/", "pom.properties", true);
+        while (entries.hasMoreElements()) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(entries.nextElement().openStream(), UTF_8))) {
+                reader.lines()
+                      .filter(e -> !e.startsWith("#"))
+                      .forEach(e -> bundleBuilder.append('\n').append(e.replace("=", " = ")));
+            } catch (IOException e1) {
+                // Ignore
+            }
+            bundleBuilder.append('\n');
+        }
     }
 
 

@@ -17,17 +17,21 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleReference;
-import org.osgi.framework.launch.Framework;
-import org.osgi.framework.launch.FrameworkFactory;
-import org.osgi.util.tracker.ServiceTracker;
-
+import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.BundleReference;
+import org.osgi.framework.FrameworkEvent;
+import org.osgi.framework.FrameworkListener;
+import org.osgi.framework.launch.Framework;
+import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Utility class which takes care of launching OSGi framework.
@@ -39,6 +43,8 @@ import java.util.ServiceLoader;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class OSGiFrameworkLauncher {
+
+    private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
 
     private final Properties properties;
     private Framework framework;
@@ -73,7 +79,7 @@ public class OSGiFrameworkLauncher {
             @Override
             public void run() {
                 try {
-                    framework.init();
+                    framework.init(event -> logger.log(Level.SEVERE, event.getSource() + "fiiii" ));
                 } catch (BundleException e) {
                     throw new RuntimeException(e);
                 }
@@ -83,6 +89,17 @@ public class OSGiFrameworkLauncher {
         t.start();
         t.join();
         return framework;
+    }
+
+    public static class Foo implements FrameworkListener {
+
+        private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
+
+        @Override
+        public void frameworkEvent(FrameworkEvent event) {
+            logger.log(Level.SEVERE, event.getSource() + "fiiii" );
+
+        }
     }
 
 

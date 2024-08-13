@@ -17,10 +17,18 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
+import static com.sun.enterprise.glassfish.bootstrap.Constants.HK2_CACHE_DIR;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INHABITANTS_CACHE;
+import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.BUNDLEIDS_FILENAME;
+import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_FILENAME;
+import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_PREFIX;
+import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintFelixMessage;
+import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
+import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
+
 import com.sun.enterprise.glassfish.bootstrap.Constants;
 import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.MainHelper;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,22 +38,15 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkEvent;
+import org.osgi.framework.FrameworkListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
-
-import static com.sun.enterprise.glassfish.bootstrap.Constants.HK2_CACHE_DIR;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INHABITANTS_CACHE;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.BUNDLEIDS_FILENAME;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_FILENAME;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_PREFIX;
-import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
-import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
@@ -142,6 +143,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             long t2 = System.currentTimeMillis();
 
             // Step 3: Start the framework, so bundles will get activated as per their start levels
+            framework.getBundleContext().addFrameworkListener(new ErrorLogger(framework));
             framework.start();
             long t3 = System.currentTimeMillis();
             printStats(bundleProvisioner, t0, t1, t2, t3);
@@ -150,6 +152,29 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             return getGlassFishRuntime();
         } catch (Exception e) {
             throw new GlassFishException(e);
+        }
+    }
+
+    private static class ErrorLogger implements FrameworkListener {
+
+        final org.apache.felix.framework.Logger felixLogger = new org.apache.felix.framework.Logger();
+        final Framework framework;
+
+        public ErrorLogger(Framework framework) {
+            this.framework = framework;
+        }
+
+        @Override
+        public void frameworkEvent(FrameworkEvent event) {
+            if (event.getThrowable() != null) {
+                felixLogger.log(
+                    framework,
+                    org.apache.felix.framework.Logger.LOG_ERROR,
+                    prettyPrintFelixMessage(
+                        framework.getBundleContext(),
+                        event.getThrowable().getMessage()) ,
+                    event.getThrowable());
+            }
         }
     }
 

@@ -79,7 +79,7 @@ public class OSGiFrameworkLauncher {
             @Override
             public void run() {
                 try {
-                    framework.init(event -> logger.log(Level.SEVERE, event.getSource() + "fiiii" ));
+                    framework.init();
                 } catch (BundleException e) {
                     throw new RuntimeException(e);
                 }
@@ -90,18 +90,6 @@ public class OSGiFrameworkLauncher {
         t.join();
         return framework;
     }
-
-    public static class Foo implements FrameworkListener {
-
-        private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
-
-        @Override
-        public void frameworkEvent(FrameworkEvent event) {
-            logger.log(Level.SEVERE, event.getSource() + "fiiii" );
-
-        }
-    }
-
 
     public <T> T getService(Class<T> type) throws Exception {
         if (framework == null) {

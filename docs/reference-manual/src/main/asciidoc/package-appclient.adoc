@@ -65,7 +65,7 @@ following:
 === Attributes
 
 See
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]
 for descriptions of the following attributes:
 
 [width="100%",cols="50%,50%",options="header",]

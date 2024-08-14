@@ -8,7 +8,7 @@ prev=ejb.html
 = Using Container-Managed Persistence
 
 [[using-container-managed-persistence]]
-== 9 Using Container-Managed Persistence
+== Using Container-Managed Persistence
 
 This chapter contains information on how EJB 2.1 container-managed
 persistence (CMP) works in {productName}.

@@ -8,7 +8,7 @@ prev=part-tasks-and-tools.html
 = Setting Up a Development Environment
 
 [[setting-up-a-development-environment]]
-== 1 Setting Up a Development Environment
+== Setting Up a Development Environment
 
 This chapter gives guidelines for setting up an application development
 environment in the {productName}. Setting up an environment

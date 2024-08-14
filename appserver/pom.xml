@@ -37,7 +37,6 @@
 
     <modules>
         <module>common</module>
-        <module>ldapbp</module>
         <module>libpam4j</module>
         <module>ha</module>
         <module>deployment</module>
@@ -67,6 +66,7 @@
         <module>webservices</module>
         <module>orb</module>
         <module>appclient</module>
+        <module>microprofile</module>
         <module>itest-tools</module>
         <module>ant-tasks</module>
     </modules>
@@ -1007,16 +1007,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>jdk17</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-           <modules>
-               <module>microprofile</module>
-           </modules>
-        </profile>
-    </profiles>
 </project>

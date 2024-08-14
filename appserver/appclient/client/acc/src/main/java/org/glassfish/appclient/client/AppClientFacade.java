@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package org.glassfish.appclient.client;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.deployment.node.SaxParserHandlerBundled;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.util.JDK;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
@@ -148,14 +147,11 @@ public class AppClientFacade {
 
     public static void prepareACC(String agentArgsText, Instrumentation inst) throws UserError, MalformedURLException, URISyntaxException,
             JAXBException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, Exception {
-        int minor = JDK.getMinor();
-        int major = JDK.getMajor();
-        if (major < 9) {
-            if (minor < 6) {
-                throw new UserError(localStrings.getLocalString(stringsAnchor, "main.badVersion",
-                        "Current Java version {0} is too low; {1} or later required",
-                        new Object[] { System.getProperty("java.version"), "1.6" }));
-            }
+        int version = Runtime.version().feature();
+        if (version < 11) {
+            throw new UserError(localStrings.getLocalString(stringsAnchor, "main.badVersion",
+                "Current Java version {0} is too low; {1} or later required",
+                new Object[] {System.getProperty("java.version"), "11"}));
         }
 
         /*

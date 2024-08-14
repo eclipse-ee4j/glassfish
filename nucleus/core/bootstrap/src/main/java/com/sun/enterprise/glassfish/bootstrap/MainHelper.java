@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,20 +67,11 @@ import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 public class MainHelper {
 
     static void checkJdkVersion() {
-        int major = getMajorJdkVersion();
-        if (major < 11) {
-            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {11, major});
+        int version = Runtime.version().feature();
+        if (version < 11) {
+            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {11, version});
             System.exit(1);
         }
-    }
-
-    private static int getMajorJdkVersion() {
-        String jv = System.getProperty("java.version");
-        String[] split = jv.split("[\\._\\-]+");
-        if (split.length > 0) {
-            return Integer.parseInt(split[0]);
-        }
-        return -1;
     }
 
     static String whichPlatform() {

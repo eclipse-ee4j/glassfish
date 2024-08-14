@@ -53,7 +53,6 @@
         <module>persistence</module>
         <module>concurrent</module>
         <module>batch</module>
-        <module>microprofile</module>
         <module>extras</module>
         <module>admingui</module>
         <module>extras/embedded/shell</module>

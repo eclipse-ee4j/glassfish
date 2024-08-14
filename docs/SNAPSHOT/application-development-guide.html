@@ -17,8 +17,8 @@
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a>
+<li><a href="#eclipse-glassfish-server">1. Eclipse GlassFish</a></li>
+<li><a href="#preface">2. Preface</a>
 <ul class="sectlevel2">
 <li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
 <li><a href="#related-documentation">Related Documentation</a></li>
@@ -28,8 +28,8 @@
 </ul>
 </li>
 <li><a href="#part-i">Part I</a></li>
-<li><a href="#development-tasks-and-tools">Development Tasks and Tools</a></li>
-<li><a href="#setting-up-a-development-environment">1 Setting Up a Development Environment</a>
+<li><a href="#development-tasks-and-tools">3. Development Tasks and Tools</a></li>
+<li><a href="#setting-up-a-development-environment">4. Setting Up a Development Environment</a>
 <ul class="sectlevel2">
 <li><a href="#installing-and-preparing-the-server-for-development">Installing and Preparing the Server for Development</a></li>
 <li><a href="#high-availability-features">High Availability Features</a></li>
@@ -46,7 +46,7 @@
 <li><a href="#sample-applications">Sample Applications</a></li>
 </ul>
 </li>
-<li><a href="#class-loaders">2 Class Loaders</a>
+<li><a href="#class-loaders">5. Class Loaders</a>
 <ul class="sectlevel2">
 <li><a href="#the-class-loader-hierarchy">The Class Loader Hierarchy</a></li>
 <li><a href="#delegation">Delegation</a></li>
@@ -64,7 +64,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#debugging-applications">3 Debugging Applications</a>
+<li><a href="#debugging-applications">6. Debugging Applications</a>
 <ul class="sectlevel2">
 <li><a href="#enabling-debugging">Enabling Debugging</a>
 <ul class="sectlevel3">
@@ -88,8 +88,15 @@
 </ul>
 </li>
 <li><a href="#part-ii">Part II</a></li>
-<li><a href="#developing-applications-and-application-components">Developing Applications and Application Components</a></li>
-<li><a href="#securing-applications">4 Securing Applications</a>
+<li><a href="#developing-applications-and-application-components">7. Developing Applications and Application Components</a></li>
+<li><a href="#api-for-dev">8. API for development</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-api">GlassFish API</a></li>
+<li><a href="#glassfish-ee-api">GlassFish EE API</a></li>
+<li><a href="#simple-glassfish-api">Simple GlassFish API</a></li>
+</ul>
+</li>
+<li><a href="#securing-applications">9. Securing Applications</a>
 <ul class="sectlevel2">
 <li><a href="#security-goals">Security Goals</a></li>
 <li><a href="#glassfish-server-specific-security-features">Eclipse GlassFish Specific Security Features</a></li>
@@ -153,7 +160,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-web-services">5 Developing Web Services</a>
+<li><a href="#developing-web-services">10. Developing Web Services</a>
 <ul class="sectlevel2">
 <li><a href="#creating-portable-web-service-artifacts">Creating Portable Web Service Artifacts</a></li>
 <li><a href="#deploying-a-web-service">Deploying a Web Service</a></li>
@@ -161,7 +168,7 @@
 <li><a href="#the-databinding-provider">The Databinding Provider</a></li>
 </ul>
 </li>
-<li><a href="#configuring-the-java-persistence-provider">6 Configuring the Java Persistence Provider</a>
+<li><a href="#configuring-the-java-persistence-provider">11. Configuring the Java Persistence Provider</a>
 <ul class="sectlevel2">
 <li><a href="#overview-of-oracle-toplink">Overview of Oracle TopLink</a></li>
 <li><a href="#using-oracle-toplink-in-glassfish-server">Using Oracle TopLink in Eclipse GlassFish</a></li>
@@ -187,7 +194,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-web-applications">7 Developing Web Applications</a>
+<li><a href="#developing-web-applications">12. Developing Web Applications</a>
 <ul class="sectlevel2">
 <li><a href="#using-servlets">Using Servlets</a>
 <ul class="sectlevel3">
@@ -234,7 +241,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-enterprise-javabeans-technology">8 Using Enterprise JavaBeans Technology</a>
+<li><a href="#using-enterprise-javabeans-technology">13. Using Enterprise JavaBeans Technology</a>
 <ul class="sectlevel2">
 <li><a href="#value-added-features">Value Added Features</a>
 <ul class="sectlevel3">
@@ -273,7 +280,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-container-managed-persistence">9 Using Container-Managed Persistence</a>
+<li><a href="#using-container-managed-persistence">14. Using Container-Managed Persistence</a>
 <ul class="sectlevel2">
 <li><a href="#glassfish-server-support-for-cmp">Eclipse GlassFish Support for CMP</a></li>
 <li><a href="#cmp-mapping">CMP Mapping</a>
@@ -329,7 +336,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-java-clients">10 Developing Java Clients</a>
+<li><a href="#developing-java-clients">15. Developing Java Clients</a>
 <ul class="sectlevel2">
 <li><a href="#introducing-the-application-client-container">Introducing the Application Client Container</a>
 <ul class="sectlevel3">
@@ -365,7 +372,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-connectors">11 Developing Connectors</a>
+<li><a href="#developing-connectors">16. Developing Connectors</a>
 <ul class="sectlevel2">
 <li><a href="#connector-support-in-the-glassfish-server">Connector Support in the Eclipse GlassFish</a>
 <ul class="sectlevel3">
@@ -394,7 +401,7 @@
 <li><a href="#configuring-a-message-driven-bean-to-use-a-resource-adapter">Configuring a Message Driven Bean to Use a Resource Adapter</a></li>
 </ul>
 </li>
-<li><a href="#developing-lifecycle-listeners">12 Developing Lifecycle Listeners</a>
+<li><a href="#developing-lifecycle-listeners">17. Developing Lifecycle Listeners</a>
 <ul class="sectlevel2">
 <li><a href="#server-life-cycle-events">Server Life Cycle Events</a></li>
 <li><a href="#the-lifecyclelistener-interface">The LifecycleListener Interface</a></li>
@@ -404,7 +411,7 @@
 <li><a href="#considerations-for-lifecycle-modules">Considerations for Lifecycle Modules</a></li>
 </ul>
 </li>
-<li><a href="#developing-osgi-enabled-java-ee-applications">13 Developing OSGi-enabled Jakarta EE Applications</a>
+<li><a href="#developing-osgi-enabled-java-ee-applications">18. Developing OSGi-enabled Jakarta EE Applications</a>
 <ul class="sectlevel2">
 <li><a href="#overview-of-osgi-application-and-glassfish-server">Overview of OSGi Application and Eclipse GlassFish</a>
 <ul class="sectlevel3">
@@ -422,8 +429,8 @@
 </ul>
 </li>
 <li><a href="#part-iii">Part III</a></li>
-<li><a href="#using-services-and-apis">Using Services and APIs</a></li>
-<li><a href="#using-the-jdbc-api-for-database-access">14 Using the JDBC API for Database Access</a>
+<li><a href="#using-services-and-apis">19. Using Services and APIs</a></li>
+<li><a href="#using-the-jdbc-api-for-database-access">20. Using the JDBC API for Database Access</a>
 <ul class="sectlevel2">
 <li><a href="#statements">Statements</a>
 <ul class="sectlevel3">
@@ -461,7 +468,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-the-transaction-service">15 Using the Transaction Service</a>
+<li><a href="#using-the-transaction-service">21. Using the Transaction Service</a>
 <ul class="sectlevel2">
 <li><a href="#handling-transactions-with-databases">Handling Transactions with Databases</a>
 <ul class="sectlevel3">
@@ -486,7 +493,7 @@
 <li><a href="#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction">The Transaction Manager, the Transaction Synchronization Registry, and <code>UserTransaction</code></a></li>
 </ul>
 </li>
-<li><a href="#using-the-java-naming-and-directory-interface">16 Using the Java Naming and Directory Interface</a>
+<li><a href="#using-the-java-naming-and-directory-interface">22. Using the Java Naming and Directory Interface</a>
 <ul class="sectlevel2">
 <li><a href="#accessing-the-naming-context">Accessing the Naming Context</a>
 <ul class="sectlevel3">
@@ -510,7 +517,7 @@
 <li><a href="#mapping-references">Mapping References</a></li>
 </ul>
 </li>
-<li><a href="#using-the-java-message-service">17 Using the Java Message Service</a>
+<li><a href="#using-the-java-message-service">23. Using the Java Message Service</a>
 <ul class="sectlevel2">
 <li><a href="#using-application-scoped-jms-resources">Using Application-Scoped JMS Resources</a></li>
 <li><a href="#load-balanced-message-inflow">Load-Balanced Message Inflow</a></li>
@@ -523,7 +530,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-the-jakarta-mail-api">18 Using the Jakarta Mail API</a>
+<li><a href="#using-the-jakarta-mail-api">24. Using the Jakarta Mail API</a>
 <ul class="sectlevel2">
 <li><a href="#introducing-jakarta-mail">Introducing Jakarta Mail</a></li>
 <li><a href="#creating-a-jakarta-mail-session">Creating a Jakarta Mail Session</a></li>
@@ -543,7 +550,7 @@
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>Eclipse GlassFish</h2>
+<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>1. Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Application Development Guide</p>
@@ -597,7 +604,7 @@ trademark of The Open Group.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
+<h2 id="preface"><a class="anchor" href="#preface"></a>2. Preface</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -1065,13 +1072,13 @@ In configuration files, domain-dir is represented as follows:
 </div>
 </div>
 <div class="sect1">
-<h2 id="development-tasks-and-tools"><a class="anchor" href="#development-tasks-and-tools"></a>Development Tasks and Tools</h2>
+<h2 id="development-tasks-and-tools"><a class="anchor" href="#development-tasks-and-tools"></a>3. Development Tasks and Tools</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-a-development-environment"><a class="anchor" href="#setting-up-a-development-environment"></a>1 Setting Up a Development Environment</h2>
+<h2 id="setting-up-a-development-environment"><a class="anchor" href="#setting-up-a-development-environment"></a>4. Setting Up a Development Environment</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter gives guidelines for setting up an application development
@@ -1354,7 +1361,7 @@ information, see <a href="#debug-profiling-tools">Profiling Tools</a>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="class-loaders"><a class="anchor" href="#class-loaders"></a>2 Class Loaders</h2>
+<h2 id="class-loaders"><a class="anchor" href="#class-loaders"></a>5. Class Loaders</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Understanding Eclipse GlassFish class loaders can help you
@@ -1907,7 +1914,7 @@ application.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="debugging-applications"><a class="anchor" href="#debugging-applications"></a>3 Debugging Applications</h2>
+<h2 id="debugging-applications"><a class="anchor" href="#debugging-applications"></a>6. Debugging Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter gives guidelines for debugging applications in the Eclipse GlassFish.</p>
@@ -2501,13 +2508,113 @@ After you have created the JPL file, use this an input to <code>JPROBE_ARGS_0</c
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-applications-and-application-components"><a class="anchor" href="#developing-applications-and-application-components"></a>Developing Applications and Application Components</h2>
+<h2 id="developing-applications-and-application-components"><a class="anchor" href="#developing-applications-and-application-components"></a>7. Developing Applications and Application Components</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="securing-applications"><a class="anchor" href="#securing-applications"></a>4 Securing Applications</h2>
+<h2 id="api-for-dev"><a class="anchor" href="#api-for-dev"></a>8. API for development</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Eclipse GlassFish provides several APIs to build applications and components:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://jakarta.ee">Jakarta EE API</a> - Platform or Web profile, depends on the Eclipse GlassFish distribution</p>
+</li>
+<li>
+<p><a href="https://microprofile.io">MicroProfile API</a> - selected specifications, only avaiable in Eclipse GlassFish Full</p>
+</li>
+<li>
+<p>GlassFish API - to access other functionality provided by Eclipse GlassFish</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>GlassFish API is composed of a few sets of APIs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GlassFish API</p>
+</li>
+<li>
+<p>GlassFish EE API</p>
+</li>
+<li>
+<p>Simple GlassFish API</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="glassfish-api"><a class="anchor" href="#glassfish-api"></a>GlassFish API</h3>
+<div class="paragraph">
+<p>Most of the functionality specific to Eclipse GlassFish is available in the GlassFish API. To compile applications or components, add the <code>glassfish-api.jar</code> to the compile classpath. You may also need <code>scattered-archive-api.jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>glassfish-api.jar</code> is located in the Eclipse GlassFish installation in as-install<code>/modules/glassfish-api.jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>In Maven project, you can add it as the following dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.main.common&lt;/groupId&gt;
+    &lt;artifactId&gt;glassfish-api&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will already add <code>scattered-archive-api.jar</code> as a transitive dependency.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="glassfish-ee-api"><a class="anchor" href="#glassfish-ee-api"></a>GlassFish EE API</h3>
+<div class="paragraph">
+<p>GlassFish EE API provides functionality related to Jakarta EE. To compile applications or components, add the <code>glassfish-ee-api.jar</code> to the compile classpath.</p>
+</div>
+<div class="paragraph">
+<p>The <code>glassfish-ee-api.jar</code> is located in the Eclipse GlassFish installation in as-install<code>/modules/glassfish-ee-api.jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>In Maven project, you can add it as the following dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.main.common&lt;/groupId&gt;
+    &lt;artifactId&gt;glassfish-ee-api&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="simple-glassfish-api"><a class="anchor" href="#simple-glassfish-api"></a>Simple GlassFish API</h3>
+<div class="paragraph">
+<p>Simple GlassFish API provides basic functionality to deploy applications and run admin commands. Mostly to use embedded Eclipse GlassFish programmatically. To compile applications or components, add the <code>simple-glassfish-api.jar</code> to the compile classpath.</p>
+</div>
+<div class="paragraph">
+<p>The <code>simple-glassfish-api.jar</code> is located in the Eclipse GlassFish installation in as-install<code>/modules/simple-glassfish-api.jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>In Maven project, you can add it as the following dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.main.common&lt;/groupId&gt;
+    &lt;artifactId&gt;simple-glassfish-api&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="securing-applications"><a class="anchor" href="#securing-applications"></a>9. Securing Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to write secure Jakarta EE applications, which
@@ -5783,7 +5890,7 @@ registered. You can find a description of the functionality of an
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-web-services"><a class="anchor" href="#developing-web-services"></a>5 Developing Web Services</h2>
+<h2 id="developing-web-services"><a class="anchor" href="#developing-web-services"></a>10. Developing Web Services</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes Eclipse GlassFish support for web services.
@@ -6106,7 +6213,7 @@ bin/jaxb-compiler.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-the-java-persistence-provider"><a class="anchor" href="#configuring-the-java-persistence-provider"></a>6 Configuring the Java Persistence Provider</h2>
+<h2 id="configuring-the-java-persistence-provider"><a class="anchor" href="#configuring-the-java-persistence-provider"></a>11. Configuring the Java Persistence Provider</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes Oracle TopLink, the default persistence provider
@@ -7133,7 +7240,7 @@ For more information, see
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-web-applications"><a class="anchor" href="#developing-web-applications"></a>7 Developing Web Applications</h2>
+<h2 id="developing-web-applications"><a class="anchor" href="#developing-web-applications"></a>12. Developing Web Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how web applications are supported in the Eclipse GlassFish.</p>
@@ -9960,7 +10067,7 @@ Application Deployment Guide</a>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-enterprise-javabeans-technology"><a class="anchor" href="#using-enterprise-javabeans-technology"></a>8 Using Enterprise JavaBeans Technology</h2>
+<h2 id="using-enterprise-javabeans-technology"><a class="anchor" href="#using-enterprise-javabeans-technology"></a>13. Using Enterprise JavaBeans Technology</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how Enterprise JavaBeans ( EJB) technology is
@@ -11716,7 +11823,7 @@ message is a redelivered message.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-container-managed-persistence"><a class="anchor" href="#using-container-managed-persistence"></a>9 Using Container-Managed Persistence</h2>
+<h2 id="using-container-managed-persistence"><a class="anchor" href="#using-container-managed-persistence"></a>14. Using Container-Managed Persistence</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains information on how EJB 2.1 container-managed
@@ -13946,7 +14053,7 @@ FK_FOR_ACCESSPRIVILEGES     <span class="predefined-type">VARCHAR</span>(<span c
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-java-clients"><a class="anchor" href="#developing-java-clients"></a>10 Developing Java Clients</h2>
+<h2 id="developing-java-clients"><a class="anchor" href="#developing-java-clients"></a>15. Developing Java Clients</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to develop, assemble, and deploy Java
@@ -16059,7 +16166,7 @@ compatible, you merely need to run the <code>main</code> class.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-connectors"><a class="anchor" href="#developing-connectors"></a>11 Developing Connectors</h2>
+<h2 id="developing-connectors"><a class="anchor" href="#developing-connectors"></a>16. Developing Connectors</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes Eclipse GlassFish support for the Jakarta EE
@@ -16871,7 +16978,7 @@ activation configuration properties.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-lifecycle-listeners"><a class="anchor" href="#developing-lifecycle-listeners"></a>12 Developing Lifecycle Listeners</h2>
+<h2 id="developing-lifecycle-listeners"><a class="anchor" href="#developing-lifecycle-listeners"></a>17. Developing Lifecycle Listeners</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Lifecycle listener modules provide a means of running short or long
@@ -16898,7 +17005,7 @@ interface instead is recommended.</p>
 </div>
 <div class="paragraph">
 <p>All lifecycle module classes and interfaces are in the
-as-install<code>/modules/</code>glassfish-api.jar`` file.</p>
+<code>as-install/modules/glassfish-api.jar</code> file.</p>
 </div>
 <div class="paragraph">
 <p>For Javadoc tool pages relevant to lifecycle modules, see the
@@ -17125,7 +17232,7 @@ naming context, it can get this after the <code>STARTUP_EVENT</code>,
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-osgi-enabled-java-ee-applications"><a class="anchor" href="#developing-osgi-enabled-java-ee-applications"></a>13 Developing OSGi-enabled Jakarta EE Applications</h2>
+<h2 id="developing-osgi-enabled-java-ee-applications"><a class="anchor" href="#developing-osgi-enabled-java-ee-applications"></a>18. Developing OSGi-enabled Jakarta EE Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes the features and interfaces that Eclipse GlassFish
@@ -17786,13 +17893,13 @@ in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-services-and-apis"><a class="anchor" href="#using-services-and-apis"></a>Using Services and APIs</h2>
+<h2 id="using-services-and-apis"><a class="anchor" href="#using-services-and-apis"></a>19. Using Services and APIs</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-jdbc-api-for-database-access"><a class="anchor" href="#using-the-jdbc-api-for-database-access"></a>14 Using the JDBC API for Database Access</h2>
+<h2 id="using-the-jdbc-api-for-database-access"><a class="anchor" href="#using-the-jdbc-api-for-database-access"></a>20. Using the JDBC API for Database Access</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to use the Java Database Connectivity (JDBC)
@@ -18727,7 +18834,7 @@ connection pool.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-transaction-service"><a class="anchor" href="#using-the-transaction-service"></a>15 Using the Transaction Service</h2>
+<h2 id="using-the-transaction-service"><a class="anchor" href="#using-the-transaction-service"></a>21. Using the Transaction Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Jakarta EE platform provides several abstractions that simplify
@@ -19247,7 +19354,7 @@ the application code.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-java-naming-and-directory-interface"><a class="anchor" href="#using-the-java-naming-and-directory-interface"></a>16 Using the Java Naming and Directory Interface</h2>
+<h2 id="using-the-java-naming-and-directory-interface"><a class="anchor" href="#using-the-java-naming-and-directory-interface"></a>22. Using the Java Naming and Directory Interface</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A naming service maintains a set of bindings, which relate names to
@@ -20018,7 +20125,7 @@ in Eclipse GlassFish.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-java-message-service"><a class="anchor" href="#using-the-java-message-service"></a>17 Using the Java Message Service</h2>
+<h2 id="using-the-java-message-service"><a class="anchor" href="#using-the-java-message-service"></a>23. Using the Java Message Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to use the Java Message Service (JMS) API.
@@ -20314,7 +20421,7 @@ SOAPMessage soapMessage = MessageTransformer.SOAPMessageFromJMSMessage(message, 
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-jakarta-mail-api"><a class="anchor" href="#using-the-jakarta-mail-api"></a>18 Using the Jakarta Mail API</h2>
+<h2 id="using-the-jakarta-mail-api"><a class="anchor" href="#using-the-jakarta-mail-api"></a>24. Using the Jakarta Mail API</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to use the Jakarta Mail API, which provides a set
@@ -20649,7 +20756,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-14 12:59:36 UTC
+Last updated 2024-08-14 14:30:18 UTC
 </div>
 </div>
 </body>

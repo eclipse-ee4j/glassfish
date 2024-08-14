@@ -37,7 +37,6 @@
 
     <modules>
         <module>common</module>
-        <module>ldapbp</module>
         <module>libpam4j</module>
         <module>ha</module>
         <module>deployment</module>

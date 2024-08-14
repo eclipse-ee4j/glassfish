@@ -249,7 +249,7 @@ public class StaticRmiStubGenerator {
             return;
         }
 
-        if( toolsJarPath == null && !OS.isDarwin() && Runtime.version().feature() < 11) {
+        if( toolsJarPath == null && !OS.isDarwin() && Runtime.version().feature() < 21) {
             _logger.log(Level.INFO,  "[RMIC] tools.jar location was not found");
             return;
         }

@@ -68,8 +68,8 @@ public class MainHelper {
 
     static void checkJdkVersion() {
         int version = Runtime.version().feature();
-        if (version < 11) {
-            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {11, version});
+        if (version < 21) {
+            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {21, version});
             System.exit(1);
         }
     }

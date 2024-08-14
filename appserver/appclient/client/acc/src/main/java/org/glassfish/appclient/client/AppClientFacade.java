@@ -148,10 +148,10 @@ public class AppClientFacade {
     public static void prepareACC(String agentArgsText, Instrumentation inst) throws UserError, MalformedURLException, URISyntaxException,
             JAXBException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, Exception {
         int version = Runtime.version().feature();
-        if (version < 11) {
+        if (version < 21) {
             throw new UserError(localStrings.getLocalString(stringsAnchor, "main.badVersion",
                 "Current Java version {0} is too low; {1} or later required",
-                new Object[] {System.getProperty("java.version"), "11"}));
+                new Object[] {System.getProperty("java.version"), "21"}));
         }
 
         /*

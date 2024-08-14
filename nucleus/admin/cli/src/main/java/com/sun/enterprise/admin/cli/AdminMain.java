@@ -216,8 +216,8 @@ public class AdminMain {
 
     protected int doMain(String[] args) {
         Version version = Runtime.version();
-        if (version.feature() < 11) {
-            System.err.println(strings.get("OldJdk", 11, version));
+        if (version.feature() < 21) {
+            System.err.println(strings.get("OldJdk", 21, version));
             return ERROR;
         }
 

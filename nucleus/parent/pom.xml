@@ -1110,7 +1110,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.17</version>
+                    <version>1.0.18</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>

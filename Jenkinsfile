@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -94,7 +94,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.9.6-eclipse-temurin-21
+    image: maven:3.9.6-eclipse-temurin-17
     command:
     - cat
     tty: true
@@ -230,7 +230,7 @@ spec:
         }
       }
       tools {
-        jdk 'temurin-jdk21-latest'
+        jdk 'temurin-jdk17-latest'
         maven 'apache-maven-3.9.5'
       }
       steps {

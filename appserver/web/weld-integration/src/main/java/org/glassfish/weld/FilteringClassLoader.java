@@ -46,7 +46,7 @@ class FilteringClassLoader extends ClassLoader {
     private static final String PATH_WELD_EXTENTSION = "META-INF/services/jakarta.enterprise.inject.spi.Extension";
     private static final String PATH_MANIFEST = "META-INF/MANIFEST.MF";
     private static final Pattern PATTERN_OSGI_EE_JAVA = Pattern.compile("\\(&\\(osgi.ee=JavaSE\\)\\(version=(.+)\\)\\)");
-    private static final Version JDK_VERSION_MIN = Version.parse("21");
+    private static final Version JDK_VERSION_MIN = Version.parse("17");
     private static final Version JDK_VERSION = Runtime.version();
 
     FilteringClassLoader(ClassLoader parent) {

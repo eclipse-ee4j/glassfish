@@ -16,10 +16,10 @@
 
 package org.glassfish.admin.amx.logging;
 
-import org.glassfish.admin.amx.util.SetUtil;
-
 import java.util.Collections;
 import java.util.Set;
+
+import org.glassfish.admin.amx.util.SetUtil;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 

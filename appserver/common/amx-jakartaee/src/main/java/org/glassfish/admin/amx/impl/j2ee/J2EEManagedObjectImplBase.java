@@ -16,26 +16,39 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import com.sun.enterprise.config.serverbeans.Domain;
+
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.impl.mbean.AMXImplBase;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
 import org.glassfish.admin.amx.j2ee.J2EEManagedObject;
 import org.glassfish.admin.amx.j2ee.J2EEServer;
+import org.glassfish.admin.amx.j2ee.J2EETypes;
 import org.glassfish.admin.amx.j2ee.StateManageable;
 import org.glassfish.admin.amx.util.SetUtil;
 import org.glassfish.admin.amx.util.StringUtil;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 
-import org.glassfish.admin.amx.j2ee.J2EETypes;
-import static org.glassfish.admin.amx.j2ee.J2EETypes.*;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.APP_CLIENT_MODULE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.EJB_MODULE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.ENTITY_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.J2EE_APPLICATION;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.MESSAGE_DRIVEN_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.RESOURCE_ADAPTER;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.RESOURCE_ADAPTER_MODULE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.SERVLET;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.STATEFUL_SESSION_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.STATELESS_SESSION_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.WEB_MODULE;
 
 
 

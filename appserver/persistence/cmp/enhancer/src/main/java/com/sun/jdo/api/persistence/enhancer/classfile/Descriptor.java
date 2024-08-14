@@ -16,8 +16,8 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.util.Stack;
 import java.util.Map;
+import java.util.Stack;
 
 //@olsen: subst: Hashtable -> Map, HashMap
 

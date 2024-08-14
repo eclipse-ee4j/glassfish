@@ -19,13 +19,13 @@ package org.glassfish.embeddable.archive;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.lang.System.Logger.Level;
 
 /**
  * Abstraction for a Scattered Jakarta EE module (parts disseminated in various directories).

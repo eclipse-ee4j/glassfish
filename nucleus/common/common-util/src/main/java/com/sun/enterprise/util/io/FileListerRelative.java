@@ -21,7 +21,7 @@
  */
 
 package com.sun.enterprise.util.io;
-import java.io.*;
+import java.io.File;
 
 /**
  *

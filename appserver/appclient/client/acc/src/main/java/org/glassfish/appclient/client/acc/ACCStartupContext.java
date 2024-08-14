@@ -21,13 +21,14 @@ import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.io.FileUtils;
 
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 
 /**
  * Start-up context for the ACC.  Note that this context is used also for

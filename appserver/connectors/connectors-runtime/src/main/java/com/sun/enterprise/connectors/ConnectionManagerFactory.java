@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.connectors;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.ConnectionManager;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.spi.ConnectionManager;
 
 /* Authors : Binod P G, Aditya Gore
  *

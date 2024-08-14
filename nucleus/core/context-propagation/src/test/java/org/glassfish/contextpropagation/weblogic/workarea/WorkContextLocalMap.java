@@ -30,8 +30,6 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextEntryIm
 import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor;
 
 
-//import weblogic.diagnostics.debug.DebugLogger;
-
 /**
  * Thread-local implementation of <code>WorkContextMap</code>. This
  * class performs the guts of context management.

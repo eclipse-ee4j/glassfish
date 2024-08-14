@@ -23,26 +23,46 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.model.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ReferenceKeyDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.ResultDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.RetrieveDescImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
-import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.Constraint;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintField;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldName;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldNameSubQuery;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintForeignFieldName;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintJoin;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintNode;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintOperation;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintSubquery;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintValue;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
-import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
 
 
 /**

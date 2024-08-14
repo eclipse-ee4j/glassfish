@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
-import java.util.Collection;
-
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.connectors.ConnectionPoolMonitoringExtension;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
+import java.util.Collection;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Utility class to create providers for monitoring purposes.

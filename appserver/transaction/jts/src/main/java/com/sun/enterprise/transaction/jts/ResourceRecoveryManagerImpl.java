@@ -17,36 +17,42 @@
 
 package com.sun.enterprise.transaction.jts;
 
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.transaction.JavaEETransactionManagerSimplified;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
+import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
+import com.sun.enterprise.transaction.config.TransactionService;
+import com.sun.enterprise.transaction.spi.RecoveryEventListener;
+import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
+import com.sun.enterprise.transaction.spi.RecoveryResourceListener;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.CosTransactions.DelegatedRecoveryManager;
+import com.sun.jts.CosTransactions.RecoveryManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAResource;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-
-import java.util.*;
-import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import javax.transaction.xa.XAResource;
-
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.transaction.config.TransactionService;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
-import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
-import com.sun.enterprise.transaction.spi.RecoveryResourceListener;
-import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
-import com.sun.enterprise.transaction.spi.RecoveryEventListener;
-import com.sun.enterprise.transaction.JavaEETransactionManagerSimplified;
-
-import com.sun.jts.CosTransactions.DelegatedRecoveryManager;
-import com.sun.jts.CosTransactions.Configuration;
-import com.sun.jts.CosTransactions.RecoveryManager;
-import org.glassfish.api.admin.ServerEnvironment;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Resource recovery manager to recover transactions.

@@ -16,17 +16,6 @@
 
 package com.sun.enterprise.resource.listener;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.replay;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.util.Map;
-
-import org.glassfish.api.naming.SimpleJndiName;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
@@ -34,6 +23,17 @@ import com.sun.enterprise.resource.ResourceSpec;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.Map;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.replay;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LocalTxConnectionEventListenerTest {
 

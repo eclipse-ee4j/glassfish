@@ -17,17 +17,18 @@
 
 package org.glassfish.jms.admin.cli;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXServiceURL;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.MBeanServerConnection;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.management.MBeanServerConnection;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
 
 /**
  * The <code>MQJMXConnectorInfo</code> holds MBean Server connection information

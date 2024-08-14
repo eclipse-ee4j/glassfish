@@ -22,10 +22,10 @@
 
 package org.glassfish.webservices.monitoring;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import com.sun.enterprise.deployment.WebServiceEndpoint;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

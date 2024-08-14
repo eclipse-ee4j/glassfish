@@ -17,15 +17,15 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**

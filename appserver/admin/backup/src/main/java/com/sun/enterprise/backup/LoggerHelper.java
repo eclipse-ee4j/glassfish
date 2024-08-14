@@ -16,7 +16,10 @@
 
 package com.sun.enterprise.backup;
 
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // Resource Bundle:
 // com/sun/logging/enterprise/system/tools/deployment/backend/LogStrings.properties

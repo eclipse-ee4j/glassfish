@@ -16,8 +16,11 @@
 
 package com.sun.enterprise.deployment.deploy.shared;
 
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.AbstractReadableArchive;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -26,11 +29,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.jar.Manifest;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implements ReadableArchive based on multiple underlying ReadableArchives,

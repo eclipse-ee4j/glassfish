@@ -22,13 +22,13 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
-import antlr.Token;
-import antlr.CommonAST;
-import antlr.collections.AST;
-import antlr.ASTFactory;
-
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
+
+import antlr.ASTFactory;
+import antlr.CommonAST;
+import antlr.Token;
+import antlr.collections.AST;
 
 /**
  * This class represents a node in the intermediate representation (AST)

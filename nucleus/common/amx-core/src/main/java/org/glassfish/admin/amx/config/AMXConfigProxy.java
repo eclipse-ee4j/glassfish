@@ -16,6 +16,12 @@
 
 package org.glassfish.admin.amx.config;
 
+import java.util.Map;
+
+import javax.management.AttributeList;
+import javax.management.MBeanOperationInfo;
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.annotation.Description;
 import org.glassfish.admin.amx.annotation.ManagedOperation;
 import org.glassfish.admin.amx.annotation.Param;
@@ -24,11 +30,6 @@ import org.glassfish.admin.amx.core.StdAttributesAccess;
 import org.glassfish.external.amx.AMX;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-
-import javax.management.AttributeList;
-import javax.management.MBeanOperationInfo;
-import javax.management.ObjectName;
-import java.util.Map;
 
 /**
  * @deprecated Extending this proxy interface implies that the class is part of the MBean API for

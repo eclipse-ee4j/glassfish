@@ -17,14 +17,14 @@
 
 package org.glassfish.connectors.config;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.security.common.MasterPassword;
 import org.glassfish.tests.utils.junit.DomainXml;
 import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;

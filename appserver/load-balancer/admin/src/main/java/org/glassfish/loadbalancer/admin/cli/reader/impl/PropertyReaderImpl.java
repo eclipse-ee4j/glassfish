@@ -16,17 +16,15 @@
 
 package org.glassfish.loadbalancer.admin.cli.reader.impl;
 
-import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
-import org.glassfish.loadbalancer.admin.cli.transform.PropertyVisitor;
-
-import org.glassfish.loadbalancer.admin.cli.reader.api.PropertyReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
-
-import org.glassfish.loadbalancer.config.LbConfig;
-
 import java.util.Iterator;
 import java.util.Properties;
+
+import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
+import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
+import org.glassfish.loadbalancer.admin.cli.reader.api.PropertyReader;
+import org.glassfish.loadbalancer.admin.cli.transform.PropertyVisitor;
+import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
+import org.glassfish.loadbalancer.config.LbConfig;
 import org.jvnet.hk2.config.types.Property;
 
 /**

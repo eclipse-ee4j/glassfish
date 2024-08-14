@@ -22,28 +22,31 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 
-import jakarta.transaction.*;
-
-import java.util.*;
-import java.sql.Connection;
-import javax.sql.DataSource;
-
 import com.sun.jdo.api.persistence.support.ConnectionFactory;
-import com.sun.jdo.api.persistence.support.JDOException;
-import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.api.persistence.support.JDODataStoreException;
-
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperTransaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManagerFactory;
-import org.glassfish.persistence.common.I18NHelper;
-
 import com.sun.jdo.spi.persistence.support.sqlstore.connection.ConnectionImpl;
-
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperTransaction;
+
+import jakarta.transaction.Status;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.TransactionManager;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.ResourceBundle;
+
+import javax.sql.DataSource;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  *

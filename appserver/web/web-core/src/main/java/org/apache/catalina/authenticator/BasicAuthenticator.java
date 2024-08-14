@@ -18,10 +18,8 @@
 
 package org.apache.catalina.authenticator;
 
-import static java.util.Locale.ENGLISH;
-import static java.util.logging.Level.FINE;
-import static org.apache.catalina.authenticator.Constants.BASIC_METHOD;
-import static org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -32,8 +30,10 @@ import org.apache.catalina.HttpResponse;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.util.Base64;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static java.util.Locale.ENGLISH;
+import static java.util.logging.Level.FINE;
+import static org.apache.catalina.authenticator.Constants.BASIC_METHOD;
+import static org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE;
 
 /**
  * An <b>Authenticator</b> and <b>Valve</b> implementation of HTTP BASIC Authentication, as outlined in RFC 2617: "HTTP

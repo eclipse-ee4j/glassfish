@@ -17,19 +17,15 @@
 
 package com.sun.enterprise.glassfish.web;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.util.StringUtils;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -44,8 +40,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -59,6 +57,12 @@ import org.glassfish.web.loader.LogFacade;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
  * Implementation of the ArchiveHandler for war files.

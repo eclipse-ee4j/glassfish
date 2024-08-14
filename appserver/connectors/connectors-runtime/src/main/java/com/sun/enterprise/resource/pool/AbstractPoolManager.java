@@ -17,11 +17,11 @@
 
 package com.sun.enterprise.resource.pool;
 
+import com.sun.enterprise.resource.ResourceSpec;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import com.sun.enterprise.resource.ResourceSpec;
 
 /**
  * Abstract Pool manager for unimplemented features. Throws UnsupportedOperationException when invoked.

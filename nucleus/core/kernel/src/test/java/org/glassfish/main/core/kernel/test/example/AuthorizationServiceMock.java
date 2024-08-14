@@ -19,7 +19,9 @@ package org.glassfish.main.core.kernel.test.example;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.security.services.api.authorization.AuthorizationService;
 import org.glassfish.security.services.api.authorization.AzAction;
 import org.glassfish.security.services.api.authorization.AzAttributeResolver;

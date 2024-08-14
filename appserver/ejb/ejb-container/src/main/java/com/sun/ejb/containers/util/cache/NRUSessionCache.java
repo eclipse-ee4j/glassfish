@@ -16,9 +16,9 @@
 
 package com.sun.ejb.containers.util.cache;
 
-import java.util.Properties;
-
 import com.sun.ejb.spi.container.SFSBContainerCallback;
+
+import java.util.Properties;
 
 public class NRUSessionCache
     extends LruSessionCache

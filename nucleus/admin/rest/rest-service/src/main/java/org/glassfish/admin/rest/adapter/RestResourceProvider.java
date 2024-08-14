@@ -16,13 +16,13 @@
 
 package org.glassfish.admin.rest.adapter;
 
+import java.util.Set;
+
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jersey.server.ResourceConfig;
-
-import java.util.Set;
 
 /**
  * Represents contract between {@link RestAdapter} and actual ReST resource providers.

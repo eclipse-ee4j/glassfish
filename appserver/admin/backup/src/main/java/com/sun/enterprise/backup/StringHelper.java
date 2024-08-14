@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.backup;
 
-import java.util.ResourceBundle;
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  *

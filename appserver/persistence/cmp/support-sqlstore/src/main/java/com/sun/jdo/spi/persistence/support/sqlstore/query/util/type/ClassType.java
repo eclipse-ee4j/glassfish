@@ -22,19 +22,18 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.support.JDOFatalUserException;
+import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-import com.sun.jdo.api.persistence.support.JDOFatalUserException;
-import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
-import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *

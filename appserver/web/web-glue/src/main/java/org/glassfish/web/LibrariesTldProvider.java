@@ -17,12 +17,8 @@
 package org.glassfish.web;
 
 import com.sun.enterprise.util.net.JarURIPattern;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.web.TldProvider;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -33,6 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.web.TldProvider;
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implementation of TldProvider for libraries in lib and DOMAIN_ROOT/lib/applibs.

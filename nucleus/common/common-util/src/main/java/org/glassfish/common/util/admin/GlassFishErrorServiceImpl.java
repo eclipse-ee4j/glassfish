@@ -17,6 +17,8 @@
 
 package org.glassfish.common.util.admin;
 
+import com.sun.enterprise.util.FelixPrettyPrinter;
+
 import jakarta.inject.Singleton;
 
 import java.util.HashSet;
@@ -27,8 +29,6 @@ import org.glassfish.hk2.api.ErrorService;
 import org.glassfish.hk2.api.MultiException;
 import org.jvnet.hk2.annotations.Service;
 import org.osgi.framework.BundleException;
-
-import com.sun.enterprise.util.FelixPrettyPrinter;
 
 /**
  * @author jwells

@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.resource.pool;
 
-import java.util.Set;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.Set;
 
 /**
  * ResourceHandler to create/delete resource

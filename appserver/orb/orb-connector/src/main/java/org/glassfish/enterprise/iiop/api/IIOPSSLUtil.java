@@ -17,9 +17,11 @@
 package org.glassfish.enterprise.iiop.api;
 
 import java.security.SecureRandom;
-import org.jvnet.hk2.annotations.Contract;
+
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
+
+import org.jvnet.hk2.annotations.Contract;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 /**

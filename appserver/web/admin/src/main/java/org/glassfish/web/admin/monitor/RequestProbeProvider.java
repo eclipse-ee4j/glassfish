@@ -16,7 +16,9 @@
 
 package org.glassfish.web.admin.monitor;
 
-import org.glassfish.external.probe.provider.annotations.*;
+import org.glassfish.external.probe.provider.annotations.Probe;
+import org.glassfish.external.probe.provider.annotations.ProbeParam;
+import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 
 /**
  * Provider interface for HTTP request/response related probes.

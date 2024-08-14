@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
+import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,9 +38,6 @@ import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobPersistence;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.services.common.SubjectUtil;
-
-import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
-import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 
 /** Represents running (or finished) command instance.
  *

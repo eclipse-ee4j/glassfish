@@ -30,9 +30,7 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes
-
-import java.io.*;
+import java.io.Serializable;
 
 /**A structure containing 2 unsigned integers.
  * extent: the extent file number

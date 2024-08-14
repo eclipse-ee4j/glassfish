@@ -17,11 +17,29 @@
 package com.sun.enterprise.universal.glassfish;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import static com.sun.enterprise.util.SystemPropertyConstants.*;
 import com.sun.enterprise.util.net.NetUtils;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.HOST_NAME_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
+import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.UNIX_ASENV_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.WINDOWS_ASENV_FILENAME;
 
 /**
  * Class ASenvPropertyReader

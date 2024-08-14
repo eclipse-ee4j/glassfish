@@ -15,8 +15,14 @@
  */
 package com.sun.ejb.portable;
 
-import java.io.*;
-import jakarta.ejb.*;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.HomeHandle;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import javax.rmi.PortableRemoteObject;
 
 /**

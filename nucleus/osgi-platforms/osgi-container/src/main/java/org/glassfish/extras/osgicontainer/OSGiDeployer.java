@@ -16,6 +16,8 @@
 
 package org.glassfish.extras.osgicontainer;
 
+import java.io.File;
+
 import org.glassfish.api.deployment.Deployer;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
@@ -26,8 +28,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleReference;
 import org.osgi.service.packageadmin.PackageAdmin;
-
-import java.io.File;
 
 /**
  * OSGi deployer, takes care of loading and cleaning modules from the OSGi runtime.

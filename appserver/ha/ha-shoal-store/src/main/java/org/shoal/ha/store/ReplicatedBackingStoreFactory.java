@@ -17,14 +17,19 @@
 package org.shoal.ha.store;
 
 
-import org.glassfish.ha.store.api.*;
+import java.io.Serializable;
+import java.util.Properties;
+
+import org.glassfish.ha.store.api.BackingStore;
+import org.glassfish.ha.store.api.BackingStoreConfiguration;
+import org.glassfish.ha.store.api.BackingStoreException;
+import org.glassfish.ha.store.api.BackingStoreFactory;
+import org.glassfish.ha.store.api.BackingStoreTransaction;
+import org.glassfish.ha.store.api.Storeable;
 import org.jvnet.hk2.annotations.Service;
 import org.shoal.adapter.store.ReplicatedBackingStore;
 import org.shoal.adapter.store.StoreableReplicatedBackingStore;
 import org.shoal.ha.mapper.KeyMapper;
-
-import java.io.Serializable;
-import java.util.Properties;
 
 /**
  * @author Mahesh Kannan

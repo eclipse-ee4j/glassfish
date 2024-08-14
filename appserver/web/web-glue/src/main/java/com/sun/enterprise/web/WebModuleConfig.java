@@ -18,10 +18,11 @@ package com.sun.enterprise.web;
 
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 
 import java.io.File;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 
 /**
  * Represents the configuration parameters required in order to create

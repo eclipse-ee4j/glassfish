@@ -18,14 +18,14 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.gms.tools.MulticastTester;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandException;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * asadmin local command that wraps the multicast validator tool

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,13 +19,19 @@ package com.sun.enterprise.naming.impl;
 
 
 import com.sun.enterprise.util.Utility;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import javax.naming.*;
+
+import javax.naming.CompositeName;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.Reference;
+
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.omg.CORBA.ORB;
 
@@ -65,7 +72,7 @@ public class RemoteSerialContextProviderImpl
         for(Iterator<Map.Entry> it = entrySet.iterator(); it.hasNext();) {
             Object val = it.next().getValue();
             // Issue 17219 skip non-serializable values for remote client.
-            if(!(val instanceof java.io.Serializable) || val instanceof Context) {
+            if(!(val instanceof java.io.Serializable)) {
                 it.remove();
             }
         }

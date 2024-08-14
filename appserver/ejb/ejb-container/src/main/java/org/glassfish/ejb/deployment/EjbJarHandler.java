@@ -17,18 +17,15 @@
 
 package org.glassfish.ejb.deployment;
 
-import static java.util.logging.Level.SEVERE;
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.loader.ASURLClassLoader;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,8 +34,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.EjbArchiveType;
@@ -47,6 +46,11 @@ import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.SEVERE;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 
 /**

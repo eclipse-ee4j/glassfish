@@ -16,15 +16,15 @@
 
 package com.sun.gjc.spi;
 
-import static java.util.logging.Level.FINEST;
-
-import java.sql.SQLException;
-import java.util.logging.Logger;
-
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.LocalTransactionException;
+
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.FINEST;
 
 /**
  * <code>LocalTransactionImpl</code> implementation for Generic JDBC Connector.

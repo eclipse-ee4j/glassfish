@@ -17,15 +17,16 @@
 package org.glassfish.resources.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Resources;
-import org.glassfish.resources.api.Resource;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Properties;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.Resource;
 
 /**
  * This class serves as the API to creating new resources when an xml file

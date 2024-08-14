@@ -22,8 +22,14 @@
  */
 package com.sun.enterprise.universal.glassfish;
 
-import java.util.*;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Here is the contract:

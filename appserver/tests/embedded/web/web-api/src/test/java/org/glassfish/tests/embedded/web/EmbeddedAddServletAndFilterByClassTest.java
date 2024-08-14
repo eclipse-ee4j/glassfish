@@ -17,21 +17,27 @@
 
 package org.glassfish.tests.embedded.web;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.File;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.logging.Level;
-import java.util.EnumSet;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterRegistration;
-import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletRegistration;
-import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;
-import org.glassfish.embeddable.web.config.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumSet;
+import java.util.logging.Level;
+
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.web.Context;
+import org.glassfish.embeddable.web.VirtualServer;
+import org.glassfish.embeddable.web.WebContainer;
+import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -71,7 +77,7 @@ public class EmbeddedAddServletAndFilterByClassTest {
 
         VirtualServer vs = embedded.getVirtualServer("server");
         System.out.println("Default virtual server "+vs);
-        Context context = (Context) embedded.createContext(root);
+        Context context = embedded.createContext(root);
 
         ServletRegistration sr = context.addServlet("NewFilterServlet",
             (Class <? extends Servlet>) getClass().getClassLoader().loadClass(

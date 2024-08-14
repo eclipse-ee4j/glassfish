@@ -18,9 +18,10 @@
 package org.glassfish.resources.mail.beans;
 
 import com.sun.enterprise.deployment.interfaces.MailResourceIntf;
+
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resources.api.JavaEEResource;
 import org.glassfish.resources.api.JavaEEResourceBase;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 /**
  * Resource info for MailResource.

@@ -22,6 +22,12 @@ import com.sun.jts.CosTransactions.ControlImpl;
 import com.sun.jts.CosTransactions.GlobalTID;
 import com.sun.logging.LogDomains;
 
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,12 +43,6 @@ import org.omg.CosTransactions.HeuristicMixed;
 import org.omg.CosTransactions.Inactive;
 import org.omg.CosTransactions.Status;
 import org.omg.CosTransactions.Unavailable;
-
-import jakarta.transaction.HeuristicMixedException;
-import jakarta.transaction.HeuristicRollbackException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.Synchronization;
-import jakarta.transaction.SystemException;
 
 /**
  * An implementation of jakarta.transaction.Transaction using JTS

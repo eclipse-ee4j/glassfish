@@ -16,16 +16,16 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import com.sun.enterprise.security.GUILoginDialog;
+import com.sun.enterprise.security.TextLoginDialog;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.IOException;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.enterprise.security.GUILoginDialog;
-import com.sun.enterprise.security.TextLoginDialog;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This is the default callback handler provided by the application client container. The container tries to use the application

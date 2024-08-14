@@ -17,9 +17,9 @@
 
 package com.sun.enterprise.container.common.spi;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * A factory for creating an interceptor builder.

@@ -16,12 +16,13 @@
 
 package org.glassfish.internal.api;
 
-import org.jvnet.hk2.annotations.Contract;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.hk2.api.ServiceLocator;
+import java.io.File;
 
 import javax.naming.InitialContext;
-import java.io.File;
+
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * ServerContext interface: the server-wide runtime environment created by

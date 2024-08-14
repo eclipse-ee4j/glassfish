@@ -18,13 +18,15 @@
 package org.apache.naming.factory;
 
 import java.util.Hashtable;
-import javax.naming.Name;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.Name;
 import javax.naming.NamingException;
-import javax.naming.Reference;
 import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
+
 import org.apache.naming.EjbRef;
 
 /**

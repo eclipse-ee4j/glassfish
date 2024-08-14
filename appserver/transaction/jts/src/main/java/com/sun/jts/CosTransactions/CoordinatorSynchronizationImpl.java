@@ -30,18 +30,22 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
 
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.SystemException;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.Synchronization;
+import org.omg.CosTransactions.SynchronizationHelper;
+import org.omg.CosTransactions.SynchronizationPOA;
+import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
-import org.omg.CosTransactions.*;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 
 /**The CoordinatorSynchronizationImpl interface allows a subordinate Coordinator
  * to be informed of the completion of a transaction, both before the transaction

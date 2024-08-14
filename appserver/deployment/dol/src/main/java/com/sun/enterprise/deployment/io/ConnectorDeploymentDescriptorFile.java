@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.deployment.io;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.connector.ConnectorNode;
+
+import org.glassfish.deployment.common.Descriptor;
 
 
 /**

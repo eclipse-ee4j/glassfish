@@ -18,15 +18,9 @@
 
 package org.apache.catalina.connector;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.Globals.CERTIFICATES_ATTR;
-import static org.apache.catalina.Globals.SSL_CERTIFICATE_ATTR;
-import static org.apache.catalina.LogFacade.CONNECTOR_BEEN_STARTED;
-import static org.apache.catalina.LogFacade.CONNECTOR_NOT_BEEN_STARTED;
-import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_DESTROY_FAILED_EXCEPTION;
-import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_START_FAILED_EXCEPTION;
+import com.sun.appserv.ProxyHandler;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.lang.reflect.Constructor;
 import java.net.URLEncoder;
@@ -59,9 +53,15 @@ import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.util.Mapper;
 import org.glassfish.web.util.IntrospectionUtils;
 
-import com.sun.appserv.ProxyHandler;
-
-import jakarta.servlet.http.HttpServletRequest;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.Globals.CERTIFICATES_ATTR;
+import static org.apache.catalina.Globals.SSL_CERTIFICATE_ATTR;
+import static org.apache.catalina.LogFacade.CONNECTOR_BEEN_STARTED;
+import static org.apache.catalina.LogFacade.CONNECTOR_NOT_BEEN_STARTED;
+import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_DESTROY_FAILED_EXCEPTION;
+import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_START_FAILED_EXCEPTION;
 
 /**
  * Implementation of a Coyote connector for Tomcat 5.x.

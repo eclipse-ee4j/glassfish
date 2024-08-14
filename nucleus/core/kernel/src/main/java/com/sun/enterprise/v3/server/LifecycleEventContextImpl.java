@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.appserv.server.LifecycleEventContext;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,8 +25,6 @@ import javax.naming.InitialContext;
 
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
-
-import com.sun.appserv.server.LifecycleEventContext;
 
 public class LifecycleEventContextImpl implements LifecycleEventContext {
 

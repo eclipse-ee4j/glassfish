@@ -18,8 +18,6 @@
 package org.apache.catalina.startup;
 
 
-import org.apache.catalina.LogFacade;
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -27,6 +25,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
 
 
 /**

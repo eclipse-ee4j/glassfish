@@ -17,9 +17,6 @@
 
 package org.apache.catalina.session;
 
-import org.apache.catalina.*;
-import org.apache.catalina.util.LifecycleSupport;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -29,6 +26,19 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 //HERCULES:end added
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Logger;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
+import org.apache.catalina.Store;
+import org.apache.catalina.util.LifecycleSupport;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Abstract implementation of the Store interface to

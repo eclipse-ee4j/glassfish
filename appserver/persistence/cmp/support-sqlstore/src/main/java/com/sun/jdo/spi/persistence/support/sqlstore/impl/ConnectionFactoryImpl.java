@@ -22,6 +22,15 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 
+import com.sun.jdo.api.persistence.support.ConnectionFactory;
+import com.sun.jdo.api.persistence.support.JDOCanRetryException;
+import com.sun.jdo.api.persistence.support.JDODataStoreException;
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOFatalException;
+import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.spi.persistence.support.sqlstore.connection.ConnectionManager;
+
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -29,9 +38,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-
-import com.sun.jdo.api.persistence.support.*;
-import com.sun.jdo.spi.persistence.support.sqlstore.connection.ConnectionManager;
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

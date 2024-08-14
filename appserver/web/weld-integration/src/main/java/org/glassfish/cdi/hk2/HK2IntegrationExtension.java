@@ -16,7 +16,14 @@
 
 package org.glassfish.cdi.hk2;
 
-import static org.glassfish.cdi.hk2.HK2IntegrationUtilities.convertInjectionPointToInjectee;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
+import jakarta.inject.Singleton;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -31,14 +38,7 @@ import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
-import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
-import jakarta.inject.Singleton;
+import static org.glassfish.cdi.hk2.HK2IntegrationUtilities.convertInjectionPointToInjectee;
 
 /**
  * A portable CDI extension, which is the touch-point for hk2 integration with CDI

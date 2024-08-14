@@ -16,24 +16,30 @@
 
 package org.glassfish.loadbalancer.admin.cli;
 
-import java.util.logging.Logger;
-import java.util.Map;
-import java.util.Iterator;
-
-import java.beans.PropertyVetoException;
-
-import org.jvnet.hk2.annotations.*;
-import org.jvnet.hk2.config.*;
-import org.glassfish.api.Param;
-import org.glassfish.api.I18n;
-import org.glassfish.api.ActionReport;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Cluster;
+import java.beans.PropertyVetoException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Logger;
 
-import org.glassfish.api.admin.*;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * This is a remote command that enables lb-enabled attribute of an application

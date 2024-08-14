@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.logging.LogDomains;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -28,8 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import com.sun.logging.LogDomains;
 
 
 /**

@@ -16,14 +16,16 @@
 
 package org.glassfish.diagnostics.context.impl;
 
-import org.glassfish.contextpropagation.*;
+import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.contextpropagation.Location;
+import org.glassfish.contextpropagation.PropagationMode;
+import org.glassfish.contextpropagation.View;
+import org.glassfish.contextpropagation.ViewCapable;
 import org.glassfish.diagnostics.context.Context;
 import org.glassfish.diagnostics.context.ContextManager;
-
-import java.util.EnumSet;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 
 /**

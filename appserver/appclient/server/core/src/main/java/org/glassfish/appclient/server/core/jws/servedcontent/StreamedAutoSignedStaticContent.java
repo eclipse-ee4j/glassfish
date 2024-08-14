@@ -29,15 +29,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.appclient.server.core.AppClientDeployerHelper;
 import org.glassfish.appclient.server.core.jws.AppClientHTTPAdapter;
-import static org.glassfish.appclient.server.core.jws.RestrictedContentAdapter.DATE_HEADER_NAME;
-import static org.glassfish.appclient.server.core.jws.RestrictedContentAdapter.LAST_MODIFIED_HEADER_NAME;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.server.Session;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.grizzly.http.util.MimeType;
+
+import static org.glassfish.appclient.server.core.jws.RestrictedContentAdapter.DATE_HEADER_NAME;
+import static org.glassfish.appclient.server.core.jws.RestrictedContentAdapter.LAST_MODIFIED_HEADER_NAME;
 
 /**
  * Auto-signed content that is delivered not as an on-disk file but as an

@@ -17,6 +17,22 @@
 
 package org.glassfish.security.services.impl.authorization;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.security.services.api.authorization.AzAction;
+import org.glassfish.security.services.api.authorization.AzAttributeResolver;
+import org.glassfish.security.services.api.authorization.AzAttributes;
+import org.glassfish.security.services.api.authorization.AzEnvironment;
+import org.glassfish.security.services.api.common.Attribute;
+import org.glassfish.security.services.impl.common.AttributeImpl;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.FAILED_INIT;
 import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.NOT_INITIALIZED;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,20 +44,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import javax.security.auth.Subject;
-import org.glassfish.security.services.api.authorization.AzAction;
-import org.glassfish.security.services.api.authorization.AzAttributeResolver;
-import org.glassfish.security.services.api.authorization.AzAttributes;
-import org.glassfish.security.services.api.authorization.AzEnvironment;
-import org.glassfish.security.services.api.common.Attribute;
-import org.glassfish.security.services.impl.common.AttributeImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 /**
  * @see AuthorizationServiceImpl

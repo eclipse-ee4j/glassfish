@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.connectors;
 
-import javax.security.auth.Subject;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
 import jakarta.resource.spi.ManagedConnectionFactory;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * Information about the ConnectorConnectionPool. Stored inofrmation is: 1. Default Subject 2. MCF Instance 3. Password,

@@ -22,25 +22,25 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOQueryException;
+import com.sun.jdo.spi.persistence.support.sqlstore.ValueFetcher;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.DateType;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.MathType;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.PrimitiveType;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.StringType;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.WrapperClassType;
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
+import com.sun.jdo.spi.persistence.utility.ParameterInfo;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.sun.jdo.api.persistence.support.JDOQueryException;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.StringType;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.PrimitiveType;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.WrapperClassType;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.MathType;
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.DateType;
-
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.support.sqlstore.ValueFetcher;
-import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
-import com.sun.jdo.spi.persistence.utility.ParameterInfo;
 
 /**
  * The query parameter table

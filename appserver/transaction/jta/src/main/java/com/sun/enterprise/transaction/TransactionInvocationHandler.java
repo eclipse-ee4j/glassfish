@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.transaction;
 
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
 import org.glassfish.api.invocation.ComponentInvocationHandler;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-
-import jakarta.inject.Inject;
 
 @Service
 public class TransactionInvocationHandler implements ComponentInvocationHandler {

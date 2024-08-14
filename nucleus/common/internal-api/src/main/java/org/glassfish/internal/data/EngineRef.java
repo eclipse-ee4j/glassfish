@@ -17,7 +17,8 @@
 
 package org.glassfish.internal.data;
 
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.config.serverbeans.ApplicationConfig;
+import com.sun.enterprise.config.serverbeans.Engine;
 
 import java.beans.PropertyVetoException;
 
@@ -28,8 +29,7 @@ import org.glassfish.api.deployment.Deployer;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import com.sun.enterprise.config.serverbeans.ApplicationConfig;
-import com.sun.enterprise.config.serverbeans.Engine;
+import static java.util.logging.Level.WARNING;
 
 /**
  * When a module is attached to a LoadedEngine, it creates an Engine reference. Each module of an application can be

@@ -17,15 +17,15 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
  * By default, logs would be kept in {@code $INSTANCE-ROOT/logs}. The following log files

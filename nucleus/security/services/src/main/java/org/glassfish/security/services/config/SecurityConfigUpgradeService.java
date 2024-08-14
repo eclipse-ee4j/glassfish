@@ -18,6 +18,13 @@ package org.glassfish.security.services.config;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.security.auth.login.FileLoginModule;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
@@ -26,11 +33,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-
-import jakarta.inject.Inject;
-import java.beans.PropertyVetoException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Upgrades the configuration to use the default file realm and the

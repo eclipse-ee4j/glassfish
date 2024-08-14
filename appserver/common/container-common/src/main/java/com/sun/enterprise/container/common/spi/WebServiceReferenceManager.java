@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.container.common.spi;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.jvnet.hk2.annotations.Contract;
-
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 
 /**
  * This class acts as a contract to resolve the </code>jakarta.xml.ws.WebServiceRef</code> references and also

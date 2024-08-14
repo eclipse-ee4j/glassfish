@@ -17,13 +17,13 @@
 
 package org.glassfish.internal.data;
 
+import jakarta.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 /**
  * Registry for deployed Applications

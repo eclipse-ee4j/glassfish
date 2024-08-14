@@ -17,9 +17,25 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.util.cluster.InstanceInfo;
+import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Clusters;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Nodes;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.cluster.InstanceInfo;
+
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -27,21 +43,15 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.InstanceState;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.config.ReferenceContainer;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-import static com.sun.enterprise.v3.admin.cluster.Constants.*;
-import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
-import org.glassfish.api.admin.*;
+import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING;
+import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING_DISPLAY;
 
 /**
  *  This is a remote command that lists the clusters.

@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.container.common.impl.managedbean;
 
+import com.sun.enterprise.container.common.spi.ManagedBeanManager;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.NamingObjectProxy;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.container.common.spi.ManagedBeanManager;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 
 public class ManagedBeanNamingProxy implements NamingObjectProxy {
 

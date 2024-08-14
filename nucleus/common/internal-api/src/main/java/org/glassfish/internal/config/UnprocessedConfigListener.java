@@ -16,20 +16,20 @@
 
 package org.glassfish.internal.config;
 
-import org.jvnet.hk2.annotations.Service;
+import jakarta.inject.Inject;
+
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.internal.api.PostStartupRunLevel;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-import java.beans.PropertyChangeEvent;
-
-import org.glassfish.internal.api.*;
-
-import jakarta.inject.Inject;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
 Listens for unprocessed config changes

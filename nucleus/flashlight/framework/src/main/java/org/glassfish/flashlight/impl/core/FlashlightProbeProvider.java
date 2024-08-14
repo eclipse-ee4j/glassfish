@@ -17,11 +17,13 @@
 package org.glassfish.flashlight.impl.core;
 
 import com.sun.enterprise.util.ObjectAnalyzer;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.glassfish.api.monitoring.ProbeInfo;
 import org.glassfish.api.monitoring.ProbeProviderInfo;
 import org.glassfish.flashlight.provider.FlashlightProbe;
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Byron Nevins, October 2009

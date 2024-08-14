@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.resource;
 
+import com.sun.logging.LogDomains;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
-
-import com.sun.logging.LogDomains;
 
 /**
  * This is class is used for debugging. It prints out

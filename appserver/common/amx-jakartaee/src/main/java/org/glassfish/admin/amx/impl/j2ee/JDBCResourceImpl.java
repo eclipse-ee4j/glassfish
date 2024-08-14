@@ -16,11 +16,11 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.JDBCResource;
-
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
 import org.glassfish.admin.amx.j2ee.J2EETypes;
+import org.glassfish.admin.amx.j2ee.JDBCResource;
 
 public final class JDBCResourceImpl extends J2EEResourceImplBase {
     public static final Class<JDBCResource> INTF = JDBCResource.class;

@@ -16,13 +16,13 @@
 
 package org.glassfish.cdi.hk2;
 
+import jakarta.inject.Singleton;
+
 import java.lang.annotation.Annotation;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Context;
 import org.glassfish.hk2.api.ServiceHandle;
-
-import jakarta.inject.Singleton;
 
 /**
  * This is an HK2 context for use with descriptors that are backed by CDI services (which are not Dependent or

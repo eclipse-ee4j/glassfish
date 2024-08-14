@@ -17,12 +17,13 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.LogFacade;
-
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.WriteListener;
+
 import java.io.IOException;
 import java.util.ResourceBundle;
+
+import org.apache.catalina.LogFacade;
 
 /**
  * Coyote implementation of the servlet output stream.

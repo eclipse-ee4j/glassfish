@@ -7,10 +7,11 @@ prev=preface.html
 
 = Development Tasks and Tools
 
+:sectnums!:
 [[part-i]]
-
 == Part I
 
+:sectnums:
 [[development-tasks-and-tools]]
 == Development Tasks and Tools
 

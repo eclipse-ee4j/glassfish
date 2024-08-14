@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.MessageDrivenBean;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.MessageDrivenBean;
 
 public final class MessageDrivenBeanImpl extends EJBImplBase {
     public static final Class<MessageDrivenBean> INTF = MessageDrivenBean.class;

@@ -985,7 +985,7 @@ online         Jul_06   svc:/network/ssh:default
 
 See Also
 
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
 
 [[GSHAG327]]
 
@@ -1367,7 +1367,7 @@ public key authentication.
 1. Generate an SSH key pair with an encrypted private key file.
 +
 Use the SSH utility
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`]
 for this purpose.
 +
 [source]
@@ -1529,7 +1529,7 @@ See Also
 * xref:reference-manual.adoc#asadmin[`asadmin`(1M)]
 * xref:reference-manual.adoc#create-password-alias[`create-password-alias`(1)]
 * xref:reference-manual.adoc#setup-ssh[`setup-ssh`(1)]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +41,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+// WARNING: There must not be any references to java.util.logging.* instances in static initialization except levels.
+//          They would cause initialization of the JVM logging which we do AFTER this.
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
@@ -48,8 +50,6 @@ import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI
 import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.glassfish.bootstrap.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
-// WARNING: There must not be any references to java.util.logging.* instances in static initialization except levels.
-//          They would cause initialization of the JVM logging which we do AFTER this.
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -67,20 +67,11 @@ import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 public class MainHelper {
 
     static void checkJdkVersion() {
-        int major = getMajorJdkVersion();
-        if (major < 11) {
-            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {11, major});
+        int version = Runtime.version().feature();
+        if (version < 21) {
+            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {21, version});
             System.exit(1);
         }
-    }
-
-    private static int getMajorJdkVersion() {
-        String jv = System.getProperty("java.version");
-        String[] split = jv.split("[\\._\\-]+");
-        if (split.length > 0) {
-            return Integer.parseInt(split[0]);
-        }
-        return -1;
     }
 
     static String whichPlatform() {

@@ -17,10 +17,12 @@
 package com.sun.appserv.server.util;
 
 import com.sun.enterprise.util.CULoggerInfo;
+
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.glassfish.api.*;
+
+import org.glassfish.api.BytecodePreprocessor;
 
 /**
  * PreprocessorUtil is a utility class for managing the bytecode

@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.deployment.node;
 
+import com.sun.enterprise.deployment.PermissionItemDescriptor;
+import com.sun.enterprise.deployment.xml.DeclaredPermissionsTagNames;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.sun.enterprise.deployment.xml.DeclaredPermissionsTagNames;
-import com.sun.enterprise.deployment.PermissionItemDescriptor;
 
 public class PermissionItemNode extends DeploymentDescriptorNode {
 

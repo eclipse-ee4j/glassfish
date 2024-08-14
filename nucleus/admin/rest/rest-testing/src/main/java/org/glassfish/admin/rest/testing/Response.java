@@ -18,7 +18,9 @@ package org.glassfish.admin.rest.testing;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import static org.glassfish.admin.rest.testing.Common.*;
+import static org.glassfish.admin.rest.testing.Common.HEADER_LOCATION;
+import static org.glassfish.admin.rest.testing.Common.HEADER_X_LOCATION;
+import static org.glassfish.admin.rest.testing.Common.PROP_ITEM;
 
 public class Response {
     private String method;

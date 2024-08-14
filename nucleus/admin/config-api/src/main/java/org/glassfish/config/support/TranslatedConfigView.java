@@ -17,6 +17,8 @@
 
 package org.glassfish.config.support;
 
+import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -30,12 +32,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import org.glassfish.security.common.RelativePathResolver;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigView;
-
-import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
 
 /**
  * View that translate configured attributes containing properties like ${foo.bar} into system properties values.

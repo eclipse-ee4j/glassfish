@@ -18,13 +18,8 @@
 package org.apache.catalina.core;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.startup.ContextRuleSet;
-import org.apache.catalina.startup.ExpandWar;
-import org.apache.catalina.startup.NamingRuleSet;
-import org.apache.tomcat.util.digester.Digester;
-
 import jakarta.servlet.ServletContext;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +29,19 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Deployer;
+import org.apache.catalina.Host;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.startup.ContextRuleSet;
+import org.apache.catalina.startup.ExpandWar;
+import org.apache.catalina.startup.NamingRuleSet;
+import org.apache.tomcat.util.digester.Digester;
 
 
 /**

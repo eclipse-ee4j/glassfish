@@ -17,24 +17,26 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-import static com.sun.enterprise.security.SecurityLoggerInfo.realmCreated;
-import static com.sun.enterprise.security.auth.realm.RealmsManagerHolder.getNonNullRealmsManager;
-import static com.sun.enterprise.security.auth.realm.RealmsManagerHolder.getRealmsManager;
-import static java.util.logging.Level.INFO;
-
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Contract;
+
+import static com.sun.enterprise.security.SecurityLoggerInfo.realmCreated;
+import static com.sun.enterprise.security.auth.realm.RealmsManagerHolder.getNonNullRealmsManager;
+import static com.sun.enterprise.security.auth.realm.RealmsManagerHolder.getRealmsManager;
+import static java.util.logging.Level.INFO;
 
 /**
  * javadoc

@@ -17,11 +17,12 @@
 package org.glassfish.admin.amx.core;
 
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Holds meta information useful in generating and/or supplementing the default

@@ -16,10 +16,10 @@
 
 package org.glassfish.internal.embedded;
 
+import java.util.List;
+
 import org.glassfish.api.container.Sniffer;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.util.List;
 
 /**
  * Embedded container definition, although most containers will be bound

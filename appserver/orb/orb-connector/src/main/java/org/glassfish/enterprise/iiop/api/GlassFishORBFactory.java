@@ -16,11 +16,11 @@
 
 package org.glassfish.enterprise.iiop.api;
 
+import java.util.Properties;
+
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
 import org.omg.PortableInterceptor.ServerRequestInfo;
-
-import java.util.Properties;
 
 /**
  * @author Mahesh Kannan Date: Jan 17, 2009

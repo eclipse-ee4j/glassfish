@@ -16,6 +16,12 @@
 
 package org.glassfish.admin.rest.wadl;
 
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.SchemaOutputResolver;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -27,12 +33,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.SchemaOutputResolver;
+
 import javax.xml.transform.stream.StreamResult;
+
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.composite.LegacyCompositeResource;
 import org.glassfish.admin.rest.composite.RestModel;

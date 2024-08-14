@@ -18,11 +18,12 @@ package org.glassfish.batch.spi.impl;
 
 import com.ibm.jbatch.spi.BatchSecurityHelper;
 import com.sun.enterprise.config.serverbeans.Config;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
 
 @Service
 public class GlassFishBatchSecurityHelper

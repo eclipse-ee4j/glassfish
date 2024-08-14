@@ -21,10 +21,10 @@
 
 package org.glassfish.flashlight.datatree.impl;
 
-import org.glassfish.flashlight.datatree.MethodInvoker;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.glassfish.flashlight.datatree.MethodInvoker;
 
 /**
  *

@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.naming.impl;
 
-import org.omg.CORBA.ORB;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
+import org.omg.CORBA.ORB;
 
 
 /**

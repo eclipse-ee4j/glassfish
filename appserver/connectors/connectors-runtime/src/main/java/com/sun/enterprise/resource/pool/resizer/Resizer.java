@@ -17,17 +17,6 @@
 
 package com.sun.enterprise.resource.pool.resizer;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceState;
@@ -39,6 +28,17 @@ import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
 
 /**
  * Resizer to remove unusable connections, maintain steady-pool <br>

@@ -16,11 +16,11 @@
 
 package org.glassfish.api.admin.progress;
 
-import java.io.File;
-
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+
+import java.io.File;
 
 /**
  * This class contains information related to a job which will be persisted to jobs.xml

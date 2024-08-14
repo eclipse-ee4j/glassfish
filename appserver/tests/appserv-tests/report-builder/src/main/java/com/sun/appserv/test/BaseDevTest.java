@@ -16,6 +16,11 @@
 
 package com.sun.appserv.test;
 
+import com.sun.appserv.test.util.process.ProcessManager;
+import com.sun.appserv.test.util.process.ProcessManagerException;
+import com.sun.appserv.test.util.process.ProcessManagerTimeoutException;
+import com.sun.appserv.test.util.results.SimpleReporterAdapter;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,10 +38,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import com.sun.appserv.test.util.process.ProcessManager;
-import com.sun.appserv.test.util.process.ProcessManagerException;
-import com.sun.appserv.test.util.process.ProcessManagerTimeoutException;
-import com.sun.appserv.test.util.results.SimpleReporterAdapter;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 

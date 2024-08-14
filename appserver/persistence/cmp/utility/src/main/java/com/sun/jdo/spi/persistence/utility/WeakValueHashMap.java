@@ -18,7 +18,6 @@ package com.sun.jdo.spi.persistence.utility;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Collection;

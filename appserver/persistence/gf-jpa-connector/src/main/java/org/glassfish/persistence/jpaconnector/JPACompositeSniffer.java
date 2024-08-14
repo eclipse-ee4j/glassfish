@@ -20,17 +20,19 @@ package org.glassfish.persistence.jpaconnector;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.archivist.EARBasedPersistenceHelper;
 import com.sun.enterprise.deployment.archivist.PersistenceArchivist;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.javaee.core.deployment.ApplicationHolder;
 
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
+
 import java.util.Enumeration;
 import java.util.Set;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.javaee.core.deployment.ApplicationHolder;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Sniffer handling ears

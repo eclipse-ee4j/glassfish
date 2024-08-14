@@ -27,12 +27,11 @@ package com.sun.messaging.jmq.management;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import java.rmi.server.RMISocketFactory;
 
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 

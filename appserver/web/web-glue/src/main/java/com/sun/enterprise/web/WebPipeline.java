@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.web;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 
 import org.apache.catalina.Container;
@@ -23,9 +26,6 @@ import org.apache.catalina.Realm;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 import org.apache.catalina.core.StandardPipeline;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Pipeline whose invoke logic checks if a given request path represents an ad-hoc path: If so, this pipeline delegates

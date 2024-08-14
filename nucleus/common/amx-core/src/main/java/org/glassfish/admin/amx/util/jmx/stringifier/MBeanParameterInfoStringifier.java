@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.stringifier.Stringifier;
-
 import javax.management.MBeanParameterInfo;
+
+import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 public final class MBeanParameterInfoStringifier
         extends MBeanFeatureInfoStringifier implements Stringifier

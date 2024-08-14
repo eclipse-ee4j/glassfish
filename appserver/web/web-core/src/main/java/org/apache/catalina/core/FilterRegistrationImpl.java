@@ -16,18 +16,19 @@
 
 package org.apache.catalina.core;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.deploy.FilterDef;
-import org.apache.catalina.deploy.FilterMap;
-
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterRegistration;
+
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
-import java.text.MessageFormat;
-import java.util.*;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.deploy.FilterDef;
+import org.apache.catalina.deploy.FilterMap;
 
 public class FilterRegistrationImpl implements FilterRegistration {
 

@@ -15,7 +15,6 @@
  */
 package org.glassfish.appclient.common;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.security.PermissionCollection;

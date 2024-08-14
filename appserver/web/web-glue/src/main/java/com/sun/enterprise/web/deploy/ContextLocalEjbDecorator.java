@@ -17,6 +17,7 @@
 package com.sun.enterprise.web.deploy;
 
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+
 import org.apache.catalina.deploy.ContextLocalEjb;
 
 

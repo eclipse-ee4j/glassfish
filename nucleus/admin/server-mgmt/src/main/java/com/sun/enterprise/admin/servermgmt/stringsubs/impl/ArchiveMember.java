@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import java.io.Reader;
-import java.io.Writer;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.MemberEntry;
+
+import java.io.Reader;
+import java.io.Writer;
 
 /**
  * Creates {@link Reader} and {@link Writer} for the {@link MemberEntry} of an archive, that has to undergo string

@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.JavaMailResource;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.JavaMailResource;
 
 public final class JavaMailResourceImpl
         extends J2EEResourceImplBase {

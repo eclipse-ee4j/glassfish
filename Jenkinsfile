@@ -187,10 +187,10 @@ spec:
         container('maven') {
           dumpSysInfo()
           sh '''
-            # validate all modules (catching ie. wrong versions)
-            mvn validate -Ptck,staging -T4C
+            # Validate the structure in all submodules (especially version ids)
+            mvn -B -e -fae clean validate -Ptck,set-version-id,staging
             # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-            mvn -B -e clean install -Pfastest,staging -T4C
+            mvn -B -e install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles
             ./gfbuild.sh archive_embedded
             mvn -B -e clean -Pstaging

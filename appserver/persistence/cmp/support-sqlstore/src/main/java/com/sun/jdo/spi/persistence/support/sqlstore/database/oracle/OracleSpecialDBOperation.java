@@ -51,19 +51,20 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.database.oracle;
 
-import java.util.List;
-import java.util.Arrays;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.sql.PreparedStatement;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Types;
 import com.sun.jdo.api.persistence.support.FieldMapping;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.BaseSpecialDBOperation;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * OracleSpecialDBOperation is derived class for Oracle specific operation.

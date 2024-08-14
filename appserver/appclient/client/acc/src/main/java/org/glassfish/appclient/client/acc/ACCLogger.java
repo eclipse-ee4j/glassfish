@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
 import org.glassfish.appclient.client.acc.config.LogService;
 import org.glassfish.main.jul.GlassFishLogger;
 

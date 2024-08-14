@@ -33,8 +33,8 @@ import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.IORInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfo;
-import org.omg.PortableInterceptor.ServerRequestInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 

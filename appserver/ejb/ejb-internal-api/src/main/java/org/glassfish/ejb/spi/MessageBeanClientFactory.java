@@ -17,6 +17,7 @@
 package org.glassfish.ejb.spi;
 
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /*

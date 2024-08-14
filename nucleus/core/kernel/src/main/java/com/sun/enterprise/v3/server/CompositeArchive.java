@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.deploy.shared.AbstractReadableArchive;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -26,8 +28,6 @@ import java.util.jar.Manifest;
 
 import org.glassfish.api.deployment.archive.CompositeHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-
-import com.sun.enterprise.deploy.shared.AbstractReadableArchive;
 
 /**
  * A composite archive is a readable archive that hides the sub archives.

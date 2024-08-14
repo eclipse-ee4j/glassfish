@@ -28,6 +28,12 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.util.Utility;
 import com.sun.logging.LogDomains;
 
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.TransactionRequiredLocalException;
+import jakarta.ejb.TransactionRolledbackLocalException;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -42,9 +48,7 @@ import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
 import org.glassfish.enterprise.iiop.spi.EjbService;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.jvnet.hk2.annotations.Service;
-
 import org.omg.CORBA.CompletionStatus;
 import org.omg.CORBA.INVALID_TRANSACTION;
 import org.omg.CORBA.LocalObject;
@@ -62,12 +66,6 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.Servant;
 import org.omg.PortableServer.ServantLocator;
 import org.omg.PortableServer.ServantLocatorPackage.CookieHolder;
-
-import jakarta.ejb.NoSuchObjectLocalException;
-import jakarta.ejb.TransactionRequiredLocalException;
-import jakarta.ejb.TransactionRolledbackLocalException;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * This class implements the ProtocolManager interface for the

@@ -16,11 +16,11 @@
 
 package org.glassfish.extras.osgicontainer;
 
+import jakarta.inject.Singleton;
+
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.Deployer;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 /**
  * OSGi container, will just be used to manage OSGi bundles through deployment

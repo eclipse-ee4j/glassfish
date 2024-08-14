@@ -18,6 +18,7 @@
 package org.glassfish.persistence.common.database;
 
 import com.sun.logging.LogDomains;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
+
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  *

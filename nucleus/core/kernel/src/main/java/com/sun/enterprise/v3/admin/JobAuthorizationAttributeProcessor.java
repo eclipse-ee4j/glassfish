@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.v3.admin;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,9 +30,6 @@ import org.glassfish.api.admin.AuthorizationPreprocessor;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * Attaches a user attribute to job resources for authorization.

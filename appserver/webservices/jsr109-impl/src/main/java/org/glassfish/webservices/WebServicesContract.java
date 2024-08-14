@@ -16,9 +16,11 @@
 
 package org.glassfish.webservices;
 
-import org.jvnet.hk2.annotations.Contract;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+
 import java.util.logging.Logger;
+
+import org.jvnet.hk2.annotations.Contract;
 
 
 /**

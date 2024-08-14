@@ -22,11 +22,12 @@
 
 package com.sun.jdo.api.persistence.model.mapping;
 
+import com.sun.jdo.api.persistence.model.ModelException;
+
 import java.util.ArrayList;
 
-import org.netbeans.modules.dbschema.*;
-
-import com.sun.jdo.api.persistence.model.ModelException;
+import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.ReferenceKey;
 
 /**
  * This is an element which represents a relationship between two tables

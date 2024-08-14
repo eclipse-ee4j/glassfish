@@ -17,11 +17,16 @@
 package org.glassfish.admin.amx.impl.j2ee;
 
 import java.util.Set;
-import org.glassfish.admin.amx.j2ee.EJBModule;
-import static org.glassfish.admin.amx.j2ee.J2EETypes.*;
 
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.EJBModule;
 import org.glassfish.admin.amx.util.SetUtil;
+
+import static org.glassfish.admin.amx.j2ee.J2EETypes.ENTITY_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.MESSAGE_DRIVEN_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.STATEFUL_SESSION_BEAN;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.STATELESS_SESSION_BEAN;
 
 public final class EJBModuleImpl extends J2EEModuleImplBase {
     public static final Class<EJBModule> INTF = EJBModule.class;

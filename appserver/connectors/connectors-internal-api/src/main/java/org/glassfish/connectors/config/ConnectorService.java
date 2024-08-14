@@ -16,19 +16,19 @@
 
 package org.glassfish.connectors.config;
 
-import org.glassfish.api.admin.config.ConfigExtension;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.types.Property;
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.jvnet.hk2.config.types.PropertyBag;
+import jakarta.validation.constraints.Min;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import jakarta.validation.constraints.Min;
+import org.glassfish.api.admin.config.ConfigExtension;
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 
 /**

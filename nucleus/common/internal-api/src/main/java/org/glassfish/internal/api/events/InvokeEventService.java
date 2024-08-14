@@ -16,6 +16,7 @@
 package org.glassfish.internal.api.events;
 
 import jakarta.inject.Inject;
+
 import org.glassfish.hk2.api.messaging.Topic;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;

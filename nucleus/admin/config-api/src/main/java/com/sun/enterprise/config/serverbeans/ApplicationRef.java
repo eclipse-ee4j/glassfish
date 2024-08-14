@@ -18,15 +18,15 @@
 package com.sun.enterprise.config.serverbeans;
 
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 
 import org.glassfish.api.Param;
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 import static org.glassfish.config.support.Constants.NAME_APP_REGEX;
 

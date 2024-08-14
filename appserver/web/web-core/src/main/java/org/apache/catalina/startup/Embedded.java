@@ -18,8 +18,6 @@
 
 package org.apache.catalina.startup;
 
-import static java.util.logging.Level.FINE;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -28,6 +26,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.Authenticator;
 import org.apache.catalina.Connector;
 import org.apache.catalina.Container;
@@ -50,6 +49,8 @@ import org.apache.catalina.util.LifecycleSupport;
 import org.apache.catalina.util.ServerInfo;
 import org.glassfish.web.util.IntrospectionUtils;
 import org.glassfish.web.valve.GlassFishValve;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * Convenience class to embed a Catalina servlet container environment inside another application. You must call the

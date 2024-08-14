@@ -17,6 +17,19 @@
 
 package org.glassfish.weld.connector;
 
+import jakarta.inject.Singleton;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.logging.Logger;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.internal.deployment.GenericSniffer;
+import org.jvnet.hk2.annotations.Service;
+
 import static java.util.logging.Level.FINE;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_JAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_RAR_SUFFIX;
@@ -34,19 +47,6 @@ import static org.glassfish.weld.connector.WeldUtils.hasExtension;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanDiscoveryEnabled;
 import static org.glassfish.weld.connector.WeldUtils.isValidBdaBasedOnExtensionAndBeansXml;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.logging.Logger;
-
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.internal.deployment.GenericSniffer;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 /**
  * Implementation of the Sniffer for Weld.

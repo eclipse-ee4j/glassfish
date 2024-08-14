@@ -16,11 +16,12 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import jakarta.interceptor.AroundTimeout;
-
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
+
+import jakarta.interceptor.AroundTimeout;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

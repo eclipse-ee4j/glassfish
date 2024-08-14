@@ -16,14 +16,13 @@
 
 package org.glassfish.config.support;
 
-import org.glassfish.api.admin.AdminCommandContext;
+import java.beans.PropertyVetoException;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import java.beans.PropertyVetoException;
 
 /**
  * A decorator for acting upon a configuration element deletion.

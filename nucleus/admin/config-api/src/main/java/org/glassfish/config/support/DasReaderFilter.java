@@ -16,7 +16,8 @@
 
 package org.glassfish.config.support;
 
-import java.net.*;
+import java.net.URL;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 

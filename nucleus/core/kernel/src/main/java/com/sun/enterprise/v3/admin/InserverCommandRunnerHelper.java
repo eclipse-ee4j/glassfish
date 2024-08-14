@@ -16,6 +16,11 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,11 +32,6 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  *

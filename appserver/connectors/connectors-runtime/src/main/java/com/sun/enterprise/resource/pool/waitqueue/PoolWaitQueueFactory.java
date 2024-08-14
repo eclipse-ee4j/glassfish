@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.resource.pool.waitqueue;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.WARNING;
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.logging.LogDomains;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Logger;
 
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Factory to create appropriate Pool Wait Queue

@@ -17,8 +17,8 @@
 package com.sun.enterprise.admin.cli.cluster;
 
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class is needed for backwards compatibility.  uninstall-node will simply

@@ -19,10 +19,10 @@ package com.sun.enterprise.config.serverbeans;
 
 import java.beans.PropertyVetoException;
 
+import org.glassfish.api.Param;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.glassfish.api.Param;
 
 /**
  * A cluster defines a homogeneous set of server instances that share

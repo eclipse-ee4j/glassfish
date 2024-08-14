@@ -16,8 +16,9 @@
 
 package com.sun.ejb;
 
-import java.util.concurrent.TimeUnit;
 import jakarta.ejb.LockType;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * MethodLockInfo caches various attributes of lock attributes

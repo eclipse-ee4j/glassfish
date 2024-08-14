@@ -22,18 +22,19 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ResourceBundle;
-import java.lang.reflect.Method;
-
-import antlr.TokenBuffer;
-
-import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.Method;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+
+import antlr.TokenBuffer;
 
 /**
  * This class is the driver of the EJBQL compiler. It controls the compiler

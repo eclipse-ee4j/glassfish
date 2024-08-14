@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 public class TransactionServerInterceptor extends LocalObject implements ServerRequestInterceptor, Comparable<Object> {
 

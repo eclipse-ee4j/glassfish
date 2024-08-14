@@ -16,15 +16,15 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Map;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
 import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * Perform's string substitution by constructing the {@link RadixTree} of change-value pair.

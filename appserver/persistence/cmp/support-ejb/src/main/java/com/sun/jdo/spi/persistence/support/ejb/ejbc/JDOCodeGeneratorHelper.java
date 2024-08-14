@@ -22,12 +22,11 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.util.ResourceBundle;
-
-import com.sun.jdo.spi.persistence.support.ejb.codegen.GeneratorException;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.jdo.spi.persistence.support.ejb.codegen.GeneratorException;
+
+import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 

@@ -18,17 +18,17 @@ package org.glassfish.main.admin.test.rest;
 
 import jakarta.ws.rs.core.Response;
 
+import java.util.Map;
+
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.DomainAdminRestClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-import java.util.Map;
-
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.basic;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SecuredRestTestBase extends RestTestBase {
 

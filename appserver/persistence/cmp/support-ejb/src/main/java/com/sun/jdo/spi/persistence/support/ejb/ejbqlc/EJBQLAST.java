@@ -22,8 +22,8 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-import antlr.Token;
 import antlr.CommonAST;
+import antlr.Token;
 import antlr.collections.AST;
 
 /**

@@ -16,10 +16,10 @@
 
 package com.sun.gjc.spi.base.datastructure;
 
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.gjc.spi.base.CacheObjectKey;
 import com.sun.gjc.spi.base.PreparedStatementWrapper;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * This ia a FIXED size cache implementation.

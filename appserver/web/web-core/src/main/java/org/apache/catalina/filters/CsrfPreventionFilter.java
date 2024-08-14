@@ -20,15 +20,6 @@
 
 package org.apache.catalina.filters;
 
-import org.apache.catalina.LogFacade;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.security.SecureRandom;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.logging.Logger;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
@@ -38,6 +29,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.security.SecureRandom;
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
 
 /**
  * Provides basic CSRF protection for a web application. The filter assumes

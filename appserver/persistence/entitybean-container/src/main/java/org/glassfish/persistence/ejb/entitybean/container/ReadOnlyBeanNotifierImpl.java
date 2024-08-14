@@ -17,8 +17,8 @@
 package org.glassfish.persistence.ejb.entitybean.container;
 
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * An instance of ReadOnlyBeanNotifier is used to refresh ReadOnlyBeans

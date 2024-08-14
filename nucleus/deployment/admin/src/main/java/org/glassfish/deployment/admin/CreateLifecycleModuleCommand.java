@@ -19,29 +19,21 @@ package org.glassfish.deployment.admin;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.Param;
-import org.glassfish.api.I18n;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.deployment.common.DeploymentContextImpl;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.Transaction;
-
-import java.util.Properties;
 import java.util.List;
+import java.util.Properties;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -51,6 +43,15 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.deployment.common.DeploymentContextImpl;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Transaction;
 
 /**
  * Create lifecycle modules.

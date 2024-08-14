@@ -16,15 +16,14 @@
 
 package org.glassfish.flashlight.provider;
 
-import java.util.Collection;
-import java.util.ArrayList;
-
-import org.glassfish.flashlight.impl.core.*;
-
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.glassfish.flashlight.impl.core.ProbeProviderRegistry;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan

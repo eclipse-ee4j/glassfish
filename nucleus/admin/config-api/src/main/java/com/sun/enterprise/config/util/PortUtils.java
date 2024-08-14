@@ -19,10 +19,15 @@ package com.sun.enterprise.config.util;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.util.net.NetUtils;
-import java.util.*;
+
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static com.sun.enterprise.config.util.PortConstants.PORTSLIST;
 import static com.sun.enterprise.util.net.NetUtils.MAX_PORT;
-import static com.sun.enterprise.config.util.PortConstants.*;
 
 /**
  * static methods useful for dealing with ports.

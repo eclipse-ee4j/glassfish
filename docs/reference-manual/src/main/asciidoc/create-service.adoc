@@ -94,9 +94,9 @@ enable, disable, delete, or stop the service. For more information about
 SMF, see the following documentation for the Oracle Solaris operating
 system:
 
-* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[
+* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[
 Managing Services (Overview)]" in System Administration Guide: Basic Administration
-* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[
+* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[
 Managing Services (Tasks)]" in System Administration Guide: Basic Administration
 
 On Oracle Solaris systems, this subcommand must be run as the OS-level
@@ -116,9 +116,9 @@ directory by default:
 
 To run this subcommand, you must have `solaris.smf.*` authorization. For
 information about how to grant authorizations to users, see the
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)]
 and
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
 man pages.
 
 To run these commands as non-root user, the system administrator must be
@@ -126,10 +126,10 @@ contacted so that the relevant authorizations are granted. You must also
 ensure that the following conditions are met:
 
 * Oracle Solaris 10 administration commands such as
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`(1M)],
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`(1M)],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)],
 and
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)]
 are available through the `PATH` statement, so that these commands can
 be executed. A simple test to do so is to run the command `which svccfg`
 in the shell.
@@ -311,17 +311,17 @@ Command create-service executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)],
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
 
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`(1M)],
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)],
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvccfg-1m[`svccfg`(1M)],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Museradd-1m[`useradd`(1M)],
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Musermod-1m[`usermod`(1M)]
 
-"http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing
+"https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing
 Services (Overview)]" in System Administration Guide: Basic
 Administration,
-"http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
+"https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
 Services (Tasks)]" in System Administration Guide: Basic Administration
 
 Microsoft .NET Framework (`https://dotnet.microsoft.com/`)

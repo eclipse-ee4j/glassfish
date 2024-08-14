@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.security.common;
 
+import com.sun.enterprise.security.integration.AppServSecurityContext;
+
 import java.io.Serializable;
 import java.security.Principal;
 
 import javax.security.auth.Subject;
-
-import com.sun.enterprise.security.integration.AppServSecurityContext;
 
 /**
  * This base class defines the methods that Security Context should exhibit. There are two places where a derived class

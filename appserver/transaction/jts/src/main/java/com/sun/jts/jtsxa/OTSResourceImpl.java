@@ -16,26 +16,45 @@
 
 package com.sun.jts.jtsxa;
 
-import org.omg.CosTransactions.*;
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
-
-import com.sun.jts.CosTransactions.*;
-
-import javax.transaction.xa.*;
-//import com.sun.jts.etsjdbc.odbc.NativeXAResourceImpl;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.codegen.jtsxa.OTSResource;
+import com.sun.jts.codegen.jtsxa.OTSResourceHelper;
+import com.sun.jts.codegen.jtsxa.OTSResourcePOA;
 import com.sun.jts.jta.TransactionState;
-import com.sun.jts.codegen.jtsxa.*;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
 
- /* An implementation of org.omg.CosTransactions.Resource to support
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.Context;
+import org.omg.CORBA.ContextList;
+import org.omg.CORBA.ExceptionList;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.NVList;
+import org.omg.CORBA.NamedValue;
+import org.omg.CORBA.Request;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CORBA.TRANSIENT;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.Vote;
+import org.omg.CosTransactions.otid_t;
+import org.omg.PortableServer.POA;
+
+/**
+ * An implementation of org.omg.CosTransactions.Resource to support
  * X/Open XA compliant resource managers.
  */
-
 public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
 
     private static POA poa = null;

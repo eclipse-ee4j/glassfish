@@ -17,14 +17,6 @@
 
 package org.apache.catalina.util;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.core.StandardContext;
-import org.apache.naming.resources.Resource;
-
-import javax.naming.Binding;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,6 +33,15 @@ import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.Binding;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.StandardContext;
+import org.apache.naming.resources.Resource;
 
 
 /**

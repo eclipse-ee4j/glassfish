@@ -16,7 +16,7 @@
 
 package org.glassfish.appclient.client.packageappclient;
 
-import static java.util.jar.Attributes.Name.CLASS_PATH;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -35,7 +35,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipException;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import static java.util.jar.Attributes.Name.CLASS_PATH;
 
 /**
  * Creates a JAR file containing the runtime bits required to run app clients remotely, on a system without a full

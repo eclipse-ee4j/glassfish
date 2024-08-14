@@ -16,17 +16,17 @@
 
 package org.apache.naming.resources;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.url.AbstractURLStreamHandlerService;
-import org.osgi.service.url.URLConstants;
-import org.osgi.service.url.URLStreamHandlerService;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Dictionary;
 import java.util.Properties;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.url.AbstractURLStreamHandlerService;
+import org.osgi.service.url.URLConstants;
+import org.osgi.service.url.URLStreamHandlerService;
 
 /**
  * This class is responsible for adding {@code DirContextURLStreamHandler}

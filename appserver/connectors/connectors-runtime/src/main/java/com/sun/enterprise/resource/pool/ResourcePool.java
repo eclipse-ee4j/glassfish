@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.resource.ResourceHandle;
@@ -29,6 +27,8 @@ import com.sun.enterprise.resource.pool.waitqueue.PoolWaitQueue;
 
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Transaction;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * @author Tony Ng

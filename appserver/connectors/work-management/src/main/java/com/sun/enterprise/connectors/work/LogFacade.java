@@ -17,8 +17,9 @@
 package com.sun.enterprise.connectors.work;
 
 import java.util.logging.Logger;
-import org.glassfish.logging.annotation.LoggerInfo;
+
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 public class LogFacade {
 

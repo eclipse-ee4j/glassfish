@@ -18,10 +18,10 @@
 package org.apache.tomcat.util.digester;
 
 
+import java.util.logging.Level;
+
 import org.glassfish.web.util.IntrospectionUtils;
 import org.xml.sax.Attributes;
-
-import java.util.logging.Level;
 
 
 /**

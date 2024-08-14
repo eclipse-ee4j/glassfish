@@ -16,31 +16,32 @@
 
 package org.glassfish.loadbalancer.admin.cli;
 
-import java.io.OutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.UnknownHostException;
-
-import org.glassfish.loadbalancer.admin.cli.connection.ConnectionManager;
-import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
-
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.loadbalancer.config.LoadBalancer;
-import java.util.logging.Level;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.*;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.loadbalancer.admin.cli.helper.LbConfigHelper;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.loadbalancer.admin.cli.connection.ConnectionManager;
+import org.glassfish.loadbalancer.admin.cli.helper.LbConfigHelper;
+import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
+import org.glassfish.loadbalancer.config.LoadBalancer;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * Class to publish the loadbalancer.xml to the physical loadbalancer.

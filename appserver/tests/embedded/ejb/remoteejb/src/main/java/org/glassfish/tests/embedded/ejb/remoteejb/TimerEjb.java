@@ -16,11 +16,12 @@
 
 package org.glassfish.tests.embedded.ejb.remoteejb;
 
+import jakarta.ejb.Schedule;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.Timeout;
 import jakarta.ejb.Timer;
 import jakarta.ejb.TimerService;
-import jakarta.ejb.Schedule;
+
 import javax.naming.InitialContext;
 
 @Stateless

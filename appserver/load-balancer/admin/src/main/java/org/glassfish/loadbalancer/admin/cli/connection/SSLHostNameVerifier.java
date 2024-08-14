@@ -16,12 +16,13 @@
 
 package org.glassfish.loadbalancer.admin.cli.connection;
 
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.HostnameVerifier;
-
-import javax.security.auth.x500.X500Principal;
-import java.security.cert.X509Certificate;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+import javax.security.auth.x500.X500Principal;
+
 import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
 
 /**

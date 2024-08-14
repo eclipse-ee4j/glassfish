@@ -18,8 +18,6 @@
 package org.apache.catalina.valves;
 
 
-import org.apache.catalina.*;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -27,6 +25,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,6 +36,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.logging.Level;
+
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.Session;
 
 /**
  * <p>Implementation of the <b>Valve</b> interface that generates a web server

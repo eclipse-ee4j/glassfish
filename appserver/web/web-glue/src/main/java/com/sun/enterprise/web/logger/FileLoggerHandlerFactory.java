@@ -16,14 +16,15 @@
 
 package com.sun.enterprise.web.logger;
 
+import jakarta.inject.Inject;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Formatter;
 
-import jakarta.inject.Inject;
+import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
 
 /**
  * A factory for FileLoggerHandler.

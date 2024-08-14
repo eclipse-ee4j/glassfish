@@ -23,22 +23,10 @@ import com.sun.enterprise.admin.util.LineTokenReplacer;
 import com.sun.enterprise.admin.util.TokenValueSet;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.OS;
-
-
-//import javax.management.remote.JMXAuthenticator;
-//import com.sun.enterprise.admin.server.core.jmx.auth.ASJMXAuthenticator;
-//import com.sun.enterprise.admin.server.core.jmx.auth.ASLoginDriverImpl;
-
-//iMQ imports
-//import com.sun.enterprise.jms.IASJmsUtil;
-//import com.sun.messaging.jmq.jmsspi.JMSAdmin;
-//import jakarta.jms.JMSException;
-
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
-//import com.sun.enterprise.admin.common.Status;
-//import com.sun.enterprise.util.system.GFSystem;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;

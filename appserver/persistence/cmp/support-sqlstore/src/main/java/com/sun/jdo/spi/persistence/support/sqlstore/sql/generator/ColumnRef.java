@@ -23,8 +23,9 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
 import com.sun.jdo.api.persistence.support.FieldMapping;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  */

@@ -22,8 +22,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
-import org.glassfish.admin.rest.RestLogging;
 
+import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**

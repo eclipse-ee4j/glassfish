@@ -17,18 +17,12 @@
 
 package org.apache.catalina.valves;
 
-import org.apache.catalina.HttpResponse;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
-import org.apache.catalina.util.ServerInfo;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,6 +37,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TimeZone;
 import java.util.logging.Level;
+
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.apache.catalina.util.ServerInfo;
 
 
 /**

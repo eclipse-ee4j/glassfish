@@ -17,6 +17,17 @@
 
 package com.sun.enterprise.security.webservices.client;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
+import com.sun.xml.ws.api.pipe.Pipe;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
+import com.sun.xml.ws.policy.PolicyMap;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
+
 import static com.sun.xml.wss.provider.wsit.PipeConstants.ASSEMBLER_CONTEXT;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.BINDING;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.CONTAINER;
@@ -26,15 +37,6 @@ import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_REF;
 import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
-
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
-import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
-import com.sun.xml.ws.policy.PolicyMap;
-import java.util.HashMap;
-import java.util.Map;
-import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 /**
  * This is used by WSClientContainer to return proper Jakarta Authentication security pipe to the StandAlonePipeAssembler and

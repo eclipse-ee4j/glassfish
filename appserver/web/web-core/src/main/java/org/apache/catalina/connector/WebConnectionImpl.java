@@ -16,12 +16,14 @@
 
 package org.apache.catalina.connector;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.WebConnection;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Context;
 

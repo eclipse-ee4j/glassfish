@@ -16,19 +16,6 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.logging.LogHelper;
-
 import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.stringsubs.AttributePreprocessor;
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
@@ -49,6 +36,19 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Property;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.PropertyType;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.logging.LogHelper;
 
 /**
  * A class to encapsulate string-subs definition. Parse, validate and performs String substitution for the given

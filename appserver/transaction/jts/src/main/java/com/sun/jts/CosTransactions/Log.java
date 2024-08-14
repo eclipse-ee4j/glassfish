@@ -30,12 +30,11 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**The Log class provides operations that control the physical log

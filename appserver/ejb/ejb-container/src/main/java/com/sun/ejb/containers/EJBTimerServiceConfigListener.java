@@ -16,18 +16,18 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.logging.LogDomains;
-
 import org.glassfish.ejb.config.EjbTimerService;
-
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;

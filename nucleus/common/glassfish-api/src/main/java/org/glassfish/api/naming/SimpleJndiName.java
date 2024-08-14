@@ -17,6 +17,7 @@
 package org.glassfish.api.naming;
 
 import java.io.Serializable;
+
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;

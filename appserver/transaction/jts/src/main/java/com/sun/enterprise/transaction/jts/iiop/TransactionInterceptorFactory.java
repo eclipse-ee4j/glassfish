@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -24,8 +26,6 @@ import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-
-import jakarta.inject.Inject;
 
 /**
  *

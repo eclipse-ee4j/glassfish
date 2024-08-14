@@ -17,16 +17,11 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.logging.Level.CONFIG;
-import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
-import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
-import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
-
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -36,7 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import javax.security.auth.callback.CallbackHandler;
+
 import org.glassfish.appclient.client.acc.config.AuthRealm;
 import org.glassfish.appclient.client.acc.config.ClientCredential;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
@@ -45,6 +42,12 @@ import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.xml.sax.SAXException;
+
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.CONFIG;
+import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
+import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
+import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
 
 /**
  * Implements a builder for accumulating configuration information for the app client container and then starting the

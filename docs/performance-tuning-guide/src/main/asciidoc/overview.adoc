@@ -186,9 +186,9 @@ The type of authentication mechanism chosen may require additional
 hardware for the deployment. Typically a directory server executes on a
 separate server, and may also require a backup for replication and high
 availability. Refer to the
-http://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html[Oracle
+https://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html[Oracle
 Java System Directory Server]
-(`http://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html`)
+(`https://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html`)
 documentation for more information on deployment, sizing, and
 availability guidelines.
 

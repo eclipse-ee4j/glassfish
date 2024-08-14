@@ -18,8 +18,6 @@
 package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.glassfish.concurro.spi.TransactionHandle;
-import org.glassfish.concurro.spi.TransactionSetupProvider;
 
 import jakarta.enterprise.concurrent.ManagedTask;
 import jakarta.transaction.InvalidTransactionException;
@@ -29,6 +27,9 @@ import jakarta.transaction.Transaction;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.concurro.spi.TransactionHandle;
+import org.glassfish.concurro.spi.TransactionSetupProvider;
 
 public class TransactionSetupProviderImpl implements TransactionSetupProvider {
 

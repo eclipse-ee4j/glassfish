@@ -17,15 +17,24 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import java.io.File;
-import java.io.IOException;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.*;
+
 import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
+import java.io.File;
+import java.io.IOException;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Bootstraps secure admin on a new instance by downloading the minimum files

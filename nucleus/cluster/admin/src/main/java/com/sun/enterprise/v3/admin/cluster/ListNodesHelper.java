@@ -16,14 +16,15 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import com.sun.enterprise.config.serverbeans.Servers;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Nodes;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.cluster.NodeInfo;
-import java.util.logging.Logger;
-import java.util.List;
+
 import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 
 
 public class ListNodesHelper {

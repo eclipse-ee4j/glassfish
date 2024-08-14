@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.glassfish.grizzly.http.HttpContent;
-import org.glassfish.grizzly.http.util.MimeHeaders;
 import org.glassfish.grizzly.http.HttpResponsePacket;
+import org.glassfish.grizzly.http.util.MimeHeaders;
 import org.glassfish.grizzly.http2.Http2Stream;
 
 /**

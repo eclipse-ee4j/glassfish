@@ -18,13 +18,10 @@
 
 package org.apache.catalina.loader;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static org.apache.catalina.LogFacade.SET_RELOADABLE_PROPERTY_EXCEPTION;
-
 import com.sun.enterprise.loader.ASURLClassLoader;
+
 import jakarta.servlet.ServletContext;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -43,12 +40,14 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.ObjectName;
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
@@ -64,6 +63,11 @@ import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.DirContextURLStreamHandlerFactory;
 import org.apache.naming.resources.Resource;
 import org.glassfish.web.loader.WebappClassLoader;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.LogFacade.SET_RELOADABLE_PROPERTY_EXCEPTION;
 
 /**
  * Classloader implementation which is specialized for handling web applications in the most efficient way, while being

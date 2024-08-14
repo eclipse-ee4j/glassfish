@@ -18,20 +18,8 @@
 
 package org.apache.catalina.core;
 
-import static java.text.MessageFormat.format;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.ContainerEvent.AFTER_UPGRADE_HANDLER_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.BEFORE_UPGRADE_HANDLER_INITIALIZED;
-import static org.apache.catalina.Globals.WRAPPED_REQUEST;
-import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
-import static org.apache.catalina.LogFacade.NO_VALVES_IN_PIPELINE_EXCEPTION;
-import static org.apache.catalina.LogFacade.PIPLINE_NOT_STARTED;
-import static org.apache.catalina.LogFacade.PIPLINE_STARTED;
-import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_REQUIRED_EXCEPTION;
-import static org.apache.catalina.LogFacade.REMOVE_VALVE_EXCEPTION;
-import static org.apache.catalina.LogFacade.SET_BASIC_START_EXCEPTION;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpUpgradeHandler;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -60,8 +48,20 @@ import org.glassfish.web.valve.GlassFishValve;
 import org.glassfish.web.valve.GlassFishValveAdapter;
 import org.glassfish.web.valve.TomcatValveAdapter;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpUpgradeHandler;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.ContainerEvent.AFTER_UPGRADE_HANDLER_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.BEFORE_UPGRADE_HANDLER_INITIALIZED;
+import static org.apache.catalina.Globals.WRAPPED_REQUEST;
+import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
+import static org.apache.catalina.LogFacade.NO_VALVES_IN_PIPELINE_EXCEPTION;
+import static org.apache.catalina.LogFacade.PIPLINE_NOT_STARTED;
+import static org.apache.catalina.LogFacade.PIPLINE_STARTED;
+import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_REQUIRED_EXCEPTION;
+import static org.apache.catalina.LogFacade.REMOVE_VALVE_EXCEPTION;
+import static org.apache.catalina.LogFacade.SET_BASIC_START_EXCEPTION;
 
 /** CR 6411114 (Lifecycle implementation moved to ValveBase)
 import org.apache.tomcat.util.modeler.Registry;

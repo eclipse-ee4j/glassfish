@@ -18,6 +18,8 @@
 
 package org.apache.catalina.authenticator;
 
+import jakarta.servlet.http.Cookie;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.glassfish.grizzly.http.util.ByteChunk;
-
-import jakarta.servlet.http.Cookie;
 
 /**
  * Object that saves the critical information from a request so that form-based authentication can reproduce it once the

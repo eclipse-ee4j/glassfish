@@ -22,13 +22,13 @@
 
 package com.sun.jdo.api.persistence.model.mapping;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import org.netbeans.modules.dbschema.TableElement;
-import org.netbeans.modules.dbschema.SchemaElement;
-
 import com.sun.jdo.api.persistence.model.ModelException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.TableElement;
 
 /**
  *

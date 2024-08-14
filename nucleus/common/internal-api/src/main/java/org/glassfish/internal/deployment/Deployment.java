@@ -17,6 +17,9 @@
 
 package org.glassfish.internal.deployment;
 
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -41,9 +44,6 @@ import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
 
 /**
  * Deployment facility

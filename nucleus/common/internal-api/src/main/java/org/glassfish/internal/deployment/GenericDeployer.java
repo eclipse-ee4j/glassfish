@@ -16,8 +16,10 @@
 
 package org.glassfish.internal.deployment;
 
-import org.glassfish.api.deployment.*;
 import org.glassfish.api.container.Container;
+import org.glassfish.api.deployment.Deployer;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.MetaData;
 import org.jvnet.hk2.annotations.Service;
 
 /**

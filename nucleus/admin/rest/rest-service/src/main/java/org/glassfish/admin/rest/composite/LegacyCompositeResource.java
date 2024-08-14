@@ -16,12 +16,14 @@
 
 package org.glassfish.admin.rest.composite;
 
-import java.net.URI;
 import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
+
+import java.net.URI;
+
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.OptionsCapable;
 import org.glassfish.admin.rest.composite.metadata.DefaultsGenerator;

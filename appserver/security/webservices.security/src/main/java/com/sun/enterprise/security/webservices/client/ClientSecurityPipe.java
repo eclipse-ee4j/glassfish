@@ -17,19 +17,6 @@
 
 package com.sun.enterprise.security.webservices.client;
 
-import static com.sun.enterprise.security.webservices.LogUtils.ERROR_REQUEST_SECURING;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_PIPE;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_TOKEN;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
-import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_SERVICE;
-import static jakarta.security.auth.message.AuthStatus.FAILURE;
-import static jakarta.security.auth.message.AuthStatus.SEND_CONTINUE;
-import static jakarta.security.auth.message.AuthStatus.SEND_SUCCESS;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-
 import com.sun.enterprise.security.ee.authentication.jakarta.callback.ClientContainerCallbackHandler;
 import com.sun.enterprise.security.webservices.LogUtils;
 import com.sun.enterprise.security.webservices.SoapAuthenticationService;
@@ -45,15 +32,31 @@ import com.sun.xml.ws.security.secconv.WSSecureConversationException;
 import com.sun.xml.wss.provider.wsit.PacketMapMessageInfo;
 import com.sun.xml.wss.provider.wsit.PacketMessageInfo;
 import com.sun.xml.wss.provider.wsit.PipeConstants;
+
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.ws.Endpoint;
 import jakarta.xml.ws.WebServiceException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
+import static com.sun.enterprise.security.webservices.LogUtils.ERROR_REQUEST_SECURING;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_PIPE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_TOKEN;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_SERVICE;
+import static jakarta.security.auth.message.AuthStatus.FAILURE;
+import static jakarta.security.auth.message.AuthStatus.SEND_CONTINUE;
+import static jakarta.security.auth.message.AuthStatus.SEND_SUCCESS;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This pipe is used to do client side security for app server

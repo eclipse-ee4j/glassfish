@@ -16,11 +16,15 @@
 
 package com.sun.ejte.ccl.reporter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
-import java.io.*;
 
 //public class SimpleReporterAdapter extends Thread implements Serializable {
 public class SimpleReporterAdapter implements Serializable {

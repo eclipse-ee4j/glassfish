@@ -17,6 +17,7 @@
 package org.glassfish.resources.mail;
 
 import java.util.logging.Level;
+
 import org.glassfish.logging.annotation.LoggerInfo;
 
 /**

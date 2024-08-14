@@ -18,11 +18,11 @@
 package org.apache.catalina.ssi;
 
 
-import org.glassfish.web.util.HtmlEntityEncoder;
-
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.glassfish.web.util.HtmlEntityEncoder;
 /**
  * Implements the Server-side #printenv command
  *

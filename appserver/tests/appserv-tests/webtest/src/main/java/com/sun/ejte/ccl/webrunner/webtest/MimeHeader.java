@@ -16,7 +16,9 @@
 
 package com.sun.ejte.ccl.webrunner.webtest;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 /**
  *

@@ -16,7 +16,9 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 
 import java.sql.ResultSet;

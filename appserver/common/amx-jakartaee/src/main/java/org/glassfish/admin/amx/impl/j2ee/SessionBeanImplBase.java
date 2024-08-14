@@ -16,9 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import org.glassfish.admin.amx.j2ee.SessionBean;
-
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.SessionBean;
 
 public final class SessionBeanImplBase
         extends EJBImplBase {

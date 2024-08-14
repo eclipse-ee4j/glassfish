@@ -17,34 +17,32 @@
 
 package org.glassfish.admingui.plugin;
 
-import org.glassfish.api.admingui.ConsoleProvider;
-
-import org.glassfish.hk2.api.IterableProvider;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.MultiMap;
-import org.jvnet.hk2.config.ConfigParser;
-import org.jvnet.hk2.config.DomDocument;
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.admingui.connector.TOC;
-import org.glassfish.admingui.connector.TOCItem;
+import org.glassfish.admingui.connector.ConsoleConfig;
 import org.glassfish.admingui.connector.Index;
 import org.glassfish.admingui.connector.IndexItem;
 import org.glassfish.admingui.connector.IntegrationPoint;
-import org.glassfish.admingui.connector.ConsoleConfig;
-
-import jakarta.inject.Inject;
-import java.util.Iterator;
+import org.glassfish.admingui.connector.TOC;
+import org.glassfish.admingui.connector.TOCItem;
+import org.glassfish.api.admingui.ConsoleProvider;
+import org.glassfish.hk2.api.IterableProvider;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.component.MultiMap;
+import org.jvnet.hk2.config.ConfigParser;
+import org.jvnet.hk2.config.DomDocument;
 
 /**
  * <p>

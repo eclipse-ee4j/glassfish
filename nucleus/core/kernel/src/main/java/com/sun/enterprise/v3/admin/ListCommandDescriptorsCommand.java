@@ -16,6 +16,10 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.universal.collections.ManifestUtils;
+
+import jakarta.inject.Inject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,10 +36,6 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.universal.collections.ManifestUtils;
-
-import jakarta.inject.Inject;
 
 /**
  * Create data structures that describe the command.

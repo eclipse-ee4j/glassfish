@@ -17,11 +17,10 @@
 
 package org.apache.catalina.connector;
 
-import static java.util.logging.Level.FINE;
-
 import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.channels.InterruptedByTimeoutException;
@@ -29,6 +28,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
@@ -40,6 +40,8 @@ import org.apache.catalina.util.RequestUtil;
 import org.glassfish.common.util.InputValidationUtil;
 import org.glassfish.grizzly.WriteHandler;
 import org.glassfish.grizzly.http.util.ByteChunk;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * The buffer used by Tomcat response. This is a derivative of the Tomcat 3.3 OutputBuffer, with the removal of some of

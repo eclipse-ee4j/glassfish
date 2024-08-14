@@ -16,9 +16,9 @@
 
 package com.sun.gjc.spi;
 
-import java.util.Arrays;
-
 import jakarta.resource.spi.ConnectionRequestInfo;
+
+import java.util.Arrays;
 
 /**
  * ConnectionRequestInfo implementation for Generic JDBC Connector.

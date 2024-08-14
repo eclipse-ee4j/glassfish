@@ -18,11 +18,13 @@ package com.sun.appserv.web.cache.mapping;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import org.glassfish.web.LogFacade;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 
 /** ConstraintField class represents a single Field and constraints on its

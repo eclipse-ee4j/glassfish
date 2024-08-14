@@ -19,11 +19,11 @@ package org.glassfish.admin.cli.resources;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
 
 /**
  * Created with IntelliJ IDEA. User: naman Date: 2/8/12 Time: 4:11 PM To change this template use File | Settings | File

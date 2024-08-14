@@ -17,6 +17,15 @@
 
 package com.sun.enterprise.connectors;
 
+import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
+import com.sun.enterprise.connectors.module.ConnectorApplication;
+import com.sun.enterprise.connectors.util.SecurityMapUtils;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.validation.Validator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,15 +42,6 @@ import java.util.logging.Logger;
 import org.glassfish.connectors.config.ResourceAdapterConfig;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
-
-import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
-import com.sun.enterprise.connectors.module.ConnectorApplication;
-import com.sun.enterprise.connectors.util.SecurityMapUtils;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.validation.Validator;
 
 
 /**

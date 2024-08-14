@@ -21,7 +21,12 @@ import java.util.List;
 
 import org.codehaus.jettison.json.JSONArray;
 
-import static org.glassfish.admin.rest.testing.Common.*;
+import static org.glassfish.admin.rest.testing.Common.booleanVal;
+import static org.glassfish.admin.rest.testing.Common.doubleVal;
+import static org.glassfish.admin.rest.testing.Common.intVal;
+import static org.glassfish.admin.rest.testing.Common.longVal;
+import static org.glassfish.admin.rest.testing.Common.nilVal;
+import static org.glassfish.admin.rest.testing.Common.stringVal;
 
 public class ArrayValue extends Value {
     private boolean ignoreExtra;

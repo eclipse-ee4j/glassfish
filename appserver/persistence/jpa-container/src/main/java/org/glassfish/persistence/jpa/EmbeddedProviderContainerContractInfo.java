@@ -16,9 +16,9 @@
 
 package org.glassfish.persistence.jpa;
 
-import org.glassfish.api.deployment.DeploymentContext;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+
+import org.glassfish.api.deployment.DeploymentContext;
 
 /**
  * Implementation of ProviderContainerContractInfo while running inside embedded

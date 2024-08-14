@@ -17,14 +17,11 @@
 
 package org.glassfish.weld;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import jakarta.el.ELResolver;
+import jakarta.el.ExpressionFactory;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.jsp.JspApplicationContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -37,11 +34,14 @@ import org.glassfish.wasp.runtime.JspApplicationContextImpl;
 import org.jboss.weld.module.web.el.WeldELContextListener;
 import org.junit.jupiter.api.Test;
 
-import jakarta.el.ELResolver;
-import jakarta.el.ExpressionFactory;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.jsp.JspApplicationContext;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>

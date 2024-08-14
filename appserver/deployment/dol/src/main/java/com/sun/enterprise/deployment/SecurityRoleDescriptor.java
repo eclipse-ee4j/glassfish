@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.web.SecurityRole;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.security.common.Role;
-
-import com.sun.enterprise.deployment.web.SecurityRole;
 
 /**
  * I am an abstract role..

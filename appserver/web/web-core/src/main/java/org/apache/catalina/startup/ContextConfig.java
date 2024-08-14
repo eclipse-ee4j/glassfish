@@ -17,9 +17,45 @@
 
 package org.apache.catalina.startup;
 
-import org.apache.catalina.*;
-import org.apache.catalina.authenticator.*;
-import org.apache.catalina.core.*;
+import jakarta.servlet.ServletContext;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.catalina.Authenticator;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Globals;
+import org.apache.catalina.Host;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Pipeline;
+import org.apache.catalina.Realm;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.authenticator.BasicAuthenticator;
+import org.apache.catalina.authenticator.DigestAuthenticator;
+import org.apache.catalina.authenticator.FormAuthenticator;
+import org.apache.catalina.authenticator.NonLoginAuthenticator;
+import org.apache.catalina.authenticator.SSLAuthenticator;
+import org.apache.catalina.core.ContainerBase;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.core.StandardEngine;
+import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.deploy.FilterDef;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.deploy.SecurityConstraint;
@@ -30,14 +66,6 @@ import org.glassfish.web.valve.GlassFishValve;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
-
-import jakarta.servlet.ServletContext;
-import java.io.*;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.logging.*;
-import java.util.logging.Logger;
 
 /**
  * Startup event listener for a <b>Context</b> that configures the properties

@@ -22,24 +22,27 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.*;
-
-import antlr.TokenBuffer;
-import antlr.ANTLRException;
-
-import org.glassfish.persistence.common.I18NHelper;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOQueryException;
 import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.support.sqlstore.ExtentCollection;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
-import com.sun.jdo.spi.persistence.support.sqlstore.ExtentCollection;
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.TypeTable;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.TypeTable;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+
+import antlr.ANTLRException;
+import antlr.TokenBuffer;
 
 /**
  *

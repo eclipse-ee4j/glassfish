@@ -18,9 +18,11 @@ package org.glassfish.admin.rest.utils;
 
 import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.v3.admin.JobManagerService;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandState;

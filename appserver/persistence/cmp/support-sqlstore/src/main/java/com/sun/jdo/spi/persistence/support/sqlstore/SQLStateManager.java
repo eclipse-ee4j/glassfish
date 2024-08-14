@@ -22,27 +22,41 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
-import com.sun.jdo.api.persistence.support.*;
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOObjectNotFoundException;
+import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
+import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
-import com.sun.jdo.spi.persistence.support.sqlstore.model.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.QueryValueFetcher;
 import com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTimestamp;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.UpdateObjectDescImpl;
-import com.sun.jdo.spi.persistence.support.sqlstore.state.LifeCycleState;
-import com.sun.jdo.spi.persistence.support.sqlstore.state.PersistentNonTransactional;
-import com.sun.jdo.spi.persistence.support.sqlstore.state.PersistentClean;
 import com.sun.jdo.spi.persistence.support.sqlstore.state.Hollow;
+import com.sun.jdo.spi.persistence.support.sqlstore.state.LifeCycleState;
+import com.sun.jdo.spi.persistence.support.sqlstore.state.PersistentClean;
+import com.sun.jdo.spi.persistence.support.sqlstore.state.PersistentNonTransactional;
 import com.sun.jdo.spi.persistence.utility.NullSemaphore;
 import com.sun.jdo.spi.persistence.utility.Semaphore;
 import com.sun.jdo.spi.persistence.utility.SemaphoreImpl;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 
 /**

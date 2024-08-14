@@ -19,12 +19,12 @@ package org.glassfish.admin.amx.base;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectName;
 
-import org.glassfish.admin.amx.annotation.ManagedOperation;
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
+import org.glassfish.admin.amx.annotation.ManagedOperation;
+import org.glassfish.admin.amx.core.AMXMBeanMetadata;
+import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-import org.glassfish.admin.amx.core.AMXProxy;
-import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 /**
 Interface for a sample MBean , used as target for sample and test code.

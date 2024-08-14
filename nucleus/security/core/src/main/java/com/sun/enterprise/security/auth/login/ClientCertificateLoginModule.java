@@ -17,7 +17,11 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
+import com.sun.enterprise.security.integration.AppClientSSL;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
@@ -37,11 +41,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.common.UserPrincipal;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-import com.sun.enterprise.security.integration.AppClientSSL;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static java.util.logging.Level.FINE;
 
 /**
  * <p>

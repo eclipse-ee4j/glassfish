@@ -16,18 +16,18 @@
 
 package com.sun.enterprise.admin.cli.schemadoc;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Comparator;
-import java.util.List;
 
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.Attribute;
 import org.glassfish.api.admin.config.PropertyDesc;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Dom;
 
 /**
  * Contains metadata information about a class

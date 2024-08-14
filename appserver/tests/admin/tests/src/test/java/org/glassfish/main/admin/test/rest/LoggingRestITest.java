@@ -16,10 +16,10 @@
 
 package org.glassfish.main.admin.test.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.util.Arrays;
 import java.util.Map;
-
-import jakarta.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;

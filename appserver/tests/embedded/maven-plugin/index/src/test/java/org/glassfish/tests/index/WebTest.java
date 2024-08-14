@@ -17,16 +17,17 @@
 
 package org.glassfish.tests.index;
 
-import static org.hamcrest.CoreMatchers.is;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.http.HttpClient;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.is;
 
 public class WebTest {
 

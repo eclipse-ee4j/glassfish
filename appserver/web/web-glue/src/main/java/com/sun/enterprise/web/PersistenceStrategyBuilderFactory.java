@@ -18,12 +18,13 @@ package com.sun.enterprise.web;
 
 
 import com.sun.enterprise.web.session.PersistenceType;
-import org.apache.catalina.Context;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.web.LogFacade;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Context;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.web.LogFacade;
 
 /**
   * @author Rajiv Mordani

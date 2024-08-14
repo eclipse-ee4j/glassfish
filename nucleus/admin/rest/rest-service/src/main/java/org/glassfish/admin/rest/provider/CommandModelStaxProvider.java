@@ -17,13 +17,17 @@
 package org.glassfish.admin.rest.provider;
 
 import com.sun.enterprise.util.StringUtils;
-import java.io.File;
-import java.util.Properties;
+
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
+
+import java.io.File;
+import java.util.Properties;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 

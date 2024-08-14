@@ -30,21 +30,29 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.flashlight.FlashlightLoggerInfo;
-import static org.glassfish.flashlight.FlashlightLoggerInfo.*;
-import static org.objectweb.asm.Opcodes.ASM9;
-
 import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.glassfish.flashlight.provider.ProbeRegistry;
-
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
+
+import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_ATTACH_API;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_ATTACH_GET;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.REGISTRATION_ERROR;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.RETRANSFORMATION_ERROR;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.WRITE_ERROR;
+import static org.objectweb.asm.Opcodes.ASM9;
 
 /**
  * July 2012 Byron Nevins says: We no longer allow outsiders to create

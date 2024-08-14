@@ -17,6 +17,7 @@
 package com.sun.enterprise.util;
 
 import java.lang.annotation.Annotation;
+
 import org.glassfish.api.admin.ManagedJob;
 
 /**  Place for handy annotation utils.

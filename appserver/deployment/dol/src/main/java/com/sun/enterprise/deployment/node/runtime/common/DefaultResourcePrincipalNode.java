@@ -20,9 +20,10 @@ package com.sun.enterprise.deployment.node.runtime.common;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.runtime.common.DefaultResourcePrincipal;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This node handles all the role mapping information

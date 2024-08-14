@@ -22,19 +22,42 @@
 
 package com.sun.jdo.api.persistence.model.util;
 
-import java.util.*;
-import java.lang.reflect.Modifier;
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingReferenceKeyElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingTableElement;
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
-import org.netbeans.modules.dbschema.*;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.netbeans.modules.dbschema.ColumnElement;
+import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.DBIdentifier;
+import org.netbeans.modules.dbschema.DBMemberElement;
+import org.netbeans.modules.dbschema.ForeignKeyElement;
+import org.netbeans.modules.dbschema.KeyElement;
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.TableElement;
+import org.netbeans.modules.dbschema.UniqueKeyElement;
 import org.netbeans.modules.dbschema.util.NameUtil;
 import org.netbeans.modules.dbschema.util.SQLTypeUtil;
-
-import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.jdo.*;
-import com.sun.jdo.api.persistence.model.mapping.*;
-import com.sun.jdo.spi.persistence.utility.*;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
 /**
  *

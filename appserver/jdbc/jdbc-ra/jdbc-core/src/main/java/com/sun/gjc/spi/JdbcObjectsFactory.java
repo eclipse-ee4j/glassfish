@@ -17,8 +17,12 @@
 
 package com.sun.gjc.spi;
 
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
+import com.sun.gjc.spi.base.ConnectionHolder;
+import com.sun.gjc.util.SQLTraceDelegator;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.ConnectionManager;
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -31,12 +35,8 @@ import javax.sql.DataSource;
 
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
-import com.sun.gjc.spi.base.ConnectionHolder;
-import com.sun.gjc.util.SQLTraceDelegator;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.spi.ConnectionManager;
-import jakarta.resource.spi.ConnectionRequestInfo;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Factory to create JDBC objects

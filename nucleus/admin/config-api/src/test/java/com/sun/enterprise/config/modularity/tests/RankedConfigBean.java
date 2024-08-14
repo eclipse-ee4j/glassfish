@@ -18,6 +18,7 @@ package com.sun.enterprise.config.modularity.tests;
 
 import com.sun.enterprise.config.modularity.RankedConfigBeanProxy;
 import com.sun.enterprise.config.serverbeans.DomainExtension;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 

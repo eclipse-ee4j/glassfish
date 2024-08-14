@@ -17,6 +17,7 @@
 package org.glassfish.internal.api;
 
 import javax.security.auth.Subject;
+
 import org.jvnet.hk2.annotations.Service;
 
 /**

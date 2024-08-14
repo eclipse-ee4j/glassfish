@@ -16,19 +16,20 @@
 
 package org.glassfish.webservices;
 
-import java.util.Set;
-import java.util.Map;
+import com.sun.xml.ws.api.message.Message;
+import com.sun.xml.ws.api.message.Messages;
+import com.sun.xml.ws.api.message.Packet;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-import jakarta.xml.bind.JAXBContext;
-import com.sun.xml.ws.api.message.Messages;
-import com.sun.xml.ws.api.message.Message;
-import com.sun.xml.ws.api.message.Packet;
-
-import jakarta.xml.soap.SOAPMessage;
 
 /**
  * Implementation of SOAPMessageContext

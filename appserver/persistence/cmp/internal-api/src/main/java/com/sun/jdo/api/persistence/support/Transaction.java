@@ -21,7 +21,7 @@
  */
 
 package com.sun.jdo.api.persistence.support;
-import jakarta.transaction.*;
+import jakarta.transaction.Synchronization;
 
 /** The JDO Transaction interface is a sub-interface of the PersistenceManager
  * that deals with options and completion of transactions under user control.

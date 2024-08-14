@@ -17,6 +17,12 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.util.Map;
 
@@ -30,12 +36,6 @@ import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * This is the Server Context object.

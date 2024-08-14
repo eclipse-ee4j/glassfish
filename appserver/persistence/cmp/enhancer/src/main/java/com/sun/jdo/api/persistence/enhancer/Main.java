@@ -16,60 +16,35 @@
 
 package com.sun.jdo.api.persistence.enhancer;
 
-//@olsen:
-//import java.io.*;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.PrintWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.StringTokenizer;
-
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-import java.net.URL;
-
-import com.sun.jdo.api.persistence.model.Model;
-
-//import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
-//import com.sun.jdo.api.persistence.enhancer.util.ZipFileRegistry;
-//import com.sun.jdo.api.persistence.enhancer.util.ClassPath;
-//import com.sun.jdo.api.persistence.enhancer.util.FilePath;
-
-//@olsen: added support for timing statistics
-import com.sun.jdo.api.persistence.enhancer.util.Support;
-
-//import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
-
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataModelImpl;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataPropertyImpl;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataTimer;
+import com.sun.jdo.api.persistence.enhancer.util.Support;
+import com.sun.jdo.api.persistence.model.Model;
 
-//import com.sun.jdo.api.persistence.enhancer.impl.ClassControl;
-//import com.sun.jdo.api.persistence.enhancer.impl.Environment;
-
-
-//import org.openidex.jarpackager.ArchiveEntry; //@yury Added the capability to create ClassFileSources out of ArchiveEntries
-
-//@olsen: disabled feature
-/*
-import com.sun.jdo.api.persistence.enhancer.impl.FieldMap;
-*/
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 //@lars: moved functionality into ByteCodeEnhancerHelper
 //@lars: design improvements

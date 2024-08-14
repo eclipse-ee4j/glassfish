@@ -22,12 +22,28 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 
-import com.sun.jdo.api.persistence.support.*;
+import com.sun.jdo.api.persistence.support.JDODataStoreException;
+import com.sun.jdo.api.persistence.support.JDODuplicateObjectIdException;
+import com.sun.jdo.api.persistence.support.JDOException;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOFatalUserException;
+import com.sun.jdo.api.persistence.support.JDOHelper;
+import com.sun.jdo.api.persistence.support.JDOUserException;
+import com.sun.jdo.api.persistence.support.Query;
 import com.sun.jdo.api.persistence.support.Transaction;
-import com.sun.jdo.spi.persistence.support.sqlstore.*;
+import com.sun.jdo.spi.persistence.support.sqlstore.ExtentCollection;
+import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceConfig;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManagerFactory;
+import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceStore;
+import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
+import com.sun.jdo.spi.persistence.support.sqlstore.RuntimeVersion;
+import com.sun.jdo.spi.persistence.support.sqlstore.SCOCollection;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.ValueFetcher;
+import com.sun.jdo.spi.persistence.support.sqlstore.VersionConsistencyCache;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.QueryImpl;
 import com.sun.jdo.spi.persistence.utility.NullSemaphore;
@@ -35,13 +51,26 @@ import com.sun.jdo.spi.persistence.utility.Semaphore;
 import com.sun.jdo.spi.persistence.utility.SemaphoreImpl;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
-import org.glassfish.persistence.common.I18NHelper;
 import jakarta.transaction.Status;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 public class PersistenceManagerImpl implements PersistenceManager {
     /**

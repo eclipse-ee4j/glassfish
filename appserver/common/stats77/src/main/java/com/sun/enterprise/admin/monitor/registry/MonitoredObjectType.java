@@ -15,7 +15,7 @@
  */
 
 package com.sun.enterprise.admin.monitor.registry;
-//import com.sun.enterprise.config.serverbeans.*;
+
 import java.util.HashMap;
 
 /**

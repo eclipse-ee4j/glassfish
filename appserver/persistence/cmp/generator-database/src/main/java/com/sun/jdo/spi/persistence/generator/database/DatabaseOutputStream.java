@@ -23,12 +23,12 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 
 /*

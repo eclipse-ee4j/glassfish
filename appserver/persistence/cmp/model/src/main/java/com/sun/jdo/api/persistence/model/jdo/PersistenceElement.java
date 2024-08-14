@@ -22,12 +22,13 @@
 
 package com.sun.jdo.api.persistence.model.jdo;
 
-import java.util.ResourceBundle;
+import com.sun.jdo.api.persistence.model.ModelException;
+
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.text.Collator;
+import java.util.ResourceBundle;
 
-import com.sun.jdo.api.persistence.model.ModelException;
 import org.glassfish.persistence.common.I18NHelper;
 
 /**

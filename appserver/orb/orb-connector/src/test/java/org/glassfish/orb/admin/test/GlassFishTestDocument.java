@@ -17,12 +17,13 @@
 
 package org.glassfish.orb.admin.test;
 
-import org.jvnet.hk2.config.DomDocument;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.ConfigModel;
+import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.hk2.api.ServiceLocator;
-import javax.xml.stream.XMLStreamReader;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
 
 /**
  *

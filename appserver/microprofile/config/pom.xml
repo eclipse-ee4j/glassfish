@@ -95,7 +95,7 @@
                             groupId=io.helidon.common;artifactId=helidon-common-media-type,
                             groupId=io.helidon.common;artifactId=helidon-common-service-loader,
                             groupId=io.helidon.common;artifactId=helidon-common-types,
-                            
+
                             groupId=io.helidon.config;artifactId=helidon-config,
                             groupId=io.helidon.config;artifactId=helidon-config-mp,
                             groupId=io.helidon.config;artifactId=helidon-config-yaml,

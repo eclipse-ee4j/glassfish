@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.deployment.io;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.node.ApplicationNode;
 import com.sun.enterprise.deployment.node.RootXMLNode;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class is responsible for handling J2EE applications

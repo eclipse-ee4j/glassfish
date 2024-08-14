@@ -17,11 +17,16 @@
 package org.glassfish.admin.amx.impl.j2ee;
 
 import java.util.Set;
-import org.glassfish.admin.amx.j2ee.J2EEApplication;
-import static org.glassfish.admin.amx.j2ee.J2EETypes.*;
 
 import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.j2ee.J2EEApplication;
 import org.glassfish.admin.amx.util.SetUtil;
+
+import static org.glassfish.admin.amx.j2ee.J2EETypes.APP_CLIENT_MODULE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.EJB_MODULE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.RESOURCE_ADAPTER_MODULE;
+import static org.glassfish.admin.amx.j2ee.J2EETypes.WEB_MODULE;
 
 public final class J2EEApplicationImpl
         extends J2EEDeployedObjectImplBase {

@@ -36,7 +36,9 @@ import java.security.Policy;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.Vector;
+
 import javax.swing.SwingUtilities;
+
 import org.glassfish.appclient.client.acc.AppClientContainer;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 

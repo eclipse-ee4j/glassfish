@@ -16,6 +16,12 @@
 
 package com.sun.connector.cciblackbox;
 
+import jakarta.resource.ResourceException;
+import jakarta.resource.cci.IndexedRecord;
+import jakarta.resource.cci.Interaction;
+import jakarta.resource.cci.InteractionSpec;
+import jakarta.resource.cci.ResourceWarning;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.CallableStatement;
@@ -25,12 +31,6 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.resource.ResourceException;
-import jakarta.resource.cci.IndexedRecord;
-import jakarta.resource.cci.Interaction;
-import jakarta.resource.cci.InteractionSpec;
-import jakarta.resource.cci.ResourceWarning;
 
 /**
  * This implementation class enables a component to execute EIS functions.

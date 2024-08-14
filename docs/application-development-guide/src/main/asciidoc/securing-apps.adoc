@@ -2,13 +2,13 @@ type=page
 status=published
 title=Securing Applications
 next=webservices.html
-prev=part-apps-and-app-comps.html
+prev=glassfish-api.html
 ~~~~~~
 
 = Securing Applications
 
 [[securing-applications]]
-== 4 Securing Applications
+== Securing Applications
 
 This chapter describes how to write secure Jakarta EE applications, which
 contain components that perform user authentication and access

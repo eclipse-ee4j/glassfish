@@ -17,9 +17,9 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Deployment Information for connection-definition

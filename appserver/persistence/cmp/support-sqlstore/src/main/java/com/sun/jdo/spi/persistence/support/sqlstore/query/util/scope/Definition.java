@@ -22,11 +22,11 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.scope;
 
+import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
+
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
-
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
 
 /**
  * Super class of all possible identifier definitions

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,8 +40,7 @@ public class TestPCF {
         System.out.println("expect AccessControlException: " + expectACException);
         System.out.println("expected Exception: " + expectedException);
 
-        description = testSuite + "-" + expectACException + "-" +
-            expectedException + " without SecurityManager";
+        description = testSuite + "-" + expectACException + "-" + expectedException;
         try {
             PolicyConfigurationFactory f =
                 PolicyConfigurationFactory.getPolicyConfigurationFactory();
@@ -49,33 +49,6 @@ public class TestPCF {
             //It should be one of the following:
             //    java.lang.ClassNotFoundException
             //    java.lang.ClassCastException
-            //    jakarta.security.jacc.PolicyContextException
-            if (ex.getClass().getName().equals(expectedException)) {
-                stat.addStatus(description, stat.PASS);
-            } else {
-                ex.printStackTrace();
-                stat.addStatus(description, stat.FAIL);
-            }
-        }
-
-        System.out.println( "--START SECURITY MANAGER -->>");
-        System.setSecurityManager(new SecurityManager());
-
-        description = testSuite + "-" + expectACException + "-" +
-            expectedException + " with SecurityManager";
-        try {
-            PolicyConfigurationFactory f =
-                PolicyConfigurationFactory.getPolicyConfigurationFactory();
-            stat.addStatus(description, stat.PASS);
-        } catch(AccessControlException ace) {
-            if (!expectACException) {
-                ace.printStackTrace();
-            }
-            stat.addStatus(description,
-                (expectACException) ? stat.PASS : stat.FAIL);
-        } catch(Exception ex) {
-            //It should be one of the following:
-            //    java.lang.ClassNotFoundException
             //    jakarta.security.jacc.PolicyContextException
             if (ex.getClass().getName().equals(expectedException)) {
                 stat.addStatus(description, stat.PASS);

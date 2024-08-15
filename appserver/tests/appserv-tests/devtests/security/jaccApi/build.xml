@@ -68,22 +68,11 @@
     <target name="run-pcftests" depends="init-common">
         <property name="ISPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=com.sun.s1asdev.security.jaccapi.DummyPolicyConfigurationFactory"/>
         <property name="NOTPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=jakarta.security.jacc.PolicyContextException"/>
-        <property name="PFL" value="-Djava.security.policy=${basedir}/config/java.policy"/>
-        <property name="PFL2" value="-Djava.security.policy=${basedir}/config/java.policy2"/>
-
-        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
-            classpath="${s1astest.classpath}">
-            <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
-            <jvmarg value="${PFL2}"/>
-            <arg value="true"/>
-            <arg value="java.lang.ClassNotFoundException"/>
-        </java>
 
         <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${NOTPCF}"/>
-            <jvmarg value="${PFL2}"/>
             <arg value="true"/>
             <arg value="java.lang.ClassCastException"/>
         </java>
@@ -92,25 +81,6 @@
             classpath="${s1astest.classpath}">
             <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
             <jvmarg value="${ISPCF}"/>
-            <jvmarg value="${PFL2}"/>
-            <arg value="true"/>
-            <arg value="jakarta.security.jacc.PolicyContextException"/>
-        </java>
-
-        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
-            classpath="${s1astest.classpath}">
-            <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
-            <jvmarg value="${NOTPCF}"/>
-            <jvmarg value="${PFL}"/>
-            <arg value="false"/>
-            <arg value="java.lang.ClassCastException"/>
-        </java>
-
-        <java classname="jakarta.security.jacc.TestPCF" fork="yes"
-            classpath="${s1astest.classpath}">
-            <jvmarg value="-DAPS_HOME=${env.APS_HOME}"/>
-            <jvmarg value="${ISPCF}"/>
-            <jvmarg value="${PFL}"/>
             <arg value="false"/>
         </java>
     </target>

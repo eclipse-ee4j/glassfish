@@ -8,7 +8,7 @@ prev=connectors.html
 = Developing Lifecycle Listeners
 
 [[developing-lifecycle-listeners]]
-== 12 Developing Lifecycle Listeners
+== Developing Lifecycle Listeners
 
 Lifecycle listener modules provide a means of running short or long
 duration Java-based tasks within the {productName}
@@ -26,7 +26,7 @@ interface instead is recommended.
 
 
 All lifecycle module classes and interfaces are in the
-as-install``/modules/``glassfish-api.jar`` file.
+`as-install/modules/glassfish-api.jar` file.
 
 For Javadoc tool pages relevant to lifecycle modules, see the
 `com.sun.appserv.server` package.

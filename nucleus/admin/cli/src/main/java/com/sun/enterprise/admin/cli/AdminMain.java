@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,11 +22,11 @@ import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.JDK;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.lang.Runtime.Version;
 import java.net.ConnectException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -215,10 +215,9 @@ public class AdminMain {
     }
 
     protected int doMain(String[] args) {
-        int minor = JDK.getMinor();
-        int major = JDK.getMajor();
-        if (major < 11) {
-            System.err.println(strings.get("OldJdk", major, minor));
+        Version version = Runtime.version();
+        if (version.feature() < 21) {
+            System.err.println(strings.get("OldJdk", 21, version));
             return ERROR;
         }
 

@@ -1,0 +1,74 @@
+type=page
+status=published
+title=API for development
+next=securing-apps.html
+prev=part-apps-and-app-comps.html
+~~~~~~
+
+= API for development
+
+[[api-for-dev]]
+== API for development
+
+{productName} provides several APIs to build applications and components:
+
+* https://jakarta.ee[Jakarta EE API] - Platform or Web profile, depends on the {productName} distribution
+* https://microprofile.io[MicroProfile API] - selected specifications, only avaiable in {productName} Full
+* GlassFish API - to access other functionality provided by {productName}
+
+GlassFish API is composed of a few sets of APIs:
+
+* GlassFish API
+* GlassFish EE API
+* Simple GlassFish API
+
+[[glassfish-api]]
+### GlassFish API
+
+Most of the functionality specific to {productName} is available in the GlassFish API. To compile applications or components, add the `glassfish-api.jar` to the compile classpath. You may also need `scattered-archive-api.jar`.
+
+The `glassfish-api.jar` is located in the {productName} installation in as-install``/modules/glassfish-api.jar``.
+
+In Maven project, you can add it as the following dependency:
+
+```
+<dependency>
+    <groupId>org.glassfish.main.common</groupId>
+    <artifactId>glassfish-api</artifactId>
+</dependency>
+```
+
+This will already add `scattered-archive-api.jar` as a transitive dependency.
+
+[[glassfish-ee-api]]
+### GlassFish EE API
+
+GlassFish EE API provides functionality related to Jakarta EE. To compile applications or components, add the `glassfish-ee-api.jar` to the compile classpath.
+
+The `glassfish-ee-api.jar` is located in the {productName} installation in as-install``/modules/glassfish-ee-api.jar``.
+
+In Maven project, you can add it as the following dependency:
+
+```
+<dependency>
+    <groupId>org.glassfish.main.common</groupId>
+    <artifactId>glassfish-ee-api</artifactId>
+</dependency>
+```
+
+[[simple-glassfish-api]]
+### Simple GlassFish API
+
+Simple GlassFish API provides basic functionality to deploy applications and run admin commands. Mostly to use embedded {productName} programmatically. To compile applications or components, add the `simple-glassfish-api.jar` to the compile classpath.
+
+The `simple-glassfish-api.jar` is located in the {productName} installation in as-install``/modules/simple-glassfish-api.jar``.
+
+In Maven project, you can add it as the following dependency:
+
+```
+<dependency>
+    <groupId>org.glassfish.main.common</groupId>
+    <artifactId>simple-glassfish-api</artifactId>
+</dependency>
+```
+

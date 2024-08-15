@@ -8,7 +8,7 @@ prev=webapps.html
 = Using Enterprise JavaBeans Technology
 
 [[using-enterprise-javabeans-technology]]
-== 8 Using Enterprise JavaBeans Technology
+== Using Enterprise JavaBeans Technology
 
 This chapter describes how Enterprise JavaBeans ( EJB) technology is
 supported in the {productName}.

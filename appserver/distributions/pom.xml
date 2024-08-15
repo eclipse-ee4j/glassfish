@@ -58,15 +58,6 @@
         <module>glassfish-common</module>
     </modules>
 
-    <profiles>
-        <profile>
-            <id>docker</id>
-            <modules>
-                <module>docker</module>
-            </modules>
-        </profile>
-    </profiles>
-
     <properties>
         <findbugs.skip>true</findbugs.skip>
         <stage.dir.name>stage</stage.dir.name>

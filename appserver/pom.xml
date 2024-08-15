@@ -37,7 +37,6 @@
 
     <modules>
         <module>common</module>
-        <module>ldapbp</module>
         <module>libpam4j</module>
         <module>ha</module>
         <module>deployment</module>
@@ -54,7 +53,6 @@
         <module>persistence</module>
         <module>concurrent</module>
         <module>batch</module>
-        <module>microprofile</module>
         <module>extras</module>
         <module>admingui</module>
         <module>extras/embedded/shell</module>
@@ -68,6 +66,7 @@
         <module>webservices</module>
         <module>orb</module>
         <module>appclient</module>
+        <module>microprofile</module>
         <module>itest-tools</module>
         <module>ant-tasks</module>
     </modules>

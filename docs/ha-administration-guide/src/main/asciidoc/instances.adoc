@@ -1649,7 +1649,7 @@ without a change to the `config/domain.xml` file:
 1. Change the last modified time of the `config/domain.xml` file. +
 Exactly how to change the last modified time depends on the operating
 system. For example, on UNIX and Linux systems, you can use the
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)] command.
+https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)] command.
 
 2. Resynchronize each instance in the domain with the DAS. +
 For instructions, see xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an Instance and the DAS Online].
@@ -1657,7 +1657,7 @@ For instructions, see xref:#to-resynchronize-an-instance-and-the-das-online[To R
 See Also
 
 * xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an Instance and the DAS Online]
-* http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)]
+* https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)]
 
 [[to-resynchronize-additional-configuration-files]]
 

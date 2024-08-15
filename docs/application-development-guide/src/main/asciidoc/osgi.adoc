@@ -8,7 +8,7 @@ prev=lifecycle-listeners.html
 = Developing OSGi-enabled Jakarta EE Applications
 
 [[developing-osgi-enabled-java-ee-applications]]
-== 13 Developing OSGi-enabled Jakarta EE Applications
+== Developing OSGi-enabled Jakarta EE Applications
 
 This chapter describes the features and interfaces that {productName}
 provides to develop OSGi-enabled enterprise applications. This chapter

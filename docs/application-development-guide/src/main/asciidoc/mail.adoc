@@ -7,7 +7,7 @@ prev=jms.html
 = Using the Jakarta Mail API
 
 [[using-the-jakarta-mail-api]]
-== 18 Using the Jakarta Mail API
+== Using the Jakarta Mail API
 
 This chapter describes how to use the Jakarta Mail API, which provides a set
 of abstract classes defining objects that comprise a mail system.

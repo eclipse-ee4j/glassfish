@@ -17,17 +17,17 @@
 
 package com.sun.ejb.containers.interceptors;
 
-import static com.sun.ejb.containers.InvocationHandlerUtil.invokeJavaObjectMethod;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
+import com.sun.enterprise.container.common.spi.InterceptorInvoker;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.sun.enterprise.container.common.spi.InterceptorInvoker;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
+import static com.sun.ejb.containers.InvocationHandlerUtil.invokeJavaObjectMethod;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
 
 /**
  *

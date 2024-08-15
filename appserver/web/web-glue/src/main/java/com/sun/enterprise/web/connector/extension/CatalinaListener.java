@@ -16,7 +16,11 @@
 
 package com.sun.enterprise.web.connector.extension;
 
-import org.apache.catalina.*;
+import org.apache.catalina.Container;
+import org.apache.catalina.ContainerEvent;
+import org.apache.catalina.ContainerListener;
+import org.apache.catalina.Context;
+import org.apache.catalina.Host;
 
 /**
  * Listener used to receive events from Catalina when a <code>Context</code>

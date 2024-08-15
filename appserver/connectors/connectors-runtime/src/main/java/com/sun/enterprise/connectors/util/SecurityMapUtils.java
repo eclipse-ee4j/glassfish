@@ -17,17 +17,17 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
+import com.sun.enterprise.connectors.authentication.EisBackendPrincipal;
+import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.glassfish.connectors.config.BackendPrincipal;
 import org.glassfish.connectors.config.SecurityMap;
-
-import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
-import com.sun.enterprise.connectors.authentication.EisBackendPrincipal;
-import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
-import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
 /**
  * This is class performs the task of adding/deleting and updating the

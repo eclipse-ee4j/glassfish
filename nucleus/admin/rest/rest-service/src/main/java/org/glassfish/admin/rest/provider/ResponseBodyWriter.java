@@ -16,9 +16,11 @@
 
 package org.glassfish.admin.rest.provider;
 
-import java.util.logging.Level;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.ext.Provider;
+
+import java.util.logging.Level;
+
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestLogging;

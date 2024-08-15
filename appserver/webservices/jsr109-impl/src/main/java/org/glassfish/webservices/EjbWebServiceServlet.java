@@ -17,14 +17,13 @@
 
 package org.glassfish.webservices;
 
-import static com.sun.enterprise.deployment.WebServiceEndpoint.PUBLISHING_SUBCONTEXT;
-import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-import static jakarta.xml.ws.http.HTTPBinding.HTTP_BINDING;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.webservices.LogUtils.AUTH_FAILED;
-import static org.glassfish.webservices.LogUtils.EXCEPTION_THROWN;
-import static org.glassfish.webservices.LogUtils.INVALID_REQUEST_SCHEME;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,13 +38,14 @@ import org.glassfish.webservices.monitoring.Endpoint;
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import org.glassfish.webservices.monitoring.WebServiceTesterServlet;
 
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static com.sun.enterprise.deployment.WebServiceEndpoint.PUBLISHING_SUBCONTEXT;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static jakarta.xml.ws.http.HTTPBinding.HTTP_BINDING;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.webservices.LogUtils.AUTH_FAILED;
+import static org.glassfish.webservices.LogUtils.EXCEPTION_THROWN;
+import static org.glassfish.webservices.LogUtils.INVALID_REQUEST_SCHEME;
 
 /**
  * Servlet responsible for invoking EJB webservice endpoint.

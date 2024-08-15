@@ -16,9 +16,10 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
+import com.sun.enterprise.deployment.MethodDescriptor;
+
 import java.util.concurrent.TimeUnit;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
 import org.glassfish.deployment.common.Descriptor;
 
 public class ConcurrentMethodDescriptor extends Descriptor {

@@ -17,13 +17,6 @@
 
 package com.sun.enterprise.transaction;
 
-import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
-import static jakarta.transaction.Status.STATUS_NO_TRANSACTION;
-import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
-
-import org.jvnet.hk2.annotations.ContractsProvided;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.util.i18n.StringManager;
 
 import jakarta.inject.Inject;
@@ -32,6 +25,13 @@ import jakarta.transaction.Synchronization;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.TransactionSynchronizationRegistry;
+
+import org.jvnet.hk2.annotations.ContractsProvided;
+import org.jvnet.hk2.annotations.Service;
+
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Status.STATUS_NO_TRANSACTION;
+import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
 
 @Service
 @ContractsProvided({ TransactionSynchronizationRegistryImpl.class, TransactionSynchronizationRegistry.class }) // Needed because we can't change spec provided class

@@ -16,10 +16,10 @@
 
 package org.glassfish.webservices;
 
-import com.sun.xml.ws.api.server.Container;
-import com.sun.xml.ws.api.client.ServiceInterceptor;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.xml.ws.api.client.ServiceInterceptor;
+import com.sun.xml.ws.api.server.Container;
+
 import org.glassfish.internal.api.Globals;
 
 public class WSClientContainer extends Container {

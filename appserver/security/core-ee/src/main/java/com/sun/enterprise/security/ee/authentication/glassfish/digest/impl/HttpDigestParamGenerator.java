@@ -17,6 +17,18 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.StringTokenizer;
+import java.util.logging.Logger;
+
 import static com.sun.enterprise.security.auth.digest.api.Constants.A2;
 import static com.sun.enterprise.security.auth.digest.api.Constants.CNONCE;
 import static com.sun.enterprise.security.auth.digest.api.Constants.DATA;
@@ -27,18 +39,6 @@ import static com.sun.enterprise.security.auth.digest.api.Constants.QOP;
 import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
 import static com.sun.enterprise.security.auth.digest.api.Constants.URI;
 import static java.util.logging.Level.SEVERE;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.spec.AlgorithmParameterSpec;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * HttpDigestParamGenerator consumes Authorization header from HttpServlet request and generates Digest parameter

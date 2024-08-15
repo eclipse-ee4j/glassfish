@@ -19,11 +19,11 @@ package org.glassfish.internal.api;
 
 import com.sun.enterprise.module.common_impl.CompositeEnumeration;
 
-import java.util.List;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.net.URL;
-import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 

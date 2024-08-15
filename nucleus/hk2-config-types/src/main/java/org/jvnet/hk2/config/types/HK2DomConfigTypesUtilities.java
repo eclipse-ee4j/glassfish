@@ -16,10 +16,10 @@
 
 package org.jvnet.hk2.config.types;
 
-import java.util.LinkedList;
-
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
+import java.util.LinkedList;
 
 import org.glassfish.hk2.api.HK2Loader;
 import org.glassfish.hk2.api.ServiceLocator;

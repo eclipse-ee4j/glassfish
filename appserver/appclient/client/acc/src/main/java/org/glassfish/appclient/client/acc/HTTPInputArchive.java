@@ -16,6 +16,8 @@
 
 package org.glassfish.appclient.client.acc;
 
+import com.sun.enterprise.deploy.shared.AbstractReadableArchive;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +35,10 @@ import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import com.sun.enterprise.deploy.shared.AbstractReadableArchive;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implements ReadableArchive for the http (and https) protocol to support

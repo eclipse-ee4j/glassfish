@@ -16,9 +16,9 @@
 
 package org.glassfish.deployment.common;
 
+import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
-import org.glassfish.api.container.Container;
 
 /**
  * A dummy implementation of ApplicationContainer class.

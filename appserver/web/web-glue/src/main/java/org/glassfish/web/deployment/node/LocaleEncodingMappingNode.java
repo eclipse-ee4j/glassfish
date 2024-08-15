@@ -18,10 +18,11 @@ package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
 
 /**
  */

@@ -16,11 +16,20 @@
 
 package com.sun.jts.jta;
 
-import jakarta.transaction.*;
-import javax.naming.*;
+import com.sun.logging.LogDomains;
+
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionRolledbackException;
 
 import java.util.logging.Logger;
-import com.sun.logging.LogDomains;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
 /**
  * This class implements the jakarta.transaction.UserTransaction interface
  * which defines methods that allow an application to explicitly manage

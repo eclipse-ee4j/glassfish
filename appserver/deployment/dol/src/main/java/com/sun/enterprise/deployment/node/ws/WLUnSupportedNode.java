@@ -17,10 +17,11 @@
 
 package com.sun.enterprise.deployment.node.ws;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
 
 /**

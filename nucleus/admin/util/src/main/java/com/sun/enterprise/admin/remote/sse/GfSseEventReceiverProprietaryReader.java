@@ -17,6 +17,7 @@
 package com.sun.enterprise.admin.remote.sse;
 
 import com.sun.enterprise.admin.remote.reader.ProprietaryReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 

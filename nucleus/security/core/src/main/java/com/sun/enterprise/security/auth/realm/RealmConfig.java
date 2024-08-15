@@ -17,11 +17,8 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-import static com.sun.enterprise.security.SecurityLoggerInfo.noRealmsError;
-import static com.sun.enterprise.security.SecurityLoggerInfo.realmConfigDisabledError;
-import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.security.SecurityLoggerInfo;
 
 import java.util.List;
 import java.util.Properties;
@@ -29,8 +26,11 @@ import java.util.logging.Logger;
 
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.security.SecurityLoggerInfo;
+import static com.sun.enterprise.security.SecurityLoggerInfo.noRealmsError;
+import static com.sun.enterprise.security.SecurityLoggerInfo.realmConfigDisabledError;
+import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * RealmConfig usable by standalone : Admin CLI for creating Realms It has a subset of functionality defined in

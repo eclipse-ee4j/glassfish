@@ -16,10 +16,11 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
-import java.lang.reflect.Method;
-
 import com.sun.appserv.ejb.ReadOnlyBeanLocalNotifier;
 import com.sun.enterprise.deployment.EjbDescriptor;
+
+import java.lang.reflect.Method;
+
 import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBLocalHome;
 
 /**

@@ -16,27 +16,25 @@
 
 package org.glassfish.webservices;
 
-import java.net.URL;
-import java.net.URI;
+import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.concurrent.Executor;
-
-import java.lang.reflect.Method;
-
-import javax.xml.namespace.QName;
 import jakarta.xml.bind.JAXBContext;
-
-import jakarta.xml.ws.Service;
 import jakarta.xml.ws.Dispatch;
+import jakarta.xml.ws.Service;
 import jakarta.xml.ws.handler.HandlerResolver;
 
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executor;
+
+import javax.xml.namespace.QName;
 
 /**
  * Used as a delegate to concrete JAXWS

@@ -16,11 +16,12 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
+import java.io.IOException;
+
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerNotification;
 import javax.management.Notification;
 import javax.management.ObjectName;
-import java.io.IOException;
 
 /**
 Convenience base class for listening to

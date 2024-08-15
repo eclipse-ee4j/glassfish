@@ -17,11 +17,12 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.pam;
 
+import com.sun.enterprise.security.BasePasswordLoginModule;
+
+import javax.security.auth.login.LoginException;
+
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.logging.Level.FINE;
-
-import com.sun.enterprise.security.BasePasswordLoginModule;
-import javax.security.auth.login.LoginException;
 
 /**
  * This is the main LoginModule for PAM realm that invokes the calls to libpam4j classes to authenticate the given

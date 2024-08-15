@@ -17,14 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import static com.sun.ejb.codegen.AsmSerializableBeanGenerator.getGeneratedSerializableClassName;
-import static com.sun.ejb.containers.EJBContextImpl.BeanState.DESTROYED;
-import static com.sun.ejb.containers.EJBContextImpl.BeanState.PASSIVATED;
-import static com.sun.ejb.containers.EJBContextImpl.BeanState.READY;
-import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-
 import com.sun.appserv.util.cache.CacheListener;
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.Container;
@@ -59,6 +51,7 @@ import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.io.FileUtils;
+
 import jakarta.ejb.ConcurrentAccessException;
 import jakarta.ejb.ConcurrentAccessTimeoutException;
 import jakarta.ejb.CreateException;
@@ -78,6 +71,7 @@ import jakarta.persistence.SynchronizationType;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -101,6 +95,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
 import org.glassfish.ejb.LogFacade;
@@ -114,6 +109,14 @@ import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.util.SimpleMetadata;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static com.sun.ejb.codegen.AsmSerializableBeanGenerator.getGeneratedSerializableClassName;
+import static com.sun.ejb.containers.EJBContextImpl.BeanState.DESTROYED;
+import static com.sun.ejb.containers.EJBContextImpl.BeanState.PASSIVATED;
+import static com.sun.ejb.containers.EJBContextImpl.BeanState.READY;
+import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * This class provides container functionality specific to stateful SessionBeans. At deployment time, one instance of

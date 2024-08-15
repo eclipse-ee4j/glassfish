@@ -17,6 +17,7 @@
 package com.sun.enterprise.web.deploy;
 
 import com.sun.enterprise.deployment.web.WebResourceCollection;
+
 import org.apache.catalina.deploy.SecurityCollection;
 
 /**

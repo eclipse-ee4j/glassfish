@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,13 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
-/**
- *
- * @author  nsegura
- */
-
-import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
+import org.glassfish.j2ee.statistics.Stats;
 
 /**
- * Provides statistical information about the HttpService HTTP-level keep-alive
- * system
+ * Provides statistical information about the HttpService HTTP-level keep-alive system
+ *
+ * @author nsegura
  */
 public interface PWCKeepAliveStats extends Stats {
 

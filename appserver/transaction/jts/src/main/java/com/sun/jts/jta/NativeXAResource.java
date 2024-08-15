@@ -16,7 +16,8 @@
 
  package com.sun.jts.jta;
 
- import javax.transaction.xa.*;
+ import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
 
  /**
   * This interface extends JTA XAResource interface and defines

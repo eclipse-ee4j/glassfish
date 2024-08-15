@@ -17,8 +17,10 @@
 package org.glassfish.flashlight.impl.client;
 
 import com.sun.enterprise.util.Utility;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.flashlight.FlashlightLoggerInfo;
 
 /**

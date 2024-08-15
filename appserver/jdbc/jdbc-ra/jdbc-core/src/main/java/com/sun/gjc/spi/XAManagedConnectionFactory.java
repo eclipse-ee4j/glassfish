@@ -16,21 +16,6 @@
 
 package com.sun.gjc.spi;
 
-import static com.sun.gjc.spi.ManagedConnectionImpl.ISXACONNECTION;
-import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.sql.DataSource;
-import javax.sql.XAConnection;
-import javax.sql.XADataSource;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.common.DataSourceSpec;
@@ -44,6 +29,21 @@ import jakarta.resource.spi.ConnectionDefinition;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ResourceAllocationException;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.DataSource;
+import javax.sql.XAConnection;
+import javax.sql.XADataSource;
+
+import static com.sun.gjc.spi.ManagedConnectionImpl.ISXACONNECTION;
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * XA <code>ManagedConnectionFactory</code> implementation for Generic JDBC

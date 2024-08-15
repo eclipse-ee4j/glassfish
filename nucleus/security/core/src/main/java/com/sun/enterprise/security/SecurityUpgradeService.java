@@ -16,6 +16,14 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.List;
@@ -30,14 +38,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-
-import jakarta.inject.Inject;
 
 /**
  * The only thing that needs to added Extra for SecurityService migration is the addition of the new JACC provider. This would be

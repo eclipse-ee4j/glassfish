@@ -18,6 +18,8 @@
 
 package org.apache.catalina.authenticator;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -25,8 +27,6 @@ import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.realm.GenericPrincipal;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * An <b>Authenticator</b> and <b>Valve</b> implementation that checks only security constraints not involving user

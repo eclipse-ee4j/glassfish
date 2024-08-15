@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.container.common.spi;
 
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.jvnet.hk2.annotations.Contract;
-
-import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 
 @Contract
 public interface EjbNamingReferenceManager {

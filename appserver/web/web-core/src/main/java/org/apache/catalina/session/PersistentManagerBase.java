@@ -17,8 +17,6 @@
 
 package org.apache.catalina.session;
 
-import static java.util.logging.Level.SEVERE;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -28,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Lifecycle;
@@ -38,6 +37,8 @@ import org.apache.catalina.Session;
 import org.apache.catalina.Store;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.util.LifecycleSupport;
+
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Extends the <b>ManagerBase</b> class to implement most of the functionality required by a Manager which supports any

@@ -16,9 +16,10 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
+import jakarta.ejb.Stateless;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import jakarta.ejb.Stateless;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;

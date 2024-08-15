@@ -16,14 +16,14 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandException;
 import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

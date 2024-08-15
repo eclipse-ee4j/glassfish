@@ -16,14 +16,13 @@
 
 package org.glassfish.config.support;
 
-import org.glassfish.api.admin.AdminCommandContext;
+import java.beans.PropertyVetoException;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import java.beans.PropertyVetoException;
 
 /**
  * An element decorator decorates a newly added configuration element, usually added through the generic create command

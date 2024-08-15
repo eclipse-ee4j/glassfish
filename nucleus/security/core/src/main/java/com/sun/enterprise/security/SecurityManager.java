@@ -19,7 +19,9 @@ package com.sun.enterprise.security;
 
 import java.lang.reflect.Method;
 import java.security.Principal;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 
 /**

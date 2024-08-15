@@ -16,11 +16,10 @@
 
 package org.shoal.ha.store;
 
-import org.glassfish.ha.common.HACookieManager;
-import org.shoal.ha.mapper.DefaultKeyMapper;
-
 import org.glassfish.ha.common.GlassFishHAReplicaPredictor;
 import org.glassfish.ha.common.HACookieInfo;
+import org.glassfish.ha.common.HACookieManager;
+import org.shoal.ha.mapper.DefaultKeyMapper;
 
 /**
  * @author Mahesh Kannan

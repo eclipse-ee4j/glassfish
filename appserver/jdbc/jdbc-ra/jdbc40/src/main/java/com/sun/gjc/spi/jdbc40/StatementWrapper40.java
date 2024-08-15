@@ -16,14 +16,14 @@
 
 package com.sun.gjc.spi.jdbc40;
 
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
+import com.sun.gjc.spi.base.StatementWrapper;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
-import com.sun.gjc.spi.base.StatementWrapper;
 
 /**
  * Wrapper for JDBC 4.0 Statement

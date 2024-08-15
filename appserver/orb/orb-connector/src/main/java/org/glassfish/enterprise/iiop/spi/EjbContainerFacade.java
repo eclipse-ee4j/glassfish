@@ -16,9 +16,9 @@
 
 package org.glassfish.enterprise.iiop.spi;
 
-import java.rmi.Remote;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
+
+import java.rmi.Remote;
 
 /**
  * Provides ejb-specific services to iiop glue code.

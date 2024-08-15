@@ -16,11 +16,11 @@
 
 package org.glassfish.weld.services;
 
+import com.sun.enterprise.security.SecurityContext;
+
 import java.security.Principal;
 
 import org.jboss.weld.security.spi.SecurityServices;
-
-import com.sun.enterprise.security.SecurityContext;
 
 public class SecurityServicesImpl implements SecurityServices {
 

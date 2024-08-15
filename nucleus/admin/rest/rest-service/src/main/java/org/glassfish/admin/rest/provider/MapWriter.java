@@ -16,10 +16,12 @@
 
 package org.glassfish.admin.rest.provider;
 
-import java.util.Map;
-import java.util.logging.Level;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.Constants;

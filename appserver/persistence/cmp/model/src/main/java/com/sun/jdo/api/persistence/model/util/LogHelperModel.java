@@ -22,9 +22,9 @@
 
 package com.sun.jdo.api.persistence.model.util;
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
 import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /**
  *

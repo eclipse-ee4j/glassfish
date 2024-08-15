@@ -17,19 +17,19 @@
 
 package org.glassfish.weld;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.wasp.runtime.JspApplicationContextImpl;
-import org.jboss.weld.module.web.el.WeldELContextListener;
-
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.jsp.JspApplicationContext;
 import jakarta.servlet.jsp.JspFactory;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.cdi.CDILoggerInfo;
+import org.glassfish.wasp.runtime.JspApplicationContextImpl;
+import org.jboss.weld.module.web.el.WeldELContextListener;
 
 /**
  * ServletContextListener implementation that ensures (for Weld applications) the correct Weld EL Resolver and Weld EL

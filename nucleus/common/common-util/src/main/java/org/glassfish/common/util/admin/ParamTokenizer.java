@@ -16,8 +16,9 @@
 
 package org.glassfish.common.util.admin;
 
-import java.util.NoSuchElementException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.util.NoSuchElementException;
 
 /**
  * Separate parameters to admin commands into tokens.

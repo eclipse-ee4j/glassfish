@@ -16,13 +16,22 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.codegen;
 
+import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.deployment.Application;
+import com.sun.jdo.spi.persistence.support.ejb.ejbc.CMPProcessor;
+import com.sun.jdo.spi.persistence.support.ejb.ejbc.JDOCodeGenerator;
+import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -30,12 +39,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import com.sun.enterprise.config.serverbeans.JavaConfig;
-import com.sun.enterprise.deployment.Application;
-import com.sun.jdo.spi.persistence.support.ejb.ejbc.CMPProcessor;
-import com.sun.jdo.spi.persistence.support.ejb.ejbc.JDOCodeGenerator;
-import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.deployment.common.DeploymentException;

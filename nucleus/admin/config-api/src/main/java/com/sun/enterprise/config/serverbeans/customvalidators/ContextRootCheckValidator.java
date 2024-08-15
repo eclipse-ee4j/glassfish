@@ -16,13 +16,18 @@
 
 package com.sun.enterprise.config.serverbeans.customvalidators;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
 
-import java.util.Arrays;
-import java.util.List;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.UnexpectedTypeException;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Dom;

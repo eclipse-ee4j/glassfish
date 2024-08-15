@@ -30,12 +30,14 @@
 
 package com.sun.jts.jtsxa;
 
-import org.omg.CosTransactions.*;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.transaction.xa.Xid;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import org.omg.CosTransactions.otid_t;
 
 /**
  * The XID class provides an implementation of the X/Open

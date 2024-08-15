@@ -24,7 +24,6 @@ import org.glassfish.security.services.api.authorization.AzResource;
 import org.glassfish.security.services.api.authorization.AzSubject;
 import org.glassfish.security.services.api.authorization.RoleMappingService;
 import org.glassfish.security.services.spi.SecurityProvider;
-
 import org.jvnet.hk2.annotations.Contract;
 
 /**

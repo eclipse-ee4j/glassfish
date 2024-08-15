@@ -19,14 +19,16 @@ package org.glassfish.kernel.embedded;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.server.DomainXmlPersistence;
+
 import jakarta.inject.Inject;
-import org.jvnet.hk2.config.DomDocument;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
+
+import org.jvnet.hk2.config.DomDocument;
 
 /**
  * Configuration file persistence handler for embedded

@@ -16,8 +16,9 @@
 
 package com.sun.enterprise.admin.cli;
 
-import java.util.*;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import java.util.NoSuchElementException;
 
 public class ArgumentTokenizer {
     protected int currentPosition;

@@ -17,14 +17,14 @@
 package com.sun.jts.pi;
 
 import org.omg.CORBA.Any;
+import org.omg.CORBA.LocalObject;
 import org.omg.CORBA.Policy;
 import org.omg.CORBA.PolicyError;
-import org.omg.CORBA.LocalObject;
-import org.omg.CosTransactions.REQUIRES;
 import org.omg.CosTransactions.ADAPTS;
 import org.omg.CosTransactions.FORBIDS;
-import org.omg.CosTransactions.OTS_POLICY_TYPE;
 import org.omg.CosTransactions.OTSPolicyValueHelper;
+import org.omg.CosTransactions.OTS_POLICY_TYPE;
+import org.omg.CosTransactions.REQUIRES;
 import org.omg.PortableInterceptor.PolicyFactory;
 
 /**

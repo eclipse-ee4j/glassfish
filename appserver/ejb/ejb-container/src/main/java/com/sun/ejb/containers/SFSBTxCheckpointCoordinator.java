@@ -16,12 +16,13 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.logging.LogDomains;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.logging.*;
-
-import com.sun.logging.*;
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.util.SimpleMetadata;

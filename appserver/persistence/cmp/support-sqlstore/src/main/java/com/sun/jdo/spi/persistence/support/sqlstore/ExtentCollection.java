@@ -22,14 +22,15 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
+import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.api.persistence.model.Model;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
 
 /**
  *

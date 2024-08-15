@@ -16,6 +16,11 @@
 
 package org.glassfish.ejb.persistent.timer;
 
+import com.sun.ejb.EJBUtils;
+import com.sun.ejb.containers.EJBTimerSchedule;
+import com.sun.ejb.containers.EJBTimerService;
+import com.sun.logging.LogDomains;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,22 +28,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Lob;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
-import java.io.Serializable;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.ejb.EJBUtils;
-import com.sun.ejb.containers.EJBTimerService;
-import com.sun.ejb.containers.EJBTimerSchedule;
-import com.sun.logging.LogDomains;
 
 /**
  * TimerState represents the state of a persistent EJB Timer.

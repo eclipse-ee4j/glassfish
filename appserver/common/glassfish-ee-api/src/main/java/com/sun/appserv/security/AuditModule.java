@@ -24,6 +24,7 @@
 package com.sun.appserv.security;
 
 import com.sun.enterprise.security.BaseAuditModule;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

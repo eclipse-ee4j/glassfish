@@ -15,9 +15,11 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
-import org.glassfish.j2ee.statistics.Statistic;
-import java.io.Serializable;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import java.io.Serializable;
+
+import org.glassfish.j2ee.statistics.Statistic;
 
 /**
  * An abstract class providing implementation of the Statistic interface

@@ -22,17 +22,18 @@ import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.api.persistence.support.SpecialDBOperation;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-import org.glassfish.persistence.common.database.PropertyHelper;
-import org.glassfish.persistence.common.database.DBVendorTypeHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
+import org.glassfish.persistence.common.I18NHelper;
+import org.glassfish.persistence.common.database.DBVendorTypeHelper;
+import org.glassfish.persistence.common.database.PropertyHelper;
 
 
 

@@ -16,6 +16,9 @@
 
 package org.glassfish.deployment.autodeploy;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -24,15 +27,10 @@ import java.util.logging.Logger;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.deployment.autodeploy.AutoDeployer.AutodeploymentStatus;
 import org.glassfish.deployment.common.DeploymentProperties;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Performs a single auto-deployment operation for a single file.

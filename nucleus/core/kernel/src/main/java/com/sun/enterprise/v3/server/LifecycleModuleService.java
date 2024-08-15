@@ -17,6 +17,18 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.appserv.server.LifecycleListener;
+import com.sun.appserv.server.ServerLifecycleException;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.Result;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,18 +50,6 @@ import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.server.LifecycleListener;
-import com.sun.appserv.server.ServerLifecycleException;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.util.Result;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * Support class to assist in firing LifecycleEvent notifications to

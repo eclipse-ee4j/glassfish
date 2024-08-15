@@ -16,8 +16,8 @@
 
 package org.glassfish.ant.embedded.tasks;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 public class TaskBase extends Task {
 

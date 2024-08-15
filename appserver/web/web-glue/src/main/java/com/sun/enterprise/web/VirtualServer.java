@@ -17,46 +17,6 @@
 
 package com.sun.enterprise.web;
 
-import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
-import static com.sun.enterprise.web.Constants.ERROR_REPORT_VALVE;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.api.web.Constants.ADMIN_VS;
-import static org.glassfish.web.LogFacade.ADD_HTTP_PROBES_ERROR;
-import static org.glassfish.web.LogFacade.ALLOW_ACCESS;
-import static org.glassfish.web.LogFacade.APP_NOT_FOUND;
-import static org.glassfish.web.LogFacade.CODE_FILTERS_NULL;
-import static org.glassfish.web.LogFacade.DENY_ACCESS;
-import static org.glassfish.web.LogFacade.DISABLE_SSO;
-import static org.glassfish.web.LogFacade.ENABLE_SSO;
-import static org.glassfish.web.LogFacade.IGNORE_INVALID_REALM;
-import static org.glassfish.web.LogFacade.INVALID_AUTH_REALM;
-import static org.glassfish.web.LogFacade.INVALID_LISTENER_VIRTUAL_SERVER;
-import static org.glassfish.web.LogFacade.INVALID_SSO_COOKIE_SECURE;
-import static org.glassfish.web.LogFacade.MODIFYING_WEB_XML;
-import static org.glassfish.web.LogFacade.NOT_A_VALVE;
-import static org.glassfish.web.LogFacade.NULL_VIRTUAL_SERVER_PROPERTY;
-import static org.glassfish.web.LogFacade.PROXY_NULL;
-import static org.glassfish.web.LogFacade.REDIRECT_BOTH_URL_AND_URL_PREFIX;
-import static org.glassfish.web.LogFacade.REDIRECT_INVALID_ESCAPE;
-import static org.glassfish.web.LogFacade.REDIRECT_MISSING_URL_OR_URL_PREFIX;
-import static org.glassfish.web.LogFacade.REDIRECT_MULTIPLE_ELEMENT;
-import static org.glassfish.web.LogFacade.REMOVED_CONTEXT;
-import static org.glassfish.web.LogFacade.REMOVE_CONTEXT_ERROR;
-import static org.glassfish.web.LogFacade.SEND_ERROR_MISSING_PATH;
-import static org.glassfish.web.LogFacade.SEND_ERROR_MULTIPLE_ELEMENT;
-import static org.glassfish.web.LogFacade.SSO_MAX_INACTIVE_SET;
-import static org.glassfish.web.LogFacade.SSO_REAP_INTERVAL_SET;
-import static org.glassfish.web.LogFacade.UNABLE_RECONFIGURE_ACCESS_LOG;
-import static org.glassfish.web.LogFacade.UNABLE_TO_DELETE;
-import static org.glassfish.web.LogFacade.UNABLE_TO_LOAD_EXTENSION_SEVERE;
-import static org.glassfish.web.LogFacade.VS_ADDED_CONTEXT;
-import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE;
-import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE_DISABLED;
-import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE_NOT_FOUND;
-import static org.glassfish.web.LogFacade.VS_ENABLED_CONTEXT;
-
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
@@ -80,8 +40,10 @@ import com.sun.enterprise.web.logger.VirtualServerGlassFishLogger;
 import com.sun.enterprise.web.pluggable.WebContainerFeatureFactory;
 import com.sun.enterprise.web.session.SessionCookieConfig;
 import com.sun.web.security.RealmAdapter;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,6 +58,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -104,6 +67,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.ContainerListener;
 import org.apache.catalina.LifecycleException;
@@ -170,6 +134,46 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
+import static com.sun.enterprise.web.Constants.ERROR_REPORT_VALVE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.web.Constants.ADMIN_VS;
+import static org.glassfish.web.LogFacade.ADD_HTTP_PROBES_ERROR;
+import static org.glassfish.web.LogFacade.ALLOW_ACCESS;
+import static org.glassfish.web.LogFacade.APP_NOT_FOUND;
+import static org.glassfish.web.LogFacade.CODE_FILTERS_NULL;
+import static org.glassfish.web.LogFacade.DENY_ACCESS;
+import static org.glassfish.web.LogFacade.DISABLE_SSO;
+import static org.glassfish.web.LogFacade.ENABLE_SSO;
+import static org.glassfish.web.LogFacade.IGNORE_INVALID_REALM;
+import static org.glassfish.web.LogFacade.INVALID_AUTH_REALM;
+import static org.glassfish.web.LogFacade.INVALID_LISTENER_VIRTUAL_SERVER;
+import static org.glassfish.web.LogFacade.INVALID_SSO_COOKIE_SECURE;
+import static org.glassfish.web.LogFacade.MODIFYING_WEB_XML;
+import static org.glassfish.web.LogFacade.NOT_A_VALVE;
+import static org.glassfish.web.LogFacade.NULL_VIRTUAL_SERVER_PROPERTY;
+import static org.glassfish.web.LogFacade.PROXY_NULL;
+import static org.glassfish.web.LogFacade.REDIRECT_BOTH_URL_AND_URL_PREFIX;
+import static org.glassfish.web.LogFacade.REDIRECT_INVALID_ESCAPE;
+import static org.glassfish.web.LogFacade.REDIRECT_MISSING_URL_OR_URL_PREFIX;
+import static org.glassfish.web.LogFacade.REDIRECT_MULTIPLE_ELEMENT;
+import static org.glassfish.web.LogFacade.REMOVED_CONTEXT;
+import static org.glassfish.web.LogFacade.REMOVE_CONTEXT_ERROR;
+import static org.glassfish.web.LogFacade.SEND_ERROR_MISSING_PATH;
+import static org.glassfish.web.LogFacade.SEND_ERROR_MULTIPLE_ELEMENT;
+import static org.glassfish.web.LogFacade.SSO_MAX_INACTIVE_SET;
+import static org.glassfish.web.LogFacade.SSO_REAP_INTERVAL_SET;
+import static org.glassfish.web.LogFacade.UNABLE_RECONFIGURE_ACCESS_LOG;
+import static org.glassfish.web.LogFacade.UNABLE_TO_DELETE;
+import static org.glassfish.web.LogFacade.UNABLE_TO_LOAD_EXTENSION_SEVERE;
+import static org.glassfish.web.LogFacade.VS_ADDED_CONTEXT;
+import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE;
+import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE_DISABLED;
+import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE_NOT_FOUND;
+import static org.glassfish.web.LogFacade.VS_ENABLED_CONTEXT;
 
 /**
  * Standard implementation of a virtual server (aka virtual host) in the iPlanet Application Server.

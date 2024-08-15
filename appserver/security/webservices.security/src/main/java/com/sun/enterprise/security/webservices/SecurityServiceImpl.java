@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.security.webservices;
 
-import static com.sun.enterprise.security.webservices.LogUtils.BASIC_AUTH_ERROR;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.security.SecurityContext;
@@ -31,14 +26,17 @@ import com.sun.enterprise.security.webservices.client.ClientSecurityPipeCreator;
 import com.sun.enterprise.web.WebModule;
 import com.sun.web.security.RealmAdapter;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.logging.Logger;
+
 import org.apache.catalina.Globals;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.webservices.EjbRuntimeEndpointInfo;
@@ -48,6 +46,11 @@ import org.glassfish.webservices.monitoring.AuthenticationListener;
 import org.glassfish.webservices.monitoring.Endpoint;
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.security.webservices.LogUtils.BASIC_AUTH_ERROR;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * @author Kumar

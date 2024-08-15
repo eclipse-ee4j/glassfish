@@ -24,8 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.annotations.Service;
-
+import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.security.services.api.authorization.AuthorizationAdminConstants;
 import org.glassfish.security.services.api.authorization.AzAttributeResolver;
 import org.glassfish.security.services.api.authorization.AzEnvironment;
@@ -35,8 +34,7 @@ import org.glassfish.security.services.api.authorization.RoleMappingService;
 import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.impl.ServiceLogging;
 import org.glassfish.security.services.spi.authorization.RoleMappingProvider;
-
-import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 @Service (name="simpleRoleMapping")
 @PerLookup

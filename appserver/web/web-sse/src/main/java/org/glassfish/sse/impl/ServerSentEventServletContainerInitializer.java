@@ -22,9 +22,14 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRegistration;
 import jakarta.servlet.annotation.HandlesTypes;
-import java.util.*;
 
-import org.glassfish.sse.api.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.glassfish.sse.api.ServerSentEvent;
+import org.glassfish.sse.api.ServerSentEventHandler;
 
 /**
  * Registers a context listener to get ServletContext

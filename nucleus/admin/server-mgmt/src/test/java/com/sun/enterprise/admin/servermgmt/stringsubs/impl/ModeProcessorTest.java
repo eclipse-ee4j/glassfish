@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
+
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
@@ -23,8 +25,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
 
 /**
  * Unit test for {@link ModeProcessor} functionality.

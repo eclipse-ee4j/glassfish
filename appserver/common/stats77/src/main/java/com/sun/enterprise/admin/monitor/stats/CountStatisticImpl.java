@@ -15,8 +15,9 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
-import org.glassfish.j2ee.statistics.CountStatistic;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import org.glassfish.j2ee.statistics.CountStatistic;
 
 /** An implementation of a CountStatistic. All instances of this class are
  * immutable. Provides all the necessary accessors for properties.

@@ -19,6 +19,8 @@ package org.glassfish.tests.kernel.deployment;
 
 import com.sun.enterprise.config.serverbeans.Server;
 
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

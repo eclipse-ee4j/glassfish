@@ -18,13 +18,23 @@ package org.glassfish.admin.rest.generator.client;
 
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.utils.Util;
+
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.client.RestClientBase;
 import org.glassfish.admin.rest.client.RestLeaf;
 import org.glassfish.admin.rest.client.RestLeafCollection;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData;
 import org.glassfish.admin.rest.generator.ResourcesGeneratorBase;
+import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandModel.ParamModel;
@@ -34,15 +44,6 @@ import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
-
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.glassfish.admin.rest.RestLogging;
 
 /**
  *

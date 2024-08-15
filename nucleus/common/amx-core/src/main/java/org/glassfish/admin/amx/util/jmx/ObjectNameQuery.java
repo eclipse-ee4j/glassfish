@@ -16,8 +16,9 @@
 
 package org.glassfish.admin.amx.util.jmx;
 
-import javax.management.ObjectName;
 import java.util.Set;
+
+import javax.management.ObjectName;
 
 public interface ObjectNameQuery
 {

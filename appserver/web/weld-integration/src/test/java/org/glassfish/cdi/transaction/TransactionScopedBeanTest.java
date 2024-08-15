@@ -17,13 +17,13 @@
 
 package org.glassfish.cdi.transaction;
 
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.Test;
-
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.jupiter.api.Assertions.assertSame;

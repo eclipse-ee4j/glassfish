@@ -16,10 +16,9 @@
 
 package org.glassfish.loadbalancer.admin.cli.transform;
 
+import org.glassfish.loadbalancer.admin.cli.beans.Cluster;
 import org.glassfish.loadbalancer.admin.cli.reader.api.BaseReader;
 import org.glassfish.loadbalancer.admin.cli.reader.api.InstanceReader;
-
-import org.glassfish.loadbalancer.admin.cli.beans.Cluster;
 
 /**
  * Provides transform capabilites for instance

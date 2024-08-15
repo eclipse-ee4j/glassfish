@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -50,9 +52,6 @@ import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINER;
 import static org.glassfish.api.admin.RuntimeType.DAS;
-
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * The start-domain command.

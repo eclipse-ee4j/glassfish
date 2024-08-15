@@ -18,13 +18,17 @@
 package org.apache.catalina.startup;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.Logger;
-import org.apache.catalina.core.StandardEngine;
-
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+
+import org.apache.catalina.Engine;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Logger;
+import org.apache.catalina.core.StandardEngine;
 
 
 /**

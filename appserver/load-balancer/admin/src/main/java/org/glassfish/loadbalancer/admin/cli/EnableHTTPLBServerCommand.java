@@ -18,28 +18,30 @@ package org.glassfish.loadbalancer.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Server;
-import java.util.logging.Logger;
-import java.util.List;
-
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-import org.glassfish.api.Param;
-import org.glassfish.api.ActionReport;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.config.serverbeans.ServerRef;
-import org.glassfish.loadbalancer.config.LbConfigs;
-import org.glassfish.loadbalancer.config.LbConfig;
-
-import org.glassfish.api.admin.*;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.internal.api.Target;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.Target;
+import org.glassfish.loadbalancer.config.LbConfig;
+import org.glassfish.loadbalancer.config.LbConfigs;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * This is a remote command that enables lb-enabled attribute of

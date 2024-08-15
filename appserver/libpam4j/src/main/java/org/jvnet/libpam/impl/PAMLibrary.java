@@ -16,11 +16,6 @@
 
 package org.jvnet.libpam.impl;
 
-import static org.jvnet.libpam.impl.CLibrary.libc;
-
-import java.util.Arrays;
-import java.util.List;
-
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -28,6 +23,11 @@ import com.sun.jna.Pointer;
 import com.sun.jna.PointerType;
 import com.sun.jna.Structure;
 import com.sun.jna.ptr.PointerByReference;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.jvnet.libpam.impl.CLibrary.libc;
 
 /**
  * libpam.so binding.

@@ -18,6 +18,7 @@ package org.glassfish.persistence.ejb.entitybean.container;
 
 import com.sun.ejb.EjbInvocation;
 import com.sun.enterprise.security.SecurityManager;
+
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 
 /*

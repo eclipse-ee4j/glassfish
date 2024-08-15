@@ -16,13 +16,14 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
-import org.glassfish.admin.amx.util.StringUtil;
-import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
-import org.glassfish.admin.amx.util.stringifier.Stringifier;
+import java.util.Date;
 
 import javax.management.MBeanServerNotification;
 import javax.management.Notification;
-import java.util.Date;
+
+import org.glassfish.admin.amx.util.StringUtil;
+import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
+import org.glassfish.admin.amx.util.stringifier.Stringifier;
 
 public class NotificationStringifier implements Stringifier
 {

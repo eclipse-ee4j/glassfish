@@ -19,6 +19,9 @@ package org.glassfish.jdbcruntime.config.validation;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,9 +36,6 @@ import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-import jakarta.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -17,10 +17,10 @@
 
 package com.sun.web.server;
 
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.web.WebModule;
 import com.sun.enterprise.web.WebModuleDecorator;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * {@link WebModuleDecorator} that inserts {@link EEInstanceListener}.

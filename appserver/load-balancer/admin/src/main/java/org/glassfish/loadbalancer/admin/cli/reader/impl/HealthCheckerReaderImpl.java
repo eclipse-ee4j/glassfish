@@ -16,12 +16,13 @@
 
 package org.glassfish.loadbalancer.admin.cli.reader.impl;
 
-import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
-import org.glassfish.loadbalancer.admin.cli.transform.HealthCheckerVisitor;
+import com.sun.enterprise.config.serverbeans.HealthChecker;
+
+import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
 import org.glassfish.loadbalancer.admin.cli.reader.api.HealthCheckerReader;
 import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
-import com.sun.enterprise.config.serverbeans.HealthChecker;
-import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
+import org.glassfish.loadbalancer.admin.cli.transform.HealthCheckerVisitor;
+import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
 
 /**
  * Provides health checker information relavant to Load balancer tier.

@@ -23,8 +23,9 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
-import org.netbeans.modules.dbschema.ColumnElement;
 import java.util.ArrayList;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  * This class is used to encapsulate an association between

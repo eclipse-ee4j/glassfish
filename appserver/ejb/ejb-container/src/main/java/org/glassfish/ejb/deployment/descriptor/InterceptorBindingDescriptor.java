@@ -16,10 +16,11 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
+import com.sun.enterprise.deployment.MethodDescriptor;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
 import org.glassfish.deployment.common.Descriptor;
 
 

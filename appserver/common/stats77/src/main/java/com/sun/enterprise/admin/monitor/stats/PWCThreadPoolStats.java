@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,13 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
-/**
- *
- * @author  nsegura
- */
-import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
+import org.glassfish.j2ee.statistics.Stats;
 
 /**
- * Returns the statistical information associated with
- * the HttpService thread pool
+ * Returns the statistical information associated with the HttpService thread pool
+ *
+ * @author  nsegura
  */
 public interface PWCThreadPoolStats extends Stats {
 

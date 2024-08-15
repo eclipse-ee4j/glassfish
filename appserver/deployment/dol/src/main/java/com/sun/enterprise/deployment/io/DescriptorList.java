@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.deployment.io;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
-
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
 
 /**
  * Repository of descriptors

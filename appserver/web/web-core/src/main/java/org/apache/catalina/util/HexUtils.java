@@ -17,9 +17,9 @@
 
 package org.apache.catalina.util;
 
-import org.apache.catalina.LogFacade;
-
 import java.util.ResourceBundle;
+
+import org.apache.catalina.LogFacade;
 
 /**
  * Library of utility methods useful in dealing with converting byte arrays

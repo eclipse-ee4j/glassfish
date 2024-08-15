@@ -16,9 +16,6 @@
 
 package org.glassfish.appclient.client.acc.agent;
 
-import static java.util.logging.Level.FINE;
-import static org.glassfish.appclient.client.CLIBootstrap.FILE_OPTIONS_INTRODUCER;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -29,6 +26,9 @@ import java.util.logging.Logger;
 
 import org.glassfish.appclient.client.AppClientFacade;
 import org.glassfish.appclient.client.acc.UserError;
+
+import static java.util.logging.Level.FINE;
+import static org.glassfish.appclient.client.CLIBootstrap.FILE_OPTIONS_INTRODUCER;
 
 /**
  * Agent which prepares the ACC before the VM launches the selected main program.

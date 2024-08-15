@@ -17,12 +17,13 @@
 package com.sun.enterprise.admin.monitor.stats;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.glassfish.j2ee.statistics.Stats;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.glassfish.j2ee.statistics.Statistic;
+import org.glassfish.j2ee.statistics.Stats;
 
 /**
  * Provides for generic implementation of any Stats interface. This class facilitates

@@ -17,10 +17,10 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Inject configuration values to the object.

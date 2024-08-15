@@ -22,10 +22,10 @@
 
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
+import javax.management.Attribute;
+
 import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
 import org.glassfish.admin.amx.util.stringifier.Stringifier;
-
-import javax.management.Attribute;
 
 
 

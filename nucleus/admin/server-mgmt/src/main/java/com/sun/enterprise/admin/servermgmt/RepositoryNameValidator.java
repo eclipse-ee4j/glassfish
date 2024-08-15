@@ -16,13 +16,15 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-import javax.xml.parsers.*;
-import org.xml.sax.*;
+import com.sun.enterprise.util.i18n.StringManager;
+
 import java.io.ByteArrayInputStream;
 
 import javax.management.ObjectName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import com.sun.enterprise.util.i18n.StringManager;
+import org.xml.sax.InputSource;
 
 /**
  * Validates the repository name. A repository name must be a - valid file name, - valid xml CDATA value & - valid

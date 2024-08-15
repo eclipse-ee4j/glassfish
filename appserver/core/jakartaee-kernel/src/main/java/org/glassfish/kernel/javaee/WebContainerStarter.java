@@ -17,11 +17,16 @@
 
 package org.glassfish.kernel.javaee;
 
-import static com.sun.enterprise.config.serverbeans.ConfigBeansUtilities.toBoolean;
-import static java.util.logging.Level.INFO;
-import static org.jvnet.hk2.config.Changed.TYPE.ADD;
-import static org.jvnet.hk2.config.Changed.TYPE.CHANGE;
-import static org.jvnet.hk2.config.ConfigSupport.sortAndDispatch;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.v3.server.ContainerStarter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
@@ -54,16 +59,11 @@ import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.v3.server.ContainerStarter;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
+import static com.sun.enterprise.config.serverbeans.ConfigBeansUtilities.toBoolean;
+import static java.util.logging.Level.INFO;
+import static org.jvnet.hk2.config.Changed.TYPE.ADD;
+import static org.jvnet.hk2.config.Changed.TYPE.CHANGE;
+import static org.jvnet.hk2.config.ConfigSupport.sortAndDispatch;
 
 /**
  * Startup service for the web container.

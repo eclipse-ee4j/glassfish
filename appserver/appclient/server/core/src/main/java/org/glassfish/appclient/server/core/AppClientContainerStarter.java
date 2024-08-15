@@ -17,9 +17,8 @@
 package org.glassfish.appclient.server.core;
 
 import org.glassfish.api.container.Container;
-import org.jvnet.hk2.annotations.Service;
-
 import org.glassfish.api.deployment.Deployer;
+import org.jvnet.hk2.annotations.Service;
 
 @Service(name="appclient")
 public class AppClientContainerStarter implements Container {

@@ -18,6 +18,7 @@ package com.sun.enterprise.web.deploy;
 
 
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
+
 import org.apache.catalina.deploy.MessageDestination;
 
 

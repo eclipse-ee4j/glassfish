@@ -22,13 +22,15 @@ import java.util.List;
 import java.util.Objects;
 
 import org.glassfish.api.I18n;
-import org.glassfish.config.support.*;
+import org.glassfish.config.support.Create;
+import org.glassfish.config.support.Delete;
+import org.glassfish.config.support.TypeAndNameResolver;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
  * Nodes configuration.

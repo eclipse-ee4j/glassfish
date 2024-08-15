@@ -22,11 +22,11 @@
 
 package org.glassfish.deployment.common;
 
-import java.util.Properties;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * This properties are used to transfer information between

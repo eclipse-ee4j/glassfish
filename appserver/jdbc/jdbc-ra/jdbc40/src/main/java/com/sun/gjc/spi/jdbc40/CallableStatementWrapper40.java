@@ -17,7 +17,9 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.util.logging.Level.SEVERE;
+import com.sun.gjc.spi.base.CallableStatementWrapper;
+
+import jakarta.resource.ResourceException;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -32,9 +34,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLXML;
 
-import com.sun.gjc.spi.base.CallableStatementWrapper;
-
-import jakarta.resource.ResourceException;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Wrapper for JDBC 4.0 CallableStatement

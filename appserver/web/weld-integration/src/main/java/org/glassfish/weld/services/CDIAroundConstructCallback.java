@@ -16,6 +16,12 @@
 
 package org.glassfish.weld.services;
 
+import com.sun.ejb.containers.BaseContainer;
+import com.sun.ejb.containers.EJBContextImpl;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+
+import jakarta.enterprise.inject.spi.AnnotatedConstructor;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -23,12 +29,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.jboss.weld.construction.api.AroundConstructCallback;
 import org.jboss.weld.construction.api.ConstructionHandle;
 import org.jboss.weld.exceptions.WeldException;
-
-import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
-
-import jakarta.enterprise.inject.spi.AnnotatedConstructor;
 
 /**
  * This calls back into the ejb container to perform the around construct interception. When that's finished the ejb

@@ -21,9 +21,10 @@
 
 package org.glassfish.corba.admingui;
 
+import java.net.URL;
+
 import org.glassfish.api.admingui.ConsoleProvider;
 import org.jvnet.hk2.annotations.Service;
-import java.net.URL;
 
 /**
  *

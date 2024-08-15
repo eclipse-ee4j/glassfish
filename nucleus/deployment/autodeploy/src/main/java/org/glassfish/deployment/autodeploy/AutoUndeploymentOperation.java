@@ -16,25 +16,25 @@
 
 package org.glassfish.deployment.autodeploy;
 
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Application;
-import java.io.File;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.List;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.deployment.autodeploy.AutoDeployer.AutodeploymentStatus;
-import org.glassfish.deployment.common.DeploymentProperties;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.util.io.FileUtils;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.deployment.autodeploy.AutoDeployer.AutodeploymentStatus;
+import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Performs a single auto-undeploy operation for a single file.

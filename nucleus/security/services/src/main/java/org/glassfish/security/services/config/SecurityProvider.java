@@ -16,14 +16,14 @@
 
 package org.glassfish.security.services.config;
 
-import java.util.List;
-
-import java.beans.PropertyVetoException;
 import jakarta.validation.constraints.NotNull;
 
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 
 /**

@@ -18,9 +18,9 @@
 package org.apache.catalina.ssi;
 
 
-import org.apache.catalina.util.RequestUtil;
-
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.apache.catalina.util.RequestUtil;
 public class SSIServletRequestUtil {
     /**
      * Return the relative path associated with this servlet. Taken from

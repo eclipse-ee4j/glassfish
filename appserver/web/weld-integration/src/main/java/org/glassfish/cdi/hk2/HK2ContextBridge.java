@@ -16,13 +16,13 @@
 
 package org.glassfish.cdi.hk2;
 
-import java.lang.annotation.Annotation;
-
-import org.glassfish.hk2.api.ActiveDescriptor;
-
 import jakarta.enterprise.context.spi.Context;
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
+
+import java.lang.annotation.Annotation;
+
+import org.glassfish.hk2.api.ActiveDescriptor;
 
 /**
  * This is an implementation of a CDI context that is put into CDI which will handle all of the hk2 scope/context pairs

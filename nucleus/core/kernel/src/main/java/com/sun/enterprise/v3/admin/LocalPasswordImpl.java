@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.v3.admin;
 
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,8 +32,6 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.LocalPassword;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
 
 /**
  * Manage a local password, which is a cryptographically secure random number stored in a file with permissions that

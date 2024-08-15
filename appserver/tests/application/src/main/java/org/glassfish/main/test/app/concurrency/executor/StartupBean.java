@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.enterprise.concurrent.ManagedExecutorService;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

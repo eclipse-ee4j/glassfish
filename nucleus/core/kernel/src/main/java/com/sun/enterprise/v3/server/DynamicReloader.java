@@ -17,6 +17,12 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.v3.admin.CommandRunnerImpl;
+import com.sun.enterprise.v3.common.XMLActionReporter;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -38,12 +44,6 @@ import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.kernel.KernelLoggerInfo;
-
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.v3.admin.CommandRunnerImpl;
-import com.sun.enterprise.v3.common.XMLActionReporter;
 
 /**
  * Triggers reloads of deployed applications depending on the presence of and

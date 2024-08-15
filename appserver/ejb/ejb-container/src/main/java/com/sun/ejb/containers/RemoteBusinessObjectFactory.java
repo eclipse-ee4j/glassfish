@@ -16,12 +16,16 @@
 
 package com.sun.ejb.containers;
 
-import javax.naming.*;
-import javax.naming.spi.*;
+import com.sun.ejb.EJBUtils;
 
 import java.util.Hashtable;
 
-import com.sun.ejb.EJBUtils;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
 
 /**
  * An object factory to handle Remote EJB 30 business interface

@@ -22,13 +22,13 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.CMPHelper;
-import com.sun.jdo.spi.persistence.support.sqlstore.ejb.SunContainerHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.LoggerFactoryiAS;
+import com.sun.jdo.spi.persistence.support.sqlstore.ejb.SunContainerHelper;
+import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.ejb.spi.CMPService;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class implements CMPService contract and allows to load Sun specific implementation of the
@@ -45,13 +45,6 @@ public class PersistenceManagerServiceImpl implements CMPService {
     // Reference and force the initialization of the Sun specific
     // implementation of the TransactionHelper and the ContainerHelper.
     private static final Class helper = forceInit(SunContainerHelper.class);
-
-    // Reference and force the initialization of the DeploymentEventListener
-    // implementation.
-/**
-    private static final Class listener =
-        forceInit("com.sun.jdo.spi.persistence.support.ejb.ejbc.DeploymentEventListenerImpl");
-**/
 
     public boolean isReady() {
         // Checks that SunContainerHelper regeistered with CMPHelper

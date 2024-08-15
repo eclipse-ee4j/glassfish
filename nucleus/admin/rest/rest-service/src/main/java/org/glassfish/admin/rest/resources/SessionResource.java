@@ -16,13 +16,13 @@
 
 package org.glassfish.admin.rest.resources;
 
-import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.api.ActionReport;
-
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+
+import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.api.ActionReport;
 import org.glassfish.common.util.admin.RestSessionManager;
 
 /**

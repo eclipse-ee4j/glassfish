@@ -22,9 +22,11 @@ import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimePartDataSource;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.RefAddr;

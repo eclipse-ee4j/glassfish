@@ -16,17 +16,17 @@
 
 package com.sun.gjc.spi;
 
-import static java.util.logging.Level.SEVERE;
-
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.logging.Logger;
-
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnectionMetaData;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.SEVERE;
 
 /**
  * <code>ManagedConnectionMetaData</code> implementation for Generic JDBC

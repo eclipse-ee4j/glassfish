@@ -16,9 +16,8 @@
 
 package org.glassfish.tests.embedded.web;
 
-import java.io.*;
-import java.util.*;
-import jakarta.servlet.*;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 public class MyServletContextListener implements ServletContextListener {
 

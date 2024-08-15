@@ -16,20 +16,25 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import org.osgi.framework.*;
-import org.osgi.framework.Constants;
+import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 
 /**
  * This is a specialized {@link BundleProvisioner} that installs only a minimum set of of bundles.

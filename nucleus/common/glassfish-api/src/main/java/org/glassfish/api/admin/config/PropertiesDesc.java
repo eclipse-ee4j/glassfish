@@ -16,12 +16,12 @@
 
 package org.glassfish.api.admin.config;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Annotation that holds an array of {@link PropertyDesc} for properties eg {@link org.jvnet.hk2.config.types.Property}.

@@ -16,9 +16,10 @@
 
 package org.glassfish.admin.payload;
 
-import org.glassfish.api.admin.*;
 import java.io.InputStream;
 import java.util.Iterator;
+
+import org.glassfish.api.admin.Payload;
 
 /**
  * Implements the Payload API for a message containing only a single text part.

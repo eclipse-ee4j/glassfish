@@ -19,10 +19,10 @@ package org.glassfish.admin.amx.base;
 import java.util.Map;
 
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
+import org.glassfish.admin.amx.core.AMXMBeanMetadata;
+import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-import org.glassfish.admin.amx.core.AMXProxy;
-import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 /**
 Provides information about the capabilities of the running server.

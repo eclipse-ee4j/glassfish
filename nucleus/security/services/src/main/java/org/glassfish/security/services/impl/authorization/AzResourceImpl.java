@@ -16,16 +16,16 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.security.services.api.authorization.AzResource;
-import org.glassfish.security.services.api.common.Attributes;
-import org.glassfish.security.services.impl.ServiceLogging;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.security.services.api.authorization.AzResource;
+import org.glassfish.security.services.api.common.Attributes;
+import org.glassfish.security.services.impl.ServiceLogging;
 
 public final class AzResourceImpl extends AzAttributesImpl implements AzResource {
 

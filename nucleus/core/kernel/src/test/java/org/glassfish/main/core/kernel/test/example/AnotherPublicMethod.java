@@ -17,10 +17,10 @@
 
 package org.glassfish.main.core.kernel.test.example;
 
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.ActionReport;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * public command with no visibility annotation

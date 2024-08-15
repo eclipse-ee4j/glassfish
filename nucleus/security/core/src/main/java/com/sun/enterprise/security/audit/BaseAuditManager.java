@@ -22,6 +22,14 @@
 
 package com.sun.enterprise.security.audit;
 
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.BaseAuditModule;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,23 +40,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
-/*V3:Commented
-import com.sun.enterprise.config.serverbeans.ServerBeansFactory;
-import com.sun.enterprise.config.serverbeans.ElementProperty;
-import com.sun.enterprise.config.ConfigContext;
-import com.sun.enterprise.server.ApplicationServer;
- */
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.BaseAuditModule;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * Basic implementation of audit manager.

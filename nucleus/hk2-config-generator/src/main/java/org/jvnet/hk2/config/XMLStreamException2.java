@@ -17,8 +17,8 @@
 
 package org.jvnet.hk2.config;
 
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * To fix the problem in StAX API where exceptions are not properly chained.

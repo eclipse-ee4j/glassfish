@@ -31,25 +31,23 @@
 
 package org.glassfish.admingui.handlers;
 
+import com.sun.data.provider.RowKey;
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.component.dataprovider.MultipleListDataProvider;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-
-import org.glassfish.admingui.common.util.GuiUtil;
-
 import com.sun.webui.jsf.component.TableRowGroup;
 
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Properties;
 
-import com.sun.data.provider.RowKey;
+import org.glassfish.admingui.common.util.GuiUtil;
 
 public class TableHandlers {
     /** Creates a new instance of TableHandler */

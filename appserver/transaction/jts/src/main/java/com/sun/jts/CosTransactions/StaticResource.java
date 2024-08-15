@@ -30,7 +30,7 @@
 
 package com.sun.jts.CosTransactions;
 
-import org.omg.CosTransactions.*;
+import org.omg.CosTransactions.Coordinator;
 
 /**
  * The StaticResource interface provides operations that allow an object to

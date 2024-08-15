@@ -21,13 +21,23 @@
 
 package com.sun.jdo.api.persistence.model.util;
 
-import java.util.*;
-import java.io.PrintStream;
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.jdo.ConcurrencyGroupElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingReferenceKeyElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
+import com.sun.jdo.api.persistence.model.mapping.impl.MappingTableElementImpl;
 
-import com.sun.jdo.api.persistence.model.*;
-import com.sun.jdo.api.persistence.model.mapping.*;
-import com.sun.jdo.api.persistence.model.mapping.impl.*;
-import com.sun.jdo.api.persistence.model.jdo.*;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.ColumnPairElement;

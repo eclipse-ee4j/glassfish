@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.admin.util;
 
+import jakarta.inject.Singleton;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import jakarta.inject.Singleton;
+
 import org.glassfish.api.admin.NamedResource;
 import org.jvnet.hk2.annotations.Service;
 

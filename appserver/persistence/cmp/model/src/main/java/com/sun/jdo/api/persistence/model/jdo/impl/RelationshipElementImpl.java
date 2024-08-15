@@ -22,12 +22,12 @@
 
 package com.sun.jdo.api.persistence.model.jdo.impl;
 
-import java.beans.PropertyVetoException;
-
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.api.persistence.model.ModelVetoException;
 import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
+
+import java.beans.PropertyVetoException;
 
 /* TODO:
     1. upper and lower bound defaults/ get method constraints based on field

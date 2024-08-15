@@ -16,21 +16,22 @@
 
 package org.glassfish.web.admin.monitor.statistics;
 
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
 import jakarta.inject.Inject;
+
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.admin.monitor.cli.MonitorContract;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.external.statistics.CountStatistic;
-import org.glassfish.admin.monitor.cli.MonitorContract;
-import org.glassfish.flashlight.datatree.TreeNode;
 import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
+import org.glassfish.flashlight.datatree.TreeNode;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.web.admin.LogFacade;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * A Stats interface to represent the statistical data exposed by an

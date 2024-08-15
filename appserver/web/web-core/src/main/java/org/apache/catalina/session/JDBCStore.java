@@ -17,18 +17,29 @@
 
 package org.apache.catalina.session;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Loader;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
 import org.apache.catalina.util.CustomObjectInputStream;
-
-import java.io.*;
-import java.sql.*;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * Implementation of the <code>Store</code> interface that stores

@@ -16,21 +16,25 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-//import java.io.*;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-
-import com.sun.jdo.api.persistence.enhancer.classfile.*;
-
+import com.sun.jdo.api.persistence.enhancer.classfile.AttributeVector;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassField;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassMethod;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstClass;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstantPool;
+import com.sun.jdo.api.persistence.enhancer.classfile.GenericAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.SyntheticAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
+import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 
-//@olsen: added import
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 //@olsen: cosmetics

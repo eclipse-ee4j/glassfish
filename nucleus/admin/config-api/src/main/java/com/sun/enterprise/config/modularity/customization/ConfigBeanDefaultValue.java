@@ -16,18 +16,18 @@
 
 package com.sun.enterprise.config.modularity.customization;
 
-/**
- * @author Masoud Kalali
- */
-
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+
+/**
+ * @author Masoud Kalali
+ */
+
+import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
  * Carries the default configuration values for a ConfigBeanProxy

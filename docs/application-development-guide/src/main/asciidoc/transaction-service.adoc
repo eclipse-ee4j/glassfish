@@ -8,7 +8,7 @@ prev=jdbc.html
 = Using the Transaction Service
 
 [[using-the-transaction-service]]
-== 15 Using the Transaction Service
+== Using the Transaction Service
 
 The Jakarta EE platform provides several abstractions that simplify
 development of dependable transaction processing for applications. This

@@ -16,11 +16,12 @@
 
 package com.sun.enterprise.naming.impl;
 
-import javax.naming.NameParser;
-import javax.naming.Name;
-import javax.naming.CompoundName;
-import javax.naming.NamingException;
 import java.util.Properties;
+
+import javax.naming.CompoundName;
+import javax.naming.Name;
+import javax.naming.NameParser;
+import javax.naming.NamingException;
 
 public class SerialNameParser implements NameParser {
 

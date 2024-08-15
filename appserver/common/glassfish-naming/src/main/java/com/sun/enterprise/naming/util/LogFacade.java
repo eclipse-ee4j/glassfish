@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.naming.util;
 
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-
 import java.util.logging.Logger;
+
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 public class LogFacade {
     @LoggerInfo(subsystem = "glassfish-naming", description = "logger for GlassFish appserver naming", publish = true)

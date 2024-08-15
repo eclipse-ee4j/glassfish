@@ -16,14 +16,15 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
+import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
-import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
-import org.netbeans.modules.dbschema.ColumnElement;
+import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 
 import java.util.ArrayList;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  * Implements the select plan for correlated subqueries.

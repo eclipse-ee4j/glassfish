@@ -17,22 +17,24 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.pam;
 
-import static java.util.Collections.enumeration;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
+
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.libpam.PAM;
 import org.jvnet.libpam.PAMException;
 import org.jvnet.libpam.UnixUser;
+
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Realm wrapper for supporting PAM based authentication for all Unix machines. The PAM realm uses the Operating

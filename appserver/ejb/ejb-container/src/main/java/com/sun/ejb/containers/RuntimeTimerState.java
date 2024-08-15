@@ -16,15 +16,14 @@
 
 package com.sun.ejb.containers;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import java.util.Date;
-import java.util.Calendar;
-import java.io.Serializable;
-
-import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbDescriptor;
+
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * RuntimeTimerState holds all runtime state of an EJB

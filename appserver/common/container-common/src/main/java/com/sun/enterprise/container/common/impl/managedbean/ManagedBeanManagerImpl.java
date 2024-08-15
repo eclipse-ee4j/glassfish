@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.container.common.impl.managedbean;
 
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
-import static java.util.Collections.synchronizedMap;
-import static java.util.logging.Level.FINE;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED;
-import static org.glassfish.internal.deployment.Deployment.DEPLOYMENT_FAILURE;
-
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.container.common.spi.CDIService.CDIInjectionContext;
 import com.sun.enterprise.container.common.spi.InterceptorInvoker;
@@ -44,7 +36,9 @@ import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
@@ -55,8 +49,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -71,6 +67,14 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
+import static java.util.Collections.synchronizedMap;
+import static java.util.logging.Level.FINE;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED;
+import static org.glassfish.internal.deployment.Deployment.DEPLOYMENT_FAILURE;
 
 /**
  */

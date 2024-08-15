@@ -16,29 +16,35 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import java.io.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import jakarta.xml.bind.*;
-
 import com.sun.enterprise.admin.util.InstanceStateService;
-import org.glassfish.api.admin.*;
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PerLookup;
-
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.ActionReport.ExitCode;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.util.cluster.SyncRequest;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.cluster.SyncRequest;
+
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.InstanceState;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Synchronize files.  Accepts an XML document containing files

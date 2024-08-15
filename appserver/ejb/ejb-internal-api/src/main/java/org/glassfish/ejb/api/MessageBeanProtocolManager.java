@@ -16,11 +16,11 @@
 
 package org.glassfish.ejb.api;
 
+import com.sun.appserv.connectors.internal.api.ResourceHandle;
+import com.sun.enterprise.deployment.runtime.BeanPoolDescriptor;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-
-import com.sun.enterprise.deployment.runtime.BeanPoolDescriptor;
-import com.sun.appserv.connectors.internal.api.ResourceHandle;
 
 /**
  * MessageBeanProtocolManager is implemented by the MessageBeanContainer

@@ -18,6 +18,7 @@ package org.jboss.weld.tck.glassfish;
 
 import java.io.IOException;
 import java.util.Arrays;
+
 import org.jboss.cdi.tck.spi.Beans;
 
 /**

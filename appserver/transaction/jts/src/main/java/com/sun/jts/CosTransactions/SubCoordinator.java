@@ -47,7 +47,22 @@ import org.omg.CORBA.INVALID_TRANSACTION;
 import org.omg.CORBA.OBJECT_NOT_EXIST;
 import org.omg.CORBA.SystemException;
 import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
-import org.omg.CosTransactions.*;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.CoordinatorHelper;
+import org.omg.CosTransactions.Inactive;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.RecoveryCoordinator;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.SubtransactionAwareResource;
+import org.omg.CosTransactions.SubtransactionAwareResourceHelper;
+import org.omg.CosTransactions.Synchronization;
+import org.omg.CosTransactions.SynchronizationUnavailable;
+import org.omg.CosTransactions.TransIdentity;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.Vote;
+import org.omg.CosTransactions.otid_t;
 
 /**
  * The SubCoordinator interface is our implementation of the standard

@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.admin;
 
-import java.util.logging.Logger;
+import com.sun.enterprise.admin.util.proxy.Interceptor;
+
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.management.MBeanServer;
-//import com.sun.enterprise.config.ConfigContext;
-import com.sun.enterprise.admin.util.proxy.Interceptor;
 
 /**
  * This interface defines the environment for administration.

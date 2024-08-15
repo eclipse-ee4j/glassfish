@@ -17,13 +17,21 @@
 
 package org.apache.catalina.core;
 
-import org.apache.catalina.*;
-import org.apache.catalina.realm.JAASRealm;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import java.util.logging.Level;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.util.logging.Level;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Realm;
+import org.apache.catalina.Service;
+import org.apache.catalina.realm.JAASRealm;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Standard implementation of the <b>Engine</b> interface.  Each

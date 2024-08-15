@@ -23,7 +23,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import org.netbeans.modules.dbschema.ColumnElement;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.Transaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.DBVendorType;
@@ -34,7 +33,13 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintVal
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 /**
  * This class is used to generate update/insert/delete statements.

@@ -17,9 +17,10 @@
 
 package org.glassfish.gms.bootstrap;
 
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
-import org.jvnet.hk2.annotations.Contract;
 import com.sun.enterprise.ee.cms.core.CallBack;
+import com.sun.enterprise.ee.cms.core.GroupManagementService;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * <P>The register methods below replace GroupManagementService.addFactory methods.

@@ -16,23 +16,25 @@
 
 package org.glassfish.loadbalancer.admin.cli;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
-import java.beans.PropertyVetoException;
-
-import org.jvnet.hk2.config.*;
-import org.glassfish.api.ActionReport;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ServerRef;
-import com.sun.enterprise.config.serverbeans.Cluster;
-
-import org.glassfish.api.admin.*;
-import org.glassfish.api.ActionReport.ExitCode;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandException;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Base class for all the LB commands

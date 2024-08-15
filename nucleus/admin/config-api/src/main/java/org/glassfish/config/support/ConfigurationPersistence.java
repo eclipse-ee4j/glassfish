@@ -16,11 +16,12 @@
 
 package org.glassfish.config.support;
 
-import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.config.DomDocument;
+import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+
+import org.jvnet.hk2.annotations.Contract;
+import org.jvnet.hk2.config.DomDocument;
 
 /**
  * Contract defining services capable of persisting the configuration.

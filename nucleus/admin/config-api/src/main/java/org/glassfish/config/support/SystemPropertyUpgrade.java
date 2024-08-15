@@ -16,22 +16,36 @@
 
 package org.glassfish.config.support;
 
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.config.serverbeans.*;
-import static com.sun.enterprise.config.util.PortConstants.*;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static com.sun.enterprise.config.util.PortConstants.ADMIN;
+import static com.sun.enterprise.config.util.PortConstants.DEBUG;
+import static com.sun.enterprise.config.util.PortConstants.DEFAULT_JAVA_DEBUGGER_PORT;
+import static com.sun.enterprise.config.util.PortConstants.DEFAULT_OSGI_SHELL_TELNET_PORT;
+import static com.sun.enterprise.config.util.PortConstants.HTTP;
+import static com.sun.enterprise.config.util.PortConstants.OSGI;
 
 /**
  * Upgrade service to add the new 3.1 system properties to the config elements (except DAS config, server-config) in

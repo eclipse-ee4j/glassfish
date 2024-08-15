@@ -17,6 +17,7 @@
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
 import javax.management.AttributeChangeNotification;
+
 import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
 
 public class AttributeChangeNotificationStringifier

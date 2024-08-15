@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
-import static com.sun.enterprise.admin.cli.optional.DerbyControl.DB_LOG_FILENAME;
-import static java.io.File.pathSeparator;
-import static java.io.File.separator;
-import static java.util.Arrays.asList;
+import com.sun.enterprise.admin.cli.CLIProcessExecutor;
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.OS;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,10 +33,10 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.admin.cli.CLIProcessExecutor;
-import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.OS;
+import static com.sun.enterprise.admin.cli.optional.DerbyControl.DB_LOG_FILENAME;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.util.Arrays.asList;
 
 /**
  * start-database command This command class will invoke DerbyControl to first ping if the database is running. If not

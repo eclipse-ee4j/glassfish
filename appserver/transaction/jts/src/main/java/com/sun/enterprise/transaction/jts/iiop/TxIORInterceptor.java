@@ -17,8 +17,8 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import com.sun.jts.pi.InterceptorImpl;
+import com.sun.logging.LogDomains;
 
 import java.util.logging.Logger;
 
@@ -39,8 +39,8 @@ import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.IORInterceptor;
 
-import com.sun.jts.pi.InterceptorImpl;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 public class TxIORInterceptor extends LocalObject implements IORInterceptor {
 

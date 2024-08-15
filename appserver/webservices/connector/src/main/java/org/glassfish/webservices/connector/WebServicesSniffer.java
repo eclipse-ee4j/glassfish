@@ -16,14 +16,14 @@
 
 package org.glassfish.webservices.connector;
 
-import org.glassfish.internal.deployment.GenericSniffer;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.jvnet.hk2.annotations.Service;
-
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.internal.deployment.GenericSniffer;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is the Sniffer for Webservices

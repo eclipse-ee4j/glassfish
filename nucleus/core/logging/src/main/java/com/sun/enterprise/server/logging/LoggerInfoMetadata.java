@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.server.logging;
 
-import java.util.Set;
 import java.util.Locale;
+import java.util.Set;
 
 import org.jvnet.hk2.annotations.Contract;
 

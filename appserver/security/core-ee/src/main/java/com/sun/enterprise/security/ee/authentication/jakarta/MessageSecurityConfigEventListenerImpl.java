@@ -17,7 +17,13 @@
 
 package com.sun.enterprise.security.ee.authentication.jakarta;
 
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.auth.message.config.AuthConfigFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.util.logging.Logger;
@@ -33,13 +39,7 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.security.auth.message.config.AuthConfigFactory;
+import static java.util.logging.Level.FINE;
 
 /**
  * Listener class to handle admin message-security-config element events.

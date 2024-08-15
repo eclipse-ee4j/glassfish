@@ -20,6 +20,8 @@ package com.sun.enterprise.configapi.tests.typedlistener;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.List;
@@ -35,8 +37,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
-
-import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

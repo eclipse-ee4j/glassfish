@@ -30,7 +30,7 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * A class containing header information for a log record.

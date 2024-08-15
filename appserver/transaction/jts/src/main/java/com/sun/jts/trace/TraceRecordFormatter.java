@@ -16,9 +16,12 @@
 
 package com.sun.jts.trace;
 
-import org.omg.CosTransactions.*;
-import javax.transaction.xa.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Properties;
+
+import javax.transaction.xa.Xid;
+
+import org.omg.CosTransactions.otid_t;
 
 /**
  * This class is used to format the trace record.

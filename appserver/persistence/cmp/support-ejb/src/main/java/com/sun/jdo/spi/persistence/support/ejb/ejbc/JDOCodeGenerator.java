@@ -22,19 +22,6 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.jdo.api.persistence.enhancer.generator.Main;
@@ -54,6 +41,20 @@ import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.JDOQLParameterDeclarationParser;
 import com.sun.jdo.spi.persistence.utility.MergedBundle;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.ResourceBundle;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.IASEjbCMPEntityDescriptor;

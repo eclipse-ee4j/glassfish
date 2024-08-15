@@ -1,25 +1,15 @@
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-
 <!--
 
-    Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Jakarta Validation TCK
 
-    This program and the accompanying materials are made available under the
-    terms of the Eclipse Public License v. 2.0, which is available at
-    http://www.eclipse.org/legal/epl-2.0.
-
-    This Source Code may also be made available under the following Secondary
-    Licenses when the conditions for such availability set forth in the
-    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
-    version 2 with the GNU Classpath Exception, which is available at
-    https://www.gnu.org/software/classpath/license.html.
-
-    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+    License: Apache License, Version 2.0
+    See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
 
 -->
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Jakarta-Bean-Validation-TCK" verbose="2" configfailurepolicy="continue">
-    <listeners>
+<suite name="Jakarta-Validation-TCK" verbose="1">
+     <listeners>
         <!-- Required - avoid randomly mixed test method execution -->
         <listener class-name="org.jboss.cdi.tck.impl.testng.SingleTestClassMethodInterceptor" />
         <!-- Optional - intended for debug purpose only -->
@@ -32,21 +22,20 @@
         <listener class-name="org.testng.reporters.TestHTMLReporter" />
     </listeners>
 
-	<test name="Jakarta-Bean-Validation-TCK">
 
-		<method-selectors>
-			<method-selector>
-				<selector-class
-					name="org.hibernate.beanvalidation.tck.util.IntegrationTestsMethodSelector" priority="0" />
-			</method-selector>
-			<method-selector>
-				<selector-class
-					name="org.hibernate.beanvalidation.tck.util.JavaFXTestsMethodSelector" priority="1" />
-			</method-selector>
-		</method-selectors>
+    <test name="Jakarta-Validation-TCK">
 
-		<packages>
-			<package name="org.hibernate.beanvalidation.tck.tests.*" />
-		</packages>
-	</test>
+        <method-selectors>
+            <method-selector>
+                <selector-class name="org.hibernate.beanvalidation.tck.util.IntegrationTestsMethodSelector" priority="1"/>
+            </method-selector>
+            <method-selector>
+                <selector-class name="org.hibernate.beanvalidation.tck.util.JavaFXTestsMethodSelector" priority="2"/>
+            </method-selector>
+        </method-selectors>
+
+        <packages>
+            <package name="org.hibernate.beanvalidation.tck.tests.*"/>
+        </packages>
+    </test>
 </suite>

@@ -19,8 +19,10 @@ package org.glassfish.uberjar.activator;
 
 import com.sun.enterprise.glassfish.bootstrap.Constants;
 import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
+
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;

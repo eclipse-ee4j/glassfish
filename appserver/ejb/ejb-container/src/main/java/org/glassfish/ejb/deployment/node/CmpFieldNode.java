@@ -16,9 +16,10 @@
 
 package org.glassfish.ejb.deployment.node;
 
+import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+
 import java.util.Map;
 
-import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.FieldDescriptor;
 import org.w3c.dom.Node;

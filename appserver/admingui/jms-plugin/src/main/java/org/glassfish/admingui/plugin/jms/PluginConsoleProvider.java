@@ -16,10 +16,10 @@
 
 package org.glassfish.admingui.plugin.jms;
 
+import java.net.URL;
+
 import org.glassfish.api.admingui.ConsoleProvider;
 import org.jvnet.hk2.annotations.Service;
-
-import java.net.URL;
 
 /**
  *  <p> This class serves as a marker to indicate this OSGi bundle provides GUI

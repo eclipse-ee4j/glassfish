@@ -16,24 +16,26 @@
 
 package org.glassfish.web.ha;
 
-import org.glassfish.security.common.NonceInfo;
-import org.glassfish.security.common.CNonceCache;
 import com.sun.enterprise.security.CNonceCacheFactory;
+import com.sun.web.security.CNonceCacheImpl;
+
+import jakarta.inject.Inject;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreConfiguration;
 import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.api.BackingStoreFactory;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.PerLookup;
-import com.sun.web.security.CNonceCacheImpl;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.security.common.CNonceCache;
+import org.glassfish.security.common.NonceInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *

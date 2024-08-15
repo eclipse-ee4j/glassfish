@@ -29,35 +29,34 @@ import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-
 import com.sun.webui.jsf.component.Calendar;
-import com.sun.webui.jsf.model.UploadedFile;
+import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.Hyperlink;
+import com.sun.webui.jsf.model.Option;
+import com.sun.webui.jsf.model.OptionGroup;
+import com.sun.webui.jsf.model.UploadedFile;
 
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
-import com.sun.webui.jsf.model.Option;
-import com.sun.webui.jsf.model.OptionGroup;
-import com.sun.webui.jsf.component.DropDown;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.handlers.MonitoringHandlers;
+import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.admingui.util.SunOptionUtil;
 

@@ -22,7 +22,11 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /** This is a class which helps translate between the various names of the
  * CMP (ejb name, abstract schema, abstract bean, concrete bean, local

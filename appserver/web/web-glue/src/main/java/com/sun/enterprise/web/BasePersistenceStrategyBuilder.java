@@ -16,6 +16,13 @@
 
 package com.sun.enterprise.web;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.core.StandardContext;
 import org.glassfish.web.LogFacade;
@@ -24,13 +31,6 @@ import org.glassfish.web.deployment.runtime.ManagerProperties;
 import org.glassfish.web.deployment.runtime.SessionManager;
 import org.glassfish.web.deployment.runtime.StoreProperties;
 import org.glassfish.web.deployment.runtime.WebProperty;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class BasePersistenceStrategyBuilder
         implements PersistenceStrategyBuilder {

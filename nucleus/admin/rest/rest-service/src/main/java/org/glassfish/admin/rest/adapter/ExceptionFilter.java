@@ -16,11 +16,13 @@
 
 package org.glassfish.admin.rest.adapter;
 
-import java.io.IOException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
+
+import java.io.IOException;
+
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.model.ResponseBody;
 

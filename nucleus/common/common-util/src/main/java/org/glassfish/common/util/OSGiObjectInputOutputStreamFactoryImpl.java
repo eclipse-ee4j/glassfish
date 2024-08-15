@@ -17,10 +17,7 @@
 
 package org.glassfish.common.util;
 
-import static com.sun.enterprise.util.Utility.getClassLoader;
-import static java.security.AccessController.doPrivileged;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.util.CULoggerInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +38,10 @@ import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.BundleTracker;
 import org.osgi.util.tracker.BundleTrackerCustomizer;
 
-import com.sun.enterprise.util.CULoggerInfo;
+import static com.sun.enterprise.util.Utility.getClassLoader;
+import static java.security.AccessController.doPrivileged;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.WARNING;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM

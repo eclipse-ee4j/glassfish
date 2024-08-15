@@ -19,13 +19,14 @@ package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.web.LogFacade;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //END OF IASRI 4660482
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.web.LogFacade;
 
 
 /**

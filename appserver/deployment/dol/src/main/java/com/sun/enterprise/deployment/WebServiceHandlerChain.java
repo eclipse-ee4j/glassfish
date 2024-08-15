@@ -17,11 +17,11 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Represents a single handler-chains in a webservice in webservices.xml

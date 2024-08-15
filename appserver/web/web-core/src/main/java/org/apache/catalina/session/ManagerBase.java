@@ -17,17 +17,16 @@
 
 package org.apache.catalina.session;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static java.util.logging.Level.FINE;
-
 import com.sun.enterprise.util.uuid.UuidGenerator;
 import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.DataInputStream;
@@ -47,7 +46,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.ObjectName;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.Engine;
 import org.apache.catalina.LogFacade;
@@ -56,6 +57,9 @@ import org.apache.catalina.Session;
 import org.apache.catalina.SessionLocker;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardHost;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.util.logging.Level.FINE;
 
 /**
  * Minimal implementation of the <b>Manager</b> interface that supports no session persistence or distributable

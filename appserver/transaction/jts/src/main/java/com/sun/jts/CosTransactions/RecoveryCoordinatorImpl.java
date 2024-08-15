@@ -30,13 +30,23 @@
 
 package com.sun.jts.CosTransactions;
 
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
-import org.omg.CosTransactions.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.SystemException;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.RecoveryCoordinator;
+import org.omg.CosTransactions.RecoveryCoordinatorHelper;
+import org.omg.CosTransactions.RecoveryCoordinatorPOA;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.Status;
+import org.omg.PortableServer.POA;
 
 /**
  * The RecoveryCoordinatorImpl interface is our implementation of the standard

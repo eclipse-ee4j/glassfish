@@ -16,10 +16,10 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.List;
 import java.util.Properties;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * @author Mahesh Kannan

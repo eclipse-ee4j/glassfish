@@ -16,11 +16,11 @@
 
 package org.glassfish.api.admin.progress;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class contains information of all the jobs which will be persisted to jobs.xml

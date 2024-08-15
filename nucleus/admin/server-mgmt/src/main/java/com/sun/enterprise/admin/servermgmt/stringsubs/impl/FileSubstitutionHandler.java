@@ -16,16 +16,16 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Abstract class initialize the input file for the string substitution. The sub-classes provides the way to create the

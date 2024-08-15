@@ -20,7 +20,13 @@
 package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.util.i18n.StringManager;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A helper class to facilitate the add/delete/get jvm options.

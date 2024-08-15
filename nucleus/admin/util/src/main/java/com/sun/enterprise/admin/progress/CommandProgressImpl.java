@@ -18,8 +18,10 @@
 package com.sun.enterprise.admin.progress;
 
 import com.sun.enterprise.util.StringUtils;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.progress.ProgressStatusBase;

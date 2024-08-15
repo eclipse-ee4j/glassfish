@@ -34,7 +34,9 @@ import com.sun.enterprise.deployment.web.SecurityRole;
 import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
 import com.sun.logging.LogDomains;
+
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.security.common.Role;
 

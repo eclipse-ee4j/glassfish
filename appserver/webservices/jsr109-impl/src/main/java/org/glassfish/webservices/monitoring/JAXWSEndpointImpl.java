@@ -16,14 +16,14 @@
 
 package org.glassfish.webservices.monitoring;
 
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.webservices.LogUtils.EXCEPTION_TRACING_RESPONSE;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.xml.ws.handler.MessageContext;
 
 import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.SOAPMessageContext;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.xml.ws.handler.MessageContext;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.webservices.LogUtils.EXCEPTION_TRACING_RESPONSE;
 
 
 public class JAXWSEndpointImpl extends EndpointImpl {

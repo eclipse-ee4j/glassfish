@@ -16,11 +16,8 @@
 
 package org.glassfish.admin.rest.generator.client;
 
-import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigModel;
-
 import com.sun.appserv.server.util.Version;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +32,11 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import org.glassfish.admin.rest.RestLogging;
+import org.glassfish.admin.rest.utils.Util;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.config.ConfigModel;
 
 public class PythonClientGenerator extends ClientGenerator {
     private File baseDirectory;

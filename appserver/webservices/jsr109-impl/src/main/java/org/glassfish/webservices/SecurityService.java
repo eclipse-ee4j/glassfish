@@ -19,8 +19,11 @@ package org.glassfish.webservices;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.web.WebModule;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
+
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**

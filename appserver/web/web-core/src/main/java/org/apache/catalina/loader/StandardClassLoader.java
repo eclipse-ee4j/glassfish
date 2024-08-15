@@ -17,22 +17,35 @@
 
 package org.apache.catalina.loader;
 
-import org.apache.catalina.LogFacade;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.naming.JndiPermission;
-import org.glassfish.web.loader.Reloader;
-
 import java.io.File;
 import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
-import java.security.*;
-import java.util.*;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
+import java.security.AccessControlException;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.PermissionCollection;
+import java.security.Policy;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
+import org.apache.naming.JndiPermission;
+import org.glassfish.web.loader.Reloader;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Subclass implementation of <b>java.net.URLClassLoader</b> that knows how

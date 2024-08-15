@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static com.sun.enterprise.universal.io.SmartFile.sanitize;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sun.enterprise.universal.io.SmartFile.sanitize;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
 /**
  * GFDomainLauncher This class is a package-private subclass of GFLauncher designed for domain launching

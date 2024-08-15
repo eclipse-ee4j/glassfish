@@ -18,16 +18,30 @@ package org.glassfish.config.support;
 
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.Utility;
-import java.io.*;
+
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.glassfish.config.support.Constants.*;
+import static org.glassfish.config.support.Constants.CLUSTER;
+import static org.glassfish.config.support.Constants.CLUSTERS;
+import static org.glassfish.config.support.Constants.CONFIG;
+import static org.glassfish.config.support.Constants.CONFIGS;
+import static org.glassfish.config.support.Constants.CONFIG_REF;
+import static org.glassfish.config.support.Constants.NAME;
+import static org.glassfish.config.support.Constants.REF;
+import static org.glassfish.config.support.Constants.SERVER;
+import static org.glassfish.config.support.Constants.SERVERS;
+import static org.glassfish.config.support.Constants.SERVER_REF;
 
 /**
  * It is incredibly complex and difficult to do "perfect-parsing" when the elements aren't in the right order. These 3

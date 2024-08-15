@@ -21,12 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.base.DomainRoot;
-import static org.glassfish.admin.amx.core.PathnameConstants.*;
-import static org.glassfish.external.amx.AMX.*;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
+
+import static org.glassfish.admin.amx.core.PathnameConstants.LEGAL_NAME_PATTERN;
+import static org.glassfish.admin.amx.core.PathnameConstants.LEGAL_TYPE_PATTERN;
+import static org.glassfish.admin.amx.core.PathnameConstants.MATCH_ZERO_OR_MORE;
+import static org.glassfish.admin.amx.core.PathnameConstants.SEPARATOR;
+import static org.glassfish.admin.amx.core.PathnameConstants.SUBSCRIPT_LEFT;
+import static org.glassfish.admin.amx.core.PathnameConstants.SUBSCRIPT_RIGHT;
+import static org.glassfish.external.amx.AMX.PARENT_PATH_KEY;
 
 /**
  * Parses a pathname into parts.

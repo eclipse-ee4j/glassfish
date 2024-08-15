@@ -16,7 +16,8 @@
 
 package com.sun.enterprise.backup;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
 
 class DirectoryFilter implements FilenameFilter {
     public boolean accept(File dir, String name) {

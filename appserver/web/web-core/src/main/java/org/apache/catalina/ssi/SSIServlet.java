@@ -18,13 +18,12 @@
 package org.apache.catalina.ssi;
 
 
-import org.apache.catalina.Globals;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +33,10 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
+
+import org.apache.catalina.Globals;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 /**
  * Servlet to process SSI requests within a webpage. Mapped to a path from
  * within web.xml.

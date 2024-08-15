@@ -16,10 +16,11 @@
 
 package com.sun.enterprise.security.ee.authorization;
 
-import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.CONFIDENTIAL;
-import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.NONE;
-import static java.util.Collections.list;
-import static java.util.stream.Collectors.toSet;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.web.SecurityRoleReference;
+
+import jakarta.servlet.annotation.ServletSecurity.TransportGuarantee;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,11 +33,10 @@ import org.glassfish.exousia.constraints.SecurityConstraint;
 import org.glassfish.exousia.constraints.WebResourceCollection;
 import org.glassfish.exousia.mapping.SecurityRoleRef;
 
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.web.SecurityRoleReference;
-
-import jakarta.servlet.annotation.ServletSecurity.TransportGuarantee;
+import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.CONFIDENTIAL;
+import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.NONE;
+import static java.util.Collections.list;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * This class converts from GlassFish security types to Exousia security types.

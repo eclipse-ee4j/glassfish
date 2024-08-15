@@ -16,9 +16,6 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static java.util.Collections.emptyList;
-import static java.util.regex.Pattern.DOTALL;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +24,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.glassfish.appclient.client.CLIBootstrap;
+
+import static java.util.Collections.emptyList;
+import static java.util.regex.Pattern.DOTALL;
 
 /**
  * Self-contained scanner for an agent argument string.

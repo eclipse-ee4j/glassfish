@@ -18,16 +18,15 @@
 package org.glassfish.cluster.ssh.util;
 
 import com.jcraft.jsch.Session;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.api.admin.CommandException;
 
 /**

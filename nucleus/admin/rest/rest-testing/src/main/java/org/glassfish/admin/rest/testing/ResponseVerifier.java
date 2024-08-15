@@ -23,7 +23,8 @@ import java.util.Map.Entry;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
-import static org.glassfish.admin.rest.testing.Common.*;
+import static org.glassfish.admin.rest.testing.Common.HEADER_LOCATION;
+import static org.glassfish.admin.rest.testing.Common.HEADER_X_LOCATION;
 
 public class ResponseVerifier {
     private Environment env;

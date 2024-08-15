@@ -17,14 +17,16 @@
 
 package com.sun.enterprise.v3.services.impl;
 
-import static java.util.Collections.newSetFromMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
-import static org.glassfish.api.event.EventTypes.SERVER_READY;
-import static org.glassfish.common.util.Constants.IMPORTANT_RUN_LEVEL_SERVICE;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.util.Result;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.v3.services.impl.monitor.GrizzlyMonitoring;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -82,16 +84,14 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.Transactions;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import com.sun.enterprise.util.Result;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.v3.services.impl.monitor.GrizzlyMonitoring;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static java.util.Collections.newSetFromMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.api.event.EventTypes.SERVER_READY;
+import static org.glassfish.common.util.Constants.IMPORTANT_RUN_LEVEL_SERVICE;
 
 /**
  * The Network Service is responsible for starting grizzly and register the top level proxy. It is also providing a

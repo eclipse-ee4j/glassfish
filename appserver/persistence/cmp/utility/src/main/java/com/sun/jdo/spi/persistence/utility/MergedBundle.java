@@ -22,7 +22,15 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 /** Special resource bundle which delegates to two others.
  * Ideally could just set the parent on the first, but this is protected,

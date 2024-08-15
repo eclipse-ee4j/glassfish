@@ -16,17 +16,17 @@
 
 package org.glassfish.admin.rest.generator.client;
 
-import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandModel;
-import org.jvnet.hk2.config.ConfigModel;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Locale;
+
+import org.glassfish.admin.rest.utils.Util;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandModel;
+import org.jvnet.hk2.config.ConfigModel;
 
 /**
  *

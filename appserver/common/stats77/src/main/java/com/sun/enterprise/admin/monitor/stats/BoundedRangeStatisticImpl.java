@@ -15,8 +15,9 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
-import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
 
 /**
  * An implementation of a BoundedRangeStatistic. All instances of this class are

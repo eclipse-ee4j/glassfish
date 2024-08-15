@@ -16,10 +16,10 @@
 
 package org.glassfish.ant.embedded.tasks;
 
-import org.apache.tools.ant.BuildException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.tools.ant.BuildException;
 
 
 public class DeployTask extends TaskBase {

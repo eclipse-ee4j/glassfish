@@ -16,12 +16,14 @@
 
 package org.glassfish.security.services.common;
 
+import jakarta.inject.Scope;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import jakarta.inject.Scope;
 
 /**
  * Scope used by security services that enables a flexible binding to service instances.

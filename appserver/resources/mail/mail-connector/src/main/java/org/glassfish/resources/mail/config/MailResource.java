@@ -28,9 +28,9 @@ import java.util.List;
 
 import org.glassfish.admin.cli.resources.ResourceConfigCreator;
 import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
+import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
 import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
 import org.glassfish.resourcebase.resources.ResourceTypeOrder;

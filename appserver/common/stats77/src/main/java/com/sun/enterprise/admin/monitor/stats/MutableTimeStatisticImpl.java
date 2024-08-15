@@ -15,8 +15,8 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
-import org.glassfish.j2ee.statistics.TimeStatistic;
 import org.glassfish.j2ee.statistics.Statistic;
+import org.glassfish.j2ee.statistics.TimeStatistic;
 
 
 /**

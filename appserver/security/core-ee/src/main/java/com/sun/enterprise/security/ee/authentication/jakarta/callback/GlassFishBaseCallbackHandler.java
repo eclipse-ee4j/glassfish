@@ -16,9 +16,13 @@
  */
 package com.sun.enterprise.security.ee.authentication.jakarta.callback;
 
-import static com.sun.logging.LogDomains.SECURITY_LOGGER;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.security.store.PasswordAdapter;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.auth.message.callback.SecretKeyCallback;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -36,13 +40,9 @@ import org.glassfish.epicyro.config.helper.BaseCallbackHandler;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.MasterPassword;
 
-import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.auth.message.callback.SecretKeyCallback;
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 
 public abstract class GlassFishBaseCallbackHandler extends BaseCallbackHandler {

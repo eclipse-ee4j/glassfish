@@ -16,18 +16,19 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
+import com.sun.ejb.Container;
+import com.sun.ejb.ContainerFactory;
 import com.sun.ejb.containers.BaseContainerFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.security.SecurityManager;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import com.sun.ejb.Container;
-import com.sun.ejb.ContainerFactory;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.security.SecurityManager;
-import com.sun.logging.LogDomains;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.ejb.config.EjbContainer;

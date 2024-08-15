@@ -19,6 +19,10 @@ package com.sun.enterprise.config.modularity;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.DomainExtension;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.Injectee;
@@ -27,9 +31,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * create the default ejb-container configbean when non exists and an injection point requires it.

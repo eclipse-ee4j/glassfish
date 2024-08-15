@@ -17,7 +17,7 @@
 
 package org.glassfish.appclient.client;
 
-import static java.lang.System.arraycopy;
+import com.sun.enterprise.util.OS;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +32,8 @@ import java.util.stream.Stream;
 
 import org.glassfish.appclient.client.acc.UserError;
 import org.glassfish.appclient.common.ClassPathUtils;
-import com.sun.enterprise.util.OS;
+
+import static java.lang.System.arraycopy;
 
 /**
  * Constructs a java command to launch the ACC with the correct agent and command line arguments, based on the current

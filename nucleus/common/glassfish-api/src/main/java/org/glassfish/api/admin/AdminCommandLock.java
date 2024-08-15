@@ -17,6 +17,9 @@
 
 package org.glassfish.api.admin;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -28,9 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * The implementation of the admin command lock.

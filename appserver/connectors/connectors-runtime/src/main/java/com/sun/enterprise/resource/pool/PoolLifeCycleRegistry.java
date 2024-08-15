@@ -17,15 +17,15 @@
 
 package com.sun.enterprise.resource.pool;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.listener.PoolLifeCycle;
 
 import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * Implementation of PoolLifeCycle to listen to events related to a connection pool creation or destroy. The registry

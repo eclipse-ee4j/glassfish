@@ -22,16 +22,17 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
 import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
 import com.sun.jdo.api.persistence.mapping.ejb.ConversionHelper;
 import com.sun.jdo.api.persistence.mapping.ejb.EJBInfoHelper;
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.spi.persistence.support.ejb.model.DeploymentDescriptorModel;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;

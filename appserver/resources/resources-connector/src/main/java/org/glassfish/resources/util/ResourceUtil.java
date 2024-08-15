@@ -18,12 +18,13 @@
 package org.glassfish.resources.util;
 
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import java.io.IOException;
 import java.util.Enumeration;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * @author Jagadish Ramu

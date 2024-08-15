@@ -16,13 +16,14 @@
 
 package org.glassfish.ejb.deployment.node;
 
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+import com.sun.enterprise.deployment.node.XMLElement;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
-import com.sun.enterprise.deployment.node.XMLElement;
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.ActivationConfigDescriptor;
 import org.w3c.dom.Node;

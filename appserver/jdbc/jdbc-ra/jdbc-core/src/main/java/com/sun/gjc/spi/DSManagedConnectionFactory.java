@@ -16,18 +16,6 @@
 
 package com.sun.gjc.spi;
 
-import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.sql.DataSource;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.base.AbstractDataSource;
@@ -40,6 +28,18 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ResourceAllocationException;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.DataSource;
+
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Data Source <code>ManagedConnectionFactory</code> implementation for Generic JDBC Connector.

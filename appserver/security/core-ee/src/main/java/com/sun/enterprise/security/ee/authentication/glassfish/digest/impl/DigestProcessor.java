@@ -16,7 +16,11 @@
 
 package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
-import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
+import com.sun.enterprise.security.auth.digest.api.Password;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,11 +30,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
-import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
 
 /**
  * supports creation and validation of digest.

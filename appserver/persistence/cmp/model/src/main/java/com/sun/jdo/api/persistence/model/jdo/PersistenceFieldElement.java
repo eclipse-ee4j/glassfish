@@ -22,9 +22,9 @@
 
 package com.sun.jdo.api.persistence.model.jdo;
 
-import java.util.ArrayList;
-
 import com.sun.jdo.api.persistence.model.ModelException;
+
+import java.util.ArrayList;
 
 /* TODO:
     1. throw (Model or IllegalArgument)Exception on set illegal constant values?

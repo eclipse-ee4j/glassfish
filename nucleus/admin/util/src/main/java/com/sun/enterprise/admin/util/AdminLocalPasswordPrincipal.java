@@ -17,6 +17,7 @@
 package com.sun.enterprise.admin.util;
 
 import java.security.Principal;
+
 import org.glassfish.security.services.api.authorization.AuthorizationAdminConstants;
 
 /**

@@ -46,7 +46,8 @@ class FilteringClassLoader extends ClassLoader {
     private static final String PATH_WELD_EXTENTSION = "META-INF/services/jakarta.enterprise.inject.spi.Extension";
     private static final String PATH_MANIFEST = "META-INF/MANIFEST.MF";
     private static final Pattern PATTERN_OSGI_EE_JAVA = Pattern.compile("\\(&\\(osgi.ee=JavaSE\\)\\(version=(.+)\\)\\)");
-    private static final Version JDK17 = Version.parse("17");
+    private static final Version JDK_VERSION_MIN = Version.parse("17");
+    private static final Version JDK_VERSION = Runtime.version();
 
     FilteringClassLoader(ClassLoader parent) {
         super(parent);
@@ -65,8 +66,7 @@ class FilteringClassLoader extends ClassLoader {
     public Enumeration<URL> getResources(final String name) throws IOException {
         LOG.log(Level.FINE, "getResources(): {0}", name);
         final Enumeration<URL> resources = getParent().getResources(name);
-        final Version javaVersion = Runtime.version();
-        if (javaVersion.compareTo(JDK17) >= 0) {
+        if (JDK_VERSION_MIN.compareTo(JDK_VERSION) < 0) {
             return resources;
         }
         if (!name.endsWith(PATH_WELD_EXTENTSION)) {
@@ -78,7 +78,7 @@ class FilteringClassLoader extends ClassLoader {
                 return true;
             }
             LOG.log(Level.WARNING, "Removed extension {0} incompatible with the current JDK {1}.",
-                new Object[] {url, javaVersion});
+                new Object[] {url, JDK_VERSION});
             return false;
         };
         final Iterable<URL> iterable = () -> resources.asIterator();
@@ -103,7 +103,7 @@ class FilteringClassLoader extends ClassLoader {
         if (requiredMinVersion == null) {
             return true;
         }
-        return requiredMinVersion.compareTo(Runtime.version()) <= 0;
+        return requiredMinVersion.compareTo(JDK_VERSION) <= 0;
     }
 
 

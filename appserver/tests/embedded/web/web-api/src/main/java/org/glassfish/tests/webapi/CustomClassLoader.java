@@ -16,8 +16,11 @@
 
 package org.glassfish.tests.webapi;
 
-import java.io.*;
-import java.util.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Hashtable;
 
 public class CustomClassLoader extends ClassLoader {
 

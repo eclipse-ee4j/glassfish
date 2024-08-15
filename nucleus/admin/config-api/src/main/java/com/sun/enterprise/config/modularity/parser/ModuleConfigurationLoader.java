@@ -22,6 +22,11 @@ import com.sun.enterprise.config.modularity.annotation.HasNoDefaultConfiguration
 import com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -33,11 +38,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  * Containing shared functionalists between different derived classes like ConfigSnippetLoader and so on. Shared

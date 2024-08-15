@@ -17,15 +17,15 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import jakarta.inject.Qualifier;
 
-import static java.lang.annotation.ElementType.TYPE;
 import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Target;
+
+import org.jvnet.hk2.annotations.Contract;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used on {@link ConfigInjector} to indicate

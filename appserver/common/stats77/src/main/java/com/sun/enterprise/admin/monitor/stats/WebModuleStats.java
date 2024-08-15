@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
-import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
+import org.glassfish.j2ee.statistics.Stats;
 
 /**
  * Interface for querying web module statistics.

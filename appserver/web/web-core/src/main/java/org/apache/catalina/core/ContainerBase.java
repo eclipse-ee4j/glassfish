@@ -18,9 +18,8 @@
 
 package org.apache.catalina.core;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
 import jakarta.servlet.ServletException;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -38,9 +37,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.naming.directory.DirContext;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.ContainerListener;
@@ -60,6 +61,8 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.util.LifecycleSupport;
 import org.apache.naming.resources.ProxyDirContext;
 import org.glassfish.web.valve.GlassFishValve;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * Abstract implementation of the <b>Container</b> interface, providing common functionality required by nearly every

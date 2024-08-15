@@ -17,13 +17,14 @@
 package org.glassfish.admin.restconnector;
 
 import com.sun.enterprise.config.serverbeans.Config;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.container.Adapter;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.container.Adapter;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implementation of {@link Adapter} for rest based management. It extends from {@link AbstractProxyRestAdapter} that

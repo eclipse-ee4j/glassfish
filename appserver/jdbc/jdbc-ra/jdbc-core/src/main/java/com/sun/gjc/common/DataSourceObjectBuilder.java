@@ -17,6 +17,24 @@
 
 package com.sun.gjc.common;
 
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.util.MethodExecutor;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
+
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.Globals;
+
 import static com.sun.gjc.common.DataSourceSpec.CLASSNAME;
 import static com.sun.gjc.common.DataSourceSpec.DATABASENAME;
 import static com.sun.gjc.common.DataSourceSpec.DATASOURCENAME;
@@ -40,24 +58,6 @@ import static com.sun.gjc.common.DataSourceSpec.SERVERNAME;
 import static com.sun.gjc.common.DataSourceSpec.USERNAME;
 import static java.util.Arrays.asList;
 import static java.util.logging.Level.SEVERE;
-
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.Globals;
-
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.util.MethodExecutor;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.ResourceException;
 
 /**
  * Utility class, which would create necessary Datasource object according to

@@ -17,12 +17,13 @@
 
 package org.jvnet.hk2.config;
 
-import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 import javax.management.DescriptorKey;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
     Units annotation to be used on @Configured interfaces.  Units are strings because

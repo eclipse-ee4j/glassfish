@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.LinkedList;
@@ -23,9 +26,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Class to retrieve all the matching files for a given input path. It also handles the processing of wild-card in the

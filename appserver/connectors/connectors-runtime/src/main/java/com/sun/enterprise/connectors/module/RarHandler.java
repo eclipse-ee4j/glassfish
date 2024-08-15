@@ -17,16 +17,15 @@
 
 package com.sun.enterprise.connectors.module;
 
-import static java.util.logging.Level.FINEST;
-import static org.glassfish.loader.util.ASClassLoaderUtil.getLibDirectoryJarURIs;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -34,11 +33,15 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINEST;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getLibDirectoryJarURIs;
 
 /**
  * Archive handler for resource-adapters

@@ -16,14 +16,13 @@
 
 package com.sun.jts.pi;
 
-import org.omg.CORBA.Policy;
 import org.omg.CORBA.LocalObject;
-
+import org.omg.CORBA.Policy;
 import org.omg.CosTransactions.ADAPTS;
 import org.omg.CosTransactions.FORBIDS;
-import org.omg.CosTransactions.REQUIRES;
 import org.omg.CosTransactions.OTSPolicy;
 import org.omg.CosTransactions.OTS_POLICY_TYPE;
+import org.omg.CosTransactions.REQUIRES;
 
 /**
  * This is the OTSPolicy object which holds an appropriate policy value.

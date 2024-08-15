@@ -15,10 +15,11 @@
  */
 
 package com.sun.jts.CosTransactions;
-import java.util.LinkedList;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
+
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**

@@ -17,17 +17,6 @@
 
 package com.sun.enterprise.resource;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-
-import javax.transaction.xa.XAException;
-import javax.transaction.xa.XAResource;
-import javax.transaction.xa.Xid;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
@@ -39,6 +28,17 @@ import com.sun.logging.LogDomains;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ResourceAllocationException;
 import jakarta.transaction.SystemException;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * @author Tony Ng, Jagadish Ramu

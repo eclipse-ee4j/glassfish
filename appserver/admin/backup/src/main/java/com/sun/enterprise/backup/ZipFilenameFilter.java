@@ -22,7 +22,8 @@
 
 package com.sun.enterprise.backup;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Locale;
 
 /**

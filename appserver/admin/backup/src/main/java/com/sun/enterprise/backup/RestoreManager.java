@@ -19,7 +19,9 @@ package com.sun.enterprise.backup;
 import com.sun.enterprise.backup.util.BackupUtils;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.zip.ZipFile;
-import java.io.*;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *

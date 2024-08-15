@@ -23,17 +23,18 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
-import org.netbeans.modules.dbschema.ColumnElement;
+import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.lang.reflect.Field;
-import java.sql.Types;
-import java.math.BigInteger;
-import java.math.BigDecimal;
+
+import org.netbeans.modules.dbschema.ColumnElement;
 
 
 /**

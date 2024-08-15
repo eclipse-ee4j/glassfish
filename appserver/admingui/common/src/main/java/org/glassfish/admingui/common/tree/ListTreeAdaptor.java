@@ -21,15 +21,18 @@ import com.sun.jsftemplating.component.factory.tree.TreeAdaptor;
 import com.sun.jsftemplating.component.factory.tree.TreeAdaptorBase;
 import com.sun.jsftemplating.layout.descriptors.LayoutComponent;
 import com.sun.jsftemplating.layout.event.CommandActionListener;
+
+import jakarta.faces.component.ActionSource;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import jakarta.faces.component.ActionSource;
-import jakarta.faces.component.UIComponent;
-import jakarta.faces.context.FacesContext;
+
 import org.glassfish.admingui.common.util.GuiUtil;
 
 

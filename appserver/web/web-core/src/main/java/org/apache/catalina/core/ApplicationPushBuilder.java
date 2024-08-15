@@ -18,6 +18,13 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestWrapper;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.PushBuilder;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,22 +34,14 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestWrapper;
-import jakarta.servlet.SessionTrackingMode;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.PushBuilder;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.connector.Request;
-
 import org.glassfish.grizzly.http.Cookie;
 import org.glassfish.grizzly.http.server.http2.PushEvent;
-import org.glassfish.grizzly.http2.Http2Stream;
 import org.glassfish.grizzly.http.util.Header;
 import org.glassfish.grizzly.http.util.MimeHeaders;
+import org.glassfish.grizzly.http2.Http2Stream;
 
 /**
  * Implementation of jakarta.servlet.http.PushBuilder.

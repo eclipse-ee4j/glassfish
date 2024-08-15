@@ -16,9 +16,12 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo.CredentialType.USERNAME_PASSWORD;
-import static java.util.Arrays.asList;
-import static org.glassfish.appclient.client.acc.Util.writeTextToTempFile;
+import com.sun.enterprise.container.common.spi.util.InjectionException;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo;
+
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,12 +39,9 @@ import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo.CredentialType.USERNAME_PASSWORD;
+import static java.util.Arrays.asList;
+import static org.glassfish.appclient.client.acc.Util.writeTextToTempFile;
 
 /**
  *

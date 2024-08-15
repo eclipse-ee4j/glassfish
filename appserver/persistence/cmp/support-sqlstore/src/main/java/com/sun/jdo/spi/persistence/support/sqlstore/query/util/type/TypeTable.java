@@ -22,11 +22,13 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-import java.util.*;
-import java.math.*;
-
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *

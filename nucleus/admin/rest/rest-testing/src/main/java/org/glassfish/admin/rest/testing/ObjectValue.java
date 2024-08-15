@@ -17,12 +17,17 @@
 package org.glassfish.admin.rest.testing;
 
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import static org.glassfish.admin.rest.testing.Common.*;
+import static org.glassfish.admin.rest.testing.Common.booleanVal;
+import static org.glassfish.admin.rest.testing.Common.doubleVal;
+import static org.glassfish.admin.rest.testing.Common.intVal;
+import static org.glassfish.admin.rest.testing.Common.longVal;
+import static org.glassfish.admin.rest.testing.Common.nilVal;
+import static org.glassfish.admin.rest.testing.Common.stringVal;
 
 public class ObjectValue extends Value {
     private boolean ignoreExtra;

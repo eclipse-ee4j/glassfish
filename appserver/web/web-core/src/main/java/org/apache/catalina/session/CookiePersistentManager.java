@@ -16,12 +16,18 @@
 
 package org.apache.catalina.session;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
-import java.io.*;
-import java.text.MessageFormat;
-import java.util.*;
-import jakarta.servlet.http.*;
 
 /**
  * Session manager for cookie-based persistence, where cookies carry session state.

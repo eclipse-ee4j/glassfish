@@ -16,38 +16,36 @@
 
 package org.glassfish.ejb.persistent.timer;
 
-import java.io.Serializable;
-import java.io.IOException;
-import java.io.ObjectStreamException;
+import com.sun.ejb.containers.EJBContextImpl;
+import com.sun.ejb.containers.EJBTimerSchedule;
+import com.sun.ejb.containers.EJBTimerService;
+import com.sun.ejb.containers.TimerPrimaryKey;
+import com.sun.logging.LogDomains;
 
-import java.util.Date;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
+import jakarta.annotation.Resource;
 import jakarta.ejb.CreateException;
 import jakarta.ejb.FinderException;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TimerConfig;
-
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
-import jakarta.annotation.Resource;
+import java.io.IOException;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import java.sql.Connection;
-
-import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.ejb.containers.EJBTimerService;
-import com.sun.ejb.containers.EJBTimerSchedule;
-import com.sun.ejb.containers.TimerPrimaryKey;
-import com.sun.logging.LogDomains;
 
 /**
  * TimerBean is a facade for the persistent state of an EJB Timer.

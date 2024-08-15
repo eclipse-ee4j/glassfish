@@ -16,7 +16,11 @@
 
 package org.glassfish.config.support;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Target type annotation defines valid target configuration elements for the annotated command type. Valid

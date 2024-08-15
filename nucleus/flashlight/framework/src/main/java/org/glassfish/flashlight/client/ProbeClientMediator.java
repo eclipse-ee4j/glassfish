@@ -17,12 +17,11 @@
 package org.glassfish.flashlight.client;
 
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.Collection;
 import java.util.List;
 
 import org.glassfish.flashlight.provider.FlashlightProbe;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * @author Mahesh Kannan

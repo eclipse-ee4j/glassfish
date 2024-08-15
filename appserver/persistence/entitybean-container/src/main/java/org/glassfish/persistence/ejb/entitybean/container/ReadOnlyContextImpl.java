@@ -16,8 +16,9 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
-import jakarta.ejb.EnterpriseBean;
 import com.sun.ejb.containers.BaseContainer;
+
+import jakarta.ejb.EnterpriseBean;
 
 /**
  * Implementation of EJBContext for ReadOnlyBeans. Contains extra

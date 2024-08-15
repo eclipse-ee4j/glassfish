@@ -16,10 +16,10 @@
 
 package org.glassfish.internal.embedded;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.IOException;
 import java.util.Collection;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Management interfaces for all embedded ports

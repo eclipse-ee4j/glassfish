@@ -17,7 +17,9 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import static org.glassfish.deployment.common.DeploymentUtils.isArchiveOfType;
+import com.sun.enterprise.deployment.EarType;
+
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.deployment.EarType;
-
-import jakarta.inject.Inject;
+import static org.glassfish.deployment.common.DeploymentUtils.isArchiveOfType;
 
 /**
  * Ear sniffers snifs ear files.

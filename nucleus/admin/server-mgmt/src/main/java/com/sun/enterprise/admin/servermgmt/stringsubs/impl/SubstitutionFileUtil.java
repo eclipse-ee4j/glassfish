@@ -16,13 +16,13 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
+import com.sun.enterprise.admin.servermgmt.SLogger;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Utility class for the substitutable files.

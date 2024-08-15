@@ -16,19 +16,20 @@
 
 package org.glassfish.ejb.upgrade;
 
+import com.sun.ejb.containers.EjbContainerUtil;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
-import com.sun.ejb.containers.EjbContainerUtil;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
-
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;

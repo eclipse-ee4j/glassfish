@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.deployment;
 
+import jakarta.enterprise.inject.spi.Interceptor;
+
 import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.Test;
-
-import jakarta.enterprise.inject.spi.Interceptor;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;

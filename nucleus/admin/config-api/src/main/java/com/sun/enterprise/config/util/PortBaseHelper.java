@@ -18,13 +18,36 @@ package com.sun.enterprise.config.util;
 
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.net.NetUtils;
+
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jvnet.hk2.config.TransactionFailure;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.net.NetUtils;
-import static com.sun.enterprise.config.util.PortConstants.*;
+
+import static com.sun.enterprise.config.util.PortConstants.ADMIN;
+import static com.sun.enterprise.config.util.PortConstants.DEBUG;
+import static com.sun.enterprise.config.util.PortConstants.HTTP;
+import static com.sun.enterprise.config.util.PortConstants.HTTPS;
+import static com.sun.enterprise.config.util.PortConstants.IIOP;
+import static com.sun.enterprise.config.util.PortConstants.IIOPM;
+import static com.sun.enterprise.config.util.PortConstants.IIOPS;
+import static com.sun.enterprise.config.util.PortConstants.JMS;
+import static com.sun.enterprise.config.util.PortConstants.JMX;
+import static com.sun.enterprise.config.util.PortConstants.OSGI;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_ADMINPORT_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_DEBUG_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_HTTPSSL_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_IIOPMUTUALAUTH_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_IIOPSSL_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_IIOP_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_INSTANCE_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMS_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMX_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_OSGI_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORT_MAX_VAL;
 
 /**
  * Port base utilities used by create-local-instance. Similar to create-domain.

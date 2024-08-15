@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.security.webservices;
 
-import static java.util.logging.Level.FINE;
-
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
@@ -28,6 +26,7 @@ import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.wss.provider.wsit.PacketMessageInfo;
+
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.xml.soap.MimeHeaders;
@@ -39,11 +38,16 @@ import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import javax.xml.namespace.QName;
+
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
 
 /**
  *

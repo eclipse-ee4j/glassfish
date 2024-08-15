@@ -18,6 +18,7 @@ package com.sun.enterprise.config.modularity.tests;
 
 import com.sun.enterprise.config.modularity.ConfigBeanInstaller;
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
+
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;

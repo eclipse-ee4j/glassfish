@@ -17,9 +17,9 @@
 
 package org.apache.naming.resources;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -33,12 +33,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import javax.naming.NamingException;
-import javax.naming.NamingEnumeration;
+
 import javax.naming.NameClassPair;
-import javax.naming.directory.DirContext;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+
 import org.apache.naming.JndiPermission;
 
 /**

@@ -16,6 +16,9 @@
 
 package com.sun.ts.lib.harness;
 
+import com.sun.javatest.Status;
+import com.sun.ts.lib.util.TestUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,9 +34,6 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-
-import com.sun.javatest.Status;
-import com.sun.ts.lib.util.TestUtil;
 
 /**
  * This abstract class must be extended by all clients of all J2EE-TS tests. All implementations of this class must define a

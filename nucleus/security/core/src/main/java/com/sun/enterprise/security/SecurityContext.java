@@ -17,24 +17,27 @@
 
 package com.sun.enterprise.security;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.SEVERE;
-
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 import com.sun.enterprise.security.common.AbstractSecurityContext;
 import com.sun.enterprise.security.integration.AppServSecurityContext;
+
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This class that extends AbstractSecurityContext that gets stored in Thread Local Storage. If the current thread

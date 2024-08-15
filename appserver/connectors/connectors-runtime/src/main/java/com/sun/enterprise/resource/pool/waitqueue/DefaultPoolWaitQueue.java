@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.resource.pool.waitqueue;
 
+import com.sun.logging.LogDomains;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.logging.LogDomains;
 
 /**
  * Default wait queue for the connection pool

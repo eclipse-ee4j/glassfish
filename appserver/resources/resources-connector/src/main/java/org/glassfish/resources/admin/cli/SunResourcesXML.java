@@ -16,9 +16,9 @@
 
 package org.glassfish.resources.admin.cli;
 
-import org.glassfish.resources.api.Resource;
-
 import java.util.List;
+
+import org.glassfish.resources.api.Resource;
 
 /**
  * This class encapsulates the information of a sun-resources.xml

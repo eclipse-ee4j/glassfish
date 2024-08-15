@@ -17,11 +17,9 @@
 
 package org.glassfish.security.common;
 
-import static com.sun.enterprise.util.Utility.convertCharArrayToByteArray;
-import static java.nio.charset.Charset.defaultCharset;
-
 import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.i18n.StringManager;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import static com.sun.enterprise.util.Utility.convertCharArrayToByteArray;
+import static java.nio.charset.Charset.defaultCharset;
 
 /**
  * Helper class for implementing file password authentication.

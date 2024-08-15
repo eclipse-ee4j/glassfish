@@ -17,13 +17,13 @@
 
 package org.glassfish.weld.services;
 
+import com.sun.ejb.codegen.ClassGenerator;
+
 import java.security.ProtectionDomain;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.jboss.weld.serialization.spi.ProxyServices;
-
-import com.sun.ejb.codegen.ClassGenerator;
 
 /**
  * An implementation of the {@link ProxyServices}.

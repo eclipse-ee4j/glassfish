@@ -17,8 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import static java.util.logging.Level.WARNING;
-
 import com.sun.ejb.Container;
 import com.sun.ejb.ContainerFactory;
 import com.sun.ejb.base.container.util.CacheProperties;
@@ -32,14 +30,17 @@ import com.sun.enterprise.config.serverbeans.AvailabilityService;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.util.Utility;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -62,11 +63,18 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.util.logging.Level.WARNING;
+
 /**
  * A builder for StatefulSessionContainer. Takes care of building / initializing the StatefulSessionContainer with the
- * following classes: a) Cache (LRU / NRU / FIFO / UnBounded) b) SFSBStoreManager (Using PersistenceStrategyBuilder) c)
- * Cache passivation task (if idle-timeout is greater than 0) d) Passivated sessions removal task (if removal-timeout is
- * greater than 0) e) CheckpointPolicy (if ha enabled) f) SFSBUUIDUtil g) BeanLifecycleManager
+ * following classes:
+ * a) Cache (LRU / NRU / FIFO / UnBounded)
+ * b) SFSBStoreManager (Using PersistenceStrategyBuilder)
+ * c) Cache passivation task (if idle-timeout is greater than 0)
+ * d) Passivated sessions removal task (if removal-timeout is greater than 0)
+ * e) CheckpointPolicy (if ha enabled)
+ * f) SFSBUUIDUtil
+ * g) BeanLifecycleManager
  *
  * @author Mahesh Kannan
  */

@@ -16,8 +16,11 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static java.sql.ResultSet.CONCUR_READ_ONLY;
-import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
+import com.sun.gjc.spi.ManagedConnectionImpl;
+import com.sun.gjc.spi.base.ConnectionWrapper;
+import com.sun.gjc.util.SQLTraceDelegator;
+
+import jakarta.resource.spi.ConnectionRequestInfo;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -31,11 +34,8 @@ import java.sql.Statement;
 
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
-import com.sun.gjc.spi.ManagedConnectionImpl;
-import com.sun.gjc.spi.base.ConnectionWrapper;
-import com.sun.gjc.util.SQLTraceDelegator;
-
-import jakarta.resource.spi.ConnectionRequestInfo;
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 
 /**
  * Wrapper class that aids to provide wrapper for Statement, PreparedStatement,

@@ -16,7 +16,9 @@
 
 package com.sun.enterprise.connectors.inbound;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.logging.LogDomains;
 
 import java.lang.reflect.InvocationHandler;
@@ -25,8 +27,6 @@ import java.lang.reflect.Proxy;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import org.glassfish.ejb.api.MessageBeanListener;
 import org.glassfish.ejb.api.MessageBeanProtocolManager;
 

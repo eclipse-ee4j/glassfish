@@ -18,8 +18,8 @@
 
 package org.apache.naming.resources;
 
-import java.util.HashMap;
 import java.security.SecureRandom;
+import java.util.HashMap;
 /**
  * Implements a special purpose cache.
  *

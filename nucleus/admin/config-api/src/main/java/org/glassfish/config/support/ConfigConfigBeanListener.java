@@ -16,14 +16,16 @@
 
 package org.glassfish.config.support;
 
-import java.beans.PropertyChangeEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
+import java.beans.PropertyChangeEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -37,8 +39,8 @@ import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.AddingDefaultInstanceIndexFor;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.removingDefaultInstanceIndexFor;
 
 /**
  * Listens for changes to the Config for the current server and adds an index for the name

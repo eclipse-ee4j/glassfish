@@ -17,6 +17,7 @@ package org.jboss.weld.tck.glassfish;
 
 import jakarta.enterprise.context.spi.Context;
 import jakarta.enterprise.context.spi.CreationalContext;
+
 import org.jboss.cdi.tck.spi.Contextuals;
 
 public class GlassFishContextualsImpl implements Contextuals {

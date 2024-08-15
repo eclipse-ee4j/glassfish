@@ -19,14 +19,20 @@ package com.sun.enterprise.admin.servermgmt.cli;
 import com.sun.enterprise.admin.cli.Environment;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import java.util.TimerTask;
-import java.util.Timer;
-import java.util.logging.Logger;
-import java.io.File;
-
-import org.glassfish.api.admin.*;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import static com.sun.enterprise.admin.servermgmt.SLogger.*;
+
+import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
+
+import static com.sun.enterprise.admin.servermgmt.SLogger.MONITOR_MEMORY_TITLE;
+import static com.sun.enterprise.admin.servermgmt.SLogger.MONITOR_TITLE;
+import static com.sun.enterprise.admin.servermgmt.SLogger.MONITOR_UPTIME_TITLE;
+import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 
 public class MonitorTask extends TimerTask {
     private String type = null;

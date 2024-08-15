@@ -18,10 +18,11 @@ package org.glassfish.loadbalancer.admin.cli.reader.impl;
 
 import com.sun.enterprise.deployment.runtime.web.IdempotentUrlPattern;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
+
 import org.glassfish.loadbalancer.admin.cli.reader.api.IdempotentUrlPatternReader;
-import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
+import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
 import org.glassfish.loadbalancer.admin.cli.transform.IdempotentUrlPatternVisitor;
+import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
 
 /**
  * Provides idempotent url pattern information relavant to Load balancer tier.

@@ -16,13 +16,13 @@
 
 package com.sun.jdo.api.persistence.enhancer.meta;
 
-import java.io.PrintWriter;
-
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+
+import java.io.PrintWriter;
 
 
 /**

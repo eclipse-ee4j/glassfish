@@ -17,14 +17,14 @@
 
 package org.jvnet.hk2.config.test.example;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-
-import jakarta.validation.constraints.NotNull;
 
 @Configured
 public interface GenericContainer extends ConfigBeanProxy {

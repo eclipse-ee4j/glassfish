@@ -16,8 +16,10 @@
 
 package org.glassfish.embeddable.web;
 
-import java.util.*;
-import jakarta.servlet.*;
+import jakarta.servlet.ServletContext;
+
+import java.util.EventListener;
+
 import org.glassfish.embeddable.web.config.SecurityConfig;
 
 /**

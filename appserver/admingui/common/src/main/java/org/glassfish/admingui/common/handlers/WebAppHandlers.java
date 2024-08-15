@@ -28,19 +28,19 @@
  */
 package org.glassfish.admingui.common.handlers;
 
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
-import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-import com.sun.enterprise.config.serverbeans.ServerTags;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.DeployUtil;
+import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestResponse;
 import org.glassfish.admingui.common.util.RestUtil;
 

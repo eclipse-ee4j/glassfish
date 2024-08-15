@@ -16,26 +16,7 @@
  */
 package org.glassfish.tests.embedded.scatteredarchive;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.INFO;
-import static java.util.stream.Collectors.toList;
-import static org.glassfish.tests.embedded.scatteredarchive.contextInitialized.ContextInitializedTestServlet.LABEL_CONTEXT_INITIALIZED_COUNTER;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
-
 import com.sun.enterprise.util.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
-import org.glassfish.embeddable.Deployer;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
-import org.glassfish.embeddable.archive.ScatteredArchive;
-import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
-import org.glassfish.embeddable.web.HttpListener;
-import org.glassfish.embeddable.web.WebContainer;
-import org.glassfish.embeddable.GlassFishException;
-import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,10 +30,30 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import org.glassfish.embeddable.Deployer;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.archive.ScatteredArchive;
+import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
+import org.glassfish.embeddable.web.HttpListener;
+import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.tests.embedded.scatteredarchive.contextInitialized.ContextInitializedTestServlet;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.util.stream.Collectors.toList;
+import static org.glassfish.tests.embedded.scatteredarchive.contextInitialized.ContextInitializedTestServlet.LABEL_CONTEXT_INITIALIZED_COUNTER;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @author bhavanishankar@dev.java.net

@@ -17,6 +17,7 @@
 package com.sun.enterprise.config.modularity.tests;
 
 import com.sun.enterprise.config.modularity.annotation.HasNoDefaultConfiguration;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;

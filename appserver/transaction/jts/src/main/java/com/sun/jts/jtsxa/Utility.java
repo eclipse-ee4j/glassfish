@@ -16,9 +16,12 @@
 
 package com.sun.jts.jtsxa;
 
-import org.omg.CosTransactions.*;
-import com.sun.jts.codegen.otsidl.*;
-import com.sun.jts.CosTransactions.*;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
+
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.otid_t;
 
 /**
  * This is an Utility class containing helper functions.

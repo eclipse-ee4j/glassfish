@@ -17,13 +17,13 @@
 
 package org.glassfish.internal.data;
 
-import static java.util.Collections.emptyList;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Simple tracker objects to remember what operations were performed

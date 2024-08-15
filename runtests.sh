@@ -70,7 +70,7 @@ if [ -z "${test}" ]; then
 fi
 
 if [ -z "${JAVA_HOME}" ]; then
-  export JAVA_HOME=/usr/lib/jvm/jdk21
+  export JAVA_HOME=/usr/lib/jvm/jdk17
 fi
 export PATH="${JAVA_HOME}/bin:${PATH}"
 

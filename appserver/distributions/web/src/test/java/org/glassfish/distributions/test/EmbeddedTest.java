@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,17 +37,16 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.WebListener;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import junit.framework.Assert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class EmbeddedTest {
 
     static GlassFish glassfish;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -70,14 +70,14 @@ public class EmbeddedTest {
 
         listeners = webcontainer.getWebListeners();
         System.out.println("Network listener size after creation " + listeners.size());
-        Assert.assertTrue(listeners.size() == 1);
+        Assertions.assertTrue(listeners.size() == 1);
         for (WebListener listener : listeners) {
             System.out.println("Network listener " + listener.getPort());
         }
 
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testAll() throws GlassFishException {
         /*
         Set<Sniffer> sniffers = new HashSet<Sniffer>();
@@ -101,7 +101,7 @@ public class EmbeddedTest {
                 "org/glassfish/distributions/test/ejb/SimpleEjb.class".length());
 
         String appName = deployer.deploy(new File(p).toURI(), "--name=sample");
-        Assert.assertNotNull("AppName is null from deployer of type " + deployer.getClass().getName(),
+        Assertions.assertNotNull("AppName is null from deployer of type " + deployer.getClass().getName(),
                 appName);
 
         // ok now let's look up the EJB...
@@ -150,7 +150,7 @@ public class EmbeddedTest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         try {
             URL servlet = new URL("http://localhost:8080/test-classes/hello");
@@ -162,8 +162,8 @@ public class EmbeddedTest {
             if (inputLine != null) {
                 System.out.println(inputLine);
             }
-            Assert.assertNotNull(inputLine);
-            Assert.assertEquals(inputLine.trim(), "Hello World !");
+            Assertions.assertNotNull(inputLine);
+            Assertions.assertEquals(inputLine.trim(), "Hello World !");
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,7 +191,7 @@ public class EmbeddedTest {
         //System.out.println("list-contracts command result :\n" + commandResult.getOutput());
     }
 
-    @AfterClass
+    @AfterAll
     public static void close() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

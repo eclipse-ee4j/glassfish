@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,7 @@ import java.util.Map;
 import javax.naming.Context;
 
 import org.glassfish.distributions.test.ejb.SampleEjb;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UnitTest {
 

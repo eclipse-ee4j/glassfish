@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.naming.Context;
 
 import org.glassfish.distributions.test.ejb.SampleEjb;
+import org.junit.Test;
 
 public class UnitTest {
 

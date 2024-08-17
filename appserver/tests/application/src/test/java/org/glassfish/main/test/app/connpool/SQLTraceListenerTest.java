@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.itest.tools.asadmin.DomainSettings;
 import org.glassfish.main.test.app.connpool.lib.LastTraceSQLTraceListener;
 import org.glassfish.main.test.app.connpool.webapp.Employee;
 import org.glassfish.main.test.app.connpool.webapp.SqlListenerApplication;
@@ -59,6 +60,8 @@ public class SQLTraceListenerTest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
+    private static final DomainSettings DOMAIN_SETTINGS = new DomainSettings(ASADMIN);
+
     @TempDir
     private static File appLibDir;
 
@@ -80,6 +83,9 @@ public class SQLTraceListenerTest {
         result = ASADMIN.exec("restart-domain");
         assertThat(result, asadminOK());
 
+        DOMAIN_SETTINGS.backupDerbyPoolSettings();
+        DOMAIN_SETTINGS.setDerbyPoolEmbededded();
+
         result = ASADMIN.exec("set", "resources.jdbc-connection-pool." + POOL_NAME
                 + ".sql-trace-listeners=" + LastTraceSQLTraceListener.class.getName());
         assertThat(result, asadminOK());
@@ -93,6 +99,7 @@ public class SQLTraceListenerTest {
 
     @AfterAll
     public static void undeployAll() {
+        DOMAIN_SETTINGS.restoreSettings();
         assertAll(
                 () -> assertThat(ASADMIN.exec("undeploy", WEBAPP_NAME), asadminOK()),
                 () -> assertThat(ASADMIN.exec("set", "resources.jdbc-connection-pool." + POOL_NAME

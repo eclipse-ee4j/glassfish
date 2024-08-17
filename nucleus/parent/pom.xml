@@ -829,26 +829,6 @@
                                 <proc>only</proc>
                             </configuration>
                         </execution>
-                        <execution>
-                            <id>default-testcompile</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                            <configuration>
-                                <proc>none</proc>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>testprocess-annotations</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                            <configuration>
-                                <proc>only</proc>
-                            </configuration>
-                        </execution>
                     </executions>
                 </plugin>
                 <plugin>
@@ -1727,5 +1707,23 @@
                 <file.executable.suffix>.bat</file.executable.suffix>
             </properties>
         </profile>
+        
+        <profile>
+            <id>jdk23-test-annotation-processing</id>
+              <activation>
+              <jdk>[23,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testCompilerArgument>-proc:full</testCompilerArgument>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
     </profiles>
 </project>

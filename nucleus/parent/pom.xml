@@ -1646,5 +1646,22 @@
                 <file.executable.suffix>.bat</file.executable.suffix>
             </properties>
         </profile>
+        
+        <profile>
+            <id>jdk23-test-annotation-processing</id>
+              <activation>
+              <jdk>[23,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testCompilerArgument>-proc:full</testCompilerArgument>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

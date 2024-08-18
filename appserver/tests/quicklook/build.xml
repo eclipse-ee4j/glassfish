@@ -376,7 +376,6 @@
         <run-quicklook-test path="adminconsole" target="build" />
         -->
         <run-quicklook-test path="rest" target="build" />
-        <!--<run-quicklook-test path="osgitest/basicosgi" target="build"/>-->
         <run-quicklook-test path="web/helloworld" target="build-deploy" />
         <run-quicklook-test path="web/jsfastrologer" target="build-deploy" />
         <run-quicklook-test path="web/jsfinjection" target="build-deploy" />
@@ -492,7 +491,6 @@
          <run-quicklook-test path="weld/numberguess" target="undeploy" />
          <run-quicklook-test path="weld/osgiweld" target="undeploy" />
          <run-quicklook-test path="weld/extensions" target="undeploy" />
-         <run-quicklook-test path="jms/injection" target="undeploy" />
          
          <record name="${basedir}/undeploy.output" action="stop" />
      </target>

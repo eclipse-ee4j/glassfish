@@ -169,7 +169,7 @@
                                     destfile="${glassfish.modules}/weld-osgi-bundle.jar"
                                 />
                                 
-                                  <!-- To support glassfish.pfl 5.0.0 -->
+                                <!-- To support glassfish.pfl 5.0.0 -->
                                 
                                 <!-- Patch for gmbal 4.0.3 -->
                                 

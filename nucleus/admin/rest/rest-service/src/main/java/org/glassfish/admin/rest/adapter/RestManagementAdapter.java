@@ -18,6 +18,8 @@
 package org.glassfish.admin.rest.adapter;
 
 import org.glassfish.admin.restconnector.Constants;
+import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.Response;
 import org.jvnet.hk2.annotations.Service;
 
 /**

@@ -394,15 +394,11 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
         Class<?> mcfClass;
         if (jcl_ != null) {
             mcfClass = jcl_.loadClass(mcfClassName);
-//            mcf = (ManagedConnectionFactory) mcfClass.getDeclaredConstructor().newInstance();
         } else if (loader != null) {
             mcfClass = loader.loadClass(mcfClassName);
-//            mcf = (ManagedConnectionFactory) loader.loadClass(mcfClass).getDeclaredConstructor().newInstance();
+
         } else {
             mcfClass = Thread.currentThread().getContextClassLoader().loadClass(mcfClassName);
-            // mcf = (ManagedConnectionFactory) Class.forName(mcfClass).newInstance();
-//            mcf = (ManagedConnectionFactory) Thread.currentThread().getContextClassLoader().loadClass(mcfClass)
-//                .getDeclaredConstructor().newInstance();
         }
         mcf = locator.createAndInitialize((Class<ManagedConnectionFactory>)mcfClass);
         setLogWriter(mcf);

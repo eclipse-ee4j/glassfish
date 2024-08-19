@@ -32,4 +32,11 @@ public class RestManagementAdapter extends RestAdapter {
     public RestManagementAdapter() {
         super(new RestManagementResourceProvider());
     }
+
+    @Override
+    public void service(Request req, Response res) {
+        req.setServerName(req.getLocalName());
+        req.setServerPort(req.getLocalPort());
+        super.service(req, res);
+    }
 }

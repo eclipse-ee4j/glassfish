@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.main.itest.tools.HttpListenerType.HTTP;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.webSocketUri;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -44,6 +45,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class WebSocketOnDefaultWebModuleTest {
 
     private static final System.Logger LOG = System.getLogger(WebSocketOnDefaultWebModuleTest.class.getName());
+
+    private static final int HTTP_PORT = GlassFishTestEnvironment.getPort(HTTP);
 
     private static final String WEBAPP_FILE_NAME = "webapp.war";
 
@@ -81,7 +84,7 @@ public class WebSocketOnDefaultWebModuleTest {
     @Test
     public void testWebSocketOnDefaultWebModule() throws IOException, URISyntaxException, InterruptedException, ExecutionException, TimeoutException {
 
-        final WebSocketClient webSocketClient = new WebSocketClient(webSocketUri(8080, "/hello"));
+        final WebSocketClient webSocketClient = new WebSocketClient(webSocketUri(HTTP_PORT, "/hello"));
         webSocketClient.sendMessage("Hello");
         CompletableFuture<String> waitForMessage = new CompletableFuture<>();
         webSocketClient.addMessageHandler(msg -> waitForMessage.complete(msg));
@@ -94,7 +97,7 @@ public class WebSocketOnDefaultWebModuleTest {
     @Test
     public void testWebSocketOnAppContextRoot() throws IOException, URISyntaxException, InterruptedException, ExecutionException, TimeoutException {
 
-        final WebSocketClient webSocketClient = new WebSocketClient(webSocketUri(8080, "/" + WEBAPP_NAME + "/hello"));
+        final WebSocketClient webSocketClient = new WebSocketClient(webSocketUri(HTTP_PORT, "/" + WEBAPP_NAME + "/hello"));
         webSocketClient.sendMessage("Hello");
         CompletableFuture<String> waitForMessage = new CompletableFuture<>();
         webSocketClient.addMessageHandler(msg -> waitForMessage.complete(msg));

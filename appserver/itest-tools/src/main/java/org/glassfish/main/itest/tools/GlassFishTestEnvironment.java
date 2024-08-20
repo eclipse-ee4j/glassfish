@@ -149,8 +149,7 @@ public class GlassFishTestEnvironment {
 
 
     public static int getPort(HttpListenerType listenerType) {
-        return Integer.parseInt(System.getenv()
-                .getOrDefault(listenerType.getVariableName(), String.valueOf(listenerType.getDefaultPort())));
+        return listenerType.getPort();
     }
     /**
      * Creates a {@link Client} instance for the domain administrator.

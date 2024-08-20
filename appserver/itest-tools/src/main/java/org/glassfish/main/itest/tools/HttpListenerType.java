@@ -37,4 +37,10 @@ public enum HttpListenerType {
         return defaultPort;
     }
 
+    public int getPort() {
+        return Integer.parseInt(System.getenv()
+                .getOrDefault(getVariableName(), String.valueOf(getDefaultPort()))
+        );
+    }
+
 }

@@ -43,11 +43,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 /*
- * Tests for https://github.com/eclipse-ee4j/glassfish/pull/24691
+ * Tests for https://github.com/eclipse-ee4j/glassfish/issues/24712
  */
-public class WebSocketOnDefaultWebModuleTest {
+public class CustomRequestResponseOnWebSocketTest {
 
-    private static final System.Logger LOG = System.getLogger(WebSocketOnDefaultWebModuleTest.class.getName());
+    private static final System.Logger LOG = System.getLogger(CustomRequestResponseOnWebSocketTest.class.getName());
 
     private static final int HTTP_PORT = GlassFishTestEnvironment.getPort(HTTP);
 
@@ -69,37 +69,17 @@ public class WebSocketOnDefaultWebModuleTest {
                 "--name", WEBAPP_NAME,
                 webApp.getAbsolutePath());
         assertThat(result, asadminOK());
-
-        result = ASADMIN.exec("set",
-                "server-config.http-service.virtual-server.server.default-web-module=" + WEBAPP_NAME);
-        assertThat(result, asadminOK());
     }
 
     @AfterAll
     public static void undeployAll() {
         assertAll(
-                () -> assertThat(ASADMIN.exec("set",
-                        "server-config.http-service.virtual-server.server.default-web-module="), asadminOK()),
                 () -> assertThat(ASADMIN.exec("undeploy", WEBAPP_NAME), asadminOK())
         );
     }
 
     @Test
-    public void testWebSocketOnDefaultWebModule() throws IOException, URISyntaxException, InterruptedException, ExecutionException, TimeoutException {
-
-        final WebSocketClient webSocketClient = new WebSocketClient(webSocketUri(HTTP_PORT, "/hello"));
-        webSocketClient.sendMessage("Hello");
-        CompletableFuture<String> waitForMessage = new CompletableFuture<>();
-        webSocketClient.addMessageHandler(msg -> waitForMessage.complete(msg));
-
-        final String message = waitForMessage.get(10, TimeUnit.SECONDS);
-
-        assertThat(message, equalTo("World"));
-    }
-
-    @Test
-    public void testWebSocketOnAppContextRoot() throws IOException, URISyntaxException, InterruptedException, ExecutionException, TimeoutException {
-
+    public void testCustomRequest() throws IOException, URISyntaxException, InterruptedException, ExecutionException, TimeoutException {
         final WebSocketClient webSocketClient = new WebSocketClient(webSocketUri(HTTP_PORT, "/" + WEBAPP_NAME + "/hello"));
         webSocketClient.sendMessage("Hello");
         CompletableFuture<String> waitForMessage = new CompletableFuture<>();
@@ -112,6 +92,7 @@ public class WebSocketOnDefaultWebModuleTest {
 
     private static File createWebApp() throws IOException {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+                .addClass(CustomRequestResponseServletFilter.class)
                 .addClass(HelloWebSocketEndpoint.class);
 
         LOG.log(INFO, webArchive.toString(true));

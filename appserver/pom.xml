@@ -82,7 +82,7 @@
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>4.1.0</jakarta.faces-api.version>
-        <mojarra.version>4.1.1</mojarra.version>
+        <mojarra.version>4.1.2</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.2.0</jakarta.websocket-api.version>
@@ -139,8 +139,8 @@
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>4.0.0</jakarta.pages-api.version>
-        <jstl-api.version>3.0.0</jstl-api.version>
-        <wasp.version>4.0.0-M1</wasp.version>
+        <jstl-api.version>3.0.1</jstl-api.version>
+        <wasp.version>4.0.0-M2</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.2</xmlsec.version>

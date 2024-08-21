@@ -18,11 +18,11 @@ package org.glassfish.main.test.app.persistence.resourceref;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.stream.Stream;
 
 import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.itest.tools.asadmin.DomainSettings;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -51,12 +51,12 @@ public class JtaDataSourceResourceRefTest {
     private static final String CONTEXT_ROOT = "/";
     private static final Asadmin ASADMIN = getAsadmin();
 
-    private static String[] derbyPoolSettingsBackup;
+    private static final DomainSettings DOMAIN_SETTINGS = new DomainSettings(ASADMIN);
 
     @BeforeAll
     public static void deploy() throws Exception {
-        backupDerbyPoolSettings();
-        setDerbyPoolEmbededded();
+        DOMAIN_SETTINGS.backupDerbyPoolSettings();
+        DOMAIN_SETTINGS.setDerbyPoolEmbededded();
         final File warFile = createDeployment();
         try {
             AsadminResult result = ASADMIN.exec("deploy", "--contextroot", CONTEXT_ROOT, "--name", APP_NAME,
@@ -72,7 +72,7 @@ public class JtaDataSourceResourceRefTest {
     static void undeploy() {
         AsadminResult result = ASADMIN.exec("undeploy", APP_NAME);
         assertThat(result, asadminOK());
-        restoreDerbyPoolSettings();
+        DOMAIN_SETTINGS.restoreSettings();
     }
 
 
@@ -85,34 +85,6 @@ public class JtaDataSourceResourceRefTest {
         } finally {
             connection.disconnect();
         }
-    }
-
-    private static void backupDerbyPoolSettings() {
-        final AsadminResult result = ASADMIN.exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*");
-        // Exclude "command successful and .name which cannot be changed
-        derbyPoolSettingsBackup = Stream.of(result.getStdOut().split("\n"))
-            .filter(line -> line.contains("=") && !line.contains(".name=")).toArray(String[]::new);
-    }
-
-    private static void restoreDerbyPoolSettings() {
-        String[] args = new String[derbyPoolSettingsBackup.length + 1];
-        args[0] = "set";
-        for (int i = 1; i < args.length; i++) {
-            args[i] = derbyPoolSettingsBackup[i - 1];
-        }
-        final AsadminResult result = ASADMIN.exec(5_000, args);
-        assertThat(result, asadminOK());
-    }
-
-    /** Default is org.apache.derby.jdbc.ClientDataSource */
-    private static void setDerbyPoolEmbededded() {
-        final AsadminResult result = ASADMIN.exec(5_000, "set",
-            "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
-            "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
-            "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
-            "resources.jdbc-connection-pool.DerbyPool.property.URL=");
-        assertThat(result, asadminOK());
-        ASADMIN.exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*");
     }
 
     private static File createDeployment() throws IOException {

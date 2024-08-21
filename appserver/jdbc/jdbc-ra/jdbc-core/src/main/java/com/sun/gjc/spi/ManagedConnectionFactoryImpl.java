@@ -25,6 +25,7 @@ import com.sun.gjc.monitoring.JdbcStatsProvider;
 import com.sun.gjc.util.SQLTraceDelegator;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConfigProperty;
 import jakarta.resource.spi.ConnectionManager;
@@ -65,6 +66,7 @@ import javax.security.auth.Subject;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.jdbc.ConnectionValidation;
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.objects.TxIsolationLevel;
@@ -100,6 +102,9 @@ public abstract class ManagedConnectionFactoryImpl
 
     private static Logger _logger = LogDomains.getLogger(ManagedConnectionFactoryImpl.class, LogDomains.RSR_LOGGER);
     protected static final StringManager localStrings = StringManager.getManager(DataSourceObjectBuilder.class);
+
+    @Inject
+    protected InvocationManager invocationManager;
 
     protected DataSourceSpec spec = new DataSourceSpec();
     protected transient DataSourceObjectBuilder dataSourceObjectBuilder;
@@ -553,7 +558,7 @@ public abstract class ManagedConnectionFactoryImpl
         String delimiter = ",";
 
         if (sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
-            sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), getApplicationName(), getModuleName());
+            sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), invocationManager);
             StringTokenizer st = new StringTokenizer(sqlTraceListeners, delimiter);
 
             while (st.hasMoreTokens()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,8 +24,6 @@ import java.nio.channels.Channel;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.UUID;
 
 import org.apache.felix.service.command.CommandSession;
@@ -97,27 +95,20 @@ class RemoteCommandSession {
 
     private void set(final Object obj, final String field, final Object value) {
         try {
-            final Field f = obj.getClass().getDeclaredField(field);
-            final boolean accessible = f.canAccess(obj);
+            final Field declaredField = obj.getClass().getDeclaredField(field);
+            final boolean accessible = declaredField.canAccess(obj);
             if (accessible) {
-                f.set(obj, value);
+                declaredField.set(obj, value);
             } else {
-                AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                declaredField.setAccessible(true);
+                try {
+                    declaredField.set(obj, value);
+                } catch (final Exception x) {
+                    throw new RuntimeException(x);
+                }
 
-                    @Override
-                    public Void run() {
-                        f.setAccessible(true);
-                        try {
-                            f.set(obj, value);
-                        } catch (final Exception x) {
-                            throw new RuntimeException(x);
-                        }
-
-                        // reset to previous state...
-                        f.setAccessible(accessible);
-                        return null;
-                    }
-                });
+                // reset to previous state...
+                declaredField.setAccessible(accessible);
             }
         } catch (final Exception x) {
             throw new RuntimeException(x);

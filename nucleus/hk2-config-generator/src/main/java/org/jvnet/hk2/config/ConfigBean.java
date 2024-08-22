@@ -22,8 +22,6 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,10 +38,9 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.hk2.api.ServiceLocator;
 
-
 /**
- * ConfigBean is the core implementation of the config beans. It has features like locking
- * view creation and optional features attachement.
+ * ConfigBean is the core implementation of the config beans. It has features like locking view creation and optional
+ * features attachement.
  *
  * @author Jerome Dochez
  */
@@ -52,19 +49,20 @@ public class ConfigBean extends Dom implements ConfigView {
 
     private WriteableView writeableView;
     private volatile boolean writeLock = false;
-    private final Map<Class , ConfigBeanInterceptor> optionalFeatures =
-            new HashMap<Class, ConfigBeanInterceptor>();
+    private final Map<Class, ConfigBeanInterceptor> optionalFeatures = new HashMap<Class, ConfigBeanInterceptor>();
 
     /**
-        ObjectName will be null until when/if an MBean is registered.
+     * ObjectName will be null until when/if an MBean is registered.
      */
     private volatile ObjectName objectName = null;
 
-    public ObjectName getObjectName() { return objectName; }
+    public ObjectName getObjectName() {
+        return objectName;
+    }
 
-    public void setObjectName( final ObjectName objectNameIn )
-    {
-        if ( objectName != null ) throw new IllegalStateException();
+    public void setObjectName(final ObjectName objectNameIn) {
+        if (objectName != null)
+            throw new IllegalStateException();
         objectName = objectNameIn;
     }
 
@@ -73,31 +71,38 @@ public class ConfigBean extends Dom implements ConfigView {
         super(habitat, document, parent, model, in);
         // by default all ConfigBean support the ConstrainedBeanListener interface
         // allowing clients to register interest in attributes changing.
-        addInterceptor(ConstrainedBeanListener.class ,new ConfigBeanInterceptor<ConstrainedBeanListener>() {
+        addInterceptor(ConstrainedBeanListener.class, new ConfigBeanInterceptor<ConstrainedBeanListener>() {
 
             List<VetoableChangeListener> listeners = new ArrayList<VetoableChangeListener>();
 
+            @Override
             public ConstrainedBeanListener getConfiguration() {
                 return new ConstrainedBeanListener() {
 
+                    @Override
                     public void removeVetoableChangeListener(VetoableChangeListener listener) {
                         listeners.remove(listener);
                     }
 
+                    @Override
                     public void addVetoableChangeListener(VetoableChangeListener listener) {
                         listeners.add(listener);
                     }
                 };
             }
 
+            @Override
             public void beforeChange(PropertyChangeEvent evt) throws PropertyVetoException {
                 for (VetoableChangeListener listener : listeners) {
                     listener.vetoableChange(evt);
                 }
             }
+
+            @Override
             public void afterChange(PropertyChangeEvent evt, long timestamp) {
             }
 
+            @Override
             public void readValue(ConfigBean source, String xmlName, Object Value) {
             }
         });
@@ -106,7 +111,7 @@ public class ConfigBean extends Dom implements ConfigView {
     /**
      * Copy constructor, used to get a deep copy of the passed instance.
      *
-     * @param source  the instance to copy
+     * @param source the instance to copy
      */
     public ConfigBean(Dom source, Dom parent) {
         super(source, parent);
@@ -123,24 +128,25 @@ public class ConfigBean extends Dom implements ConfigView {
         return (T) new ConfigBean(this, parent);
     }
 
+    @Override
     public boolean equals(Object o) {
         if (super.equals(o)) {
-            if(((ConfigBean)o).objectName == this.objectName) {
+            if (((ConfigBean) o).objectName == this.objectName) {
                 return true;
             }
         }
         return false;
     }
 
+    @Override
     public int hashCode() {
         return System.identityHashCode(this);
     }
 
     /**
-     * Returns an optional feature of the ConfigBean. Optional features are implemented
-     * by other objects and attached to this instance. Attached features can be queried
-     * using the getOptionalFeature method giving the type of the requestion optional
-     * feature.
+     * Returns an optional feature of the ConfigBean. Optional features are implemented by other objects and attached to
+     * this instance. Attached features can be queried using the getOptionalFeature method giving the type of the requestion
+     * optional feature.
      *
      * @param featureType type of the optional feature requested.
      * @return optional feature implementation is one is attached to this instance
@@ -157,16 +163,18 @@ public class ConfigBean extends Dom implements ConfigView {
         return optionalFeatures.values();
     }
 
-    protected void setter(ConfigModel.Property target, Object value) throws Exception  {
+    @Override
+    protected void setter(ConfigModel.Property target, Object value) throws Exception {
         if (!writeLock) {
-            throw new PropertyVetoException("Instance of " + getImplementation() + " named '" + getKey() +
-                    "' is not locked for writing when changing attribute " + target.xmlName()
-                    + ", you must use transaction semantics to access it.", null);
+            throw new PropertyVetoException(
+                    "Instance of " + getImplementation() + " named '" + getKey() + "' is not locked for writing when changing attribute "
+                            + target.xmlName() + ", you must use transaction semantics to access it.",
+                    null);
         }
         _setter(target, value);
     }
 
-    void _setter(ConfigModel.Property target, Object value) throws Exception  {
+    void _setter(ConfigModel.Property target, Object value) throws Exception {
         Object oldValue = super.getter(target, value.getClass());
         PropertyChangeEvent evt = new PropertyChangeEvent(this, target.xmlName(), oldValue, value);
         for (ConfigBeanInterceptor interceptor : optionalFeatures.values()) {
@@ -179,13 +187,14 @@ public class ConfigBean extends Dom implements ConfigView {
     }
 
     Object _getter(ConfigModel.Property target, Type t) {
-        final Object value = super.getter(target,t);
+        final Object value = super.getter(target, t);
         for (ConfigBeanInterceptor interceptor : optionalFeatures.values()) {
             interceptor.readValue(this, target.xmlName(), value);
         }
         return value;
     }
 
+    @Override
     protected Object getter(ConfigModel.Property target, Type t) {
         final Object value = _getter(target, t);
         if (value instanceof List) {
@@ -194,21 +203,27 @@ public class ConfigBean extends Dom implements ConfigView {
             // we need to protect this list as it was obtained from a readable view...
             return new AbstractList() {
 
+                @Override
                 public int size() {
                     return valueList.size();
                 }
 
+                @Override
                 public Object get(int index) {
                     return valueList.get(index);
                 }
 
+                @Override
                 public boolean add(Object o) {
                     throw new IllegalStateException("Not part of a transaction !", null);
                 }
+
+                @Override
                 public Object set(int index, Object element) {
                     throw new IllegalStateException("Not part of a transaction !", null);
                 }
 
+                @Override
                 public Object remove(int index) {
                     throw new IllegalStateException("Not part of a transaction !", null);
                 }
@@ -219,8 +234,8 @@ public class ConfigBean extends Dom implements ConfigView {
     }
 
     /**
-     * Add a new ConfigBeanInterceptor to this ConfigBean instance. The inteceptor will
-     * be called each time a attribute of this bean is accessed.
+     * Add a new ConfigBeanInterceptor to this ConfigBean instance. The inteceptor will be called each time a attribute of
+     * this bean is accessed.
      *
      * @param interceptorType type of the type interceptor.
      * @param interceptor the new interceptor
@@ -234,10 +249,12 @@ public class ConfigBean extends Dom implements ConfigView {
      *
      * @return the master view
      */
+    @Override
     public ConfigBean getMasterView() {
         return this;
     }
 
+    @Override
     public void setMasterView(ConfigView view) {
     }
 
@@ -247,25 +264,14 @@ public class ConfigBean extends Dom implements ConfigView {
      * @param proxyType requested proxy type
      * @return Java SE proxy
      */
+    @Override
     public <T extends ConfigBeanProxy> T getProxy(final Class<T> proxyType) {
-        ClassLoader cl;
-        if (System.getSecurityManager()!=null) {
-            cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return proxyType.getClassLoader();
-                }
-            });
-        } else {
-            cl = proxyType.getClassLoader();
-        }
-        return proxyType.cast(Proxy.newProxyInstance(cl, new Class[] { proxyType} , this));
+        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] { proxyType }, this));
     }
 
     /**
-     * Allocate a new ConfigBean object as part of the Transaction
-     * associated with this configuration object. This will eventually
-     * be moved to a factory.
+     * Allocate a new ConfigBean object as part of the Transaction associated with this configuration object. This will
+     * eventually be moved to a factory.
      *
      * @param type the request configuration object type
      * @return the properly constructed configuration object
@@ -273,12 +279,11 @@ public class ConfigBean extends Dom implements ConfigView {
 
     public ConfigBean allocate(Class<?> type) {
         return (ConfigBean) document.make(getHabitat(), null, this, document.buildModel(type));
-   }
+    }
 
     /**
-     * Allocate a new ConfigBean object as part of the Transaction
-     * associated with this configuration object. This will eventually
-     * be moved to a factory.
+     * Allocate a new ConfigBean object as part of the Transaction associated with this configuration object. This will
+     * eventually be moved to a factory.
      *
      * @param type the request configuration object type
      * @return the propertly constructed configuration object
@@ -289,8 +294,8 @@ public class ConfigBean extends Dom implements ConfigView {
     }
 
     /**
-     * Returns the lock on this object, only one external view (usually the writeable view) can
-     * acquire the lock ensuring that the objects cannot be concurrently modified
+     * Returns the lock on this object, only one external view (usually the writeable view) can acquire the lock ensuring
+     * that the objects cannot be concurrently modified
      *
      * @return lock instance
      */
@@ -321,27 +326,31 @@ public class ConfigBean extends Dom implements ConfigView {
      */
     final private Lock lock = new Lock() {
 
+        @Override
         public void lock() {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void lockInterruptibly() throws InterruptedException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public synchronized boolean tryLock() {
             if (!writeLock) {
-                writeLock=true;
+                writeLock = true;
                 return true;
             }
             return false;
         }
 
+        @Override
         public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
             long nanosTimeout = TimeUnit.NANOSECONDS.convert(time, unit);
             long increment = nanosTimeout / WAIT_ITERATIONS;
             long lastTime = System.nanoTime();
-            for (; ;) {
+            for (;;) {
                 if (tryLock()) {
                     return true;
                 }
@@ -358,11 +367,13 @@ public class ConfigBean extends Dom implements ConfigView {
             throw new InterruptedException();
         }
 
+        @Override
         public synchronized void unlock() {
             writeLock = false;
             writeableView = null;
         }
 
+        @Override
         public Condition newCondition() {
             throw new UnsupportedOperationException();
         }

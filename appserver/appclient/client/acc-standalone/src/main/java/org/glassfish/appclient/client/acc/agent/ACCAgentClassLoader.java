@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,12 +23,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
-import java.security.PrivilegedAction;
 import java.util.Enumeration;
 
 import org.glassfish.appclient.common.ClassPathUtils;
-
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Used as the system class loader during app client launch.
@@ -57,9 +54,9 @@ public class ACCAgentClassLoader extends URLClassLoader {
 
 
     private static URLClassLoader prepareLoader(ClassLoader parent) {
-        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader(
-            new URL[] {ClassPathUtils.getGFClientJarURL()}, new ClassLoaderWrapper(parent));
-        return doPrivileged(action);
+        return new URLClassLoader(
+            new URL[] {ClassPathUtils.getGFClientJarURL()},
+            new ClassLoaderWrapper(parent));
     }
 
 
@@ -85,6 +82,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.loadClass(name);
         }
+
         return getParent().loadClass(name);
     }
 
@@ -93,6 +91,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.getResource(name);
         }
+
         return getParent().getResource(name);
     }
 
@@ -101,6 +100,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.getResources(name);
         }
+
         return getParent().getResources(name);
     }
 
@@ -109,6 +109,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
             String propValue = System.getProperty("org.glassfish.appclient.acc.agentLoaderDone");
             isActive = (propValue != null);
         }
+
         return isActive;
     }
 }

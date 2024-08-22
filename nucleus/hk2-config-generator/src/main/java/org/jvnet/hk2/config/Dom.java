@@ -27,8 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1571,25 +1569,10 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             this.dom = dom;
         }
 
-
         @Override
         public ConfigBeanProxy compute(final Class<?> proxyType) throws ComputationErrorException {
-            ClassLoader cl;
-            if (System.getSecurityManager() != null) {
-                cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-
-                    @Override
-                    public ClassLoader run() {
-                        return proxyType.getClassLoader();
-                    }
-                });
-            } else {
-                cl = proxyType.getClassLoader();
-            }
-
-            final ConfigBeanProxy retVal = (ConfigBeanProxy) Proxy.newProxyInstance(cl, new Class[] {proxyType}, dom);
-
-            return retVal;
+            return (ConfigBeanProxy)
+                Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] {proxyType}, dom);
         }
 
     }

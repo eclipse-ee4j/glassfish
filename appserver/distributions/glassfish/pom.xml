@@ -148,11 +148,6 @@
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
                                 
-                                <!-- To support Expression Language 6  -->
-                                <jarupdate
-                                    basedir="${patches}/jakarta.servlet.jsp.jstl-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.servlet.jsp.jstl-api.jar"
-                                />
                                 
                                 <!-- To support Expression Language 6 and Expressly 6-->
                                 <jarupdate

@@ -30,12 +30,8 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterAssociation;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.Reference;
@@ -44,6 +40,8 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resources.api.JavaEEResource;
 import org.glassfish.resources.api.JavaEEResourceBase;
 import org.glassfish.resources.naming.SerializableObjectRefAddr;
+
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Resource infor for Connector administered objects
@@ -124,8 +122,10 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
     }
 
     public Reference createAdminObjectReference() {
-        return new Reference(getAdminObjectType(), new SerializableObjectRefAddr("jndiName", this),
-                ConnectorConstants.ADMINISTERED_OBJECT_FACTORY, null);
+        return new Reference(
+            getAdminObjectType(),
+            new SerializableObjectRefAddr("jndiName", this),
+            ConnectorConstants.ADMINISTERED_OBJECT_FACTORY, null);
     }
 
     // called by com.sun.enterprise.naming.factory.AdministeredObjectFactory
@@ -135,21 +135,20 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
         try {
             if (jcl == null) {
                 // use context class loader
-                PrivilegedAction<ClassLoader> action = () -> Thread.currentThread().getContextClassLoader();
-                jcl = AccessController.doPrivileged(action);
+                jcl = Thread.currentThread().getContextClassLoader();
             }
 
             Object adminObject = jcl.loadClass(adminObjectClass_).getDeclaredConstructor().newInstance();
 
-            AccessController.doPrivileged(new SetMethodAction<>(adminObject, configProperties_));
+            new SetMethodAction<>(adminObject, configProperties_).run();
 
-            // associate ResourceAdapter if the admin-object is RAA
+            // Associate ResourceAdapter if the admin-object is RAA
             if (adminObject instanceof ResourceAdapterAssociation) {
                 try {
                     ResourceAdapter ra = ConnectorRegistry.getInstance().getActiveResourceAdapter(resadapter_).getResourceAdapter();
                     ((ResourceAdapterAssociation) adminObject).setResourceAdapter(ra);
                 } catch (ResourceException ex) {
-                    _logger.log(Level.SEVERE, "rardeployment.assoc_failed", ex);
+                    _logger.log(SEVERE, "rardeployment.assoc_failed", ex);
                 }
             }
 
@@ -161,8 +160,6 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
             ConnectorRuntime.getRuntime().getConnectorBeanValidator().validateJavaBean(adminObject, resadapter_);
 
             return adminObject;
-        } catch (PrivilegedActionException ex) {
-            throw new PoolingException(ex);
         } catch (Exception ex) {
             throw new PoolingException(ex);
         }

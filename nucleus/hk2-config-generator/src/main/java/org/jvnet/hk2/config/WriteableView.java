@@ -36,8 +36,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -83,15 +81,7 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
     private final static Validator beanValidator;
 
     static {
-        ClassLoader cl = System.getSecurityManager() == null
-            ? Thread.currentThread().getContextClassLoader()
-            : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-
-                @Override
-                public ClassLoader run() {
-                    return Thread.currentThread().getContextClassLoader();
-                }
-            });
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
         try {
             Thread.currentThread().setContextClassLoader(HibernateValidator.class.getClassLoader());
@@ -497,19 +487,9 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
             throw new IllegalArgumentException("This config bean interface is " + sourceBean.model.targetTypeName
                     + " not "  + type.getName());
         }
-        ClassLoader cl;
-        if (System.getSecurityManager() == null) {
-            cl = type.getClassLoader();
-        } else {
-            cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+        ClassLoader cl = type.getClassLoader();
+        Class<?>[] interfacesClasses = {type};
 
-                @Override
-                public ClassLoader run() {
-                    return type.getClassLoader();
-                }
-            });
-        }
-        Class[] interfacesClasses = {type};
         return (T) Proxy.newProxyInstance(cl, interfacesClasses, this);
     }
 
@@ -661,7 +641,7 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
         }
 
         @Override
-        public Object unwrap(Class type) {
+        public <U> U unwrap(Class<U> type) {
             return null;
         }
     }

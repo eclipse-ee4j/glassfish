@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +20,6 @@ package com.sun.enterprise.resource.pool.waitqueue;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.logging.LogDomains;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.FINE;
@@ -50,26 +48,20 @@ public class PoolWaitQueueFactory {
     }
 
     private static PoolWaitQueue initializeCustomWaitQueueInPrivilegedMode(final String className) throws PoolingException {
-        Object result = AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            @Override
-            public Object run() {
-                Object result = null;
-                try {
-                    result = initializeCustomWaitQueue(className);
-                } catch (Exception e) {
-                    _logger.log(WARNING, "pool.waitqueue.init.failure", className);
-                    _logger.log(WARNING, "pool.waitqueue.init.failure.exception", e);
-                }
+        Object result = null;
 
-                return result;
-            }
-        });
-
-        if (result != null) {
-            return (PoolWaitQueue) result;
+        try {
+            result = initializeCustomWaitQueue(className);
+        } catch (Exception e) {
+            _logger.log(WARNING, "pool.waitqueue.init.failure", className);
+            _logger.log(WARNING, "pool.waitqueue.init.failure.exception", e);
         }
 
-        throw new PoolingException("Unable to initalize custom PoolWaitQueue : " + className);
+        if (result == null) {
+            throw new PoolingException("Unable to initalize custom PoolWaitQueue : " + className);
+        }
+
+        return (PoolWaitQueue) result;
     }
 
     private static PoolWaitQueue initializeCustomWaitQueue(String className) throws Exception {

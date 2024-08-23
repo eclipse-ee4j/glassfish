@@ -45,7 +45,6 @@
     </developers>
 
     <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <!-- We don't need it here and it would fail -->
         <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
     </properties>

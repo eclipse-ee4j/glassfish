@@ -32,13 +32,9 @@
 
     <name>Java binding for libpam.so</name>
 
-    <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
-    </properties>
-
     <dependencies>
         <!--
-            JNA provides Java programs easy access to native shared libraries without writing anything but Java code - 
+            JNA provides Java programs easy access to native shared libraries without writing anything but Java code -
             no JNI or native code is required.
          -->
         <dependency>

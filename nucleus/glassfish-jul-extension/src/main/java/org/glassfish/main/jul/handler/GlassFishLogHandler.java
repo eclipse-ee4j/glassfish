@@ -340,7 +340,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
 
         final Formatter formatter = configuration.getFormatterConfiguration();
         setFormatter(formatter);
-        if (isRollRequired(configuration.getLogFile(), formatter)) {
+        if (isRollRequired(configuration.getLogFile(), formatter, this.configuration.getEncoding())) {
             logFileManager.roll();
         }
         // Output is disabled after the creation of the LogFileManager.
@@ -467,11 +467,11 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
     }
 
 
-    private static boolean isRollRequired(final File logFile, final Formatter formatter) {
+    private static boolean isRollRequired(final File logFile, final Formatter formatter, final Charset expectedCharset) {
         if (logFile.length() == 0) {
             return false;
         }
-        final String detectedFormatterName = new LogFormatDetector().detectFormatter(logFile);
+        final String detectedFormatterName = new LogFormatDetector().detectFormatter(logFile, expectedCharset);
         return detectedFormatterName == null || !formatter.getClass().getName().equals(detectedFormatterName);
     }
 

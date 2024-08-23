@@ -156,7 +156,7 @@ public class LoggingPrintStreamTest {
         stream.println(89L);
         stream.println(Level.OFF);
         stream.println("It's fine.");
-        stream.write("F".getBytes());
+        stream.write("F".getBytes(UTF_8));
         stream.write(0);
 
         // This should not produce any record.

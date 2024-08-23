@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,9 @@
 
 package org.glassfish.main.jul.formatter;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -89,7 +88,7 @@ public class LogFormatDetectorTest {
 
     @Test
     public void noFile() throws Exception {
-        assertNull(detector.detectFormatter((File) null));
+        assertNull(detector.detectFormatter(null, UTF_8));
     }
 
 

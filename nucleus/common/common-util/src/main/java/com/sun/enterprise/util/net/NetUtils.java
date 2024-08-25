@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.util.net;
 
-import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
+import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.InterfaceAddress;
@@ -38,9 +38,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 public class NetUtils {
@@ -50,15 +49,13 @@ public class NetUtils {
     private final static int IS_SECURE_PORT_TIMEOUT = 4000;
     private final static boolean asDebug
             =            Boolean.parseBoolean(System.getenv("AS_DEBUG"));
-    private final static Logger logger = CULoggerInfo.getLogger();
-    private static Boolean badHostErrorWasReportedAlready = Boolean.FALSE;
-    private final static Object SYNC_OBJECT = new Object();
     private static void printd(String string) {
         if (asDebug) {
             System.out.println(string);
         }
     }
 
+    private static final Logger LOG = System.getLogger(NetUtils.class.getName());
     public enum PortAvailability {
         illegalNumber, noPermission, inUse, unknown, OK
     };
@@ -518,12 +515,14 @@ public class NetUtils {
      * @return one of the 4 possibilities for this port
      */
     public static PortAvailability checkPort(int portNumber) {
-        if (!isPortValid(portNumber))
+        if (!isPortValid(portNumber)) {
             return PortAvailability.illegalNumber;
+        }
 
         // if we can setup a server socket on that port then it must be free.
-        if (isPortFreeServer(portNumber))
+        if (isPortFreeServer(portNumber)) {
             return PortAvailability.OK;
+        }
 
         if (isPortFreeClient(null, portNumber)) {
             // can not setup a server socket and can not connect as a client
@@ -583,38 +582,26 @@ public class NetUtils {
         // Change:  log it as a warning the first time and then log it as a FINE.
 
         try {
-            byte[] allZero = new byte[]{0, 0, 0, 0};
-            InetAddress add = InetAddress.getByAddress(allZero);
+            InetAddress add = InetAddress.getByAddress(new byte[] {0, 0, 0, 0});
 
-            if (isPortFreeServer(port, add) == false)
-                return false;   // return immediately on "not-free"
+            if (!isPortFreeServer(port, add)) {
+                // return immediately on "not-free"
+                return false;
+            }
 
             try {
                 add = InetAddress.getLocalHost();
-            }
-            catch (UnknownHostException uhe) {
-                // Byron says: We don't want to report this error over and over
-                // and over again at WARNING level.
-                Level level = Level.WARNING;
-
-                // careful: many threads may call in here!
-                synchronized (SYNC_OBJECT) {
-                    if (badHostErrorWasReportedAlready)
-                        level = Level.FINE;
-                    else
-                        badHostErrorWasReportedAlready = true;
-                }
-                logger.log(level, CULoggerInfo.badNetworkConfig, uhe.toString());
+            } catch (UnknownHostException uhe) {
+                LOG.log(WARNING, "Could not resolve the local host by DNS.", uhe);
             }
 
-            if (isPortFreeServer(port, add) == false)
-                return false;   // return immediately on "not-free"
+            if (!isPortFreeServer(port, add)) {
+                return false;
+            }
 
             add = InetAddress.getByName("localhost");
-
             return isPortFreeServer(port, add);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // If we can't get an IP address then we can't check
             return false;
         }

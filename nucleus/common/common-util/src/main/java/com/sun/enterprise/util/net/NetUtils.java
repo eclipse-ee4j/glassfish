@@ -32,8 +32,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
-
 public final class NetUtils {
 
     public static final int MAX_PORT = 65535;
@@ -112,13 +110,15 @@ public final class NetUtils {
     }
 
     /**
-     * Painfully thorough error-handling.  Some would say over-engineered but I
-     * plan on never looking at this code again!
+     * Resolves both hosts and then compares their internet addresses.
+     * If they match at least once, those hosts are considered as same.
+     * If there is no such address, returns false.
+     *
      * @param host1
      * @param host2
-     * @return
+     * @return true if parameters resolved to same internet address(es)
      */
-    public static boolean isEqual(String host1, String host2) {
+    public static boolean isSameHost(String host1, String host2) {
         List<String> host1_ips = new ArrayList<>();
         List<String> host2_ips = new ArrayList<>();
 

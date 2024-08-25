@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +32,7 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 
 import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.SharedSecureRandom;
+import org.glassfish.security.common.SharedSecureRandom;
 
 import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
 import static java.util.logging.Level.WARNING;

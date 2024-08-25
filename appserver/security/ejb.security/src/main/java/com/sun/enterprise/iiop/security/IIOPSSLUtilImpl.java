@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,7 @@ import javax.net.ssl.X509KeyManager;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
-import org.glassfish.security.common.SharedSecureRandomImpl;
+import org.glassfish.security.common.SharedSecureRandom;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
@@ -108,7 +108,7 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     @Override
     public SecureRandom getInitializedSecureRandom() {
-        return SharedSecureRandomImpl.get();
+        return SharedSecureRandom.get();
     }
 
     @Override

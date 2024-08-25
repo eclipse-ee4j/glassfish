@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +34,7 @@ import javax.net.ssl.X509KeyManager;
 
 import org.apache.catalina.net.ServerSocketFactory;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.SharedSecureRandomImpl;
+import org.glassfish.security.common.SharedSecureRandom;
 
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
@@ -73,7 +73,7 @@ public class SSLSocketFactory implements ServerSocketFactory {
             }
 
             context = SSLContext.getInstance("TLS");
-            context.init(keyManagers, trustManagers, SharedSecureRandomImpl.get());
+            context.init(keyManagers, trustManagers, SharedSecureRandom.get());
 
             factory = context.getServerSocketFactory();
             cipherSuites = factory.getSupportedCipherSuites();

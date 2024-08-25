@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,9 @@
 
 package com.sun.ejb.base.sfsb.util;
 
-
 import com.sun.enterprise.util.Utility;
 
-import org.glassfish.security.common.SharedSecureRandomImpl;
+import org.glassfish.security.common.SharedSecureRandom;
 
 /**
  * A utility class that generates stateful session keys using two longs
@@ -108,7 +108,7 @@ public class ScrambledKeyGenerator extends SimpleKeyGenerator {
 
         return new SimpleSessionKey(prefix + cachedTime,
             // suffix + System.identityHashCode(new Object()), id
-            suffix + SharedSecureRandomImpl.get().nextInt(), id);
+            suffix + SharedSecureRandom.get().nextInt(), id);
     }
 
 }

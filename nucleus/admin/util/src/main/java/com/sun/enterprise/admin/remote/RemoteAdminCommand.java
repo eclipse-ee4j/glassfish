@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -796,34 +796,13 @@ public class RemoteAdminCommand {
                 throw new CommandException(msg, he);
             } catch (SocketException se) {
                 logger.finer("doHttpCommand: socket exception " + se);
-                try {
-                    boolean serverAppearsSecure = NetUtils.isSecurePort(host, port);
-                    if (serverAppearsSecure && !shouldUseSecure) {
-                        if (retryUsingSecureConnection(host, port)) {
-                            // retry using secure connection
-                            shouldUseSecure = true;
-                            usedCallerProvidedCredentials = true;
-                            shouldTryCommandAgain = true;
-                            continue;
-                        }
-                    }
-                    throw new CommandException(se);
-                } catch (IOException io) {
-                    // XXX - logger.printExceptionStackTrace(io);
-                    throw new CommandException(io);
-                }
+                throw new CommandException(se);
             } catch (SSLException se) {
                 logger.finer("doHttpCommand: SSL exception " + se);
-                try {
-                    boolean serverAppearsSecure = NetUtils.isSecurePort(host, port);
-                    if (!serverAppearsSecure && secure) {
-                        logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
-                    }
-                    throw new CommandException(se);
-                } catch (IOException io) {
-                    // XXX - logger.printExceptionStackTrace(io);
-                    throw new CommandException(io);
+                if (secure) {
+                    logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
                 }
+                throw new CommandException(se);
             } catch (SocketTimeoutException e) {
                 logger.finer("doHttpCommand: read timeout " + e);
                 throw new CommandException(strings.get("ReadTimeout", (float) readTimeout / 1000), e);

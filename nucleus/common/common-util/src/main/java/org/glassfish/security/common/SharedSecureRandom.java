@@ -19,6 +19,8 @@ package org.glassfish.security.common;
 
 import java.security.SecureRandom;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 /**
  * An utility class that supplies an Initialized SecureRandom.
  */
@@ -36,5 +38,8 @@ public class SharedSecureRandom {
         // This will force the PRNG to seed itself securely
         byte[] key = new byte[20];
         SECURE_RANDOM.nextBytes(key);
+
+        System.getLogger(SharedSecureRandom.class.getName()).log(DEBUG, "Using shared SecureRandom with provider '"
+            + SECURE_RANDOM.getProvider() + "' and algorithm '" + SECURE_RANDOM.getAlgorithm() + "'.");
     }
 }

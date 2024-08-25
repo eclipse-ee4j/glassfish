@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -295,7 +296,7 @@ public class ValidateNodeCommand implements AdminCommand {
             // Strings don't match, but we could have a case of
             // "sidewinder" and "sidewinder.us.oracle.com". NetUtils
             // isEqual() handles this check.
-            if (! NetUtils.isEqual(value, configValue)) {
+            if (!NetUtils.isSameHost(value, configValue)) {
                 // If they both refer to the localhost then consider them
                 // them same.
                 if ( ! (NetUtils.isThisHostLocal(value) &&

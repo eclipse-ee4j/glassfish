@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,25 +22,30 @@ import java.security.SecureRandom;
 /**
  * An utility class that supplies an Initialized SecureRandom.
  */
-public class SharedSecureRandomImpl {
+public class SharedSecureRandom {
 
-    //the generator has a large period (in Sun's standard implementation, based on the 160-bit SHA1 hash function, the period is 2^160);
-    private static final SecureRandom secureRandom = new SecureRandom();
+    /**
+     * The generator has a large period (in Sun's standard implementation,
+     * based on the 160-bit SHA1 hash function, the period is 2^160);
+     */
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     static {
-        //always call java.security.SecureRandom.nextBytes(byte[])
-        //immediately after creating a new instance of the PRNG.
-        //This will force the PRNG to seed itself securely
+        // always call java.security.SecureRandom.nextBytes(byte[])
+        // immediately after creating a new instance of the PRNG.
+        // This will force the PRNG to seed itself securely
         byte[] key = new byte[20];
-        secureRandom.nextBytes(key);
+        SECURE_RANDOM.nextBytes(key);
     }
 
     /**
-     * Can a single  java.security.SecureRandom instance be shared  safely by multiple threads ?.
-     * Yes.  As far as I know.  nextBytes and setSeed are sync'd.
+     * Can a single java.security.SecureRandom instance be shared safely by multiple threads ?.
+     * Yes. As far as I know. nextBytes and setSeed are sync'd.
+     *
+     * @return shared {@link SecureRandom}
      */
     public static SecureRandom get() {
-        return secureRandom;
+        return SECURE_RANDOM;
     }
 
 }

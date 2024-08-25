@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -786,7 +786,7 @@ public final class FileRealmHelper
             throw new IllegalArgumentException(ex);
         }
 
-        SecureRandom rng = SharedSecureRandomImpl.get();
+        SecureRandom rng = SharedSecureRandom.get();
         byte[] salt=new byte[SALT_SIZE];
         rng.nextBytes(salt);
         user.setSalt(salt);

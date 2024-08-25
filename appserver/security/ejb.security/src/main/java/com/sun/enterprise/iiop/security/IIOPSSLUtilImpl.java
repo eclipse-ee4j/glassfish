@@ -36,10 +36,11 @@ import javax.net.ssl.X509KeyManager;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
-import org.glassfish.security.common.SharedSecureRandom;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
+
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
  * @author Kumar
@@ -108,7 +109,7 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     @Override
     public SecureRandom getInitializedSecureRandom() {
-        return SharedSecureRandom.get();
+        return SECURE_RANDOM;
     }
 
     @Override

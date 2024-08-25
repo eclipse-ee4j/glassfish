@@ -28,7 +28,7 @@ public class SharedSecureRandom {
      * The generator has a large period (in Sun's standard implementation,
      * based on the 160-bit SHA1 hash function, the period is 2^160);
      */
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    public static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     static {
         // always call java.security.SecureRandom.nextBytes(byte[])
@@ -37,15 +37,4 @@ public class SharedSecureRandom {
         byte[] key = new byte[20];
         SECURE_RANDOM.nextBytes(key);
     }
-
-    /**
-     * Can a single java.security.SecureRandom instance be shared safely by multiple threads ?.
-     * Yes. As far as I know. nextBytes and setSeed are sync'd.
-     *
-     * @return shared {@link SecureRandom}
-     */
-    public static SecureRandom get() {
-        return SECURE_RANDOM;
-    }
-
 }

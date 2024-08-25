@@ -32,10 +32,10 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.SharedSecureRandom;
 
 import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
  * Custom socket factory for ldaps (SSL).
@@ -62,7 +62,7 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
 
         try {
             SSLContext sslContext = SSLContext.getInstance(SSL);
-            sslContext.init(sslUtils.getKeyManagers(), sslUtils.getTrustManagers(), SharedSecureRandom.get());
+            sslContext.init(sslUtils.getKeyManagers(), sslUtils.getTrustManagers(), SECURE_RANDOM);
             socketFactory = sslContext.getSocketFactory();
         } catch (Exception ex) {
             _logger.log(WARNING, securityExceptionError, ex);

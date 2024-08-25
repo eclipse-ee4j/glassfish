@@ -22,7 +22,6 @@ import com.sun.enterprise.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -31,12 +30,10 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import static java.lang.System.Logger.Level.WARNING;
@@ -676,79 +673,6 @@ public class NetUtils {
             }
             return freePort;
         }
-    }
-
-    /**
-     *        This method accepts a hostname and port #.  It uses this information
-     *        to attempt to connect to the port, send a test query, analyze the
-     *        result to determine if the port is secure or unsecure (currently only
-     *        http / https is supported).
-     *  @param hostname - String name of the host where the connections has to be made
-     *  @param port - int name of the port where the connections has to be made
-     *  @return admin password
-     *  @throws IOException if an error occurs during the connection
-     *  @throws ConnectException if an error occurred while attempting to connect a socket to a remote address and port.
-     *  @throws SocketTimeoutException if timeout(4s) expires before connecting
-     */
-    public static boolean isSecurePort(String hostname, int port) throws IOException, ConnectException, SocketTimeoutException {
-
-        boolean isSecure = false;
-
-        // Entire logic being put inside this block to retain this code block
-        // for a future use. Since TEST_QUERY has been stubbed out, this code block
-        // was no longer capable of doing its intended task of checking a port is
-        // secure or not. Please read out the comments in TEST_QUERY declaration to
-        // get full context.
-        if (false){
-            // Open the socket w/ a 4 second timeout
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(hostname, port), IS_SECURE_PORT_TIMEOUT);
-
-            // Send an https query (w/ trailing http query)
-            java.io.OutputStream ostream = socket.getOutputStream();
-            ostream.write(TEST_QUERY);
-
-            // Get the result
-            java.io.InputStream istream = socket.getInputStream();
-            int count = 0;
-            while (count < 20) {
-                // Wait up to 4 seconds
-                try {
-                    if (istream.available() > 0) {
-                        break;
-                    }
-                    Thread.sleep(200);
-                }
-                catch (InterruptedException ex) {
-                }
-                count++;
-            }
-            byte[] input = new byte[istream.available()];
-            int read = istream.read(input);
-
-            // Close the socket
-            socket.close();
-
-            // Determine protocol from result
-            // Can't read https response w/ OpenSSL (or equiv), so use as
-            // default & try to detect an http response.
-            String response = new String(input).toLowerCase(Locale.ENGLISH);
-            isSecure = true;
-            if (read <= 0 || response.length() == 0) {
-                isSecure = false;
-            }
-            else if (response.startsWith("http/1.")) {
-                isSecure = false;
-            }
-            else if (response.indexOf("<html") != -1) {
-                isSecure = false;
-            }
-            else if (response.indexOf("connection: ") != -1) {
-                isSecure = false;
-            }
-        }
-
-        return isSecure;
     }
 
     /**

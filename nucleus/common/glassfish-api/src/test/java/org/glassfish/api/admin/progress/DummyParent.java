@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,17 +17,34 @@
 
 package org.glassfish.api.admin.progress;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
- *
  * @author mmares
  */
 public class DummyParent extends ProgressStatusImpl {
 
-    public ProgressStatusEvent lastEvent;
+    private static final long serialVersionUID = 1L;
+    private final AtomicReference<ProgressStatusEvent> lastEvent = new AtomicReference<>();
 
     @Override
     protected void fireEvent(ProgressStatusEvent event) {
-        lastEvent = event;
+        lastEvent.set(event);
     }
 
+
+    /**
+     * @return last event or null
+     */
+    public ProgressStatusEvent getLastProgressStatusEvent() {
+        return lastEvent.get();
+    }
+
+
+    /**
+     * Sets the last event to null.
+     */
+    public void resetLastProgressStatusEvent() {
+        this.lastEvent.set(null);
+    }
 }

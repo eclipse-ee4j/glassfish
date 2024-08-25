@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.regex.Pattern;
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigView;
 
@@ -74,12 +73,6 @@ public class SimpleConfigViewWrapper implements ConfigView {
     @Override
     public <T extends ConfigBeanProxy> T getProxy(Class<T> proxyType) {
         return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] {proxyType}, this));
-    }
-
-    static ServiceLocator habitat;
-
-    public static void setHabitat(ServiceLocator h) {
-        habitat = h;
     }
 
    /**

@@ -295,41 +295,6 @@ public final class NetUtils {
         return !isLocal(ip);
     }
 
-    /**
-     * Get the next free port (incrementing by 1)
-     * @param hostName The host name on which the port is to be obtained
-     * @param port The port number
-     * @return The next incremental port number or 0 if a port cannot be found.
-     */
-    public static int getNextFreePort(String hostName, int port) {
-        while (port++ < MAX_PORT) {
-            if (isPortFree(hostName, port)) {
-                return port;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Returns a random port in the specified range
-     * @param hostName The host on which the port is to be obtained.
-     * @param startingPort starting port in the range
-     * @param endingPort ending port in the range
-     * @return the new port or 0 if the range is invalid.
-     */
-    public static int getFreePort(String hostName, int startingPort, int endingPort) {
-        int range = endingPort - startingPort;
-        int port = 0;
-        if (range > 0) {
-            while (true) {
-                port = SECURE_RANDOM.nextInt(range + 1) + startingPort;
-                if (isPortFree(hostName, port)) {
-                    break;
-                }
-            }
-        }
-        return port;
-    }
 
     public static boolean isPortValid(int portNumber) {
         return portNumber >= 0 && portNumber <= MAX_PORT;

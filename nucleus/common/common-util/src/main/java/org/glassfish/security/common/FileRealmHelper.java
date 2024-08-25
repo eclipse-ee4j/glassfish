@@ -26,7 +26,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 
 /**
@@ -786,9 +787,8 @@ public final class FileRealmHelper
             throw new IllegalArgumentException(ex);
         }
 
-        SecureRandom rng = SharedSecureRandom.get();
-        byte[] salt=new byte[SALT_SIZE];
-        rng.nextBytes(salt);
+        byte[] salt = new byte[SALT_SIZE];
+        SECURE_RANDOM.nextBytes(salt);
         user.setSalt(salt);
         String algo = user.getAlgo();
         if(algo == null) {

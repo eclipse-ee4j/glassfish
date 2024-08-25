@@ -34,10 +34,10 @@ import javax.net.ssl.X509KeyManager;
 
 import org.apache.catalina.net.ServerSocketFactory;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.SharedSecureRandom;
 
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
  * SSL server socket factory.
@@ -73,7 +73,7 @@ public class SSLSocketFactory implements ServerSocketFactory {
             }
 
             context = SSLContext.getInstance("TLS");
-            context.init(keyManagers, trustManagers, SharedSecureRandom.get());
+            context.init(keyManagers, trustManagers, SECURE_RANDOM);
 
             factory = context.getServerSocketFactory();
             cipherSuites = factory.getSupportedCipherSuites();

@@ -19,7 +19,7 @@ package com.sun.ejb.base.sfsb.util;
 
 import com.sun.enterprise.util.Utility;
 
-import org.glassfish.security.common.SharedSecureRandom;
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
  * A utility class that generates stateful session keys using two longs
@@ -106,10 +106,7 @@ public class ScrambledKeyGenerator extends SimpleKeyGenerator {
             }
         }
 
-        return new SimpleSessionKey(prefix + cachedTime,
-            // suffix + System.identityHashCode(new Object()), id
-            suffix + SharedSecureRandom.get().nextInt(), id);
+        return new SimpleSessionKey(prefix + cachedTime, suffix + SECURE_RANDOM.nextInt(), id);
     }
-
 }
 

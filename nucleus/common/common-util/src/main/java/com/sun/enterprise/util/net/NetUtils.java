@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +33,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 public class NetUtils {
     public static final int MAX_PORT = 65535;
@@ -462,9 +464,8 @@ public class NetUtils {
         int range = endingPort - startingPort;
         int port = 0;
         if (range > 0) {
-            SecureRandom r = new SecureRandom();
             while (true) {
-                port = r.nextInt(range + 1) + startingPort;
+                port = SECURE_RANDOM.nextInt(range + 1) + startingPort;
                 if (isPortFree(hostName, port)) {
                     break;
                 }

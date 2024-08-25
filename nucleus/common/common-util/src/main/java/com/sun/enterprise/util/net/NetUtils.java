@@ -20,9 +20,6 @@ package com.sun.enterprise.util.net;
 import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.InterfaceAddress;
@@ -34,28 +31,16 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
-public class NetUtils {
-    public static final int MAX_PORT = 65535;
-    private final static int IS_RUNNING_DEFAULT_TIMEOUT = 3000;
-    private final static int IS_PORT_FREE_TIMEOUT = 1000;
-    private final static int IS_SECURE_PORT_TIMEOUT = 4000;
-    private final static boolean asDebug
-            =            Boolean.parseBoolean(System.getenv("AS_DEBUG"));
-    private static void printd(String string) {
-        if (asDebug) {
-            System.out.println(string);
-        }
-    }
+public final class NetUtils {
 
-    private static final Logger LOG = System.getLogger(NetUtils.class.getName());
-    public enum PortAvailability {
-        illegalNumber, noPermission, inUse, unknown, OK
-    };
+    public static final int MAX_PORT = 65535;
+    private static final String LOCALHOST_IP = "127.0.0.1";
+
+    private static final int IS_RUNNING_DEFAULT_TIMEOUT = 3000;
+    private static final int IS_PORT_FREE_TIMEOUT = 1000;
 
     private NetUtils() {
     }
@@ -73,9 +58,9 @@ public class NetUtils {
      */
     public static boolean isThisHostLocal(String hostname) {
         // optimize common cases
-        if (hostname == null || hostname.length() == 0
-                || hostname.equalsIgnoreCase("localhost"))
+        if (hostname == null || hostname.isEmpty() || hostname.equalsIgnoreCase("localhost")) {
             return true;
+        }
 
         // now check all the addresses of "localhost"
         InetAddress hostAddrs[] = null;
@@ -85,20 +70,21 @@ public class NetUtils {
 
             // any address that's a loopback address is a local address
             for (InetAddress ia : hostAddrs) {
-                if (ia.isLoopbackAddress())
+                if (ia.isLoopbackAddress()) {
                     return true;
+                }
             }
 
             // are any of our addresses the same as any address of "localhost"?
             // XXX - redundant with the above check?
             for (InetAddress lia : InetAddress.getAllByName("localhost")) {
                 for (InetAddress ia : hostAddrs) {
-                    if (lia.equals(ia))
+                    if (lia.equals(ia)) {
                         return true;
+                    }
                 }
             }
-        }
-        catch (UnknownHostException ex) {
+        } catch (UnknownHostException ex) {
             // ignore it
         }
 
@@ -106,79 +92,23 @@ public class NetUtils {
         Enumeration<NetworkInterface> eni = null;
         try {
             eni = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException ex) {
+            return false;
         }
-        catch (SocketException ex) {
-            // ignore it
-        }
-        if (eni != null && hostAddrs != null) {
+        if (hostAddrs != null) {
             while (eni.hasMoreElements()) {
                 NetworkInterface ni = eni.nextElement();
                 for (InterfaceAddress intf : ni.getInterfaceAddresses()) {
                     for (InetAddress ia : hostAddrs) {
-                        if (intf.getAddress().equals(ia))
+                        if (intf.getAddress().equals(ia)) {
                             return true;
+                        }
                     }
                 }
             }
         }
-        return false;   // nothing matched, not local
-
-        /*
-         * For reference, here's the old code...
-         *
-        // come on JDK!  Why is this so #$@% difficult!?!
-        // if you can think of something better -- go for it!!!
-        // use IP addresses because one hostname can have more than one IP address!
-        List<String> host_ips = new ArrayList<String>();
-        List<String> local_ips = new ArrayList<String>();
-        String myCanonicalHostName = System.getProperty(SystemPropertyConstants.HOST_NAME_PROPERTY);
-
-        try {
-        if (!StringUtils.ok(myCanonicalHostName))
-        myCanonicalHostName = getCanonicalHostName();
-
-        InetAddress[] adds = InetAddress.getAllByName(hostname);
-
-        if (adds == null || adds.length <= 0)
+        // nothing matched, not local
         return false;
-
-        for (InetAddress ia : adds)
-        host_ips.add(ia.getHostAddress());
-
-        adds = InetAddress.getAllByName(myCanonicalHostName);
-        for (int i = 0; adds != null && i < adds.length; i++) {
-        String ip = adds[i].getHostAddress();
-        if (!local_ips.contains(ip))
-        local_ips.add(ip);
-        }
-
-        adds = InetAddress.getAllByName("localhost");
-        for (int i = 0; adds != null && i < adds.length; i++) {
-        String ip = adds[i].getHostAddress();
-        if (!local_ips.contains(ip))
-        local_ips.add(ip);
-        }
-
-        adds = InetAddress.getAllByName(null);
-        for (int i = 0; adds != null && i < adds.length; i++) {
-        String ip = adds[i].getHostAddress();
-        if (!local_ips.contains(ip))
-        local_ips.add(ip);
-        }
-        }
-        catch (UnknownHostException ex) {
-        return false;
-        }
-
-        // if any hostAddress matches any localAddress -- then the host is local...
-
-        for (String hip : host_ips)
-        for (String lip : local_ips)
-        if (hip.equals(lip))
-        return true;
-
-        return false;
-         */
     }
 
     /**
@@ -188,98 +118,62 @@ public class NetUtils {
      * @param host2
      * @return
      */
-    static public boolean isEqual(String host1, String host2) {
-        List<String> host1_ips = new ArrayList<String>();
-        List<String> host2_ips = new ArrayList<String>();
+    public static boolean isEqual(String host1, String host2) {
+        List<String> host1_ips = new ArrayList<>();
+        List<String> host2_ips = new ArrayList<>();
 
         try {
-            if (!StringUtils.ok(host1) && !StringUtils.ok(host2))
-                return true; // edge case ==> both are null or empty
+            if (!StringUtils.ok(host1) && !StringUtils.ok(host2)) {
+                // edge case ==> both are null or empty
+                return true;
+            }
 
-            if (!StringUtils.ok(host1) || !StringUtils.ok(host2))
-                return false; // just one of them is null or empty
+            if (!StringUtils.ok(host1) || !StringUtils.ok(host2)) {
+                // just one of them is null or empty
+                return false;
+            }
 
             InetAddress[] adds1 = InetAddress.getAllByName(host1);
             InetAddress[] adds2 = InetAddress.getAllByName(host2);
 
-            boolean adds1Empty = false; // readability.  You'll see why below!
-            boolean adds2Empty = false;
-
-            if (adds1.length <= 0)
-                adds1Empty = true;
-
-            if (adds2.length <= 0)
-                adds2Empty = true;
-
-            // I told you!
-            if (adds1Empty && adds2Empty) // both
+            if (adds1.length == 0 && adds2.length == 0) {
                 return true;
+            }
 
-            if (adds1Empty || adds2Empty) // one but not the other
+            if (adds1.length == 0 || adds2.length == 0) {
                 return false;
+            }
 
-            for (InetAddress ia : adds1)
+            for (InetAddress ia : adds1) {
                 host1_ips.add(ia.getHostAddress());
+            }
 
-            for (InetAddress ia : adds2)
+            for (InetAddress ia : adds2) {
                 host2_ips.add(ia.getHostAddress());
+            }
 
-            for (String h1ip : host1_ips)
-                for (String h2ip : host2_ips)
-                    if (h1ip.equals(h2ip))
+            for (String h1ip : host1_ips) {
+                for (String h2ip : host2_ips) {
+                    if (h1ip.equals(h2ip)) {
                         return true;
+                    }
+                }
+            }
 
             return false;
-        }
-        catch (UnknownHostException ex) {
+        } catch (UnknownHostException ex) {
             return false;
         }
     }
 
-    static public Socket getClientSocket(final String host, final int port, final int msecTimeout) {
-        class SocketFetcher implements Runnable {
-            @Override
-            public void run() {
-                try {
-                    socket = new Socket(host, port);
-                }
-                catch (Exception e) {
-                    socket = null;
-                }
-            }
-
-            Socket getSocket() {
-                return socket;
-            }
-            private Socket socket;
-        }
-        ;
-
-        SocketFetcher fetcher = new SocketFetcher();
-        Thread t = new Thread(fetcher);
-
-        t.start();
-        try {
-            t.join(msecTimeout);
-        }
-        catch (InterruptedException ex) {
-            // It's probably not running at all
-        }
-
-        return fetcher.getSocket();
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     public static String getHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     /**
      * This method returns the fully qualified name of the host.  If
      * the name can't be resolved (on windows if there isn't a domain specified), just
@@ -312,7 +206,6 @@ public class NetUtils {
         return hostname;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     public static InetAddress[] getHostAddresses() {
         try {
             String hname = getHostName();
@@ -322,13 +215,11 @@ public class NetUtils {
             }
 
             return InetAddress.getAllByName(hname);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     public static String[] getHostIPs() {
         try {
             InetAddress[] adds = getHostAddresses();
@@ -345,15 +236,13 @@ public class NetUtils {
             }
 
             return ips;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     public static String trimIP(String ip) {
-        if (ip == null || ip.length() <= 0) {
+        if (ip == null || ip.isEmpty()) {
             return ip;
         }
 
@@ -366,30 +255,6 @@ public class NetUtils {
         return ip;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    public static byte[] ip2bytes(String ip) {
-        try {
-            // possibilities:  "1.1.1.1", "frodo/1.1.1.1", "frodo.foo.com/1.1.1.1"
-
-            ip = trimIP(ip);
-            StringTokenizer stk = new StringTokenizer(ip, ".");
-
-            byte[] bytes = new byte[stk.countTokens()];
-
-            for (int i = 0; stk.hasMoreTokens(); i++) {
-                String num = stk.nextToken();
-                int inum = Integer.parseInt(num);
-                bytes[i] = (byte) inum;
-                //System.out.println("token: " + inum);
-            }
-            return bytes;
-        }
-        catch (NumberFormatException nfe) {
-            return null;
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     public static boolean isLocalHost(String ip) {
         if (ip == null) {
             return false;
@@ -400,7 +265,6 @@ public class NetUtils {
         return ip.equals(LOCALHOST_IP);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     public static boolean isLocal(String ip) {
         if (ip == null) {
             return false;
@@ -418,8 +282,8 @@ public class NetUtils {
             return false;
         }
 
-        for (int i = 0; i < myIPs.length; i++) {
-            if (ip.equals(myIPs[i])) {
+        for (String myIP : myIPs) {
+            if (ip.equals(myIP)) {
                 return true;
             }
         }
@@ -427,7 +291,6 @@ public class NetUtils {
         return false;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     public static boolean isRemote(String ip) {
         return !isLocal(ip);
     }
@@ -469,35 +332,26 @@ public class NetUtils {
     }
 
     public static boolean isPortValid(int portNumber) {
-        if (portNumber >= 0 && portNumber <= MAX_PORT) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return portNumber >= 0 && portNumber <= MAX_PORT;
     }
 
     public static boolean isPortStringValid(String portNumber) {
         try {
             return isPortValid(Integer.parseInt(portNumber));
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             return false;
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     public static boolean isPortFree(String hostName, int portNumber) {
         if (portNumber <= 0 || portNumber > MAX_PORT) {
             return false;
         }
 
-        if (hostName == null || isThisMe(hostName)) {
+        if (hostName == null || isThisHostLocal(hostName)) {
             return isPortFreeServer(portNumber);
         }
-        else {
-            return isPortFreeClient(hostName, portNumber);
-        }
+        return isPortFreeClient(hostName, portNumber);
     }
 
     /**
@@ -545,15 +399,10 @@ public class NetUtils {
             if (hostName == null) {
                 hostName = getHostName();
             }
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
-            OutputStream os = socket.getOutputStream();
-            InputStream is = socket.getInputStream();
-            os.close();
-            is.close();
-            socket.close();
-        }
-        catch (Exception e) {
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
+            }
+        } catch (Exception e) {
             // Nobody is listening on this port
             return true;
         }
@@ -589,7 +438,7 @@ public class NetUtils {
             try {
                 add = InetAddress.getLocalHost();
             } catch (UnknownHostException uhe) {
-                LOG.log(WARNING, "Could not resolve the local host by DNS.", uhe);
+                // Ignore. This exception should be already logged on startup.
             }
 
             if (!isPortFreeServer(port, add)) {
@@ -605,38 +454,38 @@ public class NetUtils {
     }
 
     private static boolean isPortFreeServer(int port, InetAddress add) {
-        try {
-            ServerSocket ss = new ServerSocket(port, 100, add);
-            ss.close();
-
-            printd(add.toString() + " : " + port + " --> FREE");
+        try (ServerSocket ss = new ServerSocket(port, 10, add)) {
             return true;
-        }
-        catch (Exception e) {
-            printd(add.toString() + " : " + port + " --> IN USE");
+        } catch (Exception e) {
             return false;
         }
     }
 
+
     /**
-    Gets a free port at the time of call to this method.
-    The logic leverages the built in java.net.ServerSocket implementation
-    which binds a server socket to a free port when instantiated with
-    a port <code> 0 </code>.
-    <P> Note that this method guarantees the availability of the port
-    only at the time of call. The method does not bind to this port.
-    <p> Checking for free port can fail for several reasons which may
-    indicate potential problems with the system. This method acknowledges
-    the fact and following is the general contract:
-    <li> Best effort is made to find a port which can be bound to. All
-    the exceptional conditions in the due course are considered SEVERE.
-    <li> If any exceptional condition is experienced, <code> 0 </code>
-    is returned, indicating that the method failed for some reasons and
-    the callers should take the corrective action. (The method need not
-    always throw an exception for this).
-    <li> Method is synchronized on this class.
-    @return integer depicting the free port number available at this time
-    0 otherwise.
+     * Gets a free port at the time of call to this method.
+     * The logic leverages the built in java.net.ServerSocket implementation
+     * which binds a server socket to a free port when instantiated with
+     * a port <code>0</code>.
+     * <p>
+     * Note that this method guarantees the availability of the port
+     * only at the time of call. The method does not bind to this port.
+     * <p>
+     * Checking for free port can fail for several reasons which may
+     * indicate potential problems with the system. This method acknowledges
+     * the fact and following is the general contract:
+     * <ul>
+     * <li>Best effort is made to find a port which can be bound to. All
+     * the exceptional conditions in the due course are considered SEVERE.
+     * <li>If any exceptional condition is experienced, <code> 0 </code>
+     * is returned, indicating that the method failed for some reasons and
+     * the callers should take the corrective action. (The method need not
+     * always throw an exception for this).
+     * <li>Method is synchronized on this class.
+     * </ul>
+     *
+     * @return integer depicting the free port number available at this time
+     *         0 otherwise.
      */
     public static int getFreePort() {
         int freePort = 0;
@@ -650,11 +499,9 @@ public class NetUtils {
                 serverSocket = new ServerSocket(0);
                 freePort = serverSocket.getLocalPort();
                 portFound = true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 //squelch the exception
-            }
-            finally {
+            } finally {
                 if (!portFound) {
                     freePort = 0;
                 }
@@ -665,8 +512,7 @@ public class NetUtils {
                             throw new Exception("local exception ...");
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //squelch the exception
                     freePort = 0;
                 }
@@ -686,28 +532,25 @@ public class NetUtils {
      * <p>
      * In such cases, we need to know if the domain is running and this method
      * provides a way to do that.
-     * @param the timeout in milliseconds
+     * @param timeoutMilliseconds timeout in milliseconds
      * @return boolean indicating whether the server is running
      */
     public static boolean isRunning(String host, int port, int timeoutMilliseconds) {
         Socket server = new Socket();
-
         try {
-            if (host == null)
+            if (host == null) {
                 host = InetAddress.getByName(null).getHostName();
+            }
 
             InetSocketAddress whom = new InetSocketAddress(host, port);
             server.connect(whom, timeoutMilliseconds);
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
-        }
-        finally {
+        } finally {
             try {
                 server.close();
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 // nothing to do
             }
         }
@@ -720,67 +563,11 @@ public class NetUtils {
     /**
      * convenience method for the local machine
      */
-    public static final boolean isRunning(int port) {
+    public static boolean isRunning(int port) {
         return isRunning(null, port);
     }
-    ///////////////////////////////////////////////////////////////////////////
-    private static final String LOCALHOST_IP = "127.0.0.1";
 
-    ///////////////////////////////////////////////////////////////////////////
-    private static boolean isThisMe(String hostname) {
-        try {
-            InetAddress[] myadds = getHostAddresses();
-            InetAddress[] theiradds = InetAddress.getAllByName(hostname);
-
-            for (int i = 0; i < theiradds.length; i++) {
-                if (theiradds[i].isLoopbackAddress()) {
-                    return true;
-                }
-
-                for (int j = 0; j < myadds.length; j++) {
-                    if (myadds[j].equals(theiradds[i])) {
-                        return true;
-                    }
-                }
-            }
-        }
-        catch (Exception e) {
-        }
-
-        return false;
+    public enum PortAvailability {
+        illegalNumber, noPermission, inUse, unknown, OK
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    public static void main(String[] args) {
-        System.out.println("80: " + isPortFree(80));
-        System.out.println("777: " + isPortFree(777));
-        System.out.println("8000: " + isPortFree(8000));
-        System.out.println("");
-        timeit(null, 12345);
-        timeit(null, 4848);
-        timeit("10.0.4.5", 1234); // unlikely IP address
-    }
-
-    private static void timeit(String h, int p) {
-        long start = System.currentTimeMillis();
-        boolean b = isRunning(h, p);
-        long duration = System.currentTimeMillis() - start;
-        System.out.printf("isRunning says: %b for %s, %d, %d%n", b, h, p, duration);
-    }
-    /**
-     *        This is the test query used to ping the server in an attempt to
-     *        determine if it is secure or not.
-     */
-    private static byte[] TEST_QUERY = new byte[]{
-        //  This static declaration contained a SSL query to be used while
-        // establishing connection with https server.
-        // This query basically had two parts, first part representing HTTPS
-        // request, while the other part represented HTTP request. Some servers
-        // won't respond unless HTTP request is too sent out along with HTTPS
-        // request.
-        // This is being removed due to copyright issues as part of full IP review.
-        // In future, one may wish to define this query to be able to fulfil its
-        // intended usage or re-implement the isSecurePort method to be able to
-        // detect if a port is a secure port by some alternate approach.
-    };
 }

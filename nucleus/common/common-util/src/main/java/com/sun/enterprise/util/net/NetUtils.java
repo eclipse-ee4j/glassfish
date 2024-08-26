@@ -41,6 +41,249 @@ public final class NetUtils {
     private static final int IS_PORT_FREE_TIMEOUT = 1000;
 
     private NetUtils() {
+        // Static utility class
+    }
+
+    /**
+     * Gets a free port at the time of call to this method.
+     * The logic leverages the built in java.net.ServerSocket implementation
+     * which binds a server socket to a free port when instantiated with
+     * a port <code>0</code>.
+     * <p>
+     * Note that this method guarantees the availability of the port
+     * only at the time of call. The method does not bind to this port.
+     * <p>
+     * Checking for free port can fail for several reasons which may
+     * indicate potential problems with the system.
+     * <p>
+     * If any exceptional condition is experienced, <code>0</code>
+     * is returned, indicating that the method failed for some reasons and
+     * the callers should take the corrective action.
+     * <p>Method is synchronized on this class.
+     *
+     * @return integer depicting the free port number available at this time
+     * @throws IllegalStateException if it was not possible to open and close the server socket.
+     */
+    public static synchronized int getFreePort() throws IllegalStateException {
+        try {
+            try (ServerSocket serverSocket = new ServerSocket(0)) {
+                // following call normally returns the free port,
+                // to which the ServerSocket is bound.
+                return serverSocket.getLocalPort();
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not open random free local port.", e);
+        }
+    }
+
+    /**
+     * There are 4 possibilities when you want to setup a server socket on a port:
+     * <ol>
+     * <li>The port is not in valid range.
+     * <li>The user does not have permission to open up shop on that port
+     *    An example of (2) is a non-root user on UNIX trying to use port 80
+     * <li>The port is already in use
+     * <li>OK -- you can use it!
+     * </ol>
+     *
+     * @param portNumber
+     * @return one of the 4 possibilities for this port
+     */
+    public static PortAvailability checkPort(int portNumber) {
+        if (!isPortValid(portNumber)) {
+            return PortAvailability.illegalNumber;
+        }
+
+        // if we can setup a server socket on that port then it must be free.
+        if (isPortFreeServer(portNumber)) {
+            return PortAvailability.OK;
+        }
+
+        if (isPortFreeClient(null, portNumber)) {
+            // can not setup a server socket and can not connect as a client
+            // that means we don't have permission...
+            return PortAvailability.noPermission;
+        }
+        return PortAvailability.inUse;
+    }
+
+    public static boolean isPortStringValid(String portNumber) {
+        try {
+            return isPortValid(Integer.parseInt(portNumber));
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    public static boolean isPortValid(int portNumber) {
+        return portNumber >= 0 && portNumber <= MAX_PORT;
+    }
+
+    public static boolean isPortFree(int portNumber) {
+        return isPortFree(null, portNumber);
+    }
+
+    public static boolean isPortFree(String hostName, int portNumber) {
+        if (portNumber <= 0 || portNumber > MAX_PORT) {
+            return false;
+        }
+
+        if (hostName == null || isThisHostLocal(hostName)) {
+            return isPortFreeServer(portNumber);
+        }
+        return isPortFreeClient(hostName, portNumber);
+    }
+
+    private static boolean isPortFreeClient(String hostName, int portNumber) {
+        try {
+            // WBN - I have no idea why I'm messing with these streams!
+            // I lifted the code from installer.  Apparently if you just
+            // open a socket on a free port and catch the exception something
+            // will go wrong in Windows.
+            // Feel free to change it if you know EXACTLY what you're doing
+
+            //If the host name is null, assume localhost
+            if (hostName == null) {
+                hostName = getHostName();
+            }
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
+            }
+        } catch (Exception e) {
+            // Nobody is listening on this port
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean isPortFreeServer(int port) {
+        // check 3 different ip-port combinations.
+        // Amazingly I have seen all 3 possibilities -- so just checking on 0.0.0.0
+        // is not good enough.
+        // Usually it is the 0.0.0.0 -- but JMS (default:7676)
+        // only returns false from the "localhost":port combination.
+        // We want to be aggressively disqualifying ports rather than the other
+        // way around
+
+        // JIRA 19391 April 2013  Byron Nevins
+        // If DNS can not resolve the hostname, then
+        // InetAddress.getLocalHost() will throw an UnknownHostException
+        // Before this change we caught ALL Exceptions and returned false.
+        // So if, say, the system has a bad hostname setup, this method
+        // would say the port is in use.  Which probably is not true.
+        // Change:  log it as a warning the first time and then log it as a FINE.
+
+        try {
+            InetAddress add = InetAddress.getByAddress(new byte[] {0, 0, 0, 0});
+
+            if (!isPortFreeServer(port, add)) {
+                // return immediately on "not-free"
+                return false;
+            }
+
+            try {
+                add = InetAddress.getLocalHost();
+            } catch (UnknownHostException uhe) {
+                // Ignore. This exception should be already logged on startup.
+            }
+
+            if (!isPortFreeServer(port, add)) {
+                return false;
+            }
+
+            add = InetAddress.getByName("localhost");
+            return isPortFreeServer(port, add);
+        } catch (Exception e) {
+            // If we can't get an IP address then we can't check
+            return false;
+        }
+    }
+
+    private static boolean isPortFreeServer(int port, InetAddress add) {
+        try (ServerSocket ss = new ServerSocket(port, 10, add)) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Calls {@link #isRunning(String, int, int)}
+     * with {@value #IS_RUNNING_DEFAULT_TIMEOUT} ms timeout.
+     *
+     * @param host
+     * @param port port to check.
+     * @return true if there's something listening on the port.
+     */
+    public static boolean isRunning(String host, int port) {
+        return isRunning(host, port, IS_RUNNING_DEFAULT_TIMEOUT);
+    }
+
+    /**
+     * There is sometimes a need for subclasses to know if a
+     * <code> local domain </code> is running. An example of such a command is
+     * change-master-password command. The stop-domain command also needs to
+     * know if a domain is running <i> without </i> having to provide user
+     * name and password on command line (this is the case when I own a domain
+     * that has non-default admin user and password) and want to stop it
+     * without providing it.
+     * <p>
+     * In such cases, we need to know if the domain is running and this method
+     * provides a way to do that.
+     * @param timeoutMilliseconds timeout in milliseconds
+     * @return true if there's something listening on th port.
+     */
+    public static boolean isRunning(String host, int port, int timeoutMilliseconds) {
+        Socket server = new Socket();
+        try {
+            if (host == null) {
+                host = InetAddress.getByName(null).getHostName();
+            }
+
+            InetSocketAddress whom = new InetSocketAddress(host, port);
+            server.connect(whom, timeoutMilliseconds);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        } finally {
+            try {
+                server.close();
+            } catch (IOException ex) {
+                // nothing to do
+            }
+        }
+    }
+
+
+    public static boolean isRemote(String ip) {
+        return !isLocal(ip);
+    }
+
+    public static boolean isLocal(String ip) {
+        if (ip == null) {
+            return false;
+        }
+
+        ip = trimIP(ip);
+
+        if (ip.equals(LOCALHOST_IP)) {
+            return true;
+        }
+
+        String[] myIPs = getHostIPs();
+
+        if (myIPs == null) {
+            return false;
+        }
+
+        for (String myIP : myIPs) {
+            if (ip.equals(myIP)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -166,70 +409,14 @@ public final class NetUtils {
         }
     }
 
-    public static String getHostName() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * This method returns the fully qualified name of the host.  If
-     * the name can't be resolved (on windows if there isn't a domain specified), just
-     * host name is returned
-     *
-     * @throws UnknownHostException so it can be handled on a case by case basis
-     */
-    public static String getCanonicalHostName() throws UnknownHostException {
-        String hostname = null;
-        String defaultHostname = InetAddress.getLocalHost().getHostName();
-
-        // short-circuit out if user has reverse-DNS issues
-        if (Boolean.parseBoolean(System.getenv("AS_NO_REVERSE_DNS"))) {
-            return defaultHostname;
-        }
-
-        // look for full name
-        hostname = InetAddress.getLocalHost().getCanonicalHostName();
-
-        // check to see if ip returned or canonical hostname is different than hostname
-        // It is possible for dhcp connected computers to have an erroneous name returned
-        // that is created by the dhcp server.  If that happens, return just the default hostname
-        if (hostname.equals(InetAddress.getLocalHost().getHostAddress())
-                || !hostname.startsWith(defaultHostname)) {
-            // don't want IP or canonical hostname, this will cause a lot of problems for dhcp users
-            // get just plan host name instead
-            hostname = defaultHostname;
-        }
-
-        return hostname;
-    }
-
-    public static InetAddress[] getHostAddresses() {
-        try {
-            String hname = getHostName();
-
-            if (hname == null) {
-                return null;
-            }
-
-            return InetAddress.getAllByName(hname);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public static String[] getHostIPs() {
         try {
             InetAddress[] adds = getHostAddresses();
-
             if (adds == null) {
                 return null;
             }
 
             String[] ips = new String[adds.length];
-
             for (int i = 0; i < adds.length; i++) {
                 String ip = trimIP(adds[i].toString());
                 ips[i] = ip;
@@ -241,7 +428,57 @@ public final class NetUtils {
         }
     }
 
-    public static String trimIP(String ip) {
+    public static InetAddress[] getHostAddresses() {
+        try {
+            String hname = getHostName();
+            if (hname == null) {
+                return null;
+            }
+            return InetAddress.getAllByName(hname);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String getHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * This method returns the fully qualified name of the host.
+     * If the name can't be resolved (on Windows if there isn't a domain specified),
+     * just host name is returned
+     *
+     * @return fully qualified name of the local host.
+     * @throws UnknownHostException so it can be handled on a case by case basis
+     */
+    public static String getCanonicalHostName() throws UnknownHostException {
+        final String defaultHostname = InetAddress.getLocalHost().getHostName();
+        // short-circuit out if user has reverse-DNS issues
+        if (Boolean.parseBoolean(System.getenv("AS_NO_REVERSE_DNS"))) {
+            return defaultHostname;
+        }
+
+        // look for full name
+        // check to see if ip returned or canonical hostname is different than hostname
+        // It is possible for dhcp connected computers to have an erroneous name returned
+        // that is created by the dhcp server. If that happens, return just the default hostname
+        final String hostname = InetAddress.getLocalHost().getCanonicalHostName();
+        if (hostname.equals(InetAddress.getLocalHost().getHostAddress())
+                || !hostname.startsWith(defaultHostname)) {
+            // don't want IP or canonical hostname, this will cause a lot of problems for dhcp users
+            // get just plain host name instead
+            return defaultHostname;
+        }
+
+        return hostname;
+    }
+
+    private static String trimIP(String ip) {
         if (ip == null || ip.isEmpty()) {
             return ip;
         }
@@ -253,283 +490,6 @@ public final class NetUtils {
         }
 
         return ip;
-    }
-
-    public static boolean isLocalHost(String ip) {
-        if (ip == null) {
-            return false;
-        }
-
-        ip = trimIP(ip);
-
-        return ip.equals(LOCALHOST_IP);
-    }
-
-    public static boolean isLocal(String ip) {
-        if (ip == null) {
-            return false;
-        }
-
-        ip = trimIP(ip);
-
-        if (isLocalHost(ip)) {
-            return true;
-        }
-
-        String[] myIPs = getHostIPs();
-
-        if (myIPs == null) {
-            return false;
-        }
-
-        for (String myIP : myIPs) {
-            if (ip.equals(myIP)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean isRemote(String ip) {
-        return !isLocal(ip);
-    }
-
-
-    public static boolean isPortValid(int portNumber) {
-        return portNumber >= 0 && portNumber <= MAX_PORT;
-    }
-
-    public static boolean isPortStringValid(String portNumber) {
-        try {
-            return isPortValid(Integer.parseInt(portNumber));
-        } catch (NumberFormatException ex) {
-            return false;
-        }
-    }
-
-    public static boolean isPortFree(String hostName, int portNumber) {
-        if (portNumber <= 0 || portNumber > MAX_PORT) {
-            return false;
-        }
-
-        if (hostName == null || isThisHostLocal(hostName)) {
-            return isPortFreeServer(portNumber);
-        }
-        return isPortFreeClient(hostName, portNumber);
-    }
-
-    /**
-     * There are 4 possibilities when you want to setup a server socket on a port:
-     * 1. The port is already in use
-     * 2. The user does not have permission to open up shop on that port
-     *    An example of (2) is a non-root user on UNIX trying to use port 80
-     * 3. The port number is not in the legal range
-     * 4. OK -- you can use it!
-     *
-     * @param portNumber
-     * @return one of the 4 possibilities for this port
-     */
-    public static PortAvailability checkPort(int portNumber) {
-        if (!isPortValid(portNumber)) {
-            return PortAvailability.illegalNumber;
-        }
-
-        // if we can setup a server socket on that port then it must be free.
-        if (isPortFreeServer(portNumber)) {
-            return PortAvailability.OK;
-        }
-
-        if (isPortFreeClient(null, portNumber)) {
-            // can not setup a server socket and can not connect as a client
-            // that means we don't have permission...
-            return PortAvailability.noPermission;
-        }
-        return PortAvailability.inUse;
-    }
-
-    public static boolean isPortFree(int portNumber) {
-        return isPortFree(null, portNumber);
-    }
-
-    private static boolean isPortFreeClient(String hostName, int portNumber) {
-        try {
-            // WBN - I have no idea why I'm messing with these streams!
-            // I lifted the code from installer.  Apparently if you just
-            // open a socket on a free port and catch the exception something
-            // will go wrong in Windows.
-            // Feel free to change it if you know EXACTLY what you're doing
-
-            //If the host name is null, assume localhost
-            if (hostName == null) {
-                hostName = getHostName();
-            }
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
-            }
-        } catch (Exception e) {
-            // Nobody is listening on this port
-            return true;
-        }
-
-        return false;
-    }
-
-    private static boolean isPortFreeServer(int port) {
-        // check 3 different ip-port combinations.
-        // Amazingly I have seen all 3 possibilities -- so just checking on 0.0.0.0
-        // is not good enough.
-        // Usually it is the 0.0.0.0 -- but JMS (default:7676)
-        // only returns false from the "localhost":port combination.
-        // We want to be aggressively disqualifying ports rather than the other
-        // way around
-
-        // JIRA 19391 April 2013  Byron Nevins
-        // If DNS can not resolve the hostname, then
-        // InetAddress.getLocalHost() will throw an UnknownHostException
-        // Before this change we caught ALL Exceptions and returned false.
-        // So if, say, the system has a bad hostname setup, this method
-        // would say the port is in use.  Which probably is not true.
-        // Change:  log it as a warning the first time and then log it as a FINE.
-
-        try {
-            InetAddress add = InetAddress.getByAddress(new byte[] {0, 0, 0, 0});
-
-            if (!isPortFreeServer(port, add)) {
-                // return immediately on "not-free"
-                return false;
-            }
-
-            try {
-                add = InetAddress.getLocalHost();
-            } catch (UnknownHostException uhe) {
-                // Ignore. This exception should be already logged on startup.
-            }
-
-            if (!isPortFreeServer(port, add)) {
-                return false;
-            }
-
-            add = InetAddress.getByName("localhost");
-            return isPortFreeServer(port, add);
-        } catch (Exception e) {
-            // If we can't get an IP address then we can't check
-            return false;
-        }
-    }
-
-    private static boolean isPortFreeServer(int port, InetAddress add) {
-        try (ServerSocket ss = new ServerSocket(port, 10, add)) {
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
-    /**
-     * Gets a free port at the time of call to this method.
-     * The logic leverages the built in java.net.ServerSocket implementation
-     * which binds a server socket to a free port when instantiated with
-     * a port <code>0</code>.
-     * <p>
-     * Note that this method guarantees the availability of the port
-     * only at the time of call. The method does not bind to this port.
-     * <p>
-     * Checking for free port can fail for several reasons which may
-     * indicate potential problems with the system. This method acknowledges
-     * the fact and following is the general contract:
-     * <ul>
-     * <li>Best effort is made to find a port which can be bound to. All
-     * the exceptional conditions in the due course are considered SEVERE.
-     * <li>If any exceptional condition is experienced, <code> 0 </code>
-     * is returned, indicating that the method failed for some reasons and
-     * the callers should take the corrective action. (The method need not
-     * always throw an exception for this).
-     * <li>Method is synchronized on this class.
-     * </ul>
-     *
-     * @return integer depicting the free port number available at this time
-     *         0 otherwise.
-     */
-    public static int getFreePort() {
-        int freePort = 0;
-        boolean portFound = false;
-        ServerSocket serverSocket = null;
-
-        synchronized (NetUtils.class) {
-            try {
-                /*following call normally returns the free port,
-                to which the ServerSocket is bound. */
-                serverSocket = new ServerSocket(0);
-                freePort = serverSocket.getLocalPort();
-                portFound = true;
-            } catch (Exception e) {
-                //squelch the exception
-            } finally {
-                if (!portFound) {
-                    freePort = 0;
-                }
-                try {
-                    if (serverSocket != null) {
-                        serverSocket.close();
-                        if (!serverSocket.isClosed()) {
-                            throw new Exception("local exception ...");
-                        }
-                    }
-                } catch (Exception e) {
-                    //squelch the exception
-                    freePort = 0;
-                }
-            }
-            return freePort;
-        }
-    }
-
-    /**
-     * There is sometimes a need for subclasses to know if a
-     * <code> local domain </code> is running. An example of such a command is
-     * change-master-password command. The stop-domain command also needs to
-     * know if a domain is running <i> without </i> having to provide user
-     * name and password on command line (this is the case when I own a domain
-     * that has non-default admin user and password) and want to stop it
-     * without providing it.
-     * <p>
-     * In such cases, we need to know if the domain is running and this method
-     * provides a way to do that.
-     * @param timeoutMilliseconds timeout in milliseconds
-     * @return boolean indicating whether the server is running
-     */
-    public static boolean isRunning(String host, int port, int timeoutMilliseconds) {
-        Socket server = new Socket();
-        try {
-            if (host == null) {
-                host = InetAddress.getByName(null).getHostName();
-            }
-
-            InetSocketAddress whom = new InetSocketAddress(host, port);
-            server.connect(whom, timeoutMilliseconds);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        } finally {
-            try {
-                server.close();
-            } catch (IOException ex) {
-                // nothing to do
-            }
-        }
-    }
-
-    public static boolean isRunning(String host, int port) {
-        return isRunning(host, port, IS_RUNNING_DEFAULT_TIMEOUT);
-    }
-
-    /**
-     * convenience method for the local machine
-     */
-    public static boolean isRunning(int port) {
-        return isRunning(null, port);
     }
 
     public enum PortAvailability {

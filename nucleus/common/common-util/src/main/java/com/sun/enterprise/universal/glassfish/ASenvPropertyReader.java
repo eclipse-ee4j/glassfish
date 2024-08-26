@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +41,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY
 import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.UNIX_ASENV_FILENAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.WINDOWS_ASENV_FILENAME;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Class ASenvPropertyReader
@@ -237,7 +239,7 @@ public class ASenvPropertyReader {
 
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new FileReader(asenv));
+                reader = new BufferedReader(new FileReader(asenv, UTF_8));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     setProperty(line);

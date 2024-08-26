@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -186,7 +187,8 @@ public class ProcessManager {
         if (process == null) {
             throw new ProcessManagerException("Parameter process was null.");
         }
-        try (PrintWriter pipe = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())))) {
+        try (PrintWriter pipe = new PrintWriter(
+            new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), Charset.defaultCharset())))) {
             for (String stdinLine : stdinLines) {
                 LOG.log(Level.DEBUG, "InputLine --> {0} <--", stdinLine);
                 pipe.println(stdinLine);
@@ -224,7 +226,7 @@ public class ProcessManager {
 
         ReaderThread(InputStream stream, boolean echo, String threadName, Thread threadWaitingForProcess, String textToWaitFor) {
             setName(threadName);
-            this.reader = new BufferedReader(new InputStreamReader(stream));
+            this.reader = new BufferedReader(new InputStreamReader(stream, Charset.defaultCharset()));
             this.sb = new StringBuilder();
             this.echo = echo;
             this.threadWaitingForProcess = threadWaitingForProcess;

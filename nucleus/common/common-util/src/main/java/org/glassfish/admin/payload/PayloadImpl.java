@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,8 @@ import java.util.Properties;
 
 import org.glassfish.api.admin.Payload;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Abstract implementation of the Payload API.
  *
@@ -47,7 +49,7 @@ public class PayloadImpl implements Payload {
          */
         private final ArrayList<Payload.Part> parts = new ArrayList<>();
 
-        private boolean dirty = false;
+        private boolean dirty;
 
         @Override
         public int size() {
@@ -643,11 +645,9 @@ public class PayloadImpl implements Payload {
         @Override
         public void copy(final OutputStream os) throws IOException {
             int bytesRead;
-            byte [] buffer = new byte[1024];
+            byte[] buffer = new byte[8192];
             final InputStream is = getInputStream();
-            /*
-             * Directory entries can have null input streams.
-             */
+            // Directory entries can have null input streams.
             if (is != null) {
                 while ((bytesRead = is.read(buffer)) != -1) {
                     os.write(buffer, 0, bytesRead);
@@ -689,7 +689,7 @@ public class PayloadImpl implements Payload {
          */
         static class Buffered extends PayloadImpl.Part {
             private final String content;
-            private ByteArrayInputStream is = null;
+            private ByteArrayInputStream is;
 
             /**
              * Creates a new buffer-based Part.
@@ -712,7 +712,7 @@ public class PayloadImpl implements Payload {
             public ByteArrayInputStream getInputStream() {
                 if (is == null) {
                     // Some parts might not have content.
-                    final byte[] data = content == null ? new byte[0] : content.getBytes();
+                    final byte[] data = content == null ? new byte[0] : content.getBytes(UTF_8);
                     is = new ByteArrayInputStream(data);
                 }
                 return is;
@@ -785,8 +785,8 @@ public class PayloadImpl implements Payload {
             private static class SelfClosingInputStream extends InputStream {
 
                 private final InputStream wrappedStream;
-                private boolean isWrappedStreamClosed = false;
-                private boolean isExternallyClosed = false;
+                private boolean isWrappedStreamClosed;
+                private boolean isExternallyClosed;
 
                 private SelfClosingInputStream(final InputStream wrappedStream) {
                     this.wrappedStream = wrappedStream;

@@ -24,7 +24,6 @@ import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.HttpConnectorAddress;
 import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.io.FileUtils;
@@ -38,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -51,6 +49,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -82,6 +81,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
@@ -908,7 +909,7 @@ public class RemoteAdminCommand {
          */
     }
 
-    /*
+    /**
      * Returns the username/password authenticaiton information to use
      * in building the outbound HTTP connection.
      *
@@ -978,27 +979,24 @@ public class RemoteAdminCommand {
      * @return the URI so far, including the newly-added option
      */
     private StringBuilder addStringOption(StringBuilder uriString, String name, String option) {
-        try {
-            String encodedOption = URLEncoder.encode(option, "UTF-8");
-            uriString.append(name).append('=').append(encodedOption).append(QUERY_STRING_SEPARATOR);
-        } catch (UnsupportedEncodingException e) {
-            // XXX - should never happen
-            throw new RuntimeException("Error encoding value for: " + name + ", value:" + option, e);
-        }
+        String encodedOption = URLEncoder.encode(option, UTF_8);
+        uriString.append(name).append('=').append(encodedOption).append(QUERY_STRING_SEPARATOR);
         return uriString;
     }
 
     /**
      * Add a password option, passing it as a header in the request
+     *
+     * @deprecated insecure!!!
      */
+    @Deprecated
     private StringBuilder addPasswordOption(StringBuilder uriString, String name, String option) throws IOException {
         if (passwordOptions == null) {
             passwordOptions = new StringBuilder();
         } else {
             passwordOptions.append(QUERY_STRING_SEPARATOR);
         }
-        GFBase64Encoder encoder = new GFBase64Encoder();
-        passwordOptions.append(name).append('=').append(URLEncoder.encode(encoder.encode(option.getBytes()), "UTF-8"));
+        passwordOptions.append(name).append('=').append(Base64.getUrlEncoder().encodeToString(option.getBytes(UTF_8)));
         return uriString;
     }
 

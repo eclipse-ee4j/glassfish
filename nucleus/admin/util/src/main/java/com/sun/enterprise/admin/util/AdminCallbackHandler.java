@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,11 +18,11 @@
 package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.universal.GFBase64Decoder;
 
 import java.io.IOException;
 import java.net.PasswordAuthentication;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -41,6 +41,8 @@ import org.glassfish.grizzly.http.Cookie;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.LocalPassword;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Handles callbacks for admin authentication other than user-provided username and password, such as the local
@@ -64,9 +66,8 @@ public class AdminCallbackHandler implements CallbackHandler {
 
     private final Request request;
 
-    private Map<String, String> headers = null;
+    private Map<String, String> headers;
 
-    private static final GFBase64Decoder decoder = new GFBase64Decoder();
     private static final String BASIC = "Basic ";
 
     private final Principal clientPrincipal;
@@ -99,7 +100,7 @@ public class AdminCallbackHandler implements CallbackHandler {
     }
 
     private static Map<String, String> headers(final Request req) {
-        final Map<String, String> result = new HashMap<String, String>();
+        final Map<String, String> result = new HashMap<>();
         for (String headerName : req.getHeaderNames()) {
             result.put(headerName(headerName), req.getHeader(headerName));
         }
@@ -139,7 +140,7 @@ public class AdminCallbackHandler implements CallbackHandler {
         }
 
         String enc = authHeader.substring(BASIC.length());
-        String dec = new String(decoder.decodeBuffer(enc));
+        String dec = new String(Base64.getDecoder().decode(enc), UTF_8);
         int i = dec.indexOf(':');
         if (i < 0) {
             logger.log(PROGRESS_LEVEL,

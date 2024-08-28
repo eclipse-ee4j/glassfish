@@ -19,14 +19,19 @@ package org.glassfish.weld.services;
 
 import com.sun.ejb.codegen.ClassGenerator;
 
+import java.io.ByteArrayInputStream;
 import java.security.ProtectionDomain;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.jboss.weld.serialization.spi.ProxyServices;
 
-import static com.sun.ejb.codegen.Generator.getPackageName;
+import javassist.ClassPool;
+import javassist.CtClass;
+
 
 /**
  * An implementation of the {@link ProxyServices}.
@@ -45,6 +50,7 @@ public class ProxyServicesImpl implements ProxyServices {
 
     private final ClassLoaderHierarchy classLoaderHierarchy;
 
+    private Map<ClassLoader, ClassPool> classPoolMap = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
      * @param services immediately used to find a {@link ClassLoaderHierarchy} service
@@ -57,9 +63,17 @@ public class ProxyServicesImpl implements ProxyServices {
     public Class<?> defineClass(final Class<?> originalClass, final String className, final byte[] classBytes,
         final int off, final int len) throws ClassFormatError {
         try {
-            String packageName = getPackageName(className);
-            byte[] classData = Arrays.copyOfRange(classBytes, off, off+len);
-            return ClassGenerator.defineClass(originalClass.getClassLoader(), originalClass, packageName, className, classData);
+            final String originalPackageName = originalClass.getPackageName();
+            String modifiedClassName = originalClass.getName() + "_GlassFishWeldProxy";
+            final ClassLoader originalClassCL = getClassLoaderforBean(originalClass);
+            final ClassPool classPool = classPoolMap.computeIfAbsent(originalClassCL, cl -> new ClassPool());
+            while (classPool.getOrNull(modifiedClassName) != null) {
+                modifiedClassName += "_";
+            }
+            final CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(classBytes, off, len));
+            ctClass.setName(modifiedClassName);
+            return ClassGenerator.defineClass(originalClass.getClassLoader(), originalClass, originalPackageName,
+                    modifiedClassName, ctClass.toBytecode());
         } catch (final Exception e) {
             throw new WeldProxyException("Could not define class " + className, e);
         }
@@ -126,9 +140,5 @@ public class ProxyServicesImpl implements ProxyServices {
         return false;
     }
 
-
-    private Class<?> loadClassByThreadCL(final String className) throws ClassNotFoundException {
-        return Class.forName(className, true, Thread.currentThread().getContextClassLoader());
-    }
 
 }

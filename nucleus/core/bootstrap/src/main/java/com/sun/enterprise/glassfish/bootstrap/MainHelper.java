@@ -50,6 +50,7 @@ import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI
 import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.glassfish.bootstrap.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -98,7 +99,7 @@ public class MainHelper {
             BOOTSTRAP_LOGGER.log(FINE, "{0} not found, ignoring", asenv.getAbsolutePath());
             return asenvProps;
         }
-        try (LineNumberReader lnReader = new LineNumberReader(new FileReader(asenv))) {
+        try (LineNumberReader lnReader = new LineNumberReader(new FileReader(asenv, UTF_8))) {
             String line = lnReader.readLine();
             // most of the asenv.conf values have surrounding "", remove them
             // and on Windows, they start with SET XXX=YYY

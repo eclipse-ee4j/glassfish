@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -67,7 +68,7 @@ class MainHelperTest {
         asenv_bat.deleteOnExit();
         asenv_conf.deleteOnExit();
 
-        PrintWriter pw1 = new PrintWriter(asenv_bat);
+        PrintWriter pw1 = new PrintWriter(asenv_bat, UTF_8);
         pw1.println("set AbcVar=value1");
         pw1.println("SET Avar=\"value2\"");
         pw1.println("Set Bvar=\"value3\"");
@@ -76,7 +77,7 @@ class MainHelperTest {
         pw1.println("set seVar=\"value6\"");
         pw1.println("set sVar=\"value7\"");
         pw1.close();
-        PrintWriter pw2 = new PrintWriter(asenv_conf);
+        PrintWriter pw2 = new PrintWriter(asenv_conf, UTF_8);
         pw2.println("AbcVar=value1");
         pw2.println("Avar=\"value2\"");
         pw2.println("Bvar=\"value3\"");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -138,7 +139,7 @@ public class GlassFishMain {
             addShutdownHook();
             gfr = GlassFishRuntime.bootstrap(new BootstrapProperties(ctx), getClass().getClassLoader());
             gf = gfr.newGlassFish(new GlassFishProperties(ctx));
-            if (Boolean.valueOf(Util.getPropertyOrSystemProperty(ctx, "GlassFish_Interactive", "false"))) {
+            if (Boolean.parseBoolean(Util.getPropertyOrSystemProperty(ctx, "GlassFish_Interactive", "false"))) {
                 startConsole();
             } else {
                 gf.start();
@@ -147,7 +148,7 @@ public class GlassFishMain {
 
         private void startConsole() throws IOException {
             String command;
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
             while ((command = readCommand(reader)) != null) {
                 try {
                     STDOUT.println("command = " + command);

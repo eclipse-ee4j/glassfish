@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -122,10 +123,12 @@ public class Util {
         try {
             copyWithoutClose(in, out, size);
         } finally {
-            if (in != null)
+            if (in != null) {
                 in.close();
-            if (out != null)
+            }
+            if (out != null) {
                 out.close();
+            }
         }
     }
 
@@ -159,10 +162,8 @@ public class Util {
 
     public static void substVars(Properties props) {
         // Perform variable substitution for system properties.
-        for (Enumeration e = props.propertyNames(); e.hasMoreElements();) {
-            String name = (String) e.nextElement();
-            props.setProperty(name,
-                    FelixUtil.substVars(props.getProperty(name), name, null, props));
+        for (String name : props.stringPropertyNames()) {
+            props.setProperty(name, FelixUtil.substVars(props.getProperty(name), name, null, props));
         }
     }
 

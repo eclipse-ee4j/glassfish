@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 
@@ -218,7 +219,7 @@ public final class FileRealmHelper
         return ud.getGroups();
     }
 
-    /*
+    /**
      * Test whether their is a user in the FileRealm that has a password that
      * has been set, i.e., something other than the resetKey.
      */
@@ -232,17 +233,13 @@ public final class FileRealmHelper
         return false;
     }
 
-    //---------------------------------------------------------------------
-    // File realm maintenance methods for admin.
-
-
     /**
      * Return false if any char of the string is not alphanumeric or space
      * or other permitted character.
      * For a username it will allow an @ symbol. To allow for the case of type
      * <i>username@foo.com</i>. It will not allow the same symbol for a group name
-     * @param String the name to be validated
-     * @param boolean true if the string is a username, false if it is
+     * @param s the name to be validated
+     * @param userName true if the string is a username, false if it is
      * a group name
      *
      */
@@ -374,7 +371,7 @@ public final class FileRealmHelper
      * of the groupList.
      *
      * @param groupList Array of group names to validate.
-     * @throws IASSecurityException Thrown if the value is not valid.
+     * @throws IllegalArgumentException Thrown if the value is not valid.
      *
      *
      */
@@ -450,7 +447,7 @@ public final class FileRealmHelper
      * @param password Cleartext password for the user. If non-null the user
      *     password is changed to this value. If null, the original password
      *     is retained.
-     * @param groupList List of groups to which user belongs.
+     * @param groups List of groups to which user belongs.
      * @throws IllegalArgumentException If there are problems adding user.
      */
     public synchronized void updateUser(String name, String newName, char[] password,
@@ -521,35 +518,20 @@ public final class FileRealmHelper
      * file locking or revision management as deemed necessary.
      * @throws IOException if there is a failure
      */
-    public void persist() throws IOException {
-        synchronized (FileRealmHelper.class) {
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(keyfile);
-
-                for (Map.Entry<String, User> uval : userTable.entrySet()) {
-                    String algo = uval.getValue().getAlgo();
-                    String entry = encodeUser(uval.getKey(), uval.getValue(),algo);
-                    out.write(entry.getBytes());
-                }
-            } catch (IOException e) {
-                throw e;
-
-            } catch (Exception e) {
-                String msg = sm.getString("filerealm.badwrite", e.toString());
-                throw new IOException(msg);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
+    public synchronized void persist() throws IOException {
+        try (FileOutputStream out = new FileOutputStream(keyfile)) {
+            for (Map.Entry<String, User> uval : userTable.entrySet()) {
+                String algo = uval.getValue().getAlgo();
+                String entry = encodeUser(uval.getKey(), uval.getValue(), algo);
+                out.write(entry.getBytes(UTF_8));
             }
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            String msg = sm.getString("filerealm.badwrite", keyfile);
+            throw new IOException(msg, e);
         }
     }
-
-
-    //---------------------------------------------------------------------
-    // Private methods.
-
 
     /**
      * Add group names to the groups table. It is assumed all entries are
@@ -597,33 +579,18 @@ public final class FileRealmHelper
 
     /**
      * Load keyfile from config and populate internal cache.
-     *
      */
-    private void loadKeyFile() throws IOException
-    {
-        BufferedReader input = null;
-
-        try {
-            input = new BufferedReader(new FileReader(keyfile));
+    private void loadKeyFile() throws IOException {
+        try (BufferedReader input = new BufferedReader(new FileReader(keyfile, UTF_8));) {
             while (input.ready()) {
-
                 String line = input.readLine();
-                if (line != null &&
-                        !line.startsWith(COMMENT) &&
-                        line.indexOf(FIELD_SEP) >= 0) {
+                if (line != null && !line.startsWith(COMMENT) && line.indexOf(FIELD_SEP) >= 0) {
                     User ud = decodeUser(line, groupSizeMap);
                     userTable.put(ud.getName(), ud);
                 }
             }
         } catch (Exception e) {
-            throw new IOException(e.toString());
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch(Exception ex) {
-                }
-            }
+            throw new IOException("Could not load key file " + keyfile, e);
         }
     }
 

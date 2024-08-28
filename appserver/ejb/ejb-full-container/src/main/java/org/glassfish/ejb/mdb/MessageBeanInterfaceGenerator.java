@@ -23,16 +23,12 @@ import jakarta.resource.spi.endpoint.MessageEndpoint;
 
 public class MessageBeanInterfaceGenerator extends EjbOptionalIntfGenerator {
 
-    public MessageBeanInterfaceGenerator(ClassLoader loader) {
-        super(loader);
-    }
-
     @SuppressWarnings("unchecked")
     public <T> Class<? extends T> generateMessageBeanSubClass(Class<?> beanClass, Class<T> messageBeanInterface) throws Exception {
         final String generatedMessageBeanSubClassName = messageBeanInterface.getName() + "__Bean__";
 
         generateSubclass(beanClass, generatedMessageBeanSubClassName, messageBeanInterface, MessageEndpoint.class);
-        return (Class<? extends T>) loadClass(generatedMessageBeanSubClassName);
+        return (Class<? extends T>) loadClass(generatedMessageBeanSubClassName, beanClass);
     }
 
     public Class<?> generateMessageBeanInterface(Class<?> beanClass) throws Exception {
@@ -40,7 +36,7 @@ public class MessageBeanInterfaceGenerator extends EjbOptionalIntfGenerator {
 
         generateInterface(beanClass, generatedMessageBeanInterfaceName, MessageEndpoint.class);
 
-        return loadClass(generatedMessageBeanInterfaceName);
+        return loadClass(generatedMessageBeanInterfaceName, beanClass);
     }
 
     public static String getGeneratedMessageBeanInterfaceName(Class<?> ejbClass) {

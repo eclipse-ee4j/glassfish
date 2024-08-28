@@ -20,10 +20,13 @@ package org.glassfish.weld.services;
 import com.sun.ejb.codegen.ClassGenerator;
 
 import java.security.ProtectionDomain;
+import java.util.Arrays;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.jboss.weld.serialization.spi.ProxyServices;
+
+import static com.sun.ejb.codegen.Generator.getPackageName;
 
 /**
  * An implementation of the {@link ProxyServices}.
@@ -53,18 +56,20 @@ public class ProxyServicesImpl implements ProxyServices {
     @Override
     public Class<?> defineClass(final Class<?> originalClass, final String className, final byte[] classBytes,
         final int off, final int len) throws ClassFormatError {
-        return defineClass(originalClass, className, classBytes, off, len, null);
+        try {
+            String packageName = getPackageName(className);
+            byte[] classData = Arrays.copyOfRange(classBytes, off, off+len);
+            return ClassGenerator.defineClass(originalClass.getClassLoader(), originalClass, packageName, className, classData);
+        } catch (final Exception e) {
+            throw new WeldProxyException("Could not define class " + className, e);
+        }
     }
 
 
     @Override
     public Class<?> defineClass(final Class<?> originalClass, final String className, final byte[] classBytes,
         final int off, final int len, final ProtectionDomain protectionDomain) throws ClassFormatError {
-        final ClassLoader loader = getClassLoaderforBean(originalClass);
-        if (protectionDomain == null) {
-            return defineClass(loader, className, classBytes, off, len);
-        }
-        return defineClass(loader, className, classBytes, off, len, protectionDomain);
+        return defineClass(originalClass, className, classBytes, off, len);
     }
 
 
@@ -126,26 +131,4 @@ public class ProxyServicesImpl implements ProxyServices {
         return Class.forName(className, true, Thread.currentThread().getContextClassLoader());
     }
 
-
-    private Class<?> defineClass(
-        final ClassLoader loader, final String className,
-        final byte[] b, final int off, final int len,
-        final ProtectionDomain protectionDomain) {
-        try {
-            return ClassGenerator.defineClass(loader, className, b, 0, len, protectionDomain);
-        } catch (final Exception e) {
-            throw new WeldProxyException("Could not define class " + className, e);
-        }
-    }
-
-
-    private Class<?> defineClass(
-        final ClassLoader loader, final String className,
-        final byte[] b, final int off, final int len) {
-        try {
-            return ClassGenerator.defineClass(loader, className, b, 0, len);
-        } catch (final Exception e) {
-            throw new WeldProxyException("Could not define class " + className, e);
-        }
-    }
 }

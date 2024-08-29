@@ -49,14 +49,15 @@ public class FelixUtil {
      * @throws IllegalArgumentException If there was a syntax error in the
      *         property placeholder syntax or a recursive variable reference.
      */
+    /*
+     * THIS METHOD HAS BEEN COPIED FROM FELIX
+     * - because we need this call very early and Felix is not on classpath yet.
+     * See org.apache.felix.framework.util.Util class.
+     */
     public static String substVars(String val, String currentKey,
                                     Map cycleMap, Properties configProps)
             throws IllegalArgumentException
     {
-        /*
-         * THIS METHOD HAS BEEN COPIED FROM FELIX
-         * http://svn.apache.org/repos/asf/felix/trunk/framework/src/main/java/org/apache/felix/framework/util/Util.java
-         */
         // If there is currently no cycle map, then create
         // one for detecting cycles for this invocation.
         if (cycleMap == null)

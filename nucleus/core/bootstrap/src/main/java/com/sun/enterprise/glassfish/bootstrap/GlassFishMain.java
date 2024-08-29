@@ -28,7 +28,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.CommandResult;
@@ -63,7 +62,6 @@ public class GlassFishMain {
      */
     private static final String ENV_AS_TRACE_BOOTSTRAP = "AS_TRACE_BOOTSTRAP";
 
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("([^\"']\\S*|\".*?\"|'.*?')\\s*");
     // logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
     private static final PrintStream STDERR = System.err;

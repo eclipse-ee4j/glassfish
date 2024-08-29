@@ -74,10 +74,6 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
     private static final Logger LOG = Logger.getLogger(EmbeddedOSGiGlassFishRuntime.class.getName());
 
-    // TODO(Sahoo): Merge with StaticGlassFishRuntime and elevate to higher package level.
-    // This can be achieved by modelling this as a GlassFishRuntimeDecorator taking StaticGlassFishRuntime
-    // as the decorated object.
-
     private final List<GlassFish> glassFishes = new ArrayList<>();
     private final BundleContext context;
 

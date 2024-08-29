@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.GlassFishRuntimeDecorator;
-
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
@@ -36,14 +34,15 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.FINAL_STA
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
+public class OSGiGlassFishRuntime extends GlassFishRuntime {
 
+    private final GlassFishRuntime glassfishRuntime;
     // cache the value, because we can't use bundleContext after this bundle is stopped.
     // system bundle is the framework
     private volatile Framework framework;
 
-    public OSGiGlassFishRuntime(GlassFishRuntime embeddedGfr, final Framework framework) {
-        super(embeddedGfr);
+    public OSGiGlassFishRuntime(GlassFishRuntime glassfishRuntime, final Framework framework) {
+        this.glassfishRuntime = glassfishRuntime;
         this.framework = framework;
     }
 
@@ -54,8 +53,7 @@ public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
             return;
         }
         try {
-            super.shutdown();
-
+            glassfishRuntime.shutdown();
             framework.stop();
             framework.waitForStop(0);
         } catch (InterruptedException ex) {
@@ -70,10 +68,9 @@ public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
 
     @Override
     public GlassFish newGlassFish(GlassFishProperties glassfishProperties) throws GlassFishException {
-        GlassFish embeddedGf = super.newGlassFish(glassfishProperties);
+        GlassFish glassfish = glassfishRuntime.newGlassFish(glassfishProperties);
         int finalStartLevel = Integer
             .parseInt(glassfishProperties.getProperties().getProperty(FINAL_START_LEVEL_PROP, "2"));
-        return new OSGiGlassFishImpl(embeddedGf, framework.getBundleContext(), finalStartLevel);
+        return new OSGiGlassFishImpl(glassfish, framework.getBundleContext(), finalStartLevel);
     }
-
 }

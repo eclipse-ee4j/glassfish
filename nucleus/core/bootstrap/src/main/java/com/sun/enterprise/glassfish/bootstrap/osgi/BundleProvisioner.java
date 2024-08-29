@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,9 +38,6 @@ import java.util.logging.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.packageadmin.PackageAdmin;
-import org.osgi.service.startlevel.StartLevel;
 
 /**
  * Goes through a list of URIs and installs bundles from those locations.
@@ -119,7 +116,7 @@ public class BundleProvisioner {
 
     private static Logger logger = LogFacade.BOOTSTRAP_LOGGER;
 
-    private BundleContext bundleContext;
+    private GlassFishBundleContext bundleContext;
     private boolean systemBundleUpdationRequired;
     private final Map<URI, Jar> currentManagedBundles = new HashMap<>();
     private int noOfUninstalledBundles;
@@ -127,27 +124,22 @@ public class BundleProvisioner {
     private int noOfInstalledBundles;
     private final Customizer customizer;
 
-    private final StartLevel sl;
-    private PackageAdmin pa;
-
     public BundleProvisioner(BundleContext bundleContext, Properties config) {
         this(bundleContext, new DefaultCustomizer(config));
     }
 
     public BundleProvisioner(BundleContext bundleContext, Customizer customizer) {
-        this.bundleContext = bundleContext;
+        this.bundleContext = new GlassFishBundleContext(bundleContext);
         this.customizer = customizer;
-        ServiceReference<StartLevel> reference = getBundleContext().getServiceReference(StartLevel.class);
-        sl = getBundleContext().getService(reference);
     }
 
 
     public BundleContext getBundleContext() {
-        return bundleContext;
+        return bundleContext.unwrap();
     }
 
     public void setBundleContext(BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
+        this.bundleContext = new GlassFishBundleContext(bundleContext);
     }
 
     /**
@@ -408,33 +400,27 @@ public class BundleProvisioner {
      * @return
      */
     private boolean isFragment(Bundle bundle) {
-        final ServiceReference<PackageAdmin> reference = getBundleContext().getServiceReference(PackageAdmin.class);
-        PackageAdmin pa = getBundleContext().getService(reference);
-        return pa.getBundleType(bundle) == PackageAdmin.BUNDLE_TYPE_FRAGMENT;
+        return bundleContext.isFragment(bundle);
     }
 
     private int install(Collection<Jar> jars) {
         for (Jar jar : jars) {
             try (InputStream is = jar.getURI().toURL().openStream()) {
-                Bundle b = getBundleContext().installBundle(makeLocation(jar), is);
-                Integer startLevel = getStartLevel(jar);
+                Bundle bundle = getBundleContext().installBundle(makeLocation(jar), is);
+                Integer jarStartLevel = getStartLevel(jar);
                 // if specified, set it
-                if (startLevel != null) {
-                    getStartLevelService().setInitialBundleStartLevel(startLevel);
+                if (jarStartLevel != null) {
+                    bundleContext.setInitialBundleStartLevel(jarStartLevel);
                 }
                 noOfInstalledBundles++;
-                addBundle(new Jar(b));
+                addBundle(new Jar(bundle));
                 logger.logp(Level.FINE, "BundleProvisioner", "install", "Installed bundle {0} from {1} ",
-                    new Object[] {b.getBundleId(), jar.getURI()});
+                    new Object[] {bundle.getBundleId(), jar.getURI()});
             } catch (Exception e) {
                 LogFacade.log(logger, Level.WARNING, LogFacade.INSTALL_FAILED, e, jar.getURI());
             }
         }
         return noOfInstalledBundles;
-    }
-
-    private StartLevel getStartLevelService() {
-        return sl;
     }
 
     private String makeLocation(Jar jar) {
@@ -445,10 +431,7 @@ public class BundleProvisioner {
      * Refresh packages
      */
     public void refresh() {
-        final ServiceReference<PackageAdmin> reference = getBundleContext().getServiceReference(PackageAdmin.class);
-        PackageAdmin pa = getBundleContext().getService(reference);
-        pa.refreshPackages(null); // null to refresh any bundle that's obsolete
-        getBundleContext().ungetService(reference);
+        bundleContext.refresh();
     }
 
     /**

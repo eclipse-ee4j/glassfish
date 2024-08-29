@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,9 +26,12 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.launch.Framework;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.FINAL_START_LEVEL_PROP;
+
 /**
- * This is a special implementation used in non-embedded environment. It assumes that it has launched the
- * framework during bootstrap and hence can stop it upon shutdown.
+ * This is a special implementation used in non-embedded environment.
+ * It assumes that it has launched the framework during bootstrap and hence can stop it upon
+ * shutdown.
  * It also creates a specialized GlassFishImpl called {@link OSGiGlassFishImpl}
  *
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -35,7 +39,8 @@ import org.osgi.framework.launch.Framework;
 public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
 
     // cache the value, because we can't use bundleContext after this bundle is stopped.
-    private volatile Framework framework; // system bundle is the framework
+    // system bundle is the framework
+    private volatile Framework framework;
 
     public OSGiGlassFishRuntime(GlassFishRuntime embeddedGfr, final Framework framework) {
         super(embeddedGfr);
@@ -45,7 +50,8 @@ public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
     @Override
     public void shutdown() throws GlassFishException {
         if (framework == null) {
-            return; // already shutdown
+            // already shutdown
+            return;
         }
         try {
             super.shutdown();
@@ -56,17 +62,17 @@ public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
             throw new GlassFishException(ex);
         } catch (BundleException ex) {
             throw new GlassFishException(ex);
-        }
-        finally {
-            framework = null; // guard against repeated calls.
+        } finally {
+            // guard against repeated calls.
+            framework = null;
         }
     }
 
     @Override
     public GlassFish newGlassFish(GlassFishProperties glassfishProperties) throws GlassFishException {
         GlassFish embeddedGf = super.newGlassFish(glassfishProperties);
-        int finalStartLevel = Integer.parseInt(glassfishProperties.getProperties().getProperty(
-                Constants.FINAL_START_LEVEL_PROP, "2"));
+        int finalStartLevel = Integer
+            .parseInt(glassfishProperties.getProperties().getProperty(FINAL_START_LEVEL_PROP, "2"));
         return new OSGiGlassFishImpl(embeddedGf, framework.getBundleContext(), finalStartLevel);
     }
 

@@ -35,8 +35,8 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.AUTO_INSTALL_PROP;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.AUTO_START_PROP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_INSTALL_PROP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_START_PROP;
 import static java.lang.System.Logger.Level.DEBUG;
 
 /**

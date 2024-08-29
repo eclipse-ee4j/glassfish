@@ -40,11 +40,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.BUNDLEIDS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.HK2_CACHE_DIR;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INHABITANTS_CACHE;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.BUNDLEIDS_FILENAME;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_FILENAME;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_PREFIX;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ONDEMAND_BUNDLE_PROVISIONING;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PROVISIONING_OPTIONS_FILENAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PROVISIONING_OPTIONS_PREFIX;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 
@@ -327,7 +328,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private static BundleProvisioner createBundleProvisioner(BundleContext bctx, Properties props) {
         final boolean ondemandProvisioning = Boolean
-            .parseBoolean(props.getProperty(Constants.ONDEMAND_BUNDLE_PROVISIONING));
+            .parseBoolean(props.getProperty(ONDEMAND_BUNDLE_PROVISIONING));
         final BundleProvisioner provisioner;
         if (ondemandProvisioning) {
             return new MinimalBundleProvisioner(bctx, props);

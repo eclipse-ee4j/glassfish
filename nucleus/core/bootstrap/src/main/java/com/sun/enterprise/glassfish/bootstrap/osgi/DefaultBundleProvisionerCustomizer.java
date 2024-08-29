@@ -35,6 +35,12 @@ import java.util.stream.Stream;
 
 import org.osgi.framework.Bundle;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_INSTALL_PROP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_START_LEVEL_PROP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_START_OPTIONS_PROP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_START_PROP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.FILE_SCHEME;
+
 /**
  * This is default implementation of {@link BundleProvisionerCustomizer} which uses the URI of the
  * Jar as location. The default customizer uses following configuration properties:
@@ -85,21 +91,21 @@ class DefaultBundleProvisionerCustomizer implements BundleProvisionerCustomizer 
 
 
     private void processAutoInstallLocations() {
-        String list = config.getProperty(Constants.AUTO_INSTALL_PROP);
+        String list = config.getProperty(AUTO_INSTALL_PROP);
         configuredAutoInstallLocations = getLocations(list, false);
         autoInstallLocations = getLocations(list);
     }
 
 
     private void processAutoStartLocations() {
-        String list = config.getProperty(Constants.AUTO_START_PROP);
+        String list = config.getProperty(AUTO_START_PROP);
         autoStartLocations = getLocations(list);
     }
 
 
     private void processStartLevels() {
         for (String key : config.stringPropertyNames()) {
-            if (key.startsWith(Constants.AUTO_START_LEVEL_PROP)) {
+            if (key.startsWith(AUTO_START_LEVEL_PROP)) {
                 try {
                     Integer startLevel = Integer.parseInt(key.substring(key.lastIndexOf('.') + 1));
                     String list = config.getProperty(key);
@@ -165,7 +171,7 @@ class DefaultBundleProvisionerCustomizer implements BundleProvisionerCustomizer 
 
     @Override
     public int getStartOptions() {
-        String autostart = config.getProperty(Constants.AUTO_START_OPTIONS_PROP);
+        String autostart = config.getProperty(AUTO_START_OPTIONS_PROP);
         return autostart == null ? Bundle.START_ACTIVATION_POLICY : Integer.parseInt(autostart);
     }
 
@@ -198,7 +204,7 @@ class DefaultBundleProvisionerCustomizer implements BundleProvisionerCustomizer 
     protected List<? extends URI> listJarFiles(URI aDirectoryURI) {
         // currently we only support file type directory URI.
         // In future, we should be able to handle directories inside jar files as well.
-        if (!Constants.FILE_SCHEME.equalsIgnoreCase(aDirectoryURI.getScheme())) {
+        if (!FILE_SCHEME.equalsIgnoreCase(aDirectoryURI.getScheme())) {
             throw new IllegalStateException("Currently we only support file URI scheme.");
         }
         final FileFilter filter = path -> (path.getName().endsWith(".jar") && !path.isDirectory());

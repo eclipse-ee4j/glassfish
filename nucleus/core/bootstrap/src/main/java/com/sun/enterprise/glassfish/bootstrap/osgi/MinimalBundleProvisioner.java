@@ -19,23 +19,15 @@ package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
 
 /**
  * This is a specialized {@link BundleProvisioner} that installs only a minimum set of of bundles.
@@ -44,89 +36,12 @@ import org.osgi.framework.Constants;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-public class MinimalBundleProvisioner extends BundleProvisioner {
+class MinimalBundleProvisioner extends BundleProvisioner {
     private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
     private List<Long> installedBundleIds;
 
-    static class MinimalCustomizer extends DefaultCustomizer {
-        private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
-
-        MinimalCustomizer(Properties config) {
-            super(config);
-        }
-
-        public Jar getLatestJar() {
-            File latestFile = null;
-            for (URI uri : getConfiguredAutoInstallLocations()) {
-                File file = null;
-                try {
-                    file = new File(uri);
-                } catch (Exception e) {
-                    continue; // not a file, skip to next one
-                }
-                if (latestFile == null) {
-                    latestFile = file;
-                }
-                if (file.lastModified() > latestFile.lastModified()) {
-                    latestFile = file;
-                }
-                if (file.isDirectory()) {
-                    // do only one-level search as configured auto install locations are not recursive.
-                    for (File child : file.listFiles()) {
-                        if (child.lastModified() > latestFile.lastModified()) {
-                            latestFile = child;
-                        }
-                    }
-                }
-            }
-            return latestFile != null ? new Jar(latestFile) : null;
-        }
-
-        @Override
-        public List<URI> getAutoInstallLocations() {
-            // We only install those bundles that are required to be started  or those bundles that are fragments
-            List<URI> installLocations = getAutoStartLocations();
-            List<URI> fragments = selectFragmentJars(super.getAutoInstallLocations());
-            installLocations.addAll(fragments);
-            logger.log(Level.INFO, LogFacade.SHOW_INSTALL_LOCATIONS, new Object[]{installLocations});
-            return installLocations;
-        }
-
-        private List<URI> selectFragmentJars(List<URI> installLocations) {
-            List<URI> fragments = new ArrayList<>();
-            for (URI uri : installLocations) {
-                InputStream is = null;
-                JarInputStream jis = null;
-                try {
-                    is = uri.toURL().openStream();
-                    jis = new JarInputStream(is);
-                    Manifest m = jis.getManifest();
-                    if (m != null && m.getMainAttributes().getValue(Constants.FRAGMENT_HOST) != null) {
-                        logger.logp(Level.FINE, "MinimalBundleProvisioner$MinimalCustomizer", "selectFragmentJars",
-                                "{0} is a fragment", new Object[]{uri});
-                        fragments.add(uri);
-                    }
-                } catch (IOException e) {
-                    LogFacade.log(logger, Level.INFO, LogFacade.CANT_TELL_IF_FRAGMENT, e, uri);
-                } finally {
-                    try {
-                        if (is != null) {
-                            is.close();
-                        }
-                        if (jis != null) {
-                            jis.close();
-                        }
-                    } catch (IOException e1) {
-                        // ignore
-                    }
-                }
-            }
-            return fragments;
-        }
-    }
-
-    public MinimalBundleProvisioner(BundleContext bundleContext, Properties config) {
-        super(bundleContext, new MinimalCustomizer(config));
+    MinimalBundleProvisioner(BundleContext bundleContext, Properties config) {
+        super(bundleContext, new MinimalBundleProvisionerCustomizer(config));
     }
 
     @Override
@@ -158,10 +73,10 @@ public class MinimalBundleProvisioner extends BundleProvisioner {
     public boolean hasAnyThingChanged() {
         long latestBundleTimestamp = -1;
         Bundle latestBundle = null;
-        for (Bundle b : getBundleContext().getBundles()) {
-            if (b.getLastModified() > latestBundleTimestamp) {
-                latestBundleTimestamp = b.getLastModified();
-                latestBundle = b;
+        for (Bundle bundle : getBundleContext().getBundles()) {
+            if (bundle.getLastModified() > latestBundleTimestamp) {
+                latestBundleTimestamp = bundle.getLastModified();
+                latestBundle = bundle;
             }
         }
         Jar latestJar = getCustomizer().getLatestJar();
@@ -191,7 +106,7 @@ public class MinimalBundleProvisioner extends BundleProvisioner {
     }
 
     @Override
-    public MinimalCustomizer getCustomizer() {
-        return (MinimalCustomizer) super.getCustomizer();
+    public MinimalBundleProvisionerCustomizer getCustomizer() {
+        return (MinimalBundleProvisionerCustomizer) super.getCustomizer();
     }
 }

@@ -32,6 +32,7 @@ import org.glassfish.hk2.utilities.DescriptorImpl;
  *
  * @author Jerome Dochez
  */
+// Note: Used in a service file!
 public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 

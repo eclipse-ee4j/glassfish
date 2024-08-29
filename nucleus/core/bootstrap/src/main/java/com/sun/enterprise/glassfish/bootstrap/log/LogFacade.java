@@ -148,7 +148,7 @@ public class LogFacade {
     public static final String TOTAL_TIME = "NCLS-BOOTSTRAP-00025";
 
     @LogMessageInfo(
-            message = "Create bundle provisioner class = {0}.",
+            message = "Create bundle provisioner {0}.",
             level = "CONFIG")
     public static final String CREATE_BUNDLE_PROVISIONER = "NCLS-BOOTSTRAP-00026";
 

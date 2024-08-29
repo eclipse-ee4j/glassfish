@@ -45,6 +45,7 @@ import org.glassfish.embeddable.spi.RuntimeBuilder;
 /**
  * @author bhavanishankar@dev.java.net
  */
+// Note: Used in a service file!
 public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;

@@ -43,6 +43,7 @@ import org.osgi.framework.BundleReference;
  * @see #build(org.glassfish.embeddable.BootstrapProperties)
  * @see #handles(org.glassfish.embeddable.BootstrapProperties)
  */
+// Note: Used in a service file!
 public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     @Override

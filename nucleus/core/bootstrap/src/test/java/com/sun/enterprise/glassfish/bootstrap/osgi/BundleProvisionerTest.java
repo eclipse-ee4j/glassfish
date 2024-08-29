@@ -66,8 +66,7 @@ class BundleProvisionerTest {
         osgiFramework.init();
         long t2 = System.currentTimeMillis();
         LOG.log(Level.INFO, LogFacade.OSGI_INIT_TIME, (t2-t1));
-        BundleProvisioner bundleProvisioner = BundleProvisioner
-            .createBundleProvisioner(osgiFramework.getBundleContext(), props);
+        BundleProvisioner bundleProvisioner = new BundleProvisioner(osgiFramework.getBundleContext(), props);
         bundleProvisioner.installBundles();
         long t3 = System.currentTimeMillis();
         LOG.log(Level.INFO, LogFacade.BUNDLE_INSTALLATION_TIME, (t3-t2));

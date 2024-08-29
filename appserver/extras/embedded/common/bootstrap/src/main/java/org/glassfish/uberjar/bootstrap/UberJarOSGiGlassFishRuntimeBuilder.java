@@ -19,7 +19,7 @@ package org.glassfish.uberjar.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiFrameworkLauncher;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
@@ -69,13 +69,13 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     @Override
     public boolean handles(BootstrapProperties bsOptions) {
-        Platform platform = Platform.valueOf(bsOptions.getProperty(PLATFORM_PROPERTY_KEY));
-        if (platform == null) {
-            platform = Platform.Felix;
+        OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(bsOptions.getProperty(PLATFORM_PROPERTY_KEY));
+        if (osgiPlatform == null) {
+            osgiPlatform = OsgiPlatform.Felix;
         }
-        logger.log(Level.FINER, "platform = {0}", platform);
+        logger.log(Level.FINER, "platform = {0}", osgiPlatform);
         // TODO(Sahoo): Add support for generic OSGi platform
-        switch (platform) {
+        switch (osgiPlatform) {
             case Felix:
             case Equinox:
             case Knopflerfish:
@@ -141,7 +141,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         String platform = bsOptions.getProperty(PLATFORM_PROPERTY_KEY);
         if (platform == null) {
-            platform = Platform.Felix.toString();
+            platform = OsgiPlatform.Felix.toString();
             bsOptions.setProperty(PLATFORM_PROPERTY_KEY, platform);
         }
 

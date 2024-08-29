@@ -22,41 +22,36 @@ import java.util.Properties;
 
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
-public class FelixHelper extends PlatformHelper {
-    private static final String FELIX_HOME = "FELIX_HOME";
+public class EquinoxAdapter extends OsgiPlatformAdapter {
 
     /**
-     * Home of FW installation relative to Glassfish root installation.
+     * If equinox is installed under glassfish/eclipse this would be the
+     * glassfish/eclipse/plugins dir that contains the equinox jars can be null
      */
-    public static final String GF_FELIX_HOME = "osgi/felix";
-
-    /**
-     * Location of the config properties file relative to the domain directory
-     */
-    public static final String CONFIG_PROPERTIES = "config/osgi.properties";
-
+    private static File pluginsDir;
     private final File fwDir;
 
-    /**
-     * @param properties
-     */
-    public FelixHelper(Properties properties) {
+    public EquinoxAdapter(Properties properties) {
         super(properties);
-        String fwPath = System.getenv(FELIX_HOME);
+        String fwPath = System.getenv("EQUINOX_HOME");
         if (fwPath == null) {
-            // try system property, which comes from asenv.conf
-            fwPath = System.getProperty(FELIX_HOME, new File(glassfishDir, GF_FELIX_HOME).getAbsolutePath());
+            fwPath = new File(glassfishDir, "osgi/equinox").getAbsolutePath();
         }
-        fwDir = new File(fwPath);
+        this.fwDir = new File(fwPath);
         if (!fwDir.exists()) {
-            throw new RuntimeException("Can't locate Felix at " + fwPath);
+            throw new RuntimeException("Can't locate Equinox at " + fwPath);
         }
     }
 
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        File felixJar = new File(fwDir, "bin/felix.jar");
-        cpb.addJar(felixJar);
+        // Add all the jars to classpath for the moment, since the jar name
+        // is not a constant.
+        if (pluginsDir == null) {
+            cpb.addJarFolder(fwDir);
+        } else {
+            cpb.addGlob(pluginsDir, "org.eclipse.osgi_*.jar");
+        }
     }
 
     @Override
@@ -65,7 +60,7 @@ public class FelixHelper extends PlatformHelper {
         // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
         // Hence, we set it here.
         Properties platformConfig = super.readPlatformConfiguration();
-        platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/felix/").getAbsolutePath());
+        platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
         return platformConfig;
     }
 }

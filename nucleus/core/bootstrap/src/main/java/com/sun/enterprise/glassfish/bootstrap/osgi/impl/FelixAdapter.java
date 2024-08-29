@@ -22,32 +22,41 @@ import java.util.Properties;
 
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
-public class KnopflerfishHelper extends PlatformHelper {
-
-    private static final String KF_HOME = "KNOPFLERFISH_HOME";
+public class FelixAdapter extends OsgiPlatformAdapter {
+    private static final String FELIX_HOME = "FELIX_HOME";
 
     /**
-     * Home of fw installation relative to Glassfish root installation.
+     * Home of FW installation relative to Glassfish root installation.
      */
-    public static final String GF_KF_HOME = "osgi/knopflerfish.org/osgi/";
+    public static final String GF_FELIX_HOME = "osgi/felix";
+
+    /**
+     * Location of the config properties file relative to the domain directory
+     */
+    public static final String CONFIG_PROPERTIES = "config/osgi.properties";
 
     private final File fwDir;
 
-    public KnopflerfishHelper(Properties properties) {
+    /**
+     * @param properties
+     */
+    public FelixAdapter(Properties properties) {
         super(properties);
-        String fwPath = System.getenv(KF_HOME);
+        String fwPath = System.getenv(FELIX_HOME);
         if (fwPath == null) {
-            fwPath = new File(glassfishDir, GF_KF_HOME).getAbsolutePath();
+            // try system property, which comes from asenv.conf
+            fwPath = System.getProperty(FELIX_HOME, new File(glassfishDir, GF_FELIX_HOME).getAbsolutePath());
         }
-        this.fwDir = new File(fwPath);
+        fwDir = new File(fwPath);
         if (!fwDir.exists()) {
-            throw new RuntimeException("Can't locate KnopflerFish at " + fwPath);
+            throw new RuntimeException("Can't locate Felix at " + fwPath);
         }
     }
 
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        cpb.addJar(new File(fwDir, "framework.jar"));
+        File felixJar = new File(fwDir, "bin/felix.jar");
+        cpb.addJar(felixJar);
     }
 
     @Override
@@ -56,8 +65,7 @@ public class KnopflerfishHelper extends PlatformHelper {
         // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
         // Hence, we set it here.
         Properties platformConfig = super.readPlatformConfiguration();
-        platformConfig.setProperty(FRAMEWORK_STORAGE,
-            new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
+        platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/felix/").getAbsolutePath());
         return platformConfig;
     }
 }

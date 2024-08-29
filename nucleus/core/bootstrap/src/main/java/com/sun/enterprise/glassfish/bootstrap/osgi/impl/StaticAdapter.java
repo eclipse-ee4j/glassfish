@@ -17,23 +17,31 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
-public class StaticHelper extends PlatformHelper {
+/**
+ * Non-OSGI platform adapter.
+ * Does not have any config file, does not record OSGI framework jar files.
+ */
+public class StaticAdapter extends OsgiPlatformAdapter {
 
-    public StaticHelper(Properties properties) {
+    public StaticAdapter(Properties properties) {
         super(properties);
     }
 
+    /**
+     * Noop.
+     */
     @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
+    public void addFrameworkJars(ClassPathBuilder cpb) {
         // nothing to do
     }
 
+    /**
+     * @return null - no config file for this platform.
+     */
     @Override
     protected File getFrameworkConfigFile() {
-        // no config file for this platform.
         return null;
     }
 }

@@ -20,7 +20,7 @@ package com.sun.enterprise.glassfish.bootstrap.osgi;
 import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,9 +52,9 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
  * <p/>
- * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform#Felix},
- * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform#Equinox},
- * and {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform#Knopflerfish}.
+ * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Felix},
+ * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Equinox},
+ * and {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Knopflerfish}.
  * <p/>
  * <p/>It can't handle GenericOSGi platform,
  * because it reads framework configuration from a framework specific file when it calls
@@ -168,8 +168,8 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         String platformStr = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
         if (platformStr != null && !platformStr.isBlank()) {
             try {
-                Platform platform = Platform.valueOf(platformStr);
-                switch (platform) {
+                OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(platformStr);
+                switch (osgiPlatform) {
                     case Felix:
                     case Equinox:
                     case Knopflerfish:

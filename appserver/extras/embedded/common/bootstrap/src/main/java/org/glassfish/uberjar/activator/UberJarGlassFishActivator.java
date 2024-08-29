@@ -18,7 +18,7 @@
 package org.glassfish.uberjar.activator;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -60,7 +60,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, Platform.Felix.name());
+                    props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
 
                     logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
                             ", classloader = " + getClass().getClassLoader());

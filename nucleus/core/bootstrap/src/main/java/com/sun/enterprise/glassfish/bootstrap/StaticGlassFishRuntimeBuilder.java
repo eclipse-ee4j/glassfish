@@ -19,7 +19,7 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.Which;
@@ -89,7 +89,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
             return false;
         }
         String platform = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
-        return platform == null || Platform.Static.toString().equalsIgnoreCase(platform);
+        return platform == null || OsgiPlatform.Static.toString().equalsIgnoreCase(platform);
     }
 
     private String getInstallRoot(BootstrapProperties props) {

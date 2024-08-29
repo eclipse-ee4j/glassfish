@@ -17,8 +17,8 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.PlatformHelper;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,9 +102,9 @@ class MainHelperTest {
     @Test
     void createLauncher_Felix() throws Exception {
         Properties properties = createDefaultProperties();
-        PlatformHelper platformHelper = PlatformFactory.getPlatformHelper(properties);
-        assertNotNull(platformHelper);
-        Properties cfg = platformHelper.readPlatformConfiguration();
+        OsgiPlatformAdapter osgiPlatformAdapter = OsgiPlatformFactory.getOsgiPlatformAdapter(properties);
+        assertNotNull(osgiPlatformAdapter);
+        Properties cfg = osgiPlatformAdapter.readPlatformConfiguration();
         assertNotNull(cfg);
         cfg.putAll(properties);
 
@@ -126,7 +126,7 @@ class MainHelperTest {
 
     private Properties createDefaultProperties() throws IOException {
         Properties properties = new Properties();
-        properties.setProperty(PLATFORM_PROPERTY_KEY, Platform.Felix.name());
+        properties.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
         Path installRoot = Files.createTempDirectory("FakeGFInstallRoot");
         Path felixBin = installRoot.resolve(Path.of("osgi", "felix", "bin"));
         Files.createDirectories(felixBin);

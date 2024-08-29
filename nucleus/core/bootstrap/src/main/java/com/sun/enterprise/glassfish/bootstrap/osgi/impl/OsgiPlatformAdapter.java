@@ -28,7 +28,7 @@ import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_FMW
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static java.util.logging.Level.INFO;
 
-public abstract class PlatformHelper {
+public abstract class OsgiPlatformAdapter {
 
     /** Location of the unified config properties file relative to the domain directory */
     private static final String CONFIG_PROPERTIES = "config/osgi.properties";
@@ -40,7 +40,7 @@ public abstract class PlatformHelper {
     /**
      * @param properties Initial properties
      */
-    public PlatformHelper(Properties properties) {
+    public OsgiPlatformAdapter(Properties properties) {
         this.properties = properties;
         this.glassfishDir = StartupContextUtil.getInstallRoot(properties);
         this.domainDir = StartupContextUtil.getInstanceRoot(properties);

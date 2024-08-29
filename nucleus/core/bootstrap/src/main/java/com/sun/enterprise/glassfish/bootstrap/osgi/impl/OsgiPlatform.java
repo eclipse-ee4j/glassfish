@@ -17,7 +17,7 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
 /** Supported platform we know about */
-public enum Platform {
+public enum OsgiPlatform {
     Felix,
     Knopflerfish,
     Equinox,

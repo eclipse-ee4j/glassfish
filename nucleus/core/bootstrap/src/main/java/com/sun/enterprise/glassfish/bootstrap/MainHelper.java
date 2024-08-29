@@ -20,7 +20,7 @@ package com.sun.enterprise.glassfish.bootstrap;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.bootstrap.ArgumentManager;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.bootstrap.Which;
@@ -84,7 +84,7 @@ public class MainHelper {
         if (platformEnvOption != null && !platformEnvOption.isBlank()) {
             return platformEnvOption.trim();
         }
-        return Platform.Felix.toString();
+        return OsgiPlatform.Felix.toString();
     }
 
     public static Properties parseAsEnv(File installRoot) {
@@ -383,7 +383,7 @@ public class MainHelper {
         }
 
         if (ctx.getProperty(PLATFORM_PROPERTY_KEY) == null) {
-            ctx.setProperty(PLATFORM_PROPERTY_KEY, Platform.Felix.name());
+            ctx.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
         }
 
         if (ctx.getProperty(INSTALL_ROOT_PROP_NAME) == null) {
@@ -562,7 +562,7 @@ public class MainHelper {
     static void mergePlatformConfiguration(Properties ctx) {
         final Properties osgiConf;
         try {
-            osgiConf = PlatformFactory.getPlatformHelper(ctx).readPlatformConfiguration();
+            osgiConf = OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).readPlatformConfiguration();
         } catch (IOException e) {
             throw new IllegalStateException("The OSGI configuration could not be loaded!", e);
         }
@@ -579,7 +579,7 @@ public class MainHelper {
     }
 
     static boolean isOSGiPlatform(String platform) {
-        Platform p = Platform.valueOf(platform);
+        OsgiPlatform p = OsgiPlatform.valueOf(platform);
         switch (p) {
             case Felix:
             case Knopflerfish:

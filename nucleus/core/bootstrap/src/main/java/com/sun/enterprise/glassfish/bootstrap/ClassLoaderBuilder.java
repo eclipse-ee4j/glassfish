@@ -40,7 +40,7 @@ class ClassLoaderBuilder {
     }
 
     void addPlatformDependencies() throws IOException {
-        PlatformFactory.getPlatformHelper(ctx).addFrameworkJars(cpb);
+        OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).addFrameworkJars(cpb);
     }
 
     /**

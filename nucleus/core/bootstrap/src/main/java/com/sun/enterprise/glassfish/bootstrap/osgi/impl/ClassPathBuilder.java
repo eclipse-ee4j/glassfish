@@ -38,10 +38,6 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
 public final class ClassPathBuilder {
     private final List<File> files = new ArrayList<>();
 
-    public ClassPathBuilder() {
-    }
-
-
     /**
      * Adds a single jar.
      */

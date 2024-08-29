@@ -22,36 +22,32 @@ import java.util.Properties;
 
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
-public class EquinoxHelper extends PlatformHelper {
+public class KnopflerfishAdapter extends OsgiPlatformAdapter {
+
+    private static final String KF_HOME = "KNOPFLERFISH_HOME";
 
     /**
-     * If equinox is installed under glassfish/eclipse this would be the
-     * glassfish/eclipse/plugins dir that contains the equinox jars can be null
+     * Home of fw installation relative to Glassfish root installation.
      */
-    private static File pluginsDir;
+    public static final String GF_KF_HOME = "osgi/knopflerfish.org/osgi/";
+
     private final File fwDir;
 
-    public EquinoxHelper(Properties properties) {
+    public KnopflerfishAdapter(Properties properties) {
         super(properties);
-        String fwPath = System.getenv("EQUINOX_HOME");
+        String fwPath = System.getenv(KF_HOME);
         if (fwPath == null) {
-            fwPath = new File(glassfishDir, "osgi/equinox").getAbsolutePath();
+            fwPath = new File(glassfishDir, GF_KF_HOME).getAbsolutePath();
         }
         this.fwDir = new File(fwPath);
         if (!fwDir.exists()) {
-            throw new RuntimeException("Can't locate Equinox at " + fwPath);
+            throw new RuntimeException("Can't locate KnopflerFish at " + fwPath);
         }
     }
 
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        // Add all the jars to classpath for the moment, since the jar name
-        // is not a constant.
-        if (pluginsDir == null) {
-            cpb.addJarFolder(fwDir);
-        } else {
-            cpb.addGlob(pluginsDir, "org.eclipse.osgi_*.jar");
-        }
+        cpb.addJar(new File(fwDir, "framework.jar"));
     }
 
     @Override
@@ -60,7 +56,8 @@ public class EquinoxHelper extends PlatformHelper {
         // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
         // Hence, we set it here.
         Properties platformConfig = super.readPlatformConfiguration();
-        platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
+        platformConfig.setProperty(FRAMEWORK_STORAGE,
+            new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
         return platformConfig;
     }
 }

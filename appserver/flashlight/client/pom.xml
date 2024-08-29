@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>common</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.17</version>
         <relativePath>../../common/pom.xml</relativePath>
     </parent>
 

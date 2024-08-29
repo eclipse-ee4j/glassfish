@@ -24,13 +24,13 @@
     <parent>
         <groupId>org.glassfish.tests.hk2.isolation</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.17</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.hk2.isolation.web</groupId>
     <artifactId>iso2</artifactId>
-    <version>7.0.17-SNAPSHOT</version>
+    <version>7.0.17</version>
     <packaging>war</packaging>
 
     <name>Isolation servlet two</name>

@@ -166,7 +166,7 @@ public final class Util {
      * @param platformConf which will be updated by corresponding values in System properties.
      * @param excluding property names that should not be overridden
      */
-    public static void overrideBySystemProps(Properties platformConf, Collection<String> excluding) {
+    static void overrideBySystemProps(Properties platformConf, Collection<String> excluding) {
         Properties sysProps = System.getProperties();
         for (Map.Entry<Object, Object> entry: platformConf.entrySet()) {
             if (excluding.contains(entry.getKey())) {

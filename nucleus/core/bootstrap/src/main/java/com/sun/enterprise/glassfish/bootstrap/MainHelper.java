@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
@@ -26,10 +27,8 @@ import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.bootstrap.Which;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.LineNumberReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -39,8 +38,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
@@ -50,8 +47,6 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static org.osgi.framework.Constants.EXPORT_PACKAGE;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
@@ -84,47 +79,13 @@ public class MainHelper {
         if (platformEnvOption != null && !platformEnvOption.isBlank()) {
             return platformEnvOption.trim();
         }
-        return OsgiPlatform.Felix.toString();
+        return OsgiPlatform.Felix.name();
     }
 
-    public static Properties parseAsEnv(File installRoot) {
-
-        Properties asenvProps = new Properties();
-
-        // let's read the asenv.conf
+    public static AsenvConf parseAsEnv(File installRoot) {
         File configDir = new File(installRoot, "config");
         File asenv = getAsEnvConf(configDir);
-
-        if (!asenv.exists()) {
-            BOOTSTRAP_LOGGER.log(FINE, "{0} not found, ignoring", asenv.getAbsolutePath());
-            return asenvProps;
-        }
-        try (LineNumberReader lnReader = new LineNumberReader(new FileReader(asenv, UTF_8))) {
-            String line = lnReader.readLine();
-            // most of the asenv.conf values have surrounding "", remove them
-            // and on Windows, they start with SET XXX=YYY
-            Pattern p = Pattern.compile("(?i)(set +)?([^=]*)=\"?([^\"]*)\"?");
-            while (line != null) {
-                Matcher m = p.matcher(line);
-                if (m.matches()) {
-                    File f = new File(m.group(3));
-                    if (!f.isAbsolute()) {
-                        f = new File(configDir, m.group(3));
-                        if (f.exists()) {
-                            asenvProps.put(m.group(2), f.getAbsolutePath());
-                        } else {
-                            asenvProps.put(m.group(2), m.group(3));
-                        }
-                    } else {
-                        asenvProps.put(m.group(2), m.group(3));
-                    }
-                }
-                line = lnReader.readLine();
-            }
-            return asenvProps;
-        } catch (IOException ioe) {
-            throw new RuntimeException("Error opening asenv.conf : ", ioe);
-        }
+        return new AsenvConf(asenv, configDir);
     }
 
     void addPaths(File dir, String[] jarPrefixes, List<URL> urls) throws MalformedURLException {
@@ -155,8 +116,9 @@ public class MainHelper {
 
     /**
      * Determines the root directory of the domain that we'll start.
+     * @param installRoot
      */
-    static File getDomainRoot(Properties args, Properties asEnv) {
+    static File getDomainRoot(Properties args, File installRoot) {
         // first see if it is specified directly
 
         String domainDir = getParam(args, "domaindir");
@@ -168,7 +130,7 @@ public class MainHelper {
         // now see if they specified the domain name -- we will look in the
         // default domains-dir
 
-        File defDomainsRoot = getDefaultDomainsDir(asEnv);
+        File defDomainsRoot = getDefaultDomainsDir(installRoot);
         String domainName = getParam(args, "domain");
 
         if (isSet(domainName)) {
@@ -214,7 +176,8 @@ public class MainHelper {
         }
     }
 
-    private static File getDefaultDomainsDir(Properties asEnv) {
+    private static File getDefaultDomainsDir(File installRoot) {
+        AsenvConf asEnv = parseAsEnv(installRoot);
         String dirname = asEnv.getProperty(DEFAULT_DOMAINS_DIR_PROPNAME);
         if (!isSet(dirname)) {
             throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + " is not set.");
@@ -277,7 +240,7 @@ public class MainHelper {
      * @param asEnv
      * @return
      */
-    static File getInstanceRoot(Properties args, Properties asEnv) {
+    static File getInstanceRoot(Properties args) {
         String instanceDir = getParam(args, "instancedir");
         if (isSet(instanceDir)) {
             return new File(instanceDir);
@@ -293,15 +256,12 @@ public class MainHelper {
     }
 
     static File findInstanceRoot(File installRoot, Properties args) {
-        Properties asEnv = parseAsEnv(installRoot);
-
         // IMPORTANT - check for instance BEFORE domain.  We will always come up
         // with a default domain but there is no such thing sa a default instance
-
-        File instanceDir = getInstanceRoot(args, asEnv);
+        File instanceDir = getInstanceRoot(args);
         if (instanceDir == null) {
             // that means that this is a DAS.
-            instanceDir = getDomainRoot(args, asEnv);
+            instanceDir = getDomainRoot(args, installRoot);
         }
         verifyDomainRoot(instanceDir);
         return instanceDir;
@@ -347,28 +307,6 @@ public class MainHelper {
         addRawStartupInfo(args, ctx);
 
         mergePlatformConfiguration(ctx);
-        return ctx;
-    }
-
-    public static Properties buildStaticStartupContext(long timeZero, String... args) {
-        checkJdkVersion();
-        Properties ctx = argsToMap(args);
-        ctx.setProperty(PLATFORM_PROPERTY_KEY, "Static");
-        buildStartupContext(ctx);
-        addRawStartupInfo(args, ctx);
-
-        // Reset time zero with the real value. We can't do this before buildStartupContext()
-        // because it has an optimization that is triggered by this key.
-        ctx.setProperty(StartupContext.TIME_ZERO_NAME, Long.toString(timeZero));
-
-        // Config variable substitution (and maybe other downstream code) relies on
-        // some values in System properties, so copy them in.
-        for (String key : new String[]{INSTALL_ROOT_PROP_NAME,
-                                       INSTANCE_ROOT_URI_PROP_NAME,
-                                       INSTALL_ROOT_PROP_NAME,
-                                       INSTALL_ROOT_URI_PROP_NAME}) {
-            System.setProperty(key, ctx.getProperty(key));
-        }
         return ctx;
     }
 

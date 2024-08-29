@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
@@ -88,7 +89,7 @@ class MainHelperTest {
         pw2.close();
 
         File installRoot = new File(resources.toString());
-        Properties asenvProps = MainHelper.parseAsEnv(installRoot);
+        AsenvConf asenvProps = MainHelper.parseAsEnv(installRoot);
         assertEquals("value1", asenvProps.getProperty("AbcVar"));
         assertEquals("value2", asenvProps.getProperty("Avar"));
         assertEquals("value3", asenvProps.getProperty("Bvar"));

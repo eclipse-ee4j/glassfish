@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,7 +53,7 @@ public class ACCStartupContext extends StartupContext {
      * @return
      */
     private static Properties accEnvironment() {
-        final Properties result = MainHelper.parseAsEnv(getRootDirectory());
+        final Properties result = MainHelper.parseAsEnv(getRootDirectory()).toProperties();
         result.setProperty("com.sun.aas.installRoot", getRootDirectory().getAbsolutePath());
         final File javadbDir = new File(getRootDirectory().getParentFile(), "javadb");
         if (javadbDir.isDirectory()) {

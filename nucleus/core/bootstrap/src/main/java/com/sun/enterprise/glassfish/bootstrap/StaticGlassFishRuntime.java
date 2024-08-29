@@ -197,7 +197,7 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
                 "config/login.conf",
                 "config/admin-keyfile",
                 "org/glassfish/web/embed/default-web.xml",
-                "org/glassfish/embed/domain.xml"
+                "org/glassfish/embed/domain.xml",
             };
 
             // Create instance config directory.
@@ -228,7 +228,7 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         return instanceRoot.getAbsolutePath();
     }
 
-    public static void copy(URL url, File destFile, boolean overwrite) {
+    private static void copy(URL url, File destFile, boolean overwrite) {
         if (url == null || destFile == null) {
             return;
         }

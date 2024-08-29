@@ -22,7 +22,7 @@
     <parent>
         <artifactId>naming2</artifactId>
         <groupId>org.glassfish.devtests</groupId>
-        <version>7.0.17</version>
+        <version>7.0.18-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.devtests</groupId>
     <artifactId>naming-context-tests</artifactId>

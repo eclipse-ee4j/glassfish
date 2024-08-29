@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.17</version>
+        <version>7.0.18-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.jackson.module</groupId>

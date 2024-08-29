@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>ext-shared-service-enable-disable-test</artifactId>
-    <version>7.0.17</version>
+    <version>7.0.18-SNAPSHOT</version>
     <name>Enable Disable External and Shared Service Test</name>
     <packaging>war</packaging>
     <build>

@@ -43,6 +43,7 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELETE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -55,8 +56,6 @@ import static java.util.logging.Level.WARNING;
 public class StaticGlassFishRuntime extends GlassFishRuntime {
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
-
-    private static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
 
     private final Map<String, GlassFish> glassFishInstances = new HashMap<>();
     private final Main main;
@@ -102,7 +101,8 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
                         super.dispose();
                     } finally {
                         glassFishInstances.remove(gfProps.getInstanceRoot());
-                        if (Boolean.parseBoolean(gfProps.getProperties().getProperty(AUTO_DELETE)) && gfProps.getInstanceRoot() != null) {
+                        if (Boolean.parseBoolean(gfProps.getProperties().getProperty(AUTO_DELETE))
+                            && gfProps.getInstanceRoot() != null) {
                             File instanceRoot = new File(gfProps.getInstanceRoot());
                             // Might have been deleted already.
                             if (instanceRoot.exists()) {

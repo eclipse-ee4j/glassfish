@@ -70,6 +70,8 @@ public final class BootstrapKeys {
 
     public static final String FILE_SCHEME = "file";
 
+    public static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
+
     private BootstrapKeys() {
     }
 }

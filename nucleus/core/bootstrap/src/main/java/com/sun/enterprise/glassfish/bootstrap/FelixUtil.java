@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class FelixUtil {
+class FelixUtil {
 
     private static final String DELIM_START = "${";
     private static final String DELIM_STOP  = "}";

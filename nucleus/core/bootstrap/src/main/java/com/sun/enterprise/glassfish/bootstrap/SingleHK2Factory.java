@@ -30,28 +30,27 @@ import com.sun.enterprise.module.single.SingleModulesRegistry;
  *
  * @author bhavanishankar@dev.java.net
  */
+class SingleHK2Factory extends AbstractFactory {
 
-public class SingleHK2Factory extends AbstractFactory {
+    private final ClassLoader classloader;
+    private ModulesRegistry modulesRegistry;
 
-    ClassLoader cl;
-    ModulesRegistry modulesRegistry;
-
-    public static synchronized void initialize(ClassLoader cl) {
+    public static synchronized void initialize(ClassLoader classloader) {
         if (Instance != null) {
             LogFacade.BOOTSTRAP_LOGGER.finer(() -> "Singleton already initialized as " + getInstance());
         }
-        Instance = new SingleHK2Factory(cl);
+        Instance = new SingleHK2Factory(classloader);
         LogFacade.BOOTSTRAP_LOGGER.finer(() -> "Reinitialized singleton as " + getInstance());
     }
 
-    public SingleHK2Factory(ClassLoader cl) {
-        this.cl = cl;
-        this.modulesRegistry = new SingleModulesRegistry(cl);
+    SingleHK2Factory(ClassLoader classloader) {
+        this.classloader = classloader;
+        this.modulesRegistry = new SingleModulesRegistry(classloader);
     }
 
     @Override
     public ModulesRegistry createModulesRegistry() {
-        return modulesRegistry == null ? modulesRegistry = new SingleModulesRegistry(cl) : modulesRegistry;
+        return modulesRegistry == null ? modulesRegistry = new SingleModulesRegistry(classloader) : modulesRegistry;
     }
 
     @Override

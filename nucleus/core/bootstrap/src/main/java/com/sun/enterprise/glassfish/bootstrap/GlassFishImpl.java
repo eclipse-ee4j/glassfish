@@ -21,6 +21,7 @@ import com.sun.enterprise.module.bootstrap.ModuleStartup;
 
 import java.util.Properties;
 
+import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
@@ -31,29 +32,38 @@ import org.glassfish.hk2.extras.ExtrasUtilities;
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-
 public class GlassFishImpl implements GlassFish {
 
+    private static final String CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
+
     private ModuleStartup gfKernel;
-    private ServiceLocator habitat;
-    volatile Status status = Status.INIT;
+    private ServiceLocator serviceLocator;
+    private volatile Status status = Status.INIT;
 
-    public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator habitat, Properties gfProps) throws GlassFishException {
+    public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator serviceLocator, Properties gfProps)
+        throws GlassFishException {
         this.gfKernel = gfKernel;
-        this.habitat = habitat;
-        /*
-            We enable a temporary distribution service until the HK2 Extras package is fixed so that we can enable
-            the topic distribution service provided by HK2.
-        */
-        ExtrasUtilities.enableTopicDistribution(habitat);
+        this.serviceLocator = serviceLocator;
+        // We enable a temporary distribution service until the HK2 Extras package is fixed so that
+        // we can enable the topic distribution service provided by HK2.
+        ExtrasUtilities.enableTopicDistribution(serviceLocator);
 
-        configure(gfProps);
-    }
-
-    private void configure(Properties gfProps) throws GlassFishException {
         // If there are custom configurations like http.port, https.port, jmx.port then configure them.
-        Configurator configurator = new Configurator(habitat);
-        configurator.configure(gfProps);
+        CommandRunner commandRunner = null;
+        for (String key : gfProps.stringPropertyNames()) {
+            if (!key.startsWith(CONFIG_PROP_PREFIX)) {
+                continue;
+            }
+            if (commandRunner == null) {
+                // only create the CommandRunner if needed
+                commandRunner = serviceLocator.getService(CommandRunner.class);
+            }
+            CommandResult result = commandRunner.run("set",
+                key.substring(CONFIG_PROP_PREFIX.length()) + "=" + gfProps.getProperty(key));
+            if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
+                throw new GlassFishException(result.getOutput());
+            }
+        }
     }
 
     @Override
@@ -89,7 +99,7 @@ public class GlassFishImpl implements GlassFish {
             }
         }
         this.gfKernel = null;
-        this.habitat = null;
+        this.serviceLocator = null;
         this.status = Status.DISPOSED;
     }
 
@@ -109,8 +119,8 @@ public class GlassFishImpl implements GlassFish {
             throw new IllegalArgumentException("Server is not started yet. It is in " + status + "state");
         }
 
-        return serviceName != null ? habitat.<T>getService(serviceType, serviceName) :
-                habitat.<T>getService(serviceType);
+        return serviceName != null ? serviceLocator.<T>getService(serviceType, serviceName) :
+                serviceLocator.<T>getService(serviceType);
     }
 
     @Override

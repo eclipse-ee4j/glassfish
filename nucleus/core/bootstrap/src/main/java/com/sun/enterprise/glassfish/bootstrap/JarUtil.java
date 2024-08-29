@@ -40,41 +40,41 @@ import java.util.logging.Logger;
  * @author bhavanishankar@dev.java.net
  * @author David Matejcek
  */
-public final class JarUtil {
+final class JarUtil {
 
     /**
      * JAXR  system resource adapter name.
      */
-    public static final String JAXR_RA_NAME = "jaxr-ra";
+    private static final String JAXR_RA_NAME = "jaxr-ra";
 
     /**
      * JDBC datasource  system resource adapter name.
      */
-    public static final String JDBCDATASOURCE_RA_NAME = "__ds_jdbc_ra";
+    private static final String JDBCDATASOURCE_RA_NAME = "__ds_jdbc_ra";
 
     /**
      * JDBC connectionpool datasource  system resource adapter name.
      */
-    public static final String JDBCCONNECTIONPOOLDATASOURCE_RA_NAME = "__cp_jdbc_ra";
+    private static final String JDBCCONNECTIONPOOLDATASOURCE_RA_NAME = "__cp_jdbc_ra";
 
     /**
      * JDBC XA datasource  system resource adapter name.
      */
-    public static final String JDBCXA_RA_NAME = "__xa_jdbc_ra";
+    private static final String JDBCXA_RA_NAME = "__xa_jdbc_ra";
 
     /**
      * JDBC Driver Manager system resource adapter name.
      */
-    public static final String JDBCDRIVER_RA_NAME = "__dm_jdbc_ra";
+    private static final String JDBCDRIVER_RA_NAME = "__dm_jdbc_ra";
 
     /**
      * JMS datasource  system resource adapter name.
      */
-    public static final String DEFAULT_JMS_ADAPTER = "jmsra";
+    private static final String DEFAULT_JMS_ADAPTER = "jmsra";
 
-    public static final String RAR_EXTENSION = ".rar";
+    private static final String RAR_EXTENSION = ".rar";
 
-    public static final List<String> systemRarNames = Collections.unmodifiableList(
+    private static final List<String> SYSTEM_RAR_NAMES = Collections.unmodifiableList(
             Arrays.asList(
                     JAXR_RA_NAME,
                     JDBCDATASOURCE_RA_NAME,
@@ -84,7 +84,7 @@ public final class JarUtil {
                     DEFAULT_JMS_ADAPTER
             ));
 
-    private static final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
+    private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
     private JarUtil() {
         // utility class
@@ -92,7 +92,7 @@ public final class JarUtil {
 
     public static boolean extractRars(String installDir) {
         boolean extracted = true;
-        for (String rarName : systemRarNames) {
+        for (String rarName : SYSTEM_RAR_NAMES) {
             extracted = extracted & extractRar(installDir, rarName);
         }
         return extracted;
@@ -111,14 +111,14 @@ public final class JarUtil {
         String rarFileName = rarName + RAR_EXTENSION;
         try (InputStream rarInJar = JarUtil.class.getClassLoader().getResourceAsStream(rarFileName)) {
             if (rarInJar == null) {
-                logger.log(Level.CONFIG, "The RAR file wasn't found: [" + rarFileName + "]");
+                LOG.log(Level.CONFIG, "The RAR file wasn't found: [" + rarFileName + "]");
                 return false;
             }
             try (JarInputStream jarInputStream = new JarInputStream(rarInJar)) {
                 extractJar(jarInputStream, installDir);
                 return true;
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Exception while extracting resource [" + rarFileName + "]", e);
+                LOG.log(Level.WARNING, "Exception while extracting resource [" + rarFileName + "]", e);
                 return false;
             }
         } catch (IOException e) {

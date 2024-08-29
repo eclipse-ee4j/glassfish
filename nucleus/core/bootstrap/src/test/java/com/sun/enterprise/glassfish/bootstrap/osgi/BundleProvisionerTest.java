@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.Util;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;

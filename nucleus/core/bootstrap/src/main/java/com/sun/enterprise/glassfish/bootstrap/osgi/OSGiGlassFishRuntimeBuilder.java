@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,10 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.MainHelper;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +40,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.HK2_CACHE_DIR;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INHABITANTS_CACHE;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.HK2_CACHE_DIR;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INHABITANTS_CACHE;
 import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.BUNDLEIDS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_PREFIX;
@@ -50,9 +51,9 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
  * <p/>
- * {@link com.sun.enterprise.glassfish.bootstrap.Constants.Platform#Felix},
- * {@link com.sun.enterprise.glassfish.bootstrap.Constants.Platform#Equinox},
- * and {@link com.sun.enterprise.glassfish.bootstrap.Constants.Platform#Knopflerfish}.
+ * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform#Felix},
+ * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform#Equinox},
+ * and {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform#Knopflerfish}.
  * <p/>
  * <p/>It can't handle GenericOSGi platform,
  * because it reads framework configuration from a framework specific file when it calls
@@ -105,7 +106,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
             // Set the builder name so that when we check for nonEmbedded() inside GlassFishMainActivator,
             // we can identify the environment.
-            properties.setProperty(Constants.BUILDER_NAME_PROPERTY, getClass().getName());
+            properties.setProperty(BootstrapKeys.BUILDER_NAME_PROPERTY, getClass().getName());
             // Step 0: Locate and launch a framework
             long t0 = System.currentTimeMillis();
             fwLauncher = new OSGiFrameworkLauncher(properties);
@@ -156,7 +157,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public boolean handles(BootstrapProperties bsProps) {
         // See GLASSFISH-16743 for the reason behind additional check
-        final String builderName = bsProps.getProperty(Constants.BUILDER_NAME_PROPERTY);
+        final String builderName = bsProps.getProperty(BootstrapKeys.BUILDER_NAME_PROPERTY);
         if (builderName != null && !builderName.equals(getClass().getName())) {
             return false;
         }
@@ -164,10 +165,10 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
          * This builder can't handle GOSGi platform, because we read framework configuration from a framework
          * specific file in MainHelper.buildStartupContext(properties);
          */
-        String platformStr = bsProps.getProperty(Constants.PLATFORM_PROPERTY_KEY);
+        String platformStr = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
         if (platformStr != null && platformStr.trim().length() != 0) {
             try {
-                Constants.Platform platform = Constants.Platform.valueOf(platformStr);
+                Platform platform = Platform.valueOf(platformStr);
                 switch (platform) {
                     case Felix:
                     case Equinox:

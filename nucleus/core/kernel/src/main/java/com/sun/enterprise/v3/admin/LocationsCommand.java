@@ -18,7 +18,7 @@
 package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

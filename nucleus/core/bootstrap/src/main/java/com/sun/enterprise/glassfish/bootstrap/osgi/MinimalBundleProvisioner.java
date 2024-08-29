@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,11 +45,13 @@ import org.osgi.framework.Constants;
  * @author sanjeeb.sahoo@oracle.com
  */
 public class MinimalBundleProvisioner extends BundleProvisioner {
-    private Logger logger = LogFacade.BOOTSTRAP_LOGGER;
+    private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
     private List<Long> installedBundleIds;
+
     static class MinimalCustomizer extends DefaultCustomizer {
-        private Logger logger = LogFacade.BOOTSTRAP_LOGGER;
-        public MinimalCustomizer(Properties config) {
+        private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
+
+        MinimalCustomizer(Properties config) {
             super(config);
         }
 
@@ -90,7 +93,7 @@ public class MinimalBundleProvisioner extends BundleProvisioner {
         }
 
         private List<URI> selectFragmentJars(List<URI> installLocations) {
-            List<URI> fragments = new ArrayList<URI>();
+            List<URI> fragments = new ArrayList<>();
             for (URI uri : installLocations) {
                 InputStream is = null;
                 JarInputStream jis = null;

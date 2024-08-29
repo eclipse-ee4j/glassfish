@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,24 +31,15 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-public class Util {
-
-    private static Logger logger = LogFacade.BOOTSTRAP_LOGGER;
+public final class Util {
 
     private Util(){}
-
-    public static Logger getLogger() {
-        return logger;
-    }
 
     /**
      * Gets a property value from the supplied properties object, if not defined there from system properties.

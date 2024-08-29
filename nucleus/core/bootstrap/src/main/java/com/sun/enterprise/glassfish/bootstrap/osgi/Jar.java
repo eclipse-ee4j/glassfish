@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,14 +32,13 @@ import org.osgi.framework.Constants;
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-class Jar
-{
+class Jar {
+
     private final URI uri;
     private final long lastModified;
     private final long bundleId;
 
-    Jar(File file)
-    {
+    Jar(File file) {
         // Convert to a URI because the location of a bundle
         // is typically a URI. At least, that's the case for
         // autostart bundles.
@@ -49,20 +49,17 @@ class Jar
         bundleId = -1L;
     }
 
-    Jar(Bundle b) throws URISyntaxException
-    {
+
+    Jar(Bundle b) throws URISyntaxException {
         // Convert to a URI because the location of a bundle
         // is typically a URI. At least, that's the case for
         // autostart bundles.
         // Normalisation is needed to ensure that we don't treat (e.g.)
         // /tmp/foo and /tmp//foo differently.
         String location = b.getLocation();
-        if (location != null &&
-                !location.equals(Constants.SYSTEM_BUNDLE_LOCATION))
-        {
+        if (location != null && !location.equals(Constants.SYSTEM_BUNDLE_LOCATION)) {
             uri = new URI(b.getLocation()).normalize();
-        }
-        else {
+        } else {
             uri = null;
         }
 
@@ -70,7 +67,8 @@ class Jar
         bundleId = b.getBundleId();
     }
 
-    public Jar(URI uri) {
+
+    Jar(URI uri) {
         this.uri = uri.normalize();
         long localLastModified = -1L;
         bundleId = -1L;
@@ -85,47 +83,56 @@ class Jar
         lastModified = localLastModified;
     }
 
-    public URI getURI()
-    {
+
+    public URI getURI() {
         return uri;
     }
+
 
     public String getPath() {
         return uri == null ? null : uri.getPath();
     }
 
-    public long getLastModified()
-    {
+
+    public long getLastModified() {
         return lastModified;
     }
 
-    public long getBundleId()
-    {
+
+    public long getBundleId() {
         return bundleId;
     }
 
-    public boolean isNewer(Jar other)
-    {
+
+    public boolean isNewer(Jar other) {
         return (getLastModified() > other.getLastModified());
     }
 
+
     // Override hashCode and equals as this object is used in Set
-    public int hashCode()
-    {
+    @Override
+    public int hashCode() {
         return uri == null ? 0 : uri.hashCode();
     }
 
-    public boolean equals(Object obj)
-    {
-        if (obj == null || !(obj instanceof Jar)) return false;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Jar)) {
+            return false;
+        }
 
         Jar other = (Jar) obj;
 
         if (uri == null) {
-            if (other.uri == null) return true;
+            if (other.uri == null) {
+                return true;
+            }
             return false;
         }
-        if (other.uri == null) return false;
+        if (other.uri == null) {
+            return false;
+        }
 
         // For optimization reason, we use toString.
         // It works, as we anyway use normalize()

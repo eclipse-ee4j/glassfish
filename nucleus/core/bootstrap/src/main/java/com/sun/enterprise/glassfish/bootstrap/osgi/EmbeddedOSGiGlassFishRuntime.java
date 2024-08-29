@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,10 +54,10 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINEST;
 import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
@@ -227,8 +227,8 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
     }
 
 
-    private void setEnv(Properties properties) {
-        final String installRootValue = properties.getProperty(INSTALL_ROOT_PROP_NAME);
+    private void setEnv(Properties bootstrapProperties) {
+        final String installRootValue = bootstrapProperties.getProperty(INSTALL_ROOT_PROP_NAME);
         if (installRootValue != null && !installRootValue.isEmpty()) {
             File installRoot = new File(installRootValue);
             System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
@@ -239,7 +239,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
         }
 
-        final String instanceRootValue = properties.getProperty(INSTANCE_ROOT_PROP_NAME);
+        final String instanceRootValue = bootstrapProperties.getProperty(INSTANCE_ROOT_PROP_NAME);
         if (instanceRootValue != null && !instanceRootValue.isEmpty()) {
             File instanceRoot = new File(instanceRootValue);
             System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());

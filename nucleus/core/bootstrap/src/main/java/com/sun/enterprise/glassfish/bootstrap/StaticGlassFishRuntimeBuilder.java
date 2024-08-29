@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.Which;
@@ -42,12 +45,11 @@ import org.glassfish.embeddable.spi.RuntimeBuilder;
 /**
  * @author bhavanishankar@dev.java.net
  */
-
 public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
 
-    private static Logger logger = Util.getLogger();
+    private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
     private static final String JAR_EXT = ".jar";
-    final List<String> moduleExcludes = Arrays.asList("jsftemplating.jar", "gf-client-module.jar");
+    private static final List<String> MODULE_EXCLUDES = Arrays.asList("jsftemplating.jar", "gf-client-module.jar");
 
     @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
@@ -72,7 +74,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         // Step 3. Create NonOSGIGlassFishRuntime
         GlassFishRuntime glassFishRuntime = new StaticGlassFishRuntime(main);
-        logger.logp(Level.FINER, getClass().getName(), "build",
+        LOG.logp(Level.FINER, getClass().getName(), "build",
                 "Created GlassFishRuntime {0} with InstallRoot {1}, Bootstrap Options {2}",
                 new Object[]{glassFishRuntime, installRoot, bsProps});
         return glassFishRuntime;
@@ -81,12 +83,12 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public boolean handles(BootstrapProperties bsProps) {
         // See GLASSFISH-16743 for the reason behind additional check
-        final String builderName = bsProps.getProperty(Constants.BUILDER_NAME_PROPERTY);
+        final String builderName = bsProps.getProperty(BootstrapKeys.BUILDER_NAME_PROPERTY);
         if (builderName != null && !builderName.equals(getClass().getName())) {
             return false;
         }
-        String platform = bsProps.getProperty(Constants.PLATFORM_PROPERTY_KEY);
-        return platform == null || Constants.Platform.Static.toString().equalsIgnoreCase(platform);
+        String platform = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
+        return platform == null || Platform.Static.toString().equalsIgnoreCase(platform);
     }
 
     private String getInstallRoot(BootstrapProperties props) {
@@ -118,7 +120,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
                 return new ArrayList<>();
             }
         } catch (Exception ex) {
-            logger.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
+            LOG.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
         } finally {
             if (jarfile != null) {
                 try {
@@ -137,12 +139,11 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
             public boolean accept(File pathname) {
                 if (pathname.isDirectory() && !pathname.equals(autostartModulesDir)) {
                     pathname.listFiles(this);
-                } else if (pathname.getName().endsWith(JAR_EXT) &&
-                        !moduleExcludes.contains(pathname.getName())) {
+                } else if (pathname.getName().endsWith(JAR_EXT) && !MODULE_EXCLUDES.contains(pathname.getName())) {
                     try {
                         moduleJarURLs.add(pathname.toURI().toURL());
                     } catch (Exception ex) {
-                        logger.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
+                        LOG.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
                     }
                 }
                 return false;
@@ -166,7 +167,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private static class StaticClassLoader extends GlassfishUrlClassLoader {
 
-        public StaticClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
+        StaticClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
             super(moduleJarURLs.toArray(new URL[moduleJarURLs.size()]), parent);
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,11 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.cfg;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -36,29 +38,37 @@ public final class StartupContextUtil {
     private StartupContextUtil() {
     }
 
-    public static File getInstallRoot(Properties p) {
-        return absolutize(new File(p.getProperty(Constants.INSTALL_ROOT_PROP_NAME)));
-
-    }
 
     public static File getInstallRoot(StartupContext sc) {
         return getInstallRoot(sc.getArguments());
     }
 
-    public static File getInstanceRoot(Properties p) {
-        return absolutize(new File(p.getProperty(Constants.INSTANCE_ROOT_PROP_NAME)));
+
+    public static File getInstallRoot(Properties p) {
+        return absolutize(new File(p.getProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME)));
+
     }
+
 
     public static File getInstanceRoot(StartupContext sc) {
         return getInstanceRoot(sc.getArguments());
     }
 
+
+    public static File getInstanceRoot(Properties p) {
+        return absolutize(new File(p.getProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME)));
+    }
+
+
     public static String[] getOriginalArguments(StartupContext sc) {
         Properties args = sc.getArguments();
-        String s = args.getProperty(Constants.ORIGINAL_ARGS); // See how ASMain packages the arguments
-        if (s == null) return new String[0];
-        StringTokenizer st = new StringTokenizer(s, Constants.ARG_SEP, false);
-        List<String> result = new ArrayList<String>();
+        // See how ASMain packages the arguments
+        String s = args.getProperty(BootstrapKeys.ORIGINAL_ARGS);
+        if (s == null) {
+            return new String[0];
+        }
+        StringTokenizer st = new StringTokenizer(s, BootstrapKeys.ARG_SEP, false);
+        List<String> result = new ArrayList<>();
         while (st.hasMoreTokens()) {
             result.add(st.nextToken());
         }
@@ -66,16 +76,12 @@ public final class StartupContextUtil {
 
     }
 
-    private static File absolutize(File f)
-    {
-        try
-        {
+
+    private static File absolutize(File f) {
+        try {
             return f.getCanonicalFile();
-        }
-        catch(Exception e)
-        {
+        } catch (IOException e) {
             return f.getAbsoluteFile();
         }
     }
-
 }

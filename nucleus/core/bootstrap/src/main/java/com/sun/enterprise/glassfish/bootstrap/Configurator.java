@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +19,39 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import java.util.Properties;
 
+import org.glassfish.embeddable.CommandResult;
+import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
- * @author Sanjeeb.Sahoo@Sun.COM
+ * @author bhavanishankar@dev.java.net
  */
-public interface Configurator {
-    void configure(Properties props) throws GlassFishException;
+class Configurator {
+
+    private static final String CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
+
+    private final ServiceLocator serviceLocator;
+
+
+    Configurator(ServiceLocator habitat) {
+        this.serviceLocator = habitat;
+    }
+
+    void configure(Properties props) throws GlassFishException {
+        CommandRunner commandRunner = null;
+        for (String key : props.stringPropertyNames()) {
+            if (key.startsWith(CONFIG_PROP_PREFIX)) {
+                if (commandRunner == null) {
+                    // only create the CommandRunner if needed
+                    commandRunner = serviceLocator.getService(CommandRunner.class);
+                }
+                CommandResult result = commandRunner.run("set",
+                        key.substring(CONFIG_PROP_PREFIX.length()) + "=" + props.getProperty(key));
+                if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
+                    throw new GlassFishException(result.getOutput());
+                }
+            }
+        }
+    }
 }

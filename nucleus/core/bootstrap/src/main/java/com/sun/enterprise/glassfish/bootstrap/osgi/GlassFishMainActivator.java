@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 
 import java.io.File;
 import java.lang.System.Logger;
@@ -109,7 +109,7 @@ public class GlassFishMainActivator implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-        embedded = context.getProperty(Constants.BUILDER_NAME_PROPERTY) == null;
+        embedded = context.getProperty(BootstrapKeys.BUILDER_NAME_PROPERTY) == null;
         LOG.log(DEBUG, "Starting {0}; embedded: {1}", context.getBundle(), embedded);
         if (embedded) {
             startEmbedded(context);
@@ -192,30 +192,30 @@ public class GlassFishMainActivator implements BundleActivator {
             }
         }
 
-        installRoot = context.getProperty(Constants.INSTALL_ROOT_PROP_NAME);
+        installRoot = context.getProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME);
 
         if (installRoot == null) {
             installRoot = guessInstallRoot(context);
             if (installRoot == null) {
-                throw new RuntimeException("Property named " + Constants.INSTALL_ROOT_PROP_NAME + " is not set.");
+                throw new RuntimeException("Property named " + BootstrapKeys.INSTALL_ROOT_PROP_NAME + " is not set.");
             }
             LOG.log(DEBUG, "Deduced install root as: {0} from location of bundle. "
-                + "If this is not correct, set correct value in a property called " + Constants.INSTALL_ROOT_PROP_NAME,
+                + "If this is not correct, set correct value in a property called " + BootstrapKeys.INSTALL_ROOT_PROP_NAME,
                 installRoot);
         }
         if (!new File(installRoot).exists()) {
             throw new RuntimeException("No such directory: [" + installRoot + "]");
         }
-        properties.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot);
-        String instanceRoot = context.getProperty(Constants.INSTANCE_ROOT_PROP_NAME);
+        properties.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot);
+        String instanceRoot = context.getProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME);
         if (instanceRoot == null) {
             instanceRoot = new File(installRoot, "domains/domain1/").getAbsolutePath();
         }
-        properties.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot);
+        properties.setProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME, instanceRoot);
         properties.putAll(makeProvisioningOptions(context));
 
         // This property is understood by our corresponding builder.
-        properties.setProperty(Constants.BUILDER_NAME_PROPERTY, EmbeddedOSGiGlassFishRuntimeBuilder.class.getName());
+        properties.setProperty(BootstrapKeys.BUILDER_NAME_PROPERTY, EmbeddedOSGiGlassFishRuntimeBuilder.class.getName());
         return properties;
     }
 

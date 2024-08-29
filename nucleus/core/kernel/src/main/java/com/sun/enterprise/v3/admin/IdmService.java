@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.security.store.IdentityManagement;
 

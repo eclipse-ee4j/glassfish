@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 
 import java.util.Hashtable;
 
@@ -48,7 +48,7 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public boolean handles(BootstrapProperties bsProps) {
         return EmbeddedOSGiGlassFishRuntimeBuilder.class.getName().
-                equals(bsProps.getProperties().getProperty(Constants.BUILDER_NAME_PROPERTY));
+                equals(bsProps.getProperties().getProperty(BootstrapKeys.BUILDER_NAME_PROPERTY));
     }
 
     @Override
@@ -61,9 +61,9 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private void configureBundles(BootstrapProperties bsProps) {
-        if (System.getProperty(Constants.PLATFORM_PROPERTY_KEY) == null) {
+        if (System.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY) == null) {
             // Set this, because some stupid downstream code may be relying on this property
-            System.setProperty(Constants.PLATFORM_PROPERTY_KEY, "GenericOSGi");
+            System.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, "GenericOSGi");
         }
     }
 

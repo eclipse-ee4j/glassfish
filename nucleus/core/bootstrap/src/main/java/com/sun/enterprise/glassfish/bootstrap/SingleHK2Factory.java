@@ -16,14 +16,12 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModuleDefinition;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
 import com.sun.enterprise.module.common_impl.ModuleId;
 import com.sun.enterprise.module.single.SingleModulesRegistry;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Factory which provides SingleModulesRegistry
@@ -34,20 +32,15 @@ import java.util.logging.Logger;
 
 public class SingleHK2Factory extends AbstractFactory {
 
-    private static Logger logger = Util.getLogger();
     ClassLoader cl;
     ModulesRegistry modulesRegistry;
 
     public static synchronized void initialize(ClassLoader cl) {
         if (Instance != null) {
-            if (logger.isLoggable(Level.FINER)) {
-                logger.finer("Singleton already initialized as " + getInstance());
-            }
+            LogFacade.BOOTSTRAP_LOGGER.finer(() -> "Singleton already initialized as " + getInstance());
         }
         Instance = new SingleHK2Factory(cl);
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Reinitialized singleton as " + getInstance());
-        }
+        LogFacade.BOOTSTRAP_LOGGER.finer(() -> "Reinitialized singleton as " + getInstance());
     }
 
     public SingleHK2Factory(ClassLoader cl) {

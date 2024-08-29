@@ -17,13 +17,15 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
 import com.sun.enterprise.module.bootstrap.ArgumentManager;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.bootstrap.Which;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,21 +43,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-// WARNING: There must not be any references to java.util.logging.* instances in static initialization except levels.
-//          They would cause initialization of the JVM logging which we do AFTER this.
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
-import static com.sun.enterprise.glassfish.bootstrap.LogFacade.BOOTSTRAP_LOGGER;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
+import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static org.osgi.framework.Constants.EXPORT_PACKAGE;
-import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 
 /**
@@ -66,6 +64,8 @@ import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class MainHelper {
+
+    private static final String DEFAULT_DOMAINS_DIR_PROPNAME = "AS_DEF_DOMAINS_PATH";
 
     static void checkJdkVersion() {
         int version = Runtime.version().feature();
@@ -84,7 +84,7 @@ public class MainHelper {
         if (platformEnvOption != null && !platformEnvOption.isBlank()) {
             return platformEnvOption.trim();
         }
-        return Constants.Platform.Felix.toString();
+        return Platform.Felix.toString();
     }
 
     public static Properties parseAsEnv(File installRoot) {
@@ -182,7 +182,7 @@ public class MainHelper {
 
     /**
      * Verifies correctness of the root directory of the domain that we'll start and
-     * sets the system property called {@link com.sun.enterprise.glassfish.bootstrap.Constants#INSTANCE_ROOT_PROP_NAME}.
+     * sets the system property called {@link com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys#INSTANCE_ROOT_PROP_NAME}.
      */
     void verifyAndSetDomainRoot(File domainRoot) {
         verifyDomainRoot(domainRoot);
@@ -215,15 +215,14 @@ public class MainHelper {
     }
 
     private static File getDefaultDomainsDir(Properties asEnv) {
-        // note: 99% error detection!
-        String dirname = asEnv.getProperty(Constants.DEFAULT_DOMAINS_DIR_PROPNAME);
+        String dirname = asEnv.getProperty(DEFAULT_DOMAINS_DIR_PROPNAME);
         if (!isSet(dirname)) {
-            throw new RuntimeException(Constants.DEFAULT_DOMAINS_DIR_PROPNAME + " is not set.");
+            throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + " is not set.");
         }
 
         File domainsDir = absolutize(new File(dirname));
         if (!domainsDir.isDirectory()) {
-            throw new RuntimeException(Constants.DEFAULT_DOMAINS_DIR_PROPNAME + "[" + dirname + "]"
+            throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + "[" + dirname + "]"
                 + " is specifying a file that is NOT a directory.");
         }
         return domainsDir;
@@ -333,7 +332,7 @@ public class MainHelper {
         ctx.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
 
         if (ctx.getProperty(StartupContext.STARTUP_MODULE_NAME) == null) {
-            ctx.setProperty(StartupContext.STARTUP_MODULE_NAME, Constants.GF_KERNEL);
+            ctx.setProperty(StartupContext.STARTUP_MODULE_NAME, BootstrapKeys.GF_KERNEL);
         }
 
         // temporary hack until CLI does that for us.
@@ -384,7 +383,7 @@ public class MainHelper {
         }
 
         if (ctx.getProperty(PLATFORM_PROPERTY_KEY) == null) {
-            ctx.setProperty(PLATFORM_PROPERTY_KEY, Constants.Platform.Felix.name());
+            ctx.setProperty(PLATFORM_PROPERTY_KEY, Platform.Felix.name());
         }
 
         if (ctx.getProperty(INSTALL_ROOT_PROP_NAME) == null) {
@@ -401,42 +400,43 @@ public class MainHelper {
         }
 
         if (ctx.getProperty(StartupContext.STARTUP_MODULE_NAME) == null) {
-            ctx.setProperty(StartupContext.STARTUP_MODULE_NAME, Constants.GF_KERNEL);
+            ctx.setProperty(StartupContext.STARTUP_MODULE_NAME, BootstrapKeys.GF_KERNEL);
         }
 
-        if (!ctx.contains(Constants.NO_FORCED_SHUTDOWN)) {
+        if (!ctx.contains(BootstrapKeys.NO_FORCED_SHUTDOWN)) {
             // Since we are in non-embedded mode, we set this property to false unless user has specified it
             // When set to false, the VM will exit when server fails to startup for whatever reason.
             // See AppServerStartup.java
-            ctx.setProperty(Constants.NO_FORCED_SHUTDOWN, Boolean.FALSE.toString());
+            ctx.setProperty(BootstrapKeys.NO_FORCED_SHUTDOWN, Boolean.FALSE.toString());
         }
         mergePlatformConfiguration(ctx);
     }
+
 
     /**
      * Need the raw unprocessed args for RestartDomainCommand in case we were NOT started
      * by CLI
      *
      * @param args raw args to this main()
-     * @param p    the properties to save as a system property
+     * @param bootstrapProperties the properties to save as a system property
      */
-    private static void addRawStartupInfo(final String[] args, final Properties p) {
+    private static void addRawStartupInfo(final String[] args, final Properties bootstrapProperties) {
         //package the args...
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < args.length; i++) {
             if (i > 0) {
-                sb.append(Constants.ARG_SEP);
+                sb.append(BootstrapKeys.ARG_SEP);
             }
 
             sb.append(args[i]);
         }
 
-        if (!wasStartedByCLI(p)) {
+        if (!wasStartedByCLI(bootstrapProperties)) {
             // no sense doing this if we were started by CLI...
-            p.put(Constants.ORIGINAL_CP, System.getProperty("java.class.path"));
-            p.put(Constants.ORIGINAL_CN, ASMain.class.getName());
-            p.put(Constants.ORIGINAL_ARGS, sb.toString());
+            bootstrapProperties.put(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
+            bootstrapProperties.put(BootstrapKeys.ORIGINAL_CN, ASMain.class.getName());
+            bootstrapProperties.put(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
         }
     }
 
@@ -562,7 +562,7 @@ public class MainHelper {
     static void mergePlatformConfiguration(Properties ctx) {
         final Properties osgiConf;
         try {
-            osgiConf = PlatformHelper.getPlatformHelper(ctx).readPlatformConfiguration();
+            osgiConf = PlatformFactory.getPlatformHelper(ctx).readPlatformConfiguration();
         } catch (IOException e) {
             throw new IllegalStateException("The OSGI configuration could not be loaded!", e);
         }
@@ -579,7 +579,7 @@ public class MainHelper {
     }
 
     static boolean isOSGiPlatform(String platform) {
-        Constants.Platform p = Constants.Platform.valueOf(platform);
+        Platform p = Platform.valueOf(platform);
         switch (p) {
             case Felix:
             case Knopflerfish:
@@ -588,273 +588,6 @@ public class MainHelper {
             case Static:
             default:
                 return false;
-        }
-    }
-
-    static class ClassLoaderBuilder {
-
-        private final ClassPathBuilder cpb;
-        private final File glassfishDir;
-        private final Properties ctx;
-
-        ClassLoaderBuilder(Properties ctx) {
-            this.ctx = ctx;
-            cpb = new ClassPathBuilder();
-            glassfishDir = new File(ctx.getProperty(INSTALL_ROOT_PROP_NAME));
-        }
-
-        void addPlatformDependencies() throws IOException {
-            PlatformHelper.getPlatformHelper(ctx).addFrameworkJars(cpb);
-        }
-
-        /**
-         * Adds JDK tools.jar to classpath.
-         */
-        void addJDKToolsJar() {
-            File jdkToolsJar = Util.getJDKToolsJar();
-            try {
-                cpb.addJar(jdkToolsJar);
-            } catch (IOException ioe) {
-                // on the mac, it happens all the time
-                BOOTSTRAP_LOGGER.log(FINE, "JDK tools.jar does not exist at {0}", jdkToolsJar);
-            }
-        }
-
-        public ClassLoader build(ClassLoader delegate) {
-            return cpb.create(delegate);
-        }
-
-        public void addLauncherDependencies() throws IOException {
-            cpb.addJar(new File(glassfishDir, "modules/glassfish.jar"));
-        }
-
-        public void addServerBootstrapDependencies() throws IOException {
-            cpb.addJar(new File(glassfishDir, "modules/simple-glassfish-api.jar"));
-            cpb.addJar(new File(glassfishDir, "lib/bootstrap/glassfish-jul-extension.jar"));
-        }
-    }
-
-    static abstract class PlatformHelper {
-        /**
-         * Location of the unified config properties file relative to the domain directory
-         */
-        public static final String CONFIG_PROPERTIES = "config/osgi.properties";
-
-        protected Properties properties;
-        protected File glassfishDir;
-        protected File domainDir;
-        protected File fwDir;
-
-        static synchronized PlatformHelper getPlatformHelper(Properties properties) {
-            Constants.Platform platform = Constants.Platform
-                .valueOf(properties.getProperty(PLATFORM_PROPERTY_KEY));
-            PlatformHelper platformHelper;
-            switch (platform) {
-                case Felix:
-                    platformHelper = new FelixHelper();
-                    break;
-                case Knopflerfish:
-                    platformHelper = new KnopflerfishHelper();
-                    break;
-                case Equinox:
-                    platformHelper = new EquinoxHelper();
-                    break;
-                case Static:
-                    platformHelper = new StaticHelper();
-                    break;
-                default:
-                    throw new RuntimeException("Unsupported platform " + platform);
-            }
-            platformHelper.init(properties);
-            return platformHelper;
-        }
-
-
-        /**
-         * @param properties Initial properties
-         */
-        void init(Properties properties) {
-            this.properties = properties;
-            glassfishDir = StartupContextUtil.getInstallRoot(properties);
-            domainDir = StartupContextUtil.getInstanceRoot(properties);
-            setFwDir();
-        }
-
-        protected abstract void setFwDir();
-
-        /**
-         * Adds the jar files of the OSGi platform to the given {@link ClassPathBuilder}
-         */
-        protected abstract void addFrameworkJars(ClassPathBuilder cpb) throws IOException;
-
-        /**
-         * @return platform specific configuration information
-         * @throws IOException if the configuration could not be loaded
-         */
-        protected Properties readPlatformConfiguration() throws IOException {
-            Properties platformConfig = new Properties();
-            final File configFile = getFrameworkConfigFile();
-            if (configFile == null) {
-                return platformConfig;
-            }
-            try (InputStream in = new FileInputStream(configFile)) {
-                platformConfig.load(in);
-            }
-            return platformConfig;
-        }
-
-
-        protected File getFrameworkConfigFile() {
-            String fileName = CONFIG_PROPERTIES;
-            // First we search in domainDir. If it's not found there, we fall back on installDir
-            File f = new File(domainDir, fileName);
-            if (f.exists()) {
-                BOOTSTRAP_LOGGER.log(INFO, LogFacade.BOOTSTRAP_FMWCONF, f.getAbsolutePath());
-            } else {
-                f = new File(glassfishDir, fileName);
-            }
-            return f;
-        }
-    }
-
-    static class FelixHelper extends PlatformHelper {
-        private static final String FELIX_HOME = "FELIX_HOME";
-
-        /**
-         * Home of FW installation relative to Glassfish root installation.
-         */
-        public static final String GF_FELIX_HOME = "osgi/felix";
-
-        /**
-         * Location of the config properties file relative to the domain directory
-         */
-        public static final String CONFIG_PROPERTIES = "config/osgi.properties";
-
-        @Override
-        protected void setFwDir() {
-            String fwPath = System.getenv(FELIX_HOME);
-            if (fwPath == null) {
-                // try system property, which comes from asenv.conf
-                fwPath = System.getProperty(FELIX_HOME, new File(glassfishDir, GF_FELIX_HOME).getAbsolutePath());
-            }
-            fwDir = new File(fwPath);
-            if (!fwDir.exists()) {
-                throw new RuntimeException("Can't locate Felix at " + fwPath);
-            }
-        }
-
-        @Override
-        protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-            File felixJar = new File(fwDir, "bin/felix.jar");
-            cpb.addJar(felixJar);
-        }
-
-        @Override
-        protected Properties readPlatformConfiguration() throws IOException {
-            // GlassFish filesystem layout does not recommend use of upper case char in file names.
-            // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-            // Hence, we set it here.
-            Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/felix/").getAbsolutePath());
-            return platformConfig;
-        }
-    }
-
-    static class EquinoxHelper extends PlatformHelper {
-
-        /**
-         * If equinox is installed under glassfish/eclipse this would be the
-         * glassfish/eclipse/plugins dir that contains the equinox jars can be null
-         */
-        private static File pluginsDir;
-
-        @Override
-        protected void setFwDir() {
-            String fwPath = System.getenv("EQUINOX_HOME");
-            if (fwPath == null) {
-                fwPath = new File(glassfishDir, "osgi/equinox").getAbsolutePath();
-            }
-            fwDir = new File(fwPath);
-            if (!fwDir.exists()) {
-                throw new RuntimeException("Can't locate Equinox at " + fwPath);
-            }
-        }
-
-        @Override
-        protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-            // Add all the jars to classpath for the moment, since the jar name
-            // is not a constant.
-            if (pluginsDir == null) {
-                cpb.addJarFolder(fwDir);
-            } else {
-                cpb.addGlob(pluginsDir, "org.eclipse.osgi_*.jar");
-            }
-        }
-
-        @Override
-        protected Properties readPlatformConfiguration() throws IOException {
-            // GlassFish filesystem layout does not recommend use of upper case char in file names.
-            // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-            // Hence, we set it here.
-            Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
-            return platformConfig;
-        }
-    }
-
-    static class KnopflerfishHelper extends PlatformHelper {
-
-        private static final String KF_HOME = "KNOPFLERFISH_HOME";
-
-        /**
-         * Home of fw installation relative to Glassfish root installation.
-         */
-        public static final String GF_KF_HOME = "osgi/knopflerfish.org/osgi/";
-
-        @Override
-        protected void setFwDir() {
-            String fwPath = System.getenv(KF_HOME);
-            if (fwPath == null) {
-                fwPath = new File(glassfishDir, GF_KF_HOME).getAbsolutePath();
-            }
-            fwDir = new File(fwPath);
-            if (!fwDir.exists()) {
-                throw new RuntimeException("Can't locate KnopflerFish at " + fwPath);
-            }
-        }
-
-        @Override
-        protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-            cpb.addJar(new File(fwDir, "framework.jar"));
-        }
-
-        @Override
-        protected Properties readPlatformConfiguration() throws IOException {
-            // GlassFish filesystem layout does not recommend use of upper case char in file names.
-            // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-            // Hence, we set it here.
-            Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(FRAMEWORK_STORAGE,
-                new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
-            return platformConfig;
-        }
-    }
-
-    static class StaticHelper extends PlatformHelper {
-        @Override
-        protected void setFwDir() {
-            // nothing to do
-        }
-
-        @Override
-        protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-            // nothing to do
-        }
-
-        @Override
-        protected File getFrameworkConfigFile() {
-            // no config file for this platform.
-            return null;
         }
     }
 }

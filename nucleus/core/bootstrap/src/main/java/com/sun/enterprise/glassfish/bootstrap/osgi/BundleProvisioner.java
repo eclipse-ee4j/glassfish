@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -694,7 +694,7 @@ public class BundleProvisioner {
 
     static BundleProvisioner createBundleProvisioner(BundleContext bctx, Properties props) {
         Class<? extends BundleProvisioner> clazz = Boolean
-            .valueOf(props.getProperty(Constants.ONDEMAND_BUNDLE_PROVISIONING))
+            .parseBoolean(props.getProperty(Constants.ONDEMAND_BUNDLE_PROVISIONING))
                 ? MinimalBundleProvisioner.class : BundleProvisioner.class;
         logger.log(Level.CONFIG, LogFacade.CREATE_BUNDLE_PROVISIONER, clazz);
         try {

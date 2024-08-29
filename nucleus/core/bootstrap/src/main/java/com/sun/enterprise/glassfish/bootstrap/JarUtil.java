@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
  */
 
 package com.sun.enterprise.glassfish.bootstrap;
+
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,7 +40,7 @@ import java.util.logging.Logger;
  * @author bhavanishankar@dev.java.net
  * @author David Matejcek
  */
-public class JarUtil {
+public final class JarUtil {
 
     /**
      * JAXR  system resource adapter name.
@@ -84,6 +86,9 @@ public class JarUtil {
 
     private static final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
 
+    private JarUtil() {
+        // utility class
+    }
 
     public static boolean extractRars(String installDir) {
         boolean extracted = true;
@@ -147,7 +152,7 @@ public class JarUtil {
                     continue;
                 }
                 try (FileOutputStream out = new FileOutputStream(outputFile)) {
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[8192];
                     int readCount = 0;
 
                     while ((readCount = jar.read(buffer)) >= 0) {

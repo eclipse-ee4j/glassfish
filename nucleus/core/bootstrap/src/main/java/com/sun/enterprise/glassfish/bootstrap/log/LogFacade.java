@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.log;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -33,29 +33,7 @@ public class LogFacade {
     @LogMessagesResourceBundle()
     public static final String RB_NAME = "com.sun.enterprise.glassfish.bootstrap.LogMessages";
 
-    public static final Logger BOOTSTRAP_LOGGER =
-        Logger.getLogger(BOOTSTRAP_LOGGER_NAME, RB_NAME);
-
-    /**
-     * This helper method is duplicated from org.glassfish.api.logging.LogHelper to avoid adding
-     * dependency on the glassfish-api bundle.
-     * Logs a message with the given level, message, parameters and <code>Throwable</code>.
-     * @param logger the <code>Logger</code> object to be used for logging the message.
-     * @param level the <code>Level</code> of the message to be logged.
-     * @param messageId the key in the resource bundle of the <code>Logger</code> containing the localized text.
-     * @param thrown the <code>Throwable</code> associated with the message to be logged.
-     * @param params the parameters to the localized text.
-     */
-    public static void log(Logger logger, Level level, String messageId,
-            Throwable thrown, Object... params) {
-        LogRecord rec = new LogRecord(level, messageId);
-        rec.setLoggerName(logger.getName());
-        rec.setResourceBundleName(logger.getResourceBundleName());
-        rec.setResourceBundle(logger.getResourceBundle());
-        rec.setParameters(params);
-        rec.setThrown(thrown);
-        logger.log(rec);
-    }
+    public static final Logger BOOTSTRAP_LOGGER = Logger.getLogger(BOOTSTRAP_LOGGER_NAME, RB_NAME);
 
     @LogMessageInfo(
             message = "GlassFish requires JDK {0}, you are using JDK version {1}.",
@@ -68,16 +46,6 @@ public class LogFacade {
             message = "Using {0} as the framework configuration file.",
             level = "INFO")
     public static final String BOOTSTRAP_FMWCONF = "NCLS-BOOTSTRAP-00002";
-
-    @LogMessageInfo(
-            message = "Could not extract archive {0}.",
-            level = "WARNING")
-    public static final String BOOTSTRAP_CANT_EXTRACT_ARCHIVE = "NCLS-BOOTSTRAP-00003";
-
-    @LogMessageInfo(
-            message = "Could not find RAR [{0}] location [{1}] after extraction.",
-            level = "INFO")
-    public static final String BOOTSTRAP_CANT_FIND_RAR = "NCLS-BOOTSTRAP-00004";
 
     @LogMessageInfo(
             message = "Can not start bundle {0} because it is not contained in the list of installed bundles.",
@@ -230,11 +198,6 @@ public class LogFacade {
     public static final String PROVISIONING_OPTIONS_CHANGED = "NCLS-BOOTSTRAP-00035";
 
     @LogMessageInfo(
-            message = "Unable to locate bundle {0}.",
-            level = "WARNING")
-    public static final String CANT_LOCATE_BUNDLE = "NCLS-BOOTSTRAP-00036";
-
-    @LogMessageInfo(
             message = "Storage support not available in framework bundle, so can't store bundle ids. This may lead to slower start up time.",
             level = "WARNING")
     public static final String CANT_STORE_BUNDLEIDS = "NCLS-BOOTSTRAP-00037";
@@ -249,6 +212,24 @@ public class LogFacade {
             level = "WARNING")
     public static final String CAUGHT_EXCEPTION = "NCLS-BOOTSTRAP-00039";
 
+    /**
+     * This helper method is duplicated from org.glassfish.api.logging.LogHelper to avoid adding
+     * dependency on the glassfish-api bundle.
+     * Logs a message with the given level, message, parameters and <code>Throwable</code>.
+     *
+     * @param logger the <code>Logger</code> object to be used for logging the message.
+     * @param level the <code>Level</code> of the message to be logged.
+     * @param messageId the key in the resource bundle of the <code>Logger</code> containing the localized text.
+     * @param thrown the <code>Throwable</code> associated with the message to be logged.
+     * @param params the parameters to the localized text.
+     */
+    public static void log(Logger logger, Level level, String messageId, Throwable thrown, Object... params) {
+        LogRecord rec = new LogRecord(level, messageId);
+        rec.setLoggerName(logger.getName());
+        rec.setResourceBundleName(logger.getResourceBundleName());
+        rec.setResourceBundle(logger.getResourceBundle());
+        rec.setParameters(params);
+        rec.setThrown(thrown);
+        logger.log(rec);
+    }
 }
-
-

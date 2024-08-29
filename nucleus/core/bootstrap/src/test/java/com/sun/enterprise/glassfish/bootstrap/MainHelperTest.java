@@ -17,8 +17,8 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
-import com.sun.enterprise.glassfish.bootstrap.MainHelper.PlatformHelper;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.Platform;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.PlatformHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +29,9 @@ import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.not;
@@ -102,7 +102,7 @@ class MainHelperTest {
     @Test
     void createLauncher_Felix() throws Exception {
         Properties properties = createDefaultProperties();
-        PlatformHelper platformHelper = PlatformHelper.getPlatformHelper(properties);
+        PlatformHelper platformHelper = PlatformFactory.getPlatformHelper(properties);
         assertNotNull(platformHelper);
         Properties cfg = platformHelper.readPlatformConfiguration();
         assertNotNull(cfg);

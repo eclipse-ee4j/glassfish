@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,7 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.GlassFishDecorator;
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

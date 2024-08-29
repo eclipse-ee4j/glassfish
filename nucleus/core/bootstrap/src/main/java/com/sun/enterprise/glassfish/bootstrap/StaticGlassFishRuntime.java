@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +17,13 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.ContextDuplicatePostProcessor;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.module.common_impl.AbstractFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +41,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
@@ -51,7 +54,7 @@ import static java.util.logging.Level.WARNING;
  */
 public class StaticGlassFishRuntime extends GlassFishRuntime {
 
-    private static final Logger LOG = Util.getLogger();
+    private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
     private static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
 
@@ -84,10 +87,10 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
 
-            ModulesRegistry modulesRegistry = SingleHK2Factory.getInstance().createModulesRegistry();
+            ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
 
             ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
-                    List.of(new EmbeddedInhabitantsParser(), new ContextDuplicatePostProcessor()), null);
+                    List.of(new EmbeddedInhabitantsParser(), new DuplicatePostProcessor()), null);
 
             final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null, startupContext);
 
@@ -148,8 +151,8 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         }
 
         File instanceRoot = new File(instanceRootValue);
-        System.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
-        System.setProperty(Constants.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
+        System.setProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
+        System.setProperty(BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
 
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
         if (installRootValue == null) {
@@ -163,12 +166,12 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
 
         // Some legacy code might depend on setting installRoot as system property.
         // Ideally everyone should depend only on StartupContext.
-        System.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-        System.setProperty(Constants.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+        System.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        System.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
 
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
-        gfProps.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-        gfProps.setProperty(Constants.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+        gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
     }
 
     private String createTempInstanceRoot(GlassFishProperties gfProps) throws Exception {
@@ -226,7 +229,9 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
     }
 
     public static void copy(URL url, File destFile, boolean overwrite) {
-        if (url == null || destFile == null) return;
+        if (url == null || destFile == null) {
+            return;
+        }
         try {
             if (!destFile.exists() || overwrite) {
                 if (!destFile.toURI().equals(url.toURI())) {

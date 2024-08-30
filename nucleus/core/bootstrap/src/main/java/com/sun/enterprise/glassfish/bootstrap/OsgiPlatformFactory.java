@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.EquinoxAdapter;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.FelixAdapter;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.KnopflerfishAdapter;
@@ -23,13 +24,11 @@ import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.StaticAdapter;
 
-import java.util.Properties;
-
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 
 class OsgiPlatformFactory {
 
-    public static synchronized OsgiPlatformAdapter getOsgiPlatformAdapter(Properties properties) {
+    public static synchronized OsgiPlatformAdapter getOsgiPlatformAdapter(GFBootstrapProperties properties) {
         OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(properties.getProperty(PLATFORM_PROPERTY_KEY));
         OsgiPlatformAdapter osgiPlatformAdapter;
         switch (osgiPlatform) {

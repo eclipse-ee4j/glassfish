@@ -16,48 +16,31 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
-
-import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
+import java.nio.file.Path;
 
 public class KnopflerfishAdapter extends OsgiPlatformAdapter {
 
     private static final String KF_HOME = "KNOPFLERFISH_HOME";
+    private final File kfHome;
 
-    /**
-     * Home of fw installation relative to Glassfish root installation.
-     */
-    public static final String GF_KF_HOME = "osgi/knopflerfish.org/osgi/";
-
-    private final File fwDir;
-
-    public KnopflerfishAdapter(Properties properties) {
+    public KnopflerfishAdapter(GFBootstrapProperties properties) {
         super(properties);
-        String fwPath = System.getenv(KF_HOME);
-        if (fwPath == null) {
-            fwPath = new File(glassfishDir, GF_KF_HOME).getAbsolutePath();
-        }
-        this.fwDir = new File(fwPath);
-        if (!fwDir.exists()) {
-            throw new RuntimeException("Can't locate KnopflerFish at " + fwPath);
-        }
+        this.kfHome = properties.getOsgiHome(KF_HOME, KF_HOME, Path.of("osgi", "knopflerfish.org", "osgi"));
     }
+
 
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        cpb.addJar(new File(fwDir, "framework.jar"));
+        cpb.addJar(new File(kfHome, "framework.jar"));
     }
 
+
     @Override
-    public Properties readPlatformConfiguration() throws IOException {
-        // GlassFish filesystem layout does not recommend use of upper case char in file names.
-        // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-        // Hence, we set it here.
-        Properties platformConfig = super.readPlatformConfiguration();
-        platformConfig.setProperty(FRAMEWORK_STORAGE,
-            new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
-        return platformConfig;
+    protected String getFrameworkStorageDirectoryName() {
+        return "knopflerfish";
     }
 }

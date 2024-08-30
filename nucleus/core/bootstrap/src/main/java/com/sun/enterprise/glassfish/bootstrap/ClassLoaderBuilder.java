@@ -16,31 +16,28 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.ClassPathBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Properties;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static java.util.logging.Level.FINE;
 
 class ClassLoaderBuilder {
 
-    private final ClassPathBuilder cpb;
-    private final Path glassfishDir;
-    private final Properties ctx;
+    private final ClassPathBuilder cpBuilder;
+    private final GFBootstrapProperties ctx;
 
-    ClassLoaderBuilder(Properties ctx) throws IOException {
+    ClassLoaderBuilder(GFBootstrapProperties ctx) {
         this.ctx = ctx;
-        cpb = new ClassPathBuilder();
-        glassfishDir = getInstallRoot(ctx);
+        this.cpBuilder = new ClassPathBuilder();
     }
 
     void addPlatformDependencies() throws IOException {
-        OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).addFrameworkJars(cpb);
+        OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).addFrameworkJars(cpBuilder);
     }
 
     /**
@@ -49,7 +46,7 @@ class ClassLoaderBuilder {
     void addJDKToolsJar() {
         File jdkToolsJar = Util.getJDKToolsJar();
         try {
-            cpb.addJar(jdkToolsJar);
+            cpBuilder.addJar(jdkToolsJar);
         } catch (IOException ioe) {
             // on the mac, it happens all the time
             BOOTSTRAP_LOGGER.log(FINE, "JDK tools.jar does not exist at {0}", jdkToolsJar);
@@ -57,25 +54,15 @@ class ClassLoaderBuilder {
     }
 
     public ClassLoader build(ClassLoader delegate) {
-        return cpb.create(delegate);
+        return cpBuilder.create(delegate);
     }
 
     public void addLauncherDependencies() throws IOException {
-        cpb.addJar(glassfishDir.resolve(Path.of("modules", "glassfish.jar")).toFile());
+        cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("modules", "glassfish.jar")));
     }
 
     public void addServerBootstrapDependencies() throws IOException {
-        cpb.addJar(glassfishDir.resolve(Path.of("modules", "simple-glassfish-api.jar")).toFile());
-        cpb.addJar(glassfishDir.resolve(Path.of("lib", "bootstrap", "glassfish-jul-extension.jar")).toFile());
-    }
-
-
-    private static Path getInstallRoot(Properties context) throws IOException {
-        String property = context.getProperty(INSTALL_ROOT_PROP_NAME);
-        if (property.indexOf(0) >= 0) {
-            throw new IOException("The property " + INSTALL_ROOT_PROP_NAME + " contains a null byte!");
-        }
-        final File file = new File(property);
-        return file.getCanonicalFile().toPath();
+        cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("modules", "simple-glassfish-api.jar")));
+        cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("lib", "bootstrap", "glassfish-jul-extension.jar")));
     }
 }

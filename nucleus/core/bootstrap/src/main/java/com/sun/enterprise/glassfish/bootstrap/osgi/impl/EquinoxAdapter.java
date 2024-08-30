@@ -16,51 +16,32 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
+import java.nio.file.Path;
 
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
 public class EquinoxAdapter extends OsgiPlatformAdapter {
 
-    /**
-     * If equinox is installed under glassfish/eclipse this would be the
-     * glassfish/eclipse/plugins dir that contains the equinox jars can be null
-     */
-    private static File pluginsDir;
-    private final File fwDir;
+    private static final String EQUINOX_HOME = "EQUINOX_HOME";
 
-    public EquinoxAdapter(Properties properties) {
+    private final File equinoxHome;
+
+    public EquinoxAdapter(GFBootstrapProperties properties) {
         super(properties);
-        String fwPath = System.getenv("EQUINOX_HOME");
-        if (fwPath == null) {
-            fwPath = new File(glassfishDir, "osgi/equinox").getAbsolutePath();
-        }
-        this.fwDir = new File(fwPath);
-        if (!fwDir.exists()) {
-            throw new RuntimeException("Can't locate Equinox at " + fwPath);
-        }
+        this.equinoxHome = properties.getOsgiHome(FRAMEWORK_STORAGE, FRAMEWORK_STORAGE, Path.of("osgi", "equinox"));
     }
 
     @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        // Add all the jars to classpath for the moment, since the jar name
-        // is not a constant.
-        if (pluginsDir == null) {
-            cpb.addJarFolder(fwDir);
-        } else {
-            cpb.addGlob(pluginsDir, "org.eclipse.osgi_*.jar");
-        }
+    public void addFrameworkJars(ClassPathBuilder builder) throws IOException {
+        builder.addJarFolder(equinoxHome);
     }
 
     @Override
-    public Properties readPlatformConfiguration() throws IOException {
-        // GlassFish filesystem layout does not recommend use of upper case char in file names.
-        // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-        // Hence, we set it here.
-        Properties platformConfig = super.readPlatformConfiguration();
-        platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
-        return platformConfig;
+    protected String getFrameworkStorageDirectoryName() {
+        return "equinox";
     }
 }

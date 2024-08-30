@@ -16,8 +16,9 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+
 import java.io.File;
-import java.util.Properties;
 
 /**
  * Non-OSGI platform adapter.
@@ -25,7 +26,7 @@ import java.util.Properties;
  */
 public class StaticAdapter extends OsgiPlatformAdapter {
 
-    public StaticAdapter(Properties properties) {
+    public StaticAdapter(GFBootstrapProperties properties) {
         super(properties);
     }
 
@@ -42,6 +43,11 @@ public class StaticAdapter extends OsgiPlatformAdapter {
      */
     @Override
     protected File getFrameworkConfigFile() {
+        return null;
+    }
+
+    @Override
+    protected String getFrameworkStorageDirectoryName() {
         return null;
     }
 }

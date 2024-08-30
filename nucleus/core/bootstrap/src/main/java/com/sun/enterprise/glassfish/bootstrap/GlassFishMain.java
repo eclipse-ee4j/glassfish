@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +31,6 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
@@ -80,7 +81,7 @@ public class GlassFishMain {
         STDOUT.println("Launching GlassFish on " + platform + " platform");
 
         final File instanceRoot = MainHelper.findInstanceRoot(installRoot, argsAsProps);
-        final Properties startupCtx = MainHelper.buildStartupContext(platform, installRoot, instanceRoot, args);
+        final GFBootstrapProperties startupCtx = MainHelper.buildStartupContext(platform, installRoot, instanceRoot, args);
         final ClassLoader launcherCL = MainHelper.createLauncherCL(startupCtx, gfBootCL);
         final Class<?> launcherClass = launcherCL.loadClass(GlassFishMain.Launcher.class.getName());
         final Object launcher = launcherClass.getDeclaredConstructor().newInstance();
@@ -89,7 +90,7 @@ public class GlassFishMain {
         // launcherCL is used only to load the RuntimeBuilder service.
         // on all other places is used classloader which loaded the GlassfishRuntime class
         // -> it must not be loaded by any parent classloader, it's children would be ignored.
-        method.invoke(launcher, startupCtx);
+        method.invoke(launcher, startupCtx.toProperties());
 
         // also note that debugging is not possible until the debug port is open.
     }
@@ -133,11 +134,11 @@ public class GlassFishMain {
         private volatile GlassFish gf;
         private volatile GlassFishRuntime gfr;
 
-        public void launch(final Properties ctx) throws Exception {
+        public void launch(final Properties properties) throws Exception {
             addShutdownHook();
-            gfr = GlassFishRuntime.bootstrap(new BootstrapProperties(ctx), getClass().getClassLoader());
-            gf = gfr.newGlassFish(new GlassFishProperties(ctx));
-            if (Boolean.parseBoolean(Util.getPropertyOrSystemProperty(ctx, "GlassFish_Interactive", "false"))) {
+            gfr = GlassFishRuntime.bootstrap(new org.glassfish.embeddable.BootstrapProperties(properties), getClass().getClassLoader());
+            gf = gfr.newGlassFish(new GlassFishProperties(properties));
+            if (Boolean.parseBoolean(Util.getPropertyOrSystemProperty(properties, "GlassFish_Interactive", "false"))) {
                 startConsole();
             } else {
                 gf.start();

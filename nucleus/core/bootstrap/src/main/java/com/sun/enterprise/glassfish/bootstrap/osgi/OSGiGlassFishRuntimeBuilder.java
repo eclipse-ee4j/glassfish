@@ -58,7 +58,7 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
  * <p/>
  * <p/>It can't handle GenericOSGi platform,
  * because it reads framework configuration from a framework specific file when it calls
- * {@link MainHelper#buildStartupContext(java.util.Properties)}.
+ * {@link MainHelper#buildStartupContext(Properties)}.
  * <p/>
  * This class is responsible for
  * a) setting up OSGi framework,
@@ -101,8 +101,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
         try {
-            MainHelper.buildStartupContext(bsProps.getProperties());
-            Properties properties = bsProps.getProperties();
+            Properties properties = MainHelper.buildStartupContext((bsProps.getProperties()));
 
             // Set the builder name so that when we check for nonEmbedded() inside GlassFishMainActivator,
             // we can identify the environment.
@@ -329,7 +328,6 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     private static BundleProvisioner createBundleProvisioner(BundleContext bctx, Properties props) {
         final boolean ondemandProvisioning = Boolean
             .parseBoolean(props.getProperty(ONDEMAND_BUNDLE_PROVISIONING));
-        final BundleProvisioner provisioner;
         if (ondemandProvisioning) {
             return new MinimalBundleProvisioner(bctx, props);
         }

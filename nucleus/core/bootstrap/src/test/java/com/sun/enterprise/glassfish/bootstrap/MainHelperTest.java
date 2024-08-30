@@ -18,6 +18,7 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
@@ -102,14 +103,15 @@ class MainHelperTest {
 
     @Test
     void createLauncher_Felix() throws Exception {
-        Properties properties = createDefaultProperties();
+        GFBootstrapProperties properties = createDefaultProperties();
         OsgiPlatformAdapter osgiPlatformAdapter = OsgiPlatformFactory.getOsgiPlatformAdapter(properties);
         assertNotNull(osgiPlatformAdapter);
         Properties cfg = osgiPlatformAdapter.readPlatformConfiguration();
         assertNotNull(cfg);
-        cfg.putAll(properties);
+        cfg.putAll(properties.toProperties());
 
-        ClassLoader loader = MainHelper.createLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
+        ClassLoader loader = MainHelper.createLauncherCL(new GFBootstrapProperties(cfg),
+            ClassLoader.getPlatformClassLoader());
         assertNotNull(loader);
         Class<?> clazz = loader.loadClass("org.osgi.framework.Bundle");
         assertNotNull(clazz);
@@ -125,7 +127,7 @@ class MainHelperTest {
     }
 
 
-    private Properties createDefaultProperties() throws IOException {
+    private GFBootstrapProperties createDefaultProperties() throws IOException {
         Properties properties = new Properties();
         properties.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
         Path installRoot = Files.createTempDirectory("FakeGFInstallRoot");
@@ -149,7 +151,7 @@ class MainHelperTest {
 
         Path instanceRoot = Files.createTempDirectory("FakeGFInstanceRoot");
         properties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
-        return properties;
+        return new GFBootstrapProperties(properties);
     }
 
 

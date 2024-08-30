@@ -19,6 +19,7 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
@@ -232,6 +233,29 @@ public class MainHelper {
         }
     }
 
+    static File findInstallRoot() {
+        // glassfish/modules/glassfish.jar
+        File bootstrapFile = findBootstrapFile();
+        // glassfish/
+        return bootstrapFile.getParentFile().getParentFile();
+    }
+
+    static File findInstanceRoot(File installRoot, String[] args) {
+        return findInstanceRoot(installRoot, ArgumentManager.argsToMap(args));
+    }
+
+    static File findInstanceRoot(File installRoot, Properties args) {
+        // IMPORTANT - check for instance BEFORE domain.  We will always come up
+        // with a default domain but there is no such thing sa a default instance
+        File instanceDir = getInstanceRoot(args);
+        if (instanceDir == null) {
+            // that means that this is a DAS.
+            instanceDir = getDomainRoot(args, installRoot);
+        }
+        verifyDomainRoot(instanceDir);
+        return instanceDir;
+    }
+
     /**
      * CLI or any other client needs to ALWAYS pass in the instanceDir for
      * instances.
@@ -248,29 +272,6 @@ public class MainHelper {
         return null;
     }
 
-    static File findInstallRoot() {
-        // glassfish/modules/glassfish.jar
-        File bootstrapFile = findBootstrapFile();
-        // glassfish/
-        return bootstrapFile.getParentFile().getParentFile();
-    }
-
-    static File findInstanceRoot(File installRoot, Properties args) {
-        // IMPORTANT - check for instance BEFORE domain.  We will always come up
-        // with a default domain but there is no such thing sa a default instance
-        File instanceDir = getInstanceRoot(args);
-        if (instanceDir == null) {
-            // that means that this is a DAS.
-            instanceDir = getDomainRoot(args, installRoot);
-        }
-        verifyDomainRoot(instanceDir);
-        return instanceDir;
-    }
-
-    static File findInstanceRoot(File installRoot, String[] args) {
-        return findInstanceRoot(installRoot, ArgumentManager.argsToMap(args));
-    }
-
     private static File findBootstrapFile() {
         try {
             return Which.jarFile(ASMain.class);
@@ -279,7 +280,7 @@ public class MainHelper {
         }
     }
 
-    static Properties buildStartupContext(String platform, File installRoot, File instanceRoot, String[] args) {
+    static GFBootstrapProperties buildStartupContext(String platform, File installRoot, File instanceRoot, String[] args) {
         Properties ctx = argsToMap(args);
         ctx.setProperty(StartupContext.TIME_ZERO_NAME, Long.toString(System.currentTimeMillis()));
 
@@ -304,20 +305,24 @@ public class MainHelper {
             }
         }
 
-        addRawStartupInfo(args, ctx);
+        GFBootstrapProperties properties = new GFBootstrapProperties(ctx);
+        addRawStartupInfo(args, properties);
 
-        mergePlatformConfiguration(ctx);
-        return ctx;
+        return mergePlatformConfiguration(properties);
     }
 
-    public static void buildStartupContext(Properties ctx) {
+    public static Properties buildStartupContext(Properties ctx) {
+        return new GFBootstrapProperties(ctx).toProperties();
+    }
+
+    public static GFBootstrapProperties buildStartupContext(GFBootstrapProperties ctx) {
         if (ctx.getProperty(StartupContext.TIME_ZERO_NAME) == null) {
             ctx.setProperty(StartupContext.TIME_ZERO_NAME, Long.toString(System.currentTimeMillis()));
         } else {
             // Optimisation
             // Skip the rest of the code. We assume that we are called from GlassFishMain
             // which already passes a properly populated properties object.
-            return;
+            return ctx;
         }
 
         if (ctx.getProperty(PLATFORM_PROPERTY_KEY) == null) {
@@ -332,7 +337,7 @@ public class MainHelper {
 
         if (ctx.getProperty(INSTANCE_ROOT_PROP_NAME) == null) {
             File installRoot = new File(ctx.getProperty(INSTALL_ROOT_PROP_NAME));
-            File instanceRoot = findInstanceRoot(installRoot, ctx);
+            File instanceRoot = findInstanceRoot(installRoot, ctx.toProperties());
             ctx.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
             ctx.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
         }
@@ -341,44 +346,40 @@ public class MainHelper {
             ctx.setProperty(StartupContext.STARTUP_MODULE_NAME, BootstrapKeys.GF_KERNEL);
         }
 
-        if (!ctx.contains(BootstrapKeys.NO_FORCED_SHUTDOWN)) {
+        if (!ctx.isPropertySet(BootstrapKeys.NO_FORCED_SHUTDOWN)) {
             // Since we are in non-embedded mode, we set this property to false unless user has specified it
             // When set to false, the VM will exit when server fails to startup for whatever reason.
             // See AppServerStartup.java
             ctx.setProperty(BootstrapKeys.NO_FORCED_SHUTDOWN, Boolean.FALSE.toString());
         }
-        mergePlatformConfiguration(ctx);
+        return mergePlatformConfiguration(ctx);
     }
 
 
     /**
-     * Need the raw unprocessed args for RestartDomainCommand in case we were NOT started
-     * by CLI
+     * Need the raw unprocessed args for RestartDomainCommand in case we were NOT started by CLI
      *
      * @param args raw args to this main()
      * @param bootstrapProperties the properties to save as a system property
      */
-    private static void addRawStartupInfo(final String[] args, final Properties bootstrapProperties) {
-        //package the args...
+    private static void addRawStartupInfo(final String[] args, final GFBootstrapProperties bootstrapProperties) {
+        if (wasStartedByCLI(bootstrapProperties)) {
+            return;
+        }
+        // no sense doing this if we were started by CLI...
+        bootstrapProperties.setProperty(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
+        bootstrapProperties.setProperty(BootstrapKeys.ORIGINAL_CN, ASMain.class.getName());
         StringBuilder sb = new StringBuilder();
-
         for (int i = 0; i < args.length; i++) {
             if (i > 0) {
                 sb.append(BootstrapKeys.ARG_SEP);
             }
-
             sb.append(args[i]);
         }
-
-        if (!wasStartedByCLI(bootstrapProperties)) {
-            // no sense doing this if we were started by CLI...
-            bootstrapProperties.put(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
-            bootstrapProperties.put(BootstrapKeys.ORIGINAL_CN, ASMain.class.getName());
-            bootstrapProperties.put(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
-        }
+        bootstrapProperties.setProperty(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
     }
 
-    private static boolean wasStartedByCLI(final Properties props) {
+    private static boolean wasStartedByCLI(final GFBootstrapProperties props) {
         // if we were started by CLI there will be some special args set...
         return props.getProperty("-asadmin-classpath") != null
             && props.getProperty("-asadmin-classname") != null
@@ -408,7 +409,7 @@ public class MainHelper {
      * @see #createOSGiFrameworkLauncherCL(java.util.Properties, ClassLoader)
      * @param delegate Parent class loader for the launcher class loader.
      */
-    static ClassLoader createLauncherCL(Properties ctx, ClassLoader delegate) {
+    static ClassLoader createLauncherCL(GFBootstrapProperties ctx, ClassLoader delegate) {
         try {
             ClassLoader osgiFWLauncherCL = createOSGiFrameworkLauncherCL(ctx, delegate);
             ClassLoaderBuilder clb = new ClassLoaderBuilder(ctx);
@@ -437,7 +438,7 @@ public class MainHelper {
      *
      * @param delegate Parent class loader for this class loader.
      */
-    private static ClassLoader createOSGiFrameworkLauncherCL(Properties ctx, ClassLoader delegate) {
+    private static ClassLoader createOSGiFrameworkLauncherCL(GFBootstrapProperties ctx, ClassLoader delegate) {
         try {
             ClassLoaderBuilder clb = new ClassLoaderBuilder(ctx);
             clb.addPlatformDependencies();
@@ -497,14 +498,14 @@ public class MainHelper {
         System.setProperty(PLATFORM_PROPERTY_KEY, ctx.getProperty(PLATFORM_PROPERTY_KEY));
     }
 
-    static void mergePlatformConfiguration(Properties ctx) {
+    static GFBootstrapProperties mergePlatformConfiguration(GFBootstrapProperties ctx) {
         final Properties osgiConf;
         try {
             osgiConf = OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).readPlatformConfiguration();
         } catch (IOException e) {
             throw new IllegalStateException("The OSGI configuration could not be loaded!", e);
         }
-        osgiConf.putAll(ctx);
+        osgiConf.putAll(ctx.toProperties());
         Util.substVars(osgiConf);
         // Starting with GlassFish 3.1.2, we allow user to overrride values specified in OSGi config file by
         // corresponding values as set via System properties. There are two properties that we must always read
@@ -512,8 +513,7 @@ public class MainHelper {
         // changed incompatibly from 3.1 to 3.1.1, but we are not able to change domain.xml in 3.1.1 for
         // compatibility reasons.
         Util.overrideBySystemProps(osgiConf, Arrays.asList("felix.fileinstall.dir", "felix.fileinstall.log.level"));
-        ctx.clear();
-        ctx.putAll(osgiConf);
+        return new GFBootstrapProperties(osgiConf);
     }
 
     static boolean isOSGiPlatform(String platform) {

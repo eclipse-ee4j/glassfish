@@ -28,7 +28,7 @@
     <artifactId>cmp_quicklook</artifactId>
     <name>CMP Roster App Quicklook</name>
     <packaging>jar</packaging>
-    <version>7.0.17-SNAPSHOT</version>
+    <version>7.0.18-SNAPSHOT</version>
     <description>This pom describes how to run QuickLook tests on the Glassfish Bundle</description>
 
     <build>

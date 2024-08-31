@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>extras-tests-parent</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.18-SNAPSHOT</version>
     </parent>
 
     <artifactId>command-logger-tests</artifactId>

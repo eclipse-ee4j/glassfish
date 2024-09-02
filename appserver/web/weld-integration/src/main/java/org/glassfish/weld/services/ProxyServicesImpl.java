@@ -50,7 +50,8 @@ public class ProxyServicesImpl implements ProxyServices {
 
     private final ClassLoaderHierarchy classLoaderHierarchy;
 
-    private Map<ClassLoader, ClassPool> classPoolMap = Collections.synchronizedMap(new WeakHashMap<>());
+    // probably shouldn't be static but moved to a singleton service
+    private static Map<ClassLoader, ClassPool> classPoolMap = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
      * @param services immediately used to find a {@link ClassLoaderHierarchy} service
@@ -59,13 +60,16 @@ public class ProxyServicesImpl implements ProxyServices {
         classLoaderHierarchy = services.getService(ClassLoaderHierarchy.class);
     }
 
+    /* This solution is not ideal - it creates the new class in the CL of the originalClass
+       (most often server CL or bootstrap CL), while the previous solution created it in the app classloader.
+    */
     @Override
     public Class<?> defineClass(final Class<?> originalClass, final String className, final byte[] classBytes,
         final int off, final int len) throws ClassFormatError {
         try {
             final String originalPackageName = originalClass.getPackageName();
             String modifiedClassName = originalClass.getName() + "_GlassFishWeldProxy";
-            final ClassLoader originalClassCL = getClassLoaderforBean(originalClass);
+            final ClassLoader originalClassCL = originalClass.getClassLoader();
             final ClassPool classPool = classPoolMap.computeIfAbsent(originalClassCL, cl -> new ClassPool());
             while (classPool.getOrNull(modifiedClassName) != null) {
                 modifiedClassName += "_";

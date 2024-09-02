@@ -44,29 +44,6 @@ public final class ClassGenerator {
 
     private static final Logger LOG = Logger.getLogger(ClassGenerator.class.getName());
 
-//    private static Method defineClassMethod;
-//    private static Method defineClassMethodSM;
-//
-//    static {
-//        try {
-//            final PrivilegedExceptionAction<Void> action = () -> {
-//                final Class<?> cl = Class.forName("java.lang.ClassLoader");
-//                final String name = "defineClass";
-//                defineClassMethod = cl.getDeclaredMethod(name, String.class, byte[].class, int.class, int.class);
-//                ClassLoaderMethods.defineClassMethod.setAccessible(true);
-//                defineClassMethodSM = cl.getDeclaredMethod(
-//                    name, String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
-//                ClassLoaderMethods.defineClassMethodSM.setAccessible(true);
-//                return null;
-//            };
-//            AccessController.doPrivileged(action);
-//            LOG.config("ClassLoader methods capable of generating classes were successfully detected.");
-//        } catch (final Exception e) {
-//            throw new Error("Could not initialize access to ClassLoader.defineClass method.", e);
-//        }
-//    }
-
-
     private ClassGenerator() {
         // hidden
     }
@@ -256,7 +233,7 @@ public final class ClassGenerator {
         }
         // The bootstrap CL used by embedded glassfish doesn't remember generated classes
         // Further ClassLoader.findClass calls will fail.
-        if (anchorClass == null || loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
+        if (anchorClass == null || loader.getClass() == ASURLClassLoader.class) {
             return false;
         }
         // Use MethodHandles.Lookup only if the anchor run-time Package defined by CL.

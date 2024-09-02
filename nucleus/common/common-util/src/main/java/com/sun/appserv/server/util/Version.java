@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
  * This class provides static methods to make accessible the version as well as
@@ -232,7 +234,7 @@ public class Version {
         File directory = new File(installRoot).toPath().resolve(Path.of("config", "branding")).toFile();
         if (directory.isDirectory()) {
             for (File file : directory.listFiles(f1 -> f1.getName().endsWith(".properties") && f1.canRead())) {
-                try (FileReader fr = new FileReader(file)) {
+                try (FileReader fr = new FileReader(file, ISO_8859_1)) {
                     Properties p = new Properties();
                     p.load(fr);
                     VERSION_PROPERTIES.add(p);

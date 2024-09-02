@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,6 +39,7 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.START_ARG_E
 import static com.sun.enterprise.admin.servermgmt.services.Constants.START_ARG_START;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.STOP_ARG_END;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.STOP_ARG_START;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Warning: there is lots of file twiddling going on in this class. It is the nature of the beast.
@@ -300,7 +301,7 @@ public class WindowsService extends NonSMFServiceAdapter {
         if (info.dryRun) {
             try {
                 // dry-run not so useful on Windows.  Very useful on UNIX...
-                xmlFileCopy = Strings.get("xmlfiledump") + FileUtils.readSmallFile(targetXml);
+                xmlFileCopy = Strings.get("xmlfiledump") + FileUtils.readSmallFile(targetXml, UTF_8);
             } catch (IOException ex) {
                 // oh well....
             }

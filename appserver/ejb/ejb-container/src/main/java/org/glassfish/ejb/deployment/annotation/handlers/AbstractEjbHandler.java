@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -332,6 +332,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
 
         Remote remoteBusAnn = (Remote) ejbClass.getAnnotation(Remote.class);
         boolean emptyRemoteBusAnn = false;
+        boolean emptyLocalBusAnn = false;
         if( remoteBusAnn != null ) {
             for(Class next : remoteBusAnn.value()) {
                 if (next.getAnnotation(Local.class) != null) {
@@ -364,6 +365,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
                 clientInterfaces.add(next);
                 localBusIntfs.add(next);
             }
+            emptyLocalBusAnn = localBusIntfs.isEmpty();
         }
 
         List<Class> imlementingInterfaces = new ArrayList<>();
@@ -393,50 +395,45 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         for(Class next : imlementingInterfaces) {
             String nextIntfName = next.getName();
 
-            if( remoteBusIntfs.contains(next)
-                ||
-                localBusIntfs.contains(next)
-                ||
-                ejbDesc.getRemoteBusinessClassNames().contains(nextIntfName)
-                ||
-                ejbDesc.getLocalBusinessClassNames().contains(nextIntfName)){
-
+            if (remoteBusIntfs.contains(next) || localBusIntfs.contains(next)
+                    || ejbDesc.getRemoteBusinessClassNames().contains(nextIntfName)
+                    || ejbDesc.getLocalBusinessClassNames().contains(nextIntfName)) {
                 // Interface has already been identified as a Remote/Local
                 // business interface, so ignore.
+                continue;
+            }
 
-            } else if( next.getAnnotation(Local.class) != null ) {
+            boolean isLocal = next.isAnnotationPresent(Local.class);
+            boolean isRemote = next.isAnnotationPresent(Remote.class);
 
+            if (isLocal || isRemote) {
+                if (isLocal) {
+                    localBusIntfs.add(next);
+                }
+                if (isRemote) {
+                    remoteBusIntfs.add(next);
+                }
                 clientInterfaces.add(next);
-                localBusIntfs.add(next);
+                continue;
+            }
 
-            } else if( next.getAnnotation(Remote.class) != null ) {
-
-                clientInterfaces.add(next);
-                remoteBusIntfs.add(next);
-
-            } else {
-
-                if( (designatedInterfaceCount == 0) &&
-                    (!ejbDesc.isLocalBean()) ) {
-
-                    // If there's an empty @Remote annotation on the class,
-                    // it's treated as a remote business interface. Otherwise,
-                    // it's treated as a local business interface.
-                    if( emptyRemoteBusAnn ) {
+            if (designatedInterfaceCount == 0 && !ejbDesc.isLocalBean()) {
+                // If there's an empty @Remote annotation on the class
+                // it's treated as a remote business interface.
+                // If there's an empty @Local annotation on the class or if
+                // the bean class is annotated with neither the @Local nor the
+                // @Remote annotation, it's treated as a local business interface.
+                if (emptyLocalBusAnn || emptyRemoteBusAnn) {
+                    if (emptyRemoteBusAnn) {
                         remoteBusIntfs.add(next);
-                    } else {
+                    }
+                    if (emptyLocalBusAnn) {
                         localBusIntfs.add(next);
                     }
-                    clientInterfaces.add(next);
-
                 } else {
-
-                    // Since the component has at least one other business
-                    // interface, each implements clause interface that cannot
-                    // be identified as business interface via the deployment
-                    // descriptor or a @Remote/@Local annotation is ignored.
-
+                    localBusIntfs.add(next);
                 }
+                clientInterfaces.add(next);
             }
         }
 

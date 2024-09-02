@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,11 @@
 
 package org.glassfish.security.common;
 
-import com.sun.enterprise.universal.GFBase64Decoder;
-import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.i18n.StringManager;
 
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * Util class for salted SHA processing.
@@ -98,30 +97,6 @@ public class SSHA
         return hash;
     }
 
-
-    /**
-     * Compute a salted SHA hash.
-     *
-     * <P>Salt bytes are obtained using SecureRandom.
-     *
-     * @param saltBytes Number of bytes of random salt value to generate.
-     * @param password Password bytes.
-     * @return Byte array of length 20 bytes containing hash result.
-     * @throws IASSecurityExeption Thrown if there is an error.
-     *
-     */
-    //Deprecating this method as this is nt being used.To be removed later
-  /*  public static byte[] compute(int saltBytes, byte[] password)
-        throws IASSecurityException
-    {
-        SecureRandom rng=SharedSecureRandom.get();
-        byte[] salt=new byte[saltBytes];
-        rng.nextBytes(salt);
-
-        return compute(salt, password);
-    }*/
-
-
     /**
      * Perform encoding of salt and computed hash.
      *
@@ -153,9 +128,7 @@ public class SSHA
         System.arraycopy(hash, 0, res, 0, resultLength);
         System.arraycopy(salt, 0, res, resultLength, salt.length);
 
-        GFBase64Encoder encoder = new GFBase64Encoder();
-        String encoded = encoder.encode(res);
-
+        String encoded = Base64.getEncoder().encodeToString(res);
         String out = SSHA_256_TAG + encoded;
         if(isSHA) {
             out = SSHA_TAG + encoded;
@@ -163,48 +136,6 @@ public class SSHA
 
         return out;
     }
-
-
-    /**
-     * Compute a salted SHA hash and return the encoded result. This is
-     * a convenience method combining compute() and encode().
-     *
-     * @param salt Salt bytes.
-     * @param password Password bytes.
-     * @return String Encoded string, as described in class documentation.
-     * @throws IASSecurityExeption Thrown if there is an error.
-     *
-     */
-    //Deprecating this method as this is nt being used.To be removed later
-  /*  public static String computeAndEncode(byte[] salt, byte[] password)
-        throws IASSecurityException
-    {
-        byte[] hash = compute(salt, password);
-        return encode(salt, hash, false);
-    }*/
-
-
-    /**
-     * Compute a salted SHA hash and return the encoded result. This is
-     * a convenience method combining compute() and encode().
-     *
-     * @param saltBytes Number of bytes of random salt value to generate.
-     * @param password Password bytes.
-     * @return String Encoded string, as described in class documentation.
-     * @throws IASSecurityExeption Thrown if there is an error.
-     *
-     */
-    //Deprecating this method as this is nt being used.To be removed later
-    /*public static String computeAndEncode(int saltBytes, byte[] password)
-        throws IASSecurityException
-    {
-        SecureRandom rng=SharedSecureRandom.get();
-        byte[] salt=new byte[saltBytes];
-        rng.nextBytes(salt);
-
-        byte[] hash = compute(salt, password);
-        return encode(salt, hash, false);
-    }*/
 
 
     /**
@@ -292,17 +223,9 @@ public class SSHA
             ssha = encoded.substring(SSHA_TAG.length());
         }
 
-        GFBase64Decoder decoder = new GFBase64Decoder();
-        byte[] result = null;
-
-        try {
-            result = decoder.decodeBuffer(ssha);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-
+        byte[] result = Base64.getDecoder().decode(ssha);
         int resultLength = 32;
-        if(isSHA) {
+        if (isSHA) {
             resultLength = 20;
         }
         assert (result.length > resultLength);

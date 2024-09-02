@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,12 +13,25 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+package org.glassfish.main.test.app.websocket;
 
-package org.glassfish.internal.api;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpoint;
 
-import org.glassfish.security.common.SharedSecureRandomImpl;
+import java.io.IOException;
 
 /**
- * An utility class that supplies an Initialized SecureRandom.
+ *
+ * @author Ondro Mihalyi
  */
-public final class SharedSecureRandom extends SharedSecureRandomImpl {}
+@ServerEndpoint("/hello")
+@ApplicationScoped
+public class HelloWebSocketEndpoint {
+
+    @OnMessage
+    public void processGreeting(String message, Session session) throws IOException {
+        session.getBasicRemote().sendText("World");
+    }
+}

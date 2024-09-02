@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,6 +39,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.annotation.Annotation;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -106,7 +108,7 @@ public abstract class CLICommand implements PostConstruct {
     // operates on its arguments, so we can share a single instance.
     private static final InjectionManager injectionMgr = new InjectionManager();
 
-    private static String commandScope = null;
+    private static String commandScope;
 
     // tokens that are substituted in manual pages
     // the tokens are delimited with {}
@@ -214,9 +216,8 @@ public abstract class CLICommand implements PostConstruct {
     private static CLICommand getRemoteCommand(String name, ProgramOptions po, Environment env) throws CommandException {
         if (useRest()) {
             return new RemoteCLICommand(name, po, env);
-        } else {
-            return new RemoteCommand(name, po, env);
         }
+        return new RemoteCommand(name, po, env);
     }
 
     /**
@@ -262,6 +263,7 @@ public abstract class CLICommand implements PostConstruct {
      */
     public int execute(String... argv) throws CommandException {
         this.argv = argv;
+        checkSanity();
         initializePasswords();
         logger.finer("Prepare");
         prepare();
@@ -298,7 +300,7 @@ public abstract class CLICommand implements PostConstruct {
         return name;
     }
 
-    /*
+    /**
      * Return the command scope for this command.  The command scope is
      * a name space in which commands are defined. Command clients can specify a scope
      * to use in looking up a command. Currently this is only used for remote
@@ -308,7 +310,7 @@ public abstract class CLICommand implements PostConstruct {
         return commandScope;
     }
 
-    /*
+    /**
      * Set the command scope for this command.
      */
     public static void setCommandScope(String ctx) {
@@ -784,6 +786,19 @@ public abstract class CLICommand implements PostConstruct {
         if (logger.isLoggable(Level.FINER)) {
             logger.finer("params: " + options);
             logger.finer("operands: " + operands);
+        }
+    }
+
+    /**
+     * Does some basic checks of the current environment to verify that the command can work on the system.
+     * Can produce warnings, errors or throw exceptions.
+     */
+    protected void checkSanity() {
+        try {
+            InetAddress.getLocalHost();
+        } catch (UnknownHostException uhe) {
+            logger.log(Level.WARNING,
+                "Bad OS network configuration. DNS can not resolve the hostname: \n{0}", uhe.toString());
         }
     }
 

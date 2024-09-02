@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestWrapper;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
@@ -71,7 +72,13 @@ public class WebSocketFilterWrapper implements Filter  {
 
                 @Override
                 public String getRequestURI() {
-                    RequestFacade wrappedRequest = (RequestFacade) super.getRequest();
+                    RequestFacade wrappedRequest = findWrappedRequestFacade();
+
+                    if (wrappedRequest == null) {
+                        // fallback to the default behavior
+                        return super.getRequestURI();
+                    }
+
                     String requestURI = wrappedRequest.getRequestURI();
 
                     // Get the contextPath without masking the default context mapping.
@@ -82,6 +89,17 @@ public class WebSocketFilterWrapper implements Filter  {
                     }
 
                     return contextPath + requestURI;
+                }
+
+                private RequestFacade findWrappedRequestFacade() {
+                    ServletRequest wrappedRequest = this.getRequest();
+                    while (wrappedRequest != null
+                            && !(wrappedRequest instanceof RequestFacade)
+                            && wrappedRequest instanceof ServletRequestWrapper) {
+                        ServletRequestWrapper wrappedRequestWrapper = (ServletRequestWrapper)wrappedRequest;
+                        wrappedRequest = wrappedRequestWrapper.getRequest();
+                    }
+                    return (wrappedRequest instanceof RequestFacade) ? (RequestFacade)wrappedRequest : null;
                 }
             };
         }

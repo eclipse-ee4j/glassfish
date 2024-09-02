@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -422,15 +422,17 @@ public final class SMFService extends ServiceAdapter {
     private boolean serviceNameExists(final String sn) {
         boolean exists = false;
         try {
-            final String[] cmd = new String[] { "/usr/bin/svcs", sn };
+            final String[] cmd = new String[] {"/usr/bin/svcs", sn};
             ProcessManager pm = new ProcessManager(cmd);
             pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
-            pm.execute();
-            exists = true;
+            int exitCode = pm.execute();
+            if (exitCode == 0) {
+                exists = true;
+            }
         } catch (final Exception e) {
-            //returns a non-zero status -- the service does not exist, status is already set
+            // Do nothing, status is already set.
         }
-        return (exists);
+        return exists;
     }
 
     private void validateManifest(final String manifestPath) throws Exception {

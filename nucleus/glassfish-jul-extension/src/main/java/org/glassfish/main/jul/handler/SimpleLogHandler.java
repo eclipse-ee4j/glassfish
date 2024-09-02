@@ -17,6 +17,7 @@
 package org.glassfish.main.jul.handler;
 
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -46,11 +47,14 @@ public class SimpleLogHandler extends StreamHandler {
      */
     public SimpleLogHandler() {
         final HandlerConfigurationHelper helper = HandlerConfigurationHelper.forHandlerClass(getClass());
+        final PrintStream outputStream;
         if (helper.getBoolean(SimpleLogHandlerProperty.USE_ERROR_STREAM, true)) {
-            setOutputStream(new UncloseablePrintStream(LoggingSystemEnvironment.getOriginalStdErr()));
+            outputStream = LoggingSystemEnvironment.getOriginalStdErr();
         } else {
-            setOutputStream(new UncloseablePrintStream(LoggingSystemEnvironment.getOriginalStdOut()));
+            outputStream = LoggingSystemEnvironment.getOriginalStdOut();
         }
+        setOutputStream(new UncloseablePrintStream(outputStream,
+            helper.getCharset(SimpleLogHandlerProperty.ENCODING, Charset.defaultCharset())));
         setFormatter(helper.getFormatter(OneLineFormatter.class));
     }
 
@@ -90,8 +94,8 @@ public class SimpleLogHandler extends StreamHandler {
      */
     private static final class UncloseablePrintStream extends PrintStream {
 
-        private UncloseablePrintStream(PrintStream out) {
-            super(out, false);
+        private UncloseablePrintStream(PrintStream out, Charset encoding) {
+            super(out, false, encoding);
         }
 
         @Override

@@ -44,10 +44,6 @@
         </developer>
     </developers>
 
-    <properties>
-        <findbugs.skip>true</findbugs.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>

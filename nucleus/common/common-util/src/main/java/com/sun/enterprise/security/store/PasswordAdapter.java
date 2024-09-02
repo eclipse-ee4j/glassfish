@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -131,7 +133,7 @@ public final class PasswordAdapter {
 
         final Key key = _pwdStore.getKey(alias, getMasterPassword());
         if (key != null) {
-            passwordString = new String(key.getEncoded());
+            passwordString = new String(key.getEncoded(), Charset.defaultCharset());
         }
 
         return passwordString;
@@ -251,8 +253,7 @@ public final class PasswordAdapter {
      */
     private static void writeKeyStoreToFile(final KeyStore keyStore, final File file, final char[] masterPassword)
         throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        final FileOutputStream out = new FileOutputStream(file);
-        try (out) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
             keyStore.store(out, masterPassword);
         }
     }

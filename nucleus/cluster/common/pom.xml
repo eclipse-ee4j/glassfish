@@ -31,10 +31,6 @@
 
     <name>cluster-common</name>
 
-    <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

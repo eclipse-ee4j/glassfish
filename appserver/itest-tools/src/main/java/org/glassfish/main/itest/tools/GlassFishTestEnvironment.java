@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -146,6 +148,9 @@ public class GlassFishTestEnvironment {
     }
 
 
+    public static int getPort(HttpListenerType listenerType) {
+        return listenerType.getPort();
+    }
     /**
      * Creates a {@link Client} instance for the domain administrator.
      * Caller is responsible for closing.
@@ -209,6 +214,14 @@ public class GlassFishTestEnvironment {
         return connection;
     }
 
+    public static URI webSocketUri(final int port, final String context) throws URISyntaxException {
+        return webSocketUri(false, port, context);
+    }
+
+    public static URI webSocketUri(final boolean secured, final int port, final String context) throws URISyntaxException {
+        final String protocol = secured ? "wss" : "ws";
+        return new URI(protocol + "://localhost:" + port + context);
+    }
 
     /**
      * Creates the unencrypted password file on the local file system and uses it to create the user

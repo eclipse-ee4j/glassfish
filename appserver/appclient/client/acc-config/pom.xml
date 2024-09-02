@@ -55,7 +55,6 @@
         <dtd-for-jaxb-compilation>glassfish-application-client-container_1_3.dtd</dtd-for-jaxb-compilation>
         <config-dtd-file>*-application-client-container*.dtd</config-dtd-file>
         <added-test-classpath>${project.basedir}/${extracted-dtd-root}</added-test-classpath>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <!-- We don't need it here and it would fail -->
         <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
     </properties>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,28 +19,27 @@ package org.glassfish.security.common;
 
 import java.security.SecureRandom;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 /**
  * An utility class that supplies an Initialized SecureRandom.
  */
-public class SharedSecureRandomImpl {
-
-    //the generator has a large period (in Sun's standard implementation, based on the 160-bit SHA1 hash function, the period is 2^160);
-    private static final SecureRandom secureRandom = new SecureRandom();
-
-    static {
-        //always call java.security.SecureRandom.nextBytes(byte[])
-        //immediately after creating a new instance of the PRNG.
-        //This will force the PRNG to seed itself securely
-        byte[] key = new byte[20];
-        secureRandom.nextBytes(key);
-    }
+public class SharedSecureRandom {
 
     /**
-     * Can a single  java.security.SecureRandom instance be shared  safely by multiple threads ?.
-     * Yes.  As far as I know.  nextBytes and setSeed are sync'd.
+     * The generator has a large period (in Sun's standard implementation,
+     * based on the 160-bit SHA1 hash function, the period is 2^160);
      */
-    public static SecureRandom get() {
-        return secureRandom;
-    }
+    public static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
+    static {
+        // always call java.security.SecureRandom.nextBytes(byte[])
+        // immediately after creating a new instance of the PRNG.
+        // This will force the PRNG to seed itself securely
+        byte[] key = new byte[20];
+        SECURE_RANDOM.nextBytes(key);
+
+        System.getLogger(SharedSecureRandom.class.getName()).log(DEBUG, "Using shared SecureRandom with provider '"
+            + SECURE_RANDOM.getProvider() + "' and algorithm '" + SECURE_RANDOM.getAlgorithm() + "'.");
+    }
 }

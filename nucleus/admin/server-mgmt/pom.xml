@@ -37,7 +37,6 @@
         <winsw.version>2.12.0</winsw.version>
         <winsw.url>https://github.com/winsw/winsw/releases/download/v${winsw.version}/WinSW.NET461.exe</winsw.url>
 
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <!-- We don't need it here and it would fail -->
         <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
     </properties>

@@ -1,6 +1,7 @@
 [//]: # "Please remove these comments"
 [//]: # "Provide a general summary of the issue in the Title above"
-
+[//]: # "If you are reporting a security issue or vulnerability, please contact the Eclipse Foundation Security Team instead of creating a GitHub issue."
+[//]: # "  - Security policy: https://github.com/eclipse-ee4j/glassfish/security/policy"
 
 ## Environment Details
 * GlassFish Version (and build number):

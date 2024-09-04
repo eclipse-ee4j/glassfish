@@ -42,25 +42,6 @@ public final class Util {
     private Util(){}
 
     /**
-     * Gets a property value from the supplied properties object, if not defined there from system properties.
-     *
-     * @param properties Properties to be searched ahead of system properties.
-     * @param propertyName name of the property
-     * @param defaultValue default property value
-     * @return value of the property
-     */
-    static String getPropertyOrSystemProperty(Properties properties, String propertyName, String defaultValue) {
-        String value = properties.getProperty(propertyName);
-        return value != null ? value : System.getProperty(propertyName, defaultValue);
-    }
-
-    /**
-     * @see #getPropertyOrSystemProperty(java.util.Properties, String, String)
-     */
-    static String getPropertyOrSystemProperty(Properties properties, String propertyName) {
-        return getPropertyOrSystemProperty(properties, propertyName, null);
-    }
-    /**
      * This method is used to copy a given file to another file
      * using the buffer sixe specified
      *

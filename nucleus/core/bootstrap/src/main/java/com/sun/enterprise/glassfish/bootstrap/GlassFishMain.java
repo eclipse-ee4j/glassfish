@@ -158,7 +158,7 @@ public class GlassFishMain {
             addShutdownHook();
             gfr = GlassFishRuntime.bootstrap(new org.glassfish.embeddable.BootstrapProperties(properties), getClass().getClassLoader());
             gf = gfr.newGlassFish(new GlassFishProperties(properties));
-            if (Boolean.parseBoolean(Util.getPropertyOrSystemProperty(properties, "GlassFish_Interactive", "false"))) {
+            if (Boolean.parseBoolean(getPropertyOrSystemProperty(properties, "GlassFish_Interactive", "false"))) {
                 startConsole();
             } else {
                 gf.start();
@@ -257,13 +257,6 @@ public class GlassFishMain {
 
         }
 
-        /**
-         * Runs a command read from a string
-         *
-         * @param cmdRunner
-         * @param command
-         * @throws GlassFishException
-         */
         private void runCommand(final CommandRunner cmdRunner, final String command) throws GlassFishException {
             String[] tokens = command.split("\\s");
             CommandResult result = cmdRunner.run(tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length));
@@ -272,6 +265,11 @@ public class GlassFishMain {
             if (result.getFailureCause() != null) {
                 result.getFailureCause().printStackTrace(STDERR);
             }
+        }
+
+        private static String getPropertyOrSystemProperty(Properties properties, String name, String defaultValue) {
+            String value = properties.getProperty(name);
+            return value == null ? System.getProperty(name, defaultValue) : value;
         }
     }
 

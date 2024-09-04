@@ -30,6 +30,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -216,14 +219,17 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         try {
             if (!destFile.exists() || overwrite) {
                 if (!destFile.toURI().equals(url.toURI())) {
-                    InputStream stream = url.openStream();
                     destFile.getParentFile().mkdirs();
-                    Util.copy(stream, new FileOutputStream(destFile), stream.available());
-                    LOG.log(FINER, () -> "Copied " + url + " to " + destFile.getAbsolutePath());
+                    try (InputStream in = url.openStream(); FileOutputStream out = new FileOutputStream(destFile)) {
+                        ReadableByteChannel inChannel = Channels.newChannel(in);
+                        FileChannel outChannel = out.getChannel();
+                        outChannel.transferFrom(inChannel, 0, in.available());
+                    }
+                    LOG.log(FINER, () -> "Copied " + url + " to " + destFile);
                 }
             }
         } catch (Exception ex) {
-            LOG.log(FINER, ex, () -> "Failed to copy " + url + " to " + destFile.getAbsolutePath());
+            LOG.log(FINER, ex, () -> "Failed to copy " + url + " to " + destFile);
         }
     }
 }

@@ -84,4 +84,23 @@ public class AsenvConf {
     public Properties toProperties() {
         return (Properties) properties.clone();
     }
+
+
+    public static AsenvConf parseAsEnv(File installRoot) {
+        File configDir = new File(installRoot, "config");
+        File asenv = getAsEnvConf(configDir);
+        return new AsenvConf(asenv, configDir);
+    }
+
+
+    /**
+     * Figures out the asenv.conf file to load.
+     */
+    private static File getAsEnvConf(File configDir) {
+        String osName = System.getProperty("os.name");
+        if (osName.contains("Windows")) {
+            return new File(configDir, "asenv.bat");
+        }
+        return new File(configDir, "asenv.conf");
+    }
 }

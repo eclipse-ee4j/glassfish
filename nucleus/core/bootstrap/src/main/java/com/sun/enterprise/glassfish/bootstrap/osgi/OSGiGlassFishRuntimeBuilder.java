@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
@@ -55,25 +54,24 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
  * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Felix},
  * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Equinox},
  * and {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Knopflerfish}.
- * <p/>
- * <p/>It can't handle GenericOSGi platform,
- * because it reads framework configuration from a framework specific file when it calls
- * {@link MainHelper#buildStartupContext(Properties)}.
- * <p/>
+ * <p>
+ * It can't handle Generic OSGi platform,
+ * because it reads framework configuration from a framework specific file, see {@link OsgiPlatform}
+ * <p>
  * This class is responsible for
- * a) setting up OSGi framework,
- * b) installing glassfish bundles,
- * c) starting a configured list of bundles
- * d) obtaining a reference to GlassFishRuntime OSGi service.
- * <p/>
+ * <ol>
+ * <li>setting up OSGi framework,
+ * <li>installing glassfish bundles,
+ * <li>starting a configured list of bundles
+ * <li>obtaining a reference to GlassFishRuntime OSGi service.
+ * </ol>
  * Steps #b & #c are handled via {@link BundleProvisioner}.
  * We specify our provisioning bundle details in the properties object that's used to boostrap
  * the system. BundleProvisioner installs and starts such bundles,
- * <p/>
+ * <p>
  * If caller does not pass in a properly populated properties object, we assume that we are
  * running against an existing installation of glassfish and set appropriate default values.
- * <p/>
- * <p/>
+ * <p>
  * This class is registered as a provider of RuntimeBuilder using META-INF/services file.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -101,7 +99,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
         try {
-            Properties properties = MainHelper.buildStartupContext((bsProps.getProperties()));
+            Properties properties = bsProps.getProperties();
 
             // Set the builder name so that when we check for nonEmbedded() inside GlassFishMainActivator,
             // we can identify the environment.
@@ -162,8 +160,8 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         if (builderName != null && !builderName.equals(getClass().getName())) {
             return false;
         }
-        // This builder can't handle GOSGi platform, because we read framework configuration from
-        // a framework specific file in MainHelper.buildStartupContext(properties);
+        // This builder can't handle Generic OSGi platform, because we read framework configuration
+        // from a framework specific file in MainHelper.buildStartupContext(properties);
         String platformStr = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
         if (platformStr != null && !platformStr.isBlank()) {
             try {

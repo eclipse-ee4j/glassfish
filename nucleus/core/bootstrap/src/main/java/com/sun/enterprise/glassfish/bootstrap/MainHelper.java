@@ -23,18 +23,15 @@ import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
-import com.sun.enterprise.module.bootstrap.ArgumentManager;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.bootstrap.Which;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -59,7 +56,7 @@ import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-public class MainHelper {
+class MainHelper {
 
     private static final String DEFAULT_DOMAINS_DIR_PROPNAME = "AS_DEF_DOMAINS_PATH";
 
@@ -83,54 +80,49 @@ public class MainHelper {
         return OsgiPlatform.Felix.name();
     }
 
-    public static AsenvConf parseAsEnv(File installRoot) {
-        File configDir = new File(installRoot, "config");
-        File asenv = getAsEnvConf(configDir);
-        return new AsenvConf(asenv, configDir);
+
+    static File findInstallRoot() {
+        // glassfish/modules/glassfish.jar
+        File bootstrapFile = findBootstrapFile();
+        // glassfish/
+        return bootstrapFile.getParentFile().getParentFile();
     }
 
-    void addPaths(File dir, String[] jarPrefixes, List<URL> urls) throws MalformedURLException {
-        File[] jars = dir.listFiles();
-        if (jars == null) {
-            return;
-        }
-        for (File f : jars) {
-            for (String prefix : jarPrefixes) {
-                String name = f.getName();
-                if (name.startsWith(prefix) && name.endsWith(".jar")) {
-                    urls.add(f.toURI().toURL());
-                }
-            }
-        }
-    }
 
     /**
-     * Figures out the asenv.conf file to load.
+     * IMPORTANT - check for instance BEFORE domain.  We will always come up
+     * with a default domain but there is no such thing as a default instance.
      */
-    private static File getAsEnvConf(File configDir) {
-        String osName = System.getProperty("os.name");
-        if (osName.contains("Windows")) {
-            return new File(configDir, "asenv.bat");
+    static File findInstanceRoot(File installRoot, Properties args) {
+        File instanceDir = getInstanceRoot(args);
+        if (instanceDir == null) {
+            // that means that this is a DAS.
+            instanceDir = getDomainRoot(args, installRoot);
         }
-        return new File(configDir, "asenv.conf");
+        verifyDomainRoot(instanceDir);
+        return instanceDir;
+    }
+
+    private static File getInstanceRoot(Properties args) {
+        String instanceDir = getParam(args, "instancedir");
+        if (isSet(instanceDir)) {
+            return new File(instanceDir);
+        }
+        return null;
     }
 
     /**
      * Determines the root directory of the domain that we'll start.
      * @param installRoot
      */
-    static File getDomainRoot(Properties args, File installRoot) {
+    private static File getDomainRoot(Properties args, File installRoot) {
         // first see if it is specified directly
-
         String domainDir = getParam(args, "domaindir");
-
         if (isSet(domainDir)) {
             return new File(domainDir);
         }
 
-        // now see if they specified the domain name -- we will look in the
-        // default domains-dir
-
+        // now see if they specified the domain name -- we will look in the default domains-dir
         File defDomainsRoot = getDefaultDomainsDir(installRoot);
         String domainName = getParam(args, "domain");
 
@@ -138,47 +130,12 @@ public class MainHelper {
             return new File(defDomainsRoot, domainName);
         }
 
-        // OK -- they specified nothing.  Get the one-and-only domain in the
-        // domains-dir
+        // OK - they specified nothing.  Get the one-and-only domain in the domains-dir
         return getDefaultDomain(defDomainsRoot);
     }
 
-    /**
-     * Verifies correctness of the root directory of the domain that we'll start and
-     * sets the system property called {@link com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys#INSTANCE_ROOT_PROP_NAME}.
-     */
-    void verifyAndSetDomainRoot(File domainRoot) {
-        verifyDomainRoot(domainRoot);
-        System.setProperty(INSTANCE_ROOT_PROP_NAME, absolutize(domainRoot).getPath());
-    }
-
-    /**
-     * Verifies correctness of the root directory of the domain that we'll start.
-     *
-     * @param domainRoot
-     */
-    static void verifyDomainRoot(File domainRoot) {
-        String msg = null;
-
-        if (domainRoot == null) {
-            msg = "Internal Error: The domain dir is null.";
-        } else if (!domainRoot.exists()) {
-            msg = "the domain directory does not exist";
-        } else if (!domainRoot.isDirectory()) {
-            msg = "the domain directory is not a directory.";
-        } else if (!domainRoot.canWrite()) {
-            msg = "the domain directory is not writable.";
-        } else if (!new File(domainRoot, "config").isDirectory()) {
-            msg = "the domain directory is corrupt - there is no config subdirectory.";
-        }
-
-        if (msg != null) {
-            throw new RuntimeException(msg);
-        }
-    }
-
     private static File getDefaultDomainsDir(File installRoot) {
-        AsenvConf asEnv = parseAsEnv(installRoot);
+        AsenvConf asEnv = AsenvConf.parseAsEnv(installRoot);
         String dirname = asEnv.getProperty(DEFAULT_DOMAINS_DIR_PROPNAME);
         if (!isSet(dirname)) {
             throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + " is not set.");
@@ -211,72 +168,31 @@ public class MainHelper {
         return domains[0];
     }
 
-
-    private static boolean isSet(String s) {
-        return s != null && !s.isEmpty();
-    }
-
-    private static String getParam(Properties map, String name) {
-        // allow both "-" and "--"
-        String val = map.getProperty("-" + name);
-        if (val == null) {
-            val = map.getProperty("--" + name);
-        }
-        return val;
-    }
-
-    private static File absolutize(File f) {
-        try {
-            return f.getCanonicalFile();
-        } catch (Exception e) {
-            return f.getAbsoluteFile();
-        }
-    }
-
-    static File findInstallRoot() {
-        // glassfish/modules/glassfish.jar
-        File bootstrapFile = findBootstrapFile();
-        // glassfish/
-        return bootstrapFile.getParentFile().getParentFile();
-    }
-
-    static File findInstanceRoot(File installRoot, String[] args) {
-        return findInstanceRoot(installRoot, ArgumentManager.argsToMap(args));
-    }
-
-    static File findInstanceRoot(File installRoot, Properties args) {
-        // IMPORTANT - check for instance BEFORE domain.  We will always come up
-        // with a default domain but there is no such thing sa a default instance
-        File instanceDir = getInstanceRoot(args);
-        if (instanceDir == null) {
-            // that means that this is a DAS.
-            instanceDir = getDomainRoot(args, installRoot);
-        }
-        verifyDomainRoot(instanceDir);
-        return instanceDir;
-    }
-
-    /**
-     * CLI or any other client needs to ALWAYS pass in the instanceDir for
-     * instances.
-     *
-     * @param args
-     * @param asEnv
-     * @return
-     */
-    static File getInstanceRoot(Properties args) {
-        String instanceDir = getParam(args, "instancedir");
-        if (isSet(instanceDir)) {
-            return new File(instanceDir);
-        }
-        return null;
-    }
-
     private static File findBootstrapFile() {
         try {
             return Which.jarFile(ASMain.class);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot get bootstrap path from " + ASMain.class + " class location, aborting");
+            throw new RuntimeException("Cannot get bootstrap path from " + ASMain.class + " class location, aborting",
+                e);
+        }
+    }
+
+    /**
+     * Verifies correctness of the root directory of the domain that we'll start.
+     *
+     * @param domainRoot
+     */
+    private static void verifyDomainRoot(File domainRoot) {
+        if (domainRoot == null) {
+            throw new RuntimeException("Internal Error: The domain dir is null.");
+        } else if (!domainRoot.exists()) {
+            throw new RuntimeException("the domain directory does not exist");
+        } else if (!domainRoot.isDirectory()) {
+            throw new RuntimeException("the domain directory is not a directory.");
+        } else if (!domainRoot.canWrite()) {
+            throw new RuntimeException("the domain directory is not writable.");
+        } else if (!new File(domainRoot, "config").isDirectory()) {
+            throw new RuntimeException("the domain directory is corrupt - there is no config subdirectory.");
         }
     }
 
@@ -310,51 +226,6 @@ public class MainHelper {
 
         return mergePlatformConfiguration(properties);
     }
-
-    public static Properties buildStartupContext(Properties ctx) {
-        return new GFBootstrapProperties(ctx).toProperties();
-    }
-
-    public static GFBootstrapProperties buildStartupContext(GFBootstrapProperties ctx) {
-        if (ctx.getProperty(StartupContext.TIME_ZERO_NAME) == null) {
-            ctx.setProperty(StartupContext.TIME_ZERO_NAME, Long.toString(System.currentTimeMillis()));
-        } else {
-            // Optimisation
-            // Skip the rest of the code. We assume that we are called from GlassFishMain
-            // which already passes a properly populated properties object.
-            return ctx;
-        }
-
-        if (ctx.getProperty(PLATFORM_PROPERTY_KEY) == null) {
-            ctx.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
-        }
-
-        if (ctx.getProperty(INSTALL_ROOT_PROP_NAME) == null) {
-            File installRoot = findInstallRoot();
-            ctx.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-            ctx.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
-        }
-
-        if (ctx.getProperty(INSTANCE_ROOT_PROP_NAME) == null) {
-            File installRoot = new File(ctx.getProperty(INSTALL_ROOT_PROP_NAME));
-            File instanceRoot = findInstanceRoot(installRoot, ctx.toProperties());
-            ctx.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
-            ctx.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
-        }
-
-        if (ctx.getProperty(StartupContext.STARTUP_MODULE_NAME) == null) {
-            ctx.setProperty(StartupContext.STARTUP_MODULE_NAME, BootstrapKeys.GF_KERNEL);
-        }
-
-        if (!ctx.isPropertySet(BootstrapKeys.NO_FORCED_SHUTDOWN)) {
-            // Since we are in non-embedded mode, we set this property to false unless user has specified it
-            // When set to false, the VM will exit when server fails to startup for whatever reason.
-            // See AppServerStartup.java
-            ctx.setProperty(BootstrapKeys.NO_FORCED_SHUTDOWN, Boolean.FALSE.toString());
-        }
-        return mergePlatformConfiguration(ctx);
-    }
-
 
     /**
      * Need the raw unprocessed args for RestartDomainCommand in case we were NOT started by CLI
@@ -487,18 +358,7 @@ public class MainHelper {
         }
     }
 
-
-    /**
-     * Store relevant information in system properties.
-     *
-     * @param ctx
-     */
-    static void setSystemProperties(Properties ctx) {
-        // Set the system property if downstream code wants to know about it
-        System.setProperty(PLATFORM_PROPERTY_KEY, ctx.getProperty(PLATFORM_PROPERTY_KEY));
-    }
-
-    static GFBootstrapProperties mergePlatformConfiguration(GFBootstrapProperties ctx) {
+    private static GFBootstrapProperties mergePlatformConfiguration(GFBootstrapProperties ctx) {
         final Properties osgiConf;
         try {
             osgiConf = OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).readPlatformConfiguration();
@@ -516,17 +376,28 @@ public class MainHelper {
         return new GFBootstrapProperties(osgiConf);
     }
 
-    static boolean isOSGiPlatform(String platform) {
-        OsgiPlatform p = OsgiPlatform.valueOf(platform);
-        switch (p) {
-            case Felix:
-            case Knopflerfish:
-            case Equinox:
-                return true;
-            case Static:
-            default:
-                return false;
+
+    private static String getParam(Properties map, String name) {
+        // allow both "-" and "--"
+        String val = map.getProperty("-" + name);
+        if (val == null) {
+            val = map.getProperty("--" + name);
         }
+        return val;
+    }
+
+
+    private static File absolutize(File f) {
+        try {
+            return f.getCanonicalFile();
+        } catch (Exception e) {
+            return f.getAbsoluteFile();
+        }
+    }
+
+
+    private static boolean isSet(String s) {
+        return s != null && !s.isEmpty();
     }
 }
 

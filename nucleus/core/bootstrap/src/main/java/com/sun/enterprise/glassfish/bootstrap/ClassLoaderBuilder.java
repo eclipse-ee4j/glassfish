@@ -53,15 +53,15 @@ class ClassLoaderBuilder {
         }
     }
 
-    public ClassLoader build(ClassLoader delegate) {
+    ClassLoader build(ClassLoader delegate) {
         return cpBuilder.create(delegate);
     }
 
-    public void addLauncherDependencies() throws IOException {
+    void addLauncherDependencies() throws IOException {
         cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("modules", "glassfish.jar")));
     }
 
-    public void addServerBootstrapDependencies() throws IOException {
+    void addServerBootstrapDependencies() throws IOException {
         cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("modules", "simple-glassfish-api.jar")));
         cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("lib", "bootstrap", "glassfish-jul-extension.jar")));
     }

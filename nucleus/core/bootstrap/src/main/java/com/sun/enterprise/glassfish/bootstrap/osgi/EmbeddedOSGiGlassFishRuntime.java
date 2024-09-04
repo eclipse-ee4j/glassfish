@@ -19,7 +19,6 @@ package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.GlassFishImpl;
 import com.sun.enterprise.glassfish.bootstrap.GlassfishBootstrapClassLoader;
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.BootException;
@@ -229,7 +228,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
         if (installRootValue != null && !installRootValue.isEmpty()) {
             File installRoot = new File(installRootValue);
             System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-            final AsenvConf asenv = MainHelper.parseAsEnv(installRoot);
+            final AsenvConf asenv = AsenvConf.parseAsEnv(installRoot);
             asenv.mirrorToSystemProperties();
             System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
         }

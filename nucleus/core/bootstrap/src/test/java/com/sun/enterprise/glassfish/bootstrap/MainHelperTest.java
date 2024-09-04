@@ -17,14 +17,12 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -34,13 +32,11 @@ import org.junit.jupiter.api.Test;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 
@@ -48,58 +44,6 @@ import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
  * Created by kokil on 5/18/17.
  */
 class MainHelperTest {
-
-    /**
-     * This test is used to test the regex pattern of "parseAsEnv" method of "MainHelper.java".
-     * <br>
-     * It creates two temporary files (asenv.conf and asenv.bat) for testing purpose.
-     * The "parseAsEnv()" method of "MainHelper.java" reads the "asenv.*" file line by line to
-     * generate the Properties "asenvProps" whose assertion has been done in this unit test.
-     */
-    @Test
-    void parseAsEnvTest() throws Exception {
-        File resources = File.createTempFile("helperTestResources", "config");
-        resources.delete(); // delete the temp file
-        resources.mkdir(); // reuse the name for a directory
-        resources.deleteOnExit();
-        File config = new File(resources, "config");
-        config.mkdir();
-        config.deleteOnExit();
-        File asenv_bat = new File(config, "asenv.bat"); // test resource for windows
-        File asenv_conf = new File(config, "asenv.conf");// test resource for linux
-        asenv_bat.deleteOnExit();
-        asenv_conf.deleteOnExit();
-
-        PrintWriter pw1 = new PrintWriter(asenv_bat, UTF_8);
-        pw1.println("set AbcVar=value1");
-        pw1.println("SET Avar=\"value2\"");
-        pw1.println("Set Bvar=\"value3\"");
-        pw1.println("set setVar=\"value4\"");
-        pw1.println("set SetVar=value5");
-        pw1.println("set seVar=\"value6\"");
-        pw1.println("set sVar=\"value7\"");
-        pw1.close();
-        PrintWriter pw2 = new PrintWriter(asenv_conf, UTF_8);
-        pw2.println("AbcVar=value1");
-        pw2.println("Avar=\"value2\"");
-        pw2.println("Bvar=\"value3\"");
-        pw2.println("setVar=\"value4\"");
-        pw2.println("SetVar=value5");
-        pw2.println("seVar=\"value6\"");
-        pw2.println("sVar=\"value7\"");
-        pw2.close();
-
-        File installRoot = new File(resources.toString());
-        AsenvConf asenvProps = MainHelper.parseAsEnv(installRoot);
-        assertEquals("value1", asenvProps.getProperty("AbcVar"));
-        assertEquals("value2", asenvProps.getProperty("Avar"));
-        assertEquals("value3", asenvProps.getProperty("Bvar"));
-        assertEquals("value4", asenvProps.getProperty("setVar"));
-        assertEquals("value5", asenvProps.getProperty("SetVar"));
-        assertEquals("value6", asenvProps.getProperty("seVar"));
-        assertEquals("value7", asenvProps.getProperty("sVar"));
-    }
-
 
     @Test
     void createLauncher_Felix() throws Exception {

@@ -18,6 +18,7 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.module.bootstrap.Which;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -67,9 +68,8 @@ public class GlassFishMain {
     private static final PrintStream STDOUT = System.out;
     private static final PrintStream STDERR = System.err;
 
-
     public static void main(final String[] args) throws Exception {
-        final File installRoot = MainHelper.findInstallRoot();
+        final File installRoot = getInstallRoot();
         final ClassLoader jdkExtensionCL = ClassLoader.getSystemClassLoader().getParent();
         final GlassfishBootstrapClassLoader gfBootCL = new GlassfishBootstrapClassLoader(installRoot, jdkExtensionCL);
         initializeLogManager(gfBootCL);
@@ -93,6 +93,26 @@ public class GlassFishMain {
         method.invoke(launcher, startupCtx.toProperties());
 
         // also note that debugging is not possible until the debug port is open.
+    }
+
+
+    /**
+     * @return autodetected glassfish directory based on where usually is this class.
+     */
+    public static File getInstallRoot() {
+        // glassfish/modules/glassfish.jar
+        File bootstrapFile = findBootstrapFile();
+        // glassfish/
+        return bootstrapFile.getParentFile().getParentFile();
+    }
+
+
+    private static File findBootstrapFile() {
+        try {
+            return Which.jarFile(GlassFishMain.class);
+        } catch (IOException e) {
+            throw new Error("Cannot get bootstrap path from " + GlassFishMain.class + " class location, aborting", e);
+        }
     }
 
 

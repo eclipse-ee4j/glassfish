@@ -24,7 +24,6 @@ import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.module.bootstrap.Which;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,15 +78,6 @@ class MainHelper {
         }
         return OsgiPlatform.Felix.name();
     }
-
-
-    static File findInstallRoot() {
-        // glassfish/modules/glassfish.jar
-        File bootstrapFile = findBootstrapFile();
-        // glassfish/
-        return bootstrapFile.getParentFile().getParentFile();
-    }
-
 
     /**
      * IMPORTANT - check for instance BEFORE domain.  We will always come up
@@ -166,15 +156,6 @@ class MainHelper {
         }
 
         return domains[0];
-    }
-
-    private static File findBootstrapFile() {
-        try {
-            return Which.jarFile(ASMain.class);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot get bootstrap path from " + ASMain.class + " class location, aborting",
-                e);
-        }
     }
 
     /**

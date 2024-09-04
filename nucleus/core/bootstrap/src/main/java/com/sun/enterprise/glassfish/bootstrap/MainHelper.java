@@ -282,7 +282,7 @@ class MainHelper {
      *  - jdk tools.jar classpath.
      * OSGi framework classes are there because we want to launch the framework.
      * simple-glassfish-api.jar is needed, because we need those classes higher up in the class loader chain otherwise
-     * {@link com.sun.enterprise.glassfish.bootstrap.GlassFishMain.Launcher} won't be able to see the same copy that's
+     * {@link com.sun.enterprise.glassfish.bootstrap.Launcher} won't be able to see the same copy that's
      * used by rest of the system.
      * tools.jar is needed because its packages, which are exported via system bundle, are consumed by EJBC.
      * This class loader is configured to be the delegate for all bundle class loaders by setting

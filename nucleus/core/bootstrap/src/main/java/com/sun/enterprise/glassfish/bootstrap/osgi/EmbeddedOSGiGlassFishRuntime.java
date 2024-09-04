@@ -241,8 +241,10 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
         }
     }
 
-    private GlassFish createGlassFish(ModuleStartup gfKernel, ServiceLocator habitat, Properties gfProps) throws GlassFishException {
-        GlassFish gf = new GlassFishImpl(gfKernel, habitat, gfProps);
+
+    private GlassFish createGlassFish(ModuleStartup gfKernel, ServiceLocator locator, Properties gfProps)
+        throws GlassFishException {
+        GlassFish gf = new GlassFishImpl(gfKernel, locator, gfProps);
         return new EmbeddedOSGiGlassFishImpl(gf, context);
     }
 

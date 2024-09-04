@@ -20,25 +20,12 @@ package com.sun.enterprise.glassfish.bootstrap;
 import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.module.bootstrap.Which;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
-
-import org.glassfish.embeddable.CommandResult;
-import org.glassfish.embeddable.CommandRunner;
-import org.glassfish.embeddable.Deployer;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
 
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.CLASS_INITIALIZER;
@@ -66,7 +53,6 @@ public class GlassFishMain {
 
     // logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
-    private static final PrintStream STDERR = System.err;
 
     public static void main(final String[] args) throws Exception {
         final File installRoot = getInstallRoot();
@@ -83,7 +69,7 @@ public class GlassFishMain {
         final File instanceRoot = MainHelper.findInstanceRoot(installRoot, argsAsProps);
         final GFBootstrapProperties startupCtx = MainHelper.buildStartupContext(platform, installRoot, instanceRoot, args);
         final ClassLoader launcherCL = MainHelper.createLauncherCL(startupCtx, gfBootCL);
-        final Class<?> launcherClass = launcherCL.loadClass(GlassFishMain.Launcher.class.getName());
+        final Class<?> launcherClass = launcherCL.loadClass(Launcher.class.getName());
         final Object launcher = launcherClass.getDeclaredConstructor().newInstance();
         final Method method = launcherClass.getMethod("launch", Properties.class);
 
@@ -148,129 +134,4 @@ public class GlassFishMain {
 
         return cfg;
     }
-
-    // must be public to be accessible via reflection
-    public static class Launcher {
-        private volatile GlassFish gf;
-        private volatile GlassFishRuntime gfr;
-
-        public void launch(final Properties properties) throws Exception {
-            addShutdownHook();
-            gfr = GlassFishRuntime.bootstrap(new org.glassfish.embeddable.BootstrapProperties(properties), getClass().getClassLoader());
-            gf = gfr.newGlassFish(new GlassFishProperties(properties));
-            if (Boolean.parseBoolean(getPropertyOrSystemProperty(properties, "GlassFish_Interactive", "false"))) {
-                startConsole();
-            } else {
-                gf.start();
-            }
-        }
-
-        private void startConsole() throws IOException {
-            String command;
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
-            while ((command = readCommand(reader)) != null) {
-                try {
-                    STDOUT.println("command = " + command);
-                    if ("start".equalsIgnoreCase(command)) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED || gf.getStatus() == GlassFish.Status.STOPPING
-                            || gf.getStatus() == GlassFish.Status.STARTING) {
-                            gf.start();
-                        } else {
-                            STDOUT.println("Already started or stopping or starting");
-                        }
-                    } else if ("stop".equalsIgnoreCase(command)) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        gf.stop();
-                    } else if (command.startsWith("deploy")) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        final Deployer deployer = gf.getService(Deployer.class, null);
-                        final String[] tokens = command.split("\\s");
-                        if (tokens.length < 2) {
-                            STDOUT.println("Syntax: deploy <options> file");
-                            continue;
-                        }
-                        final URI uri = URI.create(tokens[tokens.length -1]);
-                        final String[] params = Arrays.copyOfRange(tokens, 1, tokens.length-1);
-                        final String name = deployer.deploy(uri, params);
-                        STDOUT.println("Deployed = " + name);
-                    } else if (command.startsWith("undeploy")) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        final Deployer deployer = gf.getService(Deployer.class, null);
-                        final String name = command.substring(command.indexOf(' ')).trim();
-                        deployer.undeploy(name);
-                        STDOUT.println("Undeployed = " + name);
-                    } else if ("quit".equalsIgnoreCase(command)) {
-                        System.exit(0);
-                    } else {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        final CommandRunner cmdRunner = gf.getCommandRunner();
-                        runCommand(cmdRunner, command);
-                    }
-                } catch (final Exception e) {
-                    e.printStackTrace(STDERR);
-                }
-            }
-        }
-
-        private String readCommand(final BufferedReader reader) throws IOException {
-            prompt();
-            String command = null;
-            while((command = reader.readLine()) != null && command.isEmpty()) {
-                // loop until a non empty command or Ctrl-D is inputted.
-            }
-            return command;
-        }
-
-        private void prompt() {
-            STDOUT.print("Enter any of the following commands: start, stop, quit, deploy <path to file>, undeploy <name of app>\n" +
-                    "glassfish$ ");
-            STDOUT.flush();
-        }
-
-        private void addShutdownHook() {
-            Runtime.getRuntime().addShutdownHook(new Thread("GlassFish Shutdown Hook") {
-                @Override
-                public void run() {
-                    try {
-                        if (gfr != null) {
-                            gfr.shutdown();
-                        }
-                    }
-                    catch (final Exception ex) {
-                        STDERR.println("Error stopping framework: " + ex);
-                        ex.printStackTrace(STDERR);
-                    }
-                }
-            });
-
-        }
-
-        private void runCommand(final CommandRunner cmdRunner, final String command) throws GlassFishException {
-            String[] tokens = command.split("\\s");
-            CommandResult result = cmdRunner.run(tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length));
-            System.out.println(result.getExitStatus());
-            System.out.println(result.getOutput());
-            if (result.getFailureCause() != null) {
-                result.getFailureCause().printStackTrace(STDERR);
-            }
-        }
-
-        private static String getPropertyOrSystemProperty(Properties properties, String name, String defaultValue) {
-            String value = properties.getProperty(name);
-            return value == null ? System.getProperty(name, defaultValue) : value;
-        }
-    }
-
 }

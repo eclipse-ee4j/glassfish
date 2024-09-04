@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,13 +35,13 @@ public abstract class OsgiPlatformAdapter {
     /** Location of the unified config properties file relative to the domain directory */
     private static final Path CONFIG_PROPERTIES = Path.of("config", "osgi.properties");
 
-    private final GFBootstrapProperties properties;
+    private final StartupContextCfg cfg;
 
     /**
-     * @param properties Initial properties
+     * @param cfg Initial properties
      */
-    public OsgiPlatformAdapter(GFBootstrapProperties properties) {
-        this.properties = properties;
+    public OsgiPlatformAdapter(StartupContextCfg cfg) {
+        this.cfg = cfg;
     }
 
     /**
@@ -66,7 +66,7 @@ public abstract class OsgiPlatformAdapter {
         }
         final String storageDirectoryName = getFrameworkStorageDirectoryName();
         if (storageDirectoryName != null) {
-            platformConfig.setProperty(FRAMEWORK_STORAGE, this.properties
+            platformConfig.setProperty(FRAMEWORK_STORAGE, this.cfg
                 .getFileUnderInstanceRoot(Path.of("osgi-cache", storageDirectoryName)).getAbsolutePath());
         }
         return platformConfig;
@@ -75,11 +75,11 @@ public abstract class OsgiPlatformAdapter {
 
     protected File getFrameworkConfigFile() {
         // First we search in domainDir. If it's not found there, we fall back on installDir
-        File osgiPropertiesFile = properties.getInstanceRoot().resolve(CONFIG_PROPERTIES).toFile();
+        File osgiPropertiesFile = cfg.getInstanceRoot().resolve(CONFIG_PROPERTIES).toFile();
         if (osgiPropertiesFile.exists()) {
             BOOTSTRAP_LOGGER.log(INFO, BOOTSTRAP_FMWCONF, osgiPropertiesFile);
             return osgiPropertiesFile;
         }
-        return properties.getInstallRoot().resolve(CONFIG_PROPERTIES).toFile();
+        return cfg.getInstallRoot().resolve(CONFIG_PROPERTIES).toFile();
     }
 }

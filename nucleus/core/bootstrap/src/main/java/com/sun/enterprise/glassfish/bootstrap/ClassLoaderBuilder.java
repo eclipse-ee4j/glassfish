@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.ClassPathBuilder;
 
 import java.io.IOException;
@@ -25,15 +25,15 @@ import java.nio.file.Path;
 class ClassLoaderBuilder {
 
     private final ClassPathBuilder cpBuilder;
-    private final GFBootstrapProperties ctx;
+    private final StartupContextCfg cfg;
 
-    ClassLoaderBuilder(GFBootstrapProperties ctx) {
-        this.ctx = ctx;
+    ClassLoaderBuilder(StartupContextCfg cfg) {
+        this.cfg = cfg;
         this.cpBuilder = new ClassPathBuilder();
     }
 
     void addPlatformDependencies() throws IOException {
-        OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).addFrameworkJars(cpBuilder);
+        OsgiPlatformFactory.getOsgiPlatformAdapter(cfg).addFrameworkJars(cpBuilder);
     }
 
     ClassLoader build(ClassLoader delegate) {
@@ -41,11 +41,11 @@ class ClassLoaderBuilder {
     }
 
     void addLauncherDependencies() throws IOException {
-        cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("modules", "glassfish.jar")));
+        cpBuilder.addJar(cfg.getFileUnderInstallRoot(Path.of("modules", "glassfish.jar")));
     }
 
     void addServerBootstrapDependencies() throws IOException {
-        cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("modules", "simple-glassfish-api.jar")));
-        cpBuilder.addJar(ctx.getFileUnderInstallRoot(Path.of("lib", "bootstrap", "glassfish-jul-extension.jar")));
+        cpBuilder.addJar(cfg.getFileUnderInstallRoot(Path.of("modules", "simple-glassfish-api.jar")));
+        cpBuilder.addJar(cfg.getFileUnderInstallRoot(Path.of("lib", "bootstrap", "glassfish-jul-extension.jar")));
     }
 }

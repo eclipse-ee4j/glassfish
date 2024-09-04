@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 
 import java.io.File;
 
@@ -26,8 +26,8 @@ import java.io.File;
  */
 public class StaticAdapter extends OsgiPlatformAdapter {
 
-    public StaticAdapter(GFBootstrapProperties properties) {
-        super(properties);
+    public StaticAdapter(StartupContextCfg cfg) {
+        super(cfg);
     }
 
     /**

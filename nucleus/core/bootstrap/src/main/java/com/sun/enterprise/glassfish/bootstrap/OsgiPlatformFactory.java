@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.EquinoxAdapter;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.FelixAdapter;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.KnopflerfishAdapter;
@@ -28,21 +28,21 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_
 
 class OsgiPlatformFactory {
 
-    public static synchronized OsgiPlatformAdapter getOsgiPlatformAdapter(GFBootstrapProperties properties) {
-        OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(properties.getProperty(PLATFORM_PROPERTY_KEY));
+    static OsgiPlatformAdapter getOsgiPlatformAdapter(StartupContextCfg cfg) {
+        OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(cfg.getProperty(PLATFORM_PROPERTY_KEY));
         OsgiPlatformAdapter osgiPlatformAdapter;
         switch (osgiPlatform) {
             case Felix:
-                osgiPlatformAdapter = new FelixAdapter(properties);
+                osgiPlatformAdapter = new FelixAdapter(cfg);
                 break;
             case Knopflerfish:
-                osgiPlatformAdapter = new KnopflerfishAdapter(properties);
+                osgiPlatformAdapter = new KnopflerfishAdapter(cfg);
                 break;
             case Equinox:
-                osgiPlatformAdapter = new EquinoxAdapter(properties);
+                osgiPlatformAdapter = new EquinoxAdapter(cfg);
                 break;
             case Static:
-                osgiPlatformAdapter = new StaticAdapter(properties);
+                osgiPlatformAdapter = new StaticAdapter(cfg);
                 break;
             default:
                 throw new RuntimeException("Unsupported platform " + osgiPlatform);

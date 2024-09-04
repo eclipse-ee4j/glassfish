@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +27,9 @@ public class FelixAdapter extends OsgiPlatformAdapter {
     private static final String FELIX_HOME = "FELIX_HOME";
     private final File felixHome;
 
-    public FelixAdapter(GFBootstrapProperties properties) {
-        super(properties);
-        this.felixHome = properties.getOsgiHome(FELIX_HOME, FELIX_HOME, Path.of("osgi", "felix"));
+    public FelixAdapter(StartupContextCfg cfg) {
+        super(cfg);
+        this.felixHome = cfg.getOsgiHome(FELIX_HOME, FELIX_HOME, Path.of("osgi", "felix"));
     }
 
 

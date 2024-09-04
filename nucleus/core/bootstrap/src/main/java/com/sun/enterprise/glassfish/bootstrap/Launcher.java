@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
@@ -45,7 +46,7 @@ public class Launcher {
 
     public void launch(final Properties properties) throws Exception {
         addShutdownHook();
-        gfr = GlassFishRuntime.bootstrap(new org.glassfish.embeddable.BootstrapProperties(properties), getClass().getClassLoader());
+        gfr = GlassFishRuntime.bootstrap(new BootstrapProperties(properties), getClass().getClassLoader());
         gf = gfr.newGlassFish(new GlassFishProperties(properties));
         if (Boolean.parseBoolean(getPropertyOrSystemProperty(properties, "GlassFish_Interactive", "false"))) {
             startConsole();

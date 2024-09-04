@@ -24,14 +24,14 @@ import java.util.Properties;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 
-public class GFBootstrapProperties {
+public class StartupContextCfg {
 
     private final Properties properties;
     private final Path installRoot;
     private final Path instanceRoot;
 
 
-    public GFBootstrapProperties(Properties properties) {
+    public StartupContextCfg(Properties properties) {
         this.properties = properties;
         this.installRoot = getInstallRoot(properties);
         this.instanceRoot = getInstanceRoot(properties);

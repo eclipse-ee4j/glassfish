@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +30,9 @@ public class EquinoxAdapter extends OsgiPlatformAdapter {
 
     private final File equinoxHome;
 
-    public EquinoxAdapter(GFBootstrapProperties properties) {
-        super(properties);
-        this.equinoxHome = properties.getOsgiHome(FRAMEWORK_STORAGE, FRAMEWORK_STORAGE, Path.of("osgi", "equinox"));
+    public EquinoxAdapter(StartupContextCfg cfg) {
+        super(cfg);
+        this.equinoxHome = cfg.getOsgiHome(FRAMEWORK_STORAGE, FRAMEWORK_STORAGE, Path.of("osgi", "equinox"));
     }
 
     @Override

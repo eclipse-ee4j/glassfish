@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +27,9 @@ public class KnopflerfishAdapter extends OsgiPlatformAdapter {
     private static final String KF_HOME = "KNOPFLERFISH_HOME";
     private final File kfHome;
 
-    public KnopflerfishAdapter(GFBootstrapProperties properties) {
-        super(properties);
-        this.kfHome = properties.getOsgiHome(KF_HOME, KF_HOME, Path.of("osgi", "knopflerfish.org", "osgi"));
+    public KnopflerfishAdapter(StartupContextCfg cfg) {
+        super(cfg);
+        this.kfHome = cfg.getOsgiHome(KF_HOME, KF_HOME, Path.of("osgi", "knopflerfish.org", "osgi"));
     }
 
 

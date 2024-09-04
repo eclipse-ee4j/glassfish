@@ -30,7 +30,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -347,14 +349,39 @@ class MainHelper {
             throw new IllegalStateException("The OSGI configuration could not be loaded!", e);
         }
         osgiConf.putAll(ctx.toProperties());
-        Util.substVars(osgiConf);
+        // Perform variable substitution for system properties.
+        for (String name : osgiConf.stringPropertyNames()) {
+            osgiConf.setProperty(name, FelixUtil.substVars(osgiConf.getProperty(name), name, null, osgiConf));
+        }
+
         // Starting with GlassFish 3.1.2, we allow user to overrride values specified in OSGi config file by
         // corresponding values as set via System properties. There are two properties that we must always read
         // from OSGi config file. They are felix.fileinstall.dir and felix.fileinstall.log.level, as their values have
         // changed incompatibly from 3.1 to 3.1.1, but we are not able to change domain.xml in 3.1.1 for
         // compatibility reasons.
-        Util.overrideBySystemProps(osgiConf, Arrays.asList("felix.fileinstall.dir", "felix.fileinstall.log.level"));
+        overrideBySystemProps(osgiConf, Arrays.asList("felix.fileinstall.dir", "felix.fileinstall.log.level"));
         return new GFBootstrapProperties(osgiConf);
+    }
+
+
+    /**
+     * Override property values in the given properties object by values set in corresponding
+     * property names in System properties object.
+     *
+     * @param platformConf which will be updated by corresponding values in System properties.
+     * @param excluding property names that should not be overridden
+     */
+    private static void overrideBySystemProps(Properties platformConf, Collection<String> excluding) {
+        Properties sysProps = System.getProperties();
+        for (Map.Entry<Object, Object> entry : platformConf.entrySet()) {
+            if (excluding.contains(entry.getKey())) {
+                continue;
+            }
+            Object systemPropValue = sysProps.get(entry.getKey());
+            if (systemPropValue != null && !systemPropValue.equals(entry.getValue())) {
+                platformConf.put(entry.getKey(), systemPropValue);
+            }
+        }
     }
 
 

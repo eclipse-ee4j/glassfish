@@ -19,12 +19,8 @@ package com.sun.enterprise.glassfish.bootstrap;
 import com.sun.enterprise.glassfish.bootstrap.cfg.GFBootstrapProperties;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.ClassPathBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-
-import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
-import static java.util.logging.Level.FINE;
 
 class ClassLoaderBuilder {
 
@@ -38,19 +34,6 @@ class ClassLoaderBuilder {
 
     void addPlatformDependencies() throws IOException {
         OsgiPlatformFactory.getOsgiPlatformAdapter(ctx).addFrameworkJars(cpBuilder);
-    }
-
-    /**
-     * Adds JDK tools.jar to classpath.
-     */
-    void addJDKToolsJar() {
-        File jdkToolsJar = Util.getJDKToolsJar();
-        try {
-            cpBuilder.addJar(jdkToolsJar);
-        } catch (IOException ioe) {
-            // on the mac, it happens all the time
-            BOOTSTRAP_LOGGER.log(FINE, "JDK tools.jar does not exist at {0}", jdkToolsJar);
-        }
     }
 
     ClassLoader build(ClassLoader delegate) {

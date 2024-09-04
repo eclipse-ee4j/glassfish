@@ -73,7 +73,6 @@ public final class StartupContextUtil {
             result.add(st.nextToken());
         }
         return result.toArray(new String[result.size()]);
-
     }
 
 

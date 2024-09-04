@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.Util;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.lang.System.Logger;
@@ -50,7 +49,6 @@ class BundleProvisionerTest {
         Properties props = new Properties();
         Path cacheDir = Files.createTempDirectory("FelixCache");
         props.setProperty(FRAMEWORK_STORAGE, cacheDir.toFile().getAbsolutePath());
-        Util.substVars(props);
         long t0 = System.currentTimeMillis();
         Map<String, String> mm = props.entrySet().stream()
             .collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));

@@ -60,34 +60,6 @@ public final class Util {
     static String getPropertyOrSystemProperty(Properties properties, String propertyName) {
         return getPropertyOrSystemProperty(properties, propertyName, null);
     }
-
-    static boolean deleteRecursive(File dir) {
-        for (File f : dir.listFiles()) {
-            if (f.isFile()) {
-                f.delete();
-            } else {
-                deleteRecursive(f);
-            }
-        }
-        return dir.delete();
-    }
-
-    static long getLastModified(File directory, long current) {
-
-        for (File file : directory.listFiles()) {
-            long lastModified;
-            if (file.isDirectory()) {
-                lastModified = getLastModified(file, current);
-            } else {
-                lastModified = file.lastModified();
-            }
-            if (lastModified > current) {
-                current = lastModified;
-            }
-        }
-        return current;
-    }
-
     /**
      * This method is used to copy a given file to another file
      * using the buffer sixe specified

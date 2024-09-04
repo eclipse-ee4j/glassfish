@@ -30,10 +30,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.glassfish.embeddable.GlassFish;
@@ -57,7 +58,7 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
-    private final Map<String, GlassFish> glassFishInstances = new HashMap<>();
+    private final Map<String, GlassFish> glassFishInstances = new ConcurrentHashMap<>();
     private final Main main;
 
     public StaticGlassFishRuntime(Main main) {
@@ -78,42 +79,22 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         try {
             // Don't set temporarily created instanceRoot in the user supplied GlassFishProperties,
             // hence clone it.
-            Properties properties = new Properties();
+            final Properties properties = new Properties();
             properties.putAll(glassFishProperties.getProperties());
 
             final GlassFishProperties gfProps = new GlassFishProperties(properties);
             setEnv(gfProps);
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
+            final ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
+            final ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
+                List.of(new EmbeddedInhabitantsParser(), new DuplicatePostProcessor()), null);
 
-            ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
+            final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null,
+                startupContext);
 
-            ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
-                    List.of(new EmbeddedInhabitantsParser(), new DuplicatePostProcessor()), null);
-
-            final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null, startupContext);
-
-            // Create a new GlassFish instance
-            GlassFish glassFish = new GlassFishImpl(gfKernel, serviceLocator, gfProps.getProperties()) {
-                @Override
-                public void dispose() throws GlassFishException {
-                    try {
-                        super.dispose();
-                    } finally {
-                        glassFishInstances.remove(gfProps.getInstanceRoot());
-                        if (Boolean.parseBoolean(gfProps.getProperties().getProperty(AUTO_DELETE))
-                            && gfProps.getInstanceRoot() != null) {
-                            File instanceRoot = new File(gfProps.getInstanceRoot());
-                            // Might have been deleted already.
-                            if (instanceRoot.exists()) {
-                                Util.deleteRecursive(instanceRoot);
-                            }
-                        }
-                    }
-                }
-            };
-
-            // Add this newly created instance to a Map
+            final Consumer<GlassFish> onDispose = gf -> glassFishInstances.remove(gfProps.getInstanceRoot());
+            final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose);
             glassFishInstances.put(gfProps.getInstanceRoot(), glassFish);
 
             return glassFish;

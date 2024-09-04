@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
@@ -27,7 +28,7 @@ import org.glassfish.embeddable.GlassFishException;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class GlassFishDecorator implements GlassFish {
-    private GlassFish decoratedGf;
+    private final GlassFish decoratedGf;
 
     public GlassFishDecorator(GlassFish decoratedGf) {
         this.decoratedGf = decoratedGf;

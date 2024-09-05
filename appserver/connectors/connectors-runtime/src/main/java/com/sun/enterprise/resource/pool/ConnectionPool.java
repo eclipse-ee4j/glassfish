@@ -1099,7 +1099,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
         if (state.isUnenlisted() || (poolTxHelper.isNonXAResource(handle) && poolTxHelper.isLocalTransactionInProgress()
                 && poolTxHelper.isLocalResourceEligibleForReuse(handle))) {
-            // Note: the call to isLocalResourceEligibleForReuse can change the enlisted state of the 
+            // Note: the call to isLocalResourceEligibleForReuse can change the enlisted state of the
             // handle to false if the resource is eligible for reuse.
             freeUnenlistedResource(handle);
         }

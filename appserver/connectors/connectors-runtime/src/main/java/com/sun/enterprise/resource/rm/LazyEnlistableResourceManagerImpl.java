@@ -17,13 +17,6 @@
 
 package com.sun.enterprise.resource.rm;
 
-import java.util.List;
-import java.util.ListIterator;
-import java.util.logging.Logger;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
@@ -34,6 +27,13 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
+
+import java.util.List;
+import java.util.ListIterator;
+import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import static com.sun.logging.LogDomains.RSR_LOGGER;
 import static java.util.logging.Level.WARNING;

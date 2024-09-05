@@ -370,7 +370,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
         if (LOG.isLoggable(Level.FINE)) {
             // Warning resource state logged here might not be valid, could be part of another thread already
-            // but logging the resource id is useful. 
+            // but logging the resource id is useful.
             LOG.log(Level.FINE, "PoolManagerImpl.resourceClosed END, resource=" + resource);
         }
     }

@@ -17,16 +17,18 @@
 
 package com.sun.enterprise.resource.listener;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.logging.LogDomains;
+
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ManagedConnection;
+
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Binod P.G

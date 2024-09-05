@@ -19,13 +19,16 @@ package com.sun.enterprise.resource.pool.mock;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.SimpleResource;
 import com.sun.enterprise.transaction.spi.TransactionalResource;
+
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.SystemException;
+
 import java.util.Set;
+
 import javax.transaction.xa.XAResource;
 
 /**

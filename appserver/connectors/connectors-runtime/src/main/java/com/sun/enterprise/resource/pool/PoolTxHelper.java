@@ -116,15 +116,15 @@ public class PoolTxHelper {
     /**
      * Check whether the local resource in question is the one participating in transaction.
      *
-     * @param h ResourceHandle
+     * @param handle ResourceHandle
      * @return true if the resource is participating in the transaction
      */
-    public boolean isLocalResourceInTransaction(ResourceHandle h) {
+    private boolean isLocalResourceInTransaction(ResourceHandle handle) {
         boolean result = true;
         try {
             JavaEETransaction txn = (JavaEETransaction) ConnectorRuntime.getRuntime().getTransaction();
             if (txn != null) {
-                result = isNonXAResourceInTransaction(txn, h);
+                result = isNonXAResourceInTransaction(txn, handle) && txn.getResources(poolInfo).contains(handle);
             }
         } catch (SystemException e) {
             if (_logger.isLoggable(Level.FINE)) {

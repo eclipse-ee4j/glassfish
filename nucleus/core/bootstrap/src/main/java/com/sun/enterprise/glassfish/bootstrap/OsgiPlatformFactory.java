@@ -39,7 +39,7 @@ class OsgiPlatformFactory {
                 break;
             case Embedded:
             case Static:
-                osgiPlatformAdapter = new EmbeddedAdapter(cfg);
+                osgiPlatformAdapter = new EmbeddedAdapter();
                 break;
             default:
                 throw new RuntimeException("Unsupported platform " + cfg.getPlatform());

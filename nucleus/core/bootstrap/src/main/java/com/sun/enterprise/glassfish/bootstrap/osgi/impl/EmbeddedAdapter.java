@@ -16,20 +16,13 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
-
-import java.io.File;
 
 /**
  * Non-OSGI platform adapter.
  * Does not have any config file, does not record OSGI framework jar files.
  */
-public class EmbeddedAdapter extends OsgiPlatformAdapter {
-
-    public EmbeddedAdapter(StartupContextCfg cfg) {
-        super(cfg);
-    }
+public class EmbeddedAdapter implements OsgiPlatformAdapter {
 
     /**
      * Noop.
@@ -37,18 +30,5 @@ public class EmbeddedAdapter extends OsgiPlatformAdapter {
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) {
         // nothing to do
-    }
-
-    /**
-     * @return null - no config file for this platform.
-     */
-    @Override
-    protected File getFrameworkConfigFile() {
-        return null;
-    }
-
-    @Override
-    protected String getFrameworkStorageDirectoryName() {
-        return null;
     }
 }

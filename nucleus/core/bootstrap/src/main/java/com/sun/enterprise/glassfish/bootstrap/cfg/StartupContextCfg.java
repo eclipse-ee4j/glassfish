@@ -68,7 +68,7 @@ public class StartupContextCfg {
 
 
     public File getFileUnderInstanceRoot(Path relativePath) {
-        return this.installRoot.resolve(relativePath).toFile();
+        return this.instanceRoot.resolve(relativePath).toFile();
     }
 
 

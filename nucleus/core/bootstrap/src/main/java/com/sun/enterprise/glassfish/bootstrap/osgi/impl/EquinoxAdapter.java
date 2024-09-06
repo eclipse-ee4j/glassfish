@@ -23,26 +23,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
-
-public class EquinoxAdapter extends OsgiPlatformAdapter {
+public class EquinoxAdapter implements OsgiPlatformAdapter {
 
     private static final String EQUINOX_HOME = "EQUINOX_HOME";
 
     private final File equinoxHome;
 
     public EquinoxAdapter(StartupContextCfg cfg) {
-        super(cfg);
-        this.equinoxHome = cfg.getOsgiHome(FRAMEWORK_STORAGE, FRAMEWORK_STORAGE, Path.of("osgi", "equinox"));
+        this.equinoxHome = cfg.getOsgiHome(EQUINOX_HOME, EQUINOX_HOME, Path.of("osgi", "equinox"));
     }
 
     @Override
     public void addFrameworkJars(ClassPathBuilder builder) throws IOException {
         builder.addJarFolder(equinoxHome);
-    }
-
-    @Override
-    protected String getFrameworkStorageDirectoryName() {
-        return "equinox";
     }
 }

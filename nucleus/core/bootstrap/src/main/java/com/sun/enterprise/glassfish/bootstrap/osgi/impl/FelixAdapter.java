@@ -23,13 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class FelixAdapter extends OsgiPlatformAdapter {
+public class FelixAdapter implements OsgiPlatformAdapter {
 
     private static final String FELIX_HOME = "FELIX_HOME";
     private final File felixHome;
 
     public FelixAdapter(StartupContextCfg cfg) {
-        super(cfg);
         this.felixHome = cfg.getOsgiHome(FELIX_HOME, FELIX_HOME, Path.of("osgi", "felix"));
     }
 
@@ -37,11 +36,5 @@ public class FelixAdapter extends OsgiPlatformAdapter {
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
         cpb.addJar(new File(felixHome, "bin/felix.jar"));
-    }
-
-
-    @Override
-    protected String getFrameworkStorageDirectoryName() {
-        return "felix";
     }
 }

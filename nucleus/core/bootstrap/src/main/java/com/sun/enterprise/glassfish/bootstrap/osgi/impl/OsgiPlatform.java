@@ -18,14 +18,25 @@ package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
 /** Supported platform we know about */
 public enum OsgiPlatform {
-    Felix,
-    Knopflerfish,
-    Equinox,
-    Embedded,
+    Felix("felix"),
+    Knopflerfish("knopflerfish"),
+    Equinox("equinox"),
+    Embedded(null),
     /**
      * Older synonym for {@link #Embedded}
      * @deprecated Used by glassfish-maven-embedded-plugin which has it hardcoded
      */
     @Deprecated(forRemoval = true, since = "7.0.18")
-    Static,
+    Static(null),
+    ;
+
+    private final String frameworkStorageDirectoryName;
+
+    OsgiPlatform(String frameworkStorageDirectoryName) {
+        this.frameworkStorageDirectoryName = frameworkStorageDirectoryName;
+    }
+
+    public String getFrameworkStorageDirectoryName() {
+        return frameworkStorageDirectoryName;
+    }
 }

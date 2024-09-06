@@ -23,13 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class KnopflerfishAdapter extends OsgiPlatformAdapter {
+public class KnopflerfishAdapter implements OsgiPlatformAdapter {
 
     private static final String KF_HOME = "KNOPFLERFISH_HOME";
     private final File kfHome;
 
     public KnopflerfishAdapter(StartupContextCfg cfg) {
-        super(cfg);
         this.kfHome = cfg.getOsgiHome(KF_HOME, KF_HOME, Path.of("osgi", "knopflerfish.org", "osgi"));
     }
 
@@ -37,11 +36,5 @@ public class KnopflerfishAdapter extends OsgiPlatformAdapter {
     @Override
     public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
         cpb.addJar(new File(kfHome, "framework.jar"));
-    }
-
-
-    @Override
-    protected String getFrameworkStorageDirectoryName() {
-        return "knopflerfish";
     }
 }

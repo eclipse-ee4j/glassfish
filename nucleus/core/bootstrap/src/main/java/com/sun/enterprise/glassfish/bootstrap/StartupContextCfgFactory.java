@@ -22,7 +22,10 @@ import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -32,11 +35,18 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_R
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_FMWCONF;
+import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static com.sun.enterprise.module.bootstrap.StartupContext.STARTUP_MODULE_NAME;
 import static com.sun.enterprise.module.bootstrap.StartupContext.TIME_ZERO_NAME;
+import static java.util.logging.Level.INFO;
+import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
 final class StartupContextCfgFactory {
+
+    /** Location of the unified config properties file relative to the domain directory */
+    private static final Path CONFIG_PROPERTIES = Path.of("config", "osgi.properties");
 
 
     private StartupContextCfgFactory() {
@@ -66,10 +76,9 @@ final class StartupContextCfgFactory {
             }
         }
 
-        StartupContextCfg cfg = new StartupContextCfg(platform, properties);
-        addRawStartupInfo(args, cfg);
+        addRawStartupInfo(args, properties);
 
-        return mergePlatformConfiguration(cfg);
+        return mergePlatformConfiguration(platform, properties);
     }
 
 
@@ -79,13 +88,13 @@ final class StartupContextCfgFactory {
      * @param args raw args to this main()
      * @param cfg the properties to save as a system property
      */
-    private static void addRawStartupInfo(final String[] args, final StartupContextCfg cfg) {
-        if (wasStartedByCLI(cfg)) {
+    private static void addRawStartupInfo(final String[] args, final Properties properties) {
+        if (wasStartedByCLI(properties)) {
             return;
         }
         // no sense doing this if we were started by CLI...
-        cfg.setProperty(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
-        cfg.setProperty(BootstrapKeys.ORIGINAL_CN, ASMain.class.getName());
+        properties.setProperty(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
+        properties.setProperty(BootstrapKeys.ORIGINAL_CN, ASMain.class.getName());
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
             if (i > 0) {
@@ -93,29 +102,35 @@ final class StartupContextCfgFactory {
             }
             sb.append(args[i]);
         }
-        cfg.setProperty(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
+        properties.setProperty(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
     }
 
 
-    private static boolean wasStartedByCLI(final StartupContextCfg cfg) {
+    private static boolean wasStartedByCLI(final Properties properties) {
         // if we were started by CLI there will be some special args set...
-        return cfg.getProperty("-asadmin-classpath") != null
-            && cfg.getProperty("-asadmin-classname") != null
-            && cfg.getProperty("-asadmin-args") != null;
+        return properties.getProperty("-asadmin-classpath") != null
+            && properties.getProperty("-asadmin-classname") != null
+            && properties.getProperty("-asadmin-args") != null;
     }
 
 
-    private static StartupContextCfg mergePlatformConfiguration(StartupContextCfg cfg) {
-        final Properties osgiCfg;
+    private static StartupContextCfg mergePlatformConfiguration(OsgiPlatform platform, Properties properties) {
+        final StartupContextCfg cfg = new StartupContextCfg(platform, properties);
+        final Properties platformCfg;
         try {
-            osgiCfg = OsgiPlatformFactory.getOsgiPlatformAdapter(cfg).readPlatformConfiguration();
+            platformCfg = readPlatformConfiguration(cfg);
         } catch (IOException e) {
             throw new IllegalStateException("The OSGI configuration could not be loaded!", e);
         }
-        osgiCfg.putAll(cfg.toProperties());
+        final String storageDirectoryName = platform.getFrameworkStorageDirectoryName();
+        if (storageDirectoryName != null) {
+            File frameworkStorage = cfg.getFileUnderInstanceRoot(Path.of("osgi-cache", storageDirectoryName));
+            platformCfg.setProperty(FRAMEWORK_STORAGE, frameworkStorage.getAbsolutePath());
+        }
+        platformCfg.putAll(cfg.toProperties());
         // Perform variable substitution for system properties.
-        for (String name : osgiCfg.stringPropertyNames()) {
-            osgiCfg.setProperty(name, FelixUtil.substVars(osgiCfg.getProperty(name), name, null, osgiCfg));
+        for (String name : platformCfg.stringPropertyNames()) {
+            platformCfg.setProperty(name, FelixUtil.substVars(platformCfg.getProperty(name), name, null, platformCfg));
         }
 
         // Starting with GlassFish 3.1.2, we allow user to overrride values specified in OSGi config file by
@@ -123,8 +138,36 @@ final class StartupContextCfgFactory {
         // from OSGi config file. They are felix.fileinstall.dir and felix.fileinstall.log.level, as their values have
         // changed incompatibly from 3.1 to 3.1.1, but we are not able to change domain.xml in 3.1.1 for
         // compatibility reasons.
-        overrideBySystemProps(osgiCfg, Arrays.asList("felix.fileinstall.dir", "felix.fileinstall.log.level"));
-        return new StartupContextCfg(cfg.getPlatform(), osgiCfg);
+        overrideBySystemProps(platformCfg, Arrays.asList("felix.fileinstall.dir", "felix.fileinstall.log.level"));
+        return new StartupContextCfg(platform, platformCfg);
+    }
+
+
+    /**
+     * @return platform specific configuration information
+     * @throws IOException if the configuration could not be loaded
+     */
+    private static Properties readPlatformConfiguration(StartupContextCfg cfg) throws IOException {
+        Properties platformConfig = new Properties();
+        final File configFile = getFrameworkConfigFile(cfg);
+        if (configFile == null) {
+            return platformConfig;
+        }
+        try (InputStream in = new FileInputStream(configFile)) {
+            platformConfig.load(in);
+        }
+        return platformConfig;
+    }
+
+
+    private static File getFrameworkConfigFile(StartupContextCfg cfg) {
+        // First we search in domainDir. If it's not found there, we fall back on installDir
+        File osgiPropertiesFile = cfg.getFileUnderInstanceRoot(CONFIG_PROPERTIES);
+        if (osgiPropertiesFile.exists()) {
+            BOOTSTRAP_LOGGER.log(INFO, BOOTSTRAP_FMWCONF, osgiPropertiesFile);
+            return osgiPropertiesFile;
+        }
+        return cfg.getFileUnderInstallRoot(CONFIG_PROPERTIES);
     }
 
 

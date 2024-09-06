@@ -48,15 +48,12 @@ class GlassFishMainIT {
 
     @Test
     void createLauncher_Felix() throws Exception {
-        StartupContextCfg defaultCfg = createDefaultProperties();
-        OsgiPlatformAdapter osgiPlatformAdapter = OsgiPlatformFactory.getOsgiPlatformAdapter(defaultCfg);
+        StartupContextCfg cfg = createStartupContextCfg();
+        OsgiPlatformAdapter osgiPlatformAdapter = OsgiPlatformFactory.getOsgiPlatformAdapter(cfg);
         assertThat(osgiPlatformAdapter, instanceOf(FelixAdapter.class));
-        Properties cfg = osgiPlatformAdapter.readPlatformConfiguration();
         assertNotNull(cfg);
-        cfg.putAll(defaultCfg.toProperties());
 
-        ClassLoader loader = GlassFishMain.createLauncherCL(new StartupContextCfg(defaultCfg.getPlatform(), cfg),
-            ClassLoader.getPlatformClassLoader());
+        ClassLoader loader = GlassFishMain.createLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
         assertNotNull(loader);
         Class<?> clazz = loader.loadClass("org.osgi.framework.Bundle");
         assertNotNull(clazz);
@@ -72,7 +69,7 @@ class GlassFishMainIT {
     }
 
 
-    private StartupContextCfg createDefaultProperties() throws IOException {
+    private StartupContextCfg createStartupContextCfg() throws IOException {
         Path installRoot = Files.createTempDirectory("FakeGFInstallRoot");
         Path felixBin = installRoot.resolve(Path.of("osgi", "felix", "bin"));
         Files.createDirectories(felixBin);
@@ -94,7 +91,9 @@ class GlassFishMainIT {
 
         Path instanceRoot = Files.createTempDirectory("FakeGFInstanceRoot");
         properties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
-        return new StartupContextCfg(OsgiPlatform.Felix, properties);
+
+        return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, installRoot.toFile(),
+            instanceRoot.toFile(), new String[0]);
     }
 
 

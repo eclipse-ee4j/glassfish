@@ -34,7 +34,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 
-// must be public to be accessible via reflection
+// must be public to be accessible for reflection
 public class Launcher {
 
     // logging system may override original output streams.

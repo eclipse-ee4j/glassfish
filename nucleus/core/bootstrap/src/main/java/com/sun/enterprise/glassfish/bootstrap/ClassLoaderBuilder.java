@@ -17,7 +17,8 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.ClassPathBuilder;
+import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,12 +33,12 @@ class ClassLoaderBuilder {
         this.cpBuilder = new ClassPathBuilder();
     }
 
-    void addPlatformDependencies() throws IOException {
-        OsgiPlatformFactory.getOsgiPlatformAdapter(cfg).addFrameworkJars(cpBuilder);
+    void addPlatformDependencies(OsgiPlatformAdapter adapter) throws IOException {
+        adapter.addFrameworkJars(cpBuilder);
     }
 
     ClassLoader build(ClassLoader delegate) {
-        return cpBuilder.create(delegate);
+        return cpBuilder.build(delegate);
     }
 
     void addLauncherDependencies() throws IOException {

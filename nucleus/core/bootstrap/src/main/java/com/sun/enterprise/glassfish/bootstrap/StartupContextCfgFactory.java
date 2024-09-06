@@ -18,6 +18,7 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import java.io.File;
@@ -31,7 +32,6 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_R
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static com.sun.enterprise.module.bootstrap.StartupContext.STARTUP_MODULE_NAME;
 import static com.sun.enterprise.module.bootstrap.StartupContext.TIME_ZERO_NAME;
@@ -43,11 +43,9 @@ final class StartupContextCfgFactory {
     }
 
 
-    static StartupContextCfg createStartupContextCfg(String platform, File installRoot, File instanceRoot, String[] args) {
+    static StartupContextCfg createStartupContextCfg(OsgiPlatform platform, File installRoot, File instanceRoot, String[] args) {
         Properties properties = argsToMap(args);
         properties.setProperty(TIME_ZERO_NAME, Long.toString(System.currentTimeMillis()));
-
-        properties.setProperty(PLATFORM_PROPERTY_KEY, platform);
 
         properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
         properties.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
@@ -68,7 +66,7 @@ final class StartupContextCfgFactory {
             }
         }
 
-        StartupContextCfg cfg = new StartupContextCfg(properties);
+        StartupContextCfg cfg = new StartupContextCfg(platform, properties);
         addRawStartupInfo(args, cfg);
 
         return mergePlatformConfiguration(cfg);
@@ -126,7 +124,7 @@ final class StartupContextCfgFactory {
         // changed incompatibly from 3.1 to 3.1.1, but we are not able to change domain.xml in 3.1.1 for
         // compatibility reasons.
         overrideBySystemProps(osgiCfg, Arrays.asList("felix.fileinstall.dir", "felix.fileinstall.log.level"));
-        return new StartupContextCfg(osgiCfg);
+        return new StartupContextCfg(cfg.getPlatform(), osgiCfg);
     }
 
 

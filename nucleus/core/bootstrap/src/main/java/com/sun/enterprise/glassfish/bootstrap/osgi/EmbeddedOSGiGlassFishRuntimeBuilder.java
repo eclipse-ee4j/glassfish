@@ -18,6 +18,7 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 
 import java.util.Hashtable;
 
@@ -63,8 +64,7 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private void configureBundles(BootstrapProperties bsProps) {
         if (System.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY) == null) {
-            // Set this, because some stupid downstream code may be relying on this property
-            System.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, "GenericOSGi");
+            System.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Embedded.name());
         }
     }
 

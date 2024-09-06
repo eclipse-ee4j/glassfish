@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
@@ -56,7 +55,7 @@ class GlassFishMainIT {
         assertNotNull(cfg);
         cfg.putAll(defaultCfg.toProperties());
 
-        ClassLoader loader = GlassFishMain.createLauncherCL(new StartupContextCfg(cfg),
+        ClassLoader loader = GlassFishMain.createLauncherCL(new StartupContextCfg(defaultCfg.getPlatform(), cfg),
             ClassLoader.getPlatformClassLoader());
         assertNotNull(loader);
         Class<?> clazz = loader.loadClass("org.osgi.framework.Bundle");
@@ -74,8 +73,6 @@ class GlassFishMainIT {
 
 
     private StartupContextCfg createDefaultProperties() throws IOException {
-        Properties properties = new Properties();
-        properties.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
         Path installRoot = Files.createTempDirectory("FakeGFInstallRoot");
         Path felixBin = installRoot.resolve(Path.of("osgi", "felix", "bin"));
         Files.createDirectories(felixBin);
@@ -90,13 +87,14 @@ class GlassFishMainIT {
         Files.copy(jarFilesDir.resolve("simple-glassfish-api.jar"), modulesDir.resolve("simple-glassfish-api.jar"));
         Files.copy(jarFilesDir.resolve(Path.of("..", "glassfish.jar")), modulesDir.resolve("glassfish.jar"));
 
+        Properties properties = new Properties();
         Path cfgDir = Files.createDirectories(installRoot.resolve(Path.of("config")));
         Files.createFile(cfgDir.resolve("osgi.properties"));
         properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.toFile().getAbsolutePath());
 
         Path instanceRoot = Files.createTempDirectory("FakeGFInstanceRoot");
         properties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
-        return new StartupContextCfg(properties);
+        return new StartupContextCfg(OsgiPlatform.Felix, properties);
     }
 
 

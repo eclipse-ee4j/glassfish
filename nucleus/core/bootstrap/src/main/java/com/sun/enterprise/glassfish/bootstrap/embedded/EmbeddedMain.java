@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
 
 import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.module.bootstrap.Main;
@@ -28,21 +29,19 @@ import com.sun.enterprise.module.bootstrap.Main;
  * @author dochez
  * @author bhavanishankar@dev.java.net
  */
+class EmbeddedMain extends Main {
 
-public class EmbeddedMain extends Main {
+    EmbeddedMain() {
+    }
 
-    ClassLoader classLoader;
 
     @Override
     protected void defineParentClassLoader() throws BootException {
-          // deliberate no-op
+        // deliberate no-op
     }
 
 
     public String getName() {
         return "Embedded";
-    }
-
-    public EmbeddedMain(ClassLoader cl) {
     }
 }

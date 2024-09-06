@@ -19,10 +19,12 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cp.GlassfishBootstrapClassLoader;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
-import com.sun.enterprise.module.bootstrap.Which;
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +76,7 @@ public class GlassFishMain {
     private static final PrintStream STDOUT = System.out;
 
     public static void main(final String[] args) throws Exception {
-        final File installRoot = getInstallRoot();
+        final File installRoot = StartupContextUtil.detectInstallRoot();
         final ClassLoader jdkExtensionCL = ClassLoader.getSystemClassLoader().getParent();
         final GlassfishBootstrapClassLoader gfBootCL = new GlassfishBootstrapClassLoader(installRoot, jdkExtensionCL);
         initializeLogManager(gfBootCL);
@@ -82,7 +84,7 @@ public class GlassFishMain {
         checkJdkVersion();
 
         final Properties argsAsProps = argsToMap(args);
-        final String platform = whichPlatform();
+        final OsgiPlatform platform = OsgiPlatform.valueOf(whichPlatform());
         STDOUT.println("Launching GlassFish on " + platform + " platform");
 
         final File instanceRoot = findInstanceRoot(installRoot, argsAsProps);
@@ -132,26 +134,6 @@ public class GlassFishMain {
             return platformEnvOption.trim();
         }
         return OsgiPlatform.Felix.name();
-    }
-
-
-    /**
-     * @return autodetected glassfish directory based on where usually is this class.
-     */
-    public static File getInstallRoot() {
-        // glassfish/modules/glassfish.jar
-        File bootstrapFile = findBootstrapFile();
-        // glassfish/
-        return bootstrapFile.getParentFile().getParentFile();
-    }
-
-
-    private static File findBootstrapFile() {
-        try {
-            return Which.jarFile(GlassFishMain.class);
-        } catch (IOException e) {
-            throw new Error("Cannot get bootstrap path from " + GlassFishMain.class + " class location, aborting", e);
-        }
     }
 
 
@@ -338,8 +320,9 @@ public class GlassFishMain {
      */
     private static ClassLoader createOSGiFrameworkLauncherCL(StartupContextCfg cfg, ClassLoader delegate) {
         try {
+            OsgiPlatformAdapter adapter = OsgiPlatformFactory.getOsgiPlatformAdapter(cfg);
             ClassLoaderBuilder clb = new ClassLoaderBuilder(cfg);
-            clb.addPlatformDependencies();
+            clb.addPlatformDependencies(adapter);
             clb.addServerBootstrapDependencies();
             ClassLoader classLoader = clb.build(delegate);
             String osgiPackages = classLoader.resources("META-INF/MANIFEST.MF").map(GlassFishMain::loadExports)

@@ -15,9 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
 
+import com.sun.enterprise.glassfish.bootstrap.UberMain;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.ModulesRegistry;
@@ -46,7 +48,7 @@ import org.glassfish.embeddable.spi.RuntimeBuilder;
  * @author bhavanishankar@dev.java.net
  */
 // Note: Used in a service file!
-public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
+public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
     private static final String JAR_EXT = ".jar";
@@ -68,13 +70,13 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
 
         // Step 2. Setup the module subsystem.
-        Main main = new EmbeddedMain(cl);
+        Main main = new EmbeddedMain();
         SingleHK2Factory.initialize(cl);
         ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
         modulesRegistry.setParentClassLoader(cl);
 
         // Step 3. Create NonOSGIGlassFishRuntime
-        GlassFishRuntime glassFishRuntime = new StaticGlassFishRuntime(main);
+        GlassFishRuntime glassFishRuntime = new EmbeddedGlassFishRuntime(main);
         LOG.logp(Level.FINER, getClass().getName(), "build",
                 "Created GlassFishRuntime {0} with InstallRoot {1}, Bootstrap Options {2}",
                 new Object[]{glassFishRuntime, installRoot, bsProps});
@@ -89,13 +91,14 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
             return false;
         }
         String platform = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
-        return platform == null || OsgiPlatform.Static.toString().equalsIgnoreCase(platform);
+        return platform == null || OsgiPlatform.Embedded.name().equalsIgnoreCase(platform)
+            || OsgiPlatform.Static.name().equalsIgnoreCase(platform);
     }
 
     private String getInstallRoot(BootstrapProperties props) {
         String installRootProp = props.getInstallRoot();
         if (installRootProp == null) {
-            File installRoot = GlassFishMain.getInstallRoot();
+            File installRoot = StartupContextUtil.detectInstallRoot();
             if (isValidInstallRoot(installRoot)) {
                 installRootProp = installRoot.getAbsolutePath();
             }

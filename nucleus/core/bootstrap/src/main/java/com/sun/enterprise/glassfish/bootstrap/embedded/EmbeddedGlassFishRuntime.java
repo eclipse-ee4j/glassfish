@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
@@ -57,14 +57,14 @@ import static java.util.logging.Level.WARNING;
  *
  * @author bhavanishankar@dev.java.net
  */
-public class StaticGlassFishRuntime extends GlassFishRuntime {
+class EmbeddedGlassFishRuntime extends GlassFishRuntime {
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
     private final Map<String, GlassFish> glassFishInstances = new ConcurrentHashMap<>();
     private final Main main;
 
-    public StaticGlassFishRuntime(Main main) {
+    public EmbeddedGlassFishRuntime(Main main) {
         this.main = main;
     }
 

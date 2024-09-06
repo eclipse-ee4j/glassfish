@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -40,6 +40,9 @@ public final class ClassPathBuilder {
 
     /**
      * Adds a single jar.
+     *
+     * @param jar
+     * @throws IOException if the file doesn't exist.
      */
     public void addJar(File jar) throws IOException {
         if (!jar.exists()) {
@@ -109,7 +112,7 @@ public final class ClassPathBuilder {
         }
     }
 
-    public ClassLoader create(final ClassLoader parent) {
+    public ClassLoader build(final ClassLoader parent) {
         PrivilegedAction<GlassfishUrlClassLoader> action = () -> {
             URL[] urls = files.stream().map(ClassPathBuilder::toURL).toArray(URL[]::new);
             return new GlassfishUrlClassLoader(urls, parent);

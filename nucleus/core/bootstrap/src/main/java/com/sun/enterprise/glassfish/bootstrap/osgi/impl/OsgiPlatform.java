@@ -21,5 +21,11 @@ public enum OsgiPlatform {
     Felix,
     Knopflerfish,
     Equinox,
-    Static
+    Embedded,
+    /**
+     * Older synonym for {@link #Embedded}
+     * @deprecated Used by glassfish-maven-embedded-plugin which has it hardcoded
+     */
+    @Deprecated(forRemoval = true, since = "7.0.18")
+    Static,
 }

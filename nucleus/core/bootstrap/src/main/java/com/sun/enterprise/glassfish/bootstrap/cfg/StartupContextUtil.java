@@ -18,6 +18,7 @@
 package com.sun.enterprise.glassfish.bootstrap.cfg;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.module.bootstrap.Which;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,27 @@ public final class StartupContextUtil {
 
     // this contains utility methods only
     private StartupContextUtil() {
+    }
+
+
+    /**
+     * @return autodetected glassfish directory based on where usually is this class.
+     */
+    public static File detectInstallRoot() {
+        // glassfish/modules/glassfish.jar
+        File bootstrapFile = findBootstrapFile();
+        // glassfish/
+        return bootstrapFile.getParentFile().getParentFile();
+    }
+
+
+    private static File findBootstrapFile() {
+        try {
+            return Which.jarFile(StartupContextUtil.class);
+        } catch (IOException e) {
+            throw new Error("Cannot get bootstrap path from " + StartupContextUtil.class + " class location, aborting",
+                e);
+        }
     }
 
 

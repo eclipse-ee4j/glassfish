@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.glassfish.bootstrap.cfg;
 
+import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,18 +25,30 @@ import java.util.Properties;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 
 public class StartupContextCfg {
 
+    private final OsgiPlatform platform;
     private final Properties properties;
     private final Path installRoot;
     private final Path instanceRoot;
 
 
-    public StartupContextCfg(Properties properties) {
+    public StartupContextCfg(OsgiPlatform platform, Properties properties) {
+        properties.setProperty(PLATFORM_PROPERTY_KEY, platform.name());
+        this.platform = platform;
         this.properties = properties;
         this.installRoot = getInstallRoot(properties);
         this.instanceRoot = getInstanceRoot(properties);
+    }
+
+
+    /**
+     * @return {@link OsgiPlatform} from constructor
+     */
+    public OsgiPlatform getPlatform() {
+        return platform;
     }
 
 

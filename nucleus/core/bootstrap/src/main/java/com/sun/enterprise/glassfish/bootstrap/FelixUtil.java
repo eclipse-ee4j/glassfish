@@ -23,6 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+/*
+ * THIS METHOD HAS BEEN COPIED FROM FELIX
+ * - because we need this call very early and Felix is not on classpath yet.
+ * See org.apache.felix.framework.util.Util class.
+ */
 class FelixUtil {
 
     private static final String DELIM_START = "${";
@@ -48,11 +53,6 @@ class FelixUtil {
      * @return The value of the specified string after system property substitution.
      * @throws IllegalArgumentException If there was a syntax error in the
      *         property placeholder syntax or a recursive variable reference.
-     */
-    /*
-     * THIS METHOD HAS BEEN COPIED FROM FELIX
-     * - because we need this call very early and Felix is not on classpath yet.
-     * See org.apache.felix.framework.util.Util class.
      */
     public static String substVars(String val, String currentKey,
                                     Map cycleMap, Properties configProps)

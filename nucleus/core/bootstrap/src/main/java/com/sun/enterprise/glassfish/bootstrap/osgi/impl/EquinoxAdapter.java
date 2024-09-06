@@ -17,6 +17,7 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
+import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
 
 import java.io.File;
 import java.io.IOException;

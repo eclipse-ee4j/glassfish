@@ -17,6 +17,7 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
+import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
 
 import java.io.File;
 
@@ -24,9 +25,9 @@ import java.io.File;
  * Non-OSGI platform adapter.
  * Does not have any config file, does not record OSGI framework jar files.
  */
-public class StaticAdapter extends OsgiPlatformAdapter {
+public class EmbeddedAdapter extends OsgiPlatformAdapter {
 
-    public StaticAdapter(StartupContextCfg cfg) {
+    public EmbeddedAdapter(StartupContextCfg cfg) {
         super(cfg);
     }
 

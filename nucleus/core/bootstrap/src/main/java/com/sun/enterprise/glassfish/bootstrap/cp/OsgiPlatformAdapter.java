@@ -14,27 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
-
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
-public class KnopflerfishAdapter implements OsgiPlatformAdapter {
+interface OsgiPlatformAdapter {
 
-    private static final String KF_HOME = "KNOPFLERFISH_HOME";
-    private final File kfHome;
+    /**
+     * Adds the jar files of the OSGi platform to the given {@link ClassPathBuilder}
+     */
+    void addFrameworkJars(ClassPathBuilder builder) throws IOException;
 
-    public KnopflerfishAdapter(StartupContextCfg cfg) {
-        this.kfHome = cfg.getOsgiHome(KF_HOME, KF_HOME, Path.of("osgi", "knopflerfish.org", "osgi"));
-    }
-
-
-    @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        cpb.addJar(new File(kfHome, "framework.jar"));
-    }
 }

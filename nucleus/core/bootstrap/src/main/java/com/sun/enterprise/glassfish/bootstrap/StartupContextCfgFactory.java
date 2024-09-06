@@ -17,9 +17,9 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import java.io.File;
@@ -44,7 +44,7 @@ import static com.sun.enterprise.module.bootstrap.StartupContext.TIME_ZERO_NAME;
 import static java.util.logging.Level.INFO;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
-final class StartupContextCfgFactory {
+public final class StartupContextCfgFactory {
 
     /** Location of the unified config properties file relative to the domain directory */
     private static final Path CONFIG_PROPERTIES = Path.of("config", "osgi.properties");
@@ -54,7 +54,7 @@ final class StartupContextCfgFactory {
     }
 
 
-    static StartupContextCfg createStartupContextCfg(OsgiPlatform platform, ServerFiles files, String[] args) {
+    public static StartupContextCfg createStartupContextCfg(OsgiPlatform platform, ServerFiles files, String[] args) {
         Properties properties = argsToMap(args);
         properties.setProperty(TIME_ZERO_NAME, Long.toString(System.currentTimeMillis()));
 

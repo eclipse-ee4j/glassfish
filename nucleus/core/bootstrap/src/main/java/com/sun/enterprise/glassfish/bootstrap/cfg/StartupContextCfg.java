@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.glassfish.bootstrap.cfg;
 
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Properties;

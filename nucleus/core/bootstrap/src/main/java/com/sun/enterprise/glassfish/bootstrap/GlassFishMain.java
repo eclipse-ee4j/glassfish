@@ -18,29 +18,20 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cp.ClassLoaderBuilder;
 import com.sun.enterprise.glassfish.bootstrap.cp.GlassfishBootstrapClassLoader;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import static com.sun.enterprise.glassfish.bootstrap.StartupContextCfgFactory.createStartupContextCfg;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
@@ -49,8 +40,6 @@ import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static java.util.logging.Level.SEVERE;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.CLASS_INITIALIZER;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.KEY_TRACING_ENABLED;
-import static org.osgi.framework.Constants.EXPORT_PACKAGE;
-import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -92,7 +81,7 @@ public class GlassFishMain {
         final Path instanceRoot = findInstanceRoot(installRoot, argsAsProps);
         final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
         final StartupContextCfg startupContextCfg = createStartupContextCfg(platform, files, args);
-        final ClassLoader launcherCL = createLauncherCL(startupContextCfg, gfBootCL);
+        final ClassLoader launcherCL = ClassLoaderBuilder.createLauncherCL(startupContextCfg, gfBootCL);
 
         final Class<?> launcherClass = launcherCL.loadClass(Launcher.class.getName());
         final Object launcher = launcherClass.getDeclaredConstructor().newInstance();
@@ -264,111 +253,6 @@ public class GlassFishMain {
         }
 
         return cfg;
-    }
-
-
-    /**
-     * This method is responsible setting up launcher class loader which is then used while calling
-     * {@link org.glassfish.embeddable.GlassFishRuntime#bootstrap(org.glassfish.embeddable.BootstrapProperties, ClassLoader)}.
-     *
-     * This launcher class loader's delegation hierarchy looks like this:
-     * launcher class loader
-     *       -> OSGi framework launcher class loader
-     *             -> extension class loader
-     *                   -> null (bootstrap loader)
-     * We first create what we call "OSGi framework launcher class loader," that has
-     * classes that we want to be visible via system bundle.
-     * Then we create launcher class loader which has {@link OSGiGlassFishRuntimeBuilder} and its dependencies in
-     * its search path. We set the former one as the parent of this, there by sharing the same copy of
-     * GlassFish API classes and also making OSGi classes visible to OSGiGlassFishRuntimeBuilder.
-     *
-     * We could have merged all the jars into one class loader and called it the launcher class loader, but
-     * then such a loader, when set as the bundle parent loader for all OSGi classloading delegations, would make
-     * more things visible than desired. Please note, glassfish.jar has a very long dependency chain. See
-     * glassfish issue 13287 for the kinds of problems it can create.
-     *
-     * @see #createOSGiFrameworkLauncherCL(java.util.Properties, ClassLoader)
-     * @param delegate Parent class loader for the launcher class loader.
-     */
-    // We need to make it visible for tests
-    static ClassLoader createLauncherCL(StartupContextCfg cfg, ClassLoader delegate) {
-        try {
-            ClassLoader osgiFWLauncherCL = createOSGiFrameworkLauncherCL(cfg, delegate);
-            ClassLoaderBuilder clb = new ClassLoaderBuilder(cfg);
-            clb.addLauncherDependencies();
-            return clb.build(osgiFWLauncherCL);
-        } catch (IOException e) {
-            throw new Error(e);
-        }
-    }
-
-
-    /**
-     * This method is responsible for setting up the what we call "OSGi framework launcher class loader." It has
-     * the following classes/jars in its search path:
-     *  - OSGi framework classes,
-     *  - GlassFish bootstrap apis (simple-glassfish-api.jar)
-     *  - jdk tools.jar classpath.
-     * OSGi framework classes are there because we want to launch the framework.
-     * simple-glassfish-api.jar is needed, because we need those classes higher up in the class loader chain otherwise
-     * {@link com.sun.enterprise.glassfish.bootstrap.Launcher} won't be able to see the same copy that's
-     * used by rest of the system.
-     * tools.jar is needed because its packages, which are exported via system bundle, are consumed by EJBC.
-     * This class loader is configured to be the delegate for all bundle class loaders by setting
-     * org.osgi.framework.bundle.parent=framework in OSGi configuration. Since this is the delegate for all bundle
-     * class loaders, one should be very careful about adding stuff here, as it not only affects performance, it also
-     * affects functionality as explained in GlassFish issue 13287.
-     *
-     * @param delegate Parent class loader for this class loader.
-     */
-    private static ClassLoader createOSGiFrameworkLauncherCL(StartupContextCfg cfg, ClassLoader delegate) {
-        try {
-            OsgiPlatformAdapter adapter = OsgiPlatformFactory.getOsgiPlatformAdapter(cfg);
-            ClassLoaderBuilder clb = new ClassLoaderBuilder(cfg);
-            clb.addPlatformDependencies(adapter);
-            clb.addServerBootstrapDependencies();
-            ClassLoader classLoader = clb.build(delegate);
-            String osgiPackages = classLoader.resources("META-INF/MANIFEST.MF").map(GlassFishMain::loadExports)
-                .collect(Collectors.joining(", "));
-            // FIXME: This will not be printed anywhere after failure, because logging could not be configured.
-//            BOOTSTRAP_LOGGER.log(INFO, "OSGI framework packages:\n{0}", osgiPackages);
-            System.err.println("OSGI framework packages:\n" + osgiPackages);
-            String javaPackages = detectJavaPackages();
-            System.err.println("JDK provided packages:\n" + javaPackages);
-            cfg.setProperty(FRAMEWORK_SYSTEMPACKAGES, osgiPackages +  ", " + javaPackages);
-            return classLoader;
-        } catch (IOException e) {
-            throw new Error(e);
-        }
-    }
-
-
-    private static String loadExports(final URL url) {
-        try (InputStream is = url.openStream()) {
-            Manifest manifest = new Manifest(is);
-            Attributes attributes = manifest.getMainAttributes();
-            return attributes.getValue(EXPORT_PACKAGE);
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not parse manifest from " + url, e);
-        }
-    }
-
-
-    private static String detectJavaPackages() {
-        Set<String> packages = new HashSet<>();
-        for (Module module : ModuleLayer.boot().modules()) {
-            addAllExportedPackages(module, packages);
-        }
-        return packages.stream().sorted().collect(Collectors.joining(", "));
-    }
-
-
-    private static void addAllExportedPackages(Module module, Set<String> packages) {
-        for (String pkg : module.getPackages()) {
-            if (module.isExported(pkg) || module.isOpen(pkg)) {
-                packages.add(pkg);
-            }
-        }
     }
 
 

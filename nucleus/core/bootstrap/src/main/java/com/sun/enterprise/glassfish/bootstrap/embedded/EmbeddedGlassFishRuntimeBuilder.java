@@ -19,9 +19,9 @@ package com.sun.enterprise.glassfish.bootstrap.embedded;
 
 import com.sun.enterprise.glassfish.bootstrap.UberMain;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.Which;

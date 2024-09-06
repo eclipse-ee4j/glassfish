@@ -15,13 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
+import com.sun.enterprise.glassfish.bootstrap.StartupContextCfgFactory;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.FelixAdapter;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatformAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -45,18 +43,16 @@ import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 /**
  * Created by kokil on 5/18/17.
  */
-class GlassFishMainIT {
+class ClassLoaderBuilderIT {
 
     @Test
     void createLauncher_Felix() throws Exception {
         StartupContextCfg cfg = createStartupContextCfg();
-        OsgiPlatformAdapter osgiPlatformAdapter = OsgiPlatformFactory.getOsgiPlatformAdapter(cfg);
-        assertThat(osgiPlatformAdapter, instanceOf(FelixAdapter.class));
-        assertNotNull(cfg);
-
-        ClassLoader loader = GlassFishMain.createLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
+        ClassLoader loader = ClassLoaderBuilder.createLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
         assertNotNull(loader);
-        Class<?> clazz = loader.loadClass("org.osgi.framework.Bundle");
+        Class<?> osgiClass = loader.loadClass("org.osgi.framework.Bundle");
+        assertNotNull(osgiClass);
+        Class<?> clazz = loader.loadClass("org.apache.felix.framework.Felix");
         assertNotNull(clazz);
         String osgiPackages = cfg.getProperty(FRAMEWORK_SYSTEMPACKAGES);
         assertAll(

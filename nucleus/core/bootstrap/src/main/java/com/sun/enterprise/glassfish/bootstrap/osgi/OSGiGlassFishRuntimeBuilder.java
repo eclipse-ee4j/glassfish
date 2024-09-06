@@ -18,8 +18,8 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,9 +51,9 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
  * <p/>
- * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Felix},
- * {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Equinox},
- * and {@link com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform#Knopflerfish}.
+ * {@link com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform#Felix},
+ * {@link com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform#Equinox},
+ * and {@link com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform#Knopflerfish}.
  * <p>
  * It can't handle Generic OSGi platform,
  * because it reads framework configuration from a framework specific file, see {@link OsgiPlatform}

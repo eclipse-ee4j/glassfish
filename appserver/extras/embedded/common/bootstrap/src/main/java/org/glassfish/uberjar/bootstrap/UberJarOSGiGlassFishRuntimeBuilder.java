@@ -18,8 +18,8 @@
 package org.glassfish.uberjar.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiFrameworkLauncher;
-import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;

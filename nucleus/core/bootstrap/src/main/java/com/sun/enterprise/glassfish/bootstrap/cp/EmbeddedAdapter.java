@@ -14,27 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
+/**
+ * Non-OSGI platform adapter.
+ * Does not have any config file, does not record OSGI framework jar files.
+ */
+public class EmbeddedAdapter implements OsgiPlatformAdapter {
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-
-public class FelixAdapter implements OsgiPlatformAdapter {
-
-    private static final String FELIX_HOME = "FELIX_HOME";
-    private final File felixHome;
-
-    public FelixAdapter(StartupContextCfg cfg) {
-        this.felixHome = cfg.getOsgiHome(FELIX_HOME, FELIX_HOME, Path.of("osgi", "felix"));
-    }
-
-
+    /**
+     * Noop.
+     */
     @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        cpb.addJar(new File(felixHome, "bin/felix.jar"));
+    public void addFrameworkJars(ClassPathBuilder cpb) {
+        // nothing to do
     }
 }

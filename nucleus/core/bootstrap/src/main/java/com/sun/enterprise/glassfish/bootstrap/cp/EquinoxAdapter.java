@@ -14,10 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap.osgi.impl;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.cp.ClassPathBuilder;
 
 import java.io.File;
 import java.io.IOException;

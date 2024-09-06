@@ -87,12 +87,12 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     public void destroy() throws GlassFishException {
         if (framework == null) {
-            logger.finer("EmbeddedOSGIRuntimeBuilder.destroy called, but framework is null.");
+            logger.finer("UberJarOSGiGlassFishRuntimeBuilder.destroy called, but framework is null.");
         } else {
             try {
                 framework.stop();
                 framework.waitForStop(0);
-                logger.info("EmbeddedOSGIRuntimeBuilder.destroy, stopped framework " + framework);
+                logger.info("UberJarOSGiGlassFishRuntimeBuilder.destroy, stopped framework " + framework);
             } catch (InterruptedException ex) {
                 throw new GlassFishException(ex);
             } catch (BundleException ex) {
@@ -104,7 +104,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public GlassFishRuntime build(BootstrapProperties bsOptions) throws GlassFishException {
         String uberJarURI = bsOptions.getProperty(UBER_JAR_URI);
-        logger.log(Level.FINER, "EmbeddedOSGIRuntimeBuilder.build, uberJarUri={0}", uberJarURI);
+        logger.log(Level.FINER, "UberJarOSGiGlassFishRuntimeBuilder.build, uberJarUri={0}", uberJarURI);
 
         URI jar = null;
         try {
@@ -141,8 +141,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         String platform = bsOptions.getProperty(PLATFORM_PROPERTY_KEY);
         if (platform == null) {
-            platform = OsgiPlatform.Felix.toString();
-            bsOptions.setProperty(PLATFORM_PROPERTY_KEY, platform);
+            bsOptions.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
         }
 
         System.setProperty(UBER_JAR_URI, jar.toString()); // embedded-osgi-main module will need this to extract the modules.
@@ -170,7 +169,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         bsOptions.setProperty(FRAMEWORK_STORAGE, instanceRoot + "/osgi-cache/Felix");
 
-        logger.logp(Level.FINER, "EmbeddedOSGIRuntimeBuilder", "build", "Building file system {0}", bsOptions);
+        logger.logp(Level.FINER, "UberJarOSGiGlassFishRuntimeBuilder", "build", "Building file system {0}", bsOptions);
 
         try {
             if (!isOSGiEnv()) {

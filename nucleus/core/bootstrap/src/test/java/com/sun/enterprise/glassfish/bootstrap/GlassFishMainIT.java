@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.FelixAdapter;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
@@ -71,6 +72,9 @@ class GlassFishMainIT {
 
     private StartupContextCfg createStartupContextCfg() throws IOException {
         Path installRoot = Files.createTempDirectory("FakeGFInstallRoot");
+        Path instanceRoot = Files.createTempDirectory("FakeGFInstanceRoot");
+        ServerFiles files = new ServerFiles(installRoot, instanceRoot);
+
         Path felixBin = installRoot.resolve(Path.of("osgi", "felix", "bin"));
         Files.createDirectories(felixBin);
         Path modulesDir = installRoot.resolve("modules");
@@ -89,11 +93,9 @@ class GlassFishMainIT {
         Files.createFile(cfgDir.resolve("osgi.properties"));
         properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.toFile().getAbsolutePath());
 
-        Path instanceRoot = Files.createTempDirectory("FakeGFInstanceRoot");
         properties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
 
-        return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, installRoot.toFile(),
-            instanceRoot.toFile(), new String[0]);
+        return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, files, new String[0]);
     }
 
 

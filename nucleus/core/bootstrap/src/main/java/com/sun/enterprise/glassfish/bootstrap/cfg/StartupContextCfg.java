@@ -19,28 +19,23 @@ package com.sun.enterprise.glassfish.bootstrap.cfg;
 import com.sun.enterprise.glassfish.bootstrap.osgi.impl.OsgiPlatform;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 
 public class StartupContextCfg {
 
     private final OsgiPlatform platform;
     private final Properties properties;
-    private final Path installRoot;
-    private final Path instanceRoot;
+    private final ServerFiles files;
 
 
-    public StartupContextCfg(OsgiPlatform platform, Properties properties) {
+    public StartupContextCfg(OsgiPlatform platform, ServerFiles files, Properties properties) {
         properties.setProperty(PLATFORM_PROPERTY_KEY, platform.name());
         this.platform = platform;
         this.properties = properties;
-        this.installRoot = getInstallRoot(properties);
-        this.instanceRoot = getInstanceRoot(properties);
+        this.files = files;
     }
 
 
@@ -53,22 +48,22 @@ public class StartupContextCfg {
 
 
     public Path getInstallRoot() {
-        return this.installRoot;
+        return files.getInstallRoot();
     }
 
 
     public Path getInstanceRoot() {
-        return this.instanceRoot;
+        return files.getInstanceRoot();
     }
 
 
     public File getFileUnderInstallRoot(Path relativePath) {
-        return this.installRoot.resolve(relativePath).toFile();
+        return files.getFileUnderInstallRoot(relativePath);
     }
 
 
     public File getFileUnderInstanceRoot(Path relativePath) {
-        return this.instanceRoot.resolve(relativePath).toFile();
+        return files.getFileUnderInstanceRoot(relativePath);
     }
 
 
@@ -80,16 +75,7 @@ public class StartupContextCfg {
      * @throws IllegalArgumentException if the directory does not exist.
      */
     public File getOsgiHome(String envKey, String sysPropsKey, Path defaultSubdir) {
-        final String envProperty = System.getenv(envKey);
-        if (envProperty != null) {
-            return toExistingFile(envProperty);
-        }
-        // try system property, which comes from asenv.conf
-        final String sysProperty = System.getProperty(sysPropsKey);
-        if (sysProperty != null) {
-            return toExistingFile(sysProperty);
-        }
-        return getFileUnderInstallRoot(defaultSubdir);
+        return files.getOsgiHome(envKey, sysPropsKey, defaultSubdir);
     }
 
 
@@ -113,37 +99,12 @@ public class StartupContextCfg {
     }
 
 
+    /**
+     * Note: it is expected that you don't use this instance after this call.
+     *
+     * @return internal properties.
+     */
     public Properties toProperties() {
-        return (Properties) properties.clone();
-    }
-
-
-    private static Path getInstallRoot(Properties cfg) {
-        return toExistingFilePath(cfg.getProperty(INSTALL_ROOT_PROP_NAME));
-    }
-
-
-    private static Path getInstanceRoot(Properties cfg) {
-        return toExistingFilePath(cfg.getProperty(INSTANCE_ROOT_PROP_NAME));
-    }
-
-
-    private static Path toExistingFilePath(String path) {
-        return toExistingFile(path).toPath();
-    }
-
-
-    private static File toExistingFile(String path) throws IllegalArgumentException {
-        final File file = new File(path);
-        try {
-            File existingFile = file.getCanonicalFile();
-            if (existingFile.isDirectory() && existingFile.canRead()) {
-                return existingFile;
-            }
-            throw new IllegalArgumentException(
-                "Invalid path: " + path + " - must be an existing and readable directory.");
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid path: " + path, e);
-        }
+        return properties;
     }
 }

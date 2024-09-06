@@ -18,6 +18,7 @@
 package com.sun.enterprise.glassfish.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
+import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.glassfish.bootstrap.cp.GlassfishBootstrapClassLoader;
@@ -32,6 +33,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -87,8 +89,9 @@ public class GlassFishMain {
         final OsgiPlatform platform = OsgiPlatform.valueOf(whichPlatform());
         STDOUT.println("Launching GlassFish on " + platform + " platform");
 
-        final File instanceRoot = findInstanceRoot(installRoot, argsAsProps);
-        final StartupContextCfg startupContextCfg = createStartupContextCfg(platform, installRoot, instanceRoot, args);
+        final Path instanceRoot = findInstanceRoot(installRoot, argsAsProps);
+        final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
+        final StartupContextCfg startupContextCfg = createStartupContextCfg(platform, files, args);
         final ClassLoader launcherCL = createLauncherCL(startupContextCfg, gfBootCL);
 
         final Class<?> launcherClass = launcherCL.loadClass(Launcher.class.getName());
@@ -141,14 +144,14 @@ public class GlassFishMain {
      * IMPORTANT - check for instance BEFORE domain.  We will always come up
      * with a default domain but there is no such thing as a default instance.
      */
-    private static File findInstanceRoot(File installRoot, Properties args) {
+    private static Path findInstanceRoot(File installRoot, Properties args) {
         File instanceDir = getInstanceRoot(args);
         if (instanceDir == null) {
             // that means that this is a DAS.
             instanceDir = getDomainRoot(args, installRoot);
         }
         verifyDomainRoot(instanceDir);
-        return instanceDir;
+        return instanceDir.toPath();
     }
 
 

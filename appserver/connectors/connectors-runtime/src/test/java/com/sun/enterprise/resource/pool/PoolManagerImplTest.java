@@ -359,7 +359,8 @@ public class PoolManagerImplTest {
 
     private void assertResourceIsNotEnlisted(ResourceHandle resource) {
         assertFalse(resource.isEnlisted());
-    }
+    }
+
     private void assertResourceHasNoConnectionErrorOccured(ResourceHandle resource) {
         assertFalse(resource.hasConnectionErrorOccurred());
     }

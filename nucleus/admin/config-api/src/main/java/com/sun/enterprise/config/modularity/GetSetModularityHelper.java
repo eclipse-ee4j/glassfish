@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,14 @@ package com.sun.enterprise.config.modularity;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 import java.util.StringTokenizer;
 
+import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.config.support.Singleton;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -40,6 +44,14 @@ public class GetSetModularityHelper {
 
     @Inject
     private Domain domain;
+
+    @Inject
+    private ServiceLocator serviceLocator;
+
+    @PostConstruct
+    public void initDefaultResources() {
+        serviceLocator.getAllServices(DefaultResourceProxy.class);
+    }
 
     /**
      * @param prefix the entire . separated string

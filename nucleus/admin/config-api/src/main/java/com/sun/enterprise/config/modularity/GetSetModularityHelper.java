@@ -102,7 +102,7 @@ public class GetSetModularityHelper {
         //        TODO temporary hard coded service names till all elements are supported, being tracked as part of FPP-121
         if (dottedName.contains("monitor"))
             return;
-        if (dottedName.contains("mdb-container") || dottedName.contains("ejb-container.") || dottedName.contains("web-container.")
+        if (dottedName.contains("mdb-container") || dottedName.contains("ejb-container.") || dottedName.endsWith("ejb-container") || dottedName.contains("web-container.")
                 || dottedName.contains("cdi-service") || dottedName.contains("batch-runtime-configuration")
                 || dottedName.contains("managed-job-config")) {
             //TODO improve performance to improve command execution time

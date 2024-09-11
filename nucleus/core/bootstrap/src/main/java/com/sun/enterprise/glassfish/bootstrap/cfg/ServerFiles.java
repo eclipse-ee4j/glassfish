@@ -61,12 +61,12 @@ public class ServerFiles {
     public File getOsgiHome(String envKey, String sysPropsKey, Path defaultSubdir) {
         final String envProperty = System.getenv(envKey);
         if (envProperty != null) {
-            return ServerFiles.toExistingFile(envProperty);
+            return toExistingFile(envProperty);
         }
         // try system property, which comes from asenv.conf
         final String sysProperty = System.getProperty(sysPropsKey);
         if (sysProperty != null) {
-            return ServerFiles.toExistingFile(sysProperty);
+            return toExistingFile(sysProperty);
         }
         return getFileUnderInstallRoot(defaultSubdir);
     }

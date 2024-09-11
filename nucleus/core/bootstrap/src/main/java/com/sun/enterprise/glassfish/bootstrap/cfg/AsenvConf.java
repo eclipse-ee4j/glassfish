@@ -37,7 +37,7 @@ public class AsenvConf {
 
     private final Properties properties;
 
-    public AsenvConf(File asenv, File configDir) {
+    private AsenvConf(File asenv, File configDir) {
         this.properties = new Properties();
         if (!asenv.exists()) {
             BOOTSTRAP_LOGGER.log(FINE, "{0} not found, ignoring", asenv.getAbsolutePath());

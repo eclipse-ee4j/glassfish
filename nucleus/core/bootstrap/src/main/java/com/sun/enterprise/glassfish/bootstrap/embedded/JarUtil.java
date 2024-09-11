@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -74,15 +72,14 @@ final class JarUtil {
 
     private static final String RAR_EXTENSION = ".rar";
 
-    private static final List<String> SYSTEM_RAR_NAMES = Collections.unmodifiableList(
-            Arrays.asList(
-                    JAXR_RA_NAME,
-                    JDBCDATASOURCE_RA_NAME,
-                    JDBCCONNECTIONPOOLDATASOURCE_RA_NAME,
-                    JDBCXA_RA_NAME,
-                    JDBCDRIVER_RA_NAME,
-                    DEFAULT_JMS_ADAPTER
-            ));
+    private static final List<String> SYSTEM_RAR_NAMES = List.of(
+        JAXR_RA_NAME,
+        JDBCDATASOURCE_RA_NAME,
+        JDBCCONNECTIONPOOLDATASOURCE_RA_NAME,
+        JDBCXA_RA_NAME,
+        JDBCDRIVER_RA_NAME,
+        DEFAULT_JMS_ADAPTER
+    );
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
@@ -108,7 +105,7 @@ final class JarUtil {
         if (systemModuleLocationExists(installDir, rarName)) {
             return false;
         }
-        String rarFileName = rarName + RAR_EXTENSION;
+        final String rarFileName = rarName + RAR_EXTENSION;
         try (InputStream rarInJar = JarUtil.class.getClassLoader().getResourceAsStream(rarFileName)) {
             if (rarInJar == null) {
                 LOG.log(Level.CONFIG, "The RAR file wasn't found: [" + rarFileName + "]");

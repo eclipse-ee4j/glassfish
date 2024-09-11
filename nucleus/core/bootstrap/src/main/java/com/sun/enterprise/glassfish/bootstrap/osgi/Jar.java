@@ -118,7 +118,7 @@ class Jar {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Jar)) {
+        if (!(obj instanceof Jar)) {
             return false;
         }
 

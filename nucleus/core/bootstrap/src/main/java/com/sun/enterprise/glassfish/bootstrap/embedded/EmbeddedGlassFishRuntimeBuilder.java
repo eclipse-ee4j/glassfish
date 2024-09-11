@@ -32,8 +32,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +52,7 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
     private static final String JAR_EXT = ".jar";
-    private static final List<String> MODULE_EXCLUDES = Arrays.asList("jsftemplating.jar", "gf-client-module.jar");
+    private static final Set<String> MODULE_EXCLUDES = Set.of("jsftemplating.jar", "gf-client-module.jar");
 
     @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
@@ -64,9 +64,11 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
         // Required to add moduleJarURLs to support 'java -jar modules/glassfish.jar case'
         List<URL> moduleJarURLs = getModuleJarURLs(installRoot);
-        ClassLoader cl = getClass().getClassLoader();
-        if (!moduleJarURLs.isEmpty()) {
-            cl = new StaticClassLoader(getClass().getClassLoader(), moduleJarURLs);
+        final ClassLoader cl;
+        if (moduleJarURLs.isEmpty()) {
+            cl = getClass().getClassLoader();
+        } else {
+            cl = new EmbeddedClassLoader(getClass().getClassLoader(), moduleJarURLs);
         }
 
         // Step 2. Setup the module subsystem.
@@ -106,10 +108,6 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
         return installRootProp;
     }
 
-    private boolean isValidInstallRoot(File installRoot) {
-        return installRoot == null ? false : isValidInstallRoot(installRoot.getAbsolutePath());
-    }
-
     private List<URL> getModuleJarURLs(String installRoot) {
         if(installRoot == null) {
             return new ArrayList<>();
@@ -118,10 +116,9 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
         try {
             // When running off the uber jar don't add extras module URLs to classpath.
             jarfile = new JarFile(Which.jarFile(getClass()));
-            String mainClassName = jarfile.getManifest().
-                    getMainAttributes().getValue("Main-Class");
+            String mainClassName = jarfile.getManifest().getMainAttributes().getValue("Main-Class");
             if (UberMain.class.getName().equals(mainClassName)) {
-                return new ArrayList<>();
+                return List.of();
             }
         } catch (Exception ex) {
             LOG.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
@@ -156,23 +153,23 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
         return moduleJarURLs;
     }
 
-    private boolean isValidInstallRoot(String installRootPath) {
-        if(installRootPath == null || !new File(installRootPath).exists()) {
+    private boolean isValidInstallRoot(File installRoot) {
+        if (installRoot == null || !installRoot.exists()) {
             return false;
         }
-        if(!new File(installRootPath, "modules").exists()) {
+        if (!new File(installRoot, "modules").exists()) {
             return false;
         }
-        if(!new File(installRootPath, "lib/dtds").exists()) {
+        if (!new File(installRoot, "lib/dtds").exists()) {
             return false;
         }
         return true;
     }
 
-    private static class StaticClassLoader extends GlassfishUrlClassLoader {
+    private static class EmbeddedClassLoader extends GlassfishUrlClassLoader {
 
-        StaticClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
-            super(moduleJarURLs.toArray(new URL[moduleJarURLs.size()]), parent);
+        EmbeddedClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
+            super(moduleJarURLs.toArray(URL[]::new), parent);
         }
     }
 

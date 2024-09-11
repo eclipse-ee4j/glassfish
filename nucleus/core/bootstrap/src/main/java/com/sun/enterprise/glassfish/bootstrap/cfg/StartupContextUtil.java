@@ -27,6 +27,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ARG_SEP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_ARGS;
+
 /**
  * This encapsulates the behavior of the properties object that's part of
  * {@link com.sun.enterprise.module.bootstrap.StartupContext}.
@@ -51,6 +56,9 @@ public final class StartupContextUtil {
     }
 
 
+    /**
+     * @return uses this class to locate its jar file.
+     */
     private static File findBootstrapFile() {
         try {
             return Which.jarFile(StartupContextUtil.class);
@@ -61,35 +69,55 @@ public final class StartupContextUtil {
     }
 
 
-    public static File getInstallRoot(StartupContext sc) {
-        return getInstallRoot(sc.getArguments());
+    /**
+     * @param context
+     * @return absolute glassfish directory aka install root.
+     */
+    public static File getInstallRoot(StartupContext context) {
+        return getInstallRoot(context.getArguments());
     }
 
 
-    public static File getInstallRoot(Properties p) {
-        return absolutize(new File(p.getProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME)));
+    /**
+     * @param properties
+     * @return absolute glassfish directory aka install root.
+     */
+    public static File getInstallRoot(Properties properties) {
+        return absolutize(new File(properties.getProperty(INSTALL_ROOT_PROP_NAME)));
 
     }
 
 
-    public static File getInstanceRoot(StartupContext sc) {
-        return getInstanceRoot(sc.getArguments());
+    /**
+     * @param context
+     * @return absolute domain or instance directory aka instance root.
+     */
+    public static File getInstanceRoot(StartupContext context) {
+        return getInstanceRoot(context.getArguments());
     }
 
 
-    public static File getInstanceRoot(Properties p) {
-        return absolutize(new File(p.getProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME)));
+    /**
+     * @param properties
+     * @return absolute domain or instance directory aka instance root.
+     */
+    public static File getInstanceRoot(Properties properties) {
+        return absolutize(new File(properties.getProperty(INSTANCE_ROOT_PROP_NAME)));
     }
 
 
-    public static String[] getOriginalArguments(StartupContext sc) {
-        Properties args = sc.getArguments();
+    /**
+     * @param context
+     * @return parsed array of arguments saved as {@link #ORIGINAL_ARGS}
+     */
+    public static String[] getOriginalArguments(StartupContext context) {
+        Properties args = context.getArguments();
         // See how ASMain packages the arguments
-        String s = args.getProperty(BootstrapKeys.ORIGINAL_ARGS);
+        String s = args.getProperty(ORIGINAL_ARGS);
         if (s == null) {
             return new String[0];
         }
-        StringTokenizer st = new StringTokenizer(s, BootstrapKeys.ARG_SEP, false);
+        StringTokenizer st = new StringTokenizer(s, ARG_SEP, false);
         List<String> result = new ArrayList<>();
         while (st.hasMoreTokens()) {
             result.add(st.nextToken());

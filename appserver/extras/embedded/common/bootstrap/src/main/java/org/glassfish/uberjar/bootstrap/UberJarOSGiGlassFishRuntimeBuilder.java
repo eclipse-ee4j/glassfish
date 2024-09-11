@@ -17,7 +17,6 @@
 
 package org.glassfish.uberjar.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiFrameworkLauncher;
 import com.sun.enterprise.util.io.FileUtils;
@@ -45,6 +44,7 @@ import org.osgi.framework.BundleReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.util.tracker.ServiceTracker;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
@@ -161,7 +161,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         bsOptions.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
         System.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
 
-        System.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot);
+        System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot);
         System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
 
         String version = loadVersion();

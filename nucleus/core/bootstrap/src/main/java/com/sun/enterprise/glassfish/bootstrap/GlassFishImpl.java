@@ -36,12 +36,13 @@ public class GlassFishImpl implements GlassFish {
 
     private static final String CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
 
+    private volatile Status status;
     private ModuleStartup gfKernel;
     private ServiceLocator serviceLocator;
-    private volatile Status status = Status.INIT;
 
     public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator serviceLocator, Properties gfProps)
         throws GlassFishException {
+        this.status = Status.INIT;
         this.gfKernel = gfKernel;
         this.serviceLocator = serviceLocator;
         // We enable a temporary distribution service until the HK2 Extras package is fixed so that

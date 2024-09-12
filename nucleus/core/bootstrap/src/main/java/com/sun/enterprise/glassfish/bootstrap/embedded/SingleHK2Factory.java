@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,16 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
 
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModuleDefinition;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
 import com.sun.enterprise.module.common_impl.ModuleId;
 import com.sun.enterprise.module.single.SingleModulesRegistry;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Factory which provides SingleModulesRegistry
@@ -31,33 +30,27 @@ import java.util.logging.Logger;
  *
  * @author bhavanishankar@dev.java.net
  */
+class SingleHK2Factory extends AbstractFactory {
 
-public class SingleHK2Factory extends AbstractFactory {
+    private final ClassLoader classloader;
+    private ModulesRegistry modulesRegistry;
 
-    private static Logger logger = Util.getLogger();
-    ClassLoader cl;
-    ModulesRegistry modulesRegistry;
-
-    public static synchronized void initialize(ClassLoader cl) {
+    public static synchronized void initialize(ClassLoader classloader) {
         if (Instance != null) {
-            if (logger.isLoggable(Level.FINER)) {
-                logger.finer("Singleton already initialized as " + getInstance());
-            }
+            LogFacade.BOOTSTRAP_LOGGER.finer(() -> "Singleton already initialized as " + getInstance());
         }
-        Instance = new SingleHK2Factory(cl);
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Reinitialized singleton as " + getInstance());
-        }
+        Instance = new SingleHK2Factory(classloader);
+        LogFacade.BOOTSTRAP_LOGGER.finer(() -> "Reinitialized singleton as " + getInstance());
     }
 
-    public SingleHK2Factory(ClassLoader cl) {
-        this.cl = cl;
-        this.modulesRegistry = new SingleModulesRegistry(cl);
+    SingleHK2Factory(ClassLoader classloader) {
+        this.classloader = classloader;
+        this.modulesRegistry = new SingleModulesRegistry(classloader);
     }
 
     @Override
     public ModulesRegistry createModulesRegistry() {
-        return modulesRegistry == null ? modulesRegistry = new SingleModulesRegistry(cl) : modulesRegistry;
+        return modulesRegistry == null ? modulesRegistry = new SingleModulesRegistry(classloader) : modulesRegistry;
     }
 
     @Override

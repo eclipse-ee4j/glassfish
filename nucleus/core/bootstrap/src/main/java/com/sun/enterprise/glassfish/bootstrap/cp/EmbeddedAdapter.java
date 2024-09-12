@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,19 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
 /**
- * Tag Main to get the manifest file
+ * Non-OSGI platform adapter.
+ * Does not have any config file, does not record OSGI framework jar files.
  */
-public class ASMain {
+public class EmbeddedAdapter implements OsgiPlatformAdapter {
 
-    public static void main(final String[] args) throws Exception {
-        try {
-            GlassFishMain.main(args);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw t;
-        }
+    /**
+     * Noop.
+     */
+    @Override
+    public void addFrameworkJars(ClassPathBuilder cpb) {
+        // nothing to do
     }
 }

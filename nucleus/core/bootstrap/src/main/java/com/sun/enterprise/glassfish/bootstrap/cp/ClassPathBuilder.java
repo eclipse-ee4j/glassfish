@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -38,12 +38,11 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
 public final class ClassPathBuilder {
     private final List<File> files = new ArrayList<>();
 
-    public ClassPathBuilder() {
-    }
-
-
     /**
      * Adds a single jar.
+     *
+     * @param jar
+     * @throws IOException if the file doesn't exist.
      */
     public void addJar(File jar) throws IOException {
         if (!jar.exists()) {
@@ -113,7 +112,7 @@ public final class ClassPathBuilder {
         }
     }
 
-    public ClassLoader create(final ClassLoader parent) {
+    public ClassLoader build(final ClassLoader parent) {
         PrivilegedAction<GlassfishUrlClassLoader> action = () -> {
             URL[] urls = files.stream().map(ClassPathBuilder::toURL).toArray(URL[]::new);
             return new GlassfishUrlClassLoader(urls, parent);

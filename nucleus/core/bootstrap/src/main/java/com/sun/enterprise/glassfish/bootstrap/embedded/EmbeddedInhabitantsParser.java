@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
 
-import jakarta.inject.Inject;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,12 +32,9 @@ import org.glassfish.hk2.utilities.DescriptorImpl;
  *
  * @author Jerome Dochez
  */
+// Note: Used in a service file!
 public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
-
-    @Inject
-    private ServiceLocator serviceLocator;
-
 
     @Override
     public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,15 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.cp;
 
-import java.util.Properties;
+import java.io.IOException;
 
-import org.glassfish.embeddable.GlassFishException;
+interface OsgiPlatformAdapter {
 
-/**
- * @author Sanjeeb.Sahoo@Sun.COM
- */
-public interface Configurator {
-    void configure(Properties props) throws GlassFishException;
+    /**
+     * Adds the jar files of the OSGi platform to the given {@link ClassPathBuilder}
+     */
+    void addFrameworkJars(ClassPathBuilder builder) throws IOException;
+
 }

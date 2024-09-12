@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,14 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
+
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -38,56 +38,58 @@ import java.util.logging.Logger;
  * @author bhavanishankar@dev.java.net
  * @author David Matejcek
  */
-public class JarUtil {
+final class JarUtil {
 
     /**
      * JAXR  system resource adapter name.
      */
-    public static final String JAXR_RA_NAME = "jaxr-ra";
+    private static final String JAXR_RA_NAME = "jaxr-ra";
 
     /**
      * JDBC datasource  system resource adapter name.
      */
-    public static final String JDBCDATASOURCE_RA_NAME = "__ds_jdbc_ra";
+    private static final String JDBCDATASOURCE_RA_NAME = "__ds_jdbc_ra";
 
     /**
      * JDBC connectionpool datasource  system resource adapter name.
      */
-    public static final String JDBCCONNECTIONPOOLDATASOURCE_RA_NAME = "__cp_jdbc_ra";
+    private static final String JDBCCONNECTIONPOOLDATASOURCE_RA_NAME = "__cp_jdbc_ra";
 
     /**
      * JDBC XA datasource  system resource adapter name.
      */
-    public static final String JDBCXA_RA_NAME = "__xa_jdbc_ra";
+    private static final String JDBCXA_RA_NAME = "__xa_jdbc_ra";
 
     /**
      * JDBC Driver Manager system resource adapter name.
      */
-    public static final String JDBCDRIVER_RA_NAME = "__dm_jdbc_ra";
+    private static final String JDBCDRIVER_RA_NAME = "__dm_jdbc_ra";
 
     /**
      * JMS datasource  system resource adapter name.
      */
-    public static final String DEFAULT_JMS_ADAPTER = "jmsra";
+    private static final String DEFAULT_JMS_ADAPTER = "jmsra";
 
-    public static final String RAR_EXTENSION = ".rar";
+    private static final String RAR_EXTENSION = ".rar";
 
-    public static final List<String> systemRarNames = Collections.unmodifiableList(
-            Arrays.asList(
-                    JAXR_RA_NAME,
-                    JDBCDATASOURCE_RA_NAME,
-                    JDBCCONNECTIONPOOLDATASOURCE_RA_NAME,
-                    JDBCXA_RA_NAME,
-                    JDBCDRIVER_RA_NAME,
-                    DEFAULT_JMS_ADAPTER
-            ));
+    private static final List<String> SYSTEM_RAR_NAMES = List.of(
+        JAXR_RA_NAME,
+        JDBCDATASOURCE_RA_NAME,
+        JDBCCONNECTIONPOOLDATASOURCE_RA_NAME,
+        JDBCXA_RA_NAME,
+        JDBCDRIVER_RA_NAME,
+        DEFAULT_JMS_ADAPTER
+    );
 
-    private static final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
+    private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
+    private JarUtil() {
+        // utility class
+    }
 
     public static boolean extractRars(String installDir) {
         boolean extracted = true;
-        for (String rarName : systemRarNames) {
+        for (String rarName : SYSTEM_RAR_NAMES) {
             extracted = extracted & extractRar(installDir, rarName);
         }
         return extracted;
@@ -103,17 +105,17 @@ public class JarUtil {
         if (systemModuleLocationExists(installDir, rarName)) {
             return false;
         }
-        String rarFileName = rarName + RAR_EXTENSION;
+        final String rarFileName = rarName + RAR_EXTENSION;
         try (InputStream rarInJar = JarUtil.class.getClassLoader().getResourceAsStream(rarFileName)) {
             if (rarInJar == null) {
-                logger.log(Level.CONFIG, "The RAR file wasn't found: [" + rarFileName + "]");
+                LOG.log(Level.CONFIG, "The RAR file wasn't found: [" + rarFileName + "]");
                 return false;
             }
             try (JarInputStream jarInputStream = new JarInputStream(rarInJar)) {
                 extractJar(jarInputStream, installDir);
                 return true;
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Exception while extracting resource [" + rarFileName + "]", e);
+                LOG.log(Level.WARNING, "Exception while extracting resource [" + rarFileName + "]", e);
                 return false;
             }
         } catch (IOException e) {
@@ -147,7 +149,7 @@ public class JarUtil {
                     continue;
                 }
                 try (FileOutputStream out = new FileOutputStream(outputFile)) {
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[8192];
                     int readCount = 0;
 
                     while ((readCount = jar.read(buffer)) >= 0) {

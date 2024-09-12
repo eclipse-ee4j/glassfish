@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,19 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
-
 /**
- * Tag Main to get the manifest file
+ * Provides classes and interfaces necessary to embed GlassFish and perform
+ * lifecycle operations, application deployments and runtime configurations.
  */
-public class ASMain {
-
-    public static void main(final String[] args) throws Exception {
-        try {
-            GlassFishMain.main(args);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw t;
-        }
-    }
-}
+package org.glassfish.embeddable;

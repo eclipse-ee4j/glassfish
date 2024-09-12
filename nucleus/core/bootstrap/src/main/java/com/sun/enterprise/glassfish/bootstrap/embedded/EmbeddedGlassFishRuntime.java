@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,23 +15,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package com.sun.enterprise.glassfish.bootstrap.embedded;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.ContextDuplicatePostProcessor;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.module.common_impl.AbstractFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.glassfish.embeddable.GlassFish;
@@ -39,7 +45,9 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELETE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -49,16 +57,14 @@ import static java.util.logging.Level.WARNING;
  *
  * @author bhavanishankar@dev.java.net
  */
-public class StaticGlassFishRuntime extends GlassFishRuntime {
+class EmbeddedGlassFishRuntime extends GlassFishRuntime {
 
-    private static final Logger LOG = Util.getLogger();
+    private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
 
-    private static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
-
-    private final Map<String, GlassFish> glassFishInstances = new HashMap<>();
+    private final Map<String, GlassFish> glassFishInstances = new ConcurrentHashMap<>();
     private final Main main;
 
-    public StaticGlassFishRuntime(Main main) {
+    public EmbeddedGlassFishRuntime(Main main) {
         this.main = main;
     }
 
@@ -76,41 +82,22 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         try {
             // Don't set temporarily created instanceRoot in the user supplied GlassFishProperties,
             // hence clone it.
-            Properties properties = new Properties();
+            final Properties properties = new Properties();
             properties.putAll(glassFishProperties.getProperties());
 
             final GlassFishProperties gfProps = new GlassFishProperties(properties);
             setEnv(gfProps);
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
+            final ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
+            final ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
+                List.of(new EmbeddedInhabitantsParser(), new DuplicatePostProcessor()), null);
 
-            ModulesRegistry modulesRegistry = SingleHK2Factory.getInstance().createModulesRegistry();
+            final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null,
+                startupContext);
 
-            ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
-                    List.of(new EmbeddedInhabitantsParser(), new ContextDuplicatePostProcessor()), null);
-
-            final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null, startupContext);
-
-            // Create a new GlassFish instance
-            GlassFish glassFish = new GlassFishImpl(gfKernel, serviceLocator, gfProps.getProperties()) {
-                @Override
-                public void dispose() throws GlassFishException {
-                    try {
-                        super.dispose();
-                    } finally {
-                        glassFishInstances.remove(gfProps.getInstanceRoot());
-                        if (Boolean.parseBoolean(gfProps.getProperties().getProperty(AUTO_DELETE)) && gfProps.getInstanceRoot() != null) {
-                            File instanceRoot = new File(gfProps.getInstanceRoot());
-                            // Might have been deleted already.
-                            if (instanceRoot.exists()) {
-                                Util.deleteRecursive(instanceRoot);
-                            }
-                        }
-                    }
-                }
-            };
-
-            // Add this newly created instance to a Map
+            final Consumer<GlassFish> onDispose = gf -> glassFishInstances.remove(gfProps.getInstanceRoot());
+            final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose);
             glassFishInstances.put(gfProps.getInstanceRoot(), glassFish);
 
             return glassFish;
@@ -148,8 +135,8 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         }
 
         File instanceRoot = new File(instanceRootValue);
-        System.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
-        System.setProperty(Constants.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
+        System.setProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
+        System.setProperty(BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
 
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
         if (installRootValue == null) {
@@ -163,12 +150,12 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
 
         // Some legacy code might depend on setting installRoot as system property.
         // Ideally everyone should depend only on StartupContext.
-        System.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-        System.setProperty(Constants.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+        System.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        System.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
 
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
-        gfProps.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-        gfProps.setProperty(Constants.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+        gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
     }
 
     private String createTempInstanceRoot(GlassFishProperties gfProps) throws Exception {
@@ -194,7 +181,7 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
                 "config/login.conf",
                 "config/admin-keyfile",
                 "org/glassfish/web/embed/default-web.xml",
-                "org/glassfish/embed/domain.xml"
+                "org/glassfish/embed/domain.xml",
             };
 
             // Create instance config directory.
@@ -225,19 +212,24 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
         return instanceRoot.getAbsolutePath();
     }
 
-    public static void copy(URL url, File destFile, boolean overwrite) {
-        if (url == null || destFile == null) return;
+    private static void copy(URL url, File destFile, boolean overwrite) {
+        if (url == null || destFile == null) {
+            return;
+        }
         try {
             if (!destFile.exists() || overwrite) {
                 if (!destFile.toURI().equals(url.toURI())) {
-                    InputStream stream = url.openStream();
                     destFile.getParentFile().mkdirs();
-                    Util.copy(stream, new FileOutputStream(destFile), stream.available());
-                    LOG.log(FINER, () -> "Copied " + url + " to " + destFile.getAbsolutePath());
+                    try (InputStream in = url.openStream(); FileOutputStream out = new FileOutputStream(destFile)) {
+                        ReadableByteChannel inChannel = Channels.newChannel(in);
+                        FileChannel outChannel = out.getChannel();
+                        outChannel.transferFrom(inChannel, 0, in.available());
+                    }
+                    LOG.log(FINER, () -> "Copied " + url + " to " + destFile);
                 }
             }
         } catch (Exception ex) {
-            LOG.log(FINER, ex, () -> "Failed to copy " + url + " to " + destFile.getAbsolutePath());
+            LOG.log(FINER, ex, () -> "Failed to copy " + url + " to " + destFile);
         }
     }
 }

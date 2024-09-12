@@ -124,7 +124,7 @@ public class PoolTxHelper {
         try {
             JavaEETransaction txn = (JavaEETransaction) ConnectorRuntime.getRuntime().getTransaction();
             if (txn != null) {
-                result = isNonXAResourceInTransaction(txn, handle) && txn.getResources(poolInfo).contains(handle);
+                result = isNonXAResourceInTransaction(txn, handle) || txn.getResources(poolInfo).contains(handle);
             }
         } catch (SystemException e) {
             if (_logger.isLoggable(Level.FINE)) {

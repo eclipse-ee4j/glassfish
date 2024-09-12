@@ -36,15 +36,16 @@ public class GlassFishImpl implements GlassFish {
 
     private static final String CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
 
-    private volatile Status status;
     private ModuleStartup gfKernel;
     private ServiceLocator serviceLocator;
+    private volatile Status status;
 
     public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator serviceLocator, Properties gfProps)
         throws GlassFishException {
-        this.status = Status.INIT;
         this.gfKernel = gfKernel;
         this.serviceLocator = serviceLocator;
+        this.status = Status.INIT;
+
         // We enable a temporary distribution service until the HK2 Extras package is fixed so that
         // we can enable the topic distribution service provided by HK2.
         ExtrasUtilities.enableTopicDistribution(serviceLocator);
@@ -120,8 +121,8 @@ public class GlassFishImpl implements GlassFish {
             throw new IllegalArgumentException("Server is not started yet. It is in " + status + "state");
         }
 
-        return serviceName != null ? serviceLocator.<T>getService(serviceType, serviceName) :
-                serviceLocator.<T>getService(serviceType);
+        return serviceName == null ? serviceLocator.getService(serviceType)
+            : serviceLocator.getService(serviceType, serviceName);
     }
 
     @Override

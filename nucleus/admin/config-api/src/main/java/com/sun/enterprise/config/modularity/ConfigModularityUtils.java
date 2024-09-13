@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
+import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -93,9 +94,9 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotParseDefa
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotRemoveConfigBean;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotSetConfigBean;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotSetConfigBeanFor;
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.invalidPath;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.noMethodInReturnException;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Contains utility methods for zero-config
@@ -106,7 +107,7 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.noMethodInRetur
 @Singleton
 public final class ConfigModularityUtils {
 
-    private static final Logger LOG = getLogger();
+    private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -713,12 +714,12 @@ public final class ConfigModularityUtils {
         IndentingXMLStreamWriter indentingXMLStreamWriter = null;
         String s = null;
         try {
-            writer = xmlFactory.createXMLStreamWriter(new BufferedOutputStream(bos));
+            writer = xmlFactory.createXMLStreamWriter(new BufferedOutputStream(bos), UTF_8.name());
             indentingXMLStreamWriter = new IndentingXMLStreamWriter(writer);
             Dom configBeanDom = Dom.unwrap(configBean);
             configBeanDom.writeTo(configBeanDom.model.getTagName(), indentingXMLStreamWriter);
             indentingXMLStreamWriter.flush();
-            s = bos.toString();
+            s = bos.toString(UTF_8);
         } catch (XMLStreamException e) {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, "Cannot serialize the configbean: " + configBean.toString(), e);

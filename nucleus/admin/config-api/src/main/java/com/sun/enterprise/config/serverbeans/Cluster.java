@@ -437,7 +437,6 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
         }
     }
 
-    @SuppressWarnings("unchecked")
     default <T extends ClusterExtension> List<T> getExtensionsByType(Class<T> type) {
         List<T> extensions = new ArrayList<>();
         for (ClusterExtension extension : getExtensions()) {
@@ -454,9 +453,8 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     default <T extends ClusterExtension> T getExtensionsByTypeAndName(Class<T> type, String name) {
         for (ClusterExtension extension : getExtensions()) {
             try {
-                type.cast(extension);
                 if (extension.getName().equals(name)) {
-                    return type.cast(type);
+                    return type.cast(extension);
                 }
             } catch (ClassCastException e) {
                 // ignore, not the right type
@@ -470,31 +468,31 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     class Decorator implements CreationDecorator<Cluster> {
 
         @Param(name = "config", optional = true)
-        String configRef = null;
+        String configRef;
 
         @Param(optional = true, obsolete = true)
-        String hosts = null;
+        String hosts;
 
         @Param(optional = true, obsolete = true)
         String haagentport;
 
         @Param(optional = true, obsolete = true)
-        String haadminpassword = null;
+        String haadminpassword;
 
         @Param(optional = true, obsolete = true)
-        String haadminpasswordfile = null;
+        String haadminpasswordfile;
 
         @Param(optional = true, obsolete = true)
-        String devicesize = null;
+        String devicesize;
 
         @Param(optional = true, obsolete = true)
-        String haproperty = null;
+        String haproperty;
 
         @Param(optional = true, obsolete = true)
-        String autohadb = null;
+        String autohadb;
 
         @Param(optional = true, obsolete = true)
-        String portbase = null;
+        String portbase;
 
         @Inject
         ServiceLocator habitat;

@@ -111,11 +111,9 @@ public final class ConfigModularityUtils {
 
     @Inject
     private ServiceLocator serviceLocator;
-    @Inject
-    private StartupContext context;
 
-    private boolean ignorePersisting = false;
-    private boolean isCommandInvocation = false;
+    private boolean ignorePersisting;
+    private boolean isCommandInvocation;
 
     public <U extends ConfigBeanProxy> URL getConfigurationFileUrl(Class<U> configBeanClass, String baseFileName, String runtimeType) {
         //TODO can be optimized a little by checking the default file...
@@ -177,8 +175,9 @@ public final class ConfigModularityUtils {
     public Method findSuitableCollectionGetter(Class owner, Class typeToSet) {
         Method[] methods = owner.getMethods();
         Method tm = returnException(owner, typeToSet);
-        if (tm != null)
+        if (tm != null) {
             return tm;
+        }
         for (Method m : methods) {
             if (m.getName().startsWith("get")) {
                 Type t = m.getGenericReturnType();
@@ -258,13 +257,16 @@ public final class ConfigModularityUtils {
 
     public Class getOwningClassForLocation(String location) {
         StringTokenizer tokenizer = new StringTokenizer(location, "/", false);
-        if (!tokenizer.hasMoreElements())
+        if (!tokenizer.hasMoreElements()) {
             return null;
-        if (!tokenizer.nextToken().equalsIgnoreCase("domain"))
+        }
+        if (!tokenizer.nextToken().equalsIgnoreCase("domain")) {
             return null;
+        }
         String level = "domain";
-        if (location.equalsIgnoreCase("domain/configs"))
+        if (location.equalsIgnoreCase("domain/configs")) {
             return getClassFor("domain");
+        }
         //It is a named config so we shall just return the config class
         if ((tokenizer.countTokens() == 2) && location.startsWith("domain/configs")) {
             return Config.class;
@@ -375,8 +377,9 @@ public final class ConfigModularityUtils {
             return null;
         } else {
             Class clz = getClassFor(childElement);
-            if (parent == null)
+            if (parent == null) {
                 return null;
+            }
             Method m = getMatchingGetterMethod(parent.getClass(), clz);
             if (m != null) {
                 return (ConfigBeanProxy) m.invoke(parent);
@@ -434,8 +437,9 @@ public final class ConfigModularityUtils {
                     }
                 }
                 if (!configBeanDefaultValue.replaceCurrentIfExists() || !stackPositionHigher(finalConfigBean, configBeanInstance)) {
-                    if (configBeanInstance != null)
+                    if (configBeanInstance != null) {
                         return (T) configBeanInstance;
+                    }
                 }
                 if (configBeanInstance != null) {
                     extensions.remove(configBeanInstance);
@@ -497,8 +501,9 @@ public final class ConfigModularityUtils {
     }
 
     public <T extends ConfigBeanProxy> boolean stackPositionHigher(T finalConfigBean, ConfigBeanProxy itemToRemove) {
-        if (itemToRemove == null || finalConfigBean == null)
+        if (itemToRemove == null || finalConfigBean == null) {
             return true;
+        }
         if (RankedConfigBeanProxy.class.isAssignableFrom(finalConfigBean.getClass())
                 && RankedConfigBeanProxy.class.isAssignableFrom(itemToRemove.getClass())) {
             int itemToRemoveRank = Integer.parseInt(((RankedConfigBeanProxy) itemToRemove).getRank());
@@ -528,6 +533,7 @@ public final class ConfigModularityUtils {
                     final SystemPropertyBag bag = (SystemPropertyBag) curParent;
                     final List<ConfigCustomizationToken> tokens = configBeanDefaultValue.getCustomizationTokens();
                     ConfigSupport.apply(new SingleConfigCode<SystemPropertyBag>() {
+                        @Override
                         public Object run(SystemPropertyBag param) throws PropertyVetoException, TransactionFailure {
                             addSystemPropertyForToken(tokens, bag);
                             return param;
@@ -587,8 +593,9 @@ public final class ConfigModularityUtils {
         String nameToLookFor = getNameForConfigBean(configBeanObject, typeOfObjects);
         if (nameToLookFor != null) {
             T returnee = getNamedConfigBeanFromCollection(col, nameToLookFor, typeOfObjects);
-            if (returnee != null)
+            if (returnee != null) {
                 return returnee;
+            }
         } else {
             for (T configBean : col) {
                 try {
@@ -604,8 +611,9 @@ public final class ConfigModularityUtils {
 
     public <T extends ConfigBeanProxy> T getNamedConfigBeanFromCollection(Collection<T> col, String nameToLookFor, Class typeOfObjects)
             throws InvocationTargetException, IllegalAccessException {
-        if (nameToLookFor == null)
+        if (nameToLookFor == null) {
             return null;
+        }
         for (Object item : col) {
             if (!((ConfigView) Proxy.getInvocationHandler(item)).getProxyType().isAssignableFrom(typeOfObjects)) {
                 continue;
@@ -706,8 +714,9 @@ public final class ConfigModularityUtils {
     }
 
     public String serializeConfigBean(ConfigBeanProxy configBean) {
-        if (configBean == null)
+        if (configBean == null) {
             return null;
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         XMLOutputFactory xmlFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter writer = null;
@@ -728,10 +737,12 @@ public final class ConfigModularityUtils {
         } finally {
             try {
                 bos.close();
-                if (writer != null)
+                if (writer != null) {
                     writer.close();
-                if (indentingXMLStreamWriter != null)
+                }
+                if (indentingXMLStreamWriter != null) {
                     indentingXMLStreamWriter.close();
+                }
             } catch (IOException e) {
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.log(Level.FINE, "Cannot serialize the configbean: " + configBean.toString(), e);
@@ -837,13 +848,15 @@ public final class ConfigModularityUtils {
         Class<?> defaultReturnValue = descriptor.getImplementationClass();
 
         String name = descriptor.getName();
-        if (name == null)
+        if (name == null) {
             return defaultReturnValue;
+        }
 
         Class<?> foundContract = null;
         for (Type contract : descriptor.getContractTypes()) {
-            if (!(contract instanceof Class))
+            if (!(contract instanceof Class)) {
                 continue;
+            }
 
             Class<?> cc = (Class<?>) contract;
             if (cc.getName().equals(name)) {
@@ -852,8 +865,9 @@ public final class ConfigModularityUtils {
             }
         }
 
-        if (foundContract == null)
+        if (foundContract == null) {
             return defaultReturnValue;
+        }
         return foundContract;
     }
 
@@ -875,37 +889,43 @@ public final class ConfigModularityUtils {
             ConfigBeanProxy parent = finalConfigBean.getParent();
             while (!(parent instanceof SystemPropertyBag)) {
                 parent = parent.getParent();
-                if (parent == null)
+                if (parent == null) {
                     return null;
+                }
             }
             if (((SystemPropertyBag) parent).getSystemProperty(token.getName()) != null) {
                 return ((SystemPropertyBag) parent).getSystemProperty(token.getName()).getValue();
             }
             return null;
-        } else
+        } else {
             return token.getValue();
+        }
     }
 
     public String getRuntimeTypePrefix(StartupContext startupContext) {
         Properties args = startupContext.getArguments();
         RuntimeType serverType = RuntimeType.getDefault();
         String typeString = args.getProperty("-type");
-        if (typeString != null)
+        if (typeString != null) {
             serverType = RuntimeType.valueOf(typeString);
+        }
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("server type is: " + serverType.name());
         }
-        if (serverType.isEmbedded())
+        if (serverType.isEmbedded()) {
             return "embedded";
-        if (serverType.isSingleInstance() || serverType.isDas())
+        }
+        if (serverType.isSingleInstance() || serverType.isDas()) {
             return "admin";
-        if (serverType.isInstance())
+        }
+        if (serverType.isInstance()) {
             return "instance";
+        }
         return "";
     }
 
     public List<Class> getAnnotatedConfigBeans(Class annotationType) {
-        List<Class> prox = new ArrayList<Class>();
+        List<Class> prox = new ArrayList<>();
         List<ActiveDescriptor<?>> descriptor = serviceLocator
                 .getDescriptors(BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
         Class<?> clz = null;

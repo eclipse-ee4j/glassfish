@@ -68,6 +68,7 @@ import org.objectweb.asm.ClassReader;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
@@ -484,7 +485,7 @@ public class HK2JUnit5Extension
         final Set<String> exclude = excludedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         while (resources.hasMoreElements()) {
             final URL url = resources.nextElement();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), UTF_8))) {
                 while (true) {
                     final DescriptorImpl descriptor = new DescriptorImpl();
                     final boolean goOn = descriptor.readObject(reader);

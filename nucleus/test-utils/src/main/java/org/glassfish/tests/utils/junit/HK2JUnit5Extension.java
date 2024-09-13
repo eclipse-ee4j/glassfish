@@ -62,6 +62,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.jvnet.hk2.config.ConfigParser;
+import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
 import org.objectweb.asm.ClassReader;
@@ -94,6 +95,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class HK2JUnit5Extension
     implements BeforeAllCallback, TestInstancePostProcessor, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
+    /**
+     * One second timeout set as system property before tests start.
+     * @see ConfigSupport
+     */
+    public static final Integer HK2_CONFIG_LOCK_TIME_OUT_IN_SECONDS = 1;
     private static final Logger LOG = Logger.getLogger(HK2JUnit5Extension.class.getName());
     private static final String CLASS_PATH_PROP = "java.class.path";
     private static final String DOT_CLASS = ".class";
@@ -106,6 +112,10 @@ public class HK2JUnit5Extension
     private StaticModulesRegistry modulesRegistry;
 
     private Namespace namespaceMethod;
+
+    static {
+        System.setProperty("org.glassfish.hk2.config.locktimeout", HK2_CONFIG_LOCK_TIME_OUT_IN_SECONDS.toString());
+    }
 
 
     @Override

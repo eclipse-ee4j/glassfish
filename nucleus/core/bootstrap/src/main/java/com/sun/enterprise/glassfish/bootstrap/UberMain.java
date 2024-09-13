@@ -19,6 +19,8 @@ package com.sun.enterprise.glassfish.bootstrap;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
@@ -27,48 +29,76 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+
 /**
- * This is main class for the uber jars viz., glassfish-embedded-all.jar and
- * glassfish-embedded-web.jar, to be able to do:
+ * This is main class for the uber jars viz., glassfish-embedded-all.jar and glassfish-embedded-web.jar, to be able to
+ * do:
  * <p/>
- * <p/>java -jar glassfish-embedded-all.jar
- * <p/>java -jar glassfish-embedded-web.jar
+ * <p/>
+ * {@code java -jar glassfish-embedded-all.jar}
+ * <p/>
+ * {@code java -jar glassfish-embedded-web.jar}
+ * <p/>
+ * <h3>Example of running an app from command line</h3>
+ * <p/>
+ * On port 8080 and root context by default
+ * <p/>
+ * {@code java -jar glassfish-embedded-all.jar app.war}
+ * <p/>
+ * <h3>Example of running an app on a different port</h3>
+ * <p/>
+ * {@code java -jar glassfish-embedded-all.jar --httpPort=8090 app.war}
+ * <p/>
+ * <h3>Example with a custom deploy command</h3>
+ * <p/>
+ * Sets a custom root context (custom commands need to be enclosed in quotes because they usually contain spaces)
+ * <p/>
+ * {@code java -jar glassfish-embedded-all.jar "deploy --contextroot=/app app.war"}
  *
  * @author bhavanishankar@dev.java.net
  */
-/*
-Example of running an app from command line:
-
-java -jar glassfish-embedded-all.jar "set configs.config.server-config.network-config.network-listeners.network-listener.http-listener.enabled=true" "set configs.config.server-config.network-config.network-listeners.network-listener.http-listener.port=8080" app.war
-
-Example with root context:
-
-java -jar glassfish-embedded-all.jar "set configs.config.server-config.network-config.network-listeners.network-listener.http-listener.enabled=true" "set configs.config.server-config.network-config.network-listeners.network-listener.http-listener.port=8080" "deploy --contextroot=/ app.war"
-*/
 public class UberMain {
 
-    GlassFish gf;
+    private static Logger logger = Logger.getLogger(UberMain.class.getName());
+
+    GlassFish glassFish;
+    CommandRunner commandRunner;
 
     public static void main(String... args) throws Exception {
-        final CommandLineParser.Arguments arguments = new CommandLineParser(args).parse();
+        final CommandLineParser.Arguments arguments = new CommandLineParser().parse(args);
         new UberMain().run(arguments);
     }
 
     public void run(CommandLineParser.Arguments arguments) throws Exception {
         addShutdownHook(); // handle Ctrt-C.
 
-        GlassFishProperties gfProps = new GlassFishProperties(arguments.properties);
+        GlassFishProperties gfProps = arguments.glassFishProperties;
         setFromSystemProperty(gfProps, "org.glassfish.embeddable.autoDelete", "true");
 
-        gf = GlassFishRuntime.bootstrap().newGlassFish(gfProps);
+        glassFish = GlassFishRuntime.bootstrap().newGlassFish(gfProps);
+        glassFish.start();
+        commandRunner = glassFish.getCommandRunner();
 
-        gf.start();
 
         for (String command : arguments.commands) {
             executeCommandFromString(command);
         }
 
-        if (gf.getDeployer().getDeployedApplications().isEmpty()) {
+
+        if (!arguments.deployables.isEmpty()) {
+            if (glassFish.getDeployer().getDeployedApplications().isEmpty() && arguments.deployables.size() == 1) {
+                executeCommandFromString("deploy --contextroot=/ " + arguments.deployables.get(0));
+            } else {
+                arguments.deployables.forEach(deployable -> {
+                    executeCommandFromString("deploy " + deployable);
+                });
+            }
+        }
+
+        if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
             runCommandPromptLoop();
         }
 
@@ -91,14 +121,14 @@ public class UberMain {
             }
         }
         try {
-            gf.stop();
-            gf.dispose();
+            glassFish.stop();
+            glassFish.dispose();
         } catch (Exception ex) {
         }
     }
 
-    private void executeCommandFromString(String stringCommand) throws GlassFishException {
-        CommandRunner cr = gf.getCommandRunner();
+    private void executeCommandFromString(String stringCommand) {
+        logger.log(FINE, () -> "Executing command: " + stringCommand);
         String[] split = stringCommand.split(" ");
         String command = split[0].trim();
         String[] commandParams = null;
@@ -110,10 +140,11 @@ public class UberMain {
         }
         try {
             CommandResult result = commandParams == null
-                    ? cr.run(command) : cr.run(command, commandParams);
-            System.out.println("\n" + result.getOutput());
+                    ? commandRunner.run(command) : commandRunner.run(command, commandParams);
+            logger.log(INFO, result.getOutput());
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            logger.log(SEVERE, ex.getMessage());
+            logger.log(FINE, ex.getMessage(), ex);
         }
     }
 
@@ -122,12 +153,18 @@ public class UberMain {
                 "GlassFish Shutdown Hook") {
             @Override
             public void run() {
-                try {
-                    if (gf != null) {
-                        gf.stop();
-                        gf.dispose();
+                if (glassFish != null) {
+                    try {
+                        glassFish.stop();
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, ex.getMessage(), ex);
+                    } finally {
+                        try {
+                            glassFish.dispose();
+                        } catch (GlassFishException ex) {
+                            logger.log(Level.SEVERE, ex.getMessage(), ex);
+                        }
                     }
-                } catch (Exception ex) {
                 }
             }
         });

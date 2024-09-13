@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -169,7 +169,7 @@ public class RestUtil {
                     neutralizeForLog(GuiUtil.getCommonMessage("LOG_REST_REQUEST_INFO",
                             new Object[] {
                                     endpoint,
-                                    (useData && "post".equals(method)) ? data : attrs, method
+                                    (useData && "post".equals(method)) ? data : maskedAttr, method
                             })));
         }
 

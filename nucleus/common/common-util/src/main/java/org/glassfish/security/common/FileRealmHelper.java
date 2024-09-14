@@ -17,7 +17,6 @@
 
 package org.glassfish.security.common;
 
-import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.BufferedReader;
@@ -25,7 +24,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import static com.sun.enterprise.util.Utility.convertCharArrayToByteArray;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
@@ -204,10 +203,7 @@ public final class FileRealmHelper
         boolean ok = false;
 
         try {
-            ok = SSHA.verify(ud.getSalt(), ud.getHash(),
-                    Utility.convertCharArrayToByteArray(password, Charset.defaultCharset().displayName()),
-                    ud.getAlgo());
-
+            ok = SSHA.verify(ud.getSalt(), ud.getHash(), convertCharArrayToByteArray(password, UTF_8), ud.getAlgo());
         } catch (Exception e) {
             return null;
         }
@@ -746,10 +742,9 @@ public final class FileRealmHelper
         assert (user != null);
         //Copy the password to another reference before storing it to the
         //instance field.
-        byte[] pwdBytes = null;
-
+        final byte[] pwdBytes;
         try {
-            pwdBytes = Utility.convertCharArrayToByteArray(pwd, Charset.defaultCharset().displayName());
+            pwdBytes = convertCharArrayToByteArray(pwd, UTF_8);
         } catch(Exception ex) {
             throw new IllegalArgumentException(ex);
         }

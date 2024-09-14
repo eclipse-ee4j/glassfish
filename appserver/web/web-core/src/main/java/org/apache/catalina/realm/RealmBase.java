@@ -28,6 +28,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -326,7 +327,8 @@ public abstract class RealmBase implements Lifecycle, Realm {
         byte[] valueBytes = null;
 
         try {
-            valueBytes = Utility.convertCharArrayToByteArray(serverDigestValue, getDigestEncoding());
+            Charset charset = Utility.getCharset(getDigestEncoding());
+            valueBytes = Utility.convertCharArrayToByteArray(serverDigestValue, charset);
         } catch (CharacterCodingException cce) {
             String msg = MessageFormat.format(rb.getString(LogFacade.ILLEGAL_DIGEST_ENCODING_EXCEPTION), getDigestEncoding());
             log.log(Level.SEVERE, msg, cce);
@@ -1005,7 +1007,8 @@ public abstract class RealmBase implements Lifecycle, Realm {
 
                 byte[] bytes = null;
                 try {
-                    bytes = Utility.convertCharArrayToByteArray(credentials, getDigestEncoding());
+                    Charset charset = Utility.getCharset(getDigestEncoding());
+                    bytes = Utility.convertCharArrayToByteArray(credentials, charset);
                 } catch (CharacterCodingException cce) {
                     String msg = MessageFormat.format(rb.getString(LogFacade.ILLEGAL_DIGEST_ENCODING_EXCEPTION), getDigestEncoding());
                     log.log(Level.SEVERE, msg, cce);
@@ -1068,11 +1071,12 @@ public abstract class RealmBase implements Lifecycle, Realm {
 
         byte[] valueBytes = null;
         try {
-            valueBytes = Utility.convertCharArrayToByteArray(digestValue, getDigestEncoding());
+            Charset charset = Utility.getCharset(getDigestEncoding());
+            valueBytes = Utility.convertCharArrayToByteArray(digestValue, charset);
         } catch (CharacterCodingException cce) {
             String msg = MessageFormat.format(rb.getString(LogFacade.ILLEGAL_DIGEST_ENCODING_EXCEPTION), getDigestEncoding());
             log.log(Level.SEVERE, msg, cce);
-            throw new IllegalArgumentException(cce.getMessage());
+            throw new IllegalArgumentException(cce.getMessage(), cce);
         }
 
         byte[] digest = null;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,8 +28,6 @@ import java.io.PushbackInputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.ChoiceCallback;
@@ -37,6 +36,10 @@ import javax.security.auth.callback.PasswordCallback;
 
 import org.glassfish.internal.api.Globals;
 
+import static com.sun.enterprise.security.SecurityLoggerInfo.usernamePasswordEnteringSecurityError;
+import static java.nio.charset.Charset.defaultCharset;
+import static java.util.logging.Level.SEVERE;
+
 /**
  * This implementation of LoginDialog If these are not set, then it queries the user in the command window.
  *
@@ -44,20 +47,14 @@ import org.glassfish.internal.api.Globals;
  */
 public final class TextLoginDialog implements LoginDialog {
 
-    private static Logger _logger = null;
-
-    static {
-        _logger = SecurityLoggerInfo.getLogger();
-    }
-    private String username = null;
-    private char[] password = null;
+    private String username;
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TextLoginDialog.class);
 
     public TextLoginDialog(Callback[] callbacks) {
         try {
-            for (int i = 0; i < callbacks.length; i++) {
-                if (callbacks[i] instanceof NameCallback) {
-                    NameCallback nc = (NameCallback) callbacks[i];
+            for (Callback callback : callbacks) {
+                if (callback instanceof NameCallback) {
+                    NameCallback nc = (NameCallback) callback;
                     System.err.print(nc.getPrompt());
                     if (nc.getDefaultName() != null) {
                         System.err.print("[" + nc.getDefaultName() + "]: ");
@@ -66,14 +63,14 @@ public final class TextLoginDialog implements LoginDialog {
                     }
 
                     System.err.flush();
-                    username = (new BufferedReader(new InputStreamReader(System.in))).readLine();
-                    if ((nc.getDefaultName() != null) && ((username == null) || (username.trim().length() == 0))) {
+                    username = new BufferedReader(new InputStreamReader(System.in, defaultCharset())).readLine();
+                    if ((nc.getDefaultName() != null) && (username == null || username.isBlank())) {
                         username = nc.getDefaultName();
                     }
                     nc.setName(username);
 
-                } else if (callbacks[i] instanceof PasswordCallback) {
-                    PasswordCallback pc = (PasswordCallback) callbacks[i];
+                } else if (callback instanceof PasswordCallback) {
+                    PasswordCallback pc = (PasswordCallback) callback;
                     char[] passwd = null;
                     Object consoleObj = null;
                     Method readPasswordMethod = null;
@@ -96,8 +93,8 @@ public final class TextLoginDialog implements LoginDialog {
                         pc.setPassword(passwd);
                         Arrays.fill(passwd, ' ');
                     }
-                } else if (callbacks[i] instanceof ChoiceCallback) {
-                    ChoiceCallback cc = (ChoiceCallback) callbacks[i];
+                } else if (callback instanceof ChoiceCallback) {
+                    ChoiceCallback cc = (ChoiceCallback) callback;
                     /* Get the keystore password to see if the user is
                      * authorized to see the list of certificates
                      */
@@ -108,16 +105,15 @@ public final class TextLoginDialog implements LoginDialog {
                     for (cnt = 0; cnt < 3; cnt++) {
                         // Let the user try putting password thrice
                         System.out.println(lbl + " : ");
-                        String s = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+                        String s = new BufferedReader(new InputStreamReader(System.in, defaultCharset())).readLine();
                         if (s != null) {
                             char[] kp = s.toCharArray();
                             if (sslUtils.verifyMasterPassword(kp)) {
                                 break;
-                            } else {
-                                String errmessage = localStrings.getLocalString("enterprise.security.IncorrectKeystorePassword",
-                                    "Incorrect Keystore Password");
-                                System.err.println(errmessage);
                             }
+                            String errmessage = localStrings.getLocalString(
+                                "enterprise.security.IncorrectKeystorePassword", "Incorrect Keystore Password");
+                            System.err.println(errmessage);
                             Arrays.fill(kp, ' ');
                         }
                     }
@@ -131,7 +127,7 @@ public final class TextLoginDialog implements LoginDialog {
                             System.err.print("[" + j + "] ");
                             System.err.println(choices[j]);
                         }
-                        String line = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+                        String line = new BufferedReader(new InputStreamReader(System.in, defaultCharset())).readLine();
 
                         if (line != null) {
                             int sel = Integer.parseInt(line);
@@ -141,7 +137,7 @@ public final class TextLoginDialog implements LoginDialog {
                 }
             }
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, SecurityLoggerInfo.usernamePasswordEnteringSecurityError, e);
+            SecurityLoggerInfo.getLogger().log(SEVERE, usernamePasswordEnteringSecurityError, e);
         }
 
     }
@@ -155,11 +151,11 @@ public final class TextLoginDialog implements LoginDialog {
     }
 
     /**
-     * @return The password of the user in plain text...
+     * @return always null
      */
     @Override
-    public final char[] getPassword() {
-        return (password == null) ? null : Arrays.copyOf(password, password.length);
+    public char[] getPassword() {
+        return null;
     }
 
     private static char[] readPassword(InputStream in) throws IOException {
@@ -174,31 +170,31 @@ public final class TextLoginDialog implements LoginDialog {
 
         loop: while (true) {
             switch (c = in.read()) {
-            case -1:
-            case '\n':
-                break loop;
-
-            case '\r':
-                int c2 = in.read();
-                if ((c2 != '\n') && (c2 != -1)) {
-                    if (!(in instanceof PushbackInputStream)) {
-                        in = new PushbackInputStream(in);
-                    }
-                    ((PushbackInputStream) in).unread(c2);
-                } else {
+                case -1:
+                case '\n':
                     break loop;
 
-                }
-            default:
-                if (--room < 0) {
-                    buf = new char[offset + 128];
-                    room = buf.length - offset - 1;
-                    System.arraycopy(lineBuffer, 0, buf, 0, offset);
-                    Arrays.fill(lineBuffer, ' ');
-                    lineBuffer = buf;
-                }
-                buf[offset++] = (char) c;
-                break;
+                case '\r':
+                    int c2 = in.read();
+                    if ((c2 != '\n') && (c2 != -1)) {
+                        if (!(in instanceof PushbackInputStream)) {
+                            in = new PushbackInputStream(in);
+                        }
+                        ((PushbackInputStream) in).unread(c2);
+                    } else {
+                        break loop;
+
+                    }
+                default:
+                    if (--room < 0) {
+                        buf = new char[offset + 128];
+                        room = buf.length - offset - 1;
+                        System.arraycopy(lineBuffer, 0, buf, 0, offset);
+                        Arrays.fill(lineBuffer, ' ');
+                        lineBuffer = buf;
+                    }
+                    buf[offset++] = (char) c;
+                    break;
             }
         }
 

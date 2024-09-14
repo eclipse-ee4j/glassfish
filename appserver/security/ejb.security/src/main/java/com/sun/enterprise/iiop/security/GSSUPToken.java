@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,8 @@ import org.ietf.jgss.GSSException;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * GSSUPToken class creates a mechanism specific gssapi token for the username, password mechanism.
@@ -129,9 +131,9 @@ public class GSSUPToken {
                 // cannot use StringBuffer, as StringBuffer eats away a \
                 _name_ = _name_ + DELIMITER + realm;
             }
-            name_utf8 = _name_.getBytes("UTF8");
+            name_utf8 = _name_.getBytes(UTF_8);
             // password_utf8 = pwdcred.getPassword().getBytes("UTF8");
-            password_utf8 = Utility.convertCharArrayToByteArray(pwdcred.getPassword(), "UTF-8");
+            password_utf8 = Utility.convertCharArrayToByteArray(pwdcred.getPassword(), UTF_8);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Construction of GSSUPToken failed.", e);
         }
@@ -216,9 +218,9 @@ public class GSSUPToken {
         }
         /* Construct a PasswordCredential */
         try {
-            username = new String(name_utf8, "UTF8");
+            username = new String(name_utf8, UTF_8);
             // userpwd = new String(password_utf8, "UTF8");
-            userpwd = Utility.convertByteArrayToCharArray(password_utf8, "UTF-8");
+            userpwd = Utility.convertByteArrayToCharArray(password_utf8, UTF_8);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "IIOP1001: Exception getting username and password", e);
         }

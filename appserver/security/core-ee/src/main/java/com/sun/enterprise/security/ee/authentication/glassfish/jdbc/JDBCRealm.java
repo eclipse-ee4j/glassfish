@@ -29,6 +29,7 @@ import com.sun.enterprise.util.Utility;
 
 import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -411,7 +412,7 @@ public final class JDBCRealm extends DigestRealmBase {
     private char[] hashPassword(char[] password) throws CharacterCodingException {
         byte[] bytes = null;
         char[] result = null;
-        String charSet = getProperty(PARAM_CHARSET);
+        Charset charSet = Utility.getCharset(getProperty(PARAM_CHARSET));
         bytes = Utility.convertCharArrayToByteArray(password, charSet);
 
         if (messageDigest != null) {

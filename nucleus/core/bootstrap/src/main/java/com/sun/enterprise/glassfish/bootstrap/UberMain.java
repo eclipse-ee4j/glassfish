@@ -16,7 +16,11 @@
  */
 package com.sun.enterprise.glassfish.bootstrap;
 
+import com.sun.enterprise.glassfish.bootstrap.commandline.Arguments;
+import com.sun.enterprise.glassfish.bootstrap.commandline.CommandLineParser;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
@@ -32,6 +36,7 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.embeddable.CommandResult.ExitStatus.SUCCESS;
 
 /**
  * This is main class for the uber jars viz., glassfish-embedded-all.jar and glassfish-embedded-web.jar, to be able to
@@ -67,12 +72,16 @@ public class UberMain {
     GlassFish glassFish;
     CommandRunner commandRunner;
 
-    public static void main(String... args) throws Exception {
-        final CommandLineParser.Arguments arguments = new CommandLineParser().parse(args);
-        new UberMain().run(arguments);
+    public static void main(String... args) throws IOException, GlassFishException {
+        final Arguments arguments = new CommandLineParser().parse(args);
+        if (arguments.askedForHelp) {
+            arguments.printHelp();
+        } else {
+            new UberMain().run(arguments);
+        }
     }
 
-    public void run(CommandLineParser.Arguments arguments) throws Exception {
+    public void run(Arguments arguments) throws GlassFishException {
         addShutdownHook(); // handle Ctrt-C.
 
         GlassFishProperties gfProps = arguments.glassFishProperties;
@@ -111,7 +120,7 @@ public class UberMain {
             try {
                 str = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())).readLine();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(SEVERE, e.getMessage(), e);
             }
             if (str != null && str.trim().length() != 0) {
                 if ("exit".equalsIgnoreCase(str) || "quit".equalsIgnoreCase(str)) {
@@ -120,11 +129,7 @@ public class UberMain {
                 executeCommandFromString(str);
             }
         }
-        try {
-            glassFish.stop();
-            glassFish.dispose();
-        } catch (Exception ex) {
-        }
+        stopGlassFish();
     }
 
     private void executeCommandFromString(String stringCommand) {
@@ -141,8 +146,19 @@ public class UberMain {
         try {
             CommandResult result = commandParams == null
                     ? commandRunner.run(command) : commandRunner.run(command, commandParams);
-            logger.log(INFO, result.getOutput());
-        } catch (Exception ex) {
+            switch (result.getExitStatus()) {
+                case SUCCESS:
+                    logger.log(INFO, () -> "SUCCESS: " + result.getOutput());
+                    break;
+                default:
+                    if (result.getFailureCause() != null) {
+                        throw result.getFailureCause();
+                    } else {
+                        throw new RuntimeException("Command completed with " + result.getExitStatus() + ": "
+                                + result.getOutput() + ". Command was: " + stringCommand);
+                    }
+            }
+        } catch (Throwable ex) {
             logger.log(SEVERE, ex.getMessage());
             logger.log(FINE, ex.getMessage(), ex);
         }
@@ -154,20 +170,24 @@ public class UberMain {
             @Override
             public void run() {
                 if (glassFish != null) {
-                    try {
-                        glassFish.stop();
-                    } catch (Exception ex) {
-                        logger.log(Level.SEVERE, ex.getMessage(), ex);
-                    } finally {
-                        try {
-                            glassFish.dispose();
-                        } catch (GlassFishException ex) {
-                            logger.log(Level.SEVERE, ex.getMessage(), ex);
-                        }
-                    }
+                    stopGlassFish();
                 }
             }
         });
+    }
+
+    private void stopGlassFish() {
+        try {
+            glassFish.stop();
+        } catch (GlassFishException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+        } finally {
+            try {
+                glassFish.dispose();
+            } catch (GlassFishException ex) {
+                logger.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
     }
 
     // Preference: System property > GlassFish property > default value

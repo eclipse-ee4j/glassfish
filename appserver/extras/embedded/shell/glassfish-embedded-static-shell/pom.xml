@@ -35,6 +35,8 @@
     <properties>
         <path.derby>../../../javadb/lib</path.derby>
         <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
+        <path.bootstrap>../bootstrap</path.bootstrap>
+        <classpath.bootstrap>${path.bootstrap}/grizzly-npn-api.jar ${path.bootstrap}/glassfish-jul-extension.jar</classpath.bootstrap>
     </properties>
 
     <dependencies>
@@ -1383,7 +1385,8 @@
                         </manifest>
                         <manifestEntries>
                             <Bundle-SymbolicName>org.glassfish.embedded.static-shell</Bundle-SymbolicName>
-                            <Class-Path>${classpath.derby}</Class-Path>
+                            <Class-Path>${classpath.derby} ${classpath.bootstrap}</Class-Path>
+                            <Main-Class>com.sun.enterprise.glassfish.bootstrap.UberMain</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

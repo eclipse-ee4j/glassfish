@@ -11040,6 +11040,23 @@ we recommend to use the
 or even better it&#8217;s latest facade
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.Logger.html">System.Logger</a></code>.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Logs may contain sensitive information.
+Despite the Eclipse GlassFish in default configuration doesn&#8217;t log any passwords,
+before you share logs with anyone else you should verify that you don&#8217;t compromise your
+system by any information contained in logs, especially if you configured more verbose log levels.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="log-manager"><a class="anchor" href="#log-manager"></a>Log Manager</h4>
 <div class="paragraph">
@@ -12278,6 +12295,23 @@ Command list-log-levels executed successfully.</code></pre>
 <p>You will probably need to set logger levels most often.
 Let&#8217;s imagine that you would need to set the most verbose logging of an application
 using the <code>org.acme</code> package (and logger names).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Logs may contain sensitive information.
+Despite the Eclipse GlassFish in default configuration doesn&#8217;t log any passwords,
+before you share logs with anyone else you should verify that you don&#8217;t compromise your
+system by any information contained in logs, especially if you configured more verbose log levels.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Then you can edit the <code>logging.properties</code> file directly, what can be quite
@@ -32619,7 +32653,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-13 07:55:28 UTC
+Last updated 2024-09-14 14:39:16 UTC
 </div>
 </div>
 </body>

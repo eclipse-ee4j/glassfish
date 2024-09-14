@@ -7798,17 +7798,27 @@ surprising pattern of security events can prevent serious problems.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set logging for security and SSL messages.</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Consider setting module log levels for
-table.jakarta.enterprise.system.ssl.security and
-jakarta.enterprise.system.core.security. You can set a level from Severe
-to Finest (the default is Info), but be aware that the finer logging
-levels may produce a large log file.</p>
+<p>Consider setting module log levels for<br>
+<code>jakarta.enterprise.system.security.ssl</code><br>
+and<br>
+<code>jakarta.enterprise.system.core.security</code>.<br>
+You can set a level from <code>SEVERE</code> to <code>FINEST</code> (the default is <code>INFO</code>),
+but be aware that the finer logging levels may produce a large log file
+and may contain sensitive information.</p>
 </div>
 <div class="paragraph">
-<p>By default, Eclipse GlassFish logging messages are recorded in the server
-log, and you can set the file rotation limit, as described in
+<p>By default, Eclipse GlassFish logging messages are recorded in the <code>server.log</code> file,
+and you can set the file rotation limit, as described in
 <a href="reference-manual.html#rotate-log"><code>rotate-log</code>(1)</a></p>
 </div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure that you don&#8217;t share sensitive information in logs.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logs may contain sensitive information.
+Despite the $Eclipse GlassFish in default configuration doesn&#8217;t log any passwords,
+before you share logs with anyone else you should verify that you don&#8217;t compromise your
+system by any information contained in logs, especially if you configured
+more verbose log levels.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Ensure that you have correctly assigned users to the correct groups.</p></td>
@@ -7961,7 +7971,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-13 08:01:54 UTC
+Last updated 2024-09-14 14:45:23 UTC
 </div>
 </div>
 </body>

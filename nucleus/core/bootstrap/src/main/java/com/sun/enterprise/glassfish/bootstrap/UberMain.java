@@ -33,6 +33,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 
+import static java.lang.System.exit;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -109,6 +110,7 @@ public class UberMain {
 
         if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
             runCommandPromptLoop();
+            exit(0);
         }
 
     }
@@ -129,7 +131,6 @@ public class UberMain {
                 executeCommandFromString(str);
             }
         }
-        stopGlassFish();
     }
 
     private void executeCommandFromString(String stringCommand) {

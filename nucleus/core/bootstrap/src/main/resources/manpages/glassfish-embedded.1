@@ -10,9 +10,17 @@ DESCRIPTION
     GlassFish Embedded can be executed as an executable JAR file. This starts
     the server and configures it according to the given arguments or
     configuration files.
-    If executed without arguments or if no application is deployed, the server is
-    started and waits for further admin commands in a loop. The server can be
-    terminated with the "exit" or "quit" commands or pressing Ctrl+C.
+    
+    If executed without arguments or if no application is deployed, the server
+    is started and waits for further admin commands in a loop. The server can 
+    be terminated with the "exit" or "quit" commands or pressing Ctrl+C.
+    
+    If "glassfish.properties" file exists in the current directory, properties
+    in this file are set as if the "--properties=glassfish.properties" argument
+    was defined on the command line.
+
+    If "autodeploy" directory exists in the current directory, files and 
+    directories in that directory are deployed as applications on startup.
 
 OPTIONS
 ${OPTIONS}
@@ -34,9 +42,6 @@ DEFAULT CONFIGURATION
 
      - HTTP listener enabled on port 8080
      - HTTPS listener disabled
-     - If "glassfish.properties" file exists in the current directory, properties
-       in this file are set as if the "--properties=glassfish.properties" argument
-       was defined
 
 EXAMPLES
     Example 1: Run an application from command line

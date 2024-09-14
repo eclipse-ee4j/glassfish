@@ -15,6 +15,7 @@
  */
 package com.sun.enterprise.glassfish.bootstrap.commandline;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 
 import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAULT_HTTPS_LISTENER;
 import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAULT_HTTP_LISTENER;
+import static java.util.logging.Level.WARNING;
 
 /**
  *
@@ -34,7 +36,8 @@ import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAU
  */
 public enum Option {
     PROPERTIES("properties", "--properties=FILE",
-            "Load GlassFish properties from a file. The propertes in the file can be any of the following:\n"
+            "Load GlassFish properties from a file. This option can be repeated to load properties from multiple files."
+            + " The propertes in the file can be any of the following:\n"
             + " - Any properties supported by GlassFish Embedded.\n"
             + " - Any command line options with the name of the option as the key,"
             + " without the initial hyphens, and the value of the option as the value.\n"
@@ -67,7 +70,7 @@ public enum Option {
         }
     },
     HTTPS_PORT("httpsPort", "--httpsPort=PORT_NUMBER",
-        "Bind the HTTPS listener to the specified port. If not set, the HTTPS listener is disabled by default.") {
+            "Bind the HTTPS listener to the specified port. If not set, the HTTPS listener is disabled by default.") {
         @Override
         public void handle(String value, Arguments arguments) {
             setPort(DEFAULT_HTTPS_LISTENER, value, arguments);
@@ -94,6 +97,14 @@ public enum Option {
             setPort(DEFAULT_HTTP_LISTENER, 0, arguments);
         }
     },
+    AUTO_DEPLOY_DIR("autoDeployDir", "--autoDeployDir=DIRECTORY",
+            "Files and directories in this directory will be deployed as applications (in random order), as if they"
+            + " were specified on the command line.") {
+        @Override
+        public void handle(String value, Arguments arguments) {
+            loadApplicationsFromDirectory(value, arguments);
+        }
+    },
     HELP("help", "--help", "Print this help") {
         @Override
         public void handle(String value, Arguments arguments) {
@@ -101,7 +112,7 @@ public enum Option {
         }
     };
 
-    private static final Logger logger = Logger.getLogger(Option.class.getName());
+    protected static final Logger logger = Logger.getLogger(Option.class.getName());
 
     private String mainName;
     private Set<String> aliases;
@@ -170,7 +181,7 @@ public enum Option {
             properties.load(Files.newBufferedReader(Paths.get(fileName)));
             properties.forEach((k, v) -> {
                 try {
-                    arguments.setProperty((String) k, (String) v);
+                    arguments.setOption((String) k, (String) v);
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Invalid property '" + e.getKey() + "' in file " + fileName);
                 }
@@ -180,4 +191,14 @@ public enum Option {
         }
     }
 
+    protected void loadApplicationsFromDirectory(String directoryName, Arguments arguments) {
+        final File directory = new File(directoryName);
+        if (directory.isDirectory()) {
+            for (File appFile : directory.listFiles()) {
+                arguments.deployables.add(appFile.getAbsolutePath());
+            }
+        } else {
+            logger.log(WARNING, () -> "The path specified with the " + this.getUsage() + " option is not a directory: " + directoryName);
+        }
+    }
 }

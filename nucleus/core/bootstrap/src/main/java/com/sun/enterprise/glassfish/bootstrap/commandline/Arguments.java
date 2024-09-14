@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -40,11 +41,14 @@ public class Arguments {
 
     public static final String DEFAULT_HTTP_LISTENER = "http-listener";
     public static final String DEFAULT_HTTPS_LISTENER = "https-listener";
+    public static final String DEFAULT_PROPERTIES_FILE = "glassfish.properties";
+    public static final String DEFAULT_AUTO_DEPLOY_DIR = "autodeploy";
     public static final String COMMAND_KEY_PREFIX = "command.";
     public static final String DEPLOY_KEY_PREFIX = "deploy.";
     private static final int HELP_LINE_LENGTH = 80;              // wrap to max 80 columns per line
     private static final String HELP_FIRST_LINE_INDENT = "    "; // 4 spaces to align with man page content
     private static final String HELP_LINE_INDENT = "        ";   // 8 spaces to align with man page content
+
     public final List<String> commands = new ArrayList<>();
     public final GlassFishProperties glassFishProperties = new GlassFishProperties();
     public final List<String> deployables = new ArrayList<>();
@@ -54,21 +58,50 @@ public class Arguments {
 
     public Arguments() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);
-        if (new File(CommandLineParser.DEFAULT_PROPERTIES_FILE).isFile()) {
+        if (new File(DEFAULT_PROPERTIES_FILE).isFile()) {
             try {
-                setProperty(Option.PROPERTIES, CommandLineParser.DEFAULT_PROPERTIES_FILE);
+                Arguments.this.setOption(Option.PROPERTIES, DEFAULT_PROPERTIES_FILE);
             } catch (RuntimeException e) {
                 logger.log(Level.WARNING, e, () -> "Could not read properties from file "
-                        + CommandLineParser.DEFAULT_PROPERTIES_FILE + " - " + e.getMessage());
+                        + DEFAULT_PROPERTIES_FILE + " - " + e.getMessage());
+            }
+        }
+        if (new File(DEFAULT_AUTO_DEPLOY_DIR).isDirectory()) {
+            try {
+                Arguments.this.setOption(Option.AUTO_DEPLOY_DIR, DEFAULT_AUTO_DEPLOY_DIR);
+            } catch (RuntimeException e) {
+                logger.log(Level.WARNING, e, () -> "Could not find applications in the directory "
+                        + DEFAULT_AUTO_DEPLOY_DIR + " - " + e.getMessage());
             }
         }
     }
 
-    void setProperty(Option option, String value) {
+    /**
+     * Set an option or an argument with an optional value. If value not applicable, it should be {@code null}.
+     * @param option Chosen option to set
+     * @param value Value of the option or {@code null}
+     */
+    public void setOption(Option option, String value) {
         option.handle(value, this);
     }
 
-    void setProperty(String key, String value) throws UnknownPropertyException {
+    /**
+     * Add a command to execute at start. Commands are executed in the order in which they are added.
+     * @param command
+     */
+    public void addCommand(String command) {
+        commands.add(command);
+    }
+
+    /**
+     * Add a deployable (e.g. a WAR application) to deploy at start. Deployables are deployed in the order in which they are added.
+     * @param deployable
+     */
+    public void addDeployable(String deployable) {
+        deployables.add(deployable);
+    }
+
+    void setOption(String key, String value) throws UnknownPropertyException {
         try {
             Option option;
             try {
@@ -95,12 +128,35 @@ public class Arguments {
         }
     }
 
-    public void printHelp() throws IOException {
+    /**
+     * Print help information into the standard output
+     */
+    public void printHelp() {
+        printHelp(System.out::println);
+    }
+
+    /**
+     * Produce help information
+     * @return All the help information as String
+     */
+    public String getHelpText() {
+        StringBuilder sb = new StringBuilder();
+        printHelp(sb::append);
+        return sb.toString();
+    }
+
+    /**
+     * Produce help information and execute lineConsumer for every line.
+     * @param lineConsumer Called for every line
+     */
+    public void printHelp(Consumer<String> lineConsumer) {
         try (final BufferedReader manPageReader = openManPageReader()) {
             manPageReader.lines()
                     .map(this::replaceArguments)
                     .map(this::replaceOptions)
-                    .forEach(System.out::println);
+                    .forEach(lineConsumer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

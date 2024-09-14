@@ -25,8 +25,6 @@ import java.util.logging.Logger;
  */
 public class CommandLineParser {
 
-    public static String DEFAULT_PROPERTIES_FILE = "glassfish.properties";
-
     private static Logger logger = Logger.getLogger(CommandLineParser.class.getName());
 
     public Arguments parse(String[] commandLineArgs) {
@@ -38,15 +36,14 @@ public class CommandLineParser {
                 String[] keyValue = arg.substring(2).split("=", initialCharsToIgnore);
                 try {
                     if (keyValue.length == 2) {
-                        arguments.setProperty(keyValue[0], keyValue[1]);
+                        arguments.setOption(keyValue[0], keyValue[1]);
                     } else {
-                        arguments.setProperty(keyValue[0], null); // No value, it's a flag
+                        arguments.setOption(keyValue[0], null); // No value, it's a flag
                     }
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Unknown argument " + arg);
                 }
-            }
-            if (isdeployable(arg)) {
+            } else if (isdeployable(arg)) {
                 arguments.deployables.add(arg);
             } else {
                 arguments.commands.add(arg);

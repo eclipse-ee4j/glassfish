@@ -38,11 +38,19 @@ public enum Option {
             + " - Any properties supported by GlassFish Embedded.\n"
             + " - Any command line options with the name of the option as the key,"
             + " without the initial hyphens, and the value of the option as the value.\n"
-            + " - Keys that start with the \"command.\" prefix, followed by any text. The value will be"
+            + " - Keys that start with the \"" + Arguments.COMMAND_KEY_PREFIX
+            + "\" prefix, followed by any text. The value will be"
             + " treated as a command to execute at startup.\n"
+            + " - Keys that start with the \"" + Arguments.DEPLOY_KEY_PREFIX
+            + "\" prefix, followed by any text. The value will be"
+            + " treated as an application to deploy at startup, as if it was specified on the command line.\n"
             + "For example, the GlassFish domain directory can be specified with the usual GlassFish Embedded"
             + " property \"glassfish.embedded.tmpdir=myDomainDir\", as well as with the property"
-            + " \"domainDir=myDomainDir\" that represents the \"--domainDir=myDomainDir\" option."
+            + " \"domainDir=myDomainDir\" that represents the \"--domainDir=myDomainDir\" command-line option."
+            + " A command to deploy an application can be specified via a property key"
+            + " \"" + Arguments.COMMAND_KEY_PREFIX + "deploy.app=deploy --contextroot=app myapp.war\"."
+            + " An application to deploy at startup with the default deploy behavior can be specified via a property key"
+            + " \"" + Arguments.DEPLOY_KEY_PREFIX + "app=myapp.war\"."
             + " The property \"properties\" can also be defined in this file, pointing to another file."
             + " In that case, properties will be loaded also from that file.") {
 

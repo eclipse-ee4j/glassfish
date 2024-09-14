@@ -41,6 +41,7 @@ public class Arguments {
     public static final String DEFAULT_HTTP_LISTENER = "http-listener";
     public static final String DEFAULT_HTTPS_LISTENER = "https-listener";
     public static final String COMMAND_KEY_PREFIX = "command.";
+    public static final String DEPLOY_KEY_PREFIX = "deploy.";
     private static final int HELP_LINE_LENGTH = 80;              // wrap to max 80 columns per line
     private static final String HELP_FIRST_LINE_INDENT = "    "; // 4 spaces to align with man page content
     private static final String HELP_LINE_INDENT = "        ";   // 8 spaces to align with man page content
@@ -76,6 +77,8 @@ public class Arguments {
                 if (value != null) {
                     if (key.startsWith(COMMAND_KEY_PREFIX)) {
                         commands.add(value);
+                    } else if (key.startsWith(DEPLOY_KEY_PREFIX)) {
+                        deployables.add(value);
                     } else {
                         glassFishProperties.setProperty(key, value);
                     }

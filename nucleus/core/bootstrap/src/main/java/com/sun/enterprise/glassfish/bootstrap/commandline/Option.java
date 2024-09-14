@@ -34,21 +34,25 @@ import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAU
  */
 public enum Option {
     PROPERTIES("properties", "--properties=FILE",
-            "Load GlassFish properties from a file. The property keys can be any properties supported\n"
-            + "by GlassFish Embedded, and any command line options without the initial hyphens.\n"
-            + "For example, the GlassFish domain directory can be specified with the usual GlassFish Embedded\n"
-            + "property \"glassfish.embedded.tmpdir=myDomainDir\", as well as with the property \n"
-            + "\"domainDir=myDomainDir\" that represents the \"--domainDir=myDomainDir\" option.\n"
-            + "The property \"properties\" can also be defined in this file, pointing to another file.\n"
-            + "In that case, properties will be loaded also from that file.") {
+            "Load GlassFish properties from a file. The propertes in the file can be any of the following:\n"
+            + " - Any properties supported by GlassFish Embedded.\n"
+            + " - Any command line options with the name of the option as the key,"
+            + " without the initial hyphens, and the value of the option as the value.\n"
+            + " - Keys that start with the \"command.\" prefix, followed by any text. The value will be"
+            + " treated as a command to execute at startup.\n"
+            + "For example, the GlassFish domain directory can be specified with the usual GlassFish Embedded"
+            + " property \"glassfish.embedded.tmpdir=myDomainDir\", as well as with the property"
+            + " \"domainDir=myDomainDir\" that represents the \"--domainDir=myDomainDir\" option."
+            + " The property \"properties\" can also be defined in this file, pointing to another file."
+            + " In that case, properties will be loaded also from that file.") {
 
         public void handle(String value, Arguments arguments) {
             loadPropertiesFromFile(value, arguments);
         }
     },
     HTTP_PORT("httpPort", Set.of("port", "p"), "-p=PORT, --httpPort=PORT, --port=PORT",
-            "Bind the HTTP listener to the specified port. If not set, the HTTP listener binds to port\n"
-            + "8080 by default, unless it's disabled by the --noListener argument.") {
+            "Bind the HTTP listener to the specified port. If not set, the HTTP listener binds to port"
+            + " 8080 by default, unless it's disabled by the --noListener argument.") {
         @Override
         public void handle(String value, Arguments arguments) {
             setPort(DEFAULT_HTTP_LISTENER, value, arguments);

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -41,8 +40,10 @@ public class Arguments {
 
     public static final String DEFAULT_HTTP_LISTENER = "http-listener";
     public static final String DEFAULT_HTTPS_LISTENER = "https-listener";
-    final String HELP_FIRST_LINE_INDENT = "    "; // 4 spaces to align with man page content
-    final String HELP_LINE_INDENT = "        "; // 8 spaces to align with man page content
+    public static final String COMMAND_KEY_PREFIX = "command.";
+    private static final int HELP_LINE_LENGTH = 80;              // wrap to max 80 columns per line
+    private static final String HELP_FIRST_LINE_INDENT = "    "; // 4 spaces to align with man page content
+    private static final String HELP_LINE_INDENT = "        ";   // 8 spaces to align with man page content
     public final List<String> commands = new ArrayList<>();
     public final GlassFishProperties glassFishProperties = new GlassFishProperties();
     public final List<String> deployables = new ArrayList<>();
@@ -53,16 +54,17 @@ public class Arguments {
     public Arguments() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);
         if (new File(CommandLineParser.DEFAULT_PROPERTIES_FILE).isFile()) {
-            setProperty(Option.PROPERTIES, CommandLineParser.DEFAULT_PROPERTIES_FILE);
+            try {
+                setProperty(Option.PROPERTIES, CommandLineParser.DEFAULT_PROPERTIES_FILE);
+            } catch (RuntimeException e) {
+                logger.log(Level.WARNING, e, () -> "Could not read properties from file "
+                        + CommandLineParser.DEFAULT_PROPERTIES_FILE + " - " + e.getMessage());
+            }
         }
     }
 
     void setProperty(Option option, String value) {
-        try {
-            setProperty(option.getMainName(), value);
-        } catch (UnknownPropertyException ex) {
-            throw new Error("Should not happen");
-        }
+        option.handle(value, this);
     }
 
     void setProperty(String key, String value) throws UnknownPropertyException {
@@ -72,7 +74,11 @@ public class Arguments {
                 option = Option.from(key);
             } catch (NoSuchElementException e) {
                 if (value != null) {
-                    glassFishProperties.setProperty(key, value);
+                    if (key.startsWith(COMMAND_KEY_PREFIX)) {
+                        commands.add(value);
+                    } else {
+                        glassFishProperties.setProperty(key, value);
+                    }
                 } else {
                     throw new UnknownPropertyException(key, value);
                 }
@@ -96,24 +102,14 @@ public class Arguments {
     }
 
     private String replaceArguments(String line) {
-        final int MAX_LINE_LENGTH = 80;
-        AtomicInteger characterCount = new AtomicInteger(40); // 40 characters already in the static manpage template
+        final WordWrapper wordWrapper = new WordWrapper(HELP_LINE_LENGTH, 40, HELP_LINE_INDENT);
 
         final String arguments = Stream.concat(
-                    Arrays.stream(Option.values())
-                            .map(option -> "[" + option.getUsage() + "]"),
-                    Stream.of("[applications or admin commands...]")
-                )
-                .peek(optText -> characterCount.addAndGet(optText.length() + 1))
-                .map(optionText -> {
-                    if (characterCount.get() > MAX_LINE_LENGTH) {
-                        final String newOptionText = HELP_LINE_INDENT + optionText;
-                        characterCount.set(newOptionText.length());
-                        return "\n" + newOptionText;
-                    } else {
-                        return optionText;
-                    }
-                })
+                Arrays.stream(Option.values())
+                        .map(option -> "[" + option.getUsage() + "]"),
+                Stream.of("[applications or admin commands...]")
+        )
+                .map(wordWrapper::map)
                 .collect(Collectors.joining(" "));
         return line.replace("${ARGUMENTS}", arguments);
     }
@@ -121,14 +117,20 @@ public class Arguments {
     private String replaceOptions(String line) {
         final String options = Arrays.stream(Option.values())
                 .map(option -> {
+                    final WordWrapper wordWrapper = new WordWrapper(HELP_LINE_LENGTH, HELP_LINE_INDENT.length(), HELP_LINE_INDENT);
                     return HELP_FIRST_LINE_INDENT + option.getUsage() + "\n"
-                            + option.getHelpText().lines()
-                                    .map(aLine -> HELP_LINE_INDENT + aLine)
-                                    .collect(Collectors.joining("\n"));
+                            + HELP_LINE_INDENT
+                            + getStreamOfWords(option.getHelpText())
+                                    .map(wordWrapper::map)
+                                    .collect(Collectors.joining(" "));
                 })
                 .collect(Collectors.joining("\n\n"));
         return line.replace(
                 "${OPTIONS}", options);
+    }
+
+    protected Stream<String> getStreamOfWords(String helpText) {
+        return Arrays.stream(helpText.split(" "));
     }
 
     private BufferedReader openManPageReader() {

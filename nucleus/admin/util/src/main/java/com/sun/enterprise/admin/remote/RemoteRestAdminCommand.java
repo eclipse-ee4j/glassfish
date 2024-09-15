@@ -38,13 +38,11 @@ import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -1135,11 +1133,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             } catch (CommandException e) {
                 throw e;
             } catch (Exception e) {
-                // logger.log(Level.FINER, "doHttpCommand: exception", e);
-                logger.log(Level.FINER, "doHttpCommand: exception {0}", e);
-                ByteArrayOutputStream buf = new ByteArrayOutputStream();
-                e.printStackTrace(new PrintStream(buf));
-                logger.finer(buf.toString());
+                logger.log(Level.FINER, "Something went wrong: " + e.getMessage(), e);
                 throw new CommandException(e);
             }
         } while (shouldTryCommandAgain);

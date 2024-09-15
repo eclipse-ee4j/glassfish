@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -51,7 +52,8 @@ public class RemoteResponseManager implements ResponseManager {
     private final String response;
     private Map<String, String> mainAtts = Collections.emptyMap();
 
-    public RemoteResponseManager(InputStream in, int code, Logger logger) throws RemoteException, IOException {
+    public RemoteResponseManager(InputStream in, Charset charset, int code, Logger logger)
+        throws RemoteException, IOException {
         this.code = code;
         this.logger = logger;
 
@@ -61,7 +63,7 @@ public class RemoteResponseManager implements ResponseManager {
         FileUtils.copy(in, baos);
 
         responseStream = new ByteArrayInputStream(baos.toByteArray());
-        response = baos.toString();
+        response = baos.toString(charset);
 
         if (!ok(response)) {
             throw new RemoteFailureException(strings.get("emptyResponse"));

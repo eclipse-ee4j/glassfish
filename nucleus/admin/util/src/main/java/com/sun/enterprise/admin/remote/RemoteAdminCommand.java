@@ -578,7 +578,9 @@ public class RemoteAdminCommand {
                         new PayloadFilesManager.ActionReportHandler() {
                             @Override
                             public void handleReport(InputStream reportStream) throws Exception {
-                                handleResponse(options, reportStream, urlConnection.getResponseCode(), userOut);
+                                int responseCode = urlConnection.getResponseCode();
+                                Charset charset = Utility.getCharset(responseContentType);
+                                handleResponse(options, reportStream, charset, responseCode, userOut);
                             }
                         });
                 try {
@@ -1033,19 +1035,19 @@ public class RemoteAdminCommand {
         }
     }
 
-    private void handleResponse(ParameterMap params, InputStream in, int code, OutputStream out) throws IOException, CommandException {
+    private void handleResponse(ParameterMap params, InputStream in, Charset charset, int code, OutputStream out) throws IOException, CommandException {
         if (out == null) {
-            handleResponse(params, in, code);
+            handleResponse(params, in, charset, code);
         } else {
             FileUtils.copy(in, out);
         }
     }
 
-    private void handleResponse(ParameterMap params, InputStream in, int code) throws IOException, CommandException {
+    private void handleResponse(ParameterMap params, InputStream in, Charset charset, int code) throws IOException, CommandException {
         RemoteResponseManager rrm = null;
 
         try {
-            rrm = new RemoteResponseManager(in, code, logger);
+            rrm = new RemoteResponseManager(in, charset, code, logger);
             rrm.process();
         } catch (RemoteSuccessException rse) {
             // save results

@@ -29,6 +29,7 @@ public class CommandLineParser {
 
     public Arguments parse(String[] commandLineArgs) {
         Arguments arguments = new Arguments();
+        arguments.setDefaults();
         for (int i = 0; i < commandLineArgs.length; i++) {
             String arg = commandLineArgs[i];
             if (arg.startsWith("-")) {

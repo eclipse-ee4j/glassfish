@@ -22,19 +22,27 @@ DESCRIPTION
     If "autodeploy" directory exists in the current directory, files and 
     directories in that directory are deployed as applications on startup.
 
+    If "glassfish-domain" directory exists in the current directory, it will be
+    used as the domain directory unless specified explicitly with 
+    "--domainDir=DIRECTORY"
+
+    If "domain.xml" file exists in the current directory, it will be
+    used as the domain configuration file unless specified explicitly with 
+    "--domainConfigFile=FILE"
+
 OPTIONS
 ${OPTIONS}
 
-Any argument that doesn't start with a hyphen (-), is treated as follows:
+    Any argument that doesn't start with a hyphen (-), is treated as follows:
 
-- If it's a file or directory, it's deployed at startup as an application. If it's
-  the only application deployed at startup, it's deployed under the root context '/'.
-  Otherwise it's deployed under the context root derived from the name of the file
-  or deployment descriptors.
-- In all other cases, the argument is executed as a GlassFish admin command.
-  Individual commands must be enclosed in quotes if they contain spaces. GlassFish
-  admin commands arethe same commands supported by GlassFish Server's "asadmin"
-  command line tool or by the "CommandRunner" Java class in GlassFish Simple Public API.
+    - If it's a file or directory, it's deployed at startup as an application. If it's
+      the only application deployed at startup, it's deployed under the root context '/'.
+      Otherwise it's deployed under the context root derived from the name of the file
+      or deployment descriptors.
+    - In all other cases, the argument is executed as a GlassFish admin command.
+      Individual commands must be enclosed in quotes if they contain spaces. GlassFish
+      admin commands are the same commands supported by GlassFish Server's "asadmin"
+      command line tool or by the "CommandRunner" Java class in GlassFish Simple Public API.
 
 DEFAULT CONFIGURATION
 

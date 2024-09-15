@@ -32,7 +32,6 @@ import jakarta.inject.Scope;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1244,29 +1243,6 @@ public abstract class CLICommand implements PostConstruct {
             }
         }
         // it is a supported command; do nothing
-    }
-
-    /**
-     * Prints the exception message with level as FINER.
-     *
-     * @param e the exception object to print
-     */
-    protected void printExceptionStackTrace(java.lang.Throwable e) {
-        if (logger.isLoggable(Level.FINER)) {
-            /*
-            java.lang.StackTraceElement[] ste = e.getStackTrace();
-            for (int ii = 0; ii < ste.length; ii++)
-                printDebugMessage(ste[ii].toString());
-            */
-            final ByteArrayOutputStream output = new ByteArrayOutputStream(512);
-            e.printStackTrace(new java.io.PrintStream(output));
-            try {
-                output.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-            logger.finer(output.toString());
-        }
     }
 
     protected static boolean ok(String s) {

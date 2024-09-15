@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,13 +34,15 @@ import java.util.Set;
  *
  * @author bnevins
  */
-public class ServicesUtils {
-    private ServicesUtils() {
+public final class ServicesUtils {
 
+    private static final String SEP = "==========================================";
+
+    private ServicesUtils() {
     }
 
     static TokenValueSet map2Set(final Map<String, String> map) {
-        final Set<TokenValue> set = new HashSet<TokenValue>();
+        final Set<TokenValue> set = new HashSet<>();
         for (final Map.Entry<String, String> e : map.entrySet()) {
             final String key = e.getKey();
             final String value = e.getValue();
@@ -50,7 +53,7 @@ public class ServicesUtils {
         return (tvset);
     }
 
-    static void tokenReplaceTemplateAtDestination(Map<String, String> map, String templatePath, String targetPath) {
+    static void tokenReplaceTemplateAtDestination(Map<String, String> map, File templatePath, File targetPath) {
 
         final LineTokenReplacer tr = new LineTokenReplacer(map2Set(map));
         tr.replace(templatePath, targetPath);
@@ -59,8 +62,9 @@ public class ServicesUtils {
     static void appendTextToFile(File to, String what) {
 
         // todo - this should be a high-level utility
-        if (what == null || to == null)
+        if (what == null || to == null) {
             return;
+        }
 
         // It is very annoying in Windows when text files have "\n" instead of
         // \n\r -- the following fixes that.
@@ -73,8 +77,9 @@ public class ServicesUtils {
             pw.println(SEP);
             pw.println(new Date());
 
-            for (String s : lines)
+            for (String s : lines) {
                 pw.println(s);
+            }
 
             pw.println(SEP);
             pw.println();
@@ -83,13 +88,13 @@ public class ServicesUtils {
         } catch (IOException ioe) {
         } finally {
             try {
-                if (pw != null)
+                if (pw != null) {
                     pw.close();
+                }
             } catch (Exception e) {
                 // ignore
             }
         }
     }
 
-    private static final String SEP = "==========================================";
 }

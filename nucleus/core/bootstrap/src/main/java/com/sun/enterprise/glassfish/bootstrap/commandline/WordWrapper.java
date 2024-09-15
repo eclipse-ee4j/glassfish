@@ -95,7 +95,7 @@ public class WordWrapper {
 
     protected void appendItem(StringBuilder assembly, String item) {
         final String modifiedItem = map(item);
-        if (assembly.isEmpty()
+        if (assembly.length() == 0
                 || Set.of('\n', ' ').contains(lastChar(assembly))
                 || modifiedItem.startsWith("\n")
                 || modifiedItem.startsWith(" ")) {

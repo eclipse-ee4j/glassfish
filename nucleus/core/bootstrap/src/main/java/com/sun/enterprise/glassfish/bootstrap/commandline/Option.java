@@ -15,15 +15,20 @@
  */
 package com.sun.enterprise.glassfish.bootstrap.commandline;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAULT_HTTPS_LISTENER;
@@ -103,6 +108,26 @@ public enum Option {
         @Override
         public void handle(String value, Arguments arguments) {
             loadApplicationsFromDirectory(value, arguments);
+        }
+    },
+    LOG_LEVEL("logLevel", "--logLevel=LEVEL",
+            "Set the log level of all loggers to LEVEL") {
+        @Override
+        public void handle(String logLevel, Arguments arguments) {
+            setLogLevel(logLevel, arguments);
+        }
+    },
+    LOG_PROPERTIES("logProperties", "--logProperties=FILE",
+            "Set logging properties from file FILE") {
+        @Override
+        public void handle(String fileName, Arguments arguments) {
+            try {
+                try (InputStream logConfig = new BufferedInputStream(Files.newInputStream(Path.of(fileName)))) {
+                    LogManager.getLogManager().readConfiguration(logConfig);
+                }
+            } catch (IOException | NullPointerException ex) {
+                logger.log(WARNING, ex, () -> "Could not open properties file " + fileName);
+            }
         }
     },
     HELP("help", "--help", "Print this help") {
@@ -200,5 +225,20 @@ public enum Option {
         } else {
             logger.log(WARNING, () -> "The path specified with the " + this.getUsage() + " option is not a directory: " + directoryName);
         }
+    }
+
+    protected void setLogLevel(String logLevel, Arguments arguments) {
+        final Logger rootLogger = Logger.getLogger("");
+        final Level level;
+        try {
+            level = Level.parse(logLevel);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new IllegalArgumentException("The value of the " + this.getMainName() + " option is not valid: " + logLevel);
+        }
+        for (Handler handler : rootLogger.getHandlers()) {
+            handler.setLevel(level);
+        }
+        LogManager.getLogManager().getLoggerNames().asIterator()
+                .forEachRemaining(loggerName -> Logger.getLogger(loggerName).setLevel(level));
     }
 }

@@ -257,11 +257,11 @@ java -jar glassfish-embedded-all.jar app1.war app2.war
 
 ```
 java -jar glassfish-embedded-all.jar [--properties=FILE] 
-        [-p=PORT, --httpPort=PORT, --port=PORT] [--httpsPort=PORT_NUMBER] 
-        [--domainConfigFile=FILE] 
-        [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY] 
-        [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--help] 
-        [applications or admin commands...]
+    [-p=PORT, --httpPort=PORT, --port=PORT] [--httpsPort=PORT_NUMBER] 
+    [--domainConfigFile=FILE] 
+    [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY] 
+    [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--logLevel=LEVEL] 
+    [--logProperties=FILE] [--help] [applications or admin commands...]
 ```
 
 `--properties=FILE`
@@ -320,6 +320,14 @@ port 8080.
 Files and directories in this directory will be deployed as 
 applications (in random order), as if they were specified on the command 
 line.
+
+`--logLevel=LEVEL`
+
+Set the log level of all loggers to LEVEL
+
+`--logProperties=FILE`
+
+Set logging properties from file FILE
 
 `--help`
 

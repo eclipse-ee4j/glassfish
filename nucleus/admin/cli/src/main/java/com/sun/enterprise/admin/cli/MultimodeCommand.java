@@ -122,18 +122,17 @@ public class MultimodeCommand extends CLICommand {
         try {
             if (file == null) {
                 System.out.println(strings.get("multimodeIntro"));
-                if (encoding != null)
-                    reader = new BufferedReader(new InputStreamReader(System.in, encoding));
-                reader = new BufferedReader(new InputStreamReader(System.in));
+                reader = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
             } else {
                 printPrompt = false;
                 if (!file.canRead()) {
                     throw new CommandException("File: " + file + " can not be read");
                 }
-                if (encoding != null)
+                if (encoding == null) {
+                    reader = new BufferedReader(new FileReader(file, Charset.defaultCharset()));
+                } else {
                     reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
-                else
-                    reader = new BufferedReader(new FileReader(file));
+                }
             }
             return executeCommands(reader);
         } catch (IOException e) {

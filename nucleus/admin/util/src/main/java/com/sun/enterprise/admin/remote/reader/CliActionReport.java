@@ -138,11 +138,6 @@ public class CliActionReport extends ActionReport {
     }
 
     @Override
-    public void setContentType(String s) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public boolean hasSuccesses() {
         return has(this, ExitCode.SUCCESS);
     }

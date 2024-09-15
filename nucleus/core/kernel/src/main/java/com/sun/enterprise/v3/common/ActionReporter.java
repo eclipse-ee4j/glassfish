@@ -40,7 +40,7 @@ public abstract class ActionReporter extends ActionReport {
     protected List<ActionReporter> subActions = new ArrayList<>();
     protected ExitCode exitCode = ExitCode.SUCCESS;
     protected MessagePart topMessage = new MessagePart();
-    protected String contentType = "text/html";
+    protected String contentType = "text/html; charset=utf-8";
 
     public static final String EOL_MARKER = "%%%EOL%%%";
 

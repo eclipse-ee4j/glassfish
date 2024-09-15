@@ -62,6 +62,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.util.StringUtils.ok;
 import static com.sun.enterprise.util.SystemPropertyConstants.MONDOT;
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
 import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 
@@ -219,7 +220,7 @@ public class MonitoringReporter extends V2DottedNameSupport {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             reporter.writeReport(os);
-            String outputMessage = os.toString();
+            String outputMessage = os.toString(UTF_8);
             String[] lines = outputMessage.split("\\n");
             list = Arrays.asList(lines);
         } catch (Exception e) {
@@ -810,13 +811,8 @@ public class MonitoringReporter extends V2DottedNameSupport {
         if (plainReporter != null) {
             cliOutput.append(newMessage).append('\n');
         } else {
-            String oldMessage = reporter.getMessage();
-
-            if (oldMessage == null) {
-                reporter.setMessage(newMessage);
-            } else {
-                reporter.appendMessage("\n" + newMessage);
-            }
+            reporter.appendMessage("\n");
+            reporter.appendMessage(newMessage);
         }
     }
 

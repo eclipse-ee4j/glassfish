@@ -62,6 +62,10 @@ public abstract class ActionReport implements Serializable {
 
     public abstract void appendMessage(String message);
 
+    /**
+     * @param os output stream in UTF-8 encoding if required.
+     * @throws IOException
+     */
     public abstract void writeReport(OutputStream os) throws IOException;
 
     public abstract String getMessage();
@@ -75,8 +79,6 @@ public abstract class ActionReport implements Serializable {
     public abstract ExitCode getActionExitCode();
 
     public abstract String getContentType();
-
-    public abstract void setContentType(String s);
 
     public abstract List<? extends ActionReport> getSubActionsReport();
 
@@ -126,7 +128,7 @@ public abstract class ActionReport implements Serializable {
         private static final long serialVersionUID = -8708934987452414280L;
 
         Properties props = new Properties();
-        String message;
+        StringBuilder message;
         String childrenType;
 
         List<MessagePart> children = new ArrayList<>();
@@ -142,18 +144,14 @@ public abstract class ActionReport implements Serializable {
         }
 
         public void setMessage(String message) {
-            this.message = message;
+            this.message = new StringBuilder(message);
         }
 
         public void appendMessage(String message) {
-            // overkill Engineering seemingly but the strings might be HUGE
-            // let the optimized JDK class handle it.
             if (this.message == null) {
-                this.message = message;
+                this.message = new StringBuilder(message);
             } else {
-                StringBuilder sb = new StringBuilder(this.message);
-                sb.append(message);
-                this.message = sb.toString();
+                this.message.append(message);
             }
         }
 
@@ -166,7 +164,7 @@ public abstract class ActionReport implements Serializable {
         }
 
         public String getMessage() {
-            return message;
+            return message == null ? null : message.toString();
         }
 
         public String getChildrenType() {
@@ -207,7 +205,7 @@ public abstract class ActionReport implements Serializable {
 
         protected String toString(int indent) {
             StringBuilder result = new StringBuilder();
-            if (message != null && !message.isEmpty()) {
+            if (message != null && message.length() > 0) {
                 for (int i = 0; i < indent; i++) {
                     result.append(' ');
                 }

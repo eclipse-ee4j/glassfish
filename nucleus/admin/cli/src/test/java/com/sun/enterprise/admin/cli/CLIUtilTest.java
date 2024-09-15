@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -38,7 +39,7 @@ public class CLIUtilTest {
         final File f = File.createTempFile("TestPasswordFile", ".tmp");
         String fileName = f.toString();
         f.deleteOnExit();
-        try (BufferedWriter out = new BufferedWriter(new FileWriter(f))) {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(f, UTF_8))) {
             out.write("AS_ADMIN_PASSWORD=adminadmin\n");
             out.write("AS_ADMIN_MASTERPASSWORD=changeit\n");
         }

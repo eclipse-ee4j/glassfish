@@ -41,6 +41,7 @@ import org.glassfish.internal.api.EmbeddedSystemAdministrator;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -170,7 +171,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
                 final ByteArrayOutputStream os = new ByteArrayOutputStream();
                 try {
                     actionReport.writeReport(os);
-                    return os.toString();
+                    return os.toString(UTF_8);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } finally {

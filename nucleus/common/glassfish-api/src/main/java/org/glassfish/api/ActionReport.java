@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.api;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -63,8 +63,6 @@ public abstract class ActionReport implements Serializable {
     public abstract void appendMessage(String message);
 
     public abstract void writeReport(OutputStream os) throws IOException;
-
-    public abstract void setMessage(InputStream in);
 
     public abstract String getMessage();
 
@@ -244,7 +242,7 @@ public abstract class ActionReport implements Serializable {
         extraProperties = properties;
     }
 
-    private Map resultTypes = new ConcurrentHashMap();
+    private final Map resultTypes = new ConcurrentHashMap();
 
     /**
      * Gets a type that was set by the command implementation

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +20,6 @@ package com.sun.enterprise.v3.common;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -140,35 +137,6 @@ public abstract class ActionReporter extends ActionReport {
     @Override
     public String getMessage() {
         return topMessage.getMessage();
-    }
-
-
-    @Override
-    public void setMessage(InputStream in) {
-        try {
-            if(in == null) {
-                throw new NullPointerException("Internal Error - null InputStream");
-            }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            copyStream(in, baos);
-            setMessage(baos.toString());
-        }
-        catch (Exception ex) {
-            setActionExitCode(ExitCode.FAILURE);
-            setFailureCause(ex);
-        }
-    }
-
-    private void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) >= 0) {
-            out.write(buf, 0, len);
-        }
-
-        out.close();
-        in.close();
     }
 
     /**

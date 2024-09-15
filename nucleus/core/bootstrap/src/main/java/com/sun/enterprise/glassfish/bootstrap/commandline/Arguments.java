@@ -43,6 +43,8 @@ public class Arguments {
     public static final String DEFAULT_HTTPS_LISTENER = "https-listener";
     public static final String DEFAULT_PROPERTIES_FILE = "glassfish.properties";
     public static final String DEFAULT_AUTO_DEPLOY_DIR = "autodeploy";
+    public static final String DEFAULT_DOMAIN_DIRECTORY = "glassfish-domain";
+    public static final String DEFAULT_DOMAIN_CONFIG_FILE = "domain.xml";
     public static final String COMMAND_KEY_PREFIX = "command.";
     public static final String DEPLOY_KEY_PREFIX = "deploy.";
     private static final int HELP_LINE_LENGTH = 80;              // wrap to max 80 columns per line
@@ -56,22 +58,38 @@ public class Arguments {
 
     private static final Logger logger = Logger.getLogger(Arguments.class.getName());
 
-    public Arguments() {
+    public void setDefaults() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);
         if (new File(DEFAULT_PROPERTIES_FILE).isFile()) {
             try {
-                Arguments.this.setOption(Option.PROPERTIES, DEFAULT_PROPERTIES_FILE);
+                setOption(Option.PROPERTIES, DEFAULT_PROPERTIES_FILE);
             } catch (RuntimeException e) {
-                logger.log(Level.WARNING, e, () -> "Could not read properties from file "
+                logger.log(Level.WARNING, e, () -> "Could not read properties from the implicit properties file "
                         + DEFAULT_PROPERTIES_FILE + " - " + e.getMessage());
             }
         }
         if (new File(DEFAULT_AUTO_DEPLOY_DIR).isDirectory()) {
             try {
-                Arguments.this.setOption(Option.AUTO_DEPLOY_DIR, DEFAULT_AUTO_DEPLOY_DIR);
+                setOption(Option.AUTO_DEPLOY_DIR, DEFAULT_AUTO_DEPLOY_DIR);
             } catch (RuntimeException e) {
-                logger.log(Level.WARNING, e, () -> "Could not find applications in the directory "
+                logger.log(Level.WARNING, e, () -> "Could not find applications in the implicit directory "
                         + DEFAULT_AUTO_DEPLOY_DIR + " - " + e.getMessage());
+            }
+        }
+        if (new File(DEFAULT_DOMAIN_DIRECTORY).isDirectory()) {
+            try {
+                setOption(Option.DOMAIN_DIR, DEFAULT_DOMAIN_DIRECTORY);
+            } catch (RuntimeException e) {
+                logger.log(Level.WARNING, e, () -> "Corrupted implicit domain directory "
+                        + DEFAULT_DOMAIN_DIRECTORY + " - " + e.getMessage());
+            }
+        }
+        if (new File(DEFAULT_DOMAIN_CONFIG_FILE).isFile()) {
+            try {
+                setOption(Option.DOMAIN_CFG_FILE, DEFAULT_DOMAIN_CONFIG_FILE);
+            } catch (RuntimeException e) {
+                logger.log(Level.WARNING, e, () -> "Corrupted implicit domain configuration file "
+                        + DEFAULT_DOMAIN_CONFIG_FILE + " - " + e.getMessage());
             }
         }
     }

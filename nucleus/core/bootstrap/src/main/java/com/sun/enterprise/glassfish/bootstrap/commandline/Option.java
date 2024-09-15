@@ -84,7 +84,7 @@ public enum Option {
         }
     },
     DOMAIN_DIR("domainDir", Set.of("instanceRoot"), "--domainDir=DIRECTORY, --instanceRoot=DIRECTORY",
-            "Set the instance root (a.k.a. domain dir) using which GlassFish should run.") {
+            "Set the instance root (a.k.a. domain directory) using which GlassFish should run.") {
         @Override
         public void handle(String value, Arguments arguments) {
             arguments.glassFishProperties.setInstanceRoot(value);

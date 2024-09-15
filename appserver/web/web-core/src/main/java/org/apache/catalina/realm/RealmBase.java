@@ -29,6 +29,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -213,7 +214,7 @@ public abstract class RealmBase implements Lifecycle, Realm {
     /**
      * Returns the digest encoding charset.
      *
-     * @return The charset (may be null) for platform default
+     * @return The charset (may be null) for {@link StandardCharsets#UTF_8} to use.
      */
     public String getDigestEncoding() {
         return digestEncoding;

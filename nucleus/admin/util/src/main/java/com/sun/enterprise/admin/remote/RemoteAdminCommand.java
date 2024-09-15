@@ -76,7 +76,6 @@ import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.admin.AuthTokenManager;
-import org.glassfish.grizzly.http.util.ContentType;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -576,14 +575,15 @@ public class RemoteAdminCommand {
                     throw new IOException(strings.get("NoPayloadSupport", responseContentType));
                 }
                 PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, logger,
-                        new PayloadFilesManager.ActionReportHandler() {
-                            @Override
-                            public void handleReport(InputStream reportStream) throws Exception {
-                                int responseCode = urlConnection.getResponseCode();
-                                Charset charset = Utility.getCharset(responseContentType);
-                                handleResponse(options, reportStream, charset, responseCode, userOut);
-                            }
-                        });
+                    new PayloadFilesManager.ActionReportHandler() {
+
+                        @Override
+                        public void handleReport(InputStream reportStream) throws Exception {
+                            int responseCode = urlConnection.getResponseCode();
+                            Charset charset = Utility.getCharsetFromContentType(responseContentType);
+                            handleResponse(options, reportStream, charset, responseCode, userOut);
+                        }
+                    });
                 try {
                     downloadedFilesMgr.processParts(inboundPayload);
                 } catch (CommandException cex) {
@@ -1110,7 +1110,7 @@ public class RemoteAdminCommand {
                         partIt.next(); // just throw it away
                     } else {
                         metadataErrors = new StringBuilder();
-                        Charset charset = Utility.getCharset(ContentType.getCharsetFromContentType(responseContentType));
+                        Charset charset = Utility.getCharsetFromContentType(responseContentType);
                         commandModel = parseMetadata(partIt.next().getInputStream(), charset, metadataErrors);
                         logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;

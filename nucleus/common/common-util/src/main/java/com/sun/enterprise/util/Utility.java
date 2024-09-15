@@ -31,6 +31,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.rmi.Remote;
 import java.security.AccessController;
@@ -47,6 +48,8 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Handy class full of static functions.
@@ -618,15 +621,45 @@ public final class Utility {
         return envVal;
     }
 
+
     /**
-     * Parses the parameter. If it is null or empty string, returns default charset.
+     * Parse the character encoding from the specified content type header.
+     * If the content type is null, or there is no explicit character encoding,
+     * <code>UTF-8</code> is returned.
+     *
+     * @param contentType a content type header
+     * @return {@link Charset} or UTF-8 if the charset is null, empty string or unknown.
+     * @throws CharacterCodingException if the charset is not supported.
+     */
+    public static Charset getCharsetFromContentType(String contentType) throws CharacterCodingException {
+        if (contentType == null) {
+            return getCharset(null);
+        }
+        int start = contentType.indexOf("charset=");
+        if (start < 0) {
+            return getCharset(null);
+        }
+        String encoding = contentType.substring(start + 8);
+        int end = encoding.indexOf(';');
+        if (end >= 0) {
+            encoding = encoding.substring(0, end);
+        }
+        encoding = encoding.trim();
+        if (encoding.length() > 2 && encoding.startsWith("\"") && encoding.endsWith("\"")) {
+            encoding = encoding.substring(1, encoding.length() - 1);
+        }
+        return getCharset(encoding.trim());
+    }
+
+    /**
+     * Parses the parameter. If it is null or empty string, returns {@link StandardCharsets#UTF_8}.
      * @param charset
-     * @return default or {@link Charset}
+     * @return specified {@link Charset} or UTF-8 if the charset is null, empty string or unknown.
      * @throws CharacterCodingException if the charset is not supported.
      */
     public static Charset getCharset(String charset) throws CharacterCodingException {
         if (charset == null || charset.isEmpty()) {
-            return Charset.defaultCharset();
+            return UTF_8;
         }
         try {
             return Charset.forName(charset);
@@ -636,7 +669,6 @@ public final class Utility {
             throw e;
         }
     }
-
 
     /**
      * Convert the byte array to char array with respect to given charset.

@@ -35,6 +35,6 @@ public class GfSseEventReceiverProprietaryReader implements ProprietaryReader<Gf
 
     @Override
     public GfSseEventReceiver readFrom(final InputStream is, final String contentType) throws IOException {
-        return new GfSseEventReceiver(is, Utility.getCharset(contentType));
+        return new GfSseEventReceiver(is, Utility.getCharsetFromContentType(contentType));
     }
 }

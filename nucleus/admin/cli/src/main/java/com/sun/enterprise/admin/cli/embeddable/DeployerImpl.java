@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -190,7 +190,7 @@ public class DeployerImpl implements Deployer {
         File payloadZip = null;
         try {
             // Add the report to the payload to mimic what the normal non-embedded server does.
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
             actionReport.writeReport(baos);
             final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             final Properties reportProps = new Properties();

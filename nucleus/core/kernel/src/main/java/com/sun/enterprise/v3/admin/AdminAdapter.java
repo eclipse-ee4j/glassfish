@@ -246,7 +246,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
              * content type of the payload reflects its multi-part nature and
              * an implementation-specific content type will be set in the response.
              */
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
             report.writeReport(baos);
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             final Properties reportProps = new Properties();

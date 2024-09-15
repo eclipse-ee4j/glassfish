@@ -15,8 +15,12 @@
  */
 package com.sun.enterprise.glassfish.bootstrap.commandline;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 /**
  *
@@ -56,13 +60,49 @@ public class WordWrapper {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        final WordWrapper wordWrapper = new WordWrapper(80, 8, "        ");
-        String message = "        "
-                            + Arrays.stream(Option.PROPERTIES.getHelpText().split(" "))
-                                    .map(wordWrapper::map)
-                                    .collect(Collectors.joining(" "));
-        System.out.println(message);
+    public Collector<String, StringBuilder, String> collector() {
+        return new Collector<String, StringBuilder, String>() {
+            @Override
+            public Supplier<StringBuilder> supplier() {
+                return StringBuilder::new;
+            }
+
+            @Override
+            public BiConsumer<StringBuilder, String> accumulator() {
+                return (assembly, item) -> appendItem(assembly, item);
+            }
+
+            @Override
+            public BinaryOperator<StringBuilder> combiner() {
+                return (sb1, sb2) -> sb1.append(sb2);
+            }
+
+            @Override
+            public Function<StringBuilder, String> finisher() {
+                return StringBuilder::toString;
+            }
+
+            @Override
+            public Set<Collector.Characteristics> characteristics() {
+                return Set.of();
+            }
+        };
     }
 
+    protected static char lastChar(StringBuilder assembly) {
+        return assembly.charAt(assembly.length() - 1);
+    }
+
+    protected void appendItem(StringBuilder assembly, String item) {
+        final String modifiedItem = map(item);
+        if (assembly.isEmpty()
+                || Set.of('\n', ' ').contains(lastChar(assembly))
+                || modifiedItem.startsWith("\n")
+                || modifiedItem.startsWith(" ")) {
+            // do not prepend space
+        } else {
+            assembly.append(" ");
+        }
+        assembly.append(modifiedItem);
+    }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,10 +27,11 @@ import java.io.PrintWriter;
 import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
-/*
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
  * This is a derivation of the CookieStore which provides load and store
  * methods which allows the cookies to be stored to and retreived from
  * a file.
@@ -40,14 +42,14 @@ import java.util.List;
  */
 public class ClientCookieStore implements CookieStore {
 
-    private final CookieStore cookieStore;
-    private File cookieStoreFile;
-    private static final int CACHE_WRITE_DELTA = 60 * 60 * 1000; // 60 minutes
-    private static final String COOKIE_URI = "http://CLI_Session/";
+    // 60 minutes
+    private static final int CACHE_WRITE_DELTA = 60 * 60 * 1000;
+    private static final URI COOKIE_URI = URI.create("http://CLI_Session/");
     private static final String CACHE_COMMENT = "# These cookies are used strictly for command routing.\n"
-            + "# These cookies are not used for authentication and they are\n" + "# not assoicated with server state.";
+        + "# These cookies are not used for authentication and they are\n" + "# not assoicated with server state.";
 
-    protected URI uri = null;
+    private final CookieStore cookieStore;
+    private final File cookieStoreFile;
 
     public ClientCookieStore(CookieStore cookieStore, File file) {
         this.cookieStore = cookieStore;
@@ -85,14 +87,7 @@ public class ClientCookieStore implements CookieStore {
     }
 
     public URI getStaticURI() {
-        if (uri == null) {
-            try {
-                uri = new URI(COOKIE_URI);
-            } catch (URISyntaxException e) {
-                // This should never happen.
-            }
-        }
-        return uri;
+        return COOKIE_URI;
     }
 
     /**
@@ -103,12 +98,11 @@ public class ClientCookieStore implements CookieStore {
      * COOKIE1=xxx; ... COOKIE2=yyy; ...
      **/
     public void load() throws IOException {
-        BufferedReader in = null;
 
         this.removeAll();
 
         if (!cookieStoreFile.exists()) {
-            throw new IOException("File does not exist: " + cookieStoreFile.toString());
+            throw new IOException("File does not exist: " + cookieStoreFile);
         }
 
         try {
@@ -136,17 +130,17 @@ public class ClientCookieStore implements CookieStore {
         }
     }
 
+
     /**
-     * Store the cookies in the CookieStore to the provided location. This method will overwrite the contents of the target
-     * file.
-     *
-     **/
+     * Store the cookies in the CookieStore to the provided location.
+     * This method will overwrite the contents of the target file.
+     */
     public void store() throws IOException {
         PrintWriter out = null;
 
         // Create the directory if it doesn't exist.
         if (!cookieStoreFile.getParentFile().exists() && !cookieStoreFile.getParentFile().mkdirs()) {
-            throw new IOException("Unable to create directory: " + cookieStoreFile.toString());
+            throw new IOException("Unable to create directory: " + cookieStoreFile);
         }
 
         out = new PrintWriter(new BufferedWriter(new FileWriter(cookieStoreFile)));
@@ -159,8 +153,9 @@ public class ClientCookieStore implements CookieStore {
 
                 // Expire the cookie immediately if Max-Age = 0 or -1
                 // Expire the cookie immediately if Discard is true
-                if (cookie.getMaxAge() < 1 || cookie.getDiscard())
+                if (cookie.getMaxAge() < 1 || cookie.getDiscard()) {
                     continue;
+                }
 
                 StringBuilder sb = new StringBuilder();
 
@@ -192,7 +187,7 @@ public class ClientCookieStore implements CookieStore {
         out.close();
     }
 
-    /*
+    /**
      * Updates the last modification time of the cache file if it is more
      * than CACHE_WRITE_DELTA old.  The file's modification time is use
      * as the creation time for any cookies stored in the cache.   We use

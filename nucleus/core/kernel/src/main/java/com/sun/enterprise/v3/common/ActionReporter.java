@@ -151,10 +151,6 @@ public abstract class ActionReporter extends ActionReport {
     public String getContentType() {
         return contentType;
     }
-    @Override
-    public void setContentType(String s) {
-        contentType = s;
-    }
 
     /** Returns combined messages. Meant mainly for long running
      *  operations where some of the intermediate steps can go wrong, although
@@ -174,7 +170,7 @@ public abstract class ActionReporter extends ActionReport {
         String failMsg; //this is the message related to failure cause
         // Other code in the server may write something like report.setMessage(exception.getMessage())
         // and also set report.setFailureCause(exception). We need to avoid the duplicate message.
-        if (aReport.getMessage() != null && aReport.getMessage().length() != 0) {
+        if (aReport.getMessage() != null && !aReport.getMessage().isEmpty()) {
             mainMsg = aReport.getMessage();
             String format = "{0}";
             if (ActionReport.ExitCode.WARNING.equals(aReport.getActionExitCode())) {
@@ -190,7 +186,7 @@ public abstract class ActionReporter extends ActionReport {
             }
             sb.append(MessageFormat.format(format,mainMsg));
         }
-        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && aReport.getFailureCause().getMessage().length() != 0) {
+        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && !aReport.getFailureCause().getMessage().isEmpty()) {
             failMsg = aReport.getFailureCause().getMessage();
             if (!failMsg.equals(mainMsg)) {
                 if (sb.length() > 0) {
@@ -228,11 +224,10 @@ public abstract class ActionReporter extends ActionReport {
         while (!q.isEmpty()) {
             ActionReporter lar = q.remove();
             ExitCode ec = lar.getActionExitCode();
-            if (null != ec && ec.equals(value)) {
+            if (ec != null && ec.equals(value)) {
                 return true;
-            } else {
-                q.addAll(lar.subActions);
             }
+            q.addAll(lar.subActions);
         }
         return false;
     }

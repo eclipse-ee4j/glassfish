@@ -81,7 +81,8 @@ public class UberMain {
                 try {
                     CommandResult result = commandParams == null ?
                             cr.run(command) : cr.run(command, commandParams);
-                    System.out.println("\n" + result.getOutput());
+                    System.out.print('\n');
+                    System.out.println(result.getOutput());
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }

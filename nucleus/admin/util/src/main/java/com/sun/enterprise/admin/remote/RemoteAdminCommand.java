@@ -26,6 +26,7 @@ import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -36,7 +37,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -48,6 +48,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -76,6 +77,7 @@ import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.grizzly.http.util.ContentType;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -813,11 +815,7 @@ public class RemoteAdminCommand {
             } catch (CommandException e) {
                 throw e;
             } catch (Exception e) {
-                // logger.log(Level.FINER, "doHttpCommand: exception", e);
-                logger.finer("doHttpCommand: exception " + e);
-                ByteArrayOutputStream buf = new ByteArrayOutputStream();
-                e.printStackTrace(new PrintStream(buf));
-                logger.finer(buf.toString());
+                logger.log(Level.FINER, "Something went wrong: " + e.getMessage(), e);
                 throw new CommandException(e);
             }
         } while (shouldTryCommandAgain);
@@ -1107,7 +1105,8 @@ public class RemoteAdminCommand {
                         partIt.next(); // just throw it away
                     } else {
                         metadataErrors = new StringBuilder();
-                        commandModel = parseMetadata(partIt.next().getInputStream(), metadataErrors);
+                        Charset charset = Utility.getCharset(ContentType.getCharsetFromContentType(responseContentType));
+                        commandModel = parseMetadata(partIt.next().getInputStream(), charset, metadataErrors);
                         logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;
                     }
@@ -1163,15 +1162,16 @@ public class RemoteAdminCommand {
      * Parse the XML metadata for the command on the input stream.
      *
      * @param in the input stream
+     * @param charset
      * @return the set of ValidOptions
      */
-    private CommandModel parseMetadata(InputStream in, StringBuilder errors) {
+    private CommandModel parseMetadata(InputStream in, Charset charset, StringBuilder errors) {
         if (logger.isLoggable(Level.FINER)) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 FileUtils.copy(in, baos);
                 in = new ByteArrayInputStream(baos.toByteArray());
-                String response = baos.toString();
+                String response = baos.toString(charset);
                 logger.finer("------- RAW METADATA RESPONSE ---------");
                 logger.finer(response);
                 logger.finer("------- RAW METADATA RESPONSE ---------");

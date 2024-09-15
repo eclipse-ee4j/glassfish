@@ -4,12 +4,10 @@ title={productName} 7 Embedded Server Guide
 prev=preface.html
 ~~~~~~
 
-= {productName} 7 Embedded Server Guide
-
 [[GSESG]]
-== 1 {productName} 7 Embedded Server Guide
+== {productName} 7 Embedded Server Guide
 
-This document explains how to run applications in embedded {productName} and to develop applications in which
+This document explains how to run applications with embedded {productName} and to develop applications in which
 {productName} is embedded. This document is for software developers
 who are developing applications to run in embedded {productName}. The
 ability to program in the Java language is assumed.
@@ -27,27 +25,23 @@ The following topics are addressed here:
 
 [[introduction-to-embedded-glassfish-server]]
 
-=== Introduction to Embedded {productName}
+== Introduction to Embedded {productName}
 
 Embedded {productName} enables you to use
-{productName} as a library. Embedded {productName} also enables
+{productName} as a library or run applications from command line. Embedded {productName} also enables
 you to run {productName} inside any Virtual Machine for the Java
 platform (Java Virtual Machine or JVMmachine).
 
 No installation or configuration of embedded {productName} is
-required. The ability to run {productName} inside applications
+required. The ability to run {productName}
 without installation or configuration simplifies the process of bundling
-{productName} with applications.
+{productName} with applications or running applications from command line.
 
-
-[NOTE]
-====
-Embedded {productName} does not run on the Java Platform, Micro Edition (Java ME platform).
-====
 
 You can use embedded {productName} in the following ways:
 
 * With the Embedded Server API (see xref:#including-the-glassfish-server-embedded-server-api-in-applications[Including the {productName} Embedded Server API in Applications])
+* As an executable JAR, executed with `java -jar` (see xref:#running-from-command-line[Running {productName} Embedded Server from Command Line])
 * With the Maven Plug-in (see xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Testing Applications with the
 Maven Plug-in for Embedded {productName}])
 * With the EJB 3.1 Embeddable API (see xref:#GSESG00039[Using the EJB 3.1
@@ -69,10 +63,36 @@ see the xref:add-on-component-development-guide.adoc#GSACG[{productName} Add-On
 Component Development Guide].
 ====
 
+[[editions]]
+
+== Embedded {productName} Editions
+
+Embedded {productName} comes with the following flavours:
+
+`glassfish-embedded-all.jar`::
+  Contains classes needed for deploying all Jakarta EE application types.
+  Download this file from
+  `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all`.
+`glassfish-embedded-web.jar`::
+  Contains classes needed for deploying Jakarta EE web applications.
+  Download this file from
+  `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web`.
+`glassfish-embedded-nucleus.jar`::
+  Corresponds to the nucleus distribution. Download this file from
+  `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-nucleus`.
+`glassfish-embedded-static-shell.jar`::
+  Contains references to classes needed for deploying Jakarta EE
+  applications. Must be used with a non-embedded installation of
+  {productName}. It can run the same Jakarta EE applications that are supported by the non-embedded installation that contains it.
+  Reference this file from the
+  as-install``/lib/embedded`` directory of a nonembedded {productName}
+  installation. Do not move this file or it will not work. For an
+  explanation of as-install, see xref:#installation-root-directory[Installation Root
+  Directory].
 
 [[embedded-glassfish-server-file-system]]
 
-=== Embedded {productName} File System
+== Embedded {productName} File System
 
 The following Embedded {productName} directories and files are
 important if you are referencing a nonembedded installation of {productName}:
@@ -83,7 +103,7 @@ important if you are referencing a nonembedded installation of {productName}:
 
 [[installation-root-directory]]
 
-==== Installation Root Directory
+=== Installation Root Directory
 
 The installation root directory, represented as as-install, is the
 parent of the directory that embedded {productName} uses for
@@ -101,20 +121,15 @@ nonembedded {productName} installation and are using
 
 [[instance-root-directory]]
 
-==== Instance Root Directory
+=== Instance Root Directory
 
-The instance root directory, represented as domain-dir, is the parent
+The instance root directory, also known as the domain directory, represented as domain-dir, is the parent
 directory of a server instance directory. Embedded {productName} uses the server instance directory for domain
 configuration files.
 
-Specify the instance root directory only if you have a valid nonembedded
-{productName} domain directory and are using
-`glassfish-embedded-static-shell.jar`.
-
-
 [NOTE]
 ====
-If you have valid nonembedded {productName} as-install and domain-dir
+If you have valid custom as-install and domain-dir
 directories, specify both in the `BootstrapProperties` and
 `GlassFishProperties` classes respectively as described in
 xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}].
@@ -131,7 +146,7 @@ property in the `GlassFishProperties` class or as a system property.
 
 [[GSESG00056]][[the-domain.xml-file]]
 
-==== The `domain.xml` File
+=== The `domain.xml` File
 
 Using an existing `domain.xml` file avoids the need to configure
 embedded {productName} programmatically in your application. Your
@@ -145,16 +160,187 @@ xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configu
 
 [NOTE]
 ====
-The built-in `domain.xml` file used by default by Embedded {productName} can be downloaded from
-`http://embedded-glassfish.java.net/domain.xml`. You can customize this
+The built-in `domain.xml` file used by default by Embedded {productName} can be found in the Embedded {productName} JAR files, in path 
+`org/glassfish/embed/domain.xml`. You can customize this
 file and pass it in using the `setConfigFileURI` method while creating
 an Embedded {productName}.
 ====
 
+[[running-from-command-line]]
+
+== Running {productName} Embedded Server from Command Line
+
+Embedded {productName} JAR file can be started as an executable JAR from command line, such as:
+
+```
+java -jar glassfish-embedded-all.jar
+```
+
+```
+java -jar glassfish-embedded-web.jar
+```
+
+```
+java -jar glassfish-embedded-nucleus.jar
+```
+
+```
+java -jar ${as-install}/lib/embedded/glassfish-embedded-static-shell.jar
+```
+
+For simplicity, this guide will use `glassfish-embedded.jar` to reference any of the above JAR files.
+
+For description of all the JAR files, see xref:#editions[Embedded {productName} editions]
+
+This starts the server and configures it according to the given arguments or
+configuration files.
+   
+If executed without arguments or if no application is deployed, the server
+is started and waits for further admin commands in a loop. The server can 
+be terminated with the `exit` or `quit` commands or pressing Ctrl+C.
+
+If `glassfish.properties` file exists in the current directory, properties
+in this file are set as if the `--properties=glassfish.properties` argument
+was defined on the command line.
+
+If `autodeploy` directory exists in the current directory, files and 
+directories in that directory are deployed as applications on startup.
+
+If `glassfish-domain` directory exists in the current directory, it will be
+used as the domain directory unless specified explicitly with 
+`--domainDir=DIRECTORY`
+
+If `domain.xml` file exists in the current directory, it will be
+used as the domain configuration file unless specified explicitly with 
+`--domainConfigFile=FILE`
+
+By default, {productName} Embedded is started with the following configuration:
+
+- HTTP listener enabled on port 8080
+- HTTPS listener disabled
+
+=== Examples of Running Embedded {productName} from Command Line
+
+==== Example 1: Run an application from command line    
+
+On port 8080 and root context by default:
+
+```
+java -jar glassfish-embedded.jar app.war
+```
+
+==== Example 2: Run an app on a different port
+
+```
+java -jar glassfish-embedded.jar --httpPort=8090 app.war
+```
+
+==== Example 3: Run custom commands on startup
+
+Deploys an application with a custom root context and prints info about the deployed application. Custom commands need to be enclosed in quotes
+if they contain spaces.
+
+```
+java -jar glassfish-embedded.jar "deploy --contextroot=/app app.war" list-applications
+```
+
+==== Example 4: Run 2 applications from command line
+
+Deploys applications on different context roots, based on the file name
+or info in the application descriptors.
+
+```
+java -jar glassfish-embedded-all.jar app1.war app2.war
+```
+
+=== Command-line Arguments Supported by Embedded {productName}
+
+```
+java -jar glassfish-embedded-all.jar [--properties=FILE] 
+        [-p=PORT, --httpPort=PORT, --port=PORT] [--httpsPort=PORT_NUMBER] 
+        [--domainConfigFile=FILE] 
+        [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY] 
+        [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--help] 
+        [applications or admin commands...]
+```
+
+`--properties=FILE`
+
+Load properties from a file. This option can be repeated to 
+load properties from multiple files. The propertes in the file can be 
+any of the following:
+    - Any properties supported by Embedded ${productName}.
+    - Any command line options with the name of the option as the key, 
+without the initial hyphens, and the value of the option as the value.
+    - Keys that start with the "command." prefix, followed by any text. 
+The value will be treated as a command to execute at startup.
+    - Keys that start with the "deploy." prefix, followed by any text. The 
+value will be treated as an application to deploy at startup, as if it 
+was specified on the command line.
+For example, the ${productName} domain directory can be specified with the 
+usual Embedded ${productName} property 
+"glassfish.embedded.tmpdir=myDomainDir", as well as with the property 
+"domainDir=myDomainDir" that represents the "--domainDir=myDomainDir" 
+command-line option. A command to deploy an application can be specified 
+via a property key "command.deploy.app=deploy --contextroot=app 
+myapp.war". An application to deploy at startup with the default deploy 
+behavior can be specified via a property key "deploy.app=myapp.war". The 
+property "properties" can also be defined in this file, pointing to 
+another file. In that case, properties will be loaded also from that 
+file.
+
+`-p=PORT, --httpPort=PORT, --port=PORT`
+    
+Bind the HTTP listener to the specified port. If not set, the HTTP 
+listener binds to port 8080 by default, unless it's disabled by the 
+--noListener argument.
+
+`--httpsPort=PORT_NUMBER`
+
+Bind the HTTPS listener to the specified port. If not set, the HTTPS 
+listener is disabled by default.
+
+`--domainConfigFile=FILE`
+
+Set the location of domain configuration file (i.e., domain.xml) using 
+which Embedded {productName} should run.
+
+`--domainDir=DIRECTORY, --instanceRoot=DIRECTORY`
+
+Set the instance root (a.k.a. domain dir) using which Embedded {productName}  should 
+run.
+
+`--noListener, `--noPort`
+
+Disable the HTTP listener, which is by default enabled and bound to 
+port 8080.
+
+`--autoDeployDir=DIRECTORY`
+
+Files and directories in this directory will be deployed as 
+applications (in random order), as if they were specified on the command 
+line.
+
+`--help`
+
+Print this help
+
+---
+
+Any argument that doesn't start with a hyphen (-), is treated as follows:
+
+- If it's a file or directory, it's deployed at startup as an application. If it's
+  the only application deployed at startup, it's deployed under the root context '/'.
+  Otherwise it's deployed under the context root derived from the name of the file
+  or deployment descriptors.
+- In all other cases, the argument is executed as a {productName}  admin command.
+  Individual commands must be enclosed in quotes if they contain spaces. {productName} 
+  admin commands are the same commands supported by {productName} Server's "asadmin"
+  command line tool or by the "CommandRunner" Java class in the {productName} Simple Public API.
 
 [[including-the-glassfish-server-embedded-server-api-in-applications]]
 
-=== Including the {productName} Embedded Server API in Applications
+== Including the {productName} Embedded Server API in Applications
 
 {productName} provides an application programming
 interface (API) for developing applications in which {productName} is
@@ -173,39 +359,10 @@ Embedded Server API]
 
 [[setting-the-class-path]]
 
-==== Setting the Class Path
+=== Setting the Class Path
 
 To enable your applications to locate the class libraries for embedded
-{productName}, add one of the following JAR files to your class path:
-
-`glassfish-embedded-nucleus.jar`::
-  Corresponds to the nucleus distribution. Download this file from
-  `http://download.java.net/maven/glassfish/org/glassfish/extras/glassfish-embedded-nucleus/`.
-`glassfish-embedded-web.jar`::
-  Contains classes needed for deploying Jakarta EE web applications.
-  Download this file from
-  `http://download.java.net/maven/glassfish/org/glassfish/extras/glassfish-embedded-web/`.
-`glassfish-embedded-all.jar`::
-  Contains classes needed for deploying all Jakarta EE application types.
-  Download this file from
-  `http://download.java.net/maven/glassfish/org/glassfish/extras/glassfish-embedded-all/`.
-`glassfish-embedded-static-shell.jar`::
-  Contains references to classes needed for deploying all Jakarta EE
-  application types. Must be used with a nonembedded installation of
-  {productName}. Reference this file from the
-  as-install``/lib/embedded`` directory of a nonembedded {productName}
-  installation. Do not move this file or it will not work. For an
-  explanation of as-install, see xref:#installation-root-directory[Installation Root
-  Directory].
-
-
-[NOTE]
-====
-{productName} only supports use of the
-`glassfish-embedded-static-shell.jar` file. The other files are part of
-{productName} and are offered without official support.
-====
-
+{productName}, add a JAR file corresponding to one of the xref:#editions[Embedded {productName} editions] to your class path.
 
 In addition, add to the class path any other JAR files or classes upon
 which your applications depend. For example, if an application uses a
@@ -214,7 +371,7 @@ database other than Java DB, include the Java DataBase Connectivity
 
 [[creating-starting-and-stopping-embedded-glassfish-server]]
 
-==== Creating, Starting, and Stopping Embedded {productName}
+=== Creating, Starting, and Stopping Embedded {productName}
 
 Before you can run applications, you must set up and run the embedded
 {productName}.
@@ -226,7 +383,7 @@ The following topics are addressed here:
 
 [[creating-and-configuring-an-embedded-glassfish-server]]
 
-===== Creating and Configuring an Embedded {productName}
+==== Creating and Configuring an Embedded {productName}
 
 To create and configure an embedded {productName}, perform these
 tasks:
@@ -367,7 +524,7 @@ import org.glassfish.embeddable.*;
 
 [[running-an-embedded-glassfish-server]]
 
-===== Running an Embedded {productName}
+==== Running an Embedded {productName}
 
 After you create an embedded {productName} as described in
 xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}], you
@@ -481,7 +638,7 @@ As an alternative, you can use the `dispose` method to stop an embedded
 
 [[deploying-and-undeploying-an-application-in-an-embedded-glassfish-server]]
 
-==== Deploying and Undeploying an Application in an Embedded {productName}
+=== Deploying and Undeploying an Application in an Embedded {productName}
 
 Deploying an application installs the files that comprise the
 application into Embedded {productName} and makes the application
@@ -499,7 +656,7 @@ Application Deployment Guide].
 
 [[to-deploy-an-application-from-an-archive-file-or-a-directory]]
 
-===== To Deploy an Application From an Archive File or a Directory
+==== To Deploy an Application From an Archive File or a Directory
 
 An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
@@ -564,7 +721,7 @@ import org.glassfish.embeddable.*;
 
 [[undeploying-an-application]]
 
-===== Undeploying an Application
+==== Undeploying an Application
 
 Undeploy an application when the application is no longer required to
 run in {productName}. For example, before stopping {productName},
@@ -613,7 +770,7 @@ import org.glassfish.embeddable.*;
 
 [[creating-a-scattered-archive]]
 
-===== Creating a Scattered Archive
+==== Creating a Scattered Archive
 
 Deploying a module from a scattered archive (WAR or JAR) enables you to
 deploy an unpackaged module whose resources, deployment descriptor, and
@@ -733,7 +890,7 @@ import org.glassfish.embeddable.*;
 
 [[creating-a-scattered-enterprise-archive]]
 
-===== Creating a Scattered Enterprise Archive
+==== Creating a Scattered Enterprise Archive
 
 Deploying an application from a scattered enterprise archive (EAR)
 enables you to deploy an unpackaged application whose resources,
@@ -879,8 +1036,7 @@ import org.glassfish.embeddable.*;
 
 [[running-asadmin-commands-using-the-glassfish-server-embedded-server-api]]
 
-Running `asadmin` Commands Using the {productName} Embedded Server
-==== API
+=== Running `asadmin` Commands Using the {productName} Embedded API
 
 Running xref:reference-manual.adoc#asadmin[`asadmin`] commands from an application enables
 the application to configure the embedded {productName} to suit the
@@ -954,7 +1110,7 @@ Levels in Embedded {productName}].
 
 [[sample-applications]]
 
-==== Sample Applications
+=== Sample Applications
 
 [[gionq]]
 Example 1-12 Using an Existing `domain.xml` File and Deploying an
@@ -1015,7 +1171,7 @@ public class Main {
 
 [[testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server]]
 
-=== Testing Applications with the Maven Plug-in for Embedded {productName}
+== Testing Applications with the Maven Plug-in for Embedded {productName}
 
 If you are using http://maven.apache.org/[Apache Maven]
 (`http://maven.apache.org/`), the plug-in for embedded {productName}
@@ -1039,7 +1195,7 @@ Embedded {productName}].
 
 [[to-set-up-your-maven-environment]]
 
-==== To Set Up Your Maven Environment
+=== To Set Up Your Maven Environment
 
 Setting up your Maven environment enables Maven to download the required
 embedded {productName} distribution file when you build your project.
@@ -1251,7 +1407,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 [[to-build-and-start-an-application-from-maven]]
 
-==== To Build and Start an Application From Maven
+=== To Build and Start an Application From Maven
 
 If you are using Maven to manage the development of your application,
 you can use a Maven goal to build and start the application in embedded
@@ -1285,7 +1441,7 @@ Embedded {productName} is stopped.
 
 [[to-stop-embedded-glassfish-server]]
 
-==== To Stop Embedded {productName}
+=== To Stop Embedded {productName}
 
 1. Change to the root directory of the Maven project for your
 application.
@@ -1302,7 +1458,7 @@ Application].
 
 [[to-redeploy-an-application-that-was-built-and-started-from-maven]]
 
-==== To Redeploy an Application That Was Built and Started From Maven
+=== To Redeploy an Application That Was Built and Started From Maven
 
 An application that was built and started from Maven continues to run in
 Embedded {productName} until Embedded {productName} is stopped.
@@ -1314,7 +1470,7 @@ started from Maven, press Enter.
 
 [[maven-goals-for-embedded-glassfish-server]]
 
-==== Maven Goals for Embedded {productName}
+=== Maven Goals for Embedded {productName}
 
 You can use the following Maven goals to test your applications with
 embedded {productName}:
@@ -1328,7 +1484,7 @@ embedded {productName}:
 
 [[embedded-glassfishrun-goal]]
 
-===== `embedded-glassfish:run` Goal
+==== `embedded-glassfish:run` Goal
 
 This goal starts the server and deploys an application. You can redeploy
 if you change the application. The application can be a packaged archive
@@ -1413,7 +1569,7 @@ Caution: Do not set `autoDelete` to `true` if you are using
 
 [[embedded-glassfishstart-goal]]
 
-===== `embedded-glassfish:start` Goal
+==== `embedded-glassfish:start` Goal
 
 This goal starts the server. You can set the parameters described in the
 following table.
@@ -1460,7 +1616,7 @@ Caution: Do not set `autoDelete` to `true` if you are using
 
 [[embedded-glassfishdeploy-goal]]
 
-===== `embedded-glassfish:deploy` Goal
+==== `embedded-glassfish:deploy` Goal
 
 This goal deploys an application. You can redeploy if you change the
 application. The application can be a packaged archive or a directory
@@ -1510,7 +1666,7 @@ deployment for beans that are automatically mapped by the EJB container.
 
 [[embedded-glassfishundeploy-goal]]
 
-===== `embedded-glassfish:undeploy` Goal
+==== `embedded-glassfish:undeploy` Goal
 
 
 [NOTE]
@@ -1562,7 +1718,7 @@ applications with connector modules.
 
 [[embedded-glassfishstop-goal]]
 
-===== `embedded-glassfish:stop` Goal
+==== `embedded-glassfish:stop` Goal
 
 This goal stops the server. You can set the parameters described in the
 following table.
@@ -1580,7 +1736,7 @@ Table 1-9 `embedded-glassfish:stop` Parameters
 
 [[embedded-glassfishadmin-goal]]
 
-===== `embedded-glassfish:admin` Goal
+==== `embedded-glassfish:admin` Goal
 
 This goal runs a {productName} administration command. You must use
 either the command and commandParameters parameters in combination or
@@ -1612,7 +1768,7 @@ command.
 
 [[GSESG00039]][[using-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server]]
 
-=== Using the EJB 3.1 Embeddable API with Embedded {productName}
+== Using the EJB 3.1 Embeddable API with Embedded {productName}
 
 The EJB 3.1 Embeddable API is designed for unit testing of EJB modules.
 You must use this API with a pre-installed, nonembedded {productName}
@@ -1655,7 +1811,7 @@ The following topics are addressed here:
 
 [[GSESG00026]][[to-use-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server]]
 
-==== To Use the EJB 3.1 Embeddable API with Embedded {productName}
+=== To Use the EJB 3.1 Embeddable API with Embedded {productName}
 
 1. To specify {productName} as the Container Provider, include
 `glassfish-embedded-static-shell.jar` or `glassfish-embedded-all.jar` in
@@ -1704,7 +1860,7 @@ and threads.
 
 [[GSESG00063]][[ejb-3.1-embeddable-api-properties]]
 
-==== EJB 3.1 Embeddable API Properties
+=== EJB 3.1 Embeddable API Properties
 
 Properties that can be passed to the
 `EJBContainer#createEJBContainer(Properties)` method are summarized in
@@ -1760,7 +1916,7 @@ have a manifest file with a `Main-Class` attribute.
 
 [[GSESG00064]][[using-maven-with-the-ejb-3.1-embeddable-api-and-embedded-glassfish-server]]
 
-==== Using Maven with the EJB 3.1 Embeddable API and Embedded {productName}
+=== Using Maven with the EJB 3.1 Embeddable API and Embedded {productName}
 
 When using Maven with the EJB 3.1 Embeddable API and Embedded {productName}, you cannot use the features of the Maven plug-in. You must start
 and stop Embedded {productName} manually or programmatically outside
@@ -1829,7 +1985,7 @@ directory before running the `mvn clean verify` command.
 
 [[changing-log-levels-in-embedded-glassfish-server]]
 
-=== Changing Log Levels in Embedded {productName}
+== Changing Log Levels in Embedded {productName}
 
 To change log levels in Embedded {productName}, you can follow the
 steps in this section or you can use the Embedded Server API as shown in
@@ -1897,7 +2053,7 @@ java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFis
 
 [[default-java-persistence-data-source-for-embedded-glassfish-server]]
 
-=== Default Java Persistence Data Source for Embedded {productName}
+== Default Java Persistence Data Source for Embedded {productName}
 
 The `jdbc/__default` Java DB database is preconfigured with Embedded
 {productName}. It is used when an application is deployed in Embedded
@@ -1914,7 +2070,7 @@ API is used. To disable weaving, set the
 
 [[restrictions-for-embedded-glassfish-server]]
 
-=== Restrictions for Embedded {productName}
+== Restrictions for Embedded {productName}
 
 The `glassfish-embedded-web.jar` file for embedded {productName}
 supports only these features of nonembedded {productName}:

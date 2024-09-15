@@ -73,6 +73,8 @@ import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.UnsatisfiedDependencyException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Base class for a CLI command. An instance of a subclass of this class is created using the getCommand method with the
  * name of the command and the information about its environment.
@@ -1280,17 +1282,13 @@ public abstract class CLICommand implements PostConstruct {
      * Read the named resource file and add the first token on each line to the set. Skip comment lines.
      */
     private static void file2Set(String file, Set<String> set) {
-        BufferedReader reader = null;
-        try {
-            InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
-            if (is == null) {
-                return; // in case the resource doesn't exist
-            }
-            reader = new BufferedReader(new InputStreamReader(is));
+        try (InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                // # indicates comment
                 if (line.startsWith("#")) {
-                    continue; // # indicates comment
+                    continue;
                 }
                 StringTokenizer tok = new StringTokenizer(line, " ");
                 // handles with or without space, rudimendary as of now
@@ -1298,15 +1296,7 @@ public abstract class CLICommand implements PostConstruct {
                 set.add(cmd);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ee) {
-                    // ignore
-                }
-            }
+            throw new IllegalStateException("Could not parse resource file " + file, e);
         }
     }
 }

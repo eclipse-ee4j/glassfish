@@ -85,6 +85,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
@@ -654,12 +656,12 @@ public class RemoteAdminCommand {
              */
             shouldTryCommandAgain = false;
             try {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "URI: {0}", uriString);
-                    logger.log(Level.FINER, "URL: {0}", url.toString());
-                    logger.log(Level.FINER, "URL: {0}", url.toURL(uriString).toString());
-                    logger.log(Level.FINER, "Password options: {0}", passwordOptions);
-                    logger.log(Level.FINER, "Using auth info: User: {0}, Password: {1}",
+                if (logger.isLoggable(FINER)) {
+                    logger.log(FINER, "URI: {0}", uriString);
+                    logger.log(FINER, "URL: {0}", url.toString());
+                    logger.log(FINER, "URL: {0}", url.toURL(uriString).toString());
+                    logger.log(FINER, "Password options: {0}", passwordOptions);
+                    logger.log(FINER, "Using auth info: User: {0}, Password: {1}",
                             new Object[] { user, (password != null && password.length > 0) ? "<non-null>" : "<null>" });
                 }
                 final AuthenticationInfo authInfo = authenticationInfo();
@@ -682,8 +684,8 @@ public class RemoteAdminCommand {
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
                     urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.log(Level.FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                    if (logger.isLoggable(FINER)) {
+                        logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
                     }
                 }
                 urlConnection.setRequestMethod(httpMethod);
@@ -707,7 +709,7 @@ public class RemoteAdminCommand {
                      * Log at FINER; at FINE it would appear routinely when used from
                      * asadmin.
                      */
-                    logger.log(Level.FINER, "Following redirection to " + redirection);
+                    logger.log(FINER, "Following redirection to " + redirection);
                     url = followRedirection(url, redirection);
                     shouldTryCommandAgain = true;
                     /*
@@ -737,7 +739,7 @@ public class RemoteAdminCommand {
                 logger.finer("doHttpCommand succeeds");
             } catch (AuthenticationException authEx) {
 
-                logger.log(Level.FINER, "DAS has challenged for credentials");
+                logger.log(FINER, "DAS has challenged for credentials");
 
                 /*
                  * The DAS has challenged us to provide valid credentials.
@@ -747,7 +749,7 @@ public class RemoteAdminCommand {
                  * retry using the caller provided credentials (if there are any).
                  */
                 if (!usedCallerProvidedCredentials) {
-                    logger.log(Level.FINER, "Have not tried caller-supplied credentials yet; will do that next");
+                    logger.log(FINER, "Have not tried caller-supplied credentials yet; will do that next");
                     usedCallerProvidedCredentials = true;
                     shouldTryCommandAgain = true;
                     continue;
@@ -756,32 +758,32 @@ public class RemoteAdminCommand {
                  * We already tried the caller-provided credentials.  Try to
                  * update the credentials if we haven't already done so.
                  */
-                logger.log(Level.FINER, "Already used caller-supplied credentials");
+                logger.log(FINER, "Already used caller-supplied credentials");
                 if (askedUserForCredentials) {
                     /*
                      * We already updated the credentials once, and the updated
                      * ones did not work.  No recourse.
                      */
-                    logger.log(Level.FINER, "Already tried with updated credentials; cannot authenticate");
+                    logger.log(FINER, "Already tried with updated credentials; cannot authenticate");
                     throw authEx;
                 }
 
                 /*
                  * Try to update the creds.
                  */
-                logger.log(Level.FINER, "Have not yet tried to update credentials, so will try to update them");
+                logger.log(FINER, "Have not yet tried to update credentials, so will try to update them");
                 if (!updateAuthentication()) {
                     /*
                      * No updated credentials are avaiable, so we
                      * have no more options.
                      */
-                    logger.log(Level.FINER, "Could not update credentials; cannot authenticate");
+                    logger.log(FINER, "Could not update credentials; cannot authenticate");
                     throw authEx;
                 }
                 /*
                  * We have another set of credentials we can try.
                  */
-                logger.log(Level.FINER, "Was able to update the credentials so will retry with the updated ones");
+                logger.log(FINER, "Was able to update the credentials so will retry with the updated ones");
                 askedUserForCredentials = true;
                 shouldTryCommandAgain = true;
                 continue;
@@ -803,7 +805,7 @@ public class RemoteAdminCommand {
             } catch (SSLException se) {
                 logger.finer("doHttpCommand: SSL exception " + se);
                 if (secure) {
-                    logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
+                    logger.log(SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
                 }
                 throw new CommandException(se);
             } catch (SocketTimeoutException e) {
@@ -815,7 +817,7 @@ public class RemoteAdminCommand {
             } catch (CommandException e) {
                 throw e;
             } catch (Exception e) {
-                logger.log(Level.FINER, "Something went wrong: " + e.getMessage(), e);
+                logger.log(FINER, "Something went wrong: " + e.getMessage(), e);
                 throw new CommandException(e);
             }
         } while (shouldTryCommandAgain);
@@ -901,8 +903,8 @@ public class RemoteAdminCommand {
      */
     private String checkConnect(HttpURLConnection urlConnection) throws IOException, CommandException {
         int code = urlConnection.getResponseCode();
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "Response code: " + code);
+        if (logger.isLoggable(FINER)) {
+            logger.log(FINER, "Response code: " + code);
         }
         if (code == -1) {
             URL url = urlConnection.getURL();
@@ -1166,7 +1168,7 @@ public class RemoteAdminCommand {
      * @return the set of ValidOptions
      */
     private CommandModel parseMetadata(InputStream in, Charset charset, StringBuilder errors) {
-        if (logger.isLoggable(Level.FINER)) {
+        if (logger.isLoggable(FINER)) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 FileUtils.copy(in, baos);

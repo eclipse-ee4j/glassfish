@@ -57,7 +57,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
@@ -86,7 +85,9 @@ import org.xml.sax.SAXException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
@@ -341,19 +342,19 @@ public class RemoteAdminCommand {
                         this.usage = ccm.getUsage();
                         addedUploadOption = ccm.isAddedUploadOption();
                     }
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST,
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST,
                                 "Command model for command {0} was successfully loaded from the cache. [Duration: {1} nanos]",
                                 new Object[] { name, System.nanoTime() - startNanos });
                     }
                 } else {
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, "Command model for command {0} is not in cache. It must be fatched from server.", name);
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST, "Command model for command {0} is not in cache. It must be fatched from server.", name);
                     }
                 }
             } catch (Exception ex) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
+                if (logger.isLoggable(FINEST)) {
+                    logger.log(FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
                 }
             }
         }
@@ -1125,16 +1126,16 @@ public class RemoteAdminCommand {
             throw new InvalidCommandException(metadataErrors.toString());
         }
         this.commandModelFromCache = false;
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
                     new Object[] { name, System.nanoTime() - startNanos });
         }
         //if (!omitCache) {
         try {
             AdminCacheUtils.getCache().put(createCommandCacheKey(), commandModel);
         } catch (Exception ex) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, AdminLoggerInfo.mCantPutToCache, createCommandCacheKey());
+            if (logger.isLoggable(WARNING)) {
+                logger.log(WARNING, AdminLoggerInfo.mCantPutToCache, createCommandCacheKey());
             }
         }
         //}

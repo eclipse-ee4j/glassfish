@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,6 @@ import jakarta.inject.Inject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.AnnotatedElement;
@@ -38,7 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
@@ -50,6 +49,9 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.logging.Level.FINER;
+
 /**
  * This exists mainly due performance reason. After construct it starts hk2 descriptors parsing because is is
  * significantly more effective then HK2 initialization. <br/>
@@ -60,28 +62,6 @@ import org.jvnet.hk2.config.InjectionResolver;
  * @author martinmares
  */
 public final class CLIContainer {
-
-    class SimpleInjectionResolver extends InjectionResolver<Inject> {
-
-        public SimpleInjectionResolver(Class<Inject> type) {
-            super(type);
-        }
-
-        @Override
-        public <V> V getValue(Object o, AnnotatedElement ae, Type genricType, Class<V> type) throws MultiException {
-            if (type.isAssignableFrom(ProgramOptions.class)) {
-                return (V) getProgramOptions();
-            }
-            if (type.isAssignableFrom(Environment.class)) {
-                return (V) getEnvironment();
-            }
-            if (type.isAssignableFrom(CLIContainer.class)) {
-                return (V) CLIContainer.this;
-            }
-            throw new IllegalStateException();
-        }
-
-    }
 
     private static final InjectionManager injectionMgr = new InjectionManager();
 
@@ -102,12 +82,12 @@ public final class CLIContainer {
         try {
             cliCommandsNames = parseHk2Locators();
         } catch (IOException ex) {
-            logger.log(Level.FINER, "Can't fast parse hk2 locators! HK2 ServiceLocator must be used");
+            logger.log(FINER, "Can't fast parse hk2 locators! HK2 ServiceLocator must be used");
         }
     }
 
-    private Object createInstance(String name)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalStateException {
+
+    private Object createInstance(String name) throws ReflectiveOperationException {
         if (name == null) {
             return null;
         }
@@ -116,7 +96,7 @@ public final class CLIContainer {
             //Other scopes => HK2
             return null;
         }
-        Object result = clazz.newInstance();
+        Object result = clazz.getDeclaredConstructor().newInstance();
         InjectionResolver<Inject> injector = new SimpleInjectionResolver(Inject.class);
         injectionMgr.inject(result, injector);
         return result;
@@ -132,15 +112,10 @@ public final class CLIContainer {
     }
 
     private Set<File> expandExtensions() throws IOException {
-        Set<File> result = new HashSet<File>();
+        Set<File> result = new HashSet<>();
         for (File file : extensions) {
             if (file.isDirectory()) {
-                File[] lf = file.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.toLowerCase(Locale.ENGLISH).endsWith(".jar");
-                    }
-                });
+                File[] lf = file.listFiles((dir, name) -> name.toLowerCase(Locale.ENGLISH).endsWith(".jar"));
                 result.addAll(Arrays.asList(lf));
             } else {
                 result.add(file);
@@ -156,38 +131,27 @@ public final class CLIContainer {
     }
 
     private Map<String, String> parseHk2Locators() throws IOException {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         Set<File> extFiles = expandExtensions();
         for (File file : extFiles) {
-            BufferedReader reader = null;
-            JarFile jar = null;
-            try {
-                jar = new JarFile(file);
+            try (JarFile jar = new JarFile(file)) {
                 ZipEntry entry = jar.getEntry("META-INF/hk2-locator/default");
-                if (entry != null) {
-                    reader = new BufferedReader(new InputStreamReader(jar.getInputStream(entry)));
+                if (entry == null) {
+                    continue;
+                }
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(jar.getInputStream(entry), UTF_8))) {
                     parseInHk2LocatorOrig(reader, result);
-                }
-            } finally {
-                try {
-                    reader.close();
-                } catch (Exception ex) {
-                }
-                try {
-                    jar.close();
-                } catch (Exception ex) {
                 }
             }
         }
         return result;
     }
 
-    private String getCommandClassName(String name) throws InterruptedException, IllegalStateException {
+    private String getCommandClassName(String name) throws IllegalStateException {
         if (cliCommandsNames == null) {
             throw new IllegalStateException();
-        } else {
-            return cliCommandsNames.get(name);
         }
+        return cliCommandsNames.get(name);
     }
 
     public ServiceLocator getServiceLocator() {
@@ -213,25 +177,19 @@ public final class CLIContainer {
             try {
                 String className = getCommandClassName(name);
                 if (className == null) {
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.log(Level.FINER, "CLICommand not found for name {0}", name);
-                    }
+                    logger.log(FINER, "CLICommand not found for name {0}", name);
                     return null;
                 }
                 CLICommand result = (CLICommand) createInstance(className);
                 if (result != null) {
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.log(Level.FINER, "CLIContainer creates instance for command {0}", name);
-                    }
+                    logger.log(FINER, "CLIContainer creates instance for command {0}", name);
                     return result;
                 }
             } catch (Exception ex) {
                 //Not special case.
             }
         }
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "HK2 Service locator will be used for command {0}", name);
-        }
+        logger.log(FINER, "HK2 Service locator will be used for command {0}", name);
         return getServiceLocator().getService(CLICommand.class, name);
     }
 
@@ -255,4 +213,25 @@ public final class CLIContainer {
         return environment;
     }
 
+    class SimpleInjectionResolver extends InjectionResolver<Inject> {
+
+        SimpleInjectionResolver(Class<Inject> type) {
+            super(type);
+        }
+
+        @Override
+        public <V> V getValue(Object o, AnnotatedElement ae, Type genricType, Class<V> type) throws MultiException {
+            if (type.isAssignableFrom(ProgramOptions.class)) {
+                return (V) getProgramOptions();
+            }
+            if (type.isAssignableFrom(Environment.class)) {
+                return (V) getEnvironment();
+            }
+            if (type.isAssignableFrom(CLIContainer.class)) {
+                return (V) CLIContainer.this;
+            }
+            throw new IllegalStateException();
+        }
+
+    }
 }

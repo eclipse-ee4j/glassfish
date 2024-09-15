@@ -105,27 +105,19 @@ public class ClientCookieStore implements CookieStore {
             throw new IOException("File does not exist: " + cookieStoreFile);
         }
 
-        try {
-            in = new BufferedReader(new FileReader(cookieStoreFile));
+        try (BufferedReader in = new BufferedReader(new FileReader(cookieStoreFile, UTF_8))) {
             String str;
             while ((str = in.readLine()) != null) {
 
                 // Ignore comment lines
-                if (str.startsWith("#"))
+                if (str.startsWith("#")) {
                     continue;
+                }
 
                 List<HttpCookie> cookies = HttpCookie.parse(str);
                 for (HttpCookie cookie : cookies) {
                     this.add(getStaticURI(), cookie);
                 }
-            }
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-
             }
         }
     }
@@ -136,14 +128,13 @@ public class ClientCookieStore implements CookieStore {
      * This method will overwrite the contents of the target file.
      */
     public void store() throws IOException {
-        PrintWriter out = null;
 
         // Create the directory if it doesn't exist.
         if (!cookieStoreFile.getParentFile().exists() && !cookieStoreFile.getParentFile().mkdirs()) {
             throw new IOException("Unable to create directory: " + cookieStoreFile);
         }
 
-        out = new PrintWriter(new BufferedWriter(new FileWriter(cookieStoreFile)));
+        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(cookieStoreFile, UTF_8)));
 
         // Write comment at top of cache file.
         out.println(CACHE_COMMENT);

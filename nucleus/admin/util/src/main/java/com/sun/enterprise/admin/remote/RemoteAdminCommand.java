@@ -26,7 +26,6 @@ import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -75,6 +74,7 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -580,7 +580,7 @@ public class RemoteAdminCommand {
                         @Override
                         public void handleReport(InputStream reportStream) throws Exception {
                             int responseCode = urlConnection.getResponseCode();
-                            Charset charset = Utility.getCharsetFromHeader(responseContentType);
+                            Charset charset = HttpParser.getCharsetFromHeader(responseContentType);
                             handleResponse(options, reportStream, charset, responseCode, userOut);
                         }
                     });
@@ -1110,7 +1110,7 @@ public class RemoteAdminCommand {
                         partIt.next(); // just throw it away
                     } else {
                         metadataErrors = new StringBuilder();
-                        Charset charset = Utility.getCharsetFromHeader(responseContentType);
+                        Charset charset = HttpParser.getCharsetFromHeader(responseContentType);
                         commandModel = parseMetadata(partIt.next().getInputStream(), charset, metadataErrors);
                         logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;

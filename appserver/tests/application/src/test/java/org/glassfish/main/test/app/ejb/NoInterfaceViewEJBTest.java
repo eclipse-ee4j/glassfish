@@ -16,8 +16,6 @@
 
 package org.glassfish.main.test.app.ejb;
 
-import com.sun.enterprise.util.Utility;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -25,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.file.Files;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -80,7 +79,7 @@ public class NoInterfaceViewEJBTest {
         try {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
-                () -> assertThat(Utility.readResponseInputStream(connection),
+                () -> assertThat(HttpParser.readResponseInputStream(connection),
                     equalTo(NoInterfaceViewEJB.class.getName()))            );
         } finally {
             connection.disconnect();
@@ -203,7 +202,7 @@ public class NoInterfaceViewEJBTest {
         try {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
-                () -> assertThat(Utility.readResponseInputStream(connection),
+                () -> assertThat(HttpParser.readResponseInputStream(connection),
                         containsString("Illegal non-business method access on no-interface view"))
             );
         } finally {
@@ -218,7 +217,7 @@ public class NoInterfaceViewEJBTest {
         try {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
-                () -> assertThat(Utility.readResponseInputStream(connection),
+                () -> assertThat(HttpParser.readResponseInputStream(connection),
                         containsString("Illegal non-business method access on no-interface view"))
             );
         } finally {
@@ -265,6 +264,6 @@ public class NoInterfaceViewEJBTest {
         } catch (NoSuchMethodException e) {
             valueOf = type.getDeclaredMethod("valueOf", String.class);
         }
-        return (T) valueOf.invoke(null, Utility.readResponseInputStream(connection));
+        return (T) valueOf.invoke(null, HttpParser.readResponseInputStream(connection));
     }
 }

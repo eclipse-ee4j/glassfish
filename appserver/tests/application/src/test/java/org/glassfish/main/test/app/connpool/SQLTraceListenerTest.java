@@ -15,12 +15,11 @@
  */
 package org.glassfish.main.test.app.connpool;
 
-import com.sun.enterprise.util.Utility;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -122,7 +121,7 @@ public class SQLTraceListenerTest {
             try {
                 assertThat(connection.getResponseCode(), equalTo(200));
             } catch (AssertionError e) {
-                throw new AssertionError(Utility.readResponseErrorStream(connection), e);
+                throw new AssertionError(HttpParser.readResponseErrorStream(connection), e);
             }
         } finally {
             connection.disconnect();

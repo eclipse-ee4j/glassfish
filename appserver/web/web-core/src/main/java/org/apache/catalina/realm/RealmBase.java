@@ -67,6 +67,7 @@ import org.apache.catalina.deploy.SecurityCollection;
 import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.util.HexUtils;
 import org.apache.catalina.util.LifecycleSupport;
+import org.glassfish.common.util.HttpParser;
 
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
@@ -328,7 +329,7 @@ public abstract class RealmBase implements Lifecycle, Realm {
         byte[] valueBytes = null;
 
         try {
-            Charset charset = Utility.getCharset(getDigestEncoding());
+            Charset charset = HttpParser.getCharset(getDigestEncoding());
             valueBytes = Utility.convertCharArrayToByteArray(serverDigestValue, charset);
         } catch (CharacterCodingException cce) {
             String msg = MessageFormat.format(rb.getString(LogFacade.ILLEGAL_DIGEST_ENCODING_EXCEPTION), getDigestEncoding());
@@ -1008,7 +1009,7 @@ public abstract class RealmBase implements Lifecycle, Realm {
 
                 byte[] bytes = null;
                 try {
-                    Charset charset = Utility.getCharset(getDigestEncoding());
+                    Charset charset = HttpParser.getCharset(getDigestEncoding());
                     bytes = Utility.convertCharArrayToByteArray(credentials, charset);
                 } catch (CharacterCodingException cce) {
                     String msg = MessageFormat.format(rb.getString(LogFacade.ILLEGAL_DIGEST_ENCODING_EXCEPTION), getDigestEncoding());
@@ -1072,7 +1073,7 @@ public abstract class RealmBase implements Lifecycle, Realm {
 
         byte[] valueBytes = null;
         try {
-            Charset charset = Utility.getCharset(getDigestEncoding());
+            Charset charset = HttpParser.getCharset(getDigestEncoding());
             valueBytes = Utility.convertCharArrayToByteArray(digestValue, charset);
         } catch (CharacterCodingException cce) {
             String msg = MessageFormat.format(rb.getString(LogFacade.ILLEGAL_DIGEST_ENCODING_EXCEPTION), getDigestEncoding());

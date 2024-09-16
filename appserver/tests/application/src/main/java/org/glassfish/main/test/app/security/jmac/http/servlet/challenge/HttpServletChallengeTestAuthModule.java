@@ -35,7 +35,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 
-import org.glassfish.main.test.app.security.common.HttpHeaderParser;
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.security.common.UserNameAndPassword;
 
 import static java.lang.System.Logger.Level.DEBUG;
@@ -74,7 +74,7 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
         try {
             HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
             HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
-            UserNameAndPassword login = HttpHeaderParser.parseBasicAuthorizationHeader(request);
+            UserNameAndPassword login = HttpParser.parseBasicAuthorizationHeader(request.getHeader("Authorization"));
             LOG.log(INFO, "REQUEST: Login: {0}", login);
             if (login == null) {
                 response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");

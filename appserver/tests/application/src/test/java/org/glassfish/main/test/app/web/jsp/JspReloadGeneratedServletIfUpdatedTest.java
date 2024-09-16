@@ -17,8 +17,6 @@
 
 package org.glassfish.main.test.app.web.jsp;
 
-import com.sun.enterprise.util.Utility;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -31,6 +29,7 @@ import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -95,7 +94,7 @@ public class JspReloadGeneratedServletIfUpdatedTest {
         HttpURLConnection connection = GlassFishTestEnvironment.openConnection(8080,
             "/reload/" + JSP_FILE_NAME + ".jsp");
         connection.setRequestMethod("GET");
-        String line = Utility.readResponseInputStream(connection).trim();
+        String line = HttpParser.readResponseInputStream(connection).trim();
         assertAll(
             () -> assertEquals(200, connection.getResponseCode(), "Wrong response code."),
             () -> assertEquals(expectedText, line, "Wrong response body.")

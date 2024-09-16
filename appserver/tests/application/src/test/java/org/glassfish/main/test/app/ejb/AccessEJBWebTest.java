@@ -16,12 +16,11 @@
 
 package org.glassfish.main.test.app.ejb;
 
-import com.sun.enterprise.util.Utility;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.RandomGenerator;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -70,7 +69,7 @@ public class AccessEJBWebTest {
         connection.setRequestMethod("GET");
         assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
-                () -> assertEquals(message, Utility.readResponseInputStream(connection).trim())
+                () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
         );
     }
 
@@ -82,7 +81,7 @@ public class AccessEJBWebTest {
         connection.setRequestMethod("GET");
         assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
-                () -> assertEquals(message, Utility.readResponseInputStream(connection).trim())
+                () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
         );
     }
 
@@ -94,7 +93,7 @@ public class AccessEJBWebTest {
         connection.setRequestMethod("GET");
         assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
-                () -> assertEquals(message, Utility.readResponseInputStream(connection).trim())
+                () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
         );
     }
 
@@ -106,7 +105,7 @@ public class AccessEJBWebTest {
         connection.setRequestMethod("GET");
         assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
-                () -> assertEquals(message, Utility.readResponseInputStream(connection).trim())
+                () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
         );
     }
 

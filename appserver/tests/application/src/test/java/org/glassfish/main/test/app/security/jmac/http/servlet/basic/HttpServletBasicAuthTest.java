@@ -24,10 +24,10 @@ import java.net.HttpURLConnection;
 import java.nio.file.Path;
 import java.util.Base64;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
-import org.glassfish.main.test.app.security.common.HttpHeaderParser;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -78,7 +78,7 @@ public class HttpServletBasicAuthTest {
         createFileUser(FILE_REALM_NAME, USER_NAME, USER_PASSWORD, "mygroup");
 
         JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class).addClass(MyHttpServletResponseWrapper.class)
-            .addClass(HttpServletTestAuthModule.class).addClass(MyPrintWriter.class).addClass(HttpHeaderParser.class);
+            .addClass(HttpServletTestAuthModule.class).addClass(MyPrintWriter.class).addClass(HttpParser.class);
         LOG.log(INFO, loginModule.toString(true));
         loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
             AUTH_MODULE_NAME + ".jar");

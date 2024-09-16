@@ -16,8 +16,6 @@
 
 package org.glassfish.main.test.app.mrjar.servlet;
 
-import com.sun.enterprise.util.Utility;
-
 import jakarta.servlet.ServletContainerInitializer;
 
 import java.io.File;
@@ -25,6 +23,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.test.app.mrjar.MultiReleaseTestBase;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -87,7 +86,7 @@ public class MultiReleaseServletContainerInitializerTest extends MultiReleaseTes
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
                 // Check version of loaded class file
-                () -> assertThat(Integer.parseInt(Utility.readResponseInputStream(connection).trim()), equalTo(V11))
+                () -> assertThat(Integer.parseInt(HttpParser.readResponseInputStream(connection).trim()), equalTo(V11))
             );
         } finally {
             connection.disconnect();
@@ -104,7 +103,7 @@ public class MultiReleaseServletContainerInitializerTest extends MultiReleaseTes
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
                 // Check version of loaded class file
-                () -> assertThat(Integer.parseInt(Utility.readResponseInputStream(connection).trim()), equalTo(V17))
+                () -> assertThat(Integer.parseInt(HttpParser.readResponseInputStream(connection).trim()), equalTo(V17))
             );
         } finally {
             connection.disconnect();

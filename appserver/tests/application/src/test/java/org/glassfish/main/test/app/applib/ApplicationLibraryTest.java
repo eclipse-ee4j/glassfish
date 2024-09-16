@@ -16,14 +16,13 @@
 
 package org.glassfish.main.test.app.applib;
 
-import com.sun.enterprise.util.Utility;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -197,7 +196,7 @@ public class ApplicationLibraryTest {
         connection.setRequestMethod("GET");
         try {
             assertThat(connection.getResponseCode(), equalTo(200));
-            return Utility.readResponseInputStream(connection);
+            return HttpParser.readResponseInputStream(connection);
         } finally {
             connection.disconnect();
         }

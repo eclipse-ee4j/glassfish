@@ -75,7 +75,13 @@ public class GlassFishErrorServiceImpl implements ErrorService {
 
     String findBundleExceptionText(Throwable throwable) {
         while (throwable != null) {
-            if (throwable instanceof BundleException) {
+            boolean isBundleException = false;
+            try {
+                isBundleException = throwable instanceof BundleException;
+            } catch (NoClassDefFoundError | Exception e) {
+                // BundleException not found - ignore, we don't run in OSGi, e.g. GlassFish Embedded
+            }
+            if (isBundleException) {
                 BundleException bundleException = (BundleException) throwable;
                 return FelixPrettyPrinter.prettyPrintExceptionMessage(bundleException.getMessage());
             }

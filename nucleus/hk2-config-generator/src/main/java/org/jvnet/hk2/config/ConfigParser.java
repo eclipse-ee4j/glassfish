@@ -49,6 +49,8 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
  * @author Kohsuke Kawaguchi
  */
 public class ConfigParser {
+    private static final Logger logger = Logger.getLogger(ConfigParser.class.getName());
+
     /**
      * This is where we put parsed inhabitants into.
      */
@@ -140,7 +142,9 @@ public class ConfigParser {
         ConfigModel model = document.getModelByElementName(in.getLocalName());
         if(model==null) {
             String localName = in.getLocalName();
-            Logger.getAnonymousLogger().severe("Ignoring unrecognized element "+in.getLocalName() + " at " + in.getLocation());
+            logger.log(Level.WARNING, () -> "Ignoring unrecognized element " + in.getLocalName() + " at line #" + in.getLocation().getLineNumber());
+            logger.log(Level.FINE, () -> "Unrecognized element " + in.getLocalName() + " at "
+                    + in.getLocation().toString().replace("\n", ", "));
             // flush the sub element content from the parser
             int depth=1;
             while(depth>0) {

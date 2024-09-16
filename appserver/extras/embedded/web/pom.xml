@@ -1502,7 +1502,7 @@
                                 <manifestEntries>
                                     <Multi-Release>true</Multi-Release>
                                     <Bundle-SymbolicName>org.glassfish.main.embedded.web</Bundle-SymbolicName>
-                                    <Main-Class>com.sun.enterprise.glassfish.bootstrap.UberMain</Main-Class>
+                                    <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
                                 </manifestEntries>
                             </archive>
                         </configuration>

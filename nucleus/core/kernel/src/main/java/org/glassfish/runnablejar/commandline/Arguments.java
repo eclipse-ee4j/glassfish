@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package com.sun.enterprise.glassfish.bootstrap.commandline;
+package org.glassfish.runnablejar.commandline;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,6 +39,8 @@ import org.glassfish.embeddable.GlassFishProperties;
  */
 public class Arguments {
 
+    private static final Logger logger = Logger.getLogger(Arguments.class.getName());
+
     public static final String DEFAULT_HTTP_LISTENER = "http-listener";
     public static final String DEFAULT_HTTPS_LISTENER = "https-listener";
     public static final String DEFAULT_PROPERTIES_FILE = "glassfish.properties";
@@ -55,8 +57,7 @@ public class Arguments {
     public final GlassFishProperties glassFishProperties = new GlassFishProperties();
     public final List<String> deployables = new ArrayList<>();
     public boolean askedForHelp = false;
-
-    private static final Logger logger = Logger.getLogger(Arguments.class.getName());
+    public boolean noInfo = false;
 
     public void setDefaults() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);
@@ -95,7 +96,9 @@ public class Arguments {
     }
 
     /**
-     * Set an option or an argument with an optional value. If value not applicable, it should be {@code null}.
+     * Set an option or an argument with an optional value. If value not
+     * applicable, it should be {@code null}.
+     *
      * @param option Chosen option to set
      * @param value Value of the option or {@code null}
      */
@@ -104,7 +107,9 @@ public class Arguments {
     }
 
     /**
-     * Add a command to execute at start. Commands are executed in the order in which they are added.
+     * Add a command to execute at start. Commands are executed in the order in
+     * which they are added.
+     *
      * @param command
      */
     public void addCommand(String command) {
@@ -112,7 +117,9 @@ public class Arguments {
     }
 
     /**
-     * Add a deployable (e.g. a WAR application) to deploy at start. Deployables are deployed in the order in which they are added.
+     * Add a deployable (e.g. a WAR application) to deploy at start. Deployables
+     * are deployed in the order in which they are added.
+     *
      * @param deployable
      */
     public void addDeployable(String deployable) {
@@ -155,6 +162,7 @@ public class Arguments {
 
     /**
      * Produce help information
+     *
      * @return All the help information as String
      */
     public String getHelpText() {
@@ -165,6 +173,7 @@ public class Arguments {
 
     /**
      * Produce help information and execute lineConsumer for every line.
+     *
      * @param lineConsumer Called for every line
      */
     public void printHelp(Consumer<String> lineConsumer) {

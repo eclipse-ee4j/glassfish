@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,15 +14,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package com.sun.enterprise.glassfish.bootstrap;
+package org.glassfish.runnablejar;
 
-import com.sun.enterprise.glassfish.bootstrap.commandline.Arguments;
-import com.sun.enterprise.glassfish.bootstrap.commandline.CommandLineParser;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.glassfish.bootstrap.embedded.EmbeddedGlassFishRuntimeBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +35,9 @@ import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.runnablejar.commandline.Arguments;
+import org.glassfish.runnablejar.commandline.CommandLineParser;
 
 import static java.lang.System.exit;
 import static java.util.logging.Level.FINE;
@@ -40,8 +46,8 @@ import static java.util.logging.Level.SEVERE;
 import static org.glassfish.embeddable.CommandResult.ExitStatus.SUCCESS;
 
 /**
- * This is main class for the uber jars viz., glassfish-embedded-all.jar and glassfish-embedded-web.jar, to be able to
- * do:
+ * This is main class for the uber jars viz., glassfish-embedded-all.jar and
+ * glassfish-embedded-web.jar, to be able to do:
  * <p/>
  * <p/>
  * {@code java -jar glassfish-embedded-all.jar}
@@ -60,15 +66,18 @@ import static org.glassfish.embeddable.CommandResult.ExitStatus.SUCCESS;
  * <p/>
  * <h3>Example with a custom deploy command</h3>
  * <p/>
- * Sets a custom root context (custom commands need to be enclosed in quotes because they usually contain spaces)
+ * Sets a custom root context (custom commands need to be enclosed in quotes
+ * because they usually contain spaces)
  * <p/>
  * {@code java -jar glassfish-embedded-all.jar "deploy --contextroot=/app app.war"}
  *
+ * @author Ondro Mihalyi
  * @author bhavanishankar@dev.java.net
  */
 public class UberMain {
 
-    private static Logger logger = Logger.getLogger(UberMain.class.getName());
+    private static final Logger logger = Logger.getLogger(UberMain.class.getName());
+    private static final String SERVER_NAME = "server";
 
     GlassFish glassFish;
     CommandRunner commandRunner;
@@ -78,6 +87,8 @@ public class UberMain {
         if (arguments.askedForHelp) {
             arguments.printHelp();
         } else {
+            // When running off the uber jar don't add extras module URLs to classpath.
+            EmbeddedGlassFishRuntimeBuilder.addModuleJars = false;
             new UberMain().run(arguments);
         }
     }
@@ -92,20 +103,25 @@ public class UberMain {
         glassFish.start();
         commandRunner = glassFish.getCommandRunner();
 
-
         for (String command : arguments.commands) {
             executeCommandFromString(command);
         }
 
-
         if (!arguments.deployables.isEmpty()) {
             if (glassFish.getDeployer().getDeployedApplications().isEmpty() && arguments.deployables.size() == 1) {
-                executeCommandFromString("deploy --contextroot=/ " + arguments.deployables.get(0));
+                final String deployable = arguments.deployables.get(0);
+                executeCommandFromString("deploy --contextroot=/ " + deployable);
+                logger.log(INFO, () -> "Application " + Path.of(deployable).getFileName() + " deployed at context root \"/\"");
             } else {
                 arguments.deployables.forEach(deployable -> {
                     executeCommandFromString("deploy " + deployable);
+                    logger.log(INFO, () -> "Application " + Path.of(deployable).getFileName() + " deployed");
                 });
             }
+        }
+
+        if (!arguments.noInfo) {
+            printInfoAfterStartup();
         }
 
         if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
@@ -115,13 +131,24 @@ public class UberMain {
 
     }
 
+    protected void printInfoAfterStartup() throws GlassFishException {
+        final Level LOG_LEVEL = INFO;
+        if (logger.isLoggable(LOG_LEVEL)) {
+            final Domain domain = glassFish.getService(Domain.class);
+            final List<Application> applications = domain.getApplicationsInTarget(SERVER_NAME);
+            final List<NetworkListener> listeners = domain.getServers().getServer(SERVER_NAME).getConfig()
+                    .getNetworkConfig().getNetworkListeners().getNetworkListener();
+            logger.log(LOG_LEVEL, "\n\n" + new InfoPrinter().getInfoAfterStartup(applications, listeners) + "\n");
+        }
+    }
+
     private void runCommandPromptLoop() throws GlassFishException {
         while (true) {
             System.out.print("\n\nGlassFish $ ");
             String str = null;
             try {
                 str = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())).readLine();
-            } catch (Exception e) {
+            } catch (IOException | RuntimeException e) {
                 logger.log(SEVERE, e.getMessage(), e);
             }
             if (str != null && str.trim().length() != 0) {
@@ -149,7 +176,7 @@ public class UberMain {
                     ? commandRunner.run(command) : commandRunner.run(command, commandParams);
             switch (result.getExitStatus()) {
                 case SUCCESS:
-                    logger.log(INFO, () -> "SUCCESS: " + result.getOutput());
+                    logger.log(FINE, () -> "SUCCESS: " + result.getOutput());
                     break;
                 default:
                     if (result.getFailureCause() != null) {

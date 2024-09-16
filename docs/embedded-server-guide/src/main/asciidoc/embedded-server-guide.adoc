@@ -261,7 +261,8 @@ java -jar glassfish-embedded-all.jar [--properties=FILE]
     [--domainConfigFile=FILE] 
     [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY] 
     [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--logLevel=LEVEL] 
-    [--logProperties=FILE] [--help] [applications or admin commands...]
+    [--logProperties=FILE] [--noInfo] [--help] 
+    [applications or admin commands...]
 ```
 
 `--properties=FILE`
@@ -329,9 +330,13 @@ Set the log level of all loggers to LEVEL
 
 Set logging properties from file FILE
 
+`--noInfo`
+
+Disable printing information about deployed applications after startup
+
 `--help`
 
-Print this help
+Print help information
 
 ---
 

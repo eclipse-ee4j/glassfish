@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package com.sun.enterprise.glassfish.bootstrap.commandline;
+package org.glassfish.runnablejar.commandline;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -31,9 +31,9 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAULT_HTTPS_LISTENER;
-import static com.sun.enterprise.glassfish.bootstrap.commandline.Arguments.DEFAULT_HTTP_LISTENER;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.runnablejar.commandline.Arguments.DEFAULT_HTTPS_LISTENER;
+import static org.glassfish.runnablejar.commandline.Arguments.DEFAULT_HTTP_LISTENER;
 
 /**
  *
@@ -129,6 +129,14 @@ public enum Option {
                 logger.log(WARNING, ex, () -> "Could not open properties file " + fileName);
             }
         }
+    },
+    NO_INFO("noInfo", "--noInfo",
+    "Disable printing information about deployed applications after startup") {
+        @Override
+        public void handle(String noInfo, Arguments arguments) {
+            arguments.noInfo = (noInfo == null || Boolean.valueOf(noInfo));
+        }
+
     },
     HELP("help", "--help", "Print this help") {
         @Override

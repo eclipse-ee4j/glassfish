@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,10 @@
 
 package org.glassfish.main.test.app.web.jsp;
 
-import java.io.BufferedReader;
+import com.sun.enterprise.util.Utility;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.HttpURLConnection;
@@ -95,10 +95,7 @@ public class JspReloadGeneratedServletIfUpdatedTest {
         HttpURLConnection connection = GlassFishTestEnvironment.openConnection(8080,
             "/reload/" + JSP_FILE_NAME + ".jsp");
         connection.setRequestMethod("GET");
-        String line;
-        try (BufferedReader bis = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            line = bis.readLine();
-        }
+        String line = Utility.readResponseInputStream(connection).trim();
         assertAll(
             () -> assertEquals(200, connection.getResponseCode(), "Wrong response code."),
             () -> assertEquals(expectedText, line, "Wrong response body.")

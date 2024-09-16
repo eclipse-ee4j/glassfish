@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,12 +29,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.PrintWriter;
 import java.lang.System.Logger;
-import java.util.Base64;
 import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.main.test.app.security.common.HttpHeaderParser;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
@@ -76,44 +78,29 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
         try {
             HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
             HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
-            String authorization = request.getHeader("Authorization");
-            LOG.log(INFO, "Received authorization: {0}", authorization);
-            String username = null;
-            String password = null;
-            if (authorization != null && authorization.startsWith("Basic ")) {
-                authorization = authorization.substring(6).trim();
-                byte[] bs = Base64.getDecoder().decode(authorization);
-                String decodedString = new String(bs);
-                int ind = decodedString.indexOf(':');
-                if (ind > 0) {
-                    username = decodedString.substring(0, ind);
-                    password = decodedString.substring(ind + 1);
-                }
-            }
-
-            LOG.log(INFO, "REQUEST: User={0}, password={1}", username, password);
-            if (username == null || password == null) {
+            UserNameAndPassword login = HttpHeaderParser.parseBasicAuthorizationHeader(request);
+            LOG.log(INFO, "REQUEST: Login: {0}", login);
+            if (login == null) {
                 response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 LOG.log(INFO, "login prompt for username/password");
                 return AuthStatus.SEND_CONTINUE;
             }
 
-            char[] pwd = new char[password.length()];
-            password.getChars(0, password.length(), pwd, 0);
-            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, username, pwd);
-            CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, username);
+            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, login.getName(),
+                login.getPassword());
+            CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, login.getName());
             LOG.log(DEBUG, "Subject before invoking callbacks: {0}", clientSubject);
             handler.handle(new Callback[] {pwdCallback, cpCallback});
             LOG.log(INFO, "Subject after invoking callbacks: {0}", clientSubject);
 
             if (!pwdCallback.getResult()) {
-                LOG.log(INFO, "login fails for username {0}", username);
+                LOG.log(INFO, "login fails for login {0}", login);
                 return AuthStatus.SEND_FAILURE;
             }
             request.setAttribute("MY_NAME", getClass().getName());
             request.setAttribute("PC", pc);
-            LOG.log(INFO, "login succeeded for username {0}", username);
+            LOG.log(INFO, "login succeeded for login {0}", login);
             messageInfo.setResponseMessage(new MyHttpServletResponseWrapper(response));
             return AuthStatus.SUCCESS;
         } catch (Exception e) {
@@ -121,7 +108,6 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
             return AuthStatus.SEND_FAILURE;
         }
     }
-
 
     @Override
     public AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {

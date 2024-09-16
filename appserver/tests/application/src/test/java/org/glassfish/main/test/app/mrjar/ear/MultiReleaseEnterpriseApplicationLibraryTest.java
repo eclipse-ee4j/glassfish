@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,8 @@
  */
 
 package org.glassfish.main.test.app.mrjar.ear;
+
+import com.sun.enterprise.util.Utility;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +90,7 @@ public class MultiReleaseEnterpriseApplicationLibraryTest extends MultiReleaseTe
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
                 // Check version of loaded class file
-                () -> assertThat(Integer.parseInt(readResponse(connection)), equalTo(V11))
+                () -> assertThat(Integer.parseInt(Utility.readResponseInputStream(connection)), equalTo(V11))
             );
         } finally {
             connection.disconnect();
@@ -105,7 +107,7 @@ public class MultiReleaseEnterpriseApplicationLibraryTest extends MultiReleaseTe
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
                 // Check version of loaded class file
-                () -> assertThat(Integer.parseInt(readResponse(connection)), equalTo(V17))
+                () -> assertThat(Integer.parseInt(Utility.readResponseInputStream(connection)), equalTo(V17))
             );
         } finally {
             connection.disconnect();

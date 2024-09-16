@@ -580,7 +580,7 @@ public class RemoteAdminCommand {
                         @Override
                         public void handleReport(InputStream reportStream) throws Exception {
                             int responseCode = urlConnection.getResponseCode();
-                            Charset charset = Utility.getCharsetFromContentType(responseContentType);
+                            Charset charset = Utility.getCharsetFromHeader(responseContentType);
                             handleResponse(options, reportStream, charset, responseCode, userOut);
                         }
                     });
@@ -1110,7 +1110,7 @@ public class RemoteAdminCommand {
                         partIt.next(); // just throw it away
                     } else {
                         metadataErrors = new StringBuilder();
-                        Charset charset = Utility.getCharsetFromContentType(responseContentType);
+                        Charset charset = Utility.getCharsetFromHeader(responseContentType);
                         commandModel = parseMetadata(partIt.next().getInputStream(), charset, metadataErrors);
                         logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;

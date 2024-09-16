@@ -23,7 +23,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -621,25 +623,56 @@ public final class Utility {
         return envVal;
     }
 
+    /**
+     * Reads response input stream from the connection to a String value.
+     * Respects charset from content type header, if not set, uses <code>UTF-8</code>.
+     *
+     * @param connection
+     * @return String parsed from {@link URLConnection#getInputStream()}
+     * @throws IOException
+     */
+    public static String readResponseInputStream(URLConnection connection) throws IOException {
+        Charset charset = getCharsetFromHeader(connection.getContentType());
+        try (InputStream in = connection.getInputStream()) {
+            return new String(in.readAllBytes(), charset);
+        }
+    }
 
     /**
-     * Parse the character encoding from the specified content type header.
-     * If the content type is null, or there is no explicit character encoding,
+     * Reads response error input stream from the connection to a String value.
+     * Respects charset from content type header, if not set, uses <code>UTF-8</code>.
+     *
+     * @param connection
+     * @return String parsed from {@link HttpURLConnection#getErrorStream()}
+     * @throws IOException
+     */
+    public static String readResponseErrorStream(HttpURLConnection connection) throws IOException {
+        Charset charset = getCharsetFromHeader(connection.getContentType());
+        try (InputStream in = connection.getErrorStream()) {
+            return new String(in.readAllBytes(), charset);
+        }
+    }
+
+    /**
+     * Parse the character encoding from the specified content type, authorization header
+     * or any header using same rules when they contain ie.
+     * <code>header="value"; charset=utf-8</code> .
+     * If the header is null, or there is no explicit character encoding,
      * <code>UTF-8</code> is returned.
      *
-     * @param contentType a content type header
+     * @param header a content type header
      * @return {@link Charset} or UTF-8 if the charset is null, empty string or unknown.
      * @throws CharacterCodingException if the charset is not supported.
      */
-    public static Charset getCharsetFromContentType(String contentType) throws CharacterCodingException {
-        if (contentType == null) {
+    public static Charset getCharsetFromHeader(String header) throws CharacterCodingException {
+        if (header == null) {
             return getCharset(null);
         }
-        int start = contentType.indexOf("charset=");
+        int start = header.indexOf("charset=");
         if (start < 0) {
             return getCharset(null);
         }
-        String encoding = contentType.substring(start + 8);
+        String encoding = header.substring(start + 8);
         int end = encoding.indexOf(';');
         if (end >= 0) {
             encoding = encoding.substring(0, end);

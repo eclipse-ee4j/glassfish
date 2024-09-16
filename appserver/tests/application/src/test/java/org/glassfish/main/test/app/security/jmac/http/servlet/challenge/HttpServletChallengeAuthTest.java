@@ -30,6 +30,7 @@ import java.util.Base64;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.test.app.security.common.HttpHeaderParser;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -82,7 +83,7 @@ public class HttpServletChallengeAuthTest {
         createFileUser(FILE_REALM_NAME, USER_NAME2, USER_PASSWORD2, "mygroup");
 
         final JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class)
-            .addClass(HttpServletChallengeTestAuthModule.class);
+            .addClass(HttpServletChallengeTestAuthModule.class).addClass(HttpHeaderParser.class);
         LOG.log(INFO, loginModule.toString(true));
         loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
             AUTH_MODULE_NAME + ".jar");

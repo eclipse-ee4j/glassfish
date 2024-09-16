@@ -29,6 +29,8 @@ import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * @author Mitesh Meswani
  */
@@ -52,7 +54,7 @@ public class TextClassWriter implements ClassWriter {
             RestLogging.restLogger.log(Level.FINE, "Error creating file: {0} in {1}",
                     new String[] { className + ".java", generationDir.getAbsolutePath() });
         }
-        FileWriter fstream = new FileWriter(file);
+        FileWriter fstream = new FileWriter(file, UTF_8);
         writer = new BufferedWriter(fstream);
 
         writeCopyRightHeader();

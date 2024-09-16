@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,10 +23,8 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.Provider;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Iterator;
@@ -33,6 +32,8 @@ import java.util.Iterator;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.api.admin.ParameterMap;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author Ludovic Champenois
@@ -52,7 +53,7 @@ public class JsonParameterMapProvider implements MessageBodyReader<ParameterMap>
 
         JSONObject obj;
         try {
-            obj = new JSONObject(inputStreamAsString(in));
+            obj = new JSONObject(new String(in.readAllBytes(), UTF_8));
             Iterator iter = obj.keys();
             ParameterMap map = new ParameterMap();
 
@@ -62,7 +63,7 @@ public class JsonParameterMapProvider implements MessageBodyReader<ParameterMap>
                 if (value instanceof JSONArray) {
                     JSONArray array = (JSONArray) value;
                     for (int i = 0; i < array.length(); i++) {
-                        map.add(k, "" + array.get(i));
+                        map.add(k, String.valueOf(array.get(i)));
                     }
 
                 } else {
@@ -79,17 +80,5 @@ public class JsonParameterMapProvider implements MessageBodyReader<ParameterMap>
             return map;
         }
 
-    }
-
-    public static String inputStreamAsString(InputStream stream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
     }
 }

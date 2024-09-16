@@ -16,11 +16,12 @@
 
 package org.glassfish.admin.rest.generator;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import org.glassfish.admin.rest.RestLogging;
@@ -31,8 +32,8 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public class TextResourcesGenerator extends ResourcesGeneratorBase {
 
-    /* The absolute path to dir where resources are generated */
-    private File generationDir;
+    /** The absolute path to dir where resources are generated */
+    private final File generationDir;
 
     public TextResourcesGenerator(String outputDir, ServiceLocator habitat) {
         super(habitat);
@@ -57,29 +58,14 @@ public class TextResourcesGenerator extends ResourcesGeneratorBase {
 
     @Override
     public String endGeneration() {
-        //generate date info in 1 single file
-        File file = new File(generationDir + "/codegeneration.properties");
-        BufferedWriter out = null;
-        try {
-            if (file.createNewFile()) {
-                FileWriter fstream = new FileWriter(file);
-                out = new BufferedWriter(fstream);
-                out.write("generation_date=" + new Date() + "\n");
-            } else {
-                RestLogging.restLogger.log(Level.SEVERE, RestLogging.FILE_CREATION_FAILED, "codegeneration.properties");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-                    RestLogging.restLogger.log(Level.SEVERE, null, ex);
-                }
-            }
+        Properties properties = new Properties(1);
+        properties.setProperty("generation_date", new Date().toString());
+        File file = new File(generationDir, "codegeneration.properties");
+        try (OutputStream out = new FileOutputStream(file)) {
+            properties.store(out, null);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to generate " + file, e);
         }
-
         return "Code Generation done at : " + generationDir;
     }
 

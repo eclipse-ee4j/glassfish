@@ -63,7 +63,7 @@ public class GlassFishImpl implements GlassFish {
             CommandResult result = commandRunner.run("set",
                 key.substring(CONFIG_PROP_PREFIX.length()) + "=" + gfProps.getProperty(key));
             if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
-                throw new GlassFishException(result.getOutput());
+                throw new GlassFishException(result.getOutput(), result.getFailureCause());
             }
         }
     }

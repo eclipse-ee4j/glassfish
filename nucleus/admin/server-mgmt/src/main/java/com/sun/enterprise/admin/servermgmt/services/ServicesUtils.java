@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author bnevins
@@ -49,8 +51,7 @@ public final class ServicesUtils {
             final TokenValue tv = new TokenValue(key, value);
             set.add(tv);
         }
-        final TokenValueSet tvset = new TokenValueSet(set);
-        return (tvset);
+        return new TokenValueSet(set);
     }
 
     static void tokenReplaceTemplateAtDestination(Map<String, String> map, File templatePath, File targetPath) {
@@ -61,19 +62,12 @@ public final class ServicesUtils {
 
     static void appendTextToFile(File to, String what) {
 
-        // todo - this should be a high-level utility
-        if (what == null || to == null) {
-            return;
-        }
-
         // It is very annoying in Windows when text files have "\n" instead of
         // \n\r -- the following fixes that.
 
         String[] lines = what.split("\n");
 
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(new FileOutputStream(to, true));
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream(to, true), false, UTF_8)) {
             pw.println(SEP);
             pw.println(new Date());
 
@@ -85,15 +79,8 @@ public final class ServicesUtils {
             pw.println();
             pw.println();
             pw.flush();
-        } catch (IOException ioe) {
-        } finally {
-            try {
-                if (pw != null) {
-                    pw.close();
-                }
-            } catch (Exception e) {
-                // ignore
-            }
+        } catch (IOException e) {
+            throw new IllegalStateException(";", e);
         }
     }
 

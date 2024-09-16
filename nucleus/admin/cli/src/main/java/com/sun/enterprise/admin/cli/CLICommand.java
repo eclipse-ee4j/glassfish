@@ -1138,16 +1138,17 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
-     * Display the given prompt and read a password without echoing it. Returns null if no console available.
+     * Display the given prompt and read a password without echoing it.
+     *
+     * @return null if no console available, read password otherwise.
      */
     protected char[] readPassword(String prompt) {
-        char[] pc = null;
+        char[] password = null;
         Console cons = System.console();
         if (cons != null) {
-            pc = cons.readPassword("%s", prompt);
-            // yes, yes, yes, it would be safer to not keep it in a String
+            password = cons.readPassword("%s", prompt);
         }
-        return pc;
+        return password;
     }
 
     /**

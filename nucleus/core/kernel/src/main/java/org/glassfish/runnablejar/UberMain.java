@@ -120,13 +120,29 @@ public class UberMain {
             }
         }
 
-        if (!arguments.noInfo) {
-            printInfoAfterStartup();
+        if (arguments.shutdown) {
+            logger.log(INFO, () -> "Shutting down after startup as requested");
+            exit(0);
         }
 
-        if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
-            runCommandPromptLoop();
-            exit(0);
+        switch (glassFish.getStatus()) {
+            case INIT:
+            case STARTING:
+            case STARTED:
+                if (!arguments.noInfo) {
+                    printInfoAfterStartup();
+                }
+
+                if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
+                    runCommandPromptLoop();
+                    exit(0);
+                }
+                break;
+            case STOPPING:
+                logger.log(INFO, () -> "GlassFish is shutting down...");
+                break;
+            default:
+                logger.log(INFO, () -> "GlassFish is shut down");
         }
 
     }

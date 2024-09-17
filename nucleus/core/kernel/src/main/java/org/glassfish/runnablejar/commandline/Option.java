@@ -138,6 +138,18 @@ public enum Option {
         }
 
     },
+    SHUTDOWN("shutdown", Set.of("shut-down", "stop"), "--shut-down, --shutdown, --stop",
+    "Shut down GlassFish and the whole JVM process after server is started and initialized."
+            + " This is useful to start the server, perform some action during startup"
+            + " (e.g. during application dpeloyment), and shot down the application cleanly."
+            + " Also useful for Class Data Sharing and similar startup optimizations"
+            + " - to start the server, get it to a ready state (applications deployed, etc.),"
+            + " and then shut down cleanly, so that the JVM can store the cached data.") {
+        @Override
+        public void handle(String value, Arguments arguments) {
+            arguments.shutdown = true;
+        }
+    },
     HELP("help", "--help", "Print this help") {
         @Override
         public void handle(String value, Arguments arguments) {

@@ -261,8 +261,8 @@ java -jar glassfish-embedded-all.jar [--properties=FILE]
     [--domainConfigFile=FILE] 
     [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY] 
     [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--logLevel=LEVEL] 
-    [--logProperties=FILE] [--noInfo] [--help] 
-    [applications or admin commands...]
+    [--logProperties=FILE] [--noInfo] [--shut-down, --shutdown, --stop] 
+    [--help] [applications or admin commands...]
 ```
 
 `--properties=FILE`
@@ -333,6 +333,16 @@ Set logging properties from file FILE
 `--noInfo`
 
 Disable printing information about deployed applications after startup
+
+`--shut-down, --shutdown, --stop`
+
+Shut down GlassFish and the whole JVM process after server is started 
+and initialized. This is useful to start the server, perform some action 
+during startup (e.g. during application dpeloyment), and shot down the 
+application cleanly. Also useful for Class Data Sharing and similar 
+startup optimizations - to start the server, get it to a ready state 
+(applications deployed, etc.), and then shut down cleanly, so that the 
+JVM can store the cached data.
 
 `--help`
 

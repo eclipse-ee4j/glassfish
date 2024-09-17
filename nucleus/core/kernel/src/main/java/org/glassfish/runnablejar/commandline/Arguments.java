@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.runnablejar.UberMain;
 
 /**
  *
@@ -189,27 +190,25 @@ public class Arguments {
     }
 
     private String replaceArguments(String line) {
-        final WordWrapper wordWrapper = new WordWrapper(HELP_LINE_LENGTH, 40, HELP_LINE_INDENT);
+        final WordWrapCollector wordWrapper = new WordWrapCollector(HELP_LINE_LENGTH, 40, HELP_LINE_INDENT);
 
         final String arguments = Stream.concat(
                 Arrays.stream(Option.values())
                         .map(option -> "[" + option.getUsage() + "]"),
                 Stream.of("[applications or admin commands...]")
         )
-                .map(wordWrapper::map)
-                .collect(Collectors.joining(" "));
+                .collect(wordWrapper);
         return line.replace("${ARGUMENTS}", arguments);
     }
 
     private String replaceOptions(String line) {
         final String options = Arrays.stream(Option.values())
                 .map(option -> {
-                    final WordWrapper wordWrapper = new WordWrapper(HELP_LINE_LENGTH, HELP_LINE_INDENT.length(), HELP_LINE_INDENT);
+                    final WordWrapCollector wordWrapper = new WordWrapCollector(HELP_LINE_LENGTH, HELP_LINE_INDENT.length(), HELP_LINE_INDENT);
                     return HELP_FIRST_LINE_INDENT + option.getUsage() + "\n"
                             + HELP_LINE_INDENT
                             + getStreamOfWords(option.getHelpText())
-                                    .map(wordWrapper::map)
-                                    .collect(Collectors.joining(" "));
+                                    .collect(wordWrapper);
                 })
                 .collect(Collectors.joining("\n\n"));
         return line.replace(
@@ -221,7 +220,8 @@ public class Arguments {
     }
 
     private BufferedReader openManPageReader() {
-        final InputStream manPageInputStream = this.getClass().getClassLoader().getResourceAsStream("manpages/glassfish-embedded.1");
+        final InputStream manPageInputStream = this.getClass().getClassLoader().getResourceAsStream(
+                UberMain.class.getPackageName().replace(".", "/") + "/glassfish-embedded.1");
         return new BufferedReader(new InputStreamReader(manPageInputStream, StandardCharsets.UTF_8));
     }
 

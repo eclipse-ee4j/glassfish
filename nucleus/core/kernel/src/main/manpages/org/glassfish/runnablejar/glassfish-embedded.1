@@ -4,7 +4,7 @@ NAME
        glassfish-embedded - Start GlassFish Embedded as an executable JAR
 
 SYNOPSIS
-    java -jar glassfish-embedded-all.jar ${ARGUMENTS}
+    java -jar glassfish-embedded.jar ${ARGUMENTS}
 
 DESCRIPTION
     GlassFish Embedded can be executed as an executable JAR file. This starts
@@ -35,14 +35,15 @@ ${OPTIONS}
 
     Any argument that doesn't start with a hyphen (-), is treated as follows:
 
-    - If it's a file or directory, it's deployed at startup as an application. If it's
-      the only application deployed at startup, it's deployed under the root context '/'.
-      Otherwise it's deployed under the context root derived from the name of the file
-      or deployment descriptors.
-    - In all other cases, the argument is executed as a GlassFish admin command.
-      Individual commands must be enclosed in quotes if they contain spaces. GlassFish
-      admin commands are the same commands supported by GlassFish Server's "asadmin"
-      command line tool or by the "CommandRunner" Java class in GlassFish Simple Public API.
+    - If it's a file or directory, it's deployed at startup as an application.
+      If only application is deployed at startup, it's deployed under the root
+      context '/'. Otherwise it's deployed under the context root derived from
+      the name of the file or deployment descriptors.
+    - In all other cases, the argument is executed as a GlassFish admin 
+      command. Individual commands must be enclosed in quotes if they contain
+      spaces. GlassFish admin commands are the same commands supported by 
+      GlassFish Server's "asadmin" command line tool or by the "CommandRunner"
+      Java class in GlassFish Simple Public API.
 
 DEFAULT CONFIGURATION
 
@@ -55,23 +56,23 @@ EXAMPLES
     Example 1: Run an application from command line
         On port 8080 and root context by default
 
-        java -jar glassfish-embedded-all.jar app.war
+        java -jar glassfish-embedded.jar app.war
 
     Example 2: Run an app on a different port
 
-        java -jar glassfish-embedded-all.jar --httpPort=8090 app.war
+        java -jar glassfish-embedded.jar --httpPort=8090 app.war
 
     Example 3: Run a custom deploy command on startup
-        Sets a custom root context. Custom commands need to be enclosed in quotes
-        if they contain spaces.
+        Sets a custom root context. Custom commands need to be enclosed in 
+        quotes if they contain spaces.
 
-        java -jar glassfish-embedded-all.jar "deploy --contextroot=/app app.war"
+        java -jar glassfish-embedded.jar "deploy --contextroot=/app app.war"
 
     Example 4: Run 2 applications from command line
         Deploys applications on different context roots, based on the file name
         or info in the application descriptors.
 
-        java -jar glassfish-embedded-all.jar app1.war app2.war
+        java -jar glassfish-embedded.jar app1.war app2.war
 
 EXIT STATUS
     0
@@ -83,4 +84,4 @@ EXIT STATUS
 SEE ALSO
     deploy(1), asadmin(1)
 
-Jakarta EE 10                    13 Sep 2024                 glassfish-embedded(1)
+Jakarta EE 10                  13 Sep 2024                glassfish-embedded(1)

@@ -192,7 +192,7 @@ public class UberMain {
                     ? commandRunner.run(command) : commandRunner.run(command, commandParams);
             switch (result.getExitStatus()) {
                 case SUCCESS:
-                    logger.log(FINE, () -> "SUCCESS: " + result.getOutput());
+                    logger.log(INFO, () -> "SUCCESS: " + result.getOutput());
                     break;
                 default:
                     if (result.getFailureCause() != null) {

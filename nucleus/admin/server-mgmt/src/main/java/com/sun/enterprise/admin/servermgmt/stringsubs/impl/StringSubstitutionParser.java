@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,6 +69,9 @@ public class StringSubstitutionParser {
             JAXBContext context = JAXBContext.newInstance(StringsubsDefinition.class.getPackage().getName());
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file");
+            schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             Schema schema = schemaFactory.newSchema(schemaUrl);
             unmarshaller.setSchema(schema);
             InputSource is = new InputSource(configStream);

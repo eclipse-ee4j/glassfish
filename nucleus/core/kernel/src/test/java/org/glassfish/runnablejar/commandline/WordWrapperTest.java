@@ -32,10 +32,11 @@ public class WordWrapperTest {
     @Test
     public void testWrapper() {
         final int MAX_LINE_LENGTH = 80;
-        final WordWrapper wordWrapper = new WordWrapper(MAX_LINE_LENGTH, 8, "        ");
+        final WordWrapCollector wordWrapper = new WordWrapCollector(MAX_LINE_LENGTH, 8, "        ");
         String message = "        "
-                            + Arrays.stream(Option.PROPERTIES.getHelpText().split(" "))
-                                    .collect(wordWrapper.collector());
+                            + Arrays.stream(Option.values())
+                                    .map(Option::getHelpText)
+                                    .collect(wordWrapper);
         final List<String> linesEndingWithSpace = message.lines()
                 .filter(line -> line.endsWith(" "))
                 .collect(toList());

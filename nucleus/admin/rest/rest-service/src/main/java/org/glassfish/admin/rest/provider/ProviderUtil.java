@@ -22,10 +22,6 @@ import com.sun.appserv.server.util.Version;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriInfo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -124,17 +120,6 @@ public class ProviderUtil {
         } else {
             return string;
         }
-    }
-
-    protected static String readAsString(InputStream in) throws IOException {
-        Reader reader = new InputStreamReader(in);
-        StringBuilder sb = new StringBuilder();
-        char[] c = new char[1024];
-        int l;
-        while ((l = reader.read(c)) != -1) {
-            sb.append(c, 0, l);
-        }
-        return sb.toString();
     }
 
     static public String getElementLink(UriInfo uriInfo, String elementName) {
@@ -430,7 +415,7 @@ public class ProviderUtil {
             hasValue = true;
         }
 
-        boolean keyAttribute = Boolean.valueOf(parameterMetaData.getAttributeValue(Constants.KEY)).booleanValue();
+        boolean keyAttribute = Boolean.parseBoolean(parameterMetaData.getAttributeValue(Constants.KEY));
         if (keyAttribute) {
             if (hasValue) {
                 result.append("<dd><input name=\"").append(parameter).append("\" value =\"").append(parameterValue).append("\" type=\"")

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,27 +19,29 @@ package com.sun.enterprise.security.auth.login.common;
 
 import java.util.Arrays;
 
-/**
- * This class holds the user password for the shared password realm and the realm name. This credential is added as a private
- * credential to the JAAS subject.
- */
+import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * This class holds the user password for the shared password realm and the realm name.
+ * This credential is added as a private credential to the JAAS subject.
+ */
 public class PasswordCredential {
     private String username;
     //   private String password;
     private char[] password;
     private String realm;
-    private boolean readOnly = false;
+    private boolean readOnly;
+
     // target_name is filled in by the SecSecurityServer interceptor
     // only when a CSIv2 GSSUP authenticator is received.
-
     private byte[] target_name = {};
 
     /**
      * Construct a credential with the specified password and realm name.
      *
-     * @param the password.
-     * @param the realm name. The only value supported for now is "default".
+     * @param user username
+     * @param password null or user password
+     * @param realm Realm  name. The only value supported for now is "default".
      */
     public PasswordCredential(String user, char[] password, String realm) {
         this.username = user;
@@ -60,7 +63,7 @@ public class PasswordCredential {
     }
 
     /**
-     * called by SecServerRequestInterceptor The object if created on the server side is readonly
+     * If created on the server side the instance is readonly
      */
     public PasswordCredential(String user, char[] password, String realm, byte[] target_name) {
         this(user, password, realm);
@@ -113,9 +116,9 @@ public class PasswordCredential {
     }
 
     /**
-     * Compare two instances of the credential and return true if they are the same and false otherwise.
+     * Compare two instances of the credential and return true if they have equal realm username and password.
      *
-     * @param the object that this instance is being compared to.
+     * @param o the object that this instance is being compared to.
      * @return true if the instances are equal, false otherwise
      */
     @Override
@@ -147,7 +150,7 @@ public class PasswordCredential {
         String s = "Realm=" + realm;
         s = s + " Username=" + username;
         s = s + " Password=" + "########";
-        s = s + " TargetName = " + new String(target_name);
+        s = s + " TargetName = " + new String(target_name, UTF_8);
         return s;
     }
 

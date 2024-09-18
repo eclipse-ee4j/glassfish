@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -66,14 +68,14 @@ public class HelpCommand extends CLICommand {
     }
 
     private Writer getDestination() {
-        return new OutputStreamWriter(System.out);
+        return new OutputStreamWriter(System.out, Charset.defaultCharset());
     }
 
     private int getPageLength() {
-        if (programOpts.isInteractive())
+        if (programOpts.isInteractive()) {
             return DEFAULT_PAGE_LENGTH;
-        else
-            return NO_PAGE_LENGTH;
+        }
+        return NO_PAGE_LENGTH;
     }
 
     private String getPrompt() {
@@ -85,18 +87,19 @@ public class HelpCommand extends CLICommand {
     }
 
     private Reader getSource() throws CommandException, CommandValidationException {
-        CLICommand cmd = CLICommand.getCommand(habitat, getCommandName());
-        Reader r = cmd.getManPage();
-        if (r == null)
+        CLICommand command = CLICommand.getCommand(habitat, getCommandName());
+        Reader r = command.getManPage();
+        if (r == null) {
             throw new CommandException(strings.get("ManpageMissing", getCommandName()));
+        }
         return expandManPage(r);
     }
 
     private Reader getUserInput() {
-        return new InputStreamReader(System.in);
+        return new InputStreamReader(System.in, Charset.defaultCharset());
     }
 
     private Writer getUserOutput() {
-        return new OutputStreamWriter(System.err);
+        return new OutputStreamWriter(System.err, Charset.defaultCharset());
     }
 }

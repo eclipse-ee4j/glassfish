@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,10 +23,8 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.Provider;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -33,6 +32,8 @@ import java.util.Iterator;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author Ludovic Champenois
@@ -51,12 +52,12 @@ public class JsonHashMapProvider implements MessageBodyReader<HashMap<String, St
             MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
         HashMap map = new HashMap();
         try {
-            JSONObject obj = new JSONObject(inputStreamAsString(in));
+            JSONObject obj = new JSONObject(new String(in.readAllBytes(), UTF_8));
             Iterator iter = obj.keys();
 
             while (iter.hasNext()) {
                 String k = (String) iter.next();
-                map.put(k, "" + obj.get(k));
+                map.put(k, String.valueOf(obj.get(k)));
 
             }
             return map;
@@ -65,17 +66,5 @@ public class JsonHashMapProvider implements MessageBodyReader<HashMap<String, St
             //            map.put("error", "Entity Parsing Error: " + ex.getMessage());
             return map;
         }
-    }
-
-    public static String inputStreamAsString(InputStream stream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
     }
 }

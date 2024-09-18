@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.xml.sax.InputSource;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Validates the repository name. A repository name must be a - valid file name, - valid xml CDATA value & - valid
@@ -59,6 +62,7 @@ public class RepositoryNameValidator extends StringValidator {
      *
      * @throws InvalidConfigException
      */
+    @Override
     public void validate(Object str) throws InvalidConfigException {
         super.validate(str);
         checkValidName((String) str);
@@ -79,7 +83,7 @@ public class RepositoryNameValidator extends StringValidator {
         try {
             //Construct a valid xml string
             String xml = XML_1 + name + XML_2;
-            ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
+            ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes(UTF_8));
             InputSource is = new InputSource(bais);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setValidating(false);

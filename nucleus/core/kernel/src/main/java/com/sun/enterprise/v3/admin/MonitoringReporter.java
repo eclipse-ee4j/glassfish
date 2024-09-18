@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,6 +62,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.util.StringUtils.ok;
 import static com.sun.enterprise.util.SystemPropertyConstants.MONDOT;
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
 import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 
@@ -79,6 +81,30 @@ public class MonitoringReporter extends V2DottedNameSupport {
 
     private final TreeMap nodeTreeToProcess = new TreeMap(); // used for get
     private List<org.glassfish.flashlight.datatree.TreeNode> nodeListToProcess = new ArrayList<>(); // used for list
+
+    List<Server> targets = new ArrayList<>();
+    private PlainTextActionReporter plainReporter;
+    private ActionReporter reporter;
+    private AdminCommandContext context;
+    private String pattern;
+    private String userarg;
+    @Inject
+    @Optional
+    private MonitoringRuntimeDataRegistry datareg;
+    @Inject
+    private Domain domain;
+    @Inject
+    private Target targetService;
+    @Inject
+    ServerEnvironment serverEnv;
+    @Inject
+    ServiceLocator habitat;
+    private OutputType outputType;
+    private final static String DOTTED_NAME = ".dotted-name";
+    private final StringBuilder cliOutput = new StringBuilder();
+    private boolean targetIsMultiInstanceCluster;
+    private String targetName;
+    private Boolean aggregateDataOnly = Boolean.FALSE;
 
     public enum OutputType {
 
@@ -194,8 +220,8 @@ public class MonitoringReporter extends V2DottedNameSupport {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             reporter.writeReport(os);
-            String outputMessage = os.toString();
-            String lines[] = outputMessage.split("\\n");
+            String outputMessage = os.toString(UTF_8);
+            String[] lines = outputMessage.split("\\n");
             list = Arrays.asList(lines);
         } catch (Exception e) {
         }
@@ -207,9 +233,9 @@ public class MonitoringReporter extends V2DottedNameSupport {
         String key = null;
         String value = null;
         if (str != null) {
-            key = str.substring(0, str.lastIndexOf("="));
-            key = (key.substring(instanceName.length() + 1)).trim();
-            value = (str.substring(str.lastIndexOf("=") + 1, str.length())).trim();
+            key = str.substring(0, str.lastIndexOf('='));
+            key = key.substring(instanceName.length() + 1).trim();
+            value = str.substring(str.lastIndexOf('=') + 1, str.length()).trim();
         }
         list.add(0, key);
         list.add(1, value);
@@ -220,7 +246,7 @@ public class MonitoringReporter extends V2DottedNameSupport {
         List<HashMap> data = new ArrayList<>(targets.size());
         int i;
         for (i = 0; i < targets.size(); i++) {
-            data.add(new HashMap<String, String>());
+            data.add(new HashMap<>());
         }
         HashMap<String, String> clusterInfo = new HashMap<>();
         int instanceCount = 0;
@@ -785,13 +811,8 @@ public class MonitoringReporter extends V2DottedNameSupport {
         if (plainReporter != null) {
             cliOutput.append(newMessage).append('\n');
         } else {
-            String oldMessage = reporter.getMessage();
-
-            if (oldMessage == null) {
-                reporter.setMessage(newMessage);
-            } else {
-                reporter.appendMessage("\n" + newMessage);
-            }
+            reporter.appendMessage("\n");
+            reporter.appendMessage(newMessage);
         }
     }
 
@@ -856,34 +877,6 @@ public class MonitoringReporter extends V2DottedNameSupport {
     private boolean isDas() {
         return serverEnv.isDas();
     }
-
-    /*
-     * Surprise! The variables are down here. All the variables are private. That means they are an implementation detail
-     * and are hidden at the bottom of the file.
-     */
-    List<Server> targets = new ArrayList<>();
-    private PlainTextActionReporter plainReporter;
-    private ActionReporter reporter;
-    private AdminCommandContext context;
-    private String pattern;
-    private String userarg;
-    @Inject
-    @Optional
-    private MonitoringRuntimeDataRegistry datareg;
-    @Inject
-    private Domain domain;
-    @Inject
-    private Target targetService;
-    @Inject
-    ServerEnvironment serverEnv;
-    @Inject
-    ServiceLocator habitat;
-    private OutputType outputType;
-    private final static String DOTTED_NAME = ".dotted-name";
-    private final StringBuilder cliOutput = new StringBuilder();
-    private boolean targetIsMultiInstanceCluster = false;
-    private String targetName;
-    private Boolean aggregateDataOnly = Boolean.FALSE;
 
     private static class NameValue {
 

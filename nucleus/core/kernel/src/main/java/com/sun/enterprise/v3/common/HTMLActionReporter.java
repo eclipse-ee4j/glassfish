@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,7 +55,7 @@ public class HTMLActionReporter extends ActionReporter {
            exception.printStackTrace(writer);
             writer.println("</pre>");
         }
-        if (subActions.size()>0) {
+        if (!subActions.isEmpty()) {
             writer.println("There are " + subActions.size() + " sub operations");
         }
         writer.print("</body></html>");

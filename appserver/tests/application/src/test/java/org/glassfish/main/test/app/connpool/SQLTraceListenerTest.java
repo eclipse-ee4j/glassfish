@@ -17,9 +17,9 @@ package org.glassfish.main.test.app.connpool;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -121,16 +121,10 @@ public class SQLTraceListenerTest {
             try {
                 assertThat(connection.getResponseCode(), equalTo(200));
             } catch (AssertionError e) {
-                throw new AssertionError(readErrorResponse(connection), e);
+                throw new AssertionError(HttpParser.readResponseErrorStream(connection), e);
             }
         } finally {
             connection.disconnect();
-        }
-    }
-
-    private String readErrorResponse(HttpURLConnection connection) throws IOException {
-        try (InputStream inputStream = connection.getErrorStream()) {
-            return new String(inputStream.readAllBytes()).trim();
         }
     }
 

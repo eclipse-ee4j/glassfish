@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,7 +35,6 @@ import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,6 +71,7 @@ import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
  * A cluster defines a homogeneous set of server instances that share the same applications,
@@ -437,7 +437,6 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
         }
     }
 
-    @SuppressWarnings("unchecked")
     default <T extends ClusterExtension> List<T> getExtensionsByType(Class<T> type) {
         List<T> extensions = new ArrayList<>();
         for (ClusterExtension extension : getExtensions()) {
@@ -454,9 +453,8 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     default <T extends ClusterExtension> T getExtensionsByTypeAndName(Class<T> type, String name) {
         for (ClusterExtension extension : getExtensions()) {
             try {
-                type.cast(extension);
                 if (extension.getName().equals(name)) {
-                    return type.cast(type);
+                    return type.cast(extension);
                 }
             } catch (ClassCastException e) {
                 // ignore, not the right type
@@ -470,31 +468,31 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     class Decorator implements CreationDecorator<Cluster> {
 
         @Param(name = "config", optional = true)
-        String configRef = null;
+        String configRef;
 
         @Param(optional = true, obsolete = true)
-        String hosts = null;
+        String hosts;
 
         @Param(optional = true, obsolete = true)
         String haagentport;
 
         @Param(optional = true, obsolete = true)
-        String haadminpassword = null;
+        String haadminpassword;
 
         @Param(optional = true, obsolete = true)
-        String haadminpasswordfile = null;
+        String haadminpasswordfile;
 
         @Param(optional = true, obsolete = true)
-        String devicesize = null;
+        String devicesize;
 
         @Param(optional = true, obsolete = true)
-        String haproperty = null;
+        String haproperty;
 
         @Param(optional = true, obsolete = true)
-        String autohadb = null;
+        String autohadb;
 
         @Param(optional = true, obsolete = true)
-        String portbase = null;
+        String portbase;
 
         @Inject
         ServiceLocator habitat;
@@ -626,7 +624,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
                         // generate a random port since user did not provide one.
                         // better fix in future would be to walk existing clusters and pick an unused port.
-                        TCPPORT = Integer.toString(new SecureRandom().nextInt(9200 - 9090) + 9090);
+                        TCPPORT = Integer.toString(SECURE_RANDOM.nextInt(9200 - 9090) + 9090);
 
                         // hardcode all instances to use same default port.
                         // generate mode does not support multiple instances on one machine.
@@ -646,7 +644,8 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
                             SystemProperty gmsListenerPortSysProp = instance.createChild(SystemProperty.class);
                             gmsListenerPortSysProp.setName(propName);
                             if (TCPPORT == null || TCPPORT.trim().charAt(0) == '$') {
-                                String generateGmsListenerPort = Integer.toString(new SecureRandom().nextInt(9200 - 9090) + 9090);
+                                String generateGmsListenerPort = Integer
+                                    .toString(SECURE_RANDOM.nextInt(9200 - 9090) + 9090);
                                 gmsListenerPortSysProp.setValue(generateGmsListenerPort);
                             } else {
                                 gmsListenerPortSysProp.setValue(TCPPORT);

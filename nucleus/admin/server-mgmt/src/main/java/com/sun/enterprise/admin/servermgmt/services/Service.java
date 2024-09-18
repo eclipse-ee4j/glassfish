@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.enterprise.admin.servermgmt.services;
 
 import com.sun.enterprise.util.io.ServerDirs;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -26,7 +28,6 @@ import java.util.Map;
  *
  * @since SJSAS 9.1
  * @see #isConfigValid
- * @see ServiceHandler
  * @author Kedar Mhaswade
  */
 public interface Service {
@@ -46,7 +47,7 @@ public interface Service {
      *
      * @param number a non-negative integer representing timeout. A value of zero implies infinite timeout.
      */
-    void setTimeoutSeconds(final int number);
+    void setTimeoutSeconds(int number);
 
     /**
      * Returns the additional properties of the Service.
@@ -60,7 +61,7 @@ public interface Service {
      *
      * @param must be a colon separated String, if not null. No effect, if null is passed.
      */
-    void setServiceProperties(final String cds);
+    void setServiceProperties(String cds);
 
     /**
      * Determines if the configuration of the method is valid. When this class is constructed, appropriate defaults are
@@ -83,17 +84,17 @@ public interface Service {
     Map<String, String> tokensAndValues();
 
     /**
-     * Returns the absolute location of the manifest file as service understands it. It takes into account the name, type
+     * @return the absolute location of the manifest file as service understands it. It takes into account the name, type
      * and configuration location of the service. It is expected that these are set before calling this method. If the <b>
      * Fully Qualified Service Name </b> is invalid, a RuntimeException results.
      */
-    String getManifestFilePath();
+    File getManifestFile();
 
     /**
-     * Returns the absolute location of the template for the given service. The type of the service must be set before
+     * @return the absolute location of the template for the given service. The type of the service must be set before
      * calling this method, otherwise a runtime exception results.
      */
-    String getManifestFileTemplatePath();
+    File getManifestTemplateFile();
 
     /**
      * Creates an arbitrary service, specified by certain parameters. The implementations should dictate the mappings in the

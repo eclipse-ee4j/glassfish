@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -74,14 +75,14 @@ public class PasswordAliasTest {
     private void checkStoreAndGetPWByAlias(final String alias, final String pw) {
         store.put(alias, pw.toCharArray());
         final String retrievedPW = new String(store.get(alias));
-        assertEquals(getBytesInHex(pw.getBytes()), getBytesInHex(retrievedPW.getBytes()),
+        assertEquals(getBytesInHex(pw.getBytes(UTF_8)), getBytesInHex(retrievedPW.getBytes(UTF_8)),
             "Retrieved password failed to match stored password");
     }
 
     private static String getBytesInHex(final byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for (byte b: bytes) {
-             sb.append(String.format("%02X", b));
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
         }
         return sb.toString();
     }

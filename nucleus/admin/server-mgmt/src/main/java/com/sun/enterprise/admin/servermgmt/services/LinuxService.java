@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +42,16 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICEUSER
  */
 public class LinuxService extends NonSMFServiceAdapter {
 
+    private static final String TEMPLATE_FILE_NAME = "linux-service.template";
+
+    private String targetName;
+    private File target;
+    private final List<File> killDirs = new ArrayList<>();
+    private final List<File> startDirs = new ArrayList<>();
+    private String sFile;
+    private String kFile;
+    private boolean hasStartStopTokens;
+
     LinuxService(ServerDirs dirs, AppserverServiceType type) {
         super(dirs, type);
         if (!OS.isLinux()) {
@@ -70,9 +80,9 @@ public class LinuxService extends NonSMFServiceAdapter {
     public final void createServiceInternal() {
         try {
             handlePreExisting(info.force);
-            ServicesUtils.tokenReplaceTemplateAtDestination(getTokenMap(), getTemplateFile().getPath(), target.getPath());
+            ServicesUtils.tokenReplaceTemplateAtDestination(getTokenMap(), getTemplateFile(), target);
             trace("Target file written: " + target);
-            trace("**********   Object Dump  **********\n" + this.toString());
+            trace("**********   Object Dump  **********\n" + this);
 
             if (deleteLinks() == 0 && !info.dryRun) {
                 System.out.println(Strings.get("linux.services.uninstall.good"));
@@ -421,13 +431,4 @@ public class LinuxService extends NonSMFServiceAdapter {
 
         return sb.toString();
     }
-
-    private String targetName;
-    File target;
-    private static final String TEMPLATE_FILE_NAME = "linux-service.template";
-    private final List<File> killDirs = new ArrayList<>();
-    private final List<File> startDirs = new ArrayList<>();
-    private String sFile;
-    private String kFile;
-    private boolean hasStartStopTokens = false;
 }

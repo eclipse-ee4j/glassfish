@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +35,9 @@ import java.util.Map;
  * @author bnevins
  */
 public abstract class NonSMFServiceAdapter extends ServiceAdapter {
+
+    private String flattenedServicePropertes;
+    private File templateFile;
 
     NonSMFServiceAdapter(ServerDirs dirs, AppserverServiceType type) {
         super(dirs, type);
@@ -83,12 +87,12 @@ public abstract class NonSMFServiceAdapter extends ServiceAdapter {
     }
 
     @Override
-    public final String getManifestFilePath() {
+    public final File getManifestFile() {
         throw new UnsupportedOperationException("getManifestFilePath() is not supported in this platform.");
     }
 
     @Override
-    public final String getManifestFileTemplatePath() {
+    public final File getManifestTemplateFile() {
         throw new UnsupportedOperationException("getManifestFileTemplatePath() is not supported in this platform.");
     }
 
@@ -109,7 +113,4 @@ public abstract class NonSMFServiceAdapter extends ServiceAdapter {
     void setTemplateFile(String name) {
         templateFile = new File(info.libDir, "install/templates/" + name);
     }
-
-    private String flattenedServicePropertes;
-    private File templateFile;
 }

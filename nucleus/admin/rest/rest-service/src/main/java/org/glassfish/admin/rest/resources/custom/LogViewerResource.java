@@ -53,6 +53,8 @@ import org.glassfish.admin.rest.logviewer.WriterOutputStream;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Dom;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Represents a large text data.
  * <p/>
@@ -90,7 +92,7 @@ public class LogViewerResource {
     }
 
     @GET
-    @Produces("text/plain;charset=UTF-8")
+    @Produces("text/plain; charset=UTF-8")
     public Response get(@QueryParam("start") @DefaultValue("0") long start,
             @QueryParam("instanceName") @DefaultValue("server") String instanceName, @Context HttpHeaders hh) throws IOException {
         boolean gzipOK = true;
@@ -159,11 +161,10 @@ public class LogViewerResource {
     }
 
     private Writer getWriter(OutputStream out, boolean gzipOK) throws IOException {
-        if (gzipOK == false) {
-            return new OutputStreamWriter(out);
-        } else {
-            return new OutputStreamWriter(new GZIPOutputStream(out), "UTF-8");
+        if (gzipOK) {
+            return new OutputStreamWriter(new GZIPOutputStream(out), UTF_8);
         }
+        return new OutputStreamWriter(out, UTF_8);
     }
 
     public void initLargeText(File file, boolean completed) {
@@ -219,7 +220,7 @@ public class LogViewerResource {
 
         if (completed) {
             // write everything till EOF
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[8192];
             int sz;
             while ((sz = f.read(buf)) >= 0) {
                 os.write(buf, 0, sz);
@@ -263,7 +264,7 @@ public class LogViewerResource {
         protected ByteBuf buf;
         protected int pos;
 
-        public Mark(ByteBuf buf) {
+        private Mark(ByteBuf buf) {
             this.buf = buf;
         }
     }
@@ -273,7 +274,7 @@ public class LogViewerResource {
      */
     private static final class HeadMark extends Mark {
 
-        public HeadMark(ByteBuf buf) {
+        private HeadMark(ByteBuf buf) {
             super(buf);
         }
 
@@ -304,7 +305,7 @@ public class LogViewerResource {
      */
     private static final class TailMark extends Mark {
 
-        public TailMark(ByteBuf buf) {
+        private TailMark(ByteBuf buf) {
             super(buf);
         }
 
@@ -333,11 +334,11 @@ public class LogViewerResource {
      */
     private static final class ByteBuf {
 
-        private final byte[] buf = new byte[1024];
+        private final byte[] buf = new byte[8192];
         private int size = 0;
         private ByteBuf next;
 
-        public ByteBuf(ByteBuf previous, Session f) throws IOException {
+        private ByteBuf(ByteBuf previous, Session f) throws IOException {
             if (previous != null) {
                 assert previous.next == null;
                 previous.next = this;
@@ -378,7 +379,7 @@ public class LogViewerResource {
 
         private final RandomAccessFile file;
 
-        public FileSession(File file) throws IOException {
+        private FileSession(File file) throws IOException {
             this.file = new RandomAccessFile(file, "r");
         }
 

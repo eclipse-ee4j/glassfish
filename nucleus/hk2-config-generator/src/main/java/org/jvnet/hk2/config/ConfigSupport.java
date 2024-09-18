@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +16,6 @@
  */
 
 package org.jvnet.hk2.config;
-
-import jakarta.inject.Inject;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
@@ -36,7 +34,6 @@ import java.util.logging.Logger;
 
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ProxyCtl;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.api.ConfigurationUtilities;
 import org.jvnet.hk2.config.tiger.Types;
@@ -81,10 +78,7 @@ import org.jvnet.hk2.config.tiger.Types;
 @Service
 public class ConfigSupport implements ConfigurationUtilities {
 
-    @Inject
-    ServiceLocator habitat;
-
-    public static int lockTimeOutInSeconds=Integer.getInteger("org.glassfish.hk2.config.locktimeout", 3);
+    private static final int LOCK_TIME_OUT_IN_SECONDS = Integer.getInteger("org.glassfish.hk2.config.locktimeout", 3);
 
     /**
      * Execute some logic on one config bean of type T protected by a transaction
@@ -202,7 +196,7 @@ public class ConfigSupport implements ConfigurationUtilities {
 
         WriteableView f = new WriteableView(s);
         try {
-            if (sourceBean.getLock().tryLock(lockTimeOutInSeconds, TimeUnit.SECONDS)) {
+            if (sourceBean.getLock().tryLock(LOCK_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS)) {
                 sourceBean.setWriteableView(f);
                 return f;
             }
@@ -532,7 +526,7 @@ public class ConfigSupport implements ConfigurationUtilities {
 
         ConfigBeanProxy readableView = parent.getProxy(parent.getProxyType());
         ConfigBeanProxy readableChild = (ConfigBeanProxy)
-                apply(new SingleConfigCode<ConfigBeanProxy>() {
+                apply(new SingleConfigCode<>() {
             @Override
             public Object run(ConfigBeanProxy param) throws PropertyVetoException, TransactionFailure {
                 return addChildWithAttributes(param, parent, childType, attributes, runnable);
@@ -587,7 +581,7 @@ public class ConfigSupport implements ConfigurationUtilities {
 
 
         ConfigBeanProxy readableView = parent.getProxy(parent.getProxyType());
-        apply(new SingleConfigCode<ConfigBeanProxy>() {
+        apply(new SingleConfigCode<>() {
 
             @Override
             public Object run(ConfigBeanProxy param) throws PropertyVetoException, TransactionFailure {

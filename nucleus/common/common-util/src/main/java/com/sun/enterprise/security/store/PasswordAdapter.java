@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -34,6 +33,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * This class implements an adapter for password manipulation a JCEKS. Note that although it uses locks ('synchronized'), it
@@ -133,7 +133,7 @@ public final class PasswordAdapter {
 
         final Key key = _pwdStore.getKey(alias, getMasterPassword());
         if (key != null) {
-            passwordString = new String(key.getEncoded(), Charset.defaultCharset());
+            passwordString = new String(key.getEncoded(), UTF_8);
         }
 
         return passwordString;
@@ -205,7 +205,7 @@ public final class PasswordAdapter {
      * This methods set alias, secretKey into JCEKS keystore.
      *
      * @param alias
-     * @param secretKey
+     * @param keyBytes
      * @exception CertificateException
      * @exception IOException
      * @exception KeyStoreException

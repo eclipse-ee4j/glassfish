@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,8 @@
 
 package org.glassfish.main.test.app.web.jsp;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.HttpURLConnection;
@@ -31,6 +29,7 @@ import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -95,10 +94,7 @@ public class JspReloadGeneratedServletIfUpdatedTest {
         HttpURLConnection connection = GlassFishTestEnvironment.openConnection(8080,
             "/reload/" + JSP_FILE_NAME + ".jsp");
         connection.setRequestMethod("GET");
-        String line;
-        try (BufferedReader bis = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            line = bis.readLine();
-        }
+        String line = HttpParser.readResponseInputStream(connection).trim();
         assertAll(
             () -> assertEquals(200, connection.getResponseCode(), "Wrong response code."),
             () -> assertEquals(expectedText, line, "Wrong response body.")

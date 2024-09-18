@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +20,6 @@ package com.sun.enterprise.v3.common;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,7 +40,7 @@ public abstract class ActionReporter extends ActionReport {
     protected List<ActionReporter> subActions = new ArrayList<>();
     protected ExitCode exitCode = ExitCode.SUCCESS;
     protected MessagePart topMessage = new MessagePart();
-    protected String contentType = "text/html";
+    protected String contentType = "text/html; charset=utf-8";
 
     public static final String EOL_MARKER = "%%%EOL%%%";
 
@@ -142,35 +139,6 @@ public abstract class ActionReporter extends ActionReport {
         return topMessage.getMessage();
     }
 
-
-    @Override
-    public void setMessage(InputStream in) {
-        try {
-            if(in == null) {
-                throw new NullPointerException("Internal Error - null InputStream");
-            }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            copyStream(in, baos);
-            setMessage(baos.toString());
-        }
-        catch (Exception ex) {
-            setActionExitCode(ExitCode.FAILURE);
-            setFailureCause(ex);
-        }
-    }
-
-    private void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) >= 0) {
-            out.write(buf, 0, len);
-        }
-
-        out.close();
-        in.close();
-    }
-
     /**
      * Returns the content type to be used in sending the response back to
      * the client/caller.
@@ -182,10 +150,6 @@ public abstract class ActionReporter extends ActionReport {
     @Override
     public String getContentType() {
         return contentType;
-    }
-    @Override
-    public void setContentType(String s) {
-        contentType = s;
     }
 
     /** Returns combined messages. Meant mainly for long running
@@ -206,7 +170,7 @@ public abstract class ActionReporter extends ActionReport {
         String failMsg; //this is the message related to failure cause
         // Other code in the server may write something like report.setMessage(exception.getMessage())
         // and also set report.setFailureCause(exception). We need to avoid the duplicate message.
-        if (aReport.getMessage() != null && aReport.getMessage().length() != 0) {
+        if (aReport.getMessage() != null && !aReport.getMessage().isEmpty()) {
             mainMsg = aReport.getMessage();
             String format = "{0}";
             if (ActionReport.ExitCode.WARNING.equals(aReport.getActionExitCode())) {
@@ -222,7 +186,7 @@ public abstract class ActionReporter extends ActionReport {
             }
             sb.append(MessageFormat.format(format,mainMsg));
         }
-        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && aReport.getFailureCause().getMessage().length() != 0) {
+        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && !aReport.getFailureCause().getMessage().isEmpty()) {
             failMsg = aReport.getFailureCause().getMessage();
             if (!failMsg.equals(mainMsg)) {
                 if (sb.length() > 0) {
@@ -260,11 +224,10 @@ public abstract class ActionReporter extends ActionReport {
         while (!q.isEmpty()) {
             ActionReporter lar = q.remove();
             ExitCode ec = lar.getActionExitCode();
-            if (null != ec && ec.equals(value)) {
+            if (ec != null && ec.equals(value)) {
                 return true;
-            } else {
-                q.addAll(lar.subActions);
             }
+            q.addAll(lar.subActions);
         }
         return false;
     }

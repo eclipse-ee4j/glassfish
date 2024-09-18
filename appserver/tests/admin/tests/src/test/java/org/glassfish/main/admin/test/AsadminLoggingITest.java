@@ -39,6 +39,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getDomain1Directory;
@@ -159,7 +161,7 @@ public class AsadminLoggingITest {
         assertThat(result, asadminOK());
 
         File loggingProperties = new File(getDomain1Directory().resolve("config").toFile(), "logging.properties");
-        assertThat(loggingProperties, hasLineCount(greaterThan(50L)));
+        assertThat(loggingProperties, hasLineCount(greaterThan(50L), ISO_8859_1));
 
         List<String> lines;
         try (Stream<String> lineStream = Files.lines(loggingProperties.toPath())) {
@@ -195,7 +197,7 @@ public class AsadminLoggingITest {
         File serverLogDirectory = getDomain1Directory().resolve("logs").toFile();
         File serverLogFile = new File(serverLogDirectory, "server.log");
 
-        assertThat(serverLogFile, hasLineCount(greaterThan(50L)));
+        assertThat(serverLogFile, hasLineCount(greaterThan(50L), UTF_8));
 
         long logEntryCount = Objects.requireNonNull(serverLogDirectory.list()).length;
 
@@ -209,7 +211,7 @@ public class AsadminLoggingITest {
 
         assertAll(
             () -> assertThat(serverLogFile, FileMatchers.anExistingFile()),
-            () -> assertThat(serverLogFile, hasLineCount(lessThan(logLineCount))),
+            () -> assertThat(serverLogFile, hasLineCount(lessThan(logLineCount), UTF_8)),
             () -> assertThat(serverLogDirectory, hasEntryCount(logEntryCount + 1))
         );
     }

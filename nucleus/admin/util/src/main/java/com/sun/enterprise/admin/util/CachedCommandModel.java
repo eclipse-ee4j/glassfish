@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,7 @@ import com.sun.enterprise.util.StringUtils;
 import jakarta.xml.bind.DatatypeConverter;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,8 +30,10 @@ import java.util.TreeSet;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
- * Stores ETeg with command model.
+ * Stores ETag with command model.
  *
  * @author mmares
  */
@@ -37,7 +41,7 @@ public class CachedCommandModel extends CommandModelData {
 
     private String eTag;
     private String usage;
-    private boolean addedUploadOption = false;
+    private boolean addedUploadOption;
 
     public CachedCommandModel(String name) {
         super(name);
@@ -100,7 +104,7 @@ public class CachedCommandModel extends CommandModelData {
         }
         if (cm.getParameters() != null) {
             //sort
-            SortedSet<ParamModel> tree = new TreeSet<ParamModel>(new Comparator<ParamModel>() {
+            SortedSet<ParamModel> tree = new TreeSet<>(new Comparator<ParamModel>() {
                 @Override
                 public int compare(ParamModel o1, ParamModel o2) {
                     return o1.getName().compareTo(o2.getName());
@@ -143,12 +147,11 @@ public class CachedCommandModel extends CommandModelData {
             }
         }
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(tag.toString().getBytes("UTF-8"));
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(tag.toString().getBytes(UTF_8));
             return DatatypeConverter.printBase64Binary(md.digest());
-        } catch (Exception ex) {
-            return "v2" + tag.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Cannot cache commands!", e);
         }
     }
-
 }

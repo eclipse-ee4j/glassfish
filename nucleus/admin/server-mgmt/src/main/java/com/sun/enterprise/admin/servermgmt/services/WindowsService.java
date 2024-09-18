@@ -70,7 +70,7 @@ public class WindowsService extends NonSMFServiceAdapter {
             trace("Copied from " + sourceWin32Exe + " to " + targetWin32Exe);
             getTokenMap().put(CREDENTIALS_START_TN, getAsadminCredentials("startargument"));
             getTokenMap().put(CREDENTIALS_STOP_TN, getAsadminCredentials("stopargument"));
-            ServicesUtils.tokenReplaceTemplateAtDestination(getFinalTokenMap(), getTemplateFile().getPath(), targetXml.getPath());
+            ServicesUtils.tokenReplaceTemplateAtDestination(getFinalTokenMap(), getTemplateFile(), targetXml);
             trace("Target XML file written: " + targetXml);
             trace("**********   Object Dump  **********\n" + this.toString());
 

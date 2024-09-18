@@ -34,6 +34,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -82,7 +83,7 @@ abstract class AbstractSubstitutionAlgo {
      */
     @Test
     public void testSubstitutionForEmptyMap() {
-        assertThrows(IllegalArgumentException.class, () -> getAlgorithm(new HashMap<String, String>()));
+        assertThrows(IllegalArgumentException.class, () -> getAlgorithm(new HashMap<>()));
     }
 
     /**
@@ -173,7 +174,7 @@ abstract class AbstractSubstitutionAlgo {
      */
     private void createTextFile() throws Exception {
         testFile = new File(testFileName);
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile)))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile), UTF_8))) {
             writer.write("First line in file repeat First line in file");
             writer.newLine();
             writer.write("Second line in file");
@@ -186,7 +187,7 @@ abstract class AbstractSubstitutionAlgo {
      */
     private void createXMLFile(String fileName) throws Exception {
         testFile = new File(fileName);
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile)))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile), UTF_8))) {
             writer.write(" <ports>");
             writer.newLine();
             writer.write("<port name=\"http\" value=\"HTTP_PORT\"></port>");

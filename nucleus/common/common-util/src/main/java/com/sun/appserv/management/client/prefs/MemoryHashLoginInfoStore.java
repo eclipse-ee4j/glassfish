@@ -233,7 +233,7 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
             final String host     = uri.getHost();
             final int port        = uri.getPort();
             final String user     = uri.getUserInfo();
-            final char[] password = Utility.convertByteArrayToCharArray(Base64.getDecoder().decode(encp), UTF_8.name());
+            final char[] password = Utility.convertByteArrayToCharArray(Base64.getDecoder().decode(encp), UTF_8);
             return new LoginInfo(host, port, user, password);
         }
         static String login2Line(final LoginInfo login) throws IOException, URISyntaxException {
@@ -244,7 +244,7 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
             final URI uri         = new URI(scheme, user, host, port, null, null, null);
             final char[] password = login.getPassword();
             final String encp = Base64.getEncoder()
-                .encodeToString(Utility.convertCharArrayToByteArray(password, UTF_8.name()));
+                .encodeToString(Utility.convertCharArrayToByteArray(password, UTF_8));
             final String line     = uri.toString() + ' ' + encp;
 
             return ( line );

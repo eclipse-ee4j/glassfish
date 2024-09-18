@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +30,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.logging.Level;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Creates {@link Reader} and {@link Writer} for the String substitution file. Implementation is useful for large files
  * which cann't be read entirely in a memory or need a substantial amount of memory.
@@ -49,7 +52,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
     @Override
     public Reader getReader() {
         try {
-            _reader = new BufferedReader(new InputStreamReader(new FileInputStream(_inputFile)));
+            _reader = new BufferedReader(new InputStreamReader(new FileInputStream(_inputFile), UTF_8));
         } catch (FileNotFoundException e) {
             _logger.log(Level.INFO, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
@@ -65,7 +68,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
                     throw new IOException();
                 }
             }
-            _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile)));
+            _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile), UTF_8));
         } catch (IOException e) {
             _logger.log(Level.INFO, _strings.get("failureTempFileCreation", _outputFile.getAbsolutePath(), e));
         }

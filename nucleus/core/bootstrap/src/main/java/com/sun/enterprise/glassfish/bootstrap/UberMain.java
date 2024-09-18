@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
@@ -59,7 +61,7 @@ public class UberMain {
             System.out.print("\n\nGlassFish $ ");
             String str = null;
             try {
-                str = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                str = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())).readLine();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -79,7 +81,8 @@ public class UberMain {
                 try {
                     CommandResult result = commandParams == null ?
                             cr.run(command) : cr.run(command, commandParams);
-                    System.out.println("\n" + result.getOutput());
+                    System.out.print('\n');
+                    System.out.println(result.getOutput());
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -96,6 +99,7 @@ public class UberMain {
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(
                 "GlassFish Shutdown Hook") {
+            @Override
             public void run() {
                 try {
                     if (gf != null) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,28 +30,31 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author bnevins
  */
-public class ServicesUtils {
-    private ServicesUtils() {
+public final class ServicesUtils {
 
+    private static final String SEP = "==========================================";
+
+    private ServicesUtils() {
     }
 
     static TokenValueSet map2Set(final Map<String, String> map) {
-        final Set<TokenValue> set = new HashSet<TokenValue>();
+        final Set<TokenValue> set = new HashSet<>();
         for (final Map.Entry<String, String> e : map.entrySet()) {
             final String key = e.getKey();
             final String value = e.getValue();
             final TokenValue tv = new TokenValue(key, value);
             set.add(tv);
         }
-        final TokenValueSet tvset = new TokenValueSet(set);
-        return (tvset);
+        return new TokenValueSet(set);
     }
 
-    static void tokenReplaceTemplateAtDestination(Map<String, String> map, String templatePath, String targetPath) {
+    static void tokenReplaceTemplateAtDestination(Map<String, String> map, File templatePath, File targetPath) {
 
         final LineTokenReplacer tr = new LineTokenReplacer(map2Set(map));
         tr.replace(templatePath, targetPath);
@@ -58,38 +62,26 @@ public class ServicesUtils {
 
     static void appendTextToFile(File to, String what) {
 
-        // todo - this should be a high-level utility
-        if (what == null || to == null)
-            return;
-
         // It is very annoying in Windows when text files have "\n" instead of
         // \n\r -- the following fixes that.
 
         String[] lines = what.split("\n");
 
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(new FileOutputStream(to, true));
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream(to, true), false, UTF_8)) {
             pw.println(SEP);
             pw.println(new Date());
 
-            for (String s : lines)
+            for (String s : lines) {
                 pw.println(s);
+            }
 
             pw.println(SEP);
             pw.println();
             pw.println();
             pw.flush();
-        } catch (IOException ioe) {
-        } finally {
-            try {
-                if (pw != null)
-                    pw.close();
-            } catch (Exception e) {
-                // ignore
-            }
+        } catch (IOException e) {
+            throw new IllegalStateException(";", e);
         }
     }
 
-    private static final String SEP = "==========================================";
 }

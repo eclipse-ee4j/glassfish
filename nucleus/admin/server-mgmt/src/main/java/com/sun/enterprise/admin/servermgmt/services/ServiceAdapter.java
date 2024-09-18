@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +50,10 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.TRACE_PREPE
  * @author bnevins
  */
 public abstract class ServiceAdapter implements Service {
+
+    private final Map<String, String> tokenMap = new HashMap<>();
+    final PlatformServicesInfo info;
+
     ServiceAdapter(ServerDirs serverDirs, AppserverServiceType type) {
         info = new PlatformServicesInfo(serverDirs, type);
     }
@@ -230,7 +234,4 @@ public abstract class ServiceAdapter implements Service {
             }
         }
     }
-
-    private final Map<String, String> tokenMap = new HashMap<>();
-    final PlatformServicesInfo info;
 }

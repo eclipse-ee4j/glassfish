@@ -31,7 +31,6 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.UnsupportedCharsetException;
 import java.rmi.Remote;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -564,7 +563,7 @@ public final class Utility {
         }
     }
 
-    public static interface RunnableWithException<E extends Exception> {
+    public interface RunnableWithException<E extends Exception> {
         void run() throws E;
     }
 
@@ -623,27 +622,16 @@ public final class Utility {
      *
      * @param byteArray
      * @param charset null or "" means default charset
-     * @exception CharacterCodingException
+     * @throws CharacterCodingException
      */
-    public static char[] convertByteArrayToCharArray(byte[] byteArray, String charset) throws CharacterCodingException {
+    public static char[] convertByteArrayToCharArray(byte[] byteArray, Charset charset) throws CharacterCodingException {
         if (byteArray == null) {
             return null;
         }
 
         byte[] bArray = byteArray.clone();
         ByteBuffer byteBuffer = ByteBuffer.wrap(bArray);
-        Charset charSet;
-        if (charset == null || "".equals(charset)) {
-            charSet = Charset.defaultCharset();
-        } else if (Charset.isSupported(charset)) {
-            charSet = Charset.forName(charset);
-        } else {
-            CharacterCodingException e = new CharacterCodingException();
-            e.initCause(new UnsupportedCharsetException(charset));
-            throw e;
-        }
-
-        CharsetDecoder decoder = charSet.newDecoder();
+        CharsetDecoder decoder = charset.newDecoder();
         CharBuffer charBuffer = null;
         try {
             charBuffer = decoder.decode(byteBuffer);
@@ -665,37 +653,26 @@ public final class Utility {
      * Convert the char array to byte array with respect to given charset.
      *
      * @param charArray
-     * @param strCharset null or "" means default charset
-     * @exception CharacterCodingException
+     * @param charset null or "" means default charset
+     * @throws CharacterCodingException
      */
-    public static byte[] convertCharArrayToByteArray(char[] charArray, String strCharset) throws CharacterCodingException {
+    public static byte[] convertCharArrayToByteArray(char[] charArray, Charset charset) throws CharacterCodingException {
         if (charArray == null) {
             return null;
         }
 
         char[] cArray = charArray.clone();
         CharBuffer charBuffer = CharBuffer.wrap(cArray);
-        Charset charSet;
-        if (strCharset == null || "".equals(strCharset)) {
-            charSet = Charset.defaultCharset();
-        } else if (Charset.isSupported(strCharset)) {
-            charSet = Charset.forName(strCharset);
-        } else {
-            CharacterCodingException e = new CharacterCodingException();
-            e.initCause(new UnsupportedCharsetException(strCharset));
-            throw e;
-        }
-
-        CharsetEncoder encoder = charSet.newEncoder();
+        CharsetEncoder encoder = charset.newEncoder();
         ByteBuffer byteBuffer = null;
         try {
             byteBuffer = encoder.encode(charBuffer);
         } catch (CharacterCodingException cce) {
             throw cce;
-        } catch (Throwable t) {
-            CharacterCodingException e = new CharacterCodingException();
-            e.initCause(t);
-            throw e;
+        } catch (Exception e) {
+            CharacterCodingException cce = new CharacterCodingException();
+            cce.initCause(e);
+            throw cce;
         }
 
         byte[] result = new byte[byteBuffer.remaining()];

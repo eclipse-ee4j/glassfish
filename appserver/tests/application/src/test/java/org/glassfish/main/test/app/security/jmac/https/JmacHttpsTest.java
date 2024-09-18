@@ -25,6 +25,7 @@ import java.security.KeyStoreException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.UUID;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -63,7 +64,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JmacHttpsTest {
-    private static final String MYKS_PASSWORD = "httpspassword";
+    private static final String MYKS_PASSWORD = UUID.randomUUID().toString();
 
     private static final Logger LOG = System.getLogger(JmacHttpsTest.class.getName());
 

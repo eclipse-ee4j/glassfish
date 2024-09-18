@@ -29,12 +29,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.lang.System.Logger;
-import java.util.Base64;
 import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.common.util.HttpParser;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
@@ -71,23 +73,10 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
 
         try {
             HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
-            String authorization = request.getHeader("Authorization");
-            LOG.log(INFO, "Received authorization: {0}", authorization);
-            String username = null;
-            String password = null;
-            if (authorization != null && authorization.startsWith("Basic ")) {
-                authorization = authorization.substring(6).trim();
-                byte[] bs = Base64.getDecoder().decode(authorization);
-                String decodedString = new String(bs);
-                int ind = decodedString.indexOf(':');
-                if (ind > 0) {
-                    username = decodedString.substring(0, ind);
-                    password = decodedString.substring(ind + 1);
-                }
-            }
-
             HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
-            if (username == null || password == null) {
+            UserNameAndPassword login = HttpParser.parseBasicAuthorizationHeader(request.getHeader("Authorization"));
+            LOG.log(INFO, "REQUEST: Login: {0}", login);
+            if (login == null) {
                 response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 LOG.log(INFO, "login prompt for username/password");
@@ -96,13 +85,12 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
 
             HttpSession session = request.getSession(false);
             boolean secondPhase = session != null && session.getAttribute("FIRST_DONE") != null;
-            String loginName = secondPhase ? username + "_2" : username;
-            char[] pwd = new char[password.length()];
-            password.getChars(0, password.length(), pwd, 0);
+            String loginName = secondPhase ? login.getName() + "_2" : login.getName();
             Callback[] callbacks;
-            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, loginName, pwd);
+            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, loginName,
+                login.getPassword());
             if (secondPhase) {
-                CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, username);
+                CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, login.getName());
                 callbacks = new Callback[] {pwdCallback, cpCallback};
             } else {
                 callbacks = new Callback[] {pwdCallback};
@@ -112,10 +100,10 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
             LOG.log(INFO, "Subject after invoking callbacks: {0}", clientSubject);
 
             if (!pwdCallback.getResult()) {
-                LOG.log(INFO, "login failed for username {0} and loginname {1}", username, loginName);
+                LOG.log(INFO, "login failed for username {0} and loginname {1}", login, loginName);
                 return AuthStatus.SEND_FAILURE;
             }
-            LOG.log(INFO, "login succeeded for username {0} and loginname {1}", username, loginName);
+            LOG.log(INFO, "login succeeded for username {0} and loginname {1}", login, loginName);
             if (secondPhase) {
                 LOG.log(DEBUG, "Second phase");
                 request.setAttribute("MY_NAME", getClass().getName());

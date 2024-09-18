@@ -37,7 +37,6 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -71,6 +70,8 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.types.Property;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * An HK-2 Service that provides the functionality so that admin console access is handled properly.
@@ -244,7 +245,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
             try {
                 OutputBuffer outputBuffer = getOutputBuffer(response);
 
-                byte[] bytes = (":::" + status).getBytes(StandardCharsets.UTF_8);
+                byte[] bytes = (":::" + status).getBytes(UTF_8);
                 response.setContentLength(bytes.length);
                 outputBuffer.write(bytes);
                 outputBuffer.flush();
@@ -571,7 +572,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
         try {
             OutputBuffer outputBuffer = getOutputBuffer(response);
 
-            String html = Utils.packageResource2String("status.html");
+            String html = loadResource("status.html");
             // Replace locale specific Strings
             String localHtml = replaceTokens(html, resourceBundle);
 
@@ -585,7 +586,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
                 status = getStateMsg().toString();
             }
 
-            byte[] bytes = localHtml.replace(STATUS_TOKEN, status).getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = localHtml.replace(STATUS_TOKEN, status).getBytes(UTF_8);
             response.setContentLength(bytes.length);
             outputBuffer.write(bytes);
             outputBuffer.flush();
@@ -598,15 +599,29 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
         try {
             OutputBuffer outputBuffer = getOutputBuffer(response);
 
-            String html = Utils.packageResource2String(statusPage);
+            String html = loadResource(statusPage);
             String localHtml = replaceTokens(html, resourceBundle);
 
-            byte[] bytes = localHtml.getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = localHtml.getBytes(UTF_8);
             response.setContentLength(bytes.length);
             outputBuffer.write(bytes);
             outputBuffer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Reads the given file in this package and returns it as a String.
+     * If there is any problem in reading an IOException is thrown.
+     *
+     * @param name representing just the complete name of file to be read, e.g. foo.html
+     * @return String
+     * @throws IOException
+     */
+    private static String loadResource(String name) throws IOException {
+        try (InputStream is = AdminConsoleAdapter.class.getResourceAsStream(name)) {
+            return new String(is.readAllBytes(), UTF_8);
         }
     }
 

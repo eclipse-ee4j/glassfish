@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,49 +35,64 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.types.Property;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Service(name = "html")
 public class HtmlFormat implements SchemaOutputFormat {
-    private PrintWriter tocWriter;
-    private PrintWriter detail;
-    private Set<ClassDef> toc = new HashSet<ClassDef>();
+
+    private final Set<ClassDef> toc = new HashSet<>();
     private File dir;
     private Map<String, ClassDef> defs;
 
-    @SuppressWarnings({ "IOResourceOpenedButNotSafelyClosed" })
     @Override
     public void output(Context context) {
         dir = context.getDocDir();
         defs = context.getClassDefs();
-        try {
-            try {
-                tocWriter = new PrintWriter(new FileWriter(new File(dir, "toc.HTML")));
-                detail = new PrintWriter(new FileWriter(new File(dir, "detail.HTML")));
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e.getMessage());
-            }
+        try (PrintWriter tocWriter = createWriter("toc.HTML"); PrintWriter detail = createWriter("detail.HTML")) {
             println(tocWriter,
-                    "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"><style>body{margin-left:-1em;}</style></head><body>");
-            println(detail, "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"></head><body>");
+                "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"><style>body{margin-left:-1em;}</style></head><body>");
+            println(detail,
+                "<HTML><head><link rel=\"stylesheet\" type=\"text/css\" href=\"schemadoc.css\"></head><body>");
             copyResources();
-            buildToc(defs.get(context.getRootClassName()));
+            buildToc(tocWriter, detail, defs.get(context.getRootClassName()));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
-        } finally {
-            println(tocWriter, "</ul>");
-            footer(tocWriter);
-            footer(detail);
-            if (tocWriter != null) {
-                tocWriter.close();
-            }
-            if (detail != null) {
-                detail.close();
-            }
         }
     }
 
-    private void buildDetail(ClassDef def) {
+    private PrintWriter createWriter(String filename) {
+        try {
+            return new PrintWriter(new FileWriter(new File(dir, filename), UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    private void buildToc(final PrintWriter tocWriter, final PrintWriter detail, final ClassDef def)
+        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (def != null/* && !"Named".equals(def.getSimpleName())*/) {
+            if (!toc.contains(def)) {
+                buildDetail(detail, def);
+            }
+            toc.add(def);
+            println(tocWriter, "<ul>");
+            println(tocWriter, "<li>" + link(def));
+            for (Entry<String, String> aggType : def.getAggregatedTypes().entrySet()) {
+                if (!Property.class.getName().equals(aggType.getValue()) && defs != null) {
+                    buildToc(tocWriter, detail, defs.get(aggType.getValue()));
+                }
+            }
+            for (ClassDef subclass : def.getSubclasses()) {
+                buildToc(tocWriter, detail, subclass);
+            }
+            println(tocWriter, "</ul>");
+            footer(tocWriter);
+            footer(detail);
+        }
+    }
+
+    private void buildDetail(final PrintWriter detail, final ClassDef def) {
         println(detail, "<p><table><tr>");
         println(detail, "<a name=\"" + def.getXmlName() + "\">");
         println(detail, String.format("<th colspan=\"4\" class=\"TableHeadingColor entity %s\">%s%s",
@@ -88,25 +104,20 @@ public class HtmlFormat implements SchemaOutputFormat {
         if (map != null) {
             for (Entry<String, Attribute> entry : map.entrySet()) {
                 println(detail, String.format("<tr><td class=\"TableSubHeadingColor\">%s</td>", entry.getKey()));
-                printAttributeData(entry.getValue());
+                printAttributeData(detail, entry.getValue());
             }
         }
         println(detail, "</table>");
-        printPropertyData(def);
+        printPropertyData(detail, def);
     }
 
-    private void println(final PrintWriter writer, final String text) {
-        writer.println(text);
-        writer.flush();
-    }
-
-    private void printAttributeData(final Attribute annotation) {
+    private void printAttributeData(final PrintWriter detail, final Attribute annotation) {
         printKeyValue(detail, annotation != null ? annotation.dataType().getName() : null);
         printKeyValue(detail, annotation != null ? annotation.defaultValue() : null);
         printKeyValue(detail, annotation != null && annotation.required());
     }
 
-    private void printPropertyData(final ClassDef def) {
+    private void printPropertyData(final PrintWriter detail, final ClassDef def) {
         final Set<PropertyDesc> properties = def.getProperties();
         if (properties != null && !properties.isEmpty()) {
             println(detail, "<tr><td colspan=\"2\">");
@@ -133,29 +144,34 @@ public class HtmlFormat implements SchemaOutputFormat {
         }
     }
 
-    private void buildToc(final ClassDef def) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        if (def != null/* && !"Named".equals(def.getSimpleName())*/) {
-            if (!toc.contains(def)) {
-                buildDetail(def);
+    private void printKeyValue(final PrintWriter writer, Object value) {
+        println(writer, "<td>");
+        if (value != null) {
+            if (value instanceof Class) {
+                println(writer, ((Class) value).getSimpleName());
+            } else {
+                println(writer, value.toString().trim());
             }
-            toc.add(def);
-            println(tocWriter, "<ul>");
-            println(tocWriter, "<li>" + link(def));
-            for (Entry<String, String> aggType : def.getAggregatedTypes().entrySet()) {
-                if (!Property.class.getName().equals(aggType.getValue()) && defs != null) {
-                    buildToc(defs.get(aggType.getValue()));
-                }
-            }
-            for (ClassDef subclass : def.getSubclasses()) {
-                buildToc(subclass);
-            }
-            println(tocWriter, "</ul>");
         }
+        println(writer, "</td>");
     }
 
     private String link(final ClassDef def) {
         return String.format("<a %s target=\"detail\" href=\"detail.html#%s\">%s</a>", def.isDeprecated() ? "class=\"deprecated\"" : "",
                 def.getXmlName(), def.getXmlName());
+    }
+
+    private void println(final PrintWriter writer, final String text) {
+        writer.println(text);
+        writer.flush();
+    }
+
+    private void printHeaderRow(final PrintWriter writer, final String... values) {
+        writer.println("<tr class=\"TableHeadingColor\">");
+        for (String value : values) {
+            writer.println(String.format("<th>%s</th>", value != null ? value.trim() : " "));
+        }
+        writer.println("</tr>");
     }
 
     private void footer(final PrintWriter writer) {
@@ -175,8 +191,8 @@ public class HtmlFormat implements SchemaOutputFormat {
         try {
             try {
                 InputStream stream = getClass().getClassLoader().getResourceAsStream(resource);
-                reader = new InputStreamReader(stream);
-                writer = new PrintWriter(new File(dir, resource));
+                reader = new InputStreamReader(stream, UTF_8);
+                writer = new PrintWriter(new File(dir, resource), UTF_8);
                 char[] bytes = new char[8192];
                 int read;
                 while ((read = reader.read(bytes)) != -1) {
@@ -192,25 +208,5 @@ public class HtmlFormat implements SchemaOutputFormat {
                 writer.close();
             }
         }
-    }
-
-    private void printKeyValue(final PrintWriter writer, Object value) {
-        println(writer, "<td>");
-        if (value != null) {
-            if (value instanceof Class) {
-                println(writer, ((Class) value).getSimpleName());
-            } else {
-                println(writer, value.toString().trim());
-            }
-        }
-        println(writer, "</td>");
-    }
-
-    private void printHeaderRow(final PrintWriter writer, final String... values) {
-        writer.println("<tr class=\"TableHeadingColor\">");
-        for (String value : values) {
-            writer.println(String.format("<th>%s</th>", value != null ? value.trim() : " "));
-        }
-        writer.println("</tr>");
     }
 }

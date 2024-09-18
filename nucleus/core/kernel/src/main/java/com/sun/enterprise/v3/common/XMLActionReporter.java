@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +24,7 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -72,7 +74,6 @@ public class XMLActionReporter extends ActionReporter {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document d = db.newDocument();
-
             d.appendChild(writeActionReport(d, this));
             writeXML(d, os);
         } catch (Exception e) {
@@ -106,7 +107,7 @@ public class XMLActionReporter extends ActionReporter {
 
     @Override
     public String getContentType() {
-        return "text/xml";
+        return "application/xml";
     }
 
     private void writePart(Element actionReport, MessagePart part, String childType) {
@@ -178,10 +179,10 @@ public class XMLActionReporter extends ActionReporter {
 
     private void writeXML(Document doc, OutputStream os) throws TransformerConfigurationException, TransformerException {
         Source source = new DOMSource(doc);
-
         Result result = new StreamResult(os);
-
-        Transformer xformer = TransformerFactory.newInstance().newTransformer();
-        xformer.transform(source, result);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
+        transformer.transform(source, result);
     }
 }

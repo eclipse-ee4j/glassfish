@@ -118,7 +118,7 @@ public class ManPageFinder {
                         j = 0;
                     }
                 }
-                logger.log(Level.FINE, "Trying to get this manpage: {0}", result);
+                logger.log(Level.FINER, "Trying to get this manpage: {0}", result);
                 return result;
             }
 

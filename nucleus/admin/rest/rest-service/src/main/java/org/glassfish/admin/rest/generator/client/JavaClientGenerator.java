@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,14 +44,16 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.config.ConfigModel;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author jasonlee
  */
 public class JavaClientGenerator extends ClientGenerator {
-    private File baseDirectory;
+    private final File baseDirectory;
     private Map<String, URI> artifacts;
-    private static String MSG_INSTALL = "To install the artifacts to maven: " + "mvn install:install-file -DpomFile=pom.xml -Dfile="
+    private static String MSG_INSTALL = "To install the artifacts to maven: mvn install:install-file -DpomFile=pom.xml -Dfile="
             + ARTIFACT_NAME + "-VERSION.jar -Dsources=" + ARTIFACT_NAME + "-VERSION-sources.jar";
 
     public JavaClientGenerator(ServiceLocator habitat) {
@@ -72,7 +75,7 @@ public class JavaClientGenerator extends ClientGenerator {
     @Override
     public synchronized Map<String, URI> getArtifact() {
         if (artifacts == null) {
-            artifacts = new HashMap<String, URI>();
+            artifacts = new HashMap<>();
             createJar(ARTIFACT_NAME + "-" + versionString + "-sources.jar", ".java");
             compileSources();
             createJar(ARTIFACT_NAME + "-" + versionString + ".jar", ".class");
@@ -85,13 +88,13 @@ public class JavaClientGenerator extends ClientGenerator {
 
     private void compileSources() {
         try {
-            List<File> files = new ArrayList<File>();
+            List<File> files = new ArrayList<>();
             gatherFiles(baseDirectory, files);
 
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
-            List<String> options = new ArrayList<String>();
+            List<String> options = new ArrayList<>();
             options.add("-cp");
             StringBuilder sb = new StringBuilder();
             sb.append(ASClassLoaderUtil.getModuleClassPath(habitat, "", null));
@@ -154,26 +157,17 @@ public class JavaClientGenerator extends ClientGenerator {
     }
 
     private void addPom(String versionString) {
-        FileWriter writer = null;
-        try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("/client/pom.template.xml"))) {
+        try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("/client/pom.template.xml"), UTF_8)) {
             String pom = scanner.useDelimiter("\\Z").next();
             pom = pom.replace("{{glassfish.version}}", versionString);
             File out = File.createTempFile("pom", "xml");
             out.deleteOnExit();
-            writer = new FileWriter(out);
-            writer.write(pom);
-            writer.close();
-
+            try (FileWriter writer = new FileWriter(out, UTF_8)) {
+                writer.write(pom);
+            }
             artifacts.put("pom.xml", out.toURI());
         } catch (IOException ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (Exception e) {
-                }
-            }
         }
     }
 
@@ -225,7 +219,7 @@ public class JavaClientGenerator extends ClientGenerator {
             target.putNextEntry(entry);
             in = new BufferedInputStream(new FileInputStream(source));
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[8192];
             while (true) {
                 int count = in.read(buffer);
                 if (count == -1) {

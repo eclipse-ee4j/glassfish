@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,6 +53,7 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -83,9 +84,9 @@ public class RemoteCLICommand extends CLICommand {
 
     private static final LocalStringsImpl strings = new LocalStringsImpl(RemoteCLICommand.class);
     // return output string rather than printing it
-    private boolean returnOutput = false;
+    private boolean returnOutput;
     private String output;
-    private boolean returnActionReport = false;
+    private boolean returnActionReport;
     private ActionReport ar;
     private String usage;
     private String responseFormatType;
@@ -113,7 +114,7 @@ public class RemoteCLICommand extends CLICommand {
          * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
          * superclass.
          */
-        public CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
+        private CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
                 String authToken, boolean notify) throws CommandException {
             super(name, host, port, secure, user, password, logger, getCommandScope(), authToken, true /* prohibitDirectoryUploads */,
                     notify);
@@ -292,9 +293,7 @@ public class RemoteCLICommand extends CLICommand {
             try {
                 ((ClientCookieStore) cookieManager.getCookieStore()).load();
             } catch (IOException e) {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Unable to load cookies: " + e.toString());
-                }
+                logger.log(Level.FINER, "Unable to load cookies: ", e);
                 return;
             }
 
@@ -743,7 +742,7 @@ public class RemoteCLICommand extends CLICommand {
                 try {
                     if (r != null) {
                         br = new BufferedReader(r);
-                        PrintWriter pw = new PrintWriter(System.out);
+                        PrintWriter pw = new PrintWriter(System.out, false, Charset.defaultCharset());
                         char[] buf = new char[8192];
                         int cnt;
                         while ((cnt = br.read(buf)) > 0) {

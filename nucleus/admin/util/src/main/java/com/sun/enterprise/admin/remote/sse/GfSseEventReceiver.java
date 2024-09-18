@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 /**
  * @author Pavel Bucek (pavel.bucek at oracle.com), Martin Mares (martin.mares at oracle.com)
@@ -35,13 +37,15 @@ public final class GfSseEventReceiver implements Closeable {
     }
 
     private final InputStream inputStream;
-    private boolean closed = false;
+    private final Charset charset;
+    private boolean closed;
 
     /**
      * Constructor.
      */
-    GfSseEventReceiver(InputStream inputStream) {
+    GfSseEventReceiver(InputStream inputStream, Charset charset) {
         this.inputStream = inputStream;
+        this.charset = charset;
     }
 
     public GfSseInboundEvent readEvent() throws IOException {
@@ -56,66 +60,65 @@ public final class GfSseEventReceiver implements Closeable {
 
                 switch (currentState) {
 
-                case START:
-                    if (data == ':') {
-                        currentState = State.COMMENT;
-                    } else if (data != '\n') {
-                        baos.write(data);
-                        currentState = State.FIELD_NAME;
-                    } else {
-                        //                            System.out.println(sbr);
-                        if (!inboundEvent.isEmpty()) {
-                            return inboundEvent;
+                    case START:
+                        if (data == ':') {
+                            currentState = State.COMMENT;
+                        } else if (data != '\n') {
+                            baos.write(data);
+                            currentState = State.FIELD_NAME;
+                        } else {
+                            // System.out.println(sbr);
+                            if (!inboundEvent.isEmpty()) {
+                                return inboundEvent;
+                            }
+                            inboundEvent = new GfSseInboundEvent();
                         }
-                        inboundEvent = new GfSseInboundEvent();
-                    }
-                    break;
-                case COMMENT:
-                    if (data == '\n') {
-                        currentState = State.START;
-                    }
-                    break;
-                case FIELD_NAME:
-                    if (data == ':') {
-                        fieldName = baos.toString();
-                        baos.reset();
-                        currentState = State.FIELD_VALUE_FIRST;
-                    } else if (data == '\n') {
-                        processField(inboundEvent, baos.toString(), "".getBytes());
-                        baos.reset();
-                        currentState = State.START;
-                    } else {
-                        baos.write(data);
-                    }
-                    break;
-                case FIELD_VALUE_FIRST:
-                    // first space has to be skipped
-                    if (data != ' ') {
-                        baos.write(data);
-                    }
-
-                    if (data == '\n') {
-                        processField(inboundEvent, fieldName, baos.toByteArray());
-                        baos.reset();
-                        currentState = State.START;
                         break;
-                    }
+                    case COMMENT:
+                        if (data == '\n') {
+                            currentState = State.START;
+                        }
+                        break;
+                    case FIELD_NAME:
+                        if (data == ':') {
+                            fieldName = baos.toString(charset);
+                            baos.reset();
+                            currentState = State.FIELD_VALUE_FIRST;
+                        } else if (data == '\n') {
+                            processField(inboundEvent, baos.toString(charset), new byte[0], charset);
+                            baos.reset();
+                            currentState = State.START;
+                        } else {
+                            baos.write(data);
+                        }
+                        break;
+                    case FIELD_VALUE_FIRST:
+                        // first space has to be skipped
+                        if (data != ' ') {
+                            baos.write(data);
+                        }
 
-                    currentState = State.FIELD_VALUE;
-                    break;
-                case FIELD_VALUE:
-                    if (data == '\n') {
-                        processField(inboundEvent, fieldName, baos.toByteArray());
-                        baos.reset();
-                        currentState = State.START;
-                    } else {
-                        baos.write(data);
-                    }
-                    break;
-                default:
-                    //No-op default
+                        if (data == '\n') {
+                            processField(inboundEvent, fieldName, baos.toByteArray(), charset);
+                            baos.reset();
+                            currentState = State.START;
+                            break;
+                        }
+
+                        currentState = State.FIELD_VALUE;
+                        break;
+                    case FIELD_VALUE:
+                        if (data == '\n') {
+                            processField(inboundEvent, fieldName, baos.toByteArray(), charset);
+                            baos.reset();
+                            currentState = State.START;
+                        } else {
+                            baos.write(data);
+                        }
+                        break;
+                    default:
+                        // No-op default
                 }
-
             }
             if (data == -1) {
                 closed = true;
@@ -128,20 +131,21 @@ public final class GfSseEventReceiver implements Closeable {
 
     }
 
-    private void processField(GfSseInboundEvent inboundEvent, String name, byte[] value) {
+    private void processField(GfSseInboundEvent inboundEvent, String name, byte[] value, Charset valueCharset) {
         if (name.equals("event")) {
-            inboundEvent.setName(new String(value));
+            inboundEvent.setName(new String(value, valueCharset));
         } else if (name.equals("data")) {
             inboundEvent.addData(value);
             inboundEvent.addData(new byte[] { '\n' });
         } else if (name.equals("id")) {
-            String s = "";
+            String s;
             if (value != null) {
-                s = new String(value);
-                s = s.trim();
+                s = new String(value, valueCharset).trim();
                 if (!s.matches("\\-?\\d+")) {
                     s = "";
                 }
+            } else {
+                s = "";
             }
             inboundEvent.setId(s);
         }

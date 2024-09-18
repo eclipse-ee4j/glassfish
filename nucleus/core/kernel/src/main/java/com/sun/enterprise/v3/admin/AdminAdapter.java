@@ -246,13 +246,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
              * content type of the payload reflects its multi-part nature and
              * an implementation-specific content type will be set in the response.
              */
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
             report.writeReport(baos);
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             final Properties reportProps = new Properties();
             reportProps.setProperty("data-request-type", "report");
-            outboundPayload.addPart(0, report.getContentType(), "report",
-                    reportProps, bais);
+            outboundPayload.addPart(0, report.getContentType(), "report", reportProps, bais);
             res.setContentType(outboundPayload.getContentType());
             String commandName = req.getRequestURI().substring(getContextRoot().length() + 1);
             //Check session routing for commands that have @ExecuteOn(RuntimeType.SINGLE_INSTANCE)

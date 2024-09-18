@@ -1,4 +1,5 @@
 #
+# Copyright (c) 2024 Contributors to the Eclipse Foundation.
 # Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -24,6 +25,6 @@ setup(
     author_email='dev@glassfish.java.net',
     url='http://glassfish.org',
     long_description="Python client for the RESTful GlassFish Administration interface",
-    license='CDDL+GPLv2 w/CPE',
+    license='EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0',
     packages=['glassfish', 'glassfish.rest'],
 )

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,32 +22,26 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.nio.charset.Charset;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  */
 public final class LineTokenReplacer {
 
     private final TokenValue[] tokenArray;
-    private final String charsetName;
-
-    public LineTokenReplacer(TokenValueSet tokens) {
-        this(tokens, null);
-    }
 
     /**
      * Creates a new instance of TokenReplacer
      */
-    public LineTokenReplacer(TokenValueSet tokens, String charset) {
+    public LineTokenReplacer(TokenValueSet tokens) {
         final Object[] tmp = tokens.toArray();
         final int length = tmp.length;
         this.tokenArray = new TokenValue[length];
         System.arraycopy(tmp, 0, tokenArray, 0, length);
-        this.charsetName = charset;
     }
 
     /**
@@ -59,7 +54,7 @@ public final class LineTokenReplacer {
         return new Reader() {
 
             BufferedReader reader = new BufferedReader(in);
-            String line = null;
+            String line;
             final String eol = System.getProperty("line.separator");
 
             @Override
@@ -88,42 +83,29 @@ public final class LineTokenReplacer {
 
     }
 
-    public void replace(File inputFile, File outputFile) {
-        //Edge-cases
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-        // @todo Java SE 7 - use try with resources
-        try {
-            reader = new BufferedReader(new FileReader(inputFile));
-            try {
-                if (charsetName != null) {
-                    FileOutputStream outputStream = new FileOutputStream(outputFile);
-                    Charset charset = Charset.forName(charsetName);
-                    writer = new BufferedWriter(new OutputStreamWriter(outputStream, charset));
-                } else {
-                    writer = new BufferedWriter(new FileWriter(outputFile));
-                }
-                String lineContents;
-                while ((lineContents = reader.readLine()) != null) {
-                    String modifiedLine = replaceLine(lineContents);
-                    writer.write(modifiedLine);
-                    writer.newLine();
-                }
-            } finally {
-                if (writer != null) {
-                    writer.close();
-                }
+    /**
+     * Converts inputFile to outputFile with the following rules:
+     * <ul>
+     * <li>Both files are encoded with UTF-8
+     * <li>Line endings are replaced by {@link System#lineSeparator()}
+     * <li>Tokens from constructor are resolved
+     * </ul>
+     * @param inputFile
+     * @param outputFile
+     * @throws IllegalStateException if conversion fails for any reason
+     */
+    public void replace(File inputFile, File outputFile) throws IllegalStateException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile, UTF_8));
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8))) {
+            String lineContents;
+            while ((lineContents = reader.readLine()) != null) {
+                String modifiedLine = replaceLine(lineContents);
+                writer.write(modifiedLine);
+                writer.newLine();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ex) {
-                }
-            }
+            throw new IllegalStateException(e);
         }
     }
 
@@ -134,12 +116,11 @@ public final class LineTokenReplacer {
     private String replaceLine(String lineWithTokens) {
         String tokenFreeString = lineWithTokens;
 
-        for (int i = 0; i < tokenArray.length; i++) {
-            TokenValue aPair = tokenArray[i];
+        for (TokenValue aPair : tokenArray) {
             //System.out.println("To replace: " + aPair.delimitedToken);
             //System.out.println("Value replace: " + aPair.value);
             tokenFreeString = tokenFreeString.replace(aPair.delimitedToken, aPair.value);
         }
-        return (tokenFreeString);
+        return tokenFreeString;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,7 @@
 
 package org.glassfish.appclient.client.acc;
 
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
+import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -53,13 +53,13 @@ public class ACCStartupContext extends StartupContext {
      * @return
      */
     private static Properties accEnvironment() {
-        final Properties result = MainHelper.parseAsEnv(getRootDirectory());
-        result.setProperty("com.sun.aas.installRoot", getRootDirectory().getAbsolutePath());
+        final Properties environment = AsenvConf.parseAsEnv(getRootDirectory()).toProperties();
+        environment.setProperty("com.sun.aas.installRoot", getRootDirectory().getAbsolutePath());
         final File javadbDir = new File(getRootDirectory().getParentFile(), "javadb");
         if (javadbDir.isDirectory()) {
-            result.setProperty(DERBY_ROOT_PROPERTY, javadbDir.getAbsolutePath());
+            environment.setProperty(DERBY_ROOT_PROPERTY, javadbDir.getAbsolutePath());
         }
-        return result;
+        return environment;
     }
 
     private static File getRootDirectory() {

@@ -32,7 +32,6 @@ import jakarta.inject.Scope;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,6 +71,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.UnsatisfiedDependencyException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Base class for a CLI command. An instance of a subclass of this class is created using the getCommand method with the
@@ -1137,16 +1138,17 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
-     * Display the given prompt and read a password without echoing it. Returns null if no console available.
+     * Display the given prompt and read a password without echoing it.
+     *
+     * @return null if no console available, read password otherwise.
      */
     protected char[] readPassword(String prompt) {
-        char[] pc = null;
+        char[] password = null;
         Console cons = System.console();
         if (cons != null) {
-            pc = cons.readPassword("%s", prompt);
-            // yes, yes, yes, it would be safer to not keep it in a String
+            password = cons.readPassword("%s", prompt);
         }
-        return pc;
+        return password;
     }
 
     /**
@@ -1244,29 +1246,6 @@ public abstract class CLICommand implements PostConstruct {
         // it is a supported command; do nothing
     }
 
-    /**
-     * Prints the exception message with level as FINER.
-     *
-     * @param e the exception object to print
-     */
-    protected void printExceptionStackTrace(java.lang.Throwable e) {
-        if (logger.isLoggable(Level.FINER)) {
-            /*
-            java.lang.StackTraceElement[] ste = e.getStackTrace();
-            for (int ii = 0; ii < ste.length; ii++)
-                printDebugMessage(ste[ii].toString());
-            */
-            final ByteArrayOutputStream output = new ByteArrayOutputStream(512);
-            e.printStackTrace(new java.io.PrintStream(output));
-            try {
-                output.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-            logger.finer(output.toString());
-        }
-    }
-
     protected static boolean ok(String s) {
         return s != null && !s.isEmpty();
     }
@@ -1280,17 +1259,13 @@ public abstract class CLICommand implements PostConstruct {
      * Read the named resource file and add the first token on each line to the set. Skip comment lines.
      */
     private static void file2Set(String file, Set<String> set) {
-        BufferedReader reader = null;
-        try {
-            InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
-            if (is == null) {
-                return; // in case the resource doesn't exist
-            }
-            reader = new BufferedReader(new InputStreamReader(is));
+        try (InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                // # indicates comment
                 if (line.startsWith("#")) {
-                    continue; // # indicates comment
+                    continue;
                 }
                 StringTokenizer tok = new StringTokenizer(line, " ");
                 // handles with or without space, rudimendary as of now
@@ -1298,15 +1273,7 @@ public abstract class CLICommand implements PostConstruct {
                 set.add(cmd);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ee) {
-                    // ignore
-                }
-            }
+            throw new IllegalStateException("Could not parse resource file " + file, e);
         }
     }
 }

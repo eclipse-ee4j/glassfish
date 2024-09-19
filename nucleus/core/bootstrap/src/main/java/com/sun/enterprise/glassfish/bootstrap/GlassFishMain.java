@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,28 +17,27 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import java.io.BufferedReader;
+import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
+import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cp.ClassLoaderBuilder;
+import com.sun.enterprise.glassfish.bootstrap.cp.GlassfishBootstrapClassLoader;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
+
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
-import org.glassfish.embeddable.BootstrapProperties;
-import org.glassfish.embeddable.CommandResult;
-import org.glassfish.embeddable.CommandRunner;
-import org.glassfish.embeddable.Deployer;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
-
+import static com.sun.enterprise.glassfish.bootstrap.StartupContextCfgFactory.createStartupContextCfg;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
+import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
+import static java.util.logging.Level.SEVERE;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.CLASS_INITIALIZER;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.KEY_TRACING_ENABLED;
 
@@ -62,28 +61,29 @@ public class GlassFishMain {
      */
     private static final String ENV_AS_TRACE_BOOTSTRAP = "AS_TRACE_BOOTSTRAP";
 
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("([^\"']\\S*|\".*?\"|'.*?')\\s*");
+    private static final String DEFAULT_DOMAINS_DIR_PROPNAME = "AS_DEF_DOMAINS_PATH";
+
     // logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
-    private static final PrintStream STDERR = System.err;
-
 
     public static void main(final String[] args) throws Exception {
-        final File installRoot = MainHelper.findInstallRoot();
+        final File installRoot = StartupContextUtil.detectInstallRoot();
         final ClassLoader jdkExtensionCL = ClassLoader.getSystemClassLoader().getParent();
         final GlassfishBootstrapClassLoader gfBootCL = new GlassfishBootstrapClassLoader(installRoot, jdkExtensionCL);
         initializeLogManager(gfBootCL);
 
-        MainHelper.checkJdkVersion();
+        checkJdkVersion();
 
         final Properties argsAsProps = argsToMap(args);
-        final String platform = MainHelper.whichPlatform();
+        final OsgiPlatform platform = OsgiPlatform.valueOf(whichPlatform());
         STDOUT.println("Launching GlassFish on " + platform + " platform");
 
-        final File instanceRoot = MainHelper.findInstanceRoot(installRoot, argsAsProps);
-        final Properties startupCtx = MainHelper.buildStartupContext(platform, installRoot, instanceRoot, args);
-        final ClassLoader launcherCL = MainHelper.createLauncherCL(startupCtx, gfBootCL);
-        final Class<?> launcherClass = launcherCL.loadClass(GlassFishMain.Launcher.class.getName());
+        final Path instanceRoot = findInstanceRoot(installRoot, argsAsProps);
+        final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
+        final StartupContextCfg startupContextCfg = createStartupContextCfg(platform, files, args);
+        final ClassLoader launcherCL = ClassLoaderBuilder.createLauncherCL(startupContextCfg, gfBootCL);
+
+        final Class<?> launcherClass = launcherCL.loadClass(Launcher.class.getName());
         final Object launcher = launcherClass.getDeclaredConstructor().newInstance();
         final Method method = launcherClass.getMethod("launch", Properties.class);
 
@@ -91,13 +91,13 @@ public class GlassFishMain {
         // on all other places is used classloader which loaded the GlassfishRuntime class
         // -> it must not be loaded by any parent classloader, it's children would be ignored.
         try {
-            method.invoke(launcher, startupCtx);
+            method.invoke(launcher, startupContextCfg.toProperties());
         } catch (Throwable t) {
-            String root = (String) startupCtx.get("com.sun.aas.instanceRoot") + "/logs/serverx.log";
-
+            String root = startupContextCfg.getProperty("com.sun.aas.instanceRoot") + "/logs/serverx.log";
             try (PrintStream exceptionStream = new PrintStream(root)) {
                 t.printStackTrace(exceptionStream);
             }
+            throw t;
         }
 
         // also note that debugging is not possible until the debug port is open.
@@ -112,6 +112,132 @@ public class GlassFishMain {
         final Class<?> loggingInitializer = gfMainCL.loadClass(CLASS_INITIALIZER);
         final Properties loggingCfg = createDefaultLoggingProperties();
         loggingInitializer.getMethod("tryToSetAsDefault", Properties.class).invoke(loggingInitializer, loggingCfg);
+    }
+
+
+    private static void checkJdkVersion() {
+        int version = Runtime.version().feature();
+        if (version < 21) {
+            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {21, version});
+            System.exit(1);
+        }
+    }
+
+
+    private static String whichPlatform() {
+        final String platformSysOption = System.getProperty(PLATFORM_PROPERTY_KEY);
+        if (platformSysOption != null && !platformSysOption.isBlank()) {
+            return platformSysOption.trim();
+        }
+        final String platformEnvOption = System.getenv(PLATFORM_PROPERTY_KEY);
+        if (platformEnvOption != null && !platformEnvOption.isBlank()) {
+            return platformEnvOption.trim();
+        }
+        return OsgiPlatform.Felix.name();
+    }
+
+
+    /**
+     * IMPORTANT - check for instance BEFORE domain.  We will always come up
+     * with a default domain but there is no such thing as a default instance.
+     */
+    private static Path findInstanceRoot(File installRoot, Properties args) {
+        File instanceDir = getInstanceRoot(args);
+        if (instanceDir == null) {
+            // that means that this is a DAS.
+            instanceDir = getDomainRoot(args, installRoot);
+        }
+        verifyDomainRoot(instanceDir);
+        return instanceDir.toPath();
+    }
+
+
+    private static File getInstanceRoot(Properties args) {
+        String instanceDir = getParam(args, "instancedir");
+        if (isSet(instanceDir)) {
+            return new File(instanceDir);
+        }
+        return null;
+    }
+
+
+    /**
+     * Determines the root directory of the domain that we'll start.
+     *
+     * @param installRoot
+     */
+    private static File getDomainRoot(Properties args, File installRoot) {
+        // first see if it is specified directly
+        String domainDir = getParam(args, "domaindir");
+        if (isSet(domainDir)) {
+            return new File(domainDir);
+        }
+
+        // now see if they specified the domain name -- we will look in the default domains-dir
+        File defDomainsRoot = getDefaultDomainsDir(installRoot);
+        String domainName = getParam(args, "domain");
+
+        if (isSet(domainName)) {
+            return new File(defDomainsRoot, domainName);
+        }
+
+        // OK - they specified nothing.  Get the one-and-only domain in the domains-dir
+        return getDefaultDomain(defDomainsRoot);
+    }
+
+
+    private static File getDefaultDomainsDir(File installRoot) {
+        AsenvConf asEnv = AsenvConf.parseAsEnv(installRoot);
+        String dirname = asEnv.getProperty(DEFAULT_DOMAINS_DIR_PROPNAME);
+        if (!isSet(dirname)) {
+            throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + " is not set.");
+        }
+
+        File domainsDir = absolutize(new File(dirname));
+        if (!domainsDir.isDirectory()) {
+            throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + "[" + dirname + "]"
+                + " is specifying a file that is NOT a directory.");
+        }
+        return domainsDir;
+    }
+
+
+    private static File getDefaultDomain(File domainsDir) {
+        File[] domains = domainsDir.listFiles(File::isDirectory);
+
+        // By default we will start an unspecified domain if it is the only
+        // domain in the default domains dir
+
+        if (domains == null || domains.length == 0) {
+            throw new RuntimeException("no domain directories found under " + domainsDir);
+        }
+
+        if (domains.length > 1) {
+            throw new RuntimeException("Multiple domains[" + domains.length + "] found under "
+                    + domainsDir + " -- you must specify a domain name as -domain <name>");
+        }
+
+        return domains[0];
+    }
+
+
+    /**
+     * Verifies correctness of the root directory of the domain that we'll start.
+     *
+     * @param domainRoot
+     */
+    private static void verifyDomainRoot(File domainRoot) {
+        if (domainRoot == null) {
+            throw new RuntimeException("Internal Error: The domain dir is null.");
+        } else if (!domainRoot.exists()) {
+            throw new RuntimeException("the domain directory does not exist");
+        } else if (!domainRoot.isDirectory()) {
+            throw new RuntimeException("the domain directory is not a directory.");
+        } else if (!domainRoot.canWrite()) {
+            throw new RuntimeException("the domain directory is not writable.");
+        } else if (!new File(domainRoot, "config").isDirectory()) {
+            throw new RuntimeException("the domain directory is corrupt - there is no config subdirectory.");
+        }
     }
 
 
@@ -137,130 +263,27 @@ public class GlassFishMain {
         return cfg;
     }
 
-    // must be public to be accessible via reflection
-    public static class Launcher {
-        private volatile GlassFish gf;
-        private volatile GlassFishRuntime gfr;
 
-        public void launch(final Properties ctx) throws Exception {
-            addShutdownHook();
-            gfr = GlassFishRuntime.bootstrap(new BootstrapProperties(ctx), getClass().getClassLoader());
-            gf = gfr.newGlassFish(new GlassFishProperties(ctx));
-            if (Boolean.valueOf(Util.getPropertyOrSystemProperty(ctx, "GlassFish_Interactive", "false"))) {
-                startConsole();
-            } else {
-                gf.start();
-            }
+    private static String getParam(Properties map, String name) {
+        // allow both "-" and "--"
+        String val = map.getProperty("-" + name);
+        if (val == null) {
+            val = map.getProperty("--" + name);
         }
+        return val;
+    }
 
-        private void startConsole() throws IOException {
-            String command;
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            while ((command = readCommand(reader)) != null) {
-                try {
-                    STDOUT.println("command = " + command);
-                    if ("start".equalsIgnoreCase(command)) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED || gf.getStatus() == GlassFish.Status.STOPPING
-                            || gf.getStatus() == GlassFish.Status.STARTING) {
-                            gf.start();
-                        } else {
-                            STDOUT.println("Already started or stopping or starting");
-                        }
-                    } else if ("stop".equalsIgnoreCase(command)) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        gf.stop();
-                    } else if (command.startsWith("deploy")) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        final Deployer deployer = gf.getService(Deployer.class, null);
-                        final String[] tokens = command.split("\\s");
-                        if (tokens.length < 2) {
-                            STDOUT.println("Syntax: deploy <options> file");
-                            continue;
-                        }
-                        final URI uri = URI.create(tokens[tokens.length -1]);
-                        final String[] params = Arrays.copyOfRange(tokens, 1, tokens.length-1);
-                        final String name = deployer.deploy(uri, params);
-                        STDOUT.println("Deployed = " + name);
-                    } else if (command.startsWith("undeploy")) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        final Deployer deployer = gf.getService(Deployer.class, null);
-                        final String name = command.substring(command.indexOf(' ')).trim();
-                        deployer.undeploy(name);
-                        STDOUT.println("Undeployed = " + name);
-                    } else if ("quit".equalsIgnoreCase(command)) {
-                        System.exit(0);
-                    } else {
-                        if (gf.getStatus() != GlassFish.Status.STARTED) {
-                            STDOUT.println("GlassFish is not started yet. Please execute start first.");
-                            continue;
-                        }
-                        final CommandRunner cmdRunner = gf.getCommandRunner();
-                        runCommand(cmdRunner, command);
-                    }
-                } catch (final Exception e) {
-                    e.printStackTrace(STDERR);
-                }
-            }
-        }
 
-        private String readCommand(final BufferedReader reader) throws IOException {
-            prompt();
-            String command = null;
-            while((command = reader.readLine()) != null && command.isEmpty()) {
-                // loop until a non empty command or Ctrl-D is inputted.
-            }
-            return command;
-        }
-
-        private void prompt() {
-            STDOUT.print("Enter any of the following commands: start, stop, quit, deploy <path to file>, undeploy <name of app>\n" +
-                    "glassfish$ ");
-            STDOUT.flush();
-        }
-
-        private void addShutdownHook() {
-            Runtime.getRuntime().addShutdownHook(new Thread("GlassFish Shutdown Hook") {
-                @Override
-                public void run() {
-                    try {
-                        if (gfr != null) {
-                            gfr.shutdown();
-                        }
-                    }
-                    catch (final Exception ex) {
-                        STDERR.println("Error stopping framework: " + ex);
-                        ex.printStackTrace(STDERR);
-                    }
-                }
-            });
-
-        }
-
-        /**
-         * Runs a command read from a string
-         *
-         * @param cmdRunner
-         * @param command
-         * @throws GlassFishException
-         */
-        private void runCommand(final CommandRunner cmdRunner, final String command) throws GlassFishException {
-            String[] tokens = command.split("\\s");
-            CommandResult result = cmdRunner.run(tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length));
-            System.out.println(result.getExitStatus());
-            System.out.println(result.getOutput());
-            if (result.getFailureCause() != null) {
-                result.getFailureCause().printStackTrace(STDERR);
-            }
+    private static File absolutize(File f) {
+        try {
+            return f.getCanonicalFile();
+        } catch (Exception e) {
+            return f.getAbsoluteFile();
         }
     }
 
+
+    private static boolean isSet(String s) {
+        return s != null && !s.isEmpty();
+    }
 }

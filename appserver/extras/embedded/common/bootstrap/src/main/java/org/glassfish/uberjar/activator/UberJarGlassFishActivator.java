@@ -17,8 +17,8 @@
 
 package org.glassfish.uberjar.activator;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
-import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -36,7 +36,6 @@ import org.osgi.framework.launch.Framework;
  *
  * @author bhavanishankar@dev.java.net
  */
-
 public class UberJarGlassFishActivator implements BundleActivator {
 
     private static Logger logger = Logger.getLogger("embedded-glassfish");
@@ -53,7 +52,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
     private void privilegedStart(final BundleContext bundleContext) throws Exception {
         try {
             Properties props = new Properties();
-            props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name());
+            props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
 
             logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() + ", classloader = "
                     + getClass().getClassLoader());
@@ -99,5 +98,4 @@ public class UberJarGlassFishActivator implements BundleActivator {
     public void stop(BundleContext bundleContext) throws Exception {
         logger.info("EmbeddedGlassFishActivator is stopped");
     }
-
 }

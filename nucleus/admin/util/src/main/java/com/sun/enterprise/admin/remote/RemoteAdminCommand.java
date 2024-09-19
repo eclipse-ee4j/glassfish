@@ -36,7 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -48,6 +47,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -56,7 +56,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
@@ -75,6 +74,7 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -83,6 +83,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
@@ -337,19 +341,19 @@ public class RemoteAdminCommand {
                         this.usage = ccm.getUsage();
                         addedUploadOption = ccm.isAddedUploadOption();
                     }
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST,
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST,
                                 "Command model for command {0} was successfully loaded from the cache. [Duration: {1} nanos]",
                                 new Object[] { name, System.nanoTime() - startNanos });
                     }
                 } else {
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, "Command model for command {0} is not in cache. It must be fatched from server.", name);
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST, "Command model for command {0} is not in cache. It must be fatched from server.", name);
                     }
                 }
             } catch (Exception ex) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
+                if (logger.isLoggable(FINEST)) {
+                    logger.log(FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
                 }
             }
         }
@@ -571,12 +575,15 @@ public class RemoteAdminCommand {
                     throw new IOException(strings.get("NoPayloadSupport", responseContentType));
                 }
                 PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, logger,
-                        new PayloadFilesManager.ActionReportHandler() {
-                            @Override
-                            public void handleReport(InputStream reportStream) throws Exception {
-                                handleResponse(options, reportStream, urlConnection.getResponseCode(), userOut);
-                            }
-                        });
+                    new PayloadFilesManager.ActionReportHandler() {
+
+                        @Override
+                        public void handleReport(InputStream reportStream) throws Exception {
+                            int responseCode = urlConnection.getResponseCode();
+                            Charset charset = HttpParser.getCharsetFromHeader(responseContentType);
+                            handleResponse(options, reportStream, charset, responseCode, userOut);
+                        }
+                    });
                 try {
                     downloadedFilesMgr.processParts(inboundPayload);
                 } catch (CommandException cex) {
@@ -652,12 +659,12 @@ public class RemoteAdminCommand {
              */
             shouldTryCommandAgain = false;
             try {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "URI: {0}", uriString);
-                    logger.log(Level.FINER, "URL: {0}", url.toString());
-                    logger.log(Level.FINER, "URL: {0}", url.toURL(uriString).toString());
-                    logger.log(Level.FINER, "Password options: {0}", passwordOptions);
-                    logger.log(Level.FINER, "Using auth info: User: {0}, Password: {1}",
+                if (logger.isLoggable(FINER)) {
+                    logger.log(FINER, "URI: {0}", uriString);
+                    logger.log(FINER, "URL: {0}", url.toString());
+                    logger.log(FINER, "URL: {0}", url.toURL(uriString).toString());
+                    logger.log(FINER, "Password options: {0}", passwordOptions);
+                    logger.log(FINER, "Using auth info: User: {0}, Password: {1}",
                             new Object[] { user, (password != null && password.length > 0) ? "<non-null>" : "<null>" });
                 }
                 final AuthenticationInfo authInfo = authenticationInfo();
@@ -680,8 +687,8 @@ public class RemoteAdminCommand {
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
                     urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.log(Level.FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                    if (logger.isLoggable(FINER)) {
+                        logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
                     }
                 }
                 urlConnection.setRequestMethod(httpMethod);
@@ -705,7 +712,7 @@ public class RemoteAdminCommand {
                      * Log at FINER; at FINE it would appear routinely when used from
                      * asadmin.
                      */
-                    logger.log(Level.FINER, "Following redirection to " + redirection);
+                    logger.log(FINER, "Following redirection to " + redirection);
                     url = followRedirection(url, redirection);
                     shouldTryCommandAgain = true;
                     /*
@@ -735,7 +742,7 @@ public class RemoteAdminCommand {
                 logger.finer("doHttpCommand succeeds");
             } catch (AuthenticationException authEx) {
 
-                logger.log(Level.FINER, "DAS has challenged for credentials");
+                logger.log(FINER, "DAS has challenged for credentials");
 
                 /*
                  * The DAS has challenged us to provide valid credentials.
@@ -745,7 +752,7 @@ public class RemoteAdminCommand {
                  * retry using the caller provided credentials (if there are any).
                  */
                 if (!usedCallerProvidedCredentials) {
-                    logger.log(Level.FINER, "Have not tried caller-supplied credentials yet; will do that next");
+                    logger.log(FINER, "Have not tried caller-supplied credentials yet; will do that next");
                     usedCallerProvidedCredentials = true;
                     shouldTryCommandAgain = true;
                     continue;
@@ -754,32 +761,32 @@ public class RemoteAdminCommand {
                  * We already tried the caller-provided credentials.  Try to
                  * update the credentials if we haven't already done so.
                  */
-                logger.log(Level.FINER, "Already used caller-supplied credentials");
+                logger.log(FINER, "Already used caller-supplied credentials");
                 if (askedUserForCredentials) {
                     /*
                      * We already updated the credentials once, and the updated
                      * ones did not work.  No recourse.
                      */
-                    logger.log(Level.FINER, "Already tried with updated credentials; cannot authenticate");
+                    logger.log(FINER, "Already tried with updated credentials; cannot authenticate");
                     throw authEx;
                 }
 
                 /*
                  * Try to update the creds.
                  */
-                logger.log(Level.FINER, "Have not yet tried to update credentials, so will try to update them");
+                logger.log(FINER, "Have not yet tried to update credentials, so will try to update them");
                 if (!updateAuthentication()) {
                     /*
                      * No updated credentials are avaiable, so we
                      * have no more options.
                      */
-                    logger.log(Level.FINER, "Could not update credentials; cannot authenticate");
+                    logger.log(FINER, "Could not update credentials; cannot authenticate");
                     throw authEx;
                 }
                 /*
                  * We have another set of credentials we can try.
                  */
-                logger.log(Level.FINER, "Was able to update the credentials so will retry with the updated ones");
+                logger.log(FINER, "Was able to update the credentials so will retry with the updated ones");
                 askedUserForCredentials = true;
                 shouldTryCommandAgain = true;
                 continue;
@@ -801,7 +808,7 @@ public class RemoteAdminCommand {
             } catch (SSLException se) {
                 logger.finer("doHttpCommand: SSL exception " + se);
                 if (secure) {
-                    logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
+                    logger.log(SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
                 }
                 throw new CommandException(se);
             } catch (SocketTimeoutException e) {
@@ -813,11 +820,7 @@ public class RemoteAdminCommand {
             } catch (CommandException e) {
                 throw e;
             } catch (Exception e) {
-                // logger.log(Level.FINER, "doHttpCommand: exception", e);
-                logger.finer("doHttpCommand: exception " + e);
-                ByteArrayOutputStream buf = new ByteArrayOutputStream();
-                e.printStackTrace(new PrintStream(buf));
-                logger.finer(buf.toString());
+                logger.log(FINER, "Something went wrong: " + e.getMessage(), e);
                 throw new CommandException(e);
             }
         } while (shouldTryCommandAgain);
@@ -903,8 +906,8 @@ public class RemoteAdminCommand {
      */
     private String checkConnect(HttpURLConnection urlConnection) throws IOException, CommandException {
         int code = urlConnection.getResponseCode();
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "Response code: " + code);
+        if (logger.isLoggable(FINER)) {
+            logger.log(FINER, "Response code: " + code);
         }
         if (code == -1) {
             URL url = urlConnection.getURL();
@@ -1033,19 +1036,19 @@ public class RemoteAdminCommand {
         }
     }
 
-    private void handleResponse(ParameterMap params, InputStream in, int code, OutputStream out) throws IOException, CommandException {
+    private void handleResponse(ParameterMap params, InputStream in, Charset charset, int code, OutputStream out) throws IOException, CommandException {
         if (out == null) {
-            handleResponse(params, in, code);
+            handleResponse(params, in, charset, code);
         } else {
             FileUtils.copy(in, out);
         }
     }
 
-    private void handleResponse(ParameterMap params, InputStream in, int code) throws IOException, CommandException {
+    private void handleResponse(ParameterMap params, InputStream in, Charset charset, int code) throws IOException, CommandException {
         RemoteResponseManager rrm = null;
 
         try {
-            rrm = new RemoteResponseManager(in, code, logger);
+            rrm = new RemoteResponseManager(in, charset, code, logger);
             rrm.process();
         } catch (RemoteSuccessException rse) {
             // save results
@@ -1107,7 +1110,8 @@ public class RemoteAdminCommand {
                         partIt.next(); // just throw it away
                     } else {
                         metadataErrors = new StringBuilder();
-                        commandModel = parseMetadata(partIt.next().getInputStream(), metadataErrors);
+                        Charset charset = HttpParser.getCharsetFromHeader(responseContentType);
+                        commandModel = parseMetadata(partIt.next().getInputStream(), charset, metadataErrors);
                         logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;
                     }
@@ -1122,16 +1126,16 @@ public class RemoteAdminCommand {
             throw new InvalidCommandException(metadataErrors.toString());
         }
         this.commandModelFromCache = false;
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
                     new Object[] { name, System.nanoTime() - startNanos });
         }
         //if (!omitCache) {
         try {
             AdminCacheUtils.getCache().put(createCommandCacheKey(), commandModel);
         } catch (Exception ex) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, AdminLoggerInfo.mCantPutToCache, createCommandCacheKey());
+            if (logger.isLoggable(WARNING)) {
+                logger.log(WARNING, AdminLoggerInfo.mCantPutToCache, createCommandCacheKey());
             }
         }
         //}
@@ -1163,15 +1167,16 @@ public class RemoteAdminCommand {
      * Parse the XML metadata for the command on the input stream.
      *
      * @param in the input stream
+     * @param charset
      * @return the set of ValidOptions
      */
-    private CommandModel parseMetadata(InputStream in, StringBuilder errors) {
-        if (logger.isLoggable(Level.FINER)) {
+    private CommandModel parseMetadata(InputStream in, Charset charset, StringBuilder errors) {
+        if (logger.isLoggable(FINER)) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 FileUtils.copy(in, baos);
                 in = new ByteArrayInputStream(baos.toByteArray());
-                String response = baos.toString();
+                String response = baos.toString(charset);
                 logger.finer("------- RAW METADATA RESPONSE ---------");
                 logger.finer(response);
                 logger.finer("------- RAW METADATA RESPONSE ---------");

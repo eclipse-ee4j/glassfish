@@ -125,7 +125,7 @@ public final class CreateDomainCommand extends CLICommand {
     @Override
     protected Collection<ParamModel> usageOptions() {
         Collection<ParamModel> opts = commandModel.getParameters();
-        Set<ParamModel> uopts = new LinkedHashSet<ParamModel>();
+        Set<ParamModel> uopts = new LinkedHashSet<>();
         ParamModel aPort = new ParamModelData(ADMIN_PORT, String.class, true, Integer.toString(CLIConstants.DEFAULT_ADMIN_PORT));
         ParamModel iPort = new ParamModelData(INSTANCE_PORT, String.class, true, Integer.toString(DEFAULT_INSTANCE_PORT));
         for (ParamModel pm : opts) {
@@ -469,7 +469,7 @@ public final class CreateDomainCommand extends CLICommand {
             logger.info(strings.get("LoginInfoStoredCreateDomain", user, dn, store.getName()));
         } catch (final Throwable e) {
             logger.warning(strings.get("LoginInfoNotStoredCreateDomain", user, dn));
-            printExceptionStackTrace(e);
+            logger.log(Level.FINER, "Could not save login!", e);
         }
     }
 

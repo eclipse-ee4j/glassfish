@@ -23,7 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class FelixUtil {
+/*
+ * THIS METHOD HAS BEEN COPIED FROM FELIX
+ * - because we need this call very early and Felix is not on classpath yet.
+ * See org.apache.felix.framework.util.Util class.
+ */
+class FelixUtil {
 
     private static final String DELIM_START = "${";
     private static final String DELIM_STOP  = "}";
@@ -53,10 +58,6 @@ public class FelixUtil {
                                     Map cycleMap, Properties configProps)
             throws IllegalArgumentException
     {
-        /*
-         * THIS METHOD HAS BEEN COPIED FROM FELIX
-         * http://svn.apache.org/repos/asf/felix/trunk/framework/src/main/java/org/apache/felix/framework/util/Util.java
-         */
         // If there is currently no cycle map, then create
         // one for detecting cycles for this invocation.
         if (cycleMap == null)

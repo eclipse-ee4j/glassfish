@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +29,8 @@ import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * @author Mitesh Meswani
  */
@@ -51,7 +54,7 @@ public class TextClassWriter implements ClassWriter {
             RestLogging.restLogger.log(Level.FINE, "Error creating file: {0} in {1}",
                     new String[] { className + ".java", generationDir.getAbsolutePath() });
         }
-        FileWriter fstream = new FileWriter(file);
+        FileWriter fstream = new FileWriter(file, UTF_8);
         writer = new BufferedWriter(fstream);
 
         writeCopyRightHeader();
@@ -72,6 +75,7 @@ public class TextClassWriter implements ClassWriter {
 
     private void writeCopyRightHeader() throws IOException {
         writer.write("/*\n");
+        writer.write(" * Copyright (c) 2024 Contributors to the Eclipse Foundation.\n");
         writer.write(" * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.\n");
         writer.write(" *\n");
         writer.write(" * This program and the accompanying materials are made available under the\n");

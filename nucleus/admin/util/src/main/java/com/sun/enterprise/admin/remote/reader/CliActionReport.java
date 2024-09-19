@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,7 @@
 
 package com.sun.enterprise.admin.remote.reader;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,7 +39,7 @@ public class CliActionReport extends ActionReport {
 
     protected Throwable exception = null;
     protected String actionDescription = null;
-    protected List<CliActionReport> subActions = new ArrayList<CliActionReport>();
+    protected List<CliActionReport> subActions = new ArrayList<>();
     protected ExitCode exitCode = ExitCode.SUCCESS;
     protected MessagePart topMessage = new MessagePart();
 
@@ -134,62 +133,9 @@ public class CliActionReport extends ActionReport {
     }
 
     @Override
-    public void setMessage(InputStream in) {
-        try {
-            if (in == null)
-                throw new NullPointerException("Internal Error - null InputStream");
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            copyStream(in, baos);
-            setMessage(baos.toString());
-        } catch (Exception ex) {
-            setActionExitCode(ExitCode.FAILURE);
-            setFailureCause(ex);
-        }
-    }
-
-    private void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) >= 0) {
-            out.write(buf, 0, len);
-        }
-
-        out.close();
-        in.close();
-    }
-
-    @Override
     public String getContentType() {
         throw new UnsupportedOperationException();
     }
-
-    @Override
-    public void setContentType(String s) {
-        throw new UnsupportedOperationException();
-    }
-
-    //    public static void getCombinedMessages(CliActionReport aReport, StringBuilder sb) {
-    //        if (aReport == null || sb == null)
-    //            return;
-    //        String mainMsg = ""; //this is the message related to the topMessage
-    //        String failMsg; //this is the message related to failure cause
-    //        // Other code in the server may write something like report.setMessage(exception.getMessage())
-    //        // and also set report.setFailureCause(exception). We need to avoid the duplicate message.
-    //        if (aReport.getMessage() != null && aReport.getMessage().length() != 0) {
-    //            if (sb.length() > 0) sb.append(EOL);
-    //            sb.append(aReport.getMessage());
-    //        }
-    //        if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && aReport.getFailureCause().getMessage().length() != 0) {
-    //            failMsg = aReport.getFailureCause().getMessage();
-    //            if (!failMsg.equals(mainMsg))
-    //                if (sb.length() > 0) sb.append(EOL);
-    //                sb.append(failMsg);
-    //        }
-    //        for (CliActionReport sub : aReport.subActions) {
-    //            getCombinedMessages(sub, sb);
-    //        }
-    //    }
 
     @Override
     public boolean hasSuccesses() {
@@ -210,7 +156,7 @@ public class CliActionReport extends ActionReport {
         if (null != ar.exitCode && ar.exitCode.equals(value)) {
             return true;
         }
-        Queue<CliActionReport> q = new LinkedList<CliActionReport>();
+        Queue<CliActionReport> q = new LinkedList<>();
         q.addAll(ar.subActions);
         while (!q.isEmpty()) {
             CliActionReport lar = q.remove();

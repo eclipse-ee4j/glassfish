@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -115,7 +117,7 @@ public class StringSubstitutionEngineTest {
     @Test
     public void testSubstitutionForEmptyComponent() {
         try {
-            engine.substituteComponents(new ArrayList<String>(1));
+            engine.substituteComponents(new ArrayList<>(1));
             fail("Allowing to peform substitution for empty Component.");
         } catch (StringSubstitutionException e) {
             assertEquals("No Component identifiers for substitution.", e.getMessage());
@@ -163,7 +165,7 @@ public class StringSubstitutionEngineTest {
     @Test
     public void testSubstitutionForEmptyGroup() {
         try {
-            engine.substituteGroups(new ArrayList<String>(1));
+            engine.substituteGroups(new ArrayList<>(1));
             fail("Allowing to peform substitution for empty Groups.");
         } catch (StringSubstitutionException e) {
             assertEquals("No Group identifiers for substitution.", e.getMessage());
@@ -227,7 +229,7 @@ public class StringSubstitutionEngineTest {
             destroy();
         }
         testFile = new File(_testFileName);
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile)))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile), UTF_8))) {
             writer.write("@ORACLE_HOME@ First word in first line");
             writer.newLine();
             writer.write("Second line last word @MW_HOME@");

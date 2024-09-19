@@ -18,11 +18,11 @@ package org.glassfish.main.test.app.applib;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -196,19 +196,13 @@ public class ApplicationLibraryTest {
         connection.setRequestMethod("GET");
         try {
             assertThat(connection.getResponseCode(), equalTo(200));
-            return readResponse(connection);
+            return HttpParser.readResponseInputStream(connection);
         } finally {
             connection.disconnect();
         }
     }
 
-    private String readResponse(HttpURLConnection connection) throws IOException {
-        try (InputStream inputStream = connection.getInputStream()) {
-            return new String(inputStream.readAllBytes()).trim();
-        }
-    }
-
-    private static File createAppLib(int version) throws IOException {
+    private static File createAppLib(int version) {
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class)
             .addClasses(LibraryResource.class)
             .addAsResource(
@@ -223,7 +217,7 @@ public class ApplicationLibraryTest {
         return appLib;
     }
 
-    private static File createWebApp() throws IOException {
+    private static File createWebApp() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
             .addClass(LibraryEndpoint.class)
             .addClass(LibraryApplication.class);

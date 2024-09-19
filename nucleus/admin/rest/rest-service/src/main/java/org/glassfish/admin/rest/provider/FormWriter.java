@@ -33,12 +33,14 @@ import java.util.Set;
 
 import org.jvnet.hk2.config.Dom;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author mh124079
  * @author Ludovic Champenois ludo@dev.java.net
  */
-@Produces("application/x-www-form-urlencoded")
+@Produces(MediaType.APPLICATION_FORM_URLENCODED)
 @Provider
 public class FormWriter implements MessageBodyWriter<Dom> {
     @Inject
@@ -66,7 +68,7 @@ public class FormWriter implements MessageBodyWriter<Dom> {
         //            out.write("</td></tr>".getBytes());
         //        }
         //        out.write(postamble.getBytes());
-        out.write(constructForm(data).getBytes());
+        out.write(constructForm(data).getBytes(UTF_8));
     }
 
     private String constructForm(Dom data) {

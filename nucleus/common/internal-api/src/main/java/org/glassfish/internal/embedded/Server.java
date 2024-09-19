@@ -181,7 +181,7 @@ public class Server {
     private static final Logger logger = Logger.getAnonymousLogger();
 
     private void setBootstrapProperties(BootstrapProperties props, EmbeddedFileSystem fs) {
-        props.setProperty("GlassFish_Platform", "Static");
+        props.setProperty("GlassFish_Platform", "Embedded");
         if (fs != null) {
             String instanceRoot = fs.instanceRoot != null ? fs.instanceRoot.getAbsolutePath() : null;
             String installRoot = fs.installRoot != null ? fs.installRoot.getAbsolutePath() : instanceRoot;

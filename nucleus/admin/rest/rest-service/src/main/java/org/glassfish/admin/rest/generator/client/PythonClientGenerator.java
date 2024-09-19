@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,8 +39,10 @@ import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.ConfigModel;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class PythonClientGenerator extends ClientGenerator {
-    private File baseDirectory;
+    private final File baseDirectory;
     private static String MSG_INSTALL = "To install the egg into your Python environment:  sudo easy_install " + ARTIFACT_NAME
             + "-VERSION-egg.zip";
 
@@ -52,7 +55,7 @@ public class PythonClientGenerator extends ClientGenerator {
     @Override
     public Map<String, URI> getArtifact() {
         ZipOutputStream zip = null;
-        Map<String, URI> artifacts = new HashMap<String, URI>();
+        Map<String, URI> artifacts = new HashMap<>();
         try {
             String ZIP_BASE_DIR = "glassfish-rest-client-VERSION".replace("VERSION", Version.getVersionNumber());
             String ZIP_GF_PACKAGE_DIR = ZIP_BASE_DIR + "/glassfish";
@@ -66,9 +69,9 @@ public class PythonClientGenerator extends ClientGenerator {
             zipFile.deleteOnExit();
             zip = new ZipOutputStream(new FileOutputStream(zipFile));
 
-            add(ZIP_GF_PACKAGE_DIR, "__init__.py", new ByteArrayInputStream("".getBytes()), zip);
+            add(ZIP_GF_PACKAGE_DIR, "__init__.py", new ByteArrayInputStream(new byte[0]), zip);
             //add(ZIP_BASE_DIR, "PKG-INFO", new ByteArrayInputStream(getFileContents("PKG-INFO").getBytes()), zip);
-            add(ZIP_BASE_DIR, "setup.py", new ByteArrayInputStream(getFileContents("setup.py").getBytes()), zip);
+            add(ZIP_BASE_DIR, "setup.py", new ByteArrayInputStream(getFileContents("setup.py").getBytes(UTF_8)), zip);
             addFileFromClasspath(ZIP_REST_PACKAGE_DIR, "__init__.py", zip);
             addFileFromClasspath(ZIP_REST_PACKAGE_DIR, "connection.py", zip);
             addFileFromClasspath(ZIP_REST_PACKAGE_DIR, "restclient.py", zip);
@@ -104,7 +107,7 @@ public class PythonClientGenerator extends ClientGenerator {
     }
 
     private String getFileContents(String fileName) {
-        try (Scanner scanner = new Scanner(getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName))) {
+        try (Scanner scanner = new Scanner(getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName), UTF_8)) {
             String contents = scanner.useDelimiter("\\Z").next();
             return contents.replace("VERSION", Version.getVersionNumber());
         }
@@ -121,7 +124,7 @@ public class PythonClientGenerator extends ClientGenerator {
             ZipEntry entry = new ZipEntry(sourcePath);
             target.putNextEntry(entry);
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[8192];
             while (true) {
                 int count = source.read(buffer);
                 if (count == -1) {

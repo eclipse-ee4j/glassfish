@@ -73,6 +73,8 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Adapter for REST interface
  *
@@ -134,7 +136,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
         RestLogging.restLogger.log(Level.FINER, "Received resource request: {0}", req.getRequestURI());
 
         try {
-            res.setCharacterEncoding(Constants.ENCODING);
+            res.setCharacterEncoding(UTF_8.name());
             if (latch.await(20L, TimeUnit.SECONDS)) {
                 if (serverEnvironment.isInstance()) {
                     if (!Method.GET.equals(req.getMethod()) && !getRestResourceProvider().enableModifAccessToInstances()) {
@@ -302,17 +304,17 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
             BaseProvider<ActionReportResult> provider;
             String type = getAcceptedMimeType(req);
             if ("xml".equals(type)) {
-                res.setContentType("application/xml");
+                res.setContentType("application/xml; charset=\"utf-8\"");
                 provider = new ActionReportResultXmlProvider();
             } else if ("json".equals(type)) {
-                res.setContentType("application/json");
+                res.setContentType("application/json; charset=\"utf-8\"");
                 provider = new ActionReportResultJsonProvider();
             } else {
-                res.setContentType("text/html");
+                res.setContentType("text/html; charset=\"utf-8\"");
                 provider = new ActionReportResultHtmlProvider();
             }
             res.setStatus(statusCode);
-            res.getOutputStream().write(provider.getContent(new ActionReportResult(report)).getBytes());
+            res.getOutputStream().write(provider.getContent(new ActionReportResult(report)).getBytes(UTF_8));
             res.getOutputStream().flush();
             res.finish();
         } catch (Exception e) {

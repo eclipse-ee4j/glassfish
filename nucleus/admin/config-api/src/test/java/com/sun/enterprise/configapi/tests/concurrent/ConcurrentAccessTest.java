@@ -32,6 +32,7 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import static org.glassfish.tests.utils.junit.HK2JUnit5Extension.HK2_CONFIG_LOCK_TIME_OUT_IN_SECONDS;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -40,24 +41,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 @ExtendWith(ConfigApiJunit5Extension.class)
 public class ConcurrentAccessTest {
+
     @Inject
     private ServiceLocator locator;
     @Inject
     private Logger logger;
 
+
     @Test
     public void waitAndSuccessTest() throws Exception {
-        ConfigSupport.lockTimeOutInSeconds = 1;
-        runTest(200);
+        runTest(100);
     }
 
     @Test
     public void waitAndTimeOutTest() throws Exception {
-        ConfigSupport.lockTimeOutInSeconds = 1;
-        assertThrows(TransactionFailure.class, () -> runTest(1200));
+        assertThrows(TransactionFailure.class, () -> runTest(HK2_CONFIG_LOCK_TIME_OUT_IN_SECONDS * 1000 + 100));
     }
 
-    private void runTest(final int waitTime) throws Exception {
+    private void runTest(final int waitTimeInMillis) throws Exception {
         final Domain domain = locator.getService(Domain.class);
 
         // my lock.
@@ -73,7 +74,7 @@ public class ConcurrentAccessTest {
             logger.fine("got the lock at " + (System.currentTimeMillis() - begin));
             lock.release();
             try {
-                Thread.sleep(waitTime);
+                Thread.sleep(waitTimeInMillis);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,20 +29,22 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 import org.jvnet.hk2.config.ConfigModel;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author jdlee
  */
 class PythonClientClassWriter implements ClientClassWriter {
-    private String className;
-    private StringBuilder source;
-    private File packageDir;
+    private final String className;
+    private final StringBuilder source;
+    private final File packageDir;
     private static String TMPL_CTOR = "from restclientbase import *\n\nclass CLASS(RestClientBase):\n"
             + "    def __init__(self, connection, parent, name = None):\n" + "        self.name = name\n"
             + "        RestClientBase.__init__(self, connection, parent, name)\n" + "        self.parent = parent\n"
             + "        self.connection = connection\n\n" + "    def getRestUrl(self):\n"
             + "        return self.getParent().getRestUrl() + self.getSegment() + (('/' + self.name) if self.name else '')\n";
-    private String TMPL_GET_SEGMENT = "    def getSegment(self):\n" + "        return '/SEGMENT'\n";
+    private final String TMPL_GET_SEGMENT = "    def getSegment(self):\n" + "        return '/SEGMENT'\n";
     private static String TMPL_COMMAND_METHOD = "\n    def COMMAND(self PARAMS, optional={}):\n" + "MERGE"
             + "        return self.execute('/PATH', 'METHOD', optional, MULTIPART)\n";
     private static String TMPL_GETTER_AND_SETTER = "\n    def getMETHOD(self):\n" + "        return self.getValue('FIELD')\n\n"
@@ -49,7 +52,7 @@ class PythonClientClassWriter implements ClientClassWriter {
     private static String TMPL_GET_CHILD_RESOURCE = "\n    def getELEMENT(self, name):\n" + "        from IMPORT import CHILD\n"
             + "        child = CHILD(self.connection, self, name)\n" + "        return child if (child.status == 200) else None\n";
 
-    public PythonClientClassWriter(ConfigModel model, String className, Class parent, File baseDirectory) {
+    PythonClientClassWriter(ConfigModel model, String className, Class parent, File baseDirectory) {
         this.className = className;
 
         packageDir = baseDirectory;
@@ -137,7 +140,7 @@ class PythonClientClassWriter implements ClientClassWriter {
                     throw new RuntimeException("Unable to create new file"); //i18n
                 }
                 classFile.deleteOnExit();
-                writer = new BufferedWriter(new FileWriter(classFile));
+                writer = new BufferedWriter(new FileWriter(classFile, UTF_8));
                 writer.append(source.toString());
             } catch (IOException ioe) {
                 throw new RuntimeException(ioe);

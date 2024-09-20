@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -894,7 +895,7 @@ public abstract class GFLauncher {
         OutputStreamWriter osw = null;
         BufferedWriter bw = null;
         try {
-            osw = new OutputStreamWriter(os);
+            osw = new OutputStreamWriter(os, Charset.defaultCharset());
             bw = new BufferedWriter(osw);
             for (String token : callerParameters.securityTokens) {
                 bw.write(token);

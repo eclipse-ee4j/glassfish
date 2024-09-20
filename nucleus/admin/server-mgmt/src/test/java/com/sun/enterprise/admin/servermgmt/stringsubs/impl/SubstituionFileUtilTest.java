@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +24,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,7 +83,7 @@ public class SubstituionFileUtilTest {
         assertEquals(0, dir.list().length);
 
         File testFile = new File(dir, "testFile.txt");
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile)))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(testFile), UTF_8))) {
             writer.write("Testing: " + SubstitutionFileUtil.class.getSimpleName());
         }
         SubstitutionFileUtil.removeDir(dir);

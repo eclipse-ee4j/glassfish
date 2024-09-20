@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,10 +22,41 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * @author Rajeshwar Patil
  */
 public class XmlInputObject extends InputObject {
+
+    /** The Character '&'. */
+    public static final Character AMP = Character.valueOf('&');
+
+    /** The Character '''. */
+    public static final Character APOS = Character.valueOf('\'');
+
+    /** The Character '!'. */
+    public static final Character BANG = Character.valueOf('!');
+
+    /** The Character '='. */
+    public static final Character EQ = Character.valueOf('=');
+
+    /** The Character '>'. */
+    public static final Character GT = Character.valueOf('>');
+
+    /** The Character '<'. */
+    public static final Character LT = Character.valueOf('<');
+
+    /** The Character '?'. */
+    public static final Character QUEST = Character.valueOf('?');
+
+    /** The Character '"'. */
+    public static final Character QUOT = Character.valueOf('"');
+
+    /** The Character '/'. */
+    public static final Character SLASH = Character.valueOf('/');
+
+    private final XmlInputReader xmlReader;
 
     /**
      * Construct a XmlInputObjectfrom a input stream.
@@ -33,7 +65,7 @@ public class XmlInputObject extends InputObject {
      * @exception InputException If there is a syntax error in the source input stream or a duplicate key.
      */
     public XmlInputObject(InputStream inputstream) throws InputException, IOException {
-        this(readAsString(inputstream));
+        this(new String(inputstream.readAllBytes(), UTF_8));
     }
 
     /**
@@ -166,7 +198,7 @@ public class XmlInputObject extends InputObject {
                         if (!(token instanceof String)) {
                             throw reader.error("Missing value");
                         }
-                        subContext.put(string, XmlInputObject.stringToValue((String) token));
+                        subContext.put(string, InputObject.stringToValue((String) token));
                         token = null;
                     } else {
                         subContext.put(string, "");
@@ -192,7 +224,7 @@ public class XmlInputObject extends InputObject {
                         } else if (token instanceof String) {
                             string = (String) token;
                             if (string.length() > 0) {
-                                subContext.put("content", XmlInputObject.stringToValue(string));
+                                subContext.put("content", InputObject.stringToValue(string));
                             }
 
                             // Nested element
@@ -215,33 +247,4 @@ public class XmlInputObject extends InputObject {
             }
         }
     }
-
-    /** The Character '&'. */
-    public static final Character AMP = Character.valueOf('&');
-
-    /** The Character '''. */
-    public static final Character APOS = Character.valueOf('\'');
-
-    /** The Character '!'. */
-    public static final Character BANG = Character.valueOf('!');
-
-    /** The Character '='. */
-    public static final Character EQ = Character.valueOf('=');
-
-    /** The Character '>'. */
-    public static final Character GT = Character.valueOf('>');
-
-    /** The Character '<'. */
-    public static final Character LT = Character.valueOf('<');
-
-    /** The Character '?'. */
-    public static final Character QUEST = Character.valueOf('?');
-
-    /** The Character '"'. */
-    public static final Character QUOT = Character.valueOf('"');
-
-    /** The Character '/'. */
-    public static final Character SLASH = Character.valueOf('/');
-
-    private XmlInputReader xmlReader;
 }

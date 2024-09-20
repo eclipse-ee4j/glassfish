@@ -29,6 +29,7 @@ import com.sun.enterprise.util.Utility;
 
 import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -52,6 +53,7 @@ import javax.security.auth.login.LoginException;
 import javax.sql.DataSource;
 
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
@@ -411,7 +413,7 @@ public final class JDBCRealm extends DigestRealmBase {
     private char[] hashPassword(char[] password) throws CharacterCodingException {
         byte[] bytes = null;
         char[] result = null;
-        String charSet = getProperty(PARAM_CHARSET);
+        Charset charSet = HttpParser.getCharset(getProperty(PARAM_CHARSET));
         bytes = Utility.convertCharArrayToByteArray(password, charSet);
 
         if (messageDigest != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,6 +47,8 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Generic implementation of the Sniffer service that can be programmatically instantiated
@@ -337,8 +339,7 @@ public abstract class GenericSniffer implements Sniffer {
         XMLEventReader rdr = null;
         try {
             is.mark(Integer.MAX_VALUE);
-            rdr = xmlInputFactory.createXMLEventReader(
-                    new InputStreamReader(is));
+            rdr = xmlInputFactory.createXMLEventReader(new InputStreamReader(is, UTF_8));
             while (rdr.hasNext()) {
                 final XMLEvent ev = rdr.nextEvent();
                 if (ev.isStartDocument()) {

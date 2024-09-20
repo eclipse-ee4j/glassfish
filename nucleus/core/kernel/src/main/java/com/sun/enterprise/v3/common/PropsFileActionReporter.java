@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,6 @@ import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +31,8 @@ import java.util.jar.Manifest;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Action reporter to a manifest file
  * @author Jerome Dochez
@@ -38,6 +40,10 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "hk2-agent")
 @PerLookup
 public class PropsFileActionReporter extends ActionReporter {
+
+    private boolean useMainChildrenAttr;
+    private final Set<String> fixedNames = new TreeSet<>();
+    private static final int LONGEST = 62;
 
     @Override
     public void setMessage(String message) {
@@ -66,7 +72,7 @@ public class PropsFileActionReporter extends ActionReporter {
         StringBuilder sb = new StringBuilder();
         getCombinedMessages(this, sb);
         attr.putValue("message", sb.toString());
-        if (part.getProps().size() > 0) {
+        if (!part.getProps().isEmpty()) {
             String keys = null;
             for (Map.Entry entry : part.getProps().entrySet()) {
                 String key = fixKey(entry.getKey().toString());
@@ -77,7 +83,7 @@ public class PropsFileActionReporter extends ActionReporter {
 
             attr.putValue("keys", keys);
         }
-        if (part.getChildren().size() > 0) {
+        if (!part.getChildren().isEmpty()) {
             attr.putValue("children-type", part.getChildrenType());
             attr.putValue("use-main-children-attribute", "true");
             StringBuilder keys = null;
@@ -86,11 +92,7 @@ public class PropsFileActionReporter extends ActionReporter {
                 // delimiter
                 String cm = child.getMessage();
                 if (cm != null) {
-                    try {
-                        cm = URLEncoder.encode(cm, "UTF-8");
-                    } catch (UnsupportedEncodingException ex) {
-                        // ignore - leave cm as it is
-                    }
+                    cm = URLEncoder.encode(cm, UTF_8);
                 }
                 String newPrefix = (prefix == null ? cm : prefix + "." + cm);
 
@@ -213,7 +215,4 @@ public class PropsFileActionReporter extends ActionReporter {
         }
         return m;
     }
-    private boolean useMainChildrenAttr = false;
-    private Set<String> fixedNames = new TreeSet<>();
-    private static final int LONGEST = 62;
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +23,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -72,9 +74,7 @@ public class XMLContentActionReporter extends ActionReporter {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-
             Document d = db.newDocument();
-
             d.appendChild(writeActionReport(d, this));
             writeXML(d, os);
         } catch (ParserConfigurationException pex) {
@@ -163,13 +163,12 @@ public class XMLContentActionReporter extends ActionReporter {
      * @param os    the output stream
      * @throws TransformerException if anything goes wrong
      */
-    private void writeXML(Document doc, OutputStream os)
-            throws TransformerException {
+    private void writeXML(Document doc, OutputStream os) throws TransformerException {
         Source source = new DOMSource(doc);
-
         Result result = new StreamResult(os);
-
-        Transformer xformer = TransformerFactory.newInstance().newTransformer();
-        xformer.transform(source, result);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
+        transformer.transform(source, result);
     }
 }

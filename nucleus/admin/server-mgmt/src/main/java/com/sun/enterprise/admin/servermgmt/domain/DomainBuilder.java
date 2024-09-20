@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -118,7 +118,10 @@ public class DomainBuilder {
             if (je == null) {
                 throw new DomainException(format("Missing mandatory file {0}.", TEMPLATE_INFO_XML));
             }
-            TemplateInfoHolder templateInfoHolder = new TemplateInfoHolder(_templateJar.getInputStream(je), templateJarPath);
+            final TemplateInfoHolder templateInfoHolder;
+            try (InputStream is = _templateJar.getInputStream(je)) {
+                templateInfoHolder = new TemplateInfoHolder(is, templateJarPath);
+            }
             _extractedEntries.add(TEMPLATE_INFO_XML);
 
             // Loads string substitution XML.

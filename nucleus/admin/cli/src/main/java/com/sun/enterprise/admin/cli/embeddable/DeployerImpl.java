@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
@@ -48,6 +49,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * This is an implementation of {@link Deployer}. Unlike the other EmbeddedDeployer, this deployer uses admin command
@@ -143,7 +146,14 @@ public class DeployerImpl implements Deployer {
         CommandExecutorImpl executer = habitat.getService(CommandExecutorImpl.class);
         try {
             ActionReport actionReport = executer.executeCommand("undeploy", newParams);
-            actionReport.writeReport(System.out);
+            if (UTF_8.equals(Charset.defaultCharset())) {
+                actionReport.writeReport(System.out);
+                return;
+            }
+            // We have to reencode.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
+            actionReport.writeReport(baos);
+            System.out.print(baos.toString(UTF_8));
         } catch (CommandException e) {
             throw new GlassFishException(e);
         } catch (IOException e) {
@@ -190,7 +200,7 @@ public class DeployerImpl implements Deployer {
         File payloadZip = null;
         try {
             // Add the report to the payload to mimic what the normal non-embedded server does.
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
             actionReport.writeReport(baos);
             final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             final Properties reportProps = new Properties();

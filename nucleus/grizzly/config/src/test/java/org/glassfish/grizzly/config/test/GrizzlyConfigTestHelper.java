@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,6 @@ package org.glassfish.grizzly.config.test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URLConnection;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -38,6 +36,8 @@ import org.glassfish.grizzly.http.server.HttpServerFilter;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.jvnet.hk2.config.Dom;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public final class GrizzlyConfigTestHelper {
 
     private final Class<?> test;
@@ -48,16 +48,8 @@ public final class GrizzlyConfigTestHelper {
 
 
     public String getContent(URLConnection connection) {
-        try (InputStream inputStream = connection.getInputStream();
-            InputStreamReader reader = new InputStreamReader(inputStream)
-        ) {
-            StringBuilder builder = new StringBuilder();
-            char[] buffer = new char[1024];
-            int read;
-            while ((read = reader.read(buffer)) != -1) {
-                builder.append(buffer, 0, read);
-            }
-            return builder.toString();
+        try {
+            return new String(connection.getInputStream().readAllBytes(), UTF_8);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot get content from " + connection, e);
         }
@@ -71,7 +63,7 @@ public final class GrizzlyConfigTestHelper {
 
         final File file = new File(dir, "index.html");
         file.deleteOnExit();
-        try (FileWriter writer = new FileWriter(file)) {
+        try (FileWriter writer = new FileWriter(file, UTF_8)) {
             writer.write("<html><body>You've found the server on port " + listener.getPort() + "</body></html>");
         } catch (IOException e) {
             throw new IllegalStateException("Could not add static http handler.", e);

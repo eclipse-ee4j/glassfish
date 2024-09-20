@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +25,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.Provider;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -36,6 +34,8 @@ import java.util.Map;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
 import org.glassfish.admin.rest.utils.Util;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -53,14 +53,8 @@ public class JsonPropertyListReader implements MessageBodyReader<List<Map<String
     @Override
     public List<Map<String, String>> readFrom(Class<List<Map<String, String>>> type, Type genericType, Annotation[] annotations,
             MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            StringBuilder sb = new StringBuilder();
-            String line = reader.readLine();
-            while (line != null) {
-                sb.append(line);
-                line = reader.readLine();
-            }
-            return MarshallingUtils.getPropertiesFromJson(sb.toString());
+        try {
+            return MarshallingUtils.getPropertiesFromJson(new String(in.readAllBytes(), UTF_8));
         } catch (Exception exception) {
             throw new WebApplicationException(exception, Response.Status.INTERNAL_SERVER_ERROR);
         }

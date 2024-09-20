@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,9 +36,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.codehaus.jettison.mapped.MappedNamespaceConvention;
 import org.codehaus.jettison.mapped.MappedXMLStreamWriter;
-import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestLogging;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Abstract implementation for entity writers to STaX API. This supports XML and JSON.
@@ -94,7 +96,7 @@ public abstract class AbstractStaxProvider<T> extends BaseProvider<T> {
     }
 
     protected static XMLStreamWriter getXmlWriter(final OutputStream os, boolean indent) throws XMLStreamException {
-        XMLStreamWriter wr = XML_FACTORY.createXMLStreamWriter(os, Constants.ENCODING);
+        XMLStreamWriter wr = XML_FACTORY.createXMLStreamWriter(os, UTF_8.name());
         if (indent) {
             wr = new IndentingXMLStreamWriter(wr);
         }
@@ -102,7 +104,7 @@ public abstract class AbstractStaxProvider<T> extends BaseProvider<T> {
     }
 
     protected static XMLStreamWriter getJsonWriter(final OutputStream os, boolean indent) throws UnsupportedEncodingException {
-        return new MappedXMLStreamWriter(JSON_CONVENTION, new OutputStreamWriter(os, Constants.ENCODING));
+        return new MappedXMLStreamWriter(JSON_CONVENTION, new OutputStreamWriter(os, UTF_8.name()));
     }
 
     /**
@@ -149,11 +151,11 @@ public abstract class AbstractStaxProvider<T> extends BaseProvider<T> {
             PrePostFixedWriter writer = getWriter(mediaType, entityStream, super.getFormattingIndentLevel() > -1);
             //Write it
             if (writer.getPrefix() != null) {
-                entityStream.write(writer.getPrefix().getBytes(Constants.ENCODING));
+                entityStream.write(writer.getPrefix().getBytes(UTF_8));
             }
             writeContentToStream(proxy, writer.getWriter());
             if (writer.getPostfix() != null) {
-                entityStream.write(writer.getPostfix().getBytes(Constants.ENCODING));
+                entityStream.write(writer.getPostfix().getBytes(UTF_8));
             }
         } catch (XMLStreamException uee) {
             RestLogging.restLogger.log(Level.SEVERE, RestLogging.CANNOT_MARSHAL, uee);

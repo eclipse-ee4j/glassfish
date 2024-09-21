@@ -1,6 +1,25 @@
 # Eclipse GlassFish 7.x Downloads
 
 
+### GlassFish 7.0.17
+
+GlassFish 7.0.17 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 23. MicroProfile support requires JDK 17 or higher.
+
+In this summer 2024 release of GlassFish we did a lot of maintenance in which we will continue in future releases. We fixed several security issues and the build now passes also in Java 23. We welcome feedback - if you notice that something doesn't work as expected, feel free to create an issue or even better create your own pull request.
+
+Download:
+
+* [Eclipse GlassFish 7.0.17, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.17.zip)
+* [Eclipse GlassFish 7.0.17, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.17.zip)
+* [Eclipse GlassFish Embedded 7.0.17, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.17/jar)
+* [Eclipse GlassFish Embedded 7.0.17, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.17/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.17 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.17)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
+
 ### GlassFish 7.0.16
 
 GlassFish 7.0.16 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.

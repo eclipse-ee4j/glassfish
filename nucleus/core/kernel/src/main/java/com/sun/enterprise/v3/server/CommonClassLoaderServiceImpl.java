@@ -32,10 +32,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
@@ -70,7 +73,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     /**
      * The common classloader.
      */
-    private ClassLoader commonClassLoader;
+    private GlassfishUrlClassLoader commonClassLoader;
 
     @Inject
     APIClassLoaderServiceImpl acls;
@@ -127,20 +130,15 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         // We no longer add derby jars to launcher class loader, we add them to common class loader instead.
         cpElements.addAll(findDerbyClient());
         List<URL> urls = new ArrayList<>();
-        StringBuilder cp = new StringBuilder();
         for (File f : cpElements) {
             try {
                 urls.add(f.toURI().toURL());
-                if (cp.length() > 0) {
-                    cp.append(File.pathSeparator);
-                }
-                cp.append(f.getAbsolutePath());
             } catch (MalformedURLException e) {
                 logger.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry,
                     new Object[] {f, e});
             }
         }
-        commonClassPath = cp.toString();
+        commonClassPath = urlsToClassPath(urls.stream());
         if (urls.isEmpty()) {
             logger.logp(Level.FINE, "CommonClassLoaderManager",
                 "Skipping creation of CommonClassLoader as there are no libraries available", "urls = {0}", urls);
@@ -155,8 +153,30 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         return commonClassLoader != null ? commonClassLoader : APIClassLoader;
     }
 
+    /**
+     * Adds a classpath element to the common classloader if the classloader supports it.
+     * @param url URL of the classpath element to add
+     * @throws UnsupportedOperationException If adding not supported by the classloader
+     */
+    public void addToClassPath(URL url) {
+        if (commonClassLoader != null) {
+            commonClassLoader.addURL(url);
+        } else {
+            commonClassLoader = new GlassfishUrlClassLoader(new URL[] {url}, APIClassLoader);
+        }
+        commonClassPath = urlsToClassPath(Arrays.stream(commonClassLoader.getURLs()));
+    }
+
     public String getCommonClassPath() {
         return commonClassPath;
+    }
+
+    private static String urlsToClassPath(Stream<URL> urls) {
+        return urls
+                .map(URL::getFile)
+                .filter(Predicate.not(String::isBlank))
+                .map(file -> new File(file).getAbsolutePath())
+                .collect(Collectors.joining(File.pathSeparator));
     }
 
     private List<File> findDerbyClient() {

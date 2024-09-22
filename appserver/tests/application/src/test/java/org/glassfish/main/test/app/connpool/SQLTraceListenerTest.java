@@ -78,10 +78,7 @@ public class SQLTraceListenerTest {
 
         result = ASADMIN.exec("add-library", lib.getAbsolutePath());
         assertThat(result, asadminOK());
-
-        // add-library requires restart
-        result = ASADMIN.exec("restart-domain");
-        assertThat(result, asadminOK());
+        // add-library shouldn't require a restart anymore
 
         DOMAIN_SETTINGS.backupDerbyPoolSettings();
         DOMAIN_SETTINGS.setDerbyPoolEmbededded();

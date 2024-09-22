@@ -219,6 +219,16 @@ By default, {productName} Embedded is started with the following configuration:
 - HTTP listener enabled on port 8080
 - HTTPS listener disabled
 
+It's also possible to start {{productName} on command line with an alternative way, via the main class:
+
+```
+    java -cp glassfish-embedded.jar org.glassfish.runnablejar.UberMain
+
+```
+
+Nnote that this way of starting will require some `--add-opens` and `--add-exports` Java arguments)
+
+
 === Examples of Running Embedded {productName} from Command Line
 
 ==== Example 1: Run an application from command line    
@@ -263,6 +273,9 @@ java -jar glassfish-embedded-all.jar [--properties=FILE]
     [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--logLevel=LEVEL] 
     [--logProperties=FILE] [--noInfo] [--shut-down, --shutdown, --stop] 
     [--help] [applications or admin commands...]
+```
+
+```
 ```
 
 `--properties=FILE`

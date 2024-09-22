@@ -6,6 +6,13 @@ NAME
 SYNOPSIS
     java -jar glassfish-embedded.jar ${ARGUMENTS}
 
+    or
+
+    java -cp glassfish-embedded.jar org.glassfish.runnablejar.UberMain [args]
+
+    (note that the "java -cp" option will require some "--add-opens" and 
+      "--add-exports" Java arguments)
+
 DESCRIPTION
     GlassFish Embedded can be executed as an executable JAR file. This starts
     the server and configures it according to the given arguments or

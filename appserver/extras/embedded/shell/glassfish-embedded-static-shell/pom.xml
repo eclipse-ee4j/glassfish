@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -35,7 +35,8 @@
     <properties>
         <path.derby>../../../javadb/lib</path.derby>
         <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
-    </properties>
+        <path.bootstrap>../bootstrap</path.bootstrap>
+        <classpath.bootstrap>${path.bootstrap}/grizzly-npn-api.jar ${path.bootstrap}/glassfish-jul-extension.jar</classpath.bootstrap>        </properties>
 
     <dependencies>
         <dependency>
@@ -105,18 +106,18 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-           <groupId>org.glassfish.main.deployment</groupId>
-           <artifactId>nucleus-dtds</artifactId>
-           <version>${project.version}</version>
-           <type>zip</type>
-           <optional>true</optional>
+            <groupId>org.glassfish.main.deployment</groupId>
+            <artifactId>nucleus-dtds</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+            <optional>true</optional>
         </dependency>
         <dependency>
-           <groupId>org.glassfish.main.deployment</groupId>
-           <artifactId>nucleus-schemas</artifactId>
-           <version>${project.version}</version>
-           <type>zip</type>
-           <optional>true</optional>
+            <groupId>org.glassfish.main.deployment</groupId>
+            <artifactId>nucleus-schemas</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -230,12 +231,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-           <groupId>org.glassfish.main.batch</groupId>
-           <artifactId>batch-databases</artifactId>
-           <version>${project.version}</version>
-           <type>zip</type>
-           <optional>true</optional>
-       </dependency>
+            <groupId>org.glassfish.main.batch</groupId>
+            <artifactId>batch-databases</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>jakarta.batch</groupId>
             <artifactId>jakarta.batch-api</artifactId>
@@ -465,6 +466,12 @@
         <dependency>
             <groupId>org.glassfish.main.grizzly</groupId>
             <artifactId>nucleus-grizzly-all</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.grizzly</groupId>
+            <artifactId>glassfish-grizzly-extra-all</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -1128,9 +1135,9 @@
             <optional>true</optional>
         </dependency>
 
-       <!-- glassfish-jersey -->
+        <!-- glassfish-jersey -->
         <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <optional>true</optional>
@@ -1161,7 +1168,7 @@
             <optional>true</optional>
         </dependency>
         <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-processing</artifactId>
             <optional>true</optional>
@@ -1383,7 +1390,8 @@
                         </manifest>
                         <manifestEntries>
                             <Bundle-SymbolicName>org.glassfish.embedded.static-shell</Bundle-SymbolicName>
-                            <Class-Path>${classpath.derby}</Class-Path>
+                            <Class-Path>${classpath.derby} ${classpath.bootstrap}</Class-Path>
+                            <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

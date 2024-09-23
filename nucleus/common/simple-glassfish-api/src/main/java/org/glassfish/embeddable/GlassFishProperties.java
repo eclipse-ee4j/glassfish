@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -176,6 +176,10 @@ public class GlassFishProperties {
     /**
      * Set the port number for a network listener that the GlassFish server
      * should use.
+     *
+     * In the default configuration, all listeners are disabled. This method will enable the listener if it's disabled.
+     * If the port is 0 or a negative value, it will disable the network listener.
+     *
      * <p/>
      * Examples:
      * <p/>
@@ -184,6 +188,7 @@ public class GlassFishProperties {
      * <pre>
      *      setPort("http-listener", 8080); // GlassFish will listen on HTTP port 8080
      *      setPort("https-listener", 8181); // GlassFish will listen on HTTPS port 8181
+     *      setPort("http-listener", 0); // GlassFish will disable the HTTP listener
      * </pre>
      * <p/>
      * 2. When the custom configuration file (domain.xml) is used, then the
@@ -207,8 +212,12 @@ public class GlassFishProperties {
         if (networkListener != null) {
             String key = String.format(NETWORK_LISTENER_KEY, networkListener);
             if (key != null) {
-                gfProperties.setProperty(key + ".port", Integer.toString(port));
-                gfProperties.setProperty(key + ".enabled", "true");
+                if (port <= 0) {
+                    gfProperties.setProperty(key + ".enabled", "false");
+                } else {
+                    gfProperties.setProperty(key + ".port", Integer.toString(port));
+                    gfProperties.setProperty(key + ".enabled", "true");
+                }
             }
         }
     }

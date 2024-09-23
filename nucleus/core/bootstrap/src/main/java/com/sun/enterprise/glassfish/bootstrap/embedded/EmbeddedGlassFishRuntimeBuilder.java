@@ -17,24 +17,20 @@
 
 package com.sun.enterprise.glassfish.bootstrap.embedded;
 
-import com.sun.enterprise.glassfish.bootstrap.UberMain;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.Main;
-import com.sun.enterprise.module.bootstrap.Which;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +49,7 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
     private static final Logger LOG = LogFacade.BOOTSTRAP_LOGGER;
     private static final String JAR_EXT = ".jar";
     private static final Set<String> MODULE_EXCLUDES = Set.of("jsftemplating.jar", "gf-client-module.jar");
+    public static boolean addModuleJars = true;
 
     @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
@@ -109,29 +106,9 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private List<URL> getModuleJarURLs(String installRoot) {
-        if(installRoot == null) {
+        if(installRoot == null || !addModuleJars) {
             return new ArrayList<>();
         }
-        JarFile jarfile = null;
-        try {
-            // When running off the uber jar don't add extras module URLs to classpath.
-            jarfile = new JarFile(Which.jarFile(getClass()));
-            String mainClassName = jarfile.getManifest().getMainAttributes().getValue("Main-Class");
-            if (UberMain.class.getName().equals(mainClassName)) {
-                return List.of();
-            }
-        } catch (Exception ex) {
-            LOG.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
-        } finally {
-            if (jarfile != null) {
-                try {
-                    jarfile.close();
-                } catch (IOException ex) {
-                    // ignored
-                }
-            }
-        }
-
         File modulesDir = new File(installRoot, "modules/");
         final File autostartModulesDir = new File(modulesDir, "autostart/");
         final List<URL> moduleJarURLs = new ArrayList<>();

@@ -4,7 +4,7 @@ layout: documentation
 
 # Eclipse GlassFish Documentation
 
-## Current Release - 7.0.16 {#current}
+## Current Release - 7.0.17 {#current}
 
 * [Add On Component Development Guide](docs/latest/add-on-component-development-guide.html)
   ([pdf](docs/latest/add-on-component-development-guide.pdf))

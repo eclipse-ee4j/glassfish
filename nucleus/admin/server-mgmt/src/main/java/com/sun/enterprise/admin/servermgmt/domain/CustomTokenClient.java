@@ -116,7 +116,7 @@ public class CustomTokenClient {
                             // Find next available unused port by incrementing the port value by 1
                             while (!NetUtils.isPortFree(port) && !usedPorts.contains(port)) {
                                 if (port > NetUtils.MAX_PORT) {
-                                    throw new DomainException(format("No free port available in range {0} - {1} or it is prohibited.", firstPortTried, port));
+                                    throw new DomainException(format("No free port available in range {0} - {1} or it is prohibited.", firstPortTried, NetUtils.MAX_PORT));
                                 }
                                 port++;
                             }

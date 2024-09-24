@@ -19,6 +19,7 @@ package org.glassfish.config.support;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -77,7 +78,7 @@ import static java.util.logging.Level.WARNING;
  */
 public abstract class DomainXml implements Populator {
 
-    private static final Logger LOG = Logger.getLogger(DomainXml.class.getName());
+    private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
 
     @Inject
     StartupContext context;

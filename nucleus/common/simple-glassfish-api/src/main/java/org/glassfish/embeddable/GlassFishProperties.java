@@ -17,6 +17,8 @@
 
 package org.glassfish.embeddable;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Properties;
 
 /**
@@ -135,7 +137,7 @@ public class GlassFishProperties {
      * Unless specified, the configuration file is operated on read only mode.
      * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
      *
-     * @param configFileURI Location of configuration file.
+     * @param configFileURI Location of configuration file. File path, or full URI with the schema, e.g. file:
      */
     public void setConfigFileURI(String configFileURI) {
         gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI);
@@ -148,6 +150,15 @@ public class GlassFishProperties {
      */
     public String getConfigFileURI() {
         return gfProperties.getProperty(CONFIG_FILE_URI_PROP_NAME);
+    }
+
+    /**
+     * Get the absolute URI, with schema, set using {@link #setConfigFileURI(String)}. Internally uses {@link #filePathToAbsoluteURI(java.lang.String)}.
+     *
+     * @return The configurationFileURI set using {@link #setConfigFileURI(String)} converted to URI
+     */
+    public URI getAbsoluteConfigFileURI() {
+        return filePathToAbsoluteURI(getConfigFileURI());
     }
 
     /**
@@ -243,5 +254,23 @@ public class GlassFishProperties {
             }
         }
         return port;
+    }
+
+    /**
+     * Converts to absolute URI with absolute path.
+     * If the filePath doesn't contain schema, it will add file: schema
+     *
+     * @param filePath Path to create the URI
+     * @return absolute URI
+     */
+    public static URI filePathToAbsoluteURI(String filePath) {
+        if (filePath == null) {
+            return null;
+        }
+        URI uri = URI.create(filePath);
+        if (!uri.isAbsolute()) {
+            return new File(filePath).getAbsoluteFile().toURI();
+        }
+        return uri;
     }
 }

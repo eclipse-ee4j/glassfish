@@ -199,9 +199,9 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             }
 
             // If the user has specified a custom domain.xml then copy it.
-            String configFileURI = gfProps.getConfigFileURI();
+            URI configFileURI = gfProps.getAbsoluteConfigFileURI();
             if(configFileURI != null) {
-                copy(URI.create(configFileURI).toURL(), new File(instanceConfigDir, "domain.xml"), true);
+                copy(configFileURI.toURL(), new File(instanceConfigDir, "domain.xml"), true);
             }
         } catch (Exception ex) {
             LOG.log(SEVERE, "Failed to create instanceRoot", ex);

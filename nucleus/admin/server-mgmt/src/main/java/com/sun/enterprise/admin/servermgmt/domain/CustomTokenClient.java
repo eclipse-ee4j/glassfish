@@ -101,6 +101,7 @@ public class CustomTokenClient {
                                 throw new DomainException(format("Given port {0} is not free.", port));
                             }
                         } else {
+                          Integer firstPortTried = port;
                             if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
                                 PortTypeDetails portTypeDetails = (PortTypeDetails) token.getTokenTypeDetails();
                                 port = Integer.parseInt(portBase) + Integer.parseInt(portTypeDetails.getBaseOffset());
@@ -115,7 +116,7 @@ public class CustomTokenClient {
                             // Find next available unused port by incrementing the port value by 1
                             while (!NetUtils.isPortFree(port) && !usedPorts.contains(port)) {
                                 if (port > NetUtils.MAX_PORT) {
-                                    throw new DomainException("No free port available or it is prohibited.");
+                                    throw new DomainException(format("No free port available in range {0} - {1} or it is prohibited.", firstPortTried, port));
                                 }
                                 port++;
                             }

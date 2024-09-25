@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +31,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPE
  */
 class GFInstanceLauncher extends GFLauncher {
 
-    private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.ASMain";
+    private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.GlassFishMain";
     private static final String BOOTSTRAP_JAR = "glassfish.jar";
 
     GFInstanceLauncher(GFLauncherInfo info) {

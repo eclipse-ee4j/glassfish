@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -422,7 +423,11 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 }
                 method.setAccessible(true);
                 field.setAccessible(true);
-            } catch (ReflectiveOperationException e) {
+            } catch (ReflectiveOperationException | InaccessibleObjectException e) {
+                method = null;
+                field = null;
+            } catch (Exception e) {
+                LOG.log(WARNING, () -> "Could not initialize sun.nio.fs. We will fallback to basic file attributes. Error: " + e.getMessage(), e);
                 method = null;
                 field = null;
             }

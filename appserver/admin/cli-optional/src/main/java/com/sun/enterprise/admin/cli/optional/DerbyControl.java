@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +55,7 @@ public final class DerbyControl {
     public static void main(String[] args) {
         if (args.length < 3) {
             System.out.println("paramters not specified.");
-            System.out.println("DerbyControl <derby command> <derby host> <derby port> <derby home> <redirect output>");
+            System.out.println("DerbyControl <derby command> <derby host> <derby port> <redirect> [<derby home> | <derby user> <derby password>");
             System.exit(1);
         }
 
@@ -63,30 +63,47 @@ public final class DerbyControl {
         if (args.length == 3) {
             derbyControl = new DerbyControl(args[0], args[1], args[2]);
         } else if (args.length == 4) {
-            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3]);
+            // Variant used by sysinfoCmd
+            derbyControl = new DerbyControl(
+                    args[0],   // command
+                    args[1],   // host
+                    args[2],   // port
+                    args[3]);  // redirect
         } else if (args.length == 5) {
-            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3], args[4]);
+            // Variant used by startDatabaseCmd
+            derbyControl = new DerbyControl(
+                    args[0],   // command
+                    args[1],   // host
+                    args[2],   // port
+                    args[3],   // redirect
+                    args[4]);  // home
         } else {
-            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3], args[4], args[5]);
+            derbyControl = new DerbyControl(
+                    args[0],   // command
+                    args[1],   // host
+                    args[2],   // port
+                    args[3],   // redirect
+                    args[4],   // user
+                    args[5]);  // password
         }
 
         derbyControl.invokeNetworkServerControl();
     }
 
-    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String dhe, final String duser, final String dpwd) {
-        this.derbyCommand = dc;
-        this.derbyHost = dht;
-        this.derbyPort = dp;
-        this.derbyHome = dhe;
+    public DerbyControl(final String derbyCommand, final String derbyHost, final String derbyPort, final String redirect, final String derbyHome, final String derbyUser, final String derbyPassword) {
+        this.derbyCommand = derbyCommand;
+        this.derbyHost = derbyHost;
+        this.derbyPort = derbyPort;
         this.redirect = Boolean.valueOf(redirect).booleanValue();
-        this.derbyUser = duser;
-        this.derbyPassword = dpwd;
+        this.derbyHome = derbyHome;
+        this.derbyUser = derbyUser;
+        this.derbyPassword = derbyPassword;
 
         if (this.redirect) {
 
             try {
                 String dbLog = "";
-                if (derbyHome == null) {
+                if (this.derbyHome == null) {
                     // If derbyHome is null then redirect the output to a temporary file
                     // which gets deleted after the jvm exists.
                     dbLog = createTempLogFile();
@@ -115,22 +132,22 @@ public final class DerbyControl {
     }
 
     // constructor
-    public DerbyControl(final String dc, final String dht, final String dp) {
-        this(dc, dht, dp, "true", null, null, null);
+    public DerbyControl(final String derbyCommand, final String derbyHost, final String derbyPort) {
+        this(derbyCommand, derbyHost, derbyPort, "true", null, null, null);
     }
 
     // constructor
-    public DerbyControl(final String dc, final String dht, final String dp, final String redirect) {
-        this(dc, dht, dp, redirect, null, null, null);
+    public DerbyControl(final String derbyCommand, final String derbyHost, final String derbyPort, final String redirect) {
+        this(derbyCommand, derbyHost, derbyPort, redirect, null, null, null);
     }
 
     // constructor
-    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String dhe) {
-        this(dc, dht, dp, redirect, dhe, null, null);
+    public DerbyControl(final String derbyCommand, final String derbyHost, final String derbyPort, final String redirect, final String derbyHome) {
+        this(derbyCommand, derbyHost, derbyPort, redirect, derbyHome, null, null);
     }
 
-    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String duser, final String dpassword) {
-        this(dc, dht, dp, redirect, null, duser, dpassword);
+    public DerbyControl(final String derbyCommand, final String derbyHost, final String derbyPort, final String redirect, final String derbyUser, final String derbyPassword) {
+        this(derbyCommand, derbyHost, derbyPort, redirect, null, derbyUser, derbyPassword);
     }
 
     /**

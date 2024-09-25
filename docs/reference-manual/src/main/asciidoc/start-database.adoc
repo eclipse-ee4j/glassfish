@@ -18,7 +18,7 @@ Starts the Java DB
 [source]
 ----
 asadmin [asadmin-options] start-database [--help]
-[--jvmoptions jvm-options]
+[--jvmoptions jvm-options] [--suspend={true|false}]
 [--dbhost host] [--dbport port-no]
 [--dbhome db-file-path]
 ----
@@ -78,6 +78,22 @@ asadmin-options::
     option-name=value.
   * If the option has only a name, the format is option-name.
     For example, `-Xmx512m`.
+`--suspend`::
+`-s`::
+  Specifies whether the domain is started with
+  http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
+  Platform Debugger Architecture (JPDA)]
+  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
+  debugging enabled and suspend the newly started VM before the main class loads.
+  When a debugger connects, it can send a JDWP command to resume the suspended VM.
+  With debugging enabled extra exceptions can be printed.
+  Possible values are as follows:
+
+  `true`;;
+    The instance is started with JPDA debugging enabled and a suspendPolicy of `SUSPEND_ALL`.
+    The port number for JPDA debugging is displayed.
+  `false`;;
+    The instance is started with JPDA debugging disabled (default).
 `--dbhost`::
   The host name or IP address of the Java DB server process. The default
   is the IP address 0.0.0.0, which denotes all network interfaces on the
@@ -97,6 +113,14 @@ asadmin-options::
   current working directory.
   * Otherwise, the `start-database` subcommand creates the files in the
   as-install``/databases`` directory.
+`--dbname`::
+  The name of the database that should be used to initialize when
+  `sqlfilename` is specified.
+`--sqlfilename`::
+  Path to a file containing SQL statements to be executed after starting
+  up the Java DB. Each statement should be separated by a ";". Statements
+  may be put on new lines. The file encoding to be used is UTF-8. 
+  This file is only taken into consideration when `dbname` is specified. 
 
 +
 To create the database files at a particular location, you must set

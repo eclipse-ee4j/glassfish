@@ -66,33 +66,39 @@ public class GlassFishMain {
     // logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
 
-    public static void main(final String[] args) throws Exception {
-        final File installRoot = StartupContextUtil.detectInstallRoot();
-        final ClassLoader jdkExtensionCL = ClassLoader.getSystemClassLoader().getParent();
-        final GlassfishBootstrapClassLoader gfBootCL = new GlassfishBootstrapClassLoader(installRoot, jdkExtensionCL);
-        initializeLogManager(gfBootCL);
+    public static void main(final String[] args) {
+        try {
+            final File installRoot = StartupContextUtil.detectInstallRoot();
+            final ClassLoader jdkExtensionCL = ClassLoader.getSystemClassLoader().getParent();
+            final GlassfishBootstrapClassLoader gfBootCL = new GlassfishBootstrapClassLoader(installRoot,
+                jdkExtensionCL);
+            initializeLogManager(gfBootCL);
 
-        checkJdkVersion();
+            checkJdkVersion();
 
-        final Properties argsAsProps = argsToMap(args);
-        final OsgiPlatform platform = OsgiPlatform.valueOf(whichPlatform());
-        STDOUT.println("Launching GlassFish on " + platform + " platform");
+            final Properties argsAsProps = argsToMap(args);
+            final OsgiPlatform platform = OsgiPlatform.valueOf(whichPlatform());
+            STDOUT.println("Launching GlassFish on " + platform + " platform");
 
-        final Path instanceRoot = findInstanceRoot(installRoot, argsAsProps);
-        final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
-        final StartupContextCfg startupContextCfg = createStartupContextCfg(platform, files, args);
-        final ClassLoader launcherCL = ClassLoaderBuilder.createLauncherCL(startupContextCfg, gfBootCL);
+            final Path instanceRoot = findInstanceRoot(installRoot, argsAsProps);
+            final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
+            final StartupContextCfg startupContextCfg = createStartupContextCfg(platform, files, args);
+            final ClassLoader launcherCL = ClassLoaderBuilder.createLauncherCL(startupContextCfg, gfBootCL);
 
-        final Class<?> launcherClass = launcherCL.loadClass(Launcher.class.getName());
-        final Object launcher = launcherClass.getDeclaredConstructor().newInstance();
-        final Method method = launcherClass.getMethod("launch", Properties.class);
+            final Class<?> launcherClass = launcherCL.loadClass(Launcher.class.getName());
+            final Object launcher = launcherClass.getDeclaredConstructor().newInstance();
+            final Method method = launcherClass.getMethod("launch", Properties.class);
 
-        // launcherCL is used only to load the RuntimeBuilder service.
-        // on all other places is used classloader which loaded the GlassfishRuntime class
-        // -> it must not be loaded by any parent classloader, it's children would be ignored.
-        method.invoke(launcher, startupContextCfg.toProperties());
+            // launcherCL is used only to load the RuntimeBuilder service.
+            // on all other places is used classloader which loaded the GlassfishRuntime class
+            // -> it must not be loaded by any parent classloader, it's children would be ignored.
+            method.invoke(launcher, startupContextCfg.toProperties());
 
-        // also note that debugging is not possible until the debug port is open.
+            // also note that debugging is not possible until the debug port is open.
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new Error("Could not start the server!", t);
+        }
     }
 
 

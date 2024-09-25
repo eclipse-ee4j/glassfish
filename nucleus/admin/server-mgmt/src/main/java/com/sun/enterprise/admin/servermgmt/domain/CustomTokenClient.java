@@ -101,7 +101,7 @@ public class CustomTokenClient {
                                 throw new DomainException(format("Given port {0} is not free.", port));
                             }
                         } else {
-                          Integer firstPortTried = port;
+                            Integer firstPortTried = port;
                             if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
                                 PortTypeDetails portTypeDetails = (PortTypeDetails) token.getTokenTypeDetails();
                                 port = Integer.parseInt(portBase) + Integer.parseInt(portTypeDetails.getBaseOffset());

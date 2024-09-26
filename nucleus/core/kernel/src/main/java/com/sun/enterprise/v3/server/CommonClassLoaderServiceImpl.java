@@ -159,10 +159,10 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
      * @throws UnsupportedOperationException If adding not supported by the classloader
      */
     public void addToClassPath(URL url) {
-        if (commonClassLoader != null) {
-            commonClassLoader.addURL(url);
-        } else {
+        if (commonClassLoader == null) {
             commonClassLoader = new GlassfishUrlClassLoader(new URL[] {url}, APIClassLoader);
+        } else {
+            commonClassLoader.addURL(url);
         }
         commonClassPath = urlsToClassPath(Arrays.stream(commonClassLoader.getURLs()));
     }
@@ -175,7 +175,8 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         return urls
                 .map(URL::getFile)
                 .filter(Predicate.not(String::isBlank))
-                .map(file -> new File(file).getAbsolutePath())
+                .map(File::new)
+                .map(File::getAbsolutePath)
                 .collect(Collectors.joining(File.pathSeparator));
     }
 

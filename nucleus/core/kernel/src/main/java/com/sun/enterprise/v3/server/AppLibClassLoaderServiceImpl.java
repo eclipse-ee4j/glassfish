@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -51,6 +52,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.jar.JarFile;
 
 import org.glassfish.api.admin.ServerEnvironment;
@@ -422,7 +424,17 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
                 }
                 method.setAccessible(true);
                 field.setAccessible(true);
-            } catch (ReflectiveOperationException e) {
+            } catch (InaccessibleObjectException e) {
+                LOG.log(WARNING, () -> "Could not access specialized 'sun.nio.fs' APIs. Try opening the package with the JVM argument '--add-opens=java.base/sun.nio.fs=ALL-UNNAMED' to the JVM options. We will now fallback to using basic file attributes. Error: " + e.getMessage());
+                method = null;
+                field = null;
+            } catch (Exception e) {
+                Supplier<String> messageSupplier = () -> "Could not initialize sun.nio.fs. We will now fallback to using basic file attributes. Error: " + e.getMessage();
+                if (e instanceof ReflectiveOperationException) {
+                    LOG.log(WARNING, messageSupplier);
+                } else {
+                    LOG.log(WARNING, messageSupplier, e);
+                }
                 method = null;
                 field = null;
             }

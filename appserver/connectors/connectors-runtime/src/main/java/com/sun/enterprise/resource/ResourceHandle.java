@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,11 +27,11 @@ import com.sun.logging.LogDomains;
 import jakarta.resource.spi.ConnectionEventListener;
 import jakarta.resource.spi.DissociatableManagedConnection;
 import jakarta.resource.spi.LazyEnlistableManagedConnection;
+import jakarta.resource.spi.ManagedConnection;
 import jakarta.transaction.Transaction;
 
 import java.util.logging.Logger;
 
-import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
 import static java.util.logging.Level.FINEST;
@@ -47,37 +47,145 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     private static final Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
 
-    // unique ID for resource handles
+    /**
+     * Unique Id sequence generator value for generating unique ResourceHandle ids.
+     */
     static private long idSequence;
 
+    /**
+     * The unique Id of this ResourceHandle instance.
+     */
     private final long id;
-    private final ClientSecurityInfo info;
-    private final Object resource; // represents ManagedConnection
-    private ResourceSpec spec;
-    private XAResource xaRes;
-    private Object userConnection; // represents connection-handle to user
+
+    /**
+     * The (optional) object represented by this handle. Normally the ManagedConnection object.<br>
+     * THe object is known to be null in case of the BasicResourrceAllocator.
+     */
+    private final ManagedConnection resource;
+
+    /**
+     * The ResourceSpec reference, which can be used to find the correct connection pool for the resource handle.<br>
+     * Note: this value is set in the constructor, but can be overwritten later during the lifetime of the resource handle,
+     * while {@link #resourceAllocator} is not overwritten.
+     */
+    private ResourceSpec resourceSpec;
+
+    /**
+     * The (optional) XAResource reference for this resource handle. The value is set in this resource handle together with
+     * the {@link #userConnection}.
+     */
+    private XAResource xaResource;
+
+    /**
+     * The (optional) 'userConnection' / 'connection handle', used by the application code to refer to the underlying
+     * physical connection.<br>
+     * The value is set in this resource handle together with the {@link #xaResource}.
+     * <p>
+     * TODO: consider renaming userConnection to connectionHandle
+     */
+    private Object userConnection;
+
+    /**
+     * The ResourceAllocator that created this resource handle instance.
+     */
     private final ResourceAllocator resourceAllocator;
-    private Object instance; // the component instance holding this resource
-    private int shareCount; // sharing within a component (XA only)
-    private final boolean supportsXAResource;
 
-    private Subject subject;
+    /**
+     * The component instance holding this resource handle.
+     */
+    private Object instance;
 
-    private ResourceState state;
+    /**
+     * Sharing within a component (XA only). For XA-capable connections, multiple connections within a component are
+     * collapsed into one. shareCount keeps track of the number of additional shared connections
+     */
+    private int shareCount;
+
+    /**
+     * Resource state class providing 'timestamp', 'enlisted' and 'busy' fields.<br>
+     * Other state fields like 'enlistmentSuspended', 'shareCount', 'usageCount', 'lastValidated' and others are directly
+     * part of this class as a field.
+     */
+    private ResourceState state = new ResourceState();
+
+    /**
+     * Used by LocalTxConnectorAllocator to save a listener for the resource handle.
+     */
     private ConnectionEventListener listener;
 
+    /**
+     * Used by LazyEnlistableResourceManagerImpl to keep track of the enlistment suspended state of a resource handle.
+     * LazyEnlistableResourceManagerImpl is used when setting "lazy-connection-enlistment" to enabled in the connection
+     * pool.<br>
+     * Default: false, false means: every resource is enlisted to a transaction.
+     */
     private boolean enlistmentSuspended;
 
-    private boolean supportsLazyEnlistment_;
-    private boolean supportsLazyAssoc_;
+    /**
+     * False if the ResourceAllocator is of the type LocalTxConnectorAllocator, otherwise true.
+     */
+    private final boolean supportsXAResource;
 
+    /**
+     * True if the Resource object ManagedConnection is of the type LazyEnlistableManagedConnection, otherwise false.
+     */
+    private boolean supportsLazyEnlistment;
+
+    /**
+     * True if the Resource object ManagedConnection is of the type DissociatableManagedConnection, otherwise false.
+     */
+    private boolean supportsLazyAssociation;
+
+    /**
+     * Resource handle specific lock, which can be used to lock the resource handle when state of the resource needs to be
+     * changed. This is currently only used in the AssocWithThreadResourcePool implementation.
+     */
     public final Object lock = new Object();
-    private long lastValidated; // holds the latest time at which the connection was validated.
-    private int usageCount; // holds the no. of times the handle(connection) is used so far.
-    private int partition;
-    private int index;
+
+    /**
+     * Holds the latest time at which the connection was validated.<br>
+     * Could also be seen as part of ResourceState.
+     */
+    private long lastValidated;
+
+    /**
+     * Holds the number of times the handle(connection) is used so far. It is used by the ConnectionPool logic in case the
+     * "max-connection-usage-count" option is set in the connection pool.<br>
+     * Could also be seen as part of ResourceState.
+     */
+    private int usageCount;
+
+    /**
+     * Index of this ResourceHandle in the RWLockDataStructure internal ResourceHandle[]. RWLockDataStructure uses this
+     * index value for optimistic locking of the resource.
+     */
+    private int rwLockDataStructureResourceIndex;
+
+    /**
+     * Value isDestroyByLeakTimeOut is set to true if ConnectionPool reclaimConnection logic was called when a potential
+     * leak was found. The value is used when a resource is freed or closed by the poolLifeCycleListener to update
+     * statistics.<br>
+     * Could also be seen as part of ResourceState.
+     */
     private boolean isDestroyByLeakTimeOut;
+
+    /**
+     * The connectionErrorOccurred field is set to true when a connection was aborted, or a connection error occurred, or
+     * when a connection being closes is bad.<br>
+     * Could also be seen as part of ResourceState.
+     */
     private boolean connectionErrorOccurred;
+
+    /**
+     * Value markedReclaim is set by the
+     * {@link com.sun.enterprise.resource.pool.ConnectionLeakDetector#potentialConnectionLeakFound(ResourceHandle)} method
+     * when the resource is set to be reclaimed. Note: this value is only used to update statistics, the resource itself is
+     * already removed from the pool the moment it is marked for reclaim. Code seems to suggest that this is also set when
+     * {@link #isDestroyByLeakTimeOut} is set. Perhaps this boolean is not needed, statistics could perhaps be updated
+     * immediately when isDestroyByLeakTimeOut is updated.<br>
+     * Could also be seen as part of ResourceState.
+     */
+    private boolean markedReclaim;
 
     static private long getNextId() {
         synchronized (ResourceHandle.class) {
@@ -86,27 +194,31 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         }
     }
 
-    private boolean markedReclaim;
-
-    public ResourceHandle(Object resource, ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info) {
+    /**
+     * ResourceHandle constructor
+     *
+     * @param resource the (optional) object represented by this handle. Normally the ManagedConnection object.
+     * @param resourceSpec the ResourceSpec reference, allowing this resource handle to find the correct connection pool.
+     * @param resourceAllocator the ResourceAllocator that is creating this resource handle instance.
+     */
+    public ResourceHandle(ManagedConnection resource, ResourceSpec resourceSpec, ResourceAllocator resourceAllocator) {
         this.id = getNextId();
-        this.spec = spec;
-        this.info = info;
         this.resource = resource;
-        this.resourceAllocator = alloc;
+        this.resourceSpec = resourceSpec;
+        this.resourceAllocator = resourceAllocator;
 
-        if (alloc instanceof LocalTxConnectorAllocator) {
+        if (resourceAllocator instanceof LocalTxConnectorAllocator) {
             supportsXAResource = false;
         } else {
             supportsXAResource = true;
         }
 
         if (resource instanceof LazyEnlistableManagedConnection) {
-            supportsLazyEnlistment_ = true;
+            supportsLazyEnlistment = true;
         }
 
         if (resource instanceof DissociatableManagedConnection) {
-            supportsLazyAssoc_ = true;
+            supportsLazyAssociation = true;
         }
     }
 
@@ -118,13 +230,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         return resourceAllocator.isTransactional();
     }
 
-    /**
-     * To check whether lazy enlistment is suspended or not.
-     *
-     * <p>If {@code true}, TM will not do enlist/lazy enlist.
-     *
-     * @return boolean
-     */
     @Override
     public boolean isEnlistmentSuspended() {
         return enlistmentSuspended;
@@ -157,25 +262,21 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         return resourceAllocator;
     }
 
-    public Object getResource() {
+    public ManagedConnection getResource() {
         return resource;
     }
 
-    public ClientSecurityInfo getClientSecurityInfo() {
-        return info;
-    }
-
-    public void setResourceSpec(ResourceSpec spec) {
-        this.spec = spec;
+    public void setResourceSpec(ResourceSpec resourceSpec) {
+        this.resourceSpec = resourceSpec;
     }
 
     public ResourceSpec getResourceSpec() {
-        return spec;
+        return resourceSpec;
     }
 
     @Override
     public XAResource getXAResource() {
-        return xaRes;
+        return xaResource;
     }
 
     public Object getUserConnection() {
@@ -201,30 +302,27 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         return id;
     }
 
-    public void fillInResourceObjects(Object userConnection, XAResource xaRes) {
+    public void fillInResourceObjects(Object userConnection, XAResource xaResource) {
         if (userConnection != null) {
             this.userConnection = userConnection;
         }
 
-        if (xaRes != null) {
+        if (xaResource != null) {
             if (logger.isLoggable(FINEST)) {
                 // When Log level is Finest, XAResourceWrapper is used to log
                 // all XA interactions - Don't wrap XAResourceWrapper if it is
                 // already wrapped
-                if ((xaRes instanceof XAResourceWrapper) || (xaRes instanceof ConnectorXAResource)) {
-                    this.xaRes = xaRes;
+                if ((xaResource instanceof XAResourceWrapper) || (xaResource instanceof ConnectorXAResource)) {
+                    this.xaResource = xaResource;
                 } else {
-                    this.xaRes = new XAResourceWrapper(xaRes);
+                    this.xaResource = new XAResourceWrapper(xaResource);
                 }
             } else {
-                this.xaRes = xaRes;
+                this.xaResource = xaResource;
             }
         }
     }
 
-    // For XA-capable connections, multiple connections within a
-    // component are collapsed into one. shareCount keeps track of
-    // the number of additional shared connections
     public void incrementCount() {
         shareCount++;
     }
@@ -239,14 +337,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     public int getShareCount() {
         return shareCount;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
-    public Subject getSubject() {
-        return subject;
     }
 
     @Override
@@ -269,7 +359,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "<ResourceHandle id=" + id + ", state=" + state + "/>";
     }
 
     public void setConnectionErrorOccurred() {
@@ -278,10 +368,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     public boolean hasConnectionErrorOccurred() {
         return connectionErrorOccurred;
-    }
-
-    public void setResourceState(ResourceState state) {
-        this.state = state;
     }
 
     public ResourceState getResourceState() {
@@ -302,13 +388,8 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     }
 
     @Override
-    public void destroyResource() {
-        throw new UnsupportedOperationException("Transaction is not supported yet");
-    }
-
-    @Override
     public boolean isEnlisted() {
-        return state != null && state.isEnlisted();
+        return state.isEnlisted();
     }
 
     public long getLastValidated() {
@@ -327,33 +408,25 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         usageCount++;
     }
 
-    public int getPartition() {
-        return partition;
+    public int getRwLockDataStructureResourceIndex() {
+        return rwLockDataStructureResourceIndex;
     }
 
-    public void setPartition(int partition) {
-        this.partition = partition;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public void setRwLockDataStructureResourceIndex(int rwLockDataStructureResourceIndex) {
+        this.rwLockDataStructureResourceIndex = rwLockDataStructureResourceIndex;
     }
 
     @Override
     public String getName() {
-        return spec.getResourceId();
+        return resourceSpec.getResourceId();
     }
 
     public boolean supportsLazyEnlistment() {
-        return supportsLazyEnlistment_;
+        return supportsLazyEnlistment;
     }
 
     public boolean supportsLazyAssociation() {
-        return supportsLazyAssoc_;
+        return supportsLazyAssociation;
     }
 
     @Override

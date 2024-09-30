@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,8 +34,12 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
-
 /**
+ * XATransaction Connector Allocator, used for transaction level:
+ * {@link com.sun.appserv.connectors.internal.api.ConnectorConstants#XA_TRANSACTION_INT}.
+ * <p>
+ * TODO: Rename class to reflect XATransaction
+ *
  * @author Tony Ng
  */
 public class ConnectorAllocator extends AbstractConnectorAllocator {
@@ -143,7 +147,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
     public ResourceHandle createResource() throws PoolingException {
         try {
             ManagedConnection mc = mcf.createManagedConnection(subject, reqInfo);
-            ResourceHandle resource = createResourceHandle(mc, spec, this, info);
+            ResourceHandle resource = createResourceHandle(mc, spec, this);
             ConnectionEventListener l = new ConnectionListenerImpl(resource);
             mc.addConnectionEventListener(l);
             return resource;
@@ -156,7 +160,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
     public void fillInResourceObjects(ResourceHandle resource)
             throws PoolingException {
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
+            ManagedConnection mc = resource.getResource();
             Object con = mc.getConnection(subject, reqInfo);
             resource.incrementCount();
             XAResource xares = mc.getXAResource();
@@ -177,7 +181,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
         }
 
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
+            ManagedConnection mc = resource.getResource();
             mc.destroy();
         } catch (Exception ex) {
             throw new PoolingException(ex);

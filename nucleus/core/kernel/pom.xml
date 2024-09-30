@@ -31,6 +31,10 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Kernel Classes</name>
+    
+    <properties>
+        <commonClassLoader.tests.skip>false</commonClassLoader.tests.skip>
+    </properties>
 
     <developers>
         <developer>
@@ -260,6 +264,66 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <executions>
+                    <execution>
+                        <id>commonClassLoader tests</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipAssembly>${commonClassLoader.tests.skip}</skipAssembly>
+                    <inlineDescriptors>
+                        <inlineDescriptor>
+                            <id>domain</id>
+                            <includeBaseDirectory>false</includeBaseDirectory>
+                            <formats>
+                                <format>dir</format>
+                            </formats>
+                            <fileSets>
+                                <fileSet>
+                                    <outputDirectory>lib/classes</outputDirectory>
+                                    <includes>
+                                        <include>**/CommonClassLoaderServiceImplTestDomainClass.class</include>
+                                    </includes>
+                                    <directory>target/test-classes/</directory>
+                                </fileSet>
+                            </fileSets>
+                        </inlineDescriptor>
+                        <inlineDescriptor>
+                            <id>additional-classes</id>
+                            <includeBaseDirectory>false</includeBaseDirectory>
+                            <formats>
+                                <format>dir</format>
+                            </formats>
+                            <fileSets>
+                                <fileSet>
+                                    <outputDirectory>/</outputDirectory>
+                                    <includes>
+                                        <include>**/CommonClassLoaderServiceImplTestAdditionalClass.class</include>
+                                    </includes>
+                                    <directory>target/test-classes/</directory>
+                                </fileSet>
+                            </fileSets>
+                        </inlineDescriptor>
+                    </inlineDescriptors>
+                    <finalName>test</finalName>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>fastest</id>
+            <properties>
+                <commonClassLoader.tests.skip>true</commonClassLoader.tests.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

@@ -31,6 +31,10 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Kernel Classes</name>
+    
+    <properties>
+        <commonClassLoader.tests.skip>false</commonClassLoader.tests.skip>
+    </properties>
 
     <developers>
         <developer>
@@ -273,6 +277,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skipAssembly>${commonClassLoader.tests.skip}</skipAssembly>
                     <inlineDescriptors>
                         <inlineDescriptor>
                             <id>domain</id>
@@ -312,4 +317,13 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>fastest</id>
+            <properties>
+                <commonClassLoader.tests.skip>true</commonClassLoader.tests.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

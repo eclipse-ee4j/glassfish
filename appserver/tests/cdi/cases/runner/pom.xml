@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.cdi</groupId>
         <artifactId>cases</artifactId>
-        <version>7.0.18</version>
+        <version>7.0.19-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.cases</groupId>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.grizzly</groupId>
         <artifactId>nucleus-grizzly</artifactId>
-        <version>7.0.18</version>
+        <version>7.0.19-SNAPSHOT</version>
     </parent>
 
     <artifactId>grizzly-config</artifactId>

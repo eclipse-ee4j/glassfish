@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-main-aggregator</artifactId>
-    <version>7.0.18</version>
+    <version>7.0.19-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Project</name>
@@ -44,7 +44,7 @@
     </scm>
 
     <properties>
-        <project.build.outputTimestamp>2024-10-02T08:48:39Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-10-02T10:07:17Z</project.build.outputTimestamp>
     </properties>
 
     <build>

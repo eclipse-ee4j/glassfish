@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -355,7 +355,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      */
     @Override
     public MessageEndpoint createEndpoint(XAResource xa) throws UnavailableException {
-        // This is a temporary workaround for blocking the the create enpoint
+        // This is a temporary workaround for blocking the created endpoint
         // until the deployment completes. One thread would wait for maximum a
         // a minute.
         return createEndpoint(xa, WAIT_TIME);

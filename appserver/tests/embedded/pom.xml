@@ -32,6 +32,11 @@
     <artifactId>embedded</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Tests</name>
+    
+    <properties>
+        <surefire.workdir>${project.build.directory}/surefire-workdir</surefire.workdir>
+        <failsafe.workdir>${project.build.directory}/failsafe-workdir</failsafe.workdir>
+    </properties>
 
     <modules>
         <module>basic</module>
@@ -66,20 +71,20 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <workingDirectory>${project.build.directory}/surefire-workdir</workingDirectory>
+                        <workingDirectory>${surefire.workdir}</workingDirectory>
                         <systemPropertyVariables>
                             <project.directory>${basedir}</project.directory>
-                            <buildDir>${project.build.directory}/surefire-workdir</buildDir>
+                            <buildDir>${surefire.workdir}</buildDir>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
-                        <workingDirectory>${project.build.directory}/failsafe-workdir</workingDirectory>
+                        <workingDirectory>${failsafe.workdir}</workingDirectory>
                         <systemPropertyVariables>
                             <project.directory>${basedir}</project.directory>
-                            <buildDir>${project.build.directory}/failsafe-workdir</buildDir>
+                            <buildDir>${failsafe.workdir}</buildDir>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,8 @@ package com.sun.enterprise.resource;
 
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 
+import jakarta.resource.spi.ManagedConnection;
+
 /**
  * ResourceHandle with state related to assoc-with-thread pool
  *
@@ -30,8 +32,8 @@ public class AssocWithThreadResourceHandle extends ResourceHandle {
     private long threadId_;
     private boolean dirty_;
 
-    public AssocWithThreadResourceHandle(Object resource, ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info) {
-        super(resource, spec, alloc, info);
+    public AssocWithThreadResourceHandle(ManagedConnection resource, ResourceSpec spec, ResourceAllocator alloc) {
+        super(resource, spec, alloc);
     }
 
     public boolean isDirty() {

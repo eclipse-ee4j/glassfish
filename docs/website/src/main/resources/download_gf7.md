@@ -1,6 +1,26 @@
 # Eclipse GlassFish 7.x Downloads
 
 
+## GlassFish 7.0.18
+
+Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the Jakarta EE 10 specification, which is a major new feature release. Jakarta EE 10 requires JDK 11 as a minimum, but also works on JDK 17 and JDK 21.
+
+GlassFish 7.0.18 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 23. MicroProfile support requires JDK 17 or higher.
+
+This release is all about an exciting new feature that allows running GlassFish Embedded from the command line using java -jar glassfish-embedded.jar. It supports configuration via command line arguments and/or config files in the current directory, such as setting the HTTP port, deploying applications passed as arguments and running arbitrary AsAdmin commands at boot. Aside of that we did a large amount of maintenance for the internal modules nucleus-admin and glassfish, and fixed various issues that were reported by users.
+
+Download:
+
+* [Eclipse GlassFish 7.0.18, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.18.zip)
+* [Eclipse GlassFish 7.0.18, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.18.zip)
+* [Eclipse GlassFish Embedded 7.0.18, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.18/jar)
+* [Eclipse GlassFish Embedded 7.0.18, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.18/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.18 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.18)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
 ### GlassFish 7.0.17
 
 GlassFish 7.0.17 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 23. MicroProfile support requires JDK 17 or higher.

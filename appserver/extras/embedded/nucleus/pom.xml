@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -369,7 +369,9 @@
                                 <manifestEntries>
                                     <Multi-Release>true</Multi-Release>
                                     <Bundle-SymbolicName>org.glassfish.main.embedded.nucleus</Bundle-SymbolicName>
-                                    <Main-Class>com.sun.enterprise.glassfish.bootstrap.UberMain</Main-Class>
+                                    <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
+                                    <Add-Opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</Add-Opens>
+                                    <Add-Exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation</Add-Exports>
                                 </manifestEntries>
                             </archive>
                         </configuration>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,8 @@
 
 package org.glassfish.embeddable;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Properties;
 
 /**
@@ -135,7 +137,7 @@ public class GlassFishProperties {
      * Unless specified, the configuration file is operated on read only mode.
      * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
      *
-     * @param configFileURI Location of configuration file.
+     * @param configFileURI Location of configuration file. File path, or full URI with the schema, e.g. file:
      */
     public void setConfigFileURI(String configFileURI) {
         gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI);
@@ -148,6 +150,15 @@ public class GlassFishProperties {
      */
     public String getConfigFileURI() {
         return gfProperties.getProperty(CONFIG_FILE_URI_PROP_NAME);
+    }
+
+    /**
+     * Get the absolute URI, with schema, set using {@link #setConfigFileURI(String)}. Internally uses {@link #filePathToAbsoluteURI(java.lang.String)}.
+     *
+     * @return The configurationFileURI set using {@link #setConfigFileURI(String)} converted to URI
+     */
+    public URI getAbsoluteConfigFileURI() {
+        return filePathToAbsoluteURI(getConfigFileURI());
     }
 
     /**
@@ -176,6 +187,10 @@ public class GlassFishProperties {
     /**
      * Set the port number for a network listener that the GlassFish server
      * should use.
+     *
+     * In the default configuration, all listeners are disabled. This method will enable the listener if it's disabled.
+     * If the port is 0 or a negative value, it will disable the network listener.
+     *
      * <p/>
      * Examples:
      * <p/>
@@ -184,6 +199,7 @@ public class GlassFishProperties {
      * <pre>
      *      setPort("http-listener", 8080); // GlassFish will listen on HTTP port 8080
      *      setPort("https-listener", 8181); // GlassFish will listen on HTTPS port 8181
+     *      setPort("http-listener", 0); // GlassFish will disable the HTTP listener
      * </pre>
      * <p/>
      * 2. When the custom configuration file (domain.xml) is used, then the
@@ -207,8 +223,12 @@ public class GlassFishProperties {
         if (networkListener != null) {
             String key = String.format(NETWORK_LISTENER_KEY, networkListener);
             if (key != null) {
-                gfProperties.setProperty(key + ".port", Integer.toString(port));
-                gfProperties.setProperty(key + ".enabled", "true");
+                if (port <= 0) {
+                    gfProperties.setProperty(key + ".enabled", "false");
+                } else {
+                    gfProperties.setProperty(key + ".port", Integer.toString(port));
+                    gfProperties.setProperty(key + ".enabled", "true");
+                }
             }
         }
     }
@@ -234,5 +254,23 @@ public class GlassFishProperties {
             }
         }
         return port;
+    }
+
+    /**
+     * Converts to absolute URI with absolute path.
+     * If the filePath doesn't contain schema, it will add file: schema
+     *
+     * @param filePath Path to create the URI
+     * @return absolute URI
+     */
+    public static URI filePathToAbsoluteURI(String filePath) {
+        if (filePath == null) {
+            return null;
+        }
+        URI uri = URI.create(filePath);
+        if (!uri.isAbsolute()) {
+            return new File(filePath).getAbsoluteFile().toURI();
+        }
+        return uri;
     }
 }

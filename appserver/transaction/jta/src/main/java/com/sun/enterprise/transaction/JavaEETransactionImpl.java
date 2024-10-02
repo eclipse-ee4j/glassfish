@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,7 +48,7 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 /**
- * This class implements the JTA Transaction API for the J2EE RI. It is a wrapper over the JTS Transaction object that
+ * This class implements the JTA Transaction API for the JEE RI. It is a wrapper over the JTS Transaction object that
  * provides optimized local transaction support when a transaction uses zero/one non-XA resource, and delegates to JTS
  * otherwise. This object can be in two states: local tx (jtsTx==null) or global (JTS) tx. If jtsTx!=null, all calls are
  * delegated to jtsTx.
@@ -60,12 +60,12 @@ import javax.transaction.xa.Xid;
  */
 public final class JavaEETransactionImpl extends TimerTask implements JavaEETransaction {
 
-    static Logger _logger = LogDomains.getLogger(JavaEETransactionImpl.class, LogDomains.JTA_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(JavaEETransactionImpl.class, LogDomains.JTA_LOGGER);
 
     // Sting Manager for Localization
     private static StringManager sm = StringManager.getManager(JavaEETransactionImpl.class);
 
-    JavaEETransactionManager javaEETM;
+    private JavaEETransactionManager javaEETM;
 
     // Local Tx ids are just numbers: they dont need to be unique across
     // processes or across multiple activations of this server process.
@@ -78,7 +78,15 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
     private long txId;
     private JavaEEXid xid;
     private TransactionInternal jtsTx;
+
+    /**
+     * Non XA transaction resources
+     */
     private TransactionalResource nonXAResource;
+
+    /**
+     * use-last-agent-optimization resource
+     */
     private TransactionalResource laoResource;
     private int localTxStatus;
     private Vector syncs = new Vector();
@@ -95,7 +103,11 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
     // END: local transaction timeout
     private boolean imported = false;
 
-    private HashMap resourceTable;
+    /**
+     * Maps PoolInfo to resources
+     */
+    private HashMap<Object /* poolInfo */, Set /* resources */> resourceTable;
+
     private HashMap<Object, Object> userResourceMap;
 
     // This cache contains the EntityContexts in this Tx
@@ -646,7 +658,7 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
         // START OF IASRI 4660742
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE,
-                    "--In JavaEETransactionImpl.registerSynchronization, jtsTx=" + jtsTx + " nonXAResource=" + nonXAResource);
+                    "--In JavaEETransactionImpl.registerSynchronization START, jtsTx=" + jtsTx + ", nonXAResource=" + nonXAResource + ", sync=" + sync);
         }
         // END OF IASRI 4660742
 
@@ -655,6 +667,11 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
             jtsTx.registerSynchronization(sync);
         else
             syncs.add(sync);
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE,
+                    "--In JavaEETransactionImpl.registerSynchronization END, jtsTx=" + jtsTx + ", nonXAResource=" + nonXAResource + ", sync=" + sync);
+        }
     }
 
     public void setRollbackOnly() throws IllegalStateException, SystemException {

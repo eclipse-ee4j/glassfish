@@ -100,12 +100,21 @@ public class ResourceManagerImpl implements ResourceManager {
      */
     @Override
     public void registerResource(ResourceHandle handle) throws PoolingException {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "ResourceManagerImpl.registerResource START: handle=" + handle + ", resource="
+                    + handle.getResource() + ", transactional=" + handle.isTransactional());
+        }
+
         try {
             JavaEETransactionManager transactionManager = getTransactionManager();
 
             // Enlist if necessary
             if (handle.isTransactional()) {
                 ComponentInvocation componentInvocation = getCurrentInvocation();
+
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "ResourceManagerImpl.registerResource: componentInvocation=" + componentInvocation);
+                }
 
                 Transaction transaction = null;
                 if (componentInvocation == null) {
@@ -115,12 +124,18 @@ public class ResourceManagerImpl implements ResourceManager {
                     // method/ in that, you return the transaction from the TxManager
                     try {
                         transaction = transactionManager.getTransaction();
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.log(Level.FINE, "ResourceManagerImpl.registerResource: A transaction=" + transaction);
+                        }
                     } catch (Exception e) {
                         transaction = null;
                         LOG.log(INFO, e.getMessage());
                     }
                 } else {
                     transaction = (Transaction) componentInvocation.getTransaction();
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "ResourceManagerImpl.registerResource: B transaction=" + transaction);
+                    }
                     transactionManager.registerComponentResource(handle);
                 }
 
@@ -129,7 +144,7 @@ public class ResourceManagerImpl implements ResourceManager {
                         transactionManager.enlistResource(transaction, handle);
                     } catch (Exception ex) {
                         if (LOG.isLoggable(Level.FINE)) {
-                            LOG.fine("Exception whle trying to enlist resource " + ex.getMessage());
+                            LOG.fine("Exception while trying to enlist resource " + ex.getMessage());
                         }
 
                         // If transactional, remove the connection handle from the
@@ -148,6 +163,11 @@ public class ResourceManagerImpl implements ResourceManager {
         } catch (Exception ex) {
             LOG.log(SEVERE, "poolmgr.component_register_exception", ex);
             throw new PoolingException(ex.toString(), ex);
+        }
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "ResourceManagerImpl.registerResource END: handle=" + handle + ", resource="
+                    + handle.getResource() + ", transactional=" + handle.isTransactional());
         }
     }
 
@@ -210,7 +230,8 @@ public class ResourceManagerImpl implements ResourceManager {
     }
 
     /**
-     * Unregister the <code>ResourceHandle</code> from the transaction
+     * Unregister the <code>ResourceHandle</code> from the transaction TODO: document what the resource state should be:
+     * enlisted? busy? TODO: move documentation to the interface
      *
      * @param resource <code>ResourceHandle</code> object
      * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
@@ -218,6 +239,12 @@ public class ResourceManagerImpl implements ResourceManager {
      */
     @Override
     public void unregisterResource(ResourceHandle resource, int xaresFlag) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE,
+                    "ResourceManagerImpl.unregisterResource START: handle=" + resource + ", resource="
+                            + resource.getResource()
+                            + ", transactional=" + resource.isTransactional());
+        }
         JavaEETransactionManager transactionManager = getTransactionManager();
 
         Transaction transaction = null;
@@ -245,6 +272,9 @@ public class ResourceManagerImpl implements ResourceManager {
                 }
 
                 if (transaction != null && resource.isEnlisted()) {
+                    // TODO: delistResource seems to return always true, or throws an exception
+                    // which is ok, but return type could be removed! Since it is not used here to see
+                    // if something went wrong.
                     transactionManager.delistResource(transaction, resource, xaresFlag);
                 }
             }
@@ -257,6 +287,12 @@ public class ResourceManagerImpl implements ResourceManager {
             LOG.log(FINEST, "Ignoring InvocationException.", ex);
             // UnregisterResource is called outside of component context
             // likely to be container-forced destroy. Do nothing
+        }
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "ResourceManagerImpl.unregisterResource END: handle=" + resource + ", resource="
+                    + resource.getResource()
+                    + ", transactional=" + resource.isTransactional());
         }
     }
 

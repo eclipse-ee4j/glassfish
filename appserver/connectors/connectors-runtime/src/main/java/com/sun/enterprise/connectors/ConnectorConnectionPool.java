@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,6 @@ public class ConnectorConnectionPool implements Serializable {
     private String poolWaitQueue;
     private String dataStructureParameters;
     private String resourceGatewayClass;
-    private String resourceSelectionStrategyClass;
     private boolean nonTransactional_;
     private boolean nonComponent_;
 
@@ -772,14 +771,6 @@ public class ConnectorConnectionPool implements Serializable {
 
     public void setResourceGatewayClass(String resourceGatewayClass) {
         this.resourceGatewayClass = resourceGatewayClass;
-    }
-
-    public String getResourceSelectionStrategyClass() {
-        return resourceSelectionStrategyClass;
-    }
-
-    public void setResourceSelectionStrategyClass(String resourceSelectionStrategyClass) {
-        this.resourceSelectionStrategyClass = resourceSelectionStrategyClass;
     }
 
     public boolean isPreferValidateOverRecreate() {

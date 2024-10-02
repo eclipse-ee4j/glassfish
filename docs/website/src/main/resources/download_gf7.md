@@ -7,7 +7,7 @@ Eclipse GlassFish is an application server, implementing Jakarta EE. This releas
 
 GlassFish 7.0.18 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 23. MicroProfile support requires JDK 17 or higher.
 
-This release is all about an exciting new feature that allows running GlassFish Embedded from the command line using java -jar glassfish-embedded.jar. It supports configuration via command line arguments and/or config files in the current directory, such as setting the HTTP port, deploying applications passed as arguments and running arbitrary AsAdmin commands at boot. Aside of that we did a large amount of maintenance for the internal modules nucleus-admin and glassfish, and fixed various issues that were reported by users.
+This release is all about an exciting new feature that allows running GlassFish Embedded from the command line using `java -jar glassfish-embedded.jar`. It supports configuration via command line arguments and/or config files in the current directory, such as setting the HTTP port, deploying applications passed as arguments and running arbitrary AsAdmin commands at boot. Aside of that we did a large amount of maintenance for the internal modules `nucleus-admin` and `glassfish`, and fixed various issues that were reported by users.
 
 Download:
 

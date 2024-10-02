@@ -10,13 +10,13 @@ sponsored by the Eclipse Foundation.
 ## Latest News
 
 
-## October 30, 2024 -- Eclipse GlassFish 7.0.18 Available
+## October 2, 2024 -- Eclipse GlassFish 7.0.18 Available
 
 The full GlassFish team is happy to present you another great GlassFish release; Eclipse GlassFish 7.0.18!
 
 Download links are available from the [GlassFish Download page](download.md).
 
-This release is all about an exciting new feature that allows running GlassFish Embedded from the command line using java -jar glassfish-embedded.jar. It supports configuration via command line arguments and/or config files in the current directory, such as setting the HTTP port, deploying applications passed as arguments and running arbitrary AsAdmin commands at boot. Aside of that we did a large amount of maintenance for the internal modules nucleus-admin and glassfish, and fixed various issues that were reported by users.
+This release is all about an exciting new feature that allows running GlassFish Embedded from the command line using `java -jar glassfish-embedded.jar`. It supports configuration via command line arguments and/or config files in the current directory, such as setting the HTTP port, deploying applications passed as arguments and running arbitrary AsAdmin commands at boot. Aside of that we did a large amount of maintenance for the internal modules `nucleus-admin` and `glassfish`, and fixed various issues that were reported by users.
 
 
 ## August 30, 2024 -- Eclipse GlassFish 7.0.17 Available

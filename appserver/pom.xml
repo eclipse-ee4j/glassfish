@@ -105,7 +105,7 @@
         <exousia.version>3.0.0-M3</exousia.version>
         <epicyro.version>3.1.0</epicyro.version>
         <!-- Dependencies -->
-        <nimbus.version>9.40</nimbus.version>
+        <nimbus.version>9.41.2</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -114,7 +114,7 @@
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
-        <eclipselink.version>5.0.0-B02</eclipselink.version>
+        <eclipselink.version>5.0.0-B03</eclipselink.version>
         <eclipselink.asm.version>9.7.0</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
@@ -158,7 +158,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.0.10</helidon-config.version>
+        <helidon-config.version>4.1.1</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
@@ -495,7 +495,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.17.0</version>
+                <version>1.17.1</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -758,7 +758,7 @@
                         <dependency>
                             <groupId>org.codehaus.plexus</groupId>
                             <artifactId>plexus-utils</artifactId>
-                            <version>4.0.1</version>
+                            <version>4.0.2</version>
                         </dependency>
                     </dependencies>
                 </plugin>

@@ -302,7 +302,6 @@
         jakarta.servlet-api.jar
         jakarta.servlet.jsp-api.jar
         jakarta.servlet.jsp.jstl-api.jar
-        jakarta.servlet.jsp.jstl.jar
         jakarta.jms-api.jar
         jakarta.faces.jar
         wasp.jar
@@ -310,14 +309,13 @@
         web-glue.jar
         hibernate-validator.jar
         jakarta.validation-api.jar
-        jakarta.ejb.jar
+        jakarta.ejb-api.jar
         jakarta.jms-api.jar
         jakarta.activation-api.jar
         angus-activation.jar
         jakarta.mail-api.jar
         angus-mail.jar
-        jakarta.management.j2ee-api.jar
-        jakarta.persistence.jar
+        jakarta.persistence-api.jar
         jakarta.resource-api.jar
         jakarta.authentication-api.jar
         jakarta.authorization-api.jar
@@ -326,8 +324,10 @@
         webservices-api-osgi.jar
         webservices-osgi.jar
         weld-osgi-bundle.jar
+        jakarta.mvc-api.jar
         jersey-mvc-jsp.jar
         jakarta.enterprise.concurrent-api.jar
+        glassfish-corba-omgapi.jar
       </param-value>
     </init-param>
     <load-on-startup>3</load-on-startup>

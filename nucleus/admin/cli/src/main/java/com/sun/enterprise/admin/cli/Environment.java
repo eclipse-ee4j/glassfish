@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +42,7 @@ public final class Environment {
     private boolean debug;
     private boolean trace;
     private File logfile;
+    private Formatter formatter;
 
     /**
      * Set the prefix for environment variables referenced from the system environment by Environment objects.
@@ -109,13 +110,29 @@ public final class Environment {
         }
         if (fname != null) {
             File f = new File(fname);
-
             try {
-                if ((f.exists() || f.createNewFile()) && f.isFile() && f.canWrite()) {
+                if (f.isFile() && f.canWrite()) {
+                    logfile = f;
+                } else {
+                    File dir = f.getParentFile();
+                    if (!dir.isDirectory() && !dir.mkdirs()) {
+                        throw new IllegalStateException("Could not create a log file: " + f);
+                    }
+                    if (!f.createNewFile()) {
+                        throw new IllegalStateException("Could not create a log file: " + f);
+                    }
                     logfile = f;
                 }
             } catch (IOException e) {
-                /* ignore */ }
+                throw new IllegalStateException("Could not create a log file: " + f, e);
+            }
+        }
+        final String formatterClass = env.get(PREFIX + "LOG_FORMATTER");
+        try {
+            formatter = formatterClass == null ? null
+                : (Formatter) Class.forName(formatterClass).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("This is not a valid formatter: " + formatterClass, e);
         }
     }
 
@@ -220,12 +237,6 @@ public final class Environment {
     }
 
     public Formatter getLogFormatter() {
-        final String formatterClass = env.get(PREFIX + "LOG_FORMATTER");
-        try {
-            return formatterClass == null ? null
-                : (Formatter) Class.forName(formatterClass).getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            throw new IllegalStateException("This is not a formatter: " + formatterClass, e);
-        }
+        return formatter;
     }
 }

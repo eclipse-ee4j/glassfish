@@ -141,7 +141,7 @@ class GFEmbeddedLauncher extends GFLauncher {
             adminAddresses.add(new HostAndPort("localhost", 4848, false));
             info.setAdminAddresses(adminAddresses);
         }
-        GFLauncherLogger.addLogFileHandler(getLogFilename(), info);
+        GFLauncherLogger.addLogFileHandler(getLogFilename());
 
         // super.fixLogFilename();
 

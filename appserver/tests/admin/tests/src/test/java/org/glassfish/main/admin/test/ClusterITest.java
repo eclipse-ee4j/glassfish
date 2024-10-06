@@ -59,7 +59,7 @@ public class ClusterITest {
     private static final String INSTANCE_NAME_2 = "eein2";
     private static final String URL1 = "http://localhost:" + PORT1;
     private static final String URL2 = "http://localhost:" + PORT2;
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
     private static final AtomicBoolean INSTANCES_REACHABLE = new AtomicBoolean();
     private static final AtomicBoolean APP_DEPLOYED = new AtomicBoolean();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(JobTestExtension.class)
 public class DetachAttachITest {
     private static final Logger LOG = Logger.getLogger(DetachAttachITest.class.getName());
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
 
 
     @Test
@@ -69,7 +69,7 @@ public class DetachAttachITest {
             }
             Thread.sleep(1000L);
             {
-                AsadminResult result = ASADMIN.exec("--terse", "attach", id);
+                AsadminResult result = GlassFishTestEnvironment.getAsadmin(true).exec("attach", id);
                 assertThat(result, asadminOK());
                 assertTrue(result.getStdOut().contains("uptime"));
             }

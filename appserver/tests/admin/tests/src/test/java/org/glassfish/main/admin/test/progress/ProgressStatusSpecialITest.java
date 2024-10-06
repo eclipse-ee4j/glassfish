@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(JobTestExtension.class)
 public class ProgressStatusSpecialITest {
 
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
 
 
     @Test

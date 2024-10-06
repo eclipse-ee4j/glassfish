@@ -53,6 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * after tests are finished.
  *
  * @author David Matejcek
+ * @author Ondro Mihalyi
  */
 public class GlassFishTestEnvironment {
     private static final Logger LOG = Logger.getLogger(GlassFishTestEnvironment.class.getName());
@@ -266,6 +267,18 @@ public class GlassFishTestEnvironment {
         }
     }
 
+
+    /** Default is org.apache.derby.jdbc.ClientDataSource */
+    public static void switchDerbyPoolToEmbededded() {
+        final AsadminResult result = getAsadmin(true).exec(5_000, "set",
+            "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
+            "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
+            "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
+            "resources.jdbc-connection-pool.DerbyPool.property.URL=");
+        assertThat(result, asadminOK());
+        // Just to see the result in log.
+        assertThat(getAsadmin(true).exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*"), asadminOK());
+    }
 
     /**
      * Useful for a heuristic inside Eclipse and other environments.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,9 +74,9 @@ public class CarHandler extends AbstractArchiveHandler {
             GFCarXMLParser gfXMLParser = new GFCarXMLParser();
             versionIdentifier = gfXMLParser.extractVersionIdentifierValue(archive);
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } catch (XMLStreamException e) {
-            LOG.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
         return versionIdentifier;
 

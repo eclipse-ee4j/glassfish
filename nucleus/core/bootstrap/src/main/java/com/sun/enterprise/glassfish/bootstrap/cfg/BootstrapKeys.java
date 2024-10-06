@@ -72,6 +72,9 @@ public final class BootstrapKeys {
 
     public static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
 
+    public static final String DERBY_ROOT_PROP_NAME = "com.sun.aas.derbyRoot";
+
+
     private BootstrapKeys() {
     }
 }

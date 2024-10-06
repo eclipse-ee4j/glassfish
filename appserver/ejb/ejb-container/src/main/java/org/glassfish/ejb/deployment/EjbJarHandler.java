@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,9 +91,9 @@ public class EjbJarHandler extends AbstractArchiveHandler {
             GFEjbJarXMLParser gfXMLParser = new GFEjbJarXMLParser(archive);
             versionIdentifier = gfXMLParser.extractVersionIdentifierValue(archive);
         } catch (XMLStreamException e) {
-            LOG.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
         return versionIdentifier;
     }
@@ -145,17 +145,13 @@ public class EjbJarHandler extends AbstractArchiveHandler {
             }
 
             try {
-                final DeploymentContext dc = context;
-                final ClassLoader cl = cloader;
-
-                AccessController.doPrivileged(
-                    new PermsArchiveDelegate.SetPermissionsAction(SMGlobalPolicyUtil.CommponentType.ejb, dc, cl));
+                AccessController.doPrivileged(new PermsArchiveDelegate.SetPermissionsAction(
+                    SMGlobalPolicyUtil.CommponentType.ejb, context, cloader));
             } catch (PrivilegedActionException e) {
                 throw new SecurityException(e.getException());
             }
 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, e.getMessage());
             throw new RuntimeException(e);
         }
         return cloader;

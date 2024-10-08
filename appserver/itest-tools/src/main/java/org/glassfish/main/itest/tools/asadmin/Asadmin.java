@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,6 +57,7 @@ public class Asadmin {
     private final File asadmin;
     private final String adminUser;
     private final File adminPasswordFile;
+    private final boolean terse;
     private final Map<String, String> environment = new HashMap<>();
 
 
@@ -68,9 +69,23 @@ public class Asadmin {
      * @param adminPasswordFile - a file containing admin's password set as <code>AS_ADMIN_PASSWORD=...</code>
      */
     public Asadmin(final File asadmin, final String adminUser, final File adminPasswordFile) {
+        this(asadmin, adminUser, adminPasswordFile, false);
+    }
+
+
+    /**
+     * Creates a stateless instance of the tool.
+     *
+     * @param asadmin - executable file
+     * @param adminUser - username authorized to use the domain
+     * @param adminPasswordFile - a file containing admin's password set as <code>AS_ADMIN_PASSWORD=...</code>
+     * @param terse - to produce output, minimized and suitable for parsing.
+     */
+    public Asadmin(final File asadmin, final String adminUser, final File adminPasswordFile, final boolean terse) {
         this.asadmin = asadmin;
         this.adminUser = adminUser;
         this.adminPasswordFile = adminPasswordFile;
+        this.terse = terse;
     }
 
 
@@ -167,8 +182,10 @@ public class Asadmin {
         command.add("--passwordfile");
         command.add(adminPasswordFile.getAbsolutePath());
         if (detachedAndTerse) {
-            command.add("--terse");
+            command.add("--terse=true");
             command.add("--detach");
+        } else {
+            command.add("--terse=" + terse);
         }
         command.addAll(parameters);
 

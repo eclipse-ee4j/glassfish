@@ -51,6 +51,7 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.util.io.FileUtils.USER_HOME;
 import static org.glassfish.embeddable.GlassFishProperties.CONFIG_FILE_URI_PROP_NAME;
+import static org.osgi.framework.Constants.BUNDLE_VERSION;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA;
 
@@ -109,8 +110,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         URI jar = null;
         try {
             jar = uberJarURI != null ? new URI(uberJarURI) : Util.whichJar(GlassFishRuntime.class);
-        } catch (URISyntaxException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
         }
 
         // XXX : Commented out by Prasad , we are again looking for instance root here. Why ?
@@ -151,7 +152,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         String autoStartBundleLocation = "jar:" + jar.toString() + "!/modules/installroot-builder_jar/," +
                 "jar:" + jar.toString() + "!/modules/instanceroot-builder_jar/," +
-                "jar:" + jar.toString() + "!/modules/kernel_jar/"; // TODO :: was modules/glassfish_jar
+                "jar:" + jar.toString() + "!/modules/kernel_jar/";
 
         if (isOSGiEnv()) {
             autoStartBundleLocation = autoStartBundleLocation +
@@ -182,8 +183,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             autostartBundle.start(Bundle.START_TRANSIENT);
             logger.log(Level.FINER, "Started autostartBundle {0}", autostartBundle);
             return getService(GlassFishRuntime.class, context);
-        } catch (Throwable t) {
-            throw new GlassFishException(new Exception(t));
+        } catch (Exception e) {
+            throw new GlassFishException(e);
         }
     }
 
@@ -201,10 +202,10 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     public <T> T getService(Class<T> type, BundleContext context) throws Exception {
-        ServiceTracker tracker = new ServiceTracker(context, type.getName(), null);
+        ServiceTracker<?, T> tracker = new ServiceTracker<>(context, type.getName(), null);
         try {
             tracker.open(true);
-            return type.cast(tracker.waitForService(0));
+            return tracker.waitForService(0);
         } finally {
             // no need to track further
             tracker.close();
@@ -233,7 +234,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         URL manifestURL = UberJarOSGiGlassFishRuntimeBuilder.class.getResource("/META-INF/MANIFEST.MF");
         try (InputStream manifestStream = manifestURL.openStream()) {
             Manifest manifest = new Manifest(manifestStream);
-            return  manifest.getMainAttributes().getValue(org.osgi.framework.Constants.BUNDLE_VERSION);
+            return  manifest.getMainAttributes().getValue(BUNDLE_VERSION);
         } catch (IOException e) {
             throw new IllegalStateException("Could not load version from the manifest file.", e);
         }

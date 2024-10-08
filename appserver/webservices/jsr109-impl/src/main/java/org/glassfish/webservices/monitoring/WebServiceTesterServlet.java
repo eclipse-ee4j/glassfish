@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * WebServiceTesterServlet.java
- *
- * Created on August 6, 2004, 9:14 AM
  */
 
 package org.glassfish.webservices.monitoring;
@@ -44,6 +38,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -66,17 +61,22 @@ import org.glassfish.jaxb.runtime.api.JAXBRIContext;
 import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.WebServiceContractImpl;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.common.util.HttpParser.getCharsetFromHeader;
 /**
  * This servlet is responsible for testing web-services.
  *
- * @author Jerome Dochez
+ * @author Jerome Dochez 2004
  */
 public class WebServiceTesterServlet extends HttpServlet {
 
     private final WebServiceEndpoint svcEP;
     private static final Logger logger = LogUtils.getLogger();
 
-    //modules required by wsimport tool
+    /**
+     * Modules required by wsimport tool.
+     * Note that names are not jar file names, but Bundle-SymbolicName header in their manifests!
+     */
     private static final List<String> WSIMPORT_MODULES = Arrays.asList(new String[] {
         "jakarta.activation-api",
         "angus-activation",
@@ -89,9 +89,8 @@ public class WebServiceTesterServlet extends HttpServlet {
 
     private static final Hashtable<String, Class> gsiClasses = new Hashtable<>();
     private static final Hashtable<String, Object> ports = new Hashtable<>();
-    // resources...
-    private static final LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(WebServiceTesterServlet.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
+        WebServiceTesterServlet.class);
 
     public static void invoke(HttpServletRequest request,
             HttpServletResponse response, WebServiceEndpoint endpoint) {
@@ -99,7 +98,7 @@ public class WebServiceTesterServlet extends HttpServlet {
         try {
             WebServiceTesterServlet servlet = new WebServiceTesterServlet(endpoint);
 
-            response.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(UTF_8.name());
             if (request.getMethod().equalsIgnoreCase("GET")) {
                 servlet.doGet(request, response);
             } else {
@@ -185,20 +184,12 @@ public class WebServiceTesterServlet extends HttpServlet {
                            "Web Service Tester") + "</H1>");
 
 
-        // Microsoft Internet Explorer does not handle <BUTTON> properly
-        boolean isInternetExplorer=false;
-        String userAgent = req.getHeader("user-agent");
-        if (userAgent!=null) {
-            isInternetExplorer=userAgent.indexOf("MSIE")!=-1;
-        }
-        StringBuffer sb = new StringBuffer(URLDecoder.decode(requestURL));
-        sb.append("?WSDL");
-
         out.print("<br>");
+        String wsdlUrl = URLDecoder.decode(requestURL, getCharsetFromHeader(req.getContentType())) + "?WSDL";
         out.print(localStrings.getLocalString(
                    "enterprise.webservice.monitoring.line1",
                            "This form will allow you to test your web service implementation (<A HREF=\"{0}\" title=\"WSDL file describing {1} web service\">WSDL File</A>)",
-                           sb.toString(), myEndpoint.getDescriptor().getServiceName().getLocalPart()));
+                           wsdlUrl, myEndpoint.getDescriptor().getServiceName().getLocalPart()));
         out.print("<hr>");
         out.print(localStrings.getLocalString(
                    "enterprise.webservice.monitoring.line2",
@@ -371,7 +362,7 @@ public class WebServiceTesterServlet extends HttpServlet {
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.ENCODING, UTF_8.name());
         transformer.transform(ss, sr);
 
 
@@ -516,23 +507,15 @@ public class WebServiceTesterServlet extends HttpServlet {
                 myEndpoint.getDescriptor().getWebService().getName());
 
         // construct the WSDL http url
-        StringBuffer sb = new StringBuffer(URLDecoder.decode(requestURL));
-        sb.append("?WSDL");
+        URL wsdlUrl = toURL(URLDecoder.decode(requestURL, getCharsetFromHeader(req.getContentType())) + "?WSDL");
 
-        URL[] urls = new URL[1];
-        String classesDir;
-        try {
-            URL wsdlUrl = new URL(sb.toString());
-            // create client artifacts
-            classesDir = wsImport(wsdlUrl);
-            if (classesDir == null) {
-                wsImportError(wsdlUrl,res.getWriter());
-                return;
-            }
-            urls[0] = (new File(classesDir)).toURL();
-        } catch(MalformedURLException mue) {
-            throw new ServletException(mue);
+        // create client artifacts
+        String classesDir = wsImport(wsdlUrl);
+        if (classesDir == null) {
+            wsImportError(wsdlUrl, res.getWriter());
+            return;
         }
+        URL[] urls = new URL[] {toURL(new File(classesDir))};
 
         // we need a class loader to load the just created client artifacts. Save the current classloader
         ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
@@ -552,7 +535,7 @@ public class WebServiceTesterServlet extends HttpServlet {
             }
 
             Class<?> serviceClass = testerCL.loadClass(serviceClassName);
-            Service service = Service.create(new URL(sb.toString()), serviceName);
+            Service service = Service.create(wsdlUrl, serviceName);
             if (service==null) {
                 throw new RuntimeException("Cannot load Service");
             }
@@ -579,6 +562,22 @@ public class WebServiceTesterServlet extends HttpServlet {
             Thread.currentThread().setContextClassLoader(currentLoader);
             // delete client artifacts, everything should be loaded or it failed
             deleteDir(new File(classesDir));
+        }
+    }
+
+    private URL toURL(String url) throws ServletException {
+        try {
+            return URI.create(url).toURL();
+        } catch (MalformedURLException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    private URL toURL(File file) throws ServletException {
+        try {
+            return file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new ServletException(e);
         }
     }
 
@@ -677,8 +676,8 @@ public class WebServiceTesterServlet extends HttpServlet {
 
     private String getPortClass(Endpoint ep, Class<?> serviceClass) throws Exception {
         for (Method m : serviceClass.getMethods()) {
-            WebEndpoint webEP = (WebEndpoint) m.getAnnotation(WebEndpoint.class);
-            if (webEP == null || webEP.name() == null || webEP.name().length() == 0) {
+            WebEndpoint webEP = m.getAnnotation(WebEndpoint.class);
+            if (webEP == null || webEP.name() == null || webEP.name().isEmpty()) {
                 continue;
             }
             String getPortMethodName = "get" +

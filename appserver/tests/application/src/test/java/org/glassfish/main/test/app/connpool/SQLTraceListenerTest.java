@@ -22,8 +22,7 @@ import java.net.HttpURLConnection;
 import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
-import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-import org.glassfish.main.itest.tools.asadmin.DomainSettings;
+import org.glassfish.main.itest.tools.asadmin.DomainPropertiesBackup;
 import org.glassfish.main.test.app.connpool.lib.LastTraceSQLTraceListener;
 import org.glassfish.main.test.app.connpool.webapp.Employee;
 import org.glassfish.main.test.app.connpool.webapp.SqlListenerApplication;
@@ -48,19 +47,15 @@ public class SQLTraceListenerTest {
 
     private static final System.Logger LOG = System.getLogger(SQLTraceListenerTest.class.getName());
 
-    private static final String RESOURCE_ROOT = "src/main/resources/" + SqlListenerApplication.class.getPackageName().replace(".", "/");
-
     private static final String LIB_FILE_NAME = "lib.jar";
-
     private static final String WEBAPP_FILE_NAME = "webapp.war";
 
     private static final String WEBAPP_NAME = "webapp";
-
     private static final String POOL_NAME = "DerbyPool";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
-    private static final DomainSettings DOMAIN_SETTINGS = new DomainSettings(ASADMIN);
+    private static final DomainPropertiesBackup DERBYPOOL_BACKUP = DomainPropertiesBackup.backupDerbyPool();
 
     @TempDir
     private static File appLibDir;
@@ -70,39 +65,31 @@ public class SQLTraceListenerTest {
 
     @BeforeAll
     public static void deployAll() throws IOException {
-        AsadminResult result;
-
         File webApp = createWebApp();
-
         File lib = createSqlTraceListenerLib();
 
-        result = ASADMIN.exec("add-library", lib.getAbsolutePath());
-        assertThat(result, asadminOK());
         // add-library shouldn't require a restart anymore
+        assertThat(ASADMIN.exec("add-library", lib.getAbsolutePath()), asadminOK());
 
-        DOMAIN_SETTINGS.backupDerbyPoolSettings();
-        DOMAIN_SETTINGS.setDerbyPoolEmbededded();
+        GlassFishTestEnvironment.switchDerbyPoolToEmbededded();
 
-        result = ASADMIN.exec("set", "resources.jdbc-connection-pool." + POOL_NAME
-                + ".sql-trace-listeners=" + LastTraceSQLTraceListener.class.getName());
-        assertThat(result, asadminOK());
+        assertThat(ASADMIN.exec("set", "resources.jdbc-connection-pool." + POOL_NAME + ".sql-trace-listeners="
+            + LastTraceSQLTraceListener.class.getName()), asadminOK());
 
-        result = ASADMIN.exec("deploy",
-                "--contextroot", "/" + WEBAPP_NAME,
-                "--name", WEBAPP_NAME,
-                webApp.getAbsolutePath());
-        assertThat(result, asadminOK());
+        assertThat(
+            ASADMIN.exec("deploy", "--contextroot", "/" + WEBAPP_NAME, "--name", WEBAPP_NAME, webApp.getAbsolutePath()),
+            asadminOK());
     }
 
     @AfterAll
     public static void undeployAll() {
-        DOMAIN_SETTINGS.restoreSettings();
         assertAll(
                 () -> assertThat(ASADMIN.exec("undeploy", WEBAPP_NAME), asadminOK()),
                 () -> assertThat(ASADMIN.exec("set", "resources.jdbc-connection-pool." + POOL_NAME
                         + ".sql-trace-listeners="), asadminOK()),
                 () -> assertThat(ASADMIN.exec("remove-library", LIB_FILE_NAME), asadminOK())
         );
+        DERBYPOOL_BACKUP.restore();
     }
 
     @Test
@@ -115,20 +102,16 @@ public class SQLTraceListenerTest {
         HttpURLConnection connection = openConnection(8080, "/" + contextRoot + "/" + endpoint);
         connection.setRequestMethod("GET");
         try {
-            try {
-                assertThat(connection.getResponseCode(), equalTo(200));
-            } catch (AssertionError e) {
-                throw new AssertionError(HttpParser.readResponseErrorStream(connection), e);
-            }
+            assertThat(connection.getResponseCode(), equalTo(200));
+        } catch (AssertionError e) {
+            throw new AssertionError(HttpParser.readResponseErrorStream(connection), e);
         } finally {
             connection.disconnect();
         }
     }
 
-    private static File createSqlTraceListenerLib() throws IOException {
-        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class)
-                .addClasses(LastTraceSQLTraceListener.class);
-
+    private static File createSqlTraceListenerLib() {
+        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class).addClasses(LastTraceSQLTraceListener.class);
         LOG.log(INFO, javaArchive.toString(true));
 
         File appLib = new File(appLibDir, LIB_FILE_NAME);
@@ -136,13 +119,13 @@ public class SQLTraceListenerTest {
         return appLib;
     }
 
-    private static File createWebApp() throws IOException {
+    private static File createWebApp() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
-                .addClass(SqlListenerApplication.class)
-                .addClass(SqlListenerEndpoint.class)
-                .addClass(Employee.class)
-                .addAsResource(new File(RESOURCE_ROOT, "/META-INF/persistence.xml"), "/META-INF/persistence.xml")
-                .addAsResource(new File(RESOURCE_ROOT, "/META-INF/load.sql"), "/META-INF/load.sql");
+            .addClass(SqlListenerApplication.class)
+            .addClass(SqlListenerEndpoint.class)
+            .addClass(Employee.class)
+            .addAsResource(SqlListenerApplication.class.getPackage(), "/META-INF/persistence.xml", "/META-INF/persistence.xml")
+            .addAsResource(SqlListenerApplication.class.getPackage(), "/META-INF/load.sql", "/META-INF/load.sql");
 
         LOG.log(INFO, webArchive.toString(true));
 

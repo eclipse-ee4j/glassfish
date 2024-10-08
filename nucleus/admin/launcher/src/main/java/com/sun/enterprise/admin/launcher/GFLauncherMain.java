@@ -23,7 +23,6 @@ import static com.sun.enterprise.admin.launcher.GFLauncherLogger.LAUNCH_FAILURE;
 import static org.glassfish.api.admin.RuntimeType.DAS;
 
 /**
- *
  * @author bnevins
  */
 public class GFLauncherMain {
@@ -37,7 +36,6 @@ public class GFLauncherMain {
     }
 
     /**
-     *
      * @param args
      */
     public static void main(String[] args) {

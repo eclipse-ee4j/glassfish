@@ -15,15 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-// the label is unique and identifies the pod descriptor and its resulting pods
-// without this, the agent could be using a pod created from a different descriptor
-env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
-// Docker image defined in this project in [glassfish]/etc/docker/Dockerfile
-env.gfImage = "ee4jglassfish/ci:tini-jdk-11.0.10"
+def dumpSysInfo() {
+  sh """
+    id || true
+    uname -a || true
+    env | sort || true
+    df -h || true
+    \${JAVA_HOME}/bin/jcmd || true
+    mvn -version || true
+    ant -version || true
+    ps -e -o start,etime,pid,rss,drs,command || true
+    cat /proc/cpuinfo || true
+    cat /proc/meminfo || true
+  """
+}
 
-def jobs = [
-  "verifyPhase",
+def antjobs = [
   "cdi_all",
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
@@ -45,84 +53,30 @@ def jobs = [
   "webservice_all"
 ]
 
-def parallelStagesMap = jobs.collectEntries {
-  ["${it}": generateStage(it)]
-}
-
-def generateStage(job) {
-  if (job == 'verifyPhase') {
-    return generateMvnPodTemplate(job)
-  } else {
-    return generateAntPodTemplate(job)
-  }
-}
-
-def generateMvnPodTemplate(job) {
-  return {
-    podTemplate(
-      inheritFrom: "${env.label}",
-      containers: [
-        containerTemplate(
-          name: "glassfish-build",
-          image: "${env.gfImage}",
-          resourceRequestMemory: "7Gi",
-          resourceRequestCpu: "2650m"
-        )
-      ]
-    ) {
-      node(label) {
-        stage("${job}") {
-          container('glassfish-build') {
-            retry(5) {
-              sleep 1
-              checkout scm
-            }
-            timeout(time: 1, unit: 'HOURS') {
-              sh """
-                mvn clean install
-              """
-              junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-            }
-          }
-        }
-      }
-    }
-  }
+def parallelStagesMap = antjobs.collectEntries {
+  ["${it}": generateAntPodTemplate(it)]
 }
 
 def generateAntPodTemplate(job) {
   return {
-    podTemplate(
-      inheritFrom: "${env.label}",
-      containers: [
-        containerTemplate(
-          name: "glassfish-build",
-          image: "${env.gfImage}",
-          resourceRequestMemory: "4Gi",
-          resourceRequestCpu: "2650m"
-        )
-      ]
-    ) {
-      node(label) {
-        stage("${job}") {
-          container('glassfish-build') {
-            unstash 'build-bundles'
-            sh """
-              mkdir -p ${WORKSPACE}/appserver/tests
-              tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-            """
-            try {
-              timeout(time: 1, unit: 'HOURS') {
-                sh """
-                  export CLASSPATH=${WORKSPACE}/glassfish6/javadb
-                  ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-                """
-              }
-            } finally {
-              archiveArtifacts artifacts: "${job}-results.tar.gz"
-              junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+    node {
+      stage("${job}") {
+        unstash 'build-bundles'
+        try {
+          timeout(time: 1, unit: 'HOURS') {
+            withAnt(installation: 'apache-ant-latest') {
+              dumpSysInfo()
+              sh """
+                mkdir -p ${WORKSPACE}/appserver/tests
+                tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+                export CLASSPATH=${WORKSPACE}/glassfish6/javadb
+                ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+              """
             }
           }
+        } finally {
+          archiveArtifacts artifacts: "${job}-results.tar.gz"
+          junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
         }
       }
     }
@@ -133,84 +87,65 @@ pipeline {
 
   agent {
     kubernetes {
-      label "${env.label}"
+      inheritFrom "basic"
       yaml """
 apiVersion: v1
 kind: Pod
-metadata:
 spec:
   containers:
-  - name: jnlp
-    image: jenkins/inbound-agent:4.11-1-alpine-jdk11
-    imagePullPolicy: IfNotPresent
-    env:
-      - name: JAVA_TOOL_OPTIONS
-        value: "-Xmx768m -Xss768k"
-    resources:
-      # fixes random failure: minimum cpu usage per Pod is 200m, but request is 100m.
-      # affects performance on large repositories
-      limits:
-        memory: "1200Mi"
-        cpu: "300m"
-      requests:
-        memory: "1200Mi"
-        cpu: "300m"
-  - name: glassfish-build
-    image: ${env.gfImage}
-    args:
+  - name: maven
+    image: maven:3.9.6-eclipse-temurin-11
+    command:
     - cat
     tty: true
-    imagePullPolicy: Always
-    volumeMounts:
-      - name: "jenkins-home"
-        mountPath: "/home/jenkins"
-        readOnly: false
-      - name: maven-repo-shared-storage
-        mountPath: /home/jenkins/.m2/repository
-      - name: settings-xml
-        mountPath: /home/jenkins/.m2/settings.xml
-        subPath: settings.xml
-        readOnly: true
-      - name: settings-security-xml
-        mountPath: /home/jenkins/.m2/settings-security.xml
-        subPath: settings-security.xml
-        readOnly: true
-      - name: maven-repo-local-storage
-        mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
     env:
-      - name: "MAVEN_OPTS"
-        value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseStringDeduplication"
-      - name: "MVN_EXTRA"
-        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-      - name: JAVA_TOOL_OPTIONS
-        value: "-Xmx2g -Xss768k -XX:+UseStringDeduplication"
+    - name: "HOME"
+      value: "/home/jenkins"
+    - name: "MAVEN_OPTS"
+      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
+    volumeMounts:
+    - name: "jenkins-home"
+      mountPath: "/home/jenkins"
+      readOnly: false
+    - name: maven-repo-shared-storage
+      mountPath: /home/jenkins/.m2/repository
+    - name: settings-xml
+      mountPath: /home/jenkins/.m2/settings.xml
+      subPath: settings.xml
+      readOnly: true
+    - name: settings-security-xml
+      mountPath: /home/jenkins/.m2/settings-security.xml
+      subPath: settings-security.xml
+      readOnly: true
+    - name: maven-repo-local-storage
+      mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
     resources:
       limits:
-        memory: "12Gi"
-        cpu: "8000m"
+        memory: "8Gi"
+        cpu: "6000m"
       requests:
-        memory: "7Gi"
-        cpu: "4000m"
+        memory: "8Gi"
+        cpu: "6000m"
   volumes:
-    - name: "jenkins-home"
-      emptyDir: {}
-    - name: maven-repo-shared-storage
-      persistentVolumeClaim:
-        claimName: glassfish-maven-repo-storage
-    - name: settings-xml
-      secret:
-        secretName: m2-secret-dir
-        items:
-        - key: settings.xml
-          path: settings.xml
-    - name: settings-security-xml
-      secret:
-        secretName: m2-secret-dir
-        items:
-        - key: settings-security.xml
-          path: settings-security.xml
-    - name: maven-repo-local-storage
-      emptyDir: {}
+  - name: "jenkins-home"
+    emptyDir: {}
+  - name: maven-repo-shared-storage
+    persistentVolumeClaim:
+      claimName: glassfish-maven-repo-storage
+  - name: settings-xml
+    secret:
+      secretName: m2-secret-dir
+      items:
+      - key: settings.xml
+        path: settings.xml
+  - name: settings-security-xml
+    secret:
+      secretName: m2-secret-dir
+      items:
+      - key: settings-security.xml
+        path: settings-security.xml
+  - name: maven-repo-local-storage
+    emptyDir: {}
 """
     }
   }
@@ -247,40 +182,54 @@ spec:
   stages {
 
     stage('build') {
-      agent {
-        kubernetes {
-          label "${env.label}"
-        }
-      }
       steps {
-        container('glassfish-build') {
+        checkout scm
+        container('maven') {
+          dumpSysInfo()
+          sh '''
+            # Validate the structure in all submodules (especially version ids)
+            # mvn -B -e -fae clean validate -Ptck,set-version-id,staging # TODO: Invalid parts in this branch
+            # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+            mvn -B -e install -Pfastest,staging -T4C
+            ./gfbuild.sh archive_bundles
+            mvn -B -e clean -Pstaging
+            tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+            ls -la ${WORKSPACE}/bundles
+          '''
+        }
+        archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
+        stash includes: 'bundles/*', name: 'build-bundles'
+      }
+    }
+    stage('mvn-tests') {
+      steps {
+        checkout scm
+        container('maven') {
+          dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
-            checkout scm
             sh '''
-              echo Maven version
-              mvn -v
-
-              echo User
-              id
-
-              echo Uname
-              uname -a
-
-              # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-              mvn clean install -Pfastest,staging -T4C
-              ./gfbuild.sh archive_bundles
-              mvn clean
-              tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-              ls -la ${WORKSPACE}/bundles
+                mvn -B -e clean install -Pstaging,qa
             '''
-            archiveArtifacts artifacts: 'bundles/*.zip'
-            stash includes: 'bundles/*', name: 'build-bundles'
           }
         }
       }
+      post {
+        always {
+          archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false
+          junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+        }
+      }
     }
-
-    stage('tests') {
+    stage('ant-tests') {
+      agent {
+        kubernetes {
+          inheritFrom 'basic'
+        }
+      }
+      tools {
+        jdk 'temurin-jdk11-latest'
+        maven 'apache-maven-3.9.6'
+      }
       steps {
         script {
           parallel parallelStagesMap

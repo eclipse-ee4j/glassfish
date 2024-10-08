@@ -56,7 +56,6 @@ public class OSGiCommandsITest {
             if (!result.isError()) {
                 return;
             }
-            Thread.sleep(1000);
         }
     }
 
@@ -127,7 +126,7 @@ public class OSGiCommandsITest {
     private String newCmdSession() throws Exception {
         List<String> value = runCmd("osgi", "--session", "new");
         if (value.size() != 1) {
-            throw new Exception("Unexpected output: \n " + value);
+            throw new AssertionError("Unexpected output: \n " + value);
         }
         return value.get(0);
     }

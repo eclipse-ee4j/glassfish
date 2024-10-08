@@ -48,14 +48,10 @@ public class SQLTraceListenerTest {
 
     private static final System.Logger LOG = System.getLogger(SQLTraceListenerTest.class.getName());
 
-    private static final String RESOURCE_ROOT = "src/main/resources/" + SqlListenerApplication.class.getPackageName().replace(".", "/");
-
     private static final String LIB_FILE_NAME = "lib.jar";
-
     private static final String WEBAPP_FILE_NAME = "webapp.war";
 
     private static final String WEBAPP_NAME = "webapp";
-
     private static final String POOL_NAME = "DerbyPool";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
@@ -136,13 +132,13 @@ public class SQLTraceListenerTest {
         return appLib;
     }
 
-    private static File createWebApp() throws IOException {
+    private static File createWebApp() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
                 .addClass(SqlListenerApplication.class)
                 .addClass(SqlListenerEndpoint.class)
                 .addClass(Employee.class)
-                .addAsResource(new File(RESOURCE_ROOT, "/META-INF/persistence.xml"), "/META-INF/persistence.xml")
-                .addAsResource(new File(RESOURCE_ROOT, "/META-INF/load.sql"), "/META-INF/load.sql");
+                .addAsResource(SqlListenerApplication.class.getPackage(), "/META-INF/persistence.xml", "/META-INF/persistence.xml")
+                .addAsResource(SqlListenerApplication.class.getPackage(), "/META-INF/load.sql", "/META-INF/load.sql");
 
         LOG.log(INFO, webArchive.toString(true));
 

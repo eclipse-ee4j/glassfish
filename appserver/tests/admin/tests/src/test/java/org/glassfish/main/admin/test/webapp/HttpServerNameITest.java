@@ -13,9 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package org.glassfish.main.admin.test.webapp;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -24,7 +24,6 @@ import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -33,6 +32,7 @@ import static org.glassfish.main.admin.test.ConnectionUtils.getContent;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class HttpServerNameITest {
 
@@ -43,7 +43,6 @@ public class HttpServerNameITest {
 
     private static final AtomicBoolean APP_DEPLOYED = new AtomicBoolean();
 
-    @ParameterizedTest(name = "[{index}] testServerName: {0}")
     @CsvSource({
         "'Plain host name', hostname1, http://hostname1:8080/",
         "'Plain domain name', my.domain.com, http://my.domain.com:8080/",
@@ -53,7 +52,8 @@ public class HttpServerNameITest {
         "'Secure domain name and port', https://my.domain.com:123, https://my.domain.com:123/",
         "'Secure domain name and standard port', https://my.domain.com:443, https://my.domain.com/"
     })
-    public void testHostName(String description, String serverName, String expectedUrlPrefix) throws IOException, InterruptedException {
+    @ParameterizedTest(name = "[{index}] testServerName: {0}")
+    public void testHostName(String description, String serverName, String expectedUrlPrefix) throws Exception {
         assertThat(ASADMIN.exec("set", SERVER_NAME_PROPERTY + "=" + serverName), asadminOK());
 
         final HttpURLConnection conn = GlassFishTestEnvironment.openConnection(HTTP_PORT, "/" + TEST_APP_NAME);
@@ -73,7 +73,7 @@ public class HttpServerNameITest {
 
     @AfterAll
     static void undeploy() {
-        Assumptions.assumeTrue(APP_DEPLOYED.get());
+        assumeTrue(APP_DEPLOYED.get());
         assertThat(ASADMIN.exec("undeploy", TEST_APP_NAME), asadminOK());
     }
 
@@ -81,5 +81,4 @@ public class HttpServerNameITest {
     void cleanup() {
         ASADMIN.exec("set", SERVER_NAME_PROPERTY + "=");
     }
-
 }

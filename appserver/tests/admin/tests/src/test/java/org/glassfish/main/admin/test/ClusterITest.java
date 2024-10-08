@@ -16,7 +16,6 @@
  */
 package org.glassfish.main.admin.test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -79,13 +78,9 @@ public class ClusterITest {
     @Test
     @Order(2)
     public void deployAppToClusterTest() {
-        String warFile = getWar().getAbsolutePath();
+        String warFile = TestResources.createSimpleWarDeployment(TEST_APP_NAME).getAbsolutePath();
         assertThat(ASADMIN.exec("deploy", "--target", CLUSTER_NAME, "--name", TEST_APP_NAME, "--contextroot", TEST_APP_NAME,
                 warFile), asadminOK());
-    }
-
-    private static File getWar() {
-        return TestResources.createSimpleWarDeployment(TEST_APP_NAME);
     }
 
     @Test

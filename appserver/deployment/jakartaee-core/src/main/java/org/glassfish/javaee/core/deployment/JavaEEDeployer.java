@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -137,13 +137,13 @@ public abstract class JavaEEDeployer<T extends Container, U extends ApplicationC
      * @return The instance classpath
      */
     protected String getCommonClassPath() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         File libDir = env.getLibPath();
         String libDirPath = libDir.getAbsolutePath();
 
         // Append domain_root/lib/classes
-        sb.append(libDirPath + File.separator + "classes");
+        sb.append(libDirPath).append(File.separator).append("classes");
         sb.append(File.pathSeparator);
 
         // Append domain_root/lib/[*.jar|*.zip]
@@ -151,7 +151,7 @@ public abstract class JavaEEDeployer<T extends Container, U extends ApplicationC
         if (files != null) {
             for (String file : files) {
                 if (file.endsWith(".jar") || file.endsWith(".zip")) {
-                    sb.append(libDirPath + File.separator + file);
+                    sb.append(libDirPath).append(File.separator).append(file);
                     sb.append(File.pathSeparator);
                 }
             }

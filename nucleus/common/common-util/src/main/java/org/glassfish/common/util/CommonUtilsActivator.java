@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,15 +27,15 @@ import org.osgi.framework.BundleContext;
  * @see ObjectInputOutputStreamFactoryFactory#setFactory
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-public class CommonUtilsActivator implements BundleActivator
-{
-    public void start(BundleContext context) throws Exception
-    {
-        ObjectInputOutputStreamFactoryFactory.setFactory(
-                new OSGiObjectInputOutputStreamFactoryImpl(context));
+public class CommonUtilsActivator implements BundleActivator {
+
+    @Override
+    public void start(BundleContext context) throws Exception {
+        ObjectInputOutputStreamFactoryFactory.setFactory(new OSGiObjectInputOutputStreamFactoryImpl(context));
     }
 
-    public void stop(BundleContext context) throws Exception
-    {
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
     }
 }

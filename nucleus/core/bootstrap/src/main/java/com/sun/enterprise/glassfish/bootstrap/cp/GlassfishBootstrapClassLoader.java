@@ -72,7 +72,6 @@ public class GlassfishBootstrapClassLoader extends URLClassLoader {
         final List<URL> urls = new ArrayList<>();
         final File libDir = glassfishDir.toPath().resolve(Paths.get("lib", "bootstrap")).toFile();
         urls.add(getURL(libDir, "glassfish-jul-extension"));
-        urls.add(getURL(libDir, "grizzly-npn-api"));
         return urls.toArray(new URL[urls.size()]);
     }
 

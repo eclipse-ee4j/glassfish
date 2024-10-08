@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,7 @@ import static org.hamcrest.Matchers.stringContainsInOrder;
 @TestMethodOrder(OrderAnnotation.class)
 public class AsadminVersionITest {
 
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
 
     @AfterAll
     public static void startDomainAgain() {

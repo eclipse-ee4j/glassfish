@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,8 @@ public class DefaultP2RAuthTest {
 
     @BeforeAll
     public static void prepareDeployment() {
-        AsadminResult result = ASADMIN.exec("--terse", "get", SERVER_CFG_PROPERTY);
+        AsadminResult result = ASADMIN.exec("get", SERVER_CFG_PROPERTY);
+        assertThat(result, asadminOK());
         orignalCfgValue = result.getStdOut().replaceFirst(SERVER_CFG_PROPERTY + "=", "").trim();
         createFileUser(FILE_REALM_NAME, USER_NAME, USER_PASSWORD, "mygroup");
 

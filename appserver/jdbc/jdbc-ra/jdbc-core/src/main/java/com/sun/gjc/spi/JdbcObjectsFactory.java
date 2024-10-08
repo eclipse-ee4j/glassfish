@@ -52,13 +52,14 @@ public abstract class JdbcObjectsFactory implements Serializable {
      * @return JdbcObjectsFactory
      */
     public static JdbcObjectsFactory getInstance() {
+        String className = "com.sun.gjc.spi.jdbc40.Jdbc40ObjectsFactory";
         try {
             return(JdbcObjectsFactory)
-                Class.forName("com.sun.gjc.spi.jdbc40.Jdbc40ObjectsFactory")
+            Class.forName(className)
                      .getDeclaredConstructor()
                      .newInstance();
         } catch (Exception e) {
-            _logger.log(WARNING, "jdbc.jdbc_factory_class_load_exception", e);
+            _logger.log(WARNING, "jdbc.jdbc_factory_class_load_exception", className);
             return null;
         }
     }

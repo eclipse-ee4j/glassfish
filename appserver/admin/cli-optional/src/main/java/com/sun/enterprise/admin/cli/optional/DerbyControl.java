@@ -55,7 +55,7 @@ public final class DerbyControl {
     public static void main(String[] args) {
         if (args.length < 3) {
             System.out.println("paramters not specified.");
-            System.out.println("DerbyControl <derby command> <derby host> <derby port> <redirect> [<derby home> | <derby user> <derby password>");
+            System.out.println("DerbyControl <derby command> <derby host> <derby port> <redirect> [<derby home> | <derby user> <derby password>]");
             System.exit(1);
         }
 

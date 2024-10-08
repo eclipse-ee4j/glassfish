@@ -78,18 +78,20 @@ public class DerbyExecuteSQL {
                 properties.put("password", derbyPassword);
             }
 
-            try (Connection connection = driver.connect("jdbc:derby://" + derbyHost + ":" + derbyPort + "/" + derbyName, new Properties())) {
+            try (Connection connection = driver.connect("jdbc:derby://" + derbyHost + ":" + derbyPort + "/" + derbyName, properties)) {
                 try (Scanner scanner = new Scanner(new File(sqlFileName), "UTF-8")) {
 
                     scanner.useDelimiter(";");
 
                     while (scanner.hasNext()) {
+                        String statement = null;
                         try {
-                            String statement = scanner.next().strip();
+                            statement = scanner.next().strip();
                             if (!statement.isEmpty()) {
                                 connection.prepareStatement(statement).execute();
                             }
                         } catch (SQLException s) {
+                            System.out.println("Exeception executing: " + statement);
                             s.printStackTrace();
                         }
                     }

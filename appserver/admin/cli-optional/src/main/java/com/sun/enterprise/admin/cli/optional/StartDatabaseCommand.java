@@ -55,11 +55,17 @@ public final class StartDatabaseCommand extends DatabaseCommand {
     @Param(name = "dbhome", optional = true)
     private String dbHome;
 
-    @Param(optional = true)
-    private String dbname;
+    @Param(name = "dbname", optional = true)
+    private String dbName;
 
     @Param(optional = true)
     private String sqlfilename;
+
+    @Param(name = "dbuser", optional = true)
+    private String dbUser;
+
+    @Param(name = "dbpassword", optional = true, password = true)
+    private String dbPassword;
 
     @Param(name = "jvmoptions", optional = true, separator = ' ')
     private String[] jvmoptions;
@@ -144,8 +150,13 @@ public final class StartDatabaseCommand extends DatabaseCommand {
         cmd.add("com.sun.enterprise.admin.cli.optional.DerbyExecuteSQL");
         cmd.add(dbHost);
         cmd.add(dbPort);
-        cmd.add(dbname);
+        cmd.add(dbName);
         cmd.add(sqlfilename);
+
+        if (!isAnyNull(dbUser, dbPassword)) {
+            cmd.add(dbUser);
+            cmd.add(dbPassword);
+        }
 
         return cmd.toArray(new String[cmd.size()]);
     }
@@ -277,7 +288,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
                     }
                 }
 
-                if (cpePing.exitValue() == 0 && !isAnyNull(dbname, sqlfilename)) {
+                if (cpePing.exitValue() == 0 && !isAnyNull(dbName, sqlfilename)) {
                     cpeSysInfo.execute("executeSQLCmd", executeSQLCmd(), true);
                     if (cpeSysInfo.exitValue() != 0) {
                         logger.info("Failed to execute SQL to init DB.");

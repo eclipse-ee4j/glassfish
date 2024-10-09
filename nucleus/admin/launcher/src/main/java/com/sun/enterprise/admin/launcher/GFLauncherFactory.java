@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,28 +24,25 @@ import static org.glassfish.api.admin.RuntimeType.EMBEDDED;
 import static org.glassfish.api.admin.RuntimeType.INSTANCE;
 
 /**
- *
  * @author bnevins
  */
 public class GFLauncherFactory {
 
     /**
-     *
      * @param type The type of server to launch.
      * @return A launcher instance that can be used for launching the specified server type.
      * @throws com.sun.enterprise.admin.launcher.GFLauncherException
      */
     public static GFLauncher getInstance(RuntimeType type) throws GFLauncherException {
         switch (type) {
-        case DAS:
-            return new GFDomainLauncher(new GFLauncherInfo(DAS));
-        case EMBEDDED:
-            return new GFEmbeddedLauncher(new GFLauncherInfo(EMBEDDED));
-        case INSTANCE:
-            return new GFInstanceLauncher(new GFLauncherInfo(INSTANCE));
-
-        default:
-            throw new GFLauncherException("Only domain, instance and embedded launching are currently supported.");
+            case DAS:
+                return new GlassFishMainLauncher(new GFLauncherInfo(DAS));
+            case EMBEDDED:
+                return new GFEmbeddedLauncher(new GFLauncherInfo(EMBEDDED));
+            case INSTANCE:
+                return new GlassFishMainLauncher(new GFLauncherInfo(INSTANCE));
+            default:
+                throw new GFLauncherException("Only domain, instance and embedded launching are currently supported.");
         }
     }
 }

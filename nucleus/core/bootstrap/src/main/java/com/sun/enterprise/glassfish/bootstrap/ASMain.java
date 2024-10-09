@@ -19,15 +19,13 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 /**
  * Tag Main to get the manifest file
+ *
+ * @deprecated Just calls the real main class.
  */
+@Deprecated
 public class ASMain {
 
     public static void main(final String[] args) throws Exception {
-        try {
-            GlassFishMain.main(args);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw t;
-        }
+        GlassFishMain.main(args);
     }
 }

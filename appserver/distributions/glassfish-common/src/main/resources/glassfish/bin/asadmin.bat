@@ -1,5 +1,6 @@
 @echo off
 REM
+REM  Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@ REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
 
-REM  Always use JDK 1.6 or higher
-REM  Depends on Java from ..\config\asenv.bat
 VERIFY OTHER 2>nul
 setlocal ENABLEEXTENSIONS
 if ERRORLEVEL 0 goto ok
@@ -31,4 +30,4 @@ goto run
 :UsePath
 set JAVA=java
 :run
-%JAVA% -jar "%~dp0..\lib\client\appserver-cli.jar" %*
+%JAVA% "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%~dp0..\lib\client\appserver-cli.jar" %*

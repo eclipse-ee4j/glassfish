@@ -1,5 +1,6 @@
 #!/bin/sh
 #
+# Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -19,11 +20,12 @@ AS_INSTALL=`dirname "$0"`/..
 case "`uname`" in
   CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
 esac
-AS_INSTALL_LIB="$AS_INSTALL/lib"
 . "${AS_INSTALL}/config/asenv.conf"
 JAVA=java
-#Depends upon Java from ../config/asenv.conf
+#Depends upon Java from asenv.conf
 if [ ${AS_JAVA} ]; then
     JAVA=${AS_JAVA}/bin/java
 fi
-exec "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" "$@"
+AS_CLIENT=$AS_INSTALL/lib/client
+
+exec "$JAVA" "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$AS_CLIENT/appserver-cli.jar" "$@"

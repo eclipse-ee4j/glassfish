@@ -33,10 +33,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.logging.LogHelper;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * @author Sridatta Viswanath

@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
@@ -45,6 +44,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;

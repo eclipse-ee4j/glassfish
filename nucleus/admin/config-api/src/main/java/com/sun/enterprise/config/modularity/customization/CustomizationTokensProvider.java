@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,8 +37,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * @author Masoud Kalali

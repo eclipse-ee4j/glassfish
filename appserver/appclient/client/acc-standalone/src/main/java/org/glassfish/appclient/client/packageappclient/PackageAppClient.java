@@ -16,8 +16,6 @@
 
 package org.glassfish.appclient.client.packageappclient;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -34,6 +32,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipException;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.util.jar.Attributes.Name.CLASS_PATH;
 

@@ -19,7 +19,6 @@ package com.sun.enterprise.universal.xml;
 
 import com.sun.common.util.logging.LoggingConfigImpl;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.StringUtils;
 
@@ -42,6 +41,7 @@ import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
 
 import static java.nio.charset.StandardCharsets.UTF_8;

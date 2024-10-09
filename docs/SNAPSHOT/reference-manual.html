@@ -49969,9 +49969,11 @@ Command start-cluster executed successfully.</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin [asadmin-options] start-database [--help]
-[--jvmoptions jvm-options]
+[--jvmoptions jvm-options] [--suspend={true|false}]
 [--dbhost host] [--dbport port-no]
-[--dbhome db-file-path]</code></pre>
+[--dbhome db-file-path]
+[--dbname name] [sqlfilename sql-file-path]
+[--dbuser] [--passwordfile password-file-path]</code></pre>
 </div>
 </div>
 </div>
@@ -50066,6 +50068,31 @@ For example, <code>-Xmx512m</code>.</p>
 </ul>
 </div>
 </dd>
+<dt class="hdlist1"><code>--suspend</code></dt>
+<dt class="hdlist1"><code>-s</code></dt>
+<dd>
+<p>Specifies whether the domain is started with
+<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
+Platform Debugger Architecture (JPDA)</a>
+(<a href="https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html" class="bare">https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html</a>)
+debugging enabled and suspend the newly started VM before the main class loads.
+When a debugger connects, it can send a JDWP command to resume the suspended VM.
+With debugging enabled extra exceptions can be printed.
+Possible values are as follows:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>true</code></dt>
+<dd>
+<p>The instance is started with JPDA debugging enabled and a suspendPolicy of <code>SUSPEND_ALL</code>.
+The port number for JPDA debugging is displayed.</p>
+</dd>
+<dt class="hdlist1"><code>false</code></dt>
+<dd>
+<p>The instance is started with JPDA debugging disabled (default).</p>
+</dd>
+</dl>
+</div>
+</dd>
 <dt class="hdlist1"><code>--dbhost</code></dt>
 <dd>
 <p>The host name or IP address of the Java DB server process. The default
@@ -50097,6 +50124,27 @@ as-install<code>/databases</code> directory.</p>
 </li>
 </ul>
 </div>
+</dd>
+<dt class="hdlist1"><code>--dbname</code></dt>
+<dd>
+<p>The name of the database that should be used to initialize when
+<code>sqlfilename</code> is specified.</p>
+</dd>
+<dt class="hdlist1"><code>--sqlfilename</code></dt>
+<dd>
+<p>Path to a file containing SQL statements to be executed after starting
+up the Java DB. Each statement should be separated by a ";". Statements
+may be put on new lines. The file encoding to be used is UTF-8.
+This file is only taken into consideration when <code>dbname</code> is specified.</p>
+</dd>
+<dt class="hdlist1"><code>--dbuser</code></dt>
+<dd>
+<p>The user name of the Java DB user that is to execute init SQL statements.
+This option is used only when <code>dbname</code> and <code>sqlfilename</code> are specified.
+If this option is omitted the DB schema used for the init SQL statements
+is owned by the default user. Must be combined with the general <code>passwordfile</code>
+option of which the file it points to must contain the <code>AS_ADMIN_DBPASSWORD</code>
+key with as value the password associated with the user.</p>
 <div class="paragraph">
 <p>To create the database files at a particular location, you must set
   the <code>--dbhome</code> option.</p>
@@ -57628,7 +57676,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-10-08 12:08:20 UTC
+Last updated 2024-10-09 08:07:17 UTC
 </div>
 </div>
 </body>

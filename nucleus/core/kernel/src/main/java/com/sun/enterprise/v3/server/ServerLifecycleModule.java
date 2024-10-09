@@ -114,7 +114,7 @@ public final class ServerLifecycleModule {
             } else {
                 URL[] urls = getURLs();
                 _logger.log(Level.FINE, "Lifecycle module = {0} has classpath URLs = {1}", new Object[] { getName(), urls });
-                this.urlClassLoader = new GlassfishUrlClassLoader(urls, ctx.getLifecycleParentClassLoader());
+                this.urlClassLoader = new GlassfishUrlClassLoader(getName(), urls, ctx.getLifecycleParentClassLoader());
                 classLoader = this.urlClassLoader;
             }
             @SuppressWarnings("unchecked")

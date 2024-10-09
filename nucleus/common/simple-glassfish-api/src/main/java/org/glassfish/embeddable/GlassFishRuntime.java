@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.embeddable;
 
-import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
@@ -130,7 +129,7 @@ public abstract class GlassFishRuntime {
         }
         ClassLoader classLoader = cl == null ? GlassFishRuntime.class.getClassLoader() : cl;
         RuntimeBuilder runtimeBuilder = getRuntimeBuilder(bootstrapProperties, classLoader);
-        me = runtimeBuilder.build(bootstrapProperties);
+        me = runtimeBuilder.build(bootstrapProperties, classLoader);
         return me;
     }
 
@@ -146,10 +145,8 @@ public abstract class GlassFishRuntime {
     private static RuntimeBuilder getRuntimeBuilder(BootstrapProperties bootstrapProperties, ClassLoader classLoader)
         throws GlassFishException {
         logger.logp(Level.FINE, "GlassFishRuntime", "getRuntimeBuilder", "classloader={0}", classLoader);
-        Iterator<RuntimeBuilder> runtimeBuilders = ServiceLoader.load(RuntimeBuilder.class, classLoader).iterator();
-        while (runtimeBuilders.hasNext()) {
+        for (RuntimeBuilder builder : ServiceLoader.load(RuntimeBuilder.class, classLoader)) {
             try {
-                RuntimeBuilder builder = runtimeBuilders.next();
                 logger.logp(Level.FINE, "GlassFishRuntime", "getRuntimeBuilder", "builder = {0}", builder);
                 if (builder.handles(bootstrapProperties)) {
                     return builder;

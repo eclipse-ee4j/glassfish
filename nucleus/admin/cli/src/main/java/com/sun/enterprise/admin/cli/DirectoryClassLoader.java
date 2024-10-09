@@ -37,6 +37,10 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
  */
 public class DirectoryClassLoader extends GlassfishUrlClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private static final LocalStringsImpl STRINGS = new LocalStringsImpl(DirectoryClassLoader.class);
     private static final int MAX_DEPTH = 5;
     private static final Comparator<Path> FILENAME_COMPARATOR = Comparator.comparing(Path::getFileName);
@@ -56,7 +60,7 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
      * @param parent - parent has higher priority.
      */
     public DirectoryClassLoader(final Set<File> jarsAndDirs, final ClassLoader parent) {
-        super(getJars(jarsAndDirs), parent);
+        super("AdminCli", getJars(jarsAndDirs), parent);
     }
 
 
@@ -68,7 +72,7 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
      * @param parent the parent class loader
      */
     public DirectoryClassLoader(final File dir, final ClassLoader parent) {
-        super(getJars(dir), parent);
+        super("AdminCli(" + dir.getName() + ")", getJars(dir), parent);
     }
 
 

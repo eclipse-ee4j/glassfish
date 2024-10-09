@@ -168,15 +168,14 @@ public class RARUtils {
         File f = new File(file);
         validateRARLocation(f);
         try {
-            ClassLoader commonClassLoader =
-                    ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
+            ClassLoader commonCL = ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
             if (f.isDirectory()) {
                 List<URL> urls = new ArrayList<>();
                 urls.add(f.toURI().toURL());
                 appendURLs(urls, f);
-                return new GlassfishUrlClassLoader(urls.toArray(URL[]::new), commonClassLoader);
+                return new GlassfishUrlClassLoader("ResourceAdapterDir(" + f.getName() + ")", urls.toArray(URL[]::new), commonCL);
             }
-            return new ConnectorRARClassLoader(file, commonClassLoader);
+            return new ConnectorRARClassLoader(file, commonCL);
         } catch (IOException ioe) {
             throw new ConnectorRuntimeException("unable to read connector descriptor from " + file, ioe);
         }

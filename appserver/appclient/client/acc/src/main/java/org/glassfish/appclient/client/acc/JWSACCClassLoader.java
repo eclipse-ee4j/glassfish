@@ -26,11 +26,14 @@ import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 public class JWSACCClassLoader extends GlassfishUrlClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private final ClientClassLoaderDelegate clientCLDelegate;
 
     public JWSACCClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
-
+        super("JWS-ACC", urls, parent);
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 

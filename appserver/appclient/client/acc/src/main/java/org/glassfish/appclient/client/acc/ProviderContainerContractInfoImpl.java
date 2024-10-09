@@ -80,7 +80,8 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
 
     @Override
     public ClassLoader getTempClassloader() {
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(classLoader.getURLs());
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader("PersistenceTmp",
+            classLoader.getURLs());
         return AccessController.doPrivileged(action);
     }
 

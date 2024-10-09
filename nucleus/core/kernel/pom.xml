@@ -31,9 +31,10 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Kernel Classes</name>
-    
+
     <properties>
         <commonClassLoader.tests.skip>false</commonClassLoader.tests.skip>
+        <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
     </properties>
 
     <developers>
@@ -107,6 +108,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
             <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
@@ -114,6 +120,11 @@
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>glassfish</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.core</groupId>
+            <artifactId>glassfish-osgi-bootstrap</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -187,6 +198,11 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+            <scope>test</scope>
         </dependency>
         <!-- Dependency of Hibernate Validator -->
         <dependency>
@@ -266,7 +282,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.1</version>
                 <executions>
                     <execution>
                         <id>commonClassLoader tests</id>
@@ -317,7 +332,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>fastest</id>

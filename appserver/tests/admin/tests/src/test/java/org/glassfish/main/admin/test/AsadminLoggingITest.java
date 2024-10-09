@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -117,7 +117,7 @@ public class AsadminLoggingITest {
         assertThat(result, asadminOK());
         String[] lines = substringBefore(result.getStdOut(), "Command list-loggers executed successfully.").split("\n");
         assertAll(
-            () -> assertThat(lines, arrayWithSize(equalTo(62))),
+            () -> assertThat(lines, arrayWithSize(equalTo(61))),
             () -> assertThat(lines[0], matchesPattern("Logger Name[ ]+Subsystem[ ]+Logger Description[ ]+"))
         );
         Map<String, String[]> loggers = Arrays.stream(lines).skip(1).map(line -> line.split("\\s{2,}"))

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -85,7 +85,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
         try {
             versionIdentifier = new GFEjbJarXMLParser(archive).extractVersionIdentifierValue(archive);
         } catch (XMLStreamException | IOException e) {
-            LOG.log(SEVERE, e.getMessage());
+            LOG.log(SEVERE, e.getMessage(), e);
         }
 
         return versionIdentifier;
@@ -136,7 +136,6 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 cloader.addURL(url);
             }
         } catch (Exception e) {
-            LOG.log(SEVERE, e.getMessage());
             throw new RuntimeException(e);
         }
 

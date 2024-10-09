@@ -19,10 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-import org.glassfish.main.itest.tools.asadmin.DomainSettings;
+import org.glassfish.main.itest.tools.asadmin.DomainPropertiesBackup;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefApplication;
 import org.glassfish.main.test.app.persistence.resourceref.webapp.ResourceRefResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -51,12 +52,11 @@ public class JtaDataSourceResourceRefTest {
     private static final String CONTEXT_ROOT = "/";
     private static final Asadmin ASADMIN = getAsadmin();
 
-    private static final DomainSettings DOMAIN_SETTINGS = new DomainSettings(ASADMIN);
+    private static final DomainPropertiesBackup DERBYPOOL_BACKUP = DomainPropertiesBackup.backupDerbyPool();
 
     @BeforeAll
     public static void deploy() throws Exception {
-        DOMAIN_SETTINGS.backupDerbyPoolSettings();
-        DOMAIN_SETTINGS.setDerbyPoolEmbededded();
+        GlassFishTestEnvironment.switchDerbyPoolToEmbededded();
         final File warFile = createDeployment();
         try {
             AsadminResult result = ASADMIN.exec("deploy", "--contextroot", CONTEXT_ROOT, "--name", APP_NAME,
@@ -72,7 +72,7 @@ public class JtaDataSourceResourceRefTest {
     static void undeploy() {
         AsadminResult result = ASADMIN.exec("undeploy", APP_NAME);
         assertThat(result, asadminOK());
-        DOMAIN_SETTINGS.restoreSettings();
+        DERBYPOOL_BACKUP.restore();
     }
 
 

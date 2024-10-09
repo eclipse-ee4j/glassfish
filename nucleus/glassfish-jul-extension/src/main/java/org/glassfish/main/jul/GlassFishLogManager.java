@@ -47,8 +47,10 @@ import java.util.stream.Stream;
 import org.glassfish.main.jul.cfg.ConfigurationHelper;
 import org.glassfish.main.jul.cfg.GlassFishLogManagerConfiguration;
 import org.glassfish.main.jul.cfg.GlassFishLogManagerProperty;
+import org.glassfish.main.jul.cfg.GlassFishLoggingConstants;
 import org.glassfish.main.jul.cfg.LoggingProperties;
 import org.glassfish.main.jul.env.LoggingSystemEnvironment;
+import org.glassfish.main.jul.handler.BlockingExternallyManagedLogHandler;
 import org.glassfish.main.jul.handler.ExternallyManagedLogHandler;
 import org.glassfish.main.jul.handler.SimpleLogHandler;
 import org.glassfish.main.jul.handler.SimpleLogHandler.SimpleLogHandlerProperty;
@@ -88,8 +90,10 @@ import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
  * @author David Matejcek
  */
 public class GlassFishLogManager extends LogManager {
+
     /** Empty string - standard root logger name */
     public static final String ROOT_LOGGER_NAME = "";
+    private static final String LOGGING_PROPERTIES = "logging.properties";
 
     private static final ReentrantLock LOCK = new ReentrantLock();
 
@@ -104,6 +108,10 @@ public class GlassFishLogManager extends LogManager {
     private GlassFishLogManagerConfiguration configuration;
 
 
+    /**
+     * @deprecated Too late - if user enables ie GC logging, it initiates the JDK LogManager before this.
+     */
+    @Deprecated
     static boolean initialize(final Properties configuration) {
         trace(GlassFishLogManager.class, "initialize(configuration)");
         if (status.ordinal() > GlassFishLoggingStatus.UNINITIALIZED.ordinal()) {
@@ -697,21 +705,29 @@ public class GlassFishLogManager extends LogManager {
 
     private static LoggingProperties provideProperties() {
         try {
-            final LoggingProperties propertiesFromJvmOption = toProperties(System.getProperty(JVM_OPT_LOGGING_CFG_FILE));
+            if (Boolean.getBoolean(GlassFishLoggingConstants.JVM_OPT_LOGGING_CFG_BLOCK)) {
+                final LoggingProperties cfg = new LoggingProperties();
+                cfg.setProperty(KEY_ROOT_HANDLERS.getPropertyName(),
+                    BlockingExternallyManagedLogHandler.class.getName());
+                return cfg;
+            }
+            final String file = System.getProperty(JVM_OPT_LOGGING_CFG_FILE);
+            final LoggingProperties propertiesFromJvmOption = toProperties(file);
             if (propertiesFromJvmOption != null) {
+                trace(GlassFishLogManager.class, () -> "Using file " + file);
                 return propertiesFromJvmOption;
+            }
+            if (Boolean.getBoolean(JVM_OPT_LOGGING_CFG_USE_DEFAULTS)) {
+                return createDefaultProperties();
             }
             final LoggingProperties propertiesFromClasspath = loadFromClasspath();
             if (propertiesFromClasspath != null) {
                 return propertiesFromClasspath;
             }
-            if (Boolean.getBoolean(JVM_OPT_LOGGING_CFG_USE_DEFAULTS)) {
-                return createDefaultProperties();
-            }
             throw new IllegalStateException(
-                "Could not find any logging.properties configuration file neither from JVM option ("
-                    + JVM_OPT_LOGGING_CFG_FILE + ") nor from classpath and even " + JVM_OPT_LOGGING_CFG_USE_DEFAULTS
-                    + " wasn't set to true.");
+                "Could not find any configuration. The JVM option "
+                    + JVM_OPT_LOGGING_CFG_FILE + " was not set, the JVM option " + JVM_OPT_LOGGING_CFG_USE_DEFAULTS
+                    + " was disabled and no " + LOGGING_PROPERTIES + " were found on classpath.");
         } catch (final IOException e) {
             throw new IllegalStateException("Could not load logging configuration file.", e);
         }
@@ -725,6 +741,7 @@ public class GlassFishLogManager extends LogManager {
         cfg.setProperty(KEY_USR_ROOT_LOGGER_LEVEL.getPropertyName(), level);
         cfg.setProperty(KEY_ROOT_HANDLERS.getPropertyName(), SimpleLogHandler.class.getName());
         cfg.setProperty(SimpleLogHandlerProperty.LEVEL.getPropertyFullName(), level);
+        trace(GlassFishLogManager.class, () -> "Using internal defaults: " + cfg);
         return cfg;
     }
 
@@ -744,10 +761,12 @@ public class GlassFishLogManager extends LogManager {
     private static LoggingProperties loadFromClasspath() throws IOException {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         trace(GlassFishLogManager.class, () -> "loadFromClasspath(); classloader: " + classLoader);
-        try (InputStream input = classLoader.getResourceAsStream("logging.properties")) {
+        try (InputStream input = classLoader.getResourceAsStream(LOGGING_PROPERTIES)) {
             if (input == null) {
                 return null;
             }
+            trace(GlassFishLogManager.class,
+                () -> "Using file from classpath: " + classLoader.getResource(LOGGING_PROPERTIES));
             return LoggingProperties.loadFrom(input);
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,14 +46,16 @@ import org.glassfish.api.admin.CommandException;
  */
 public final class InstanceDirs {
 
+    private final ServerDirs dirs;
+
     /**
      * This constructor is used when the instance dir is known
      *
      * @param instanceDir The instance's directory
      * @throws IOException If any error including not having a grandparent directory.
      */
-    public InstanceDirs(File theInstanceDir) throws IOException {
-        dirs = new ServerDirs(theInstanceDir);
+    public InstanceDirs(File instanceDir) throws IOException {
+        dirs = new ServerDirs(instanceDir);
 
         if (dirs.getServerGrandParentDir() == null) {
             throw new IOException(ServerDirs.strings.get("InstanceDirs.noGrandParent", dirs.getServerDir()));
@@ -62,13 +65,14 @@ public final class InstanceDirs {
     /**
      * This constructor handles 0, 1, 2 or 3 null args.
      * It is smart enough to figure out many defaults.
-     * @param nodeDirParent E.g. install-dir/nodes
-     * @param nodeDir E.g. install-dir/nodes/localhost
+     * @param nodeDirParentPath E.g. install-dir/nodes
+     * @param nodeDirName E.g. install-dir/nodes/localhost
      * @param instanceName E.g. i1
      */
     public InstanceDirs(String nodeDirParentPath, String nodeDirName, String instanceName) throws IOException {
-        if (!StringUtils.ok(nodeDirParentPath))
+        if (!StringUtils.ok(nodeDirParentPath)) {
             nodeDirParentPath = getNodeDirRootDefault();
+        }
 
         File nodeDirParent = new File(nodeDirParentPath);
 
@@ -79,10 +83,11 @@ public final class InstanceDirs {
 
         File nodeDir;
 
-        if (StringUtils.ok(nodeDirName))
+        if (StringUtils.ok(nodeDirName)) {
             nodeDir = new File(nodeDirParent, nodeDirName);
-        else
+        } else {
             nodeDir = getTheOneAndOnlyNode(nodeDirParent);
+        }
 
         if (!nodeDir.isDirectory()) {
             dirs = null;
@@ -91,10 +96,11 @@ public final class InstanceDirs {
 
         File instanceDir;
 
-        if (StringUtils.ok(instanceName))
+        if (StringUtils.ok(instanceName)) {
             instanceDir = new File(nodeDir, instanceName);
-        else
+        } else {
             instanceDir = getTheOneAndOnlyInstance(nodeDir);
+        }
 
         if (!instanceDir.isDirectory()) {
             dirs = null;
@@ -111,6 +117,7 @@ public final class InstanceDirs {
 
         File[] files = parent.listFiles(new FileFilter() {
 
+            @Override
             public boolean accept(File f) {
                 return f != null && f.isDirectory();
             }
@@ -136,6 +143,7 @@ public final class InstanceDirs {
 
         File[] files = nodeDir.listFiles(new FileFilter() {
 
+            @Override
             public boolean accept(File f) {
                 return f != null && f.isDirectory() && !"agent".equals(f.getName());
             }
@@ -169,8 +177,9 @@ public final class InstanceDirs {
         String nodeDirDefault = System.getProperty(
                 SystemPropertyConstants.AGENT_ROOT_PROPERTY);
 
-        if (StringUtils.ok(nodeDirDefault))
+        if (StringUtils.ok(nodeDirDefault)) {
             return nodeDirDefault;
+        }
 
         String installRootPath = getInstallRootPath();
         return installRootPath + "/" + "nodes";
@@ -180,14 +189,15 @@ public final class InstanceDirs {
      * Gets the GlassFish installation root (using property com.sun.aas.installRoot),
      *
      * @return path of GlassFish install root
-     * @throws CommandException if the GlassFish install root is not found
+     * @throws IOException if the GlassFish install root is not found
      */
     protected String getInstallRootPath() throws IOException {
         String installRootPath = System.getProperty(
                 SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
-        if (!StringUtils.ok(installRootPath))
+        if (!StringUtils.ok(installRootPath)) {
             throw new IOException("noInstallDirPath");
+        }
 
         return installRootPath;
     }
@@ -202,31 +212,32 @@ public final class InstanceDirs {
         dirs = sd;
     }
 
-    public final String getInstanceName() {
+    public String getInstanceName() {
         return dirs.getServerName();
     }
 
-    public final File getInstanceDir() {
+    public File getInstanceDir() {
         return dirs.getServerDir();
     }
 
-    public final File getNodeAgentDir() {
+    public File getNodeAgentDir() {
         return dirs.getServerParentDir();
     }
 
-    public final File getNodeAgentsDir() {
+    public File getNodeAgentsDir() {
         return dirs.getServerGrandParentDir();
     }
 
-    public final ServerDirs getServerDirs() {
+    public ServerDirs getServerDirs() {
         return dirs;
     }
 
-    public final File getDasPropertiesFile() {
+    public File getDasPropertiesFile() {
         return dirs.getDasPropertiesFile();
     }
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////           All Private Below           /////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    private final ServerDirs dirs;
+
+    @Override
+    public String toString() {
+        return super.toString() + "[" + dirs + "]";
+    }
 }

@@ -53,6 +53,28 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * one
  */
 public class ASenvPropertyReader {
+
+    private static final Map<String, String> ENV_TO_SYS_PROPERTY = Map.of(
+        "AS_DERBY_INSTALL", DERBY_ROOT_PROPERTY,
+        "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
+        "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
+        "AS_CONFIG", CONFIG_ROOT_PROPERTY,
+        "AS_INSTALL", INSTALL_ROOT_PROPERTY,
+        "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
+        "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
+        "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
+
+
+    /**
+     * Typically, only one asenv file will be read, even though there may be many
+     * ASenvPropertyReader objects.  So for each unique File, only one ASenvMap
+     * is created, and all ASenvPropertyReader objects that reference the file
+     * will share the same map. The key to the propsMap is the install dir that
+     * is passed to the constructor.
+     */
+    private static final HashMap<File, ASenvMap> propsMap = new HashMap<>();
+    private ASenvMap props;
+
     /**
      * Read and process the information in asenv
      * There are no arguments because the installation directory is calculated
@@ -71,21 +93,13 @@ public class ASenvPropertyReader {
      * unit test classes that are not running from an official installation.
      * @param installDir The Glassfish installation directory
      */
-    public ASenvPropertyReader(File installDir)
-    {
+    public ASenvPropertyReader(File installDir) {
         synchronized (propsMap) {
-            try {
-                installDir = SmartFile.sanitize(installDir);
-                props = propsMap.get(installDir);
-                if (props == null) {
-                    props = new ASenvMap(installDir);
-                    propsMap.put(installDir, props);
-                }
-            }
-            catch(Exception e)
-            {
-            // ignore -- this is universal utility code there isn't much we can
-            // do.
+            installDir = SmartFile.sanitize(installDir);
+            props = propsMap.get(installDir);
+            if (props == null) {
+                props = new ASenvMap(installDir);
+                propsMap.put(installDir, props);
             }
         }
     }
@@ -95,8 +109,7 @@ public class ASenvPropertyReader {
      * trouble setting up the hostname and java root.
      * @return A Map<String,String> with all the properties
      */
-    public Map<String, String> getProps()
-    {
+    public Map<String, String> getProps() {
         return props;
     }
 
@@ -117,15 +130,14 @@ public class ASenvPropertyReader {
     }
 
 
-    /*
+    /**
      * ASenvMap is a "lazy-evaluation" map, i.e., for values that are
      * expensive to calculate, the value is not calculated until it is actually
      * used.
      */
-    static class ASenvMap extends HashMap<String, String>
-    {
+    static class ASenvMap extends HashMap<String, String> {
         // If we find a token in a set property, this is set to true.
-        boolean foundToken = false;
+        boolean foundToken;
 
         ASenvMap(File installDir) {
             put(INSTALL_ROOT_PROPERTY, installDir.getPath());
@@ -144,7 +156,9 @@ public class ASenvPropertyReader {
         @Override
         public String get(Object k) {
             String v = super.get(k);
-            if (v != null) return v;
+            if (v != null) {
+                return v;
+            }
             if (k.equals(HOST_NAME_PROPERTY)) {
                 v = getHostname();
                 put(HOST_NAME_PROPERTY, v);
@@ -171,7 +185,7 @@ public class ASenvPropertyReader {
         @Override
         public boolean containsKey(Object k) {
             completeMap();
-            return super.containsKey((String)k);
+            return super.containsKey(k);
         }
 
         @Override
@@ -180,7 +194,7 @@ public class ASenvPropertyReader {
             return super.values();
         }
 
-        /*
+        /**
          * Add the "lazy" items to the map so that the map is complete.
          */
         private void completeMap() {
@@ -188,17 +202,19 @@ public class ASenvPropertyReader {
             get(JAVA_ROOT_PROPERTY);
         }
 
-        /*
-         * 2 things to do
-         * 1) change relative paths to absolute
-         * 2) change env. variables to either the actual values in the environment
-         *  or to another prop in asenv
+
+        /**
+         * <ol>
+         * <li>change relative paths to absolute
+         * <li>change env. variables to either the actual values in the environment
+`            * or to another prop in asenv
+         * </ol>
          */
         private void postProcess(File configDir) {
             if (foundToken) {
                 final Map<String, String> env = System.getenv();
                 //put env props in first
-                Map<String, String> all = new HashMap<String, String>(env);
+                Map<String, String> all = new HashMap<>(env);
                 // now override with our props
                 all.putAll(this);
                 TokenResolver tr = new TokenResolver(all);
@@ -234,28 +250,17 @@ public class ASenvPropertyReader {
         private void setProperties(File configDir) {
             //Read in asenv.conf/bat and set system properties accordingly
             File asenv = new File(configDir,
-                    GFLauncherUtils.isWindows() ?
-                        WINDOWS_ASENV_FILENAME : UNIX_ASENV_FILENAME);
-
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new FileReader(asenv, UTF_8));
+                GFLauncherUtils.isWindows() ? WINDOWS_ASENV_FILENAME : UNIX_ASENV_FILENAME);
+            if (!asenv.exists()) {
+                return;
+            }
+            try (BufferedReader reader = new BufferedReader(new FileReader(asenv, UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     setProperty(line);
                 }
-            }
-            catch (Exception ex) {
-            // Nothing to do
-            }
-            finally {
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                }
-                catch (Exception ex) {
-                }
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not parse " + asenv, e);
             }
         }
 
@@ -270,69 +275,70 @@ public class ASenvPropertyReader {
          *
          */
         private void setProperty(String line) {
-            int pos = line.indexOf("=");
-
+            int pos = line.indexOf('=');
             if (pos > 0) {
                 String lhs = (line.substring(0, pos)).trim();
                 String rhs = (line.substring(pos + 1)).trim();
 
-                if (GFLauncherUtils.isWindows()) {    //trim off the "set "
+                if (GFLauncherUtils.isWindows()) {
+                    // trim off the "set "
                     lhs = (lhs.substring(3)).trim();
-                }
-                else {      // take the quotes out
-                    pos = rhs.indexOf("\"");
+                } else {
+                    // take the quotes out
+                    pos = rhs.indexOf('"');
                     if (pos != -1) {
                         rhs = (rhs.substring(pos + 1)).trim();
-                        pos = rhs.indexOf("\"");
+                        pos = rhs.indexOf('"');
                         if (pos != -1) {
                             rhs = (rhs.substring(0, pos)).trim();
                         }
                     }
                 }
 
-                String systemPropertyName = envToPropMap.get(lhs);
+                String systemPropertyName = ENV_TO_SYS_PROPERTY.get(lhs);
 
                 if (systemPropertyName != null) {
-                    if (TokenResolver.hasToken(rhs)) foundToken = true;
+                    if (TokenResolver.hasToken(rhs)) {
+                        foundToken = true;
+                    }
                     put(systemPropertyName, rhs);
                 }
             }
         }
 
-        static private String getHostname() {
+        private static String getHostname() {
             String hostname = "localhost";
             try {
                 // canonical name checks to make sure host is proper
                 hostname = NetUtils.getCanonicalHostName();
-            }
-            catch (Exception ex) {
-            // ignore, go with "localhost"
+            } catch (Exception ex) {
+                // ignore, go with "localhost"
             }
             return hostname;
         }
 
-        /*
+        /**
          * Get a value for the Java installation directory.  The value that is
          * passed in should be the value from the ASenv config file. If it is valid
          * it is returned.  Otherwise, this method checks the following:
          * - JAVA_HOME environment variable
          * - java.home system property
          */
-        static private String getJavaRoot(String fileValue) {
+        private static String getJavaRoot(String fileValue) {
             // make sure we have a folder with java in it!
             // note that we are not in a position to set it from domain.xml yet
 
             // first choice -- whatever is in asenv
             String javaRootName = fileValue;
 
-            if (isValidJavaRoot(javaRootName))
+            if (isValidJavaRoot(javaRootName)) {
                 return javaRootName; // we are already done!
+            }
 
             // try JAVA_HOME
             javaRootName = System.getenv("JAVA_HOME");
 
-            if (isValidJavaRoot(javaRootName))
-            {
+            if (isValidJavaRoot(javaRootName)) {
                 javaRootName = SmartFile.sanitize(new File(javaRootName)).getPath();
                 return javaRootName;
             }
@@ -340,8 +346,7 @@ public class ASenvPropertyReader {
             // usually java.home is pointing at jre and ".." goes to the jdk
             javaRootName = System.getProperty("java.home") + "/..";
 
-            if (isValidJavaRoot(javaRootName))
-            {
+            if (isValidJavaRoot(javaRootName)) {
                 javaRootName = SmartFile.sanitize(new File(javaRootName)).getPath();
                 return javaRootName;
             }
@@ -349,51 +354,30 @@ public class ASenvPropertyReader {
             // try java.home as-is
             javaRootName = System.getProperty("java.home");
 
-            if (isValidJavaRoot(javaRootName))
-            {
+            if (isValidJavaRoot(javaRootName)) {
                 javaRootName = SmartFile.sanitize(new File(javaRootName)).getPath();
                 return javaRootName;
             }
-            // TODO - should this be an Exception?  A log message?
+            // TODO - should this be an Exception? A log message?
             return null;
         }
 
-        static private boolean isValidJavaRoot(String javaRootName) {
-            if (!GFLauncherUtils.ok(javaRootName))
+        private static boolean isValidJavaRoot(String javaRootName) {
+            if (!GFLauncherUtils.ok(javaRootName)) {
                 return false;
+            }
 
             // look for ${javaRootName}/bin/java[.exe]
             File f = new File(javaRootName);
 
-            if (GFLauncherUtils.isWindows())
+            if (GFLauncherUtils.isWindows()) {
                 f = new File(f, "bin/java.exe");
-            else
+            } else {
                 f = new File(f, "bin/java");
+            }
 
             return f.exists();
         }
 
     }
-
-    static private Map<String, String> envToPropMap = new HashMap<String, String>();
-    {
-        envToPropMap.put("AS_DERBY_INSTALL", DERBY_ROOT_PROPERTY);
-        envToPropMap.put("AS_IMQ_LIB", IMQ_LIB_PROPERTY);
-        envToPropMap.put("AS_IMQ_BIN", IMQ_BIN_PROPERTY);
-        envToPropMap.put("AS_CONFIG", CONFIG_ROOT_PROPERTY);
-        envToPropMap.put("AS_INSTALL", INSTALL_ROOT_PROPERTY);
-        envToPropMap.put("AS_JAVA", JAVA_ROOT_PROPERTY_ASENV);
-        envToPropMap.put("AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY);
-        envToPropMap.put("AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
-    }
-
-    /*
-     * Typically, only one asenv file will be read, even though there may be many
-     * ASenvPropertyReader objects.  So for each unique File, only one ASenvMap
-     * is created, and all ASenvPropertyReader objects that reference the file
-     * will share the same map. The key to the propsMap is the install dir that
-     * is passed to the constructor.
-     */
-    static private final HashMap<File, ASenvMap> propsMap = new HashMap<File, ASenvMap>();
-    private ASenvMap props;
 }

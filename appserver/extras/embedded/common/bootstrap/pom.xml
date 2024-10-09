@@ -81,8 +81,7 @@
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <includes>**/OSGiFrameworkLauncher**,**/AutoProcessor**</includes>
-                                    <excludes>META-INF/**</excludes>
+                                    <includes>**/OSGiFrameworkLauncher**</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

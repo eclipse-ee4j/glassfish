@@ -26,7 +26,6 @@ import com.sun.enterprise.util.StringUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -109,7 +108,7 @@ public class RestartServer {
                 reincarnate();
             }
         } catch (Exception e) {
-            context.getLogger().severe(strings.get("restart.server.failure", e));
+            throw new Error(strings.get("restart.server.failure"), e);
         }
 
         final int restartType;
@@ -126,7 +125,7 @@ public class RestartServer {
     ///////// ALL PRIVATE BELOW ////////////////////
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
-    private void init(AdminCommandContext context) throws IOException {
+    private void init(AdminCommandContext context) {
         logger = context.getLogger();
         props = Globals.get(StartupContext.class).getArguments();
         verbose = Boolean.parseBoolean(props.getProperty("-verbose", "false"));
@@ -137,8 +136,7 @@ public class RestartServer {
         if (setupReincarnationWithAsadmin() || setupReincarnationWithOther()) {
             doReincarnation();
         } else {
-            logger.severe(strings.get("restart.server.noStartupInfo", strings.get("restart.server.asadminError"),
-                    strings.get("restart.server.nonAsadminError")));
+            throw new IllegalStateException(strings.get("restart.server.noStartupInfo", props));
         }
     }
 

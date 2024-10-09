@@ -185,6 +185,7 @@
         <!-- GlassFishLogManager is a child of this module, so we cannot use it here yet. -->
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
+        <test.enableDefaultLogCfg>true</test.enableDefaultLogCfg>
     </properties>
 
     <dependencyManagement>
@@ -861,7 +862,7 @@
                         </excludes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
-                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                             <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
                         </systemPropertyVariables>
@@ -884,7 +885,7 @@
                         </includes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
-                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                         </systemPropertyVariables>
                     </configuration>

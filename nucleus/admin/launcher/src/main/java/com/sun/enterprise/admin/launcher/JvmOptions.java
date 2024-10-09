@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,7 +67,7 @@ class JvmOptions {
             }
         }
 
-        filter(); // get rid of forbidden stuff
+        filter();
         setOsgiPort();
     }
 
@@ -175,20 +176,6 @@ class JvmOptions {
         xxProps.put(nv.name, nv.value);
     }
 
-    @Deprecated
-    void addJvmLogging() {
-        xxProps.put(":+UnlockDiagnosticVMOptions", null);
-        xxProps.put(":+LogVMOutput", null);
-        xxProps.put(":LogFile", "${com.sun.aas.instanceRoot}/logs/jvm.log");
-    }
-
-    @Deprecated
-    void removeJvmLogging() {
-        xxProps.remove(":+UnlockDiagnosticVMOptions");
-        xxProps.remove(":+LogVMOutput");
-        xxProps.remove(":LogFile");
-    }
-
     private List<String> postProcessOrdering(List<String> unsorted) {
         /*
          * (1) JVM has one known order dependency. If these 3 are here, then unlock MUST appear first in the list
@@ -226,15 +213,16 @@ class JvmOptions {
         return s != null && s.startsWith(magic);
     }
 
+
     /**
-     * Filters out unwanted properties and filters in interested properties that may need to be present by default in
-     * certain environments (OS, vm.vendor)
-     *
-     * bnevins September 2009 There may be System Properties from V2 that cause havoc. E.g. the MBean Server sys prop from
-     * V2 will be removed by upgrade code in the server but the server will blow up before it starts with a CNFE! We need to
-     * remove it carefully. I.e. the user may want to set up their own MBean Server Factory so we just check to see if the
-     * value is identical to the V2 class...
-     *
+     * Filters out unwanted properties and filters in interested properties that may need to be
+     * present by default in certain environments (OS, vm.vendor)
+     * <p>
+     * bnevins September 2009 There may be System Properties from V2 that cause havoc. E.g. the
+     * MBean Server sys prop from V2 will be removed by upgrade code in the server but the server
+     * will blow up before it starts with a CNFE! We need to remove it carefully. I.e. the user may
+     * want to set up their own MBean Server Factory so we just check to see if the value is
+     * identical to the V2 class...
      */
     private void filter() {
         // there is only one forbidden sys prop now so no need yet for fancy
@@ -341,8 +329,3 @@ class JvmOptions {
         private String value;
     }
 }
-/**
- * Reference Section <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
- * <jvm-options>-XX:+LogVMOutput</jvm-options>
- * <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
- */

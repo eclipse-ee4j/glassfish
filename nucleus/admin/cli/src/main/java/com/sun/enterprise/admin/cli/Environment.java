@@ -109,23 +109,7 @@ public final class Environment {
             fname = System.getenv(logProp);
         }
         if (fname != null) {
-            File f = new File(fname);
-            try {
-                if (f.isFile() && f.canWrite()) {
-                    logfile = f;
-                } else {
-                    File dir = f.getParentFile();
-                    if (!dir.isDirectory() && !dir.mkdirs()) {
-                        throw new IllegalStateException("Could not create a log file: " + f);
-                    }
-                    if (!f.createNewFile()) {
-                        throw new IllegalStateException("Could not create a log file: " + f);
-                    }
-                    logfile = f;
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Could not create a log file: " + f, e);
-            }
+           logfile = prepareFile(new File(fname));
         }
         final String formatterClass = env.get(PREFIX + "LOG_FORMATTER");
         try {
@@ -238,5 +222,30 @@ public final class Environment {
 
     public Formatter getLogFormatter() {
         return formatter;
+    }
+
+
+    private static File prepareFile(File file) {
+        try {
+            if (file.isFile()) {
+                if (file.canWrite()) {
+                    return file;
+                }
+                throw new IllegalStateException("The file already exists, but we cannot write to it: " + file);
+            }
+            final File dir = file.getCanonicalFile().getParentFile();
+            if (!dir.isDirectory() && !dir.mkdirs()) {
+                throw new IllegalStateException("The directory " + dir
+                    + " doesn't exist and isn't even possible to create it. Output to file '" + file
+                    + "' is not possible.");
+            }
+            if (file.createNewFile()) {
+                return file;
+            }
+            // createNewFile returns false just if the file already existed.
+            throw new IllegalStateException("Seems somebody else created the file right now, was it intentional? " + file);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create a log file: " + file, e);
+        }
     }
 }

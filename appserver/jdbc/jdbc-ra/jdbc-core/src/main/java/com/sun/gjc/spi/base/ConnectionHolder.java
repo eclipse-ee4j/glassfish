@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,6 +59,15 @@ public abstract class ConnectionHolder implements Connection {
     protected boolean wrappedAlready;
     protected boolean isClosed;
     protected boolean valid = true;
+
+    /**
+     * The active flag is false when the connection handle is created. When a method
+     * is invoked on this object, it asks the ManagedConnection if it can be the
+     * active connection handle out of the multiple connection handles. If the
+     * ManagedConnection reports that this connection handle can be active by
+     * setting this flag to true via the setActive function, the above method
+     * invocation succeeds; otherwise an exception is thrown.
+     */
     protected boolean active;
 
     private LazyAssociatableConnectionManager lazyAssocCm_;
@@ -76,17 +86,6 @@ public abstract class ConnectionHolder implements Connection {
     }
 
     private ConnectionType myType_ = ConnectionType.STANDARD;
-
-    /**
-     * The active flag is false when the connection handle is created. When a method
-     * is invoked on this object, it asks the ManagedConnection if it can be the
-     * active connection handle out of the multiple connection handles. If the
-     * ManagedConnection reports that this connection handle can be active by
-     * setting this flag to true via the setActive function, the above method
-     * invocation succeeds; otherwise an exception is thrown.
-     */
-
-
 
     /**
      * Constructs a Connection holder.
@@ -168,6 +167,7 @@ public abstract class ConnectionHolder implements Connection {
      *
      * @throws SQLException In case of a database error.
      */
+    @Override
     public void clearWarnings() throws SQLException {
         checkValidity();
         connection.clearWarnings();
@@ -178,6 +178,7 @@ public abstract class ConnectionHolder implements Connection {
      *
      * @throws SQLException In case of a database error.
      */
+    @Override
     public void close() throws SQLException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "ConnectionHolder.close() START managedConnectionImpl=" + managedConnectionImpl);
@@ -777,11 +778,9 @@ public abstract class ConnectionHolder implements Connection {
 
     /**
      * Sets the active flag to true
-     *
-     * @param actv boolean
      */
-    public void setActive(boolean actv) {
-        active = actv;
+    public void setActive() {
+        active = true;
     }
 
     /*

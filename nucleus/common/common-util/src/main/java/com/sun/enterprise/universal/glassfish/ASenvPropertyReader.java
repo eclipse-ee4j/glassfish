@@ -279,6 +279,25 @@ public class ASenvPropertyReader {
             if (pos > 0) {
                 String lhs = (line.substring(0, pos)).trim();
                 String rhs = (line.substring(pos + 1)).trim();
+                String rhsExpression = "\"${" + lhs + ":-";
+                if (!GFLauncherUtils.isWindows() && rhs.contains(rhsExpression) && rhs.contains("}")) {
+                    String env = System.getenv(lhs);
+                    int start = rhs.indexOf(rhsExpression);
+                    int end = rhs.indexOf('}');
+                    StringBuilder value = new StringBuilder();
+                    if (start > 0) {
+                        value.append(rhs.subSequence(0, start));
+                    }
+                    if (env == null) {
+                        value.append('"').append(rhs.substring(start + rhsExpression.length(), end));
+                    } else {
+                        value.append(env);
+                    }
+                    if (rhs.length() > end + 1) {
+                        value.append(rhs.substring(end + 1));
+                    }
+                    rhs = value.toString();
+                }
 
                 if (GFLauncherUtils.isWindows()) {
                     // trim off the "set "

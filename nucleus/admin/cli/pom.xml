@@ -187,6 +187,9 @@
                     <archive>
                         <manifest>
                             <mainClass>com.sun.enterprise.admin.cli.AdminMain</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathLayoutType>custom</classpathLayoutType>
+                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>../lib/bootstrap/glassfish-jul-extension.jar jakarta.annotation-api.jar jakarta.xml.bind-api.jar</Class-Path>

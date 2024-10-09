@@ -99,7 +99,11 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
+                <include>glassfish.jar</include>
+                <include>glassfish-osgi-bootstrap.jar</include>
+                <include>glassfish-jdk-extensions.jar</include>
                 <include>glassfish-jul-extension.jar</include>
+                <include>simple-glassfish-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/lib/bootstrap</outputDirectory>
         </fileSet>
@@ -143,7 +147,11 @@
                 <exclude>org.apache.felix.scr.jar</exclude>
                 <exclude>org.osgi.util.function.jar</exclude>
                 <exclude>org.osgi.util.promise.jar</exclude>
+                <exclude>glassfish.jar</exclude>
+                <exclude>glassfish-osgi-bootstrap.jar</exclude>
+                <exclude>glassfish-jdk-extensions.jar</exclude>
                 <exclude>glassfish-jul-extension.jar</exclude>
+                <exclude>simple-glassfish-api.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>

@@ -401,6 +401,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.grizzly</groupId>
+                <artifactId>grizzly-npn-api</artifactId>
+                <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
+                <version>${grizzly.npn.version}</version>
+            </dependency>
 
             <!-- GlassFish Management API -->
             <dependency>

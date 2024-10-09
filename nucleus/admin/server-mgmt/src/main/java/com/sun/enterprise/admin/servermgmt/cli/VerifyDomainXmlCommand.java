@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,9 +32,9 @@ import java.util.logging.Level;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;

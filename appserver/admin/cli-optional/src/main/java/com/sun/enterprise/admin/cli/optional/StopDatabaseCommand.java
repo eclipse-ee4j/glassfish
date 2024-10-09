@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.optional;
 
 import com.sun.enterprise.admin.cli.CLIProcessExecutor;
 import com.sun.enterprise.admin.cli.Environment;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.OS;
 
 import java.io.File;
@@ -29,6 +28,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIUtil.readPasswordFileOptions;

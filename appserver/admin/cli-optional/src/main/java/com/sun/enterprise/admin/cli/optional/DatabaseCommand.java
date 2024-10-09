@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.optional;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.ClassPathBuilder;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.OS;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import java.io.File;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;

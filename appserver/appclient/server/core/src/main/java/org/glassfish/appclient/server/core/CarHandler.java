@@ -89,7 +89,7 @@ public class CarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader("CarHandler", parent);
         ASURLClassLoader cloader = AccessController.doPrivileged(action);
         try {
             cloader.addURL(context.getSource().getURI().toURL());
@@ -99,12 +99,8 @@ public class CarHandler extends AbstractArchiveHandler {
             }
 
             try {
-                final DeploymentContext dc = context;
-                final ClassLoader cl = cloader;
-
-                AccessController.doPrivileged(
-                        new PermsArchiveDelegate.SetPermissionsAction(
-                                SMGlobalPolicyUtil.CommponentType.car, dc, cl));
+                AccessController.doPrivileged(new PermsArchiveDelegate.SetPermissionsAction(
+                    SMGlobalPolicyUtil.CommponentType.car, context, cloader));
             } catch (PrivilegedActionException e) {
                 throw new SecurityException(e.getException());
             }

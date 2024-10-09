@@ -36,7 +36,13 @@ public interface RuntimeBuilder {
      * @return
      * @throws GlassFishException
      */
-    GlassFishRuntime build(BootstrapProperties options) throws GlassFishException;
+    default GlassFishRuntime build(BootstrapProperties options) throws GlassFishException {
+        return build(options, getClass().getClassLoader());
+    }
+
+
+    GlassFishRuntime build(BootstrapProperties options, ClassLoader classloader) throws GlassFishException;
+
 
     /**
      * Returns true if this RuntimeBuilder is capable of creating a GlassFishRuntime

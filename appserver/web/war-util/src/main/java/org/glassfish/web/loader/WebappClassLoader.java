@@ -268,7 +268,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * but no defined repositories.
      */
     public WebappClassLoader(ClassLoader parent) {
-        super(new URL[0], parent);
+        // We overload getName(), however we don't know the name at this moment.
+        super("WebappClassLoader", new URL[0], parent);
         this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
         if (SECURITY_MANAGER != null) {
@@ -1125,7 +1126,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public ClassLoader copy() {
         LOG.log(DEBUG, "copy()");
         // set getParent() as the parent of the cloned class loader
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getName(), getURLs(), getParent());
         return AccessController.doPrivileged(action);
     }
 
@@ -1190,6 +1191,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
+    @Override
     public void preDestroy() {
         LOG.log(TRACE, "preDestroy()");
         try {

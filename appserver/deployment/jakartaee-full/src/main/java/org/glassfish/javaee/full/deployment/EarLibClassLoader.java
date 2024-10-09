@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,16 +26,15 @@ import java.net.URL;
  */
 public class EarLibClassLoader extends ASURLClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     public EarLibClassLoader(URL[] urls, ClassLoader classLoader) {
-        super(classLoader);
+        super("EarLib", classLoader);
 
         for (URL url : urls) {
             addURL(url);
         }
-    }
-
-    @Override
-    protected String getClassLoaderName() {
-        return "EarLibClassLoader";
     }
 }

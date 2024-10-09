@@ -84,7 +84,8 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
 
             final URL[] urlsA = urls.toArray(new URL[urls.size()]);
 
-            PrivilegedAction<ClassLoader> action = () -> new GlassfishUrlClassLoader(urlsA, Globals.class.getClassLoader());
+            PrivilegedAction<ClassLoader> action = () -> new GlassfishUrlClassLoader("DomainXmlVerifier", urlsA,
+                Globals.class.getClassLoader());
             ClassLoader cl = AccessController.doPrivileged(action);
             ModulesRegistry registry = new StaticModulesRegistry(cl);
             ServiceLocator serviceLocator = registry.createServiceLocator("default");

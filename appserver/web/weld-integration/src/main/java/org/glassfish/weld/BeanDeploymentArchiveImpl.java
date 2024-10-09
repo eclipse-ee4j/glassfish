@@ -616,9 +616,9 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             try {
                 // use a throwaway classloader to load the application's beans.xml
                 final URL beansXmlUrl;
-                try (GlassfishUrlClassLoader throwAwayClassLoader = new GlassfishUrlClassLoader(
+                try (GlassfishUrlClassLoader classloader = new GlassfishUrlClassLoader("BeanXml",
                     new URL[] {archive.getURI().toURL()}, null)) {
-                    beansXmlUrl = throwAwayClassLoader.getResource(entry);
+                    beansXmlUrl = classloader.getResource(entry);
                 }
                 if (beansXmlUrl != null && !beansXmlURLs.contains(beansXmlUrl)) {
                     beansXmlURLs.add(beansXmlUrl);

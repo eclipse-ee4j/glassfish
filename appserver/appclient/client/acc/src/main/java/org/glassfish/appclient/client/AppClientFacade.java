@@ -379,8 +379,8 @@ public class AppClientFacade {
 
     private static ClassLoader prepareLoaderToFindClassFile(final ClassLoader currentLoader) throws MalformedURLException {
         File currentDirPath = new File(System.getProperty("user.dir"));
-        ClassLoader newLoader = new GlassfishUrlClassLoader(new URL[] { currentDirPath.toURI().toURL() }, currentLoader);
-        return newLoader;
+        return new GlassfishUrlClassLoader("AppClientFacade(" + currentDirPath + ")",
+            new URL[] {currentDirPath.toURI().toURL()}, currentLoader);
     }
 
     private static AppClientContainer createContainerForClassFile(Builder builder, String classFilePath)

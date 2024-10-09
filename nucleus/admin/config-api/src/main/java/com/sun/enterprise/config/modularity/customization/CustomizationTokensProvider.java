@@ -120,7 +120,7 @@ public class CustomizationTokensProvider {
         if (ext.isDirectory()) {
             PrivilegedAction<Void> action = () -> {
                 try {
-                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader(getJars(ext));
+                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader("HK2Modules", getJars(ext));
                     ModulesRegistry registry = new StaticModulesRegistry(classLoader);
                     locator = registry.createServiceLocator("default");
                 } catch (IOException ex) {

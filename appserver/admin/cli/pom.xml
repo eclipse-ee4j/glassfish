@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>admin-cli</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -60,6 +60,8 @@
                         <manifest>
                             <mainClass>org.glassfish.admin.cli.AsadminMain</mainClass>
                             <addClasspath>true</addClasspath>
+                            <classpathLayoutType>custom</classpathLayoutType>
+                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                             <classpathPrefix>../../modules</classpathPrefix>
                         </manifest>
                         <manifestEntries>

@@ -147,10 +147,10 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             }
             BundleDescriptor bundle = DOLUtils.getCurrentBundleForContext(dc);
 
-            String moduleCP = getModuleClassPath(dc);
+            final String moduleCP = getModuleClassPath(dc);
             final List<URL> moduleCPUrls = ASClassLoaderUtil.getURLsFromClasspath(moduleCP, File.pathSeparator, null);
             final ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-            PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
+            PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader("WebServicesDeployer(" + app.getName() + ")",
                 ASClassLoaderUtil.convertURLListToArray(moduleCPUrls), oldCl);
             URLClassLoader newCl = AccessController.doPrivileged(action);
 

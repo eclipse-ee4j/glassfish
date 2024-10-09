@@ -61,7 +61,7 @@ import static java.util.logging.Level.FINER;
  *
  * @author martinmares
  */
-public final class CLIContainer {
+final class CLIContainer {
 
     private static final InjectionManager injectionMgr = new InjectionManager();
 
@@ -75,7 +75,7 @@ public final class CLIContainer {
 
     private Map<String, String> cliCommandsNames;
 
-    public CLIContainer(final ClassLoader classLoader, final Set<File> extensions, final Logger logger) {
+    CLIContainer(final ClassLoader classLoader, final Set<File> extensions, final Logger logger) {
         this.classLoader = classLoader;
         this.extensions = extensions;
         this.logger = logger;
@@ -91,7 +91,7 @@ public final class CLIContainer {
         if (name == null) {
             return null;
         }
-        Class<?> clazz = Class.forName(name);
+        Class<?> clazz = classLoader.loadClass(name);
         if (clazz.getAnnotation(PerLookup.class) == null) {
             //Other scopes => HK2
             return null;
@@ -124,7 +124,7 @@ public final class CLIContainer {
         File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         File adminCliJar = new File(new File(inst, "modules"), "admin-cli.jar");
         if (!adminCliJar.exists()) {
-            throw new IOException(adminCliJar.getCanonicalPath());
+            throw new IOException(adminCliJar.getAbsolutePath());
         }
         result.add(adminCliJar);
         return result;

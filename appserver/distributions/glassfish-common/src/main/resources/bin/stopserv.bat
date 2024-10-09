@@ -1,5 +1,6 @@
 @echo off
 REM
+REM  Copyright (c) 2024 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -16,4 +17,4 @@ REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
 
-java -jar "%~dp0..\glassfish\modules\admin-cli.jar" stop-domain %*
+java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%~dp0..\glassfish\modules\admin-cli.jar" stop-domain %*

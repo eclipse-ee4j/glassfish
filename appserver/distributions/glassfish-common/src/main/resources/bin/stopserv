@@ -1,5 +1,6 @@
 #!/bin/sh
 #
+# Copyright (c) 2024 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -18,4 +19,4 @@
 AS_INSTALL=`dirname "$0"`/../glassfish
 AS_INSTALL_LIB="$AS_INSTALL/modules"
 
-exec java -jar "$AS_INSTALL_LIB/admin-cli.jar" stop-domain "$@"
+exec java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$AS_INSTALL_LIB/admin-cli.jar" stop-domain "$@"

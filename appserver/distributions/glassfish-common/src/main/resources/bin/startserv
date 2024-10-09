@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2023,2024 Contributors to the Eclipse Foundation
+# Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -30,7 +30,7 @@ fi
 
 start_as_main_process () {
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
-      exec java -jar "$ASADMIN_JAR" start-domain --help
+      exec java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$ASADMIN_JAR" start-domain --help
     fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
@@ -50,7 +50,7 @@ start_as_main_process () {
       else
         DRY_RUN_OUTPUT+=("$COM");
       fi
-    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
+    done < <(java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
     if [[ x"$DRY_RUN_OUTPUT" == x ]]
       then
         echo -n -e "${DRY_RUN_OUTPUT_BEFORE_DUMP}" >&2

@@ -16,8 +16,6 @@
 
 package org.glassfish.main.boot.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URI;
@@ -33,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.glassfish.main.boot.log.LogFacade;
 import org.osgi.framework.Bundle;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_INSTALL_PROP;

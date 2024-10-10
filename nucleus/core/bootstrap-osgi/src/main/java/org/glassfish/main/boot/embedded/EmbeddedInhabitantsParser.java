@@ -17,8 +17,6 @@
 
 package org.glassfish.main.boot.embedded;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +24,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PopulatorPostProcessor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DescriptorImpl;
+import org.glassfish.main.boot.log.LogFacade;
 
 /**
  * Kernel's decoration for embedded environment.

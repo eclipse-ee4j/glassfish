@@ -16,8 +16,6 @@
 
 package org.glassfish.main.boot.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +28,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.main.boot.log.LogFacade;
 import org.osgi.framework.Constants;
 
 class MinimalBundleProvisionerCustomizer extends DefaultBundleProvisionerCustomizer {

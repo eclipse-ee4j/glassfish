@@ -16,8 +16,6 @@
 
 package org.glassfish.main.boot.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.nio.file.Files;
@@ -44,7 +42,7 @@ class BundleProvisionerTest {
 
     @Test
     void noBundles() throws Exception {
-        LOG.log(Level.INFO, LogFacade.STARTING_BUNDLEPROVISIONER);
+        LOG.log(Level.INFO, "Starting BundleProvisioner");
         // TODO: add some properties, create more tests
         Properties props = new Properties();
         Path cacheDir = Files.createTempDirectory("FelixCache");
@@ -60,14 +58,14 @@ class BundleProvisionerTest {
         }
         assertNotNull(osgiFramework, "No OSGi framwework found!");
         long t1 = System.currentTimeMillis();
-        LOG.log(Level.INFO, LogFacade.OSGI_LOCATE_TIME, (t1-t0));
+        LOG.log(Level.INFO, "Time taken to locate OSGi framework = {0} ms.", t1 - t0);
         osgiFramework.init();
         long t2 = System.currentTimeMillis();
-        LOG.log(Level.INFO, LogFacade.OSGI_INIT_TIME, (t2-t1));
+        LOG.log(Level.INFO, "Time taken to initialize OSGi framework = {0} ms.", t2 - t1);
         BundleProvisioner bundleProvisioner = new BundleProvisioner(osgiFramework.getBundleContext(), props);
         bundleProvisioner.installBundles();
         long t3 = System.currentTimeMillis();
-        LOG.log(Level.INFO, LogFacade.BUNDLE_INSTALLATION_TIME, (t3-t2));
+        LOG.log(Level.INFO, "Time taken to finish installation of bundles = {0} ms.", t3 - t2);
         assertEquals(0, bundleProvisioner.getNoOfInstalledBundles());
         assertEquals(0, bundleProvisioner.getNoOfUpdatedBundles());
         assertEquals(0, bundleProvisioner.getNoOfUninstalledBundles());
@@ -77,13 +75,13 @@ class BundleProvisionerTest {
 
         assertEquals(Bundle.ACTIVE, osgiFramework.getState());
         long t4 = System.currentTimeMillis();
-        LOG.log(Level.INFO, LogFacade.BUNDLE_STARTING_TIME, (t4-t3));
-        LOG.log(Level.INFO, LogFacade.TOTAL_START_TIME, (t4-t0));
+        LOG.log(Level.INFO, "Time taken to finish starting bundles = {0} ms.", t4 - t3);
+        LOG.log(Level.INFO, "Total time taken to start = {0} ms.", t4 - t0);
         osgiFramework.stop();
         osgiFramework.waitForStop(0);
         long t5 = System.currentTimeMillis();
-        LOG.log(Level.INFO, LogFacade.BUNDLE_STOP_TIME, (t5 - t4));
-        LOG.log(Level.INFO, LogFacade.TOTAL_TIME, (t5-t0));
+        LOG.log(Level.INFO, "Time taken to stop = {0} ms.", t5 - t4);
+        LOG.log(Level.INFO, "Total time taken = {0}.", t5 - t0);
         assertEquals(Bundle.RESOLVED, osgiFramework.getState());
     }
 }

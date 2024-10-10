@@ -20,7 +20,6 @@ package org.glassfish.main.boot.embedded;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
 
@@ -37,6 +36,7 @@ import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
+import org.glassfish.main.boot.log.LogFacade;
 import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**

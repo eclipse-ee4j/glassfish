@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,20 +15,19 @@
  */
 
 /**
- * @provides java.lang.System.LoggerFinder
- *
  * @author David Matejcek
  */
-module org.glassfish.main.jul {
+module org.glassfish.main.bootstrap {
 
-    requires transitive java.logging;
+    requires java.base;
+    requires java.logging;
 
-    provides java.lang.System.LoggerFinder with org.glassfish.main.jul.GlassFishLoggerFinder;
+    // felix framework is supplied by other jpms modules which don't overlap osgi.core
+    requires static org.apache.felix.framework;
+    // logging annotations are used just by maven compiler plugin and they are not used in runtime.
+    requires static org.glassfish.annotation.processing.logging;
+    requires org.glassfish.main.jdke;
 
-    exports org.glassfish.main.jul;
-    exports org.glassfish.main.jul.cfg;
-    exports org.glassfish.main.jul.env;
-    exports org.glassfish.main.jul.formatter;
-    exports org.glassfish.main.jul.handler;
-    exports org.glassfish.main.jul.record;
+    exports com.sun.enterprise.glassfish.bootstrap.cfg;
+    exports com.sun.enterprise.glassfish.bootstrap.launch;
 }

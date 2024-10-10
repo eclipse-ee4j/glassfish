@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,20 +15,19 @@
  */
 
 /**
- * @provides java.lang.System.LoggerFinder
+ * Basic GlassFish interfaces and classes used by all implementations.
+ *
+ * @uses org.glassfish.embeddable.spi.RuntimeBuilder
  *
  * @author David Matejcek
  */
-module org.glassfish.main.jul {
+module org.glassfish.main.api.simple {
 
-    requires transitive java.logging;
+    requires java.base;
+    requires java.logging;
 
-    provides java.lang.System.LoggerFinder with org.glassfish.main.jul.GlassFishLoggerFinder;
+    uses org.glassfish.embeddable.spi.RuntimeBuilder;
 
-    exports org.glassfish.main.jul;
-    exports org.glassfish.main.jul.cfg;
-    exports org.glassfish.main.jul.env;
-    exports org.glassfish.main.jul.formatter;
-    exports org.glassfish.main.jul.handler;
-    exports org.glassfish.main.jul.record;
+    exports org.glassfish.embeddable;
+    exports org.glassfish.embeddable.spi;
 }

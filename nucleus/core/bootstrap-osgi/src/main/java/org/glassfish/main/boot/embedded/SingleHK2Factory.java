@@ -17,12 +17,13 @@
 
 package org.glassfish.main.boot.embedded;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModuleDefinition;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
 import com.sun.enterprise.module.common_impl.ModuleId;
 import com.sun.enterprise.module.single.SingleModulesRegistry;
+
+import org.glassfish.main.boot.log.LogFacade;
 
 /**
  * Factory which provides SingleModulesRegistry

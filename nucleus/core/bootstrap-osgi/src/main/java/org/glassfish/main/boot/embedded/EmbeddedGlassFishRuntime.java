@@ -18,7 +18,6 @@
 package org.glassfish.main.boot.embedded;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
@@ -46,6 +45,7 @@ import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DuplicatePostProcessor;
+import org.glassfish.main.boot.log.LogFacade;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELETE;
 import static java.util.logging.Level.FINER;

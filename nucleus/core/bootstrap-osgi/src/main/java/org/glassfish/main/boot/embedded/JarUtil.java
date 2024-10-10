@@ -17,8 +17,6 @@
 
 package org.glassfish.main.boot.embedded;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +26,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.main.boot.log.LogFacade;
 
 /**
  * Most part is copied from com.sun.appserv.connectors.internal.api.ConnectorsUtil

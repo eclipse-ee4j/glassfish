@@ -19,7 +19,6 @@ package org.glassfish.main.boot.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +34,7 @@ import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
+import org.glassfish.main.boot.log.LogFacade;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;

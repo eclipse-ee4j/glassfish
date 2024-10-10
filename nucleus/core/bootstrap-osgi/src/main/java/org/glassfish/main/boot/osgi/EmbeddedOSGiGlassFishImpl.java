@@ -17,13 +17,12 @@
 
 package org.glassfish.main.boot.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.main.boot.log.LogFacade;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 

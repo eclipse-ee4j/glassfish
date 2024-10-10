@@ -78,7 +78,7 @@
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <excludes>META-INF/**</excludes>
+                                    <excludes>META-INF/**,module-info.class</excludes>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.glassfish.main.core</groupId>

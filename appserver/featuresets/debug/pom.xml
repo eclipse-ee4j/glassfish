@@ -90,6 +90,10 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-npn-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http-server</artifactId>
         </dependency>
 

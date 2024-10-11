@@ -405,7 +405,6 @@
              <!-- For ORB compatibility with JDK11+ JDKs see https://github.com/eclipse-ee4j/orb-gmbal/issues/22 -->
              <jvm-options>-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true</jvm-options>
 
-             <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
              <jvm-options>--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.admin.cli.optional;
 
 import com.sun.enterprise.admin.cli.CLIProcessExecutor;
@@ -34,6 +33,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.optional.DerbyControl.DB_LOG_FILENAME;
+import static com.sun.enterprise.util.Utility.isAnyNull;
 import static java.io.File.pathSeparator;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
@@ -55,8 +55,26 @@ public final class StartDatabaseCommand extends DatabaseCommand {
     @Param(name = "dbhome", optional = true)
     private String dbHome;
 
+    @Param(name = "dbname", optional = true)
+    private String dbName;
+
+    @Param(optional = true)
+    private String sqlfilename;
+
+    @Param(name = "dbuser", optional = true)
+    private String dbUser;
+
+    @Param(name = "dbpassword", optional = true, password = true)
+    private String dbPassword;
+
     @Param(name = "jvmoptions", optional = true, separator = ' ')
     private String[] jvmoptions;
+
+    /**
+     * Starts the database server in debug mode with suspend on
+     */
+    @Param(optional = true, shortName = "s", defaultValue = "false")
+    private boolean suspend;
 
     /**
      * defines the command to start the derby database Note that when using Darwin (Mac), the property,
@@ -70,6 +88,10 @@ public final class StartDatabaseCommand extends DatabaseCommand {
         if (OS.isDarwin()) {
             cmd.add("-Dderby.storage.fileSyncTransactionLog=True");
         }
+        if (suspend) {
+            cmd.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:9011");
+        }
+
         cmd.add("-cp");
         cmd.add(sClasspath + pathSeparator + sDatabaseClasspath);
         if (jvmoptions != null) {
@@ -111,6 +133,32 @@ public final class StartDatabaseCommand extends DatabaseCommand {
             "sysinfo",
             dbHost, dbPort, "false" };
 
+    }
+
+    public String[] executeSQLCmd() throws Exception {
+        List<String> cmd = new ArrayList<>();
+
+        cmd.add(javaHome + separator + "bin" + separator + "java");
+        cmd.add("-Djava.library.path=" + installRoot + separator + "lib");
+        if (suspend) {
+            cmd.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:9012");
+        }
+
+        cmd.add("-cp");
+        cmd.add(sClasspath + pathSeparator + sDatabaseClasspath);
+
+        cmd.add("com.sun.enterprise.admin.cli.optional.DerbyExecuteSQL");
+        cmd.add(dbHost);
+        cmd.add(dbPort);
+        cmd.add(dbName);
+        cmd.add(sqlfilename);
+
+        if (!isAnyNull(dbUser, dbPassword)) {
+            cmd.add(dbUser);
+            cmd.add(dbPassword);
+        }
+
+        return cmd.toArray(new String[cmd.size()]);
     }
 
     /**
@@ -217,7 +265,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
                 int counter = 0;
 
                 // Give time for the database to be started
-                while (cpePing.exitValue() != 0 && counter < 10) {
+                while (cpePing.exitValue() != 0 && (suspend || counter < 10)) {
                     cpePing.execute("pingDatabaseCmd", pingDatabaseCmd(true), true);
                     Thread.sleep(500);
                     counter++;
@@ -239,6 +287,14 @@ public final class StartDatabaseCommand extends DatabaseCommand {
                         }
                     }
                 }
+
+                if (cpePing.exitValue() == 0 && !isAnyNull(dbName, sqlfilename)) {
+                    cpeSysInfo.execute("executeSQLCmd", executeSQLCmd(), true);
+                    if (cpeSysInfo.exitValue() != 0) {
+                        logger.info("Failed to execute SQL to init DB.");
+                    }
+                }
+
             } catch (Exception e) {
                 throw new CommandException(strings.get("CommandUnSuccessful", name), e);
             }

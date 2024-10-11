@@ -36,7 +36,8 @@
         <path.derby>../../../javadb/lib</path.derby>
         <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
         <path.bootstrap>../bootstrap</path.bootstrap>
-        <classpath.bootstrap>${path.bootstrap}/grizzly-npn-api.jar ${path.bootstrap}/glassfish-jul-extension.jar</classpath.bootstrap>        </properties>
+        <classpath.bootstrap>${path.bootstrap}/glassfish-jul-extension.jar</classpath.bootstrap>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -473,18 +474,6 @@
             <groupId>org.glassfish.main.grizzly</groupId>
             <artifactId>glassfish-grizzly-extra-all</artifactId>
             <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-api</artifactId>
-            <version>${grizzly.npn.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-osgi</artifactId>
-            <version>${grizzly.npn.version}</version>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-jca -->

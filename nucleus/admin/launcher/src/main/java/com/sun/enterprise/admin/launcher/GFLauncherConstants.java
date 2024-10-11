@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.util.OS;
 
 /**
- *
  * @author bnevins
  */
 class GFLauncherConstants {

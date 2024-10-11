@@ -66,7 +66,7 @@ public class PUGrizzlyConfigTest {
     }
 
     @Test
-    public void puHttpHttpsSamePortConfig() throws IOException, InstantiationException {
+    public void puHttpHttpsSamePortConfig() throws Exception {
         GrizzlyConfig grizzlyConfig = null;
         try {
             grizzlyConfig = new GrizzlyConfig("grizzly-config-pu-http-https-same-port.xml");
@@ -80,9 +80,6 @@ public class PUGrizzlyConfigTest {
             HttpsURLConnection.setDefaultSSLSocketFactory(helper.getSSLSocketFactory());
             final String httpContent2 = helper.getContent(new URL("https://localhost:38082").openConnection());
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent2);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdownNetwork();

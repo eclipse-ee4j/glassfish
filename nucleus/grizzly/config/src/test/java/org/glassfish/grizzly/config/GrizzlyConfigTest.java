@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -134,7 +134,7 @@ public class GrizzlyConfigTest {
             assertEquals("heap", bufferType);
             GenericGrizzlyListener genericGrizzlyListener =
                     (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
-            MemoryManager mm = genericGrizzlyListener.getTransport().getMemoryManager();
+            MemoryManager<?> mm = genericGrizzlyListener.getTransport().getMemoryManager();
             assertEquals(HeapMemoryManager.class.getName(), mm.getClass().getName());
         } finally {
             if (grizzlyConfig != null) {
@@ -175,7 +175,7 @@ public class GrizzlyConfigTest {
             assertEquals("direct", bufferType);
             GenericGrizzlyListener genericGrizzlyListener =
                                            (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
-            MemoryManager mm = genericGrizzlyListener.getTransport().getMemoryManager();
+            MemoryManager<?> mm = genericGrizzlyListener.getTransport().getMemoryManager();
             assertEquals(ByteBufferManager.class.getName(), mm.getClass().getName());
             assertTrue(((ByteBufferManager) mm).isDirect());
         } finally {
@@ -193,27 +193,24 @@ public class GrizzlyConfigTest {
             configure();
             grizzlyConfig = new GrizzlyConfig("grizzly-config-socket.xml");
             grizzlyConfig.setupNetwork();
-            GenericGrizzlyListener genericGrizzlyListener =
-                    (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
+            GenericGrizzlyListener genericGrizzlyListener = (GenericGrizzlyListener) getListener(grizzlyConfig,
+                "http-listener-1");
             Transport t = genericGrizzlyListener.getTransport();
 
             assertEquals(-1, t.getReadBufferSize());
             assertEquals(-1, t.getWriteBufferSize());
 
-            genericGrizzlyListener =
-                    (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-2");
+            genericGrizzlyListener = (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-2");
             t = genericGrizzlyListener.getTransport();
             assertEquals(8192, t.getReadBufferSize());
             assertEquals(-1, t.getWriteBufferSize());
 
-            genericGrizzlyListener =
-                    (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-3");
+            genericGrizzlyListener = (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-3");
             t = genericGrizzlyListener.getTransport();
             assertEquals(-1, t.getReadBufferSize());
             assertEquals(8000, t.getWriteBufferSize());
 
-            genericGrizzlyListener =
-                    (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-4");
+            genericGrizzlyListener = (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-4");
             t = genericGrizzlyListener.getTransport();
             assertEquals(6000, t.getReadBufferSize());
             assertEquals(5000, t.getWriteBufferSize());

@@ -17,9 +17,13 @@
 
 package org.glassfish.main.jdke.i18n;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static java.util.ResourceBundle.Control.FORMAT_PROPERTIES;
 
 /**
  * This class makes getting localized strings super-simple.  This is the companion
@@ -48,19 +52,30 @@ import java.util.ResourceBundle;
  * @author bnevins 2005
  */
 public class LocalStringsImpl {
-    private ResourceBundle bundle;
-    private String propsName = "LocalStrings";
-    private static final String thisPackage = "com.elf.util";
-    private static final ResourceBundle.Control rbcontrol = ResourceBundle.Control
-        .getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
 
-    /**
-     * Create a LocalStringsImpl instance.
-     * Automatically discover the caller's LocalStrings.properties file
-     */
-    public LocalStringsImpl() {
-        setBundle();
+    private static final boolean LOG_ERRORS = Boolean.parseBoolean(System.getenv("AS_LOG_I18N_ERRORS"));
+    private static final String LOG_TARGET_FILE = System.getenv("AS_LOG_I18N_LOG_FILE");
+    private static final PrintStream LOG_TARGET;
+    private static final String thisPackage = "com.elf.util";
+    private static final ResourceBundle.Control rbcontrol = ResourceBundle.Control.getControl(FORMAT_PROPERTIES);
+    static {
+        if (LOG_ERRORS) {
+            if (LOG_TARGET_FILE == null) {
+                LOG_TARGET = System.err;
+            } else {
+                try {
+                    LOG_TARGET = new PrintStream(LOG_TARGET_FILE);
+                    Runtime.getRuntime().addShutdownHook(new Thread(() -> LOG_TARGET.close()));
+                } catch (FileNotFoundException e) {
+                    throw new Error(e);
+                }
+            }
+        } else {
+            LOG_TARGET = null;
+        }
     }
+
+    private final ResourceBundle bundle;
 
     /**
      * Create a LocalStringsImpl instance.
@@ -69,165 +84,126 @@ public class LocalStringsImpl {
      * the fastest performance.
      */
     public LocalStringsImpl(Class clazz) {
-        setBundle(clazz);
+        bundle = load(clazz);
     }
 
-    /**
-     * Create a LocalStringsImpl instance.
-     * use the proffered String.  The String is the FQN of the properties file,
-     * without the '.properties'.  E.g. 'com.elf.something.LogStrings'
-     */
-    public LocalStringsImpl(String packageName, String propsName) {
-        this.propsName = propsName;
-        int len = packageName.length();
 
-        // side-effect -- make sure it ends in '.'
-        if (packageName.charAt(len - 1) != '.') {
-            packageName += '.';
+    private static ResourceBundle load(Class clazz) {
+        try {
+            String className = clazz.getName();
+            String props = className.substring(0, className.lastIndexOf('.')) + "." + "LocalStrings";
+            return ResourceBundle.getBundle(props, Locale.getDefault(), clazz.getModule());
+        } catch (Exception e) {
+            if (LOG_ERRORS) {
+                e.printStackTrace(LOG_TARGET);
+            }
+            return null;
         }
-
-        setBundle(packageName);
     }
+
 
     /**
      * Get a String from the caller's package's LocalStrings.properties
+     *
      * @param indexString The string index into the localized string file
      * @return the String from LocalStrings or the supplied String if it doesn't exist
      */
     public String get(String indexString) {
         try {
             return getBundle().getString(indexString);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (LOG_ERRORS) {
+                e.printStackTrace(LOG_TARGET);
+            }
             // it is not an error to have no key...
             return indexString;
         }
     }
 
+
     /**
      * Get and format a String from the caller's package's LocalStrings.properties
+     *
      * @param indexString The string index into the localized string file
      * @param objects The arguments to give to MessageFormat
      * @return the String from LocalStrings or the supplied String if it doesn't exist --
-     * using the array of supplied Object arguments
+     *         using the array of supplied Object arguments
      */
     public String get(String indexString, Object... objects) {
         indexString = get(indexString);
-
         try {
             MessageFormat mf = new MessageFormat(indexString);
             return mf.format(objects);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (LOG_ERRORS) {
+                e.printStackTrace(LOG_TARGET);
+            }
             return indexString;
         }
     }
 
+
     /**
      * Get a String from the caller's package's LocalStrings.properties
+     *
      * @param indexString The string index into the localized string file
      * @return the String from LocalStrings or the supplied default value if it doesn't exist
      */
     public String getString(String indexString, String defaultValue) {
         try {
             return getBundle().getString(indexString);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (LOG_ERRORS) {
+                e.printStackTrace(LOG_TARGET);
+            }
             // it is not an error to have no key...
             return defaultValue;
         }
     }
 
+
     /**
      * Get an integer from the caller's package's LocalStrings.properties
+     *
      * @param indexString The string index into the localized string file
      * @return the integer value from LocalStrings or the supplied default if
-     * it doesn't exist or is bad.
+     *         it doesn't exist or is bad.
      */
     public int getInt(String indexString, int defaultValue) {
         try {
             String s = getBundle().getString(indexString);
             return Integer.parseInt(s);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (LOG_ERRORS) {
+                e.printStackTrace(LOG_TARGET);
+            }
             // it is not an error to have no key...
             return defaultValue;
         }
     }
 
+
     /**
      * Get a boolean from the caller's package's LocalStrings.properties
+     *
      * @param indexString The string index into the localized string file
      * @return the integer value from LocalStrings or the supplied default if
-     * it doesn't exist or is bad.
+     *         it doesn't exist or is bad.
      */
     public boolean getBoolean(String indexString, boolean defaultValue) {
         try {
             return Boolean.parseBoolean(getBundle().getString(indexString));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (LOG_ERRORS) {
+                e.printStackTrace(LOG_TARGET);
+            }
             // it is not an error to have no key...
             return defaultValue;
         }
     }
 
+
     public ResourceBundle getBundle() {
         return bundle;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    private void setBundle() {
-        // go through the stack, top to bottom.  The item that is below the LAST
-        // method that is in the util framework is where the logfile is.
-        // note that there may be more than one method from util in the stack
-        // because they may be calling us indirectly from LoggerHelper.  Also
-        // note that this class won't work from any class in the util hierarchy itself.
-
-        try {
-            StackTraceElement[] items = Thread.currentThread().getStackTrace();
-            int lastMeOnStack = -1;
-
-            for (int i = 0; i < items.length; i++) {
-                StackTraceElement item = items[i];
-                if (item.getClassName().startsWith(thisPackage)) {
-                    lastMeOnStack = i;
-                }
-            }
-
-            String className = items[lastMeOnStack + 1].getClassName();
-            setBundle(className);
-        }
-        catch (Exception e) {
-            bundle = null;
-        }
-    }
-
-    private void setBundle(Class clazz) {
-
-        try {
-            String className = clazz.getName();
-            setBundle(className);
-
-            // April 25, 2009 -- if OSGi is in charge then we might not have got the
-            // bundle!  Fix: send in the class's Classloader...
-            if(bundle == null) {
-                String props = className.substring(0, className.lastIndexOf('.')) + "." + propsName;
-                bundle = ResourceBundle.getBundle(props, Locale.getDefault(), clazz.getClassLoader(),
-                        rbcontrol);
-            }
-        }
-        catch (Exception e) {
-            bundle = null;
-        }
-    }
-
-    private void setBundle(String className) {
-        try {
-            String props = className.substring(0, className.lastIndexOf('.')) + "." + propsName;
-            bundle = ResourceBundle.getBundle(props, rbcontrol);
-        }
-        catch (Exception e) {
-            bundle = null;
-        }
     }
 }

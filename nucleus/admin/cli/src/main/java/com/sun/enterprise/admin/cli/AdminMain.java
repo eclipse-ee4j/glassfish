@@ -58,7 +58,6 @@ import org.glassfish.main.jul.cfg.GlassFishLogManagerConfiguration;
 import org.glassfish.main.jul.cfg.LoggingProperties;
 import org.glassfish.main.jul.formatter.GlassFishLogFormatter;
 import org.glassfish.main.jul.handler.BlockingExternallyManagedLogHandler;
-import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
@@ -334,7 +333,6 @@ public class AdminMain {
     }
 
     private void configureLogging() {
-        GlassFishLoggingTracer.trace(AdminMain.class, "Configuring logging for asadmin.");
         boolean trace = env.trace();
         boolean debug = env.debug();
 

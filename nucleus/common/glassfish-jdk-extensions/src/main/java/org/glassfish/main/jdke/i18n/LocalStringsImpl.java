@@ -20,6 +20,7 @@ package org.glassfish.main.jdke.i18n;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -89,12 +90,13 @@ public class LocalStringsImpl {
 
 
     private static ResourceBundle load(Class clazz) {
+        String className = clazz.getName();
+        String props = className.substring(0, className.lastIndexOf('.')) + "." + "LocalStrings";
         try {
-            String className = clazz.getName();
-            String props = className.substring(0, className.lastIndexOf('.')) + "." + "LocalStrings";
             return ResourceBundle.getBundle(props, Locale.getDefault(), clazz.getModule());
         } catch (Exception e) {
             if (LOG_ERRORS) {
+                LOG_TARGET.println("Could not find resource bundle: " + props);
                 e.printStackTrace(LOG_TARGET);
             }
             return null;
@@ -105,18 +107,19 @@ public class LocalStringsImpl {
     /**
      * Get a String from the caller's package's LocalStrings.properties
      *
-     * @param indexString The string index into the localized string file
+     * @param key The string index into the localized string file
      * @return the String from LocalStrings or the supplied String if it doesn't exist
      */
-    public String get(String indexString) {
+    public String get(String key) {
         try {
-            return getBundle().getString(indexString);
+            return getBundle().getString(key);
         } catch (Exception e) {
             if (LOG_ERRORS) {
+                LOG_TARGET.println("Could not resolve: " + key);
                 e.printStackTrace(LOG_TARGET);
             }
             // it is not an error to have no key...
-            return indexString;
+            return key;
         }
     }
 
@@ -124,21 +127,24 @@ public class LocalStringsImpl {
     /**
      * Get and format a String from the caller's package's LocalStrings.properties
      *
-     * @param indexString The string index into the localized string file
+     * @param key The string index into the localized string file
      * @param objects The arguments to give to MessageFormat
      * @return the String from LocalStrings or the supplied String if it doesn't exist --
      *         using the array of supplied Object arguments
      */
-    public String get(String indexString, Object... objects) {
-        indexString = get(indexString);
+    public String get(String key, Object... objects) {
+        final String template = get(key);
+        if (template == key) {
+            return key + ": " + Arrays.toString(objects);
+        }
         try {
-            MessageFormat mf = new MessageFormat(indexString);
+            MessageFormat mf = new MessageFormat(template);
             return mf.format(objects);
         } catch (Exception e) {
             if (LOG_ERRORS) {
                 e.printStackTrace(LOG_TARGET);
             }
-            return indexString;
+            return template;
         }
     }
 
@@ -146,14 +152,15 @@ public class LocalStringsImpl {
     /**
      * Get a String from the caller's package's LocalStrings.properties
      *
-     * @param indexString The string index into the localized string file
+     * @param key The string index into the localized string file
      * @return the String from LocalStrings or the supplied default value if it doesn't exist
      */
-    public String getString(String indexString, String defaultValue) {
+    public String getString(String key, String defaultValue) {
         try {
-            return getBundle().getString(indexString);
+            return getBundle().getString(key);
         } catch (Exception e) {
             if (LOG_ERRORS) {
+                LOG_TARGET.println("Could not resolve: " + key);
                 e.printStackTrace(LOG_TARGET);
             }
             // it is not an error to have no key...
@@ -165,16 +172,17 @@ public class LocalStringsImpl {
     /**
      * Get an integer from the caller's package's LocalStrings.properties
      *
-     * @param indexString The string index into the localized string file
+     * @param key The string index into the localized string file
      * @return the integer value from LocalStrings or the supplied default if
      *         it doesn't exist or is bad.
      */
-    public int getInt(String indexString, int defaultValue) {
+    public int getInt(String key, int defaultValue) {
         try {
-            String s = getBundle().getString(indexString);
+            String s = getBundle().getString(key);
             return Integer.parseInt(s);
         } catch (Exception e) {
             if (LOG_ERRORS) {
+                LOG_TARGET.println("Could not resolve: " + key);
                 e.printStackTrace(LOG_TARGET);
             }
             // it is not an error to have no key...
@@ -186,15 +194,16 @@ public class LocalStringsImpl {
     /**
      * Get a boolean from the caller's package's LocalStrings.properties
      *
-     * @param indexString The string index into the localized string file
+     * @param key The string index into the localized string file
      * @return the integer value from LocalStrings or the supplied default if
      *         it doesn't exist or is bad.
      */
-    public boolean getBoolean(String indexString, boolean defaultValue) {
+    public boolean getBoolean(String key, boolean defaultValue) {
         try {
-            return Boolean.parseBoolean(getBundle().getString(indexString));
+            return Boolean.parseBoolean(getBundle().getString(key));
         } catch (Exception e) {
             if (LOG_ERRORS) {
+                LOG_TARGET.println("Could not resolve: " + key);
                 e.printStackTrace(LOG_TARGET);
             }
             // it is not an error to have no key...

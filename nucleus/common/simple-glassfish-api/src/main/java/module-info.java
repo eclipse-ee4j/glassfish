@@ -15,12 +15,18 @@
  */
 
 /**
+ * Basic GlassFish interfaces and classes used by all implementations.
+ *
+ * @uses org.glassfish.embeddable.spi.RuntimeBuilder
+ *
  * @author David Matejcek
  */
 module org.glassfish.main.api.simple {
 
     requires java.base;
     requires java.logging;
+
+    uses org.glassfish.embeddable.spi.RuntimeBuilder;
 
     exports org.glassfish.embeddable;
     exports org.glassfish.embeddable.spi;

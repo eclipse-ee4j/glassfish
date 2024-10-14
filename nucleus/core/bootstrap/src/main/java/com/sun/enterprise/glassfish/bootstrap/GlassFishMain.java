@@ -105,6 +105,7 @@ public class GlassFishMain {
                 map.put("default", args[i]);
             }
         }
+        // no sense doing this if we were started by CLI...
         if (!wasStartedByCLI(map)) {
             for (int i = 0; i < args.length; i++) {
                 if (i > 0) {
@@ -113,9 +114,9 @@ public class GlassFishMain {
                 sb.append(args[i]);
             }
             map.setProperty(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
-            // no sense doing this if we were started by CLI...
             map.setProperty(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
             map.setProperty(BootstrapKeys.ORIGINAL_CN, GlassFishMain.class.getName());
+            map.setProperty(BootstrapKeys.ORIGINAL_MP, System.getProperty("jdk.module.path"));
         }
         return map;
     }

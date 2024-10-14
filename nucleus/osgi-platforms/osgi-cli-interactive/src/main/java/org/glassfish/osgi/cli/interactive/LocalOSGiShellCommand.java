@@ -357,6 +357,7 @@ public class LocalOSGiShellCommand extends CLICommand {
                      */
                     final ProgramOptions programOptions = new ProgramOptions(env);
                     // copy over AsadminMain info
+                    programOptions.setModulePath(programOpts.getModulePath());
                     programOptions.setClassPath(programOpts.getClassPath());
                     programOptions.setClassName(programOpts.getClassName());
                     // remove the old one and replace it

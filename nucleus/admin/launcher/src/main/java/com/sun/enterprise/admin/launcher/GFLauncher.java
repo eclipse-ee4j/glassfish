@@ -79,10 +79,8 @@ import static java.util.stream.Collectors.toList;
  * @author bnevins
  */
 public abstract class GFLauncher {
-
     private static final LocalStringsImpl I18N = new LocalStringsImpl(GFLauncher.class);
     private static final Logger LOG = System.getLogger(GFLauncher.class.getName(), I18N.getBundle());
-    private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncher.class);
 
     /**
      * Parameters provided by the caller of a launcher, either programmatically (for GF embedded) or as commandline
@@ -138,6 +136,7 @@ public abstract class GFLauncher {
     private Map<String, String> domainXMLSystemProperty;
 
     private String javaExe;
+    private String modulepath;
     private String classpath;
     private String adminFileRealmKeyFile;
     private boolean secureAdminEnabled;
@@ -217,7 +216,7 @@ public abstract class GFLauncher {
             throw gfe;
         } catch (Throwable t) {
             // hk2 might throw a java.lang.Error
-            throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
+            throw new GFLauncherException(I18N.get("unknownError", t.getMessage()), t);
         } finally {
             GFLauncherLogger.removeLogFileHandler();
         }
@@ -250,7 +249,7 @@ public abstract class GFLauncher {
             throw gfe;
         } catch (Throwable t) {
             // hk2 might throw a java.lang.Error
-            throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
+            throw new GFLauncherException(I18N.get("unknownError", t.getMessage()), t);
         } finally {
             GFLauncherLogger.removeLogFileHandler();
         }
@@ -307,6 +306,7 @@ public abstract class GFLauncher {
         GFLauncherLogger.addLogFileHandler(logFilename);
 
         setJavaExecutable();
+        setModulepath();
         setClasspath();
         setCommandLine();
         setJvmOptions();
@@ -390,7 +390,7 @@ public abstract class GFLauncher {
      */
     public String getLogFilename() throws GFLauncherException {
         if (!logFilenameWasFixed) {
-            throw new GFLauncherException(strings.get("internalError") + " call to getLogFilename() before it has been initialized");
+            throw new GFLauncherException(I18N.get("internalError") + " call to getLogFilename() before it has been initialized");
         }
 
         return logFilename;
@@ -539,6 +539,8 @@ public abstract class GFLauncher {
     final long getStartTime() {
         return startTime;
     }
+
+    abstract List<File> getMainModulepath() throws GFLauncherException;
 
     abstract List<File> getMainClasspath() throws GFLauncherException;
 
@@ -750,8 +752,12 @@ public abstract class GFLauncher {
         return false;
     }
 
+    void setModulepath() throws GFLauncherException {
+        setModulepath(GFLauncherUtils.fileListToPathString(getMainModulepath()));
+    }
+
     void setClasspath() throws GFLauncherException {
-        List<File> mainCP = getMainClasspath(); // subclass provides this
+        List<File> mainCP = getMainClasspath();
         List<File> envCP = domainXMLjavaConfig.getEnvClasspath();
         List<File> sysCP = domainXMLjavaConfig.getSystemClasspath();
         List<File> prefixCP = domainXMLjavaConfig.getPrefixClasspath();
@@ -766,15 +772,24 @@ public abstract class GFLauncher {
         all.addAll(sysCP);
         all.addAll(envCP);
         all.addAll(suffixCP);
-        setClasspath(GFLauncherUtils.fileListToPathString(all));
+        setClasspath(all.isEmpty() ? null : GFLauncherUtils.fileListToPathString(all));
     }
 
     void setCommandLine() throws GFLauncherException {
         List<String> cmdLine = getCommandLine();
         cmdLine.clear();
         addIgnoreNull(cmdLine, javaExe);
-        addIgnoreNull(cmdLine, "-cp");
-        addIgnoreNull(cmdLine, getClasspath());
+        if (getModulepath() != null) {
+            cmdLine.add("--module-path");
+            cmdLine.add(getModulepath());
+            cmdLine.add("--add-modules");
+            cmdLine.add("ALL-MODULE-PATH");
+        }
+        cmdLine.add("-verbose");
+        if (getClasspath() != null) {
+            addIgnoreNull(cmdLine, "-cp");
+            addIgnoreNull(cmdLine, getClasspath());
+        }
         addIgnoreNull(cmdLine, domainXMLjavaConfigDebugOptions);
 
         String CLIStartTime = System.getProperty("WALL_CLOCK_START");
@@ -800,7 +815,7 @@ public abstract class GFLauncher {
         } catch (GFLauncherException gfle) {
             throw gfle;
         } catch (Exception e) {
-            // harmless
+            throw new GFLauncherException(e);
         }
     }
 
@@ -868,7 +883,7 @@ public abstract class GFLauncher {
 
         if (processWhacker == null) {
             Runtime runtime = Runtime.getRuntime();
-            final String msg = strings.get("serverStopped", callerParameters.getType());
+            final String msg = I18N.get("serverStopped", callerParameters.getType());
             processWhacker = new ProcessWhacker(p, msg);
 
             runtime.addShutdownHook(new Thread(processWhacker));
@@ -943,7 +958,7 @@ public abstract class GFLauncher {
             int ev = sp.exitValue();
             ProcessStreamDrainer psd1 = getProcessStreamDrainer();
             String output = psd1.getOutErrString();
-            String trace = strings.get("server_process_died", ev, output);
+            String trace = I18N.get("server_process_died", ev, output);
             return trace;
         } catch (IllegalThreadStateException e) {
             // the glassFishProcess is still running and we are ok
@@ -966,7 +981,7 @@ public abstract class GFLauncher {
                 // the actual error is wrapped differently depending on
                 // whether the problem was with the source or target
                 Throwable cause = ioe.getCause() == null ? ioe : ioe.getCause();
-                throw new GFLauncherException(strings.get("copy_server_policy_error", cause.getMessage()), ioe);
+                throw new GFLauncherException(I18N.get("copy_server_policy_error", cause.getMessage()), ioe);
             }
         }
     }
@@ -986,7 +1001,7 @@ public abstract class GFLauncher {
                 if (FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
                     GFLauncherLogger.fine("rename_osgi_cache_succeeded", osgiCacheDir, backupOsgiCacheDir);
                 } else {
-                    throw new GFLauncherException(strings.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
+                    throw new GFLauncherException(I18N.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
                 }
             }
         }
@@ -1029,7 +1044,7 @@ public abstract class GFLauncher {
         if (flashlightJarFile.isFile()) {
             return "javaagent:" + getCleanPath(flashlightJarFile);
         } else {
-            String msg = strings.get("no_flashlight_agent", flashlightJarFile);
+            String msg = I18N.get("no_flashlight_agent", flashlightJarFile);
             GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
             throw new GFLauncherException(msg);
         }
@@ -1053,6 +1068,14 @@ public abstract class GFLauncher {
 
     void setClasspath(String s) {
         classpath = s;
+    }
+
+    String getModulepath() {
+        return modulepath;
+    }
+
+    void setModulepath(String modulepath) {
+        this.modulepath = modulepath;
     }
 
     private List<String> propsToJvmOptions(Map<String, String> map) {
@@ -1107,7 +1130,7 @@ public abstract class GFLauncher {
                 sname = callerParameters.getInstanceName();
             }
 
-            System.out.println(strings.get("ssh", sname));
+            System.out.println(I18N.get("ssh", sname));
             try {
                 System.in.close();
             } catch (Exception e) { // ignore

@@ -52,11 +52,13 @@ public class RestartServer {
     private Properties props;
     private Logger logger;
     private boolean verbose;
+    private String modulepath;
     private String classpath;
     private String classname;
     private String argsString;
     private String[] args;
     private String serverName = "";
+
     private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
     private static final String magicProperty = "-DAS_RESTART=" + ProcessHandle.current().pid();
     private static final String[] normalProps = { magicProperty };
@@ -151,7 +153,7 @@ public class RestartServer {
                 sysProps = normalProps;
             }
 
-            JavaClassRunner runner = new JavaClassRunner(classpath, sysProps, classname, args);
+            JavaClassRunner runner = new JavaClassRunner(modulepath, classpath, sysProps, classname, args);
             runner.run();
         } catch (Exception e) {
             throw new RDCException(e);
@@ -159,6 +161,7 @@ public class RestartServer {
     }
 
     private boolean setupReincarnationWithAsadmin() throws RDCException {
+        modulepath = props.getProperty(BootstrapKeys.ASADMIN_MP);
         classpath = props.getProperty(BootstrapKeys.ASADMIN_CP);
         classname = props.getProperty(BootstrapKeys.ASADMIN_CN);
         argsString = props.getProperty(BootstrapKeys.ASADMIN_ARGS);
@@ -167,7 +170,7 @@ public class RestartServer {
     }
 
     private boolean setupReincarnationWithOther() throws RDCException {
-
+        modulepath = props.getProperty(BootstrapKeys.ORIGINAL_MP);
         classpath = props.getProperty(BootstrapKeys.ORIGINAL_CP);
         classname = props.getProperty(BootstrapKeys.ORIGINAL_CN);
         argsString = props.getProperty(BootstrapKeys.ORIGINAL_ARGS);
@@ -283,7 +286,7 @@ public class RestartServer {
     }
 
     private boolean ok(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 
     // We use this simply to tell the difference between fatal errors and other

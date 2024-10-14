@@ -22,8 +22,8 @@ module org.glassfish.main.bootstrap {
     requires java.base;
     requires java.logging;
 
-    requires org.apache.felix.framework;
-    requires org.glassfish.annotation.processing.logging;
+    requires static org.apache.felix.framework;
+    requires static org.glassfish.annotation.processing.logging;
     requires org.glassfish.main.jdke;
 
     exports com.sun.enterprise.glassfish.bootstrap.cfg;

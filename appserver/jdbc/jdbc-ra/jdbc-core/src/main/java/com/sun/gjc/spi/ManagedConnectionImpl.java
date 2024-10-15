@@ -34,6 +34,7 @@ import jakarta.resource.NotSupportedException;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.DissociatableManagedConnection;
 import jakarta.resource.spi.LazyEnlistableManagedConnection;
 import jakarta.resource.spi.LocalTransaction;
@@ -129,24 +130,36 @@ public class ManagedConnectionImpl
     private Boolean isClientInfoSupported;
 
     /**
-     * Constructor for <code>ManagedConnectionImpl</code>. The pooledConn parameter
-     * is expected to be null and sqlConn parameter is the actual connection in case
-     * where the actual connection is got from a non pooled datasource object. The
-     * pooledConn parameter is expected to be non null and sqlConn parameter is
-     * expected to be null in the case where the datasource object is a connection
-     * pool datasource or an xa datasource.
+     * Constructor for <code>ManagedConnectionImpl</code>. The pooledConn parameter is expected to be null and sqlConn
+     * parameter is the actual connection in case where the actual connection is got from a non pooled datasource object.
+     * The pooledConn parameter is expected to be non null and sqlConn parameter is expected to be null in the case where
+     * the datasource object is a connection pool datasource or an xa datasource.
      *
-     * @param pooledConn <code>PooledConnection</code> object in case the physical
-     * connection is to be obtained from a pooled <code>DataSource</code>; null
-     * otherwise
-     * @param sqlConn <code>java.sql.Connection</code> object in case the physical
-     * connection is to be obtained from a non pooled <code>DataSource</code>; null
-     * otherwise
-     * @param passwdCred object conatining the user and password for allocating the
-     * connection
-     * @throws ResourceException if the <code>ManagedConnectionFactory</code> object
-     * that created this <code>ManagedConnectionImpl</code> object is not the same
-     * as returned by <code>PasswordCredential</code> object passed
+     * @param pooledConn <code>PooledConnection</code> object in case the physical connection is to be obtained from a
+     * pooled <code>DataSource</code>; null otherwise
+     * @param sqlConn <code>java.sql.Connection</code> object in case the physical connection is to be obtained from a non
+     * pooled <code>DataSource</code>; null otherwise
+     * @param passwdCred object containing the user and password for allocating the connection, value is allowed to be null.
+     * @param mcf the reference to the ManagedConnectionFactory instance that created this ManagedConnectionImpl instance.
+     * @param poolInfo Name of the pool
+     * @param statementCacheSize Statement caching is usually a feature of the JDBC driver. The GlassFish Server provides
+     * caching for drivers that do not support caching. To enable this feature, set the Statement Cache Size. By default,
+     * this attribute is set to zero and the statement caching is turned off. To enable statement caching, you can set any
+     * positive nonzero value. The built-in cache eviction strategy is LRU-based (Least Recently Used). When a connection
+     * pool is flushed, the connections in the statement cache are recreated.<br>
+     * Configured via create-jdbc-connection-pool --statementcachesize
+     * @param statementCacheType In case statementCacheSize is not 0 this defines the statement cache type to be used. Valid
+     * values are defined in com.sun.gjc.spi.base.datastructure.CacheFactory. Value null or "" uses an LRU Cache
+     * implementation. Value FIXED uses FIXED size cache implementation. Any other values are expected to be a className for
+     * a cache implementation.
+     * @param delegator optional SqlTraceDelegator, value is allowed to be null.
+     * @param statementLeakTimeout statement leak timeout in seconds.<br>
+     * Configured via create-jdbc-connection-pool --statementleaktimeout
+     * @param statementLeakReclaim true if statements need to be reclaimed.<br>
+     * Configured via create-jdbc-connection-pool --statementleakreclaim
+     * @throws ResourceException if the <code>ManagedConnectionFactory</code> object that created this
+     * <code>ManagedConnectionImpl</code> object is not the same as returned by <code>PasswordCredential</code> object
+     * passed. And throws ResourceException in case both pooledConn and sqlConn are null.
      */
     public ManagedConnectionImpl(PooledConnection pooledConn, Connection sqlConn, PasswordCredential passwdCred,
             ManagedConnectionFactory mcf, PoolInfo poolInfo, int statementCacheSize, String statementCacheType,
@@ -154,7 +167,6 @@ public class ManagedConnectionImpl
             throws ResourceException {
 
         if (pooledConn == null && sqlConn == null) {
-
             String i18nMsg = localStrings.getString("jdbc.conn_obj_null");
             throw new ResourceException(i18nMsg);
         }
@@ -170,7 +182,6 @@ public class ManagedConnectionImpl
 
         this.managedConnectionFactory = mcf;
         if (passwdCredential != null && this.managedConnectionFactory.equals(passwdCredential.getManagedConnectionFactory()) == false) {
-
             String i18nMsg = localStrings.getString("jdbc.mc_construct_err");
             throw new ResourceException(i18nMsg);
         }
@@ -248,6 +259,7 @@ public class ManagedConnectionImpl
      * @param listener <code>ConnectionEventListener</code>
      * @see <code>removeConnectionEventListener</code>
      */
+    @Override
     public void addConnectionEventListener(ConnectionEventListener listener) {
         this.listener = listener;
     }
@@ -256,11 +268,12 @@ public class ManagedConnectionImpl
      * Used by the container to change the association of an application-level
      * connection handle with a <code>ManagedConnectionImpl</code> instance.
      *
-     * @param connection <code>ConnectionHolder30</code> to be associated with this
+     * @param connection <code>ConnectionHolder</code> to be associated with this
      * <code>ManagedConnectionImpl</code> instance
      * @throws ResourceException if the physical connection is no more valid or the
      * connection handle passed is null
      */
+    @Override
     public void associateConnection(Object connection) throws ResourceException {
         logFine("In associateConnection");
         checkIfValid();
@@ -282,7 +295,7 @@ public class ManagedConnectionImpl
          * previous statements and result sets also need to be removed.
          */
 
-        connectionHolder.setActive(true);
+        connectionHolder.setActive();
         incrementCount();
 
         // associate the MC to the supplied logical connection similar to associating
@@ -304,6 +317,7 @@ public class ManagedConnectionImpl
      *
      * @throws ResourceException if the physical connection is no more valid
      */
+    @Override
     public void cleanup() throws ResourceException {
         logFine("In cleanup");
 
@@ -351,6 +365,7 @@ public class ManagedConnectionImpl
      * @throws ResourceException if there is an error in closing the physical
      * connection
      */
+    @Override
     public void destroy() throws ResourceException {
         logFine("In destroy");
         if (isDestroyed) {
@@ -400,7 +415,8 @@ public class ManagedConnectionImpl
      * @throws jakarta.resource.spi.SecurityException if there is a mismatch between
      * the password credentials or reauthentication is requested
      */
-    public Object getConnection(Subject sub, jakarta.resource.spi.ConnectionRequestInfo cxReqInfo) throws ResourceException {
+    @Override
+    public Object getConnection(Subject sub, ConnectionRequestInfo cxReqInfo) throws ResourceException {
         logFine("In getConnection");
         checkIfValid();
 
@@ -431,7 +447,7 @@ public class ManagedConnectionImpl
         incrementCount();
         isClean = false;
 
-        myLogicalConnection.setActive(true);
+        myLogicalConnection.setActive();
 
         return myLogicalConnection;
     }
@@ -484,6 +500,7 @@ public class ManagedConnectionImpl
      * @return <code>LocalTransactionImpl</code> instance
      * @throws ResourceException if the physical connection is not valid
      */
+    @Override
     public LocalTransaction getLocalTransaction() throws ResourceException {
         logFine("In getLocalTransaction");
         checkIfValid();
@@ -498,6 +515,7 @@ public class ManagedConnectionImpl
      * @throws ResourceException if the physical connection is not valid
      * @see <code>setLogWriter</code>
      */
+    @Override
     public PrintWriter getLogWriter() throws ResourceException {
         logFine("In getLogWriter");
         checkIfValid();
@@ -512,6 +530,7 @@ public class ManagedConnectionImpl
      * @return <code>ManagedConnectionMetaData</code> instance
      * @throws ResourceException if the physical connection is not valid
      */
+    @Override
     public ManagedConnectionMetaData getMetaData() throws ResourceException {
         logFine("In getMetaData");
         checkIfValid();
@@ -528,6 +547,7 @@ public class ManagedConnectionImpl
      * @throws NotSupportedException if underlying datasource is not an
      * <code>XADataSource</code>
      */
+    @Override
     public XAResource getXAResource() throws ResourceException {
         logFine("In getXAResource");
         checkIfValid();
@@ -556,7 +576,11 @@ public class ManagedConnectionImpl
      * @param listener <code>ConnectionEventListener</code> to be removed
      * @see <code>addConnectionEventListener</code>
      */
+    @Override
     public void removeConnectionEventListener(ConnectionEventListener listener) {
+        if (this.listener == listener) {
+            this.listener = null;
+        }
     }
 
     /**
@@ -709,22 +733,22 @@ public class ManagedConnectionImpl
     }
 
     /**
-     * This method is called by the <code>ConnectionHolder30</code> when its close
+     * This method is called by the <code>ConnectionHolder</code> when its close
      * method is called. This <code>ManagedConnection</code> instance invalidates
      * the connection handle and sends a CONNECTION_CLOSED event to all the
      * registered event listeners.
      *
      * @param e Exception that may have occurred while closing the connection handle
-     * @param connHolder30Object <code>ConnectionHolder30</code> that has been
+     * @param connectionHolder <code>ConnectionHolder</code> that has been
      * closed
      * @throws SQLException in case closing the sql connection got out of
      * <code>getConnection</code> on the underlying <code>PooledConnection</code>
      * throws an exception
      */
-    public void connectionClosed(Exception e, ConnectionHolder connHolder30Object) throws SQLException {
-        connHolder30Object.invalidate();
+    public void connectionClosed(Exception e, ConnectionHolder connectionHolder) throws SQLException {
+        connectionHolder.invalidate();
         decrementCount();
-        connectionEvent.setConnectionHandle(connHolder30Object);
+        connectionEvent.setConnectionHandle(connectionHolder);
 
         if (markedForRemoval && !transactionInProgress) {
             BadConnectionEventListener badConnectionEventListener = (BadConnectionEventListener) listener;
@@ -732,13 +756,15 @@ public class ManagedConnectionImpl
             _logger.log(INFO, "jdbc.markedForRemoval_conClosed");
             markedForRemoval = false;
         } else {
-            listener.connectionClosed(connectionEvent);
+            if (listener != null) {
+                listener.connectionClosed(connectionEvent);
+            }
         }
     }
 
     /**
-     * This method is called by the <code>ConnectionHolder30</code> when it detects
-     * a connecion related error.
+     * This method is called by the <code>ConnectionHolder</code> when it detects
+     * a connection related error.
      *
      * @param e Exception that has occurred during an operation on the physical
      * connection
@@ -793,13 +819,12 @@ public class ManagedConnectionImpl
      * to the calling Connection Handle object to this object if the active
      * Connection Handle is null.
      *
-     * @param ch <code>ConnectionHolder30</code> that requests this
+     * @param connectionHolder <code>ConnectionHolder</code> that requests this
      * <code>ManagedConnection</code> instance whether it can be active or not
      * @throws SQLException in case the physical is not valid or there is already an
      * active connection handle
      */
-
-    public void checkIfActive(ConnectionHolder ch) throws SQLException {
+    public void checkIfActive(ConnectionHolder connectionHolder) throws SQLException {
         if (isDestroyed || !isUsable) {
             throw new SQLException(localStrings.getString("jdbc.conn_not_usable"));
         }
@@ -822,6 +847,7 @@ public class ManagedConnectionImpl
         connectionCount--;
     }
 
+    @Override
     public void dissociateConnections() {
         if (myLogicalConnection != null) {
             myLogicalConnection.dissociateConnection();

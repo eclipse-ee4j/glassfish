@@ -146,20 +146,17 @@
                                 <xjc destdir="${dest}"
                                     schema="${project.basedir}/src/main/resources/xsd/schema/template-info.xsd"
                                     package="com.sun.enterprise.admin.servermgmt.xml.templateinfo">
-                                    <jvmarg value="-Duser.language=en" />
-                                    <jvmarg value="-Duser.country=US" />
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
                                 </xjc>
                                 <xjc destdir="${dest}"
                                     schema="${project.basedir}/src/main/resources/xsd/schema/domain-info.xsd"
                                     package="com.sun.enterprise.admin.servermgmt.xml.domaininfo">
-                                    <jvmarg value="-Duser.language=en" />
-                                    <jvmarg value="-Duser.country=US" />
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
                                 </xjc>
                                 <xjc destdir="${dest}"
                                     schema="${project.basedir}/src/main/resources/xsd/schema/stringsubs.xsd"
                                     package="com.sun.enterprise.admin.servermgmt.xml.stringsubs">
-                                    <jvmarg value="-Duser.language=en" />
-                                    <jvmarg value="-Duser.country=US" />
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
                                 </xjc>
                             </target>
                         </configuration>

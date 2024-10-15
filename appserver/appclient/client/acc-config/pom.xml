@@ -169,8 +169,7 @@
                                     <binding dir="${project.basedir}/src/main/resources" includes="configBindings.xml"/>
                                     <arg value="-dtd"/>
                                     <jvmarg value="-DenableExternalEntityProcessing=true"/>
-                                    <jvmarg value="-Duser.language=en" />
-                                    <jvmarg value="-Duser.country=US" />
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
                                 </xjc>
                             </target>
                         </configuration>

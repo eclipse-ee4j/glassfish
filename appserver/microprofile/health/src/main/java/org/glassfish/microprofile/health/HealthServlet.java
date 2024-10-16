@@ -1,6 +1,7 @@
 package org.glassfish.microprofile.health;
 
 import io.helidon.config.mp.MpConfigProviderResolver;
+
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.json.bind.Jsonb;

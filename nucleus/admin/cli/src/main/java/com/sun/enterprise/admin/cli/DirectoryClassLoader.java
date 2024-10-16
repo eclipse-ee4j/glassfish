@@ -87,12 +87,15 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
     }
 
 
-    private static Set<Path> getJarPaths(final File dir) {
-        try (Stream<Path> stream = Files.walk(dir.toPath(), MAX_DEPTH)) {
+    private static Set<Path> getJarPaths(final File jarOrDir) {
+        if (jarOrDir.isFile()) {
+            return Set.of(jarOrDir.toPath());
+        }
+        try (Stream<Path> stream = Files.walk(jarOrDir.toPath(), MAX_DEPTH)) {
             return stream.filter(path -> !Files.isDirectory(path))
                 .filter(path -> path.getFileName().toString().endsWith(".jar")).collect(Collectors.toSet());
         } catch (final IOException e) {
-            throw new IllegalStateException(STRINGS.get("DirError", dir), e);
+            throw new IllegalStateException(STRINGS.get("DirError", jarOrDir), e);
         }
     }
 }

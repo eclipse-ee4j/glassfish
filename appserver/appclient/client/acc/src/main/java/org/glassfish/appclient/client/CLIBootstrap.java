@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -83,7 +84,7 @@ public class CLIBootstrap {
     private final static String SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR = "-Djava.security.auth.login.config=";
     private final static String SYSTEM_CLASS_LOADER_PROPERTY_EXPR = "-Djava.system.class.loader=org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
 
-    private final static String[] ENV_VARS = { "_AS_INSTALL", "APPCPATH", "VMARGS" };
+    private final static String[] ENV_VARS = { "AS_INSTALL", "APPCPATH", "VMARGS" };
 
     private JavaInfo java = new JavaInfo();
     private GlassFishInfo gfInfo = new GlassFishInfo();
@@ -291,7 +292,9 @@ public class CLIBootstrap {
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
         command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
-        command.append(' ').append("-classpath").append(' ').append(gfInfo.agentJarPath()).append(File.pathSeparatorChar).append('.');
+        command.append(' ').append("--module-path ").append(quote(gfInfo.home().toPath().normalize().resolve(Path.of("lib", "bootstrap")).toString()));
+        command.append(' ').append("--add-modules ALL-MODULE-PATH");
+        command.append(' ').append("-classpath ").append(gfInfo.agentJarPath()).append(File.pathSeparatorChar).append('.');
         command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
         command.append(' ').append("-Xshare:off");
         command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
@@ -867,7 +870,7 @@ public class CLIBootstrap {
     /**
      * Encapsulates information about the GlassFish installation, mostly useful directories within the installation.
      * <p>
-     * Note that we use the property acc._AS_INSTALL to find the installation.
+     * Note that we use the property acc.AS_INSTALL to find the installation.
      */
     static class GlassFishInfo {
 
@@ -878,9 +881,9 @@ public class CLIBootstrap {
         private static final String ACC_CONFIG_PREFIX = "domains/domain1/config";
 
         GlassFishInfo() {
-            String asInstallPath = System.getProperty(ENV_VAR_PROP_PREFIX + "_AS_INSTALL");
+            String asInstallPath = System.getProperty(ENV_VAR_PROP_PREFIX + "AS_INSTALL");
             if (asInstallPath == null || asInstallPath.length() == 0) {
-                throw new IllegalArgumentException("_AS_INSTALL == null");
+                throw new IllegalArgumentException("AS_INSTALL == null");
             }
             this.home = new File(asInstallPath);
             modules = new File(home, "modules");

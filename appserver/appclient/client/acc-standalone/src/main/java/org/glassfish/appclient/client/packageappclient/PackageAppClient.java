@@ -68,7 +68,6 @@ public class PackageAppClient {
     private final static String GLASSFISH_LIB = "glassfish/lib";
     private final static String GLASSFISH_BIN = "glassfish/bin";
     private final static String GLASSFISH_CONFIG = "glassfish/config";
-    private final static String MODULES_ENDORSED_DIR = "glassfish/modules/endorsed";
     private final static String MQ_LIB = "mq/lib";
     private final static String DOMAIN_1_CONFIG = "glassfish/domains/domain1/config";
     private final static String INDENT = "  ";
@@ -79,15 +78,9 @@ public class PackageAppClient {
     private final static String[] DIRS_TO_COPY = new String[] {
         GLASSFISH_LIB + "/dtds",
         GLASSFISH_LIB + "/schemas",
-        GLASSFISH_LIB + "/appclient" };
-
-    /*
-     * relative path to the endorsed directory of the app server. Handled separately from other directorys because we do not
-     * include all files from the endorsed directory.
-     */
-    private final static String LIB_ENDORSED_DIR = GLASSFISH_LIB + "/endorsed";
-
-    private final static String[] ENDORSED_DIRS_TO_COPY = new String[] { LIB_ENDORSED_DIR, MODULES_ENDORSED_DIR };
+        GLASSFISH_LIB + "/appclient",
+        GLASSFISH_LIB + "/bootstrap",
+        };
 
     /* default sun-acc.xml is relative to the installation directory */
     private final static String DEFAULT_ACC_XML = DOMAIN_1_CONFIG + ACC_CONFIG_FILE_DEFAULT;
@@ -146,55 +139,41 @@ public class PackageAppClient {
         File installDir = findInstallDir(thisJarFile);
         File modulesDir = new File(installDir.toURI().resolve("glassfish/modules/"));
 
-        /*
-         * Write the new JAR to a temp file in the install directory. Then we can simply rename the file to the correct name.
-         * (Rename does not work on Windows systems across volumes.)
-         */
+        // Write the new JAR to a temp file in the install directory. Then we can simply rename
+        // the file to the correct name.
+        // (Rename does not work on Windows systems across volumes.)
         File tempFile = File.createTempFile("appc", ".tmp", installDir);
         File outputFile = chooseOutputFile(installDir, args);
 
         File[] configFiles = chooseConfigFiles(installDir, args);
         String[] classPathElements = getJarClassPath(thisJarFile).split(" ");
 
-        JarOutputStream os = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
+        try (JarOutputStream os = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)))) {
+            // Add this JAR file to the output.
+            addFile(os, installDir.toURI(), thisJarFile.toURI(), tempFile, "");
 
-        /*
-         * Add this JAR file to the output.
-         */
-        addFile(os, installDir.toURI(), thisJarFile.toURI(), tempFile, "");
+            // JARs listed in the Class-Path are all relative to the modules directory so resolve
+            // each Class-Path entry against the modules directory.
+            for (String classPathElement : classPathElements) {
+                File classPathJAR = new File(modulesDir, classPathElement);
+                addFile(os, installDir.toURI(), modulesDir.toURI().resolve(classPathJAR.toURI()), tempFile, "");
+            }
 
-        /*
-         * JARs listed in the Class-Path are all relative to the modules directory so resolve each Class-Path entry against the
-         * modules directory.
-         */
-        for (String classPathElement : classPathElements) {
-            File classPathJAR = new File(modulesDir, classPathElement);
-            addFile(os, installDir.toURI(), modulesDir.toURI().resolve(classPathJAR.toURI()), tempFile, "");
+            // The directories to copy are all relative to the installation directory, so resolve
+            // them against the installDir file.
+            for (String dirToCopy : DIRS_TO_COPY) {
+                addDir(os, installDir.toURI(), installDir.toURI().resolve(dirToCopy), tempFile, "");
+            }
+
+            for (String singleFileToCopy : SINGLE_FILES_TO_COPY) {
+                addFile(os, installDir.toURI(), installDir.toURI().resolve(singleFileToCopy), tempFile, "");
+            }
+
+            // The glassfish-acc.xml file and sun-acc.xml files.
+            for (File configFile : configFiles) {
+                addFile(os, installDir.toURI(), configFile.toURI(), tempFile, "");
+            }
         }
-
-        /*
-         * The directories to copy are all relative to the installation directory, so resolve them against the installDir file.
-         */
-        for (String dirToCopy : DIRS_TO_COPY) {
-            addDir(os, installDir.toURI(), installDir.toURI().resolve(dirToCopy), tempFile, "");
-        }
-
-        for (String endorsedDirToCopy : ENDORSED_DIRS_TO_COPY) {
-            addEndorsedFiles(os, installDir.toURI(), installDir.toURI().resolve(endorsedDirToCopy), tempFile);
-        }
-
-        for (String singleFileToCopy : SINGLE_FILES_TO_COPY) {
-            addFile(os, installDir.toURI(), installDir.toURI().resolve(singleFileToCopy), tempFile, "");
-        }
-
-        /*
-         * The glassfish-acc.xml file and sun-acc.xml files.
-         */
-        for (File configFile : configFiles) {
-            addFile(os, installDir.toURI(), configFile.toURI(), tempFile, "");
-        }
-
-        os.close();
         placeFile(tempFile, outputFile);
     }
 

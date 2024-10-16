@@ -785,7 +785,6 @@ public abstract class GFLauncher {
             cmdLine.add("--add-modules");
             cmdLine.add("ALL-MODULE-PATH");
         }
-        cmdLine.add("-verbose");
         if (getClasspath() != null) {
             addIgnoreNull(cmdLine, "-cp");
             addIgnoreNull(cmdLine, getClasspath());

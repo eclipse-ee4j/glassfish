@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ public class CLIBootstrapTest {
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "AS_JAVA", "");
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "JAVA_HOME", "");
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "PATH", System.getenv("PATH"));
-        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "_AS_INSTALL",
+        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "AS_INSTALL",
             "/Users/Tim/asgroup/v3/H/publish/glassfish7/glassfish");
     }
 

@@ -40,6 +40,7 @@
 
     <modules>
         <module>config</module>
+        <module>health</module>
         <module>rest-client</module>
     </modules>
 

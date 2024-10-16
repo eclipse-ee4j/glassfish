@@ -840,6 +840,29 @@
                     </exclusions>
                 </dependency>
 
+                <!-- MicroProfile Health -->
+                <dependency>
+                    <groupId>org.eclipse.microprofile.health</groupId>
+                    <artifactId>microprofile-health-api</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>*</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.main.microprofile</groupId>
+                    <artifactId>microprofile-health</artifactId>
+                    <version>${project.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>*</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+
                 <!-- MicroProfile JWT -->
                 <dependency>
                     <groupId>org.eclipse.microprofile.jwt</groupId>

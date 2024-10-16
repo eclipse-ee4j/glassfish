@@ -29,7 +29,6 @@ public class LibraryIncluder implements ApplicationArchiveProcessor {
         }
         final var webArchive = (WebArchive) archive;
         webArchive.addAsLibraries(resolveDependency("org.hamcrest:hamcrest"));
-        webArchive.addAsLibraries(resolveDependencyTransitive("org.eclipse.microprofile.health:microprofile-health-tck"));
         LOG.log(Level.INFO, () -> "webArchive:\n" + webArchive.toString(true));
     }
 

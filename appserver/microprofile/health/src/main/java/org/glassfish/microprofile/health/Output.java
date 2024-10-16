@@ -4,5 +4,5 @@ import java.util.List;
 
 import org.eclipse.microprofile.health.HealthCheckResponse;
 
-record Output(HealthCheckResponse.Status getStatus, List<HealthCheckResponse> getChecks) {
+public record Output(HealthCheckResponse.Status status, List<HealthCheckResponse> checks) {
 }

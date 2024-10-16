@@ -37,7 +37,11 @@
             <groupId>org.eclipse.microprofile.health</groupId>
             <artifactId>microprofile-health-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.glassfish.main.microprofile</groupId>
+            <artifactId>microprofile-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
@@ -86,10 +90,15 @@
                             org.glassfish.microprofile.health;
                         </Export-Package>
                         <Import-Package>
+                            io.helidon.config;
+                            io.helidon.config.mp;
+                            org.eclipse.microprofile.config.inject;
+                            org.eclipse.microprofile.config;
                             org.eclipse.microprofile.health.spi;
                             org.eclipse.microprofile.health;
                             jakarta.enterprise.util;
                             jakarta.enterprise.inject;
+                            jakarta.enterprise.inject.spi;
                             jakarta.servlet.http;
                             jakarta.servlet;
                             jakarta.json.bind;

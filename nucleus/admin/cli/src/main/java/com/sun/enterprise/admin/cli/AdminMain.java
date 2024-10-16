@@ -151,9 +151,20 @@ public class AdminMain {
         } else {
             throw new Error(strings.get("ExtDirMissing", ext));
         }
-        final File modules = getInstallRoot().resolve("modules").toFile();
-        if (modules.isDirectory()) {
-            locations.add(modules);
+        final String envClasspath = System.getenv("ASADMIN_CLASSPATH");
+        if (envClasspath == null) {
+            final File modules = getInstallRoot().resolve("modules").toFile();
+            if (modules.isDirectory()) {
+                locations.add(modules);
+            }
+        } else {
+            for (String path : envClasspath.split(":")) {
+                File file = new File(path);
+                // nuclesus doesn't contain some files, ie. backup.jar
+                if (file.exists()) {
+                    locations.add(file);
+                }
+            }
         }
         return locations;
     }

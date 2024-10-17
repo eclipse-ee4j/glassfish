@@ -33,10 +33,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.logging.LogHelper;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * @author Sridatta Viswanath
@@ -114,7 +114,7 @@ public final class ServerLifecycleModule {
             } else {
                 URL[] urls = getURLs();
                 _logger.log(Level.FINE, "Lifecycle module = {0} has classpath URLs = {1}", new Object[] { getName(), urls });
-                this.urlClassLoader = new GlassfishUrlClassLoader(urls, ctx.getLifecycleParentClassLoader());
+                this.urlClassLoader = new GlassfishUrlClassLoader(getName(), urls, ctx.getLifecycleParentClassLoader());
                 classLoader = this.urlClassLoader;
             }
             @SuppressWarnings("unchecked")

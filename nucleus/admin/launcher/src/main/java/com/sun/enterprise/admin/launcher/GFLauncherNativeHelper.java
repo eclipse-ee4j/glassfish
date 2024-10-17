@@ -85,9 +85,11 @@ class GFLauncherNativeHelper {
         // * all duplicate directories are removed
         // * junk is removed, e.g. ":xxx::yy::::::" goes to "xxx:yy"
 
-        String finalPathString = GFLauncherUtils.fileListToPathString(GFLauncherUtils.stringToFiles(sb.toString()));
-        String nativeCommand = "-D" + JAVA_NATIVE_SYSPROP_NAME + "=" + finalPathString;
-        list.add(nativeCommand);
+        List<File> files = GFLauncherUtils.stringToFiles(sb.toString());
+        if (!files.isEmpty()) {
+            String nativeCommand = "-D" + JAVA_NATIVE_SYSPROP_NAME + "=" + GFLauncherUtils.fileListToPathString(files);
+            list.add(nativeCommand);
+        }
         return list;
     }
 

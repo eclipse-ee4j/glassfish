@@ -85,8 +85,11 @@
     <target name="run_war" depends="init-common">
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
            <arg line="${appname}"/>
@@ -97,8 +100,11 @@
        <antcall  target="start-database"/>
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
            <arg line="${jndiroot}"/>
@@ -110,8 +116,11 @@
     <target name="run_war_servlet" depends="init-common">
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
            <arg line="${appname}"/>
@@ -122,8 +131,11 @@
     <target name="run_dir" depends="init-common">
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/tmp:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
            <arg line="${jndiroot}"/>

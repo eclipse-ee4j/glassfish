@@ -1,5 +1,6 @@
 @echo off
 REM
+REM  Copyright (c) 2024 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -65,18 +66,12 @@ rem issue the error so we don't have to do i18n of our own message from the scri
 goto :EOF
 
 :main
-set _AS_INSTALL=%~dp0..
-call "%_AS_INSTALL%\config\asenv.bat"
+set AS_INSTALL="%~dp0.."
+call "%AS_INSTALL%\config\asenv.bat"
 call :chooseJava
 
-set inputArgs=%*
-rem
-rem Convert the java.exe path and the classpath path to
-rem Windows "short" versions - with no spaces - so the
-rem for /F statement below will work correctly.  Spaces cause
-rem it great troubles.
-rem
-for %%a in ("%JAVA%") do set ACCJava=%%~sa%
-for %%a in ("%_AS_INSTALL%/lib/gf-client.jar") do set XCLASSPATH=%%~sa
-for /F "usebackq tokens=*" %%a in (`%ACCJava% -classpath %XCLASSPATH% org.glassfish.appclient.client.CLIBootstrap`) do set javaCmd=%%a
-%javaCmd%
+set ACC_MODULEPATH="%AS_INSTALL%\lib\bootstrap"
+set ACC_INSTALL_LIB="%AS_INSTALL%\lib\install\applications";
+set ACC_CLASSPATH="%AS_INSTALL%\lib\gf-client.jar:%AS_INSTALL%\lib\appclient\weld-se-shaded.jar:%AS_INSTALL%\admin-cli.jar:%AS_DERBY_INSTALL%\lib\*:%ACC_INSTALL_LIB%\__ds_jdbc_ra\jdbc-ra-ds.jar:%ACC_INSTALL_LIB%\__cp_jdbc_ra\jdbc-ra-cp.jar:%ACC_INSTALL_LIB%\__xa_jdbc_ra\jdbc-ra-xa.jar:%ACC_INSTALL_LIB%\__dm_jdbc_ra\jdbc-ra-dm.jar:%ACC_INSTALL_LIB%\jmsra\imqjmsra.jar:%AS_IMQ_LIB%\imq.jar:%AS_IMQ_LIB%\imqadmin.jar:%AS_IMQ_LIB%\imqutil.jar:%AS_IMQ_LIB%\fscontext.jar:%AS_INSTALL%\modules\*"
+
+%JAVA% %ASADMIN_JVM_OPTIONS% --module-path "%ACC_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ACC_CLASSPATH%" org.glassfish.appclient.client.CLIBootstrap %*

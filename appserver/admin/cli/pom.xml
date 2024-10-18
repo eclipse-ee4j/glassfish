@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>admin-cli</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -59,12 +59,7 @@
                     <archive>
                         <manifest>
                             <mainClass>org.glassfish.admin.cli.AsadminMain</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>../../modules</classpathPrefix>
                         </manifest>
-                        <manifestEntries>
-                            <Class-Path>../../lib/bootstrap/glassfish-jul-extension.jar</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

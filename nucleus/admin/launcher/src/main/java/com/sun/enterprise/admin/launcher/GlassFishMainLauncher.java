@@ -20,7 +20,7 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.universal.io.SmartFile;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.nio.file.Path;
 import java.util.List;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
@@ -34,7 +34,6 @@ import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPE
 class GlassFishMainLauncher extends GFLauncher {
 
     private static final String MAIN_CLASS = "com.sun.enterprise.glassfish.bootstrap.GlassFishMain";
-    private static final String BOOTSTRAP_JAR = "glassfish.jar";
 
     // sample profiler config
     //
@@ -62,17 +61,13 @@ class GlassFishMainLauncher extends GFLauncher {
 
     @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        File dir = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY), "modules");
-        File bootjar = new File(dir, BOOTSTRAP_JAR);
-        if (!bootjar.exists() && !isFakeLaunch()) {
-            throw new GFLauncherException("nobootjar", dir.getPath());
-        }
+        return List.of();
+    }
 
-        List<File> list = new ArrayList<>();
-        if (bootjar.exists()) {
-            list.add(SmartFile.sanitize(bootjar));
-        }
-        return list;
+    @Override
+    List<File> getMainModulepath() throws GFLauncherException {
+        return List
+            .of(SmartFile.sanitize(Path.of(getEnvProps().get(INSTALL_ROOT_PROPERTY), "lib", "bootstrap").toFile()));
     }
 
     @Override

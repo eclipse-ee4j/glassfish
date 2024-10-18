@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,14 +48,14 @@ public class JavaClassRunner {
         }
         final Path javaroot = Path.of(System.getProperty("java.home"));
         javaExecutable = javaroot.resolve("bin").resolve(javaName);
+        if (!javaExecutable.toFile().canExecute()) {
+            throw new Error(javaExecutable + " is not an existing executable file.");
+        }
     }
 
-    public JavaClassRunner(String classpath, String[] sysprops, String classname, String[] args) throws IOException {
-        if (javaExecutable == null) {
-            throw new IOException("Can not find a jvm");
-        }
-
-        if (!isEmpty(classname)) {
+    public JavaClassRunner(String modulepath, String classpath, String[] sysprops, String classname, String[] args)
+        throws IOException {
+        if (!isSet(classname)) {
             throw new IllegalArgumentException("classname was null");
         }
 
@@ -64,7 +64,13 @@ public class JavaClassRunner {
             cmdline.add("nohup");
         }
         cmdline.add(javaExecutable.toString());
-        if (isEmpty(classpath)) {
+        if (isSet(modulepath)) {
+            cmdline.add("--module-path");
+            cmdline.add(modulepath);
+            cmdline.add("--add-modules");
+            cmdline.add("ALL-MODULE-PATH");
+        }
+        if (isSet(classpath)) {
             cmdline.add("-cp");
             cmdline.add(classpath);
         }
@@ -97,7 +103,7 @@ public class JavaClassRunner {
         }
     }
 
-    private boolean isEmpty(String s) {
+    private boolean isSet(String s) {
         return s != null && !s.isEmpty();
     }
 }

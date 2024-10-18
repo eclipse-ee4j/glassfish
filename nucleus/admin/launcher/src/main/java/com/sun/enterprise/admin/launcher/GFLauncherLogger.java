@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -29,6 +27,7 @@ import java.util.logging.SimpleFormatter;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.main.jul.formatter.ODLLogFormatter;
 import org.glassfish.main.jul.handler.SimpleLogHandler;
 

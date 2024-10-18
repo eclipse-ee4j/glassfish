@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,11 +32,15 @@ import org.glassfish.internal.api.DelegatingClassLoader;
  */
 public class EarClassLoader extends ASURLClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private List<ClassLoaderHolder> moduleClassLoaders = new LinkedList<>();
-    boolean isPreDestroyCalled = false;
+    boolean isPreDestroyCalled;
 
     public EarClassLoader(ClassLoader classLoader) {
-        super(classLoader);
+        super("Ear", classLoader);
     }
 
     public void addModuleClassLoader(String moduleName, ClassLoader cl) {
@@ -113,10 +117,5 @@ public class EarClassLoader extends ASURLClassLoader {
             this.loader = loader;
             this.moduleName = moduleName;
         }
-    }
-
-    @Override
-    protected String getClassLoaderName() {
-        return "EarClassLoader";
     }
 }

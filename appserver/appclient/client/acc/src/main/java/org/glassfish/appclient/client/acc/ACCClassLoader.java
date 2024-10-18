@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +38,7 @@ import java.util.function.Consumer;
 
 import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.security.AccessController.doPrivileged;
 
@@ -49,6 +48,10 @@ import static java.security.AccessController.doPrivileged;
  * @author tjquinn
  */
 public class ACCClassLoader extends GlassfishUrlClassLoader {
+
+    static {
+        registerAsParallelCapable();
+    }
 
     private static final String AGENT_LOADER_CLASS_NAME = "org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
     private static ACCClassLoader instance;
@@ -108,13 +111,13 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
 
     public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
-        super(new URL[0], parent);
+        super("ApplicationClient", new URL[0], parent);
         this.shouldTransform = shouldTransform;
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public ACCClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
+        super("ApplicationClient", urls, parent);
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 

@@ -74,9 +74,21 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
+                <include>glassfish.jar</include>
+                <include>glassfish-jdk-extensions.jar</include>
                 <include>glassfish-jul-extension.jar</include>
+                <include>simple-glassfish-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/lib/bootstrap</outputDirectory>
+        </fileSet>
+
+        <!-- admin-cli.jar -->
+        <fileSet>
+            <directory>${temp.dir}</directory>
+            <includes>
+                <include>admin-cli.jar</include>
+            </includes>
+            <outputDirectory>${install.dir.name}</outputDirectory>
         </fileSet>
 
         <!-- lib/asadmin/ -->
@@ -127,6 +139,7 @@
                 <include>*.jar</include>
             </includes>
             <excludes>
+                <exclude>admin-cli.jar</exclude>
                 <exclude>server-mgmt.jar</exclude>
                 <exclude>osgi-cli-interactive.jar</exclude>
                 <exclude>flashlight-agent.jar</exclude>
@@ -140,7 +153,10 @@
                 <exclude>org.osgi.util.promise.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
+                <exclude>glassfish.jar</exclude>
+                <exclude>glassfish-jdk-extensions.jar</exclude>
                 <exclude>glassfish-jul-extension.jar</exclude>
+                <exclude>simple-glassfish-api.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/modules</outputDirectory>
         </fileSet>

@@ -52,6 +52,21 @@ public class RemoteResponseManager implements ResponseManager {
     private final String response;
     private Map<String, String> mainAtts = Collections.emptyMap();
 
+    /**
+     * Creates the object with the default charset by delegating to the {@link #RemoteResponseManager(java.io.InputStream, java.nio.charset.Charset, int, java.util.logging.Logger)} constructor.
+     * @param in
+     * @param code
+     * @param logger
+     * @throws RemoteException
+     * @throws IOException
+     * @deprecated It is encouraged to use the {@link #RemoteResponseManager(java.io.InputStream, java.nio.charset.Charset, int, java.util.logging.Logger)} constructor with explicit charset. This constructor is kept only for backwards compatibility with the IntelliJ Idea plugin.
+     */
+    @Deprecated(since = "7.0.18")
+    public RemoteResponseManager(InputStream in, int code, Logger logger)
+        throws RemoteException, IOException {
+        this(in, Charset.defaultCharset(), code, logger);
+    }
+
     public RemoteResponseManager(InputStream in, Charset charset, int code, Logger logger)
         throws RemoteException, IOException {
         this.code = code;

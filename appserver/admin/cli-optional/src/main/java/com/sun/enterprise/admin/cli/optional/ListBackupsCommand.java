@@ -20,13 +20,13 @@ package com.sun.enterprise.admin.cli.optional;
 import com.sun.enterprise.backup.BackupException;
 import com.sun.enterprise.backup.BackupWarningException;
 import com.sun.enterprise.backup.ListManager;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.ObjectAnalyzer;
 
 import java.io.File;
 
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**

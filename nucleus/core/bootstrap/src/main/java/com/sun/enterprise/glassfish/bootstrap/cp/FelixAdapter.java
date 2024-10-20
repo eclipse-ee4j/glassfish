@@ -33,7 +33,7 @@ public class FelixAdapter implements OsgiPlatformAdapter {
 
 
     @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        cpb.addJar(new File(felixHome, "bin/felix.jar"));
+    public ClassPathBuilder addFrameworkJars(ClassPathBuilder builder) throws IOException {
+        return builder.addJar(new File(felixHome, "bin/felix.jar"));
     }
 }

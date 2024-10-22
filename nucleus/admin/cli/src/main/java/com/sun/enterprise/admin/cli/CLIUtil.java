@@ -29,13 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +46,8 @@ import org.glassfish.api.ActionReport.MessagePart;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * CLI Utility class
@@ -248,14 +247,9 @@ public class CLIUtil {
             return;
         }
 
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(log, Charset.defaultCharset(), true));
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            Date date = new Date();
-            out.write(dateFormat.format(date));
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(log, UTF_8, true))) {
+            out.write(Instant.now().toString());
             out.write(" EXIT: " + exit);
-
             out.write(" " + cname + " ");
 
             if (args != null) {
@@ -273,21 +267,9 @@ public class CLIUtil {
                     out.write(arg + " ");
                 }
             }
+            out.write("\n");
         } catch (IOException e) {
-            // It is just a debug file.
-        } finally {
-            if (out != null) {
-                try {
-                    out.write("\n");
-                } catch (Exception e) {
-                    // ignore
-                }
-                try {
-                    out.close();
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
+            throw new IllegalStateException("Could not write to the asadmin log file " + log, e);
         }
     }
 

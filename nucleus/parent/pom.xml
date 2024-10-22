@@ -128,7 +128,7 @@
         
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
-        <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
+        <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
 
@@ -377,6 +377,12 @@
                 <version>${grizzly.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.grizzly</groupId>
+                <artifactId>grizzly-npn-api</artifactId>
+                <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
+                <version>${grizzly.npn.version}</version>
             </dependency>
 
             <!-- GlassFish Management API -->

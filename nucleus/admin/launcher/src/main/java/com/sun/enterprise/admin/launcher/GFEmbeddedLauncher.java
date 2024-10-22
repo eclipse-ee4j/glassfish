@@ -33,8 +33,9 @@ import java.util.List;
  */
 class GFEmbeddedLauncher extends GFLauncher {
 
-    private boolean setup = false;
-    private File gfeJar, runServerJar;
+    private boolean setup;
+    private File gfeJar;
+    private File runServerJar;
     private File installDir;
     private File javaExe;
     private File domainDir;
@@ -53,7 +54,7 @@ class GFEmbeddedLauncher extends GFLauncher {
 
     private final String[] DERBY_FILES = { "derby.jar", "derbyclient.jar", };
 
-    public GFEmbeddedLauncher(GFLauncherInfo info) {
+    GFEmbeddedLauncher(GFLauncherInfo info) {
         super(info);
 
     }

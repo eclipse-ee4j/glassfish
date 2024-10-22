@@ -147,18 +147,6 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-api</artifactId>
-            <version>${grizzly.npn.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-osgi</artifactId>
-            <version>${grizzly.npn.version}</version>
-            <optional>true</optional>
-        </dependency>
         <!-- glassfish-nucleus -->
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>

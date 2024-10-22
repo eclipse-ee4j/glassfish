@@ -157,18 +157,6 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-api</artifactId>
-            <version>${grizzly.npn.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-npn-osgi</artifactId>
-            <version>${grizzly.npn.version}</version>
-            <optional>true</optional>
-        </dependency>
         <!-- additional grizzly modules package which includes websockets -->
         <dependency>
             <groupId>org.glassfish.main.grizzly</groupId>

@@ -89,7 +89,7 @@
         <tyrus.version>2.2.0</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.1.0</jakarta.concurrent-api.version>
+        <jakarta.concurrent-api.version>3.1.1</jakarta.concurrent-api.version>
         <concurro.version>3.1.0-M4</concurro.version>
 
         <!-- Jakarta Interceptors -->
@@ -144,7 +144,7 @@
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.2</xmlsec.version>
-        <woodstox.version>7.0.0</woodstox.version>
+        <woodstox.version>7.1.0</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->
@@ -158,7 +158,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.1.1</helidon-config.version>
+        <helidon-config.version>4.1.2</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>

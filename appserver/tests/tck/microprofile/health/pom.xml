@@ -71,11 +71,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <systemPropertyVariables>
-                        <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
-                        <customer.hobby>Tennis</customer.hobby>
-                        <config_ordinal>120</config_ordinal>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

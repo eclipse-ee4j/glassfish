@@ -37,10 +37,4 @@ public class LibraryIncluder implements ApplicationArchiveProcessor {
                 .resolve(coordinates).withoutTransitivity()
                 .asFile();
     }
-
-    private static File[] resolveDependencyTransitive(String coordinates) {
-        return Maven.configureResolver().workOffline().loadPomFromFile("pom.xml")
-                .resolve(coordinates).withTransitivity()
-                .asFile();
-    }
 }

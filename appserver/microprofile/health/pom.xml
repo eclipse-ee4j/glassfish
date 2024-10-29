@@ -90,9 +90,6 @@
                             org.glassfish.microprofile.health;
                         </Export-Package>
                         <Import-Package>
-                            io.helidon.config;
-                            io.helidon.config.mp;
-                            org.eclipse.microprofile.config.inject;
                             org.eclipse.microprofile.config;
                             org.eclipse.microprofile.health.spi;
                             org.eclipse.microprofile.health;

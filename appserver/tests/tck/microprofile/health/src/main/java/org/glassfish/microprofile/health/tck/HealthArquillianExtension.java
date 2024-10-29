@@ -24,9 +24,9 @@ import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTr
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
-public class ConfigArquillianExtension implements LoadableExtension {
+public class HealthArquillianExtension implements LoadableExtension {
 
-    private static final Logger LOGGER = Logger.getLogger(ConfigArquillianExtension.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(HealthArquillianExtension.class.getName());
 
     /**
      * Register this object as an Arquillian extension

@@ -1,1 +1,1 @@
-org.glassfish.microprofile.health.tck.ConfigArquillianExtension
+org.glassfish.microprofile.health.tck.HealthArquillianExtension

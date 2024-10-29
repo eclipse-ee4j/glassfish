@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -24,24 +26,30 @@ public class HealthServlet extends HttpServlet {
 
     private static final String MP_DEFAULT_STARTUP_EMPTY_RESPONSE = "mp.health.default.startup.empty.response";
     private static final String MP_DEFAULT_READINESS_EMPTY_RESPONSE = "mp.health.default.readiness.empty.response";
+    private static final Logger LOGGER = Logger.getLogger(HealthServlet.class.getName());
 
     private static HealthCheckResponse callHealthCheck(HealthCheck healthCheck) {
         try {
             return healthCheck.call();
         } catch (RuntimeException e) {
-            e.printStackTrace();
-            return HealthCheckResponse.builder()
-                    .down()
-                    .name(healthCheck.getClass().getName())
-                    .withData("rootCause", e.getMessage())
-                    .build();
+            LOGGER.log(Level.SEVERE, "Health check failed", e);
+            return buildHealthCheckResponse(healthCheck.getClass().getName(), e);
         }
+    }
+
+    private static HealthCheckResponse buildHealthCheckResponse(String name, Exception e) {
+        return HealthCheckResponse.builder()
+                .down()
+                .name(name)
+                .withData("rootCause", e.getMessage())
+                .build();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try (Jsonb jsonb = JsonbBuilder.create()) {
+        Output output;
 
+        try {
             HealthCheckResponse.Status emptyResponse = HealthCheckResponse.Status.UP;
 
             Instance<HealthCheck> select = CDI.current().select(HealthCheck.class);
@@ -81,25 +89,22 @@ public class HealthServlet extends HttpServlet {
                         .findFirst()
                         .orElse(HealthCheckResponse.Status.UP);
             }
-            Output output = new Output(overallStatus, healthCheckResults);
+            output = new Output(overallStatus, healthCheckResults);
 
-            String json = jsonb.toJson(output);
-
-            resp.setStatus(
-                    switch (overallStatus) {
-                        case UP -> HttpServletResponse.SC_OK;
-                        case DOWN -> HttpServletResponse.SC_SERVICE_UNAVAILABLE;
-                    }
-            );
-
-            resp.getWriter().println(json);
+            int httpStatus = switch (overallStatus) {
+                case UP -> HttpServletResponse.SC_OK;
+                case DOWN -> HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+            };
+            resp.setStatus(httpStatus);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Unable to fetch health check status", e);
+            output = new Output(HealthCheckResponse.Status.DOWN, List.of(buildHealthCheckResponse("error", e)));
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().println("Internal server error: ");
-            e.printStackTrace(resp.getWriter());
         }
 
+        Jsonb jsonb = JsonbBuilder.create();
+        String json = jsonb.toJson(output);
+        resp.getWriter().println(json);
     }
 
     private Optional<HealthCheckResponse.Status> getValue(String value) {

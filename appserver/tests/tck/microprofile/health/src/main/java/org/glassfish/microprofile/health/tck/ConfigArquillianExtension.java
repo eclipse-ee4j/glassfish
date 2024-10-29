@@ -17,7 +17,6 @@ package org.glassfish.microprofile.health.tck;
 
 import java.util.logging.Logger;
 
-import org.glassfish.microprofile.health.tck.client.BeansXmlTransformer;
 import org.glassfish.microprofile.health.tck.client.ConfigDeploymentExceptionTransformer;
 import org.glassfish.microprofile.health.tck.client.LibraryIncluder;
 import org.glassfish.microprofile.health.tck.client.MicroProfileConfigPropertiesTransformer;
@@ -38,12 +37,8 @@ public class ConfigArquillianExtension implements LoadableExtension {
 
         LOGGER.info("Client Arquillian extension registered");
 
-        extensionBuilder.service(ApplicationArchiveProcessor.class, BeansXmlTransformer.class);
         extensionBuilder.service(ApplicationArchiveProcessor.class, MicroProfileConfigPropertiesTransformer.class);
         extensionBuilder.service(ApplicationArchiveProcessor.class, LibraryIncluder.class);
         extensionBuilder.service(DeploymentExceptionTransformer.class, ConfigDeploymentExceptionTransformer.class);
-
-        // Register this class as an Arquillian event observer
-        extensionBuilder.observer(BeansXmlTransformer.class);
     }
 }

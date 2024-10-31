@@ -24,31 +24,31 @@ import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
 public class HealthCheckResponseBuilderImpl extends HealthCheckResponseBuilder {
 
+    private final Map<String, Object> data = new HashMap<>();
     private String name;
     private HealthCheckResponse.Status status;
-    private Map<String, Object> data = new HashMap<>();
 
     @Override
-    public HealthCheckResponseBuilder name(String s) {
-        name = s;
+    public HealthCheckResponseBuilder name(String name) {
+        this.name = name;
         return this;
     }
 
     @Override
-    public HealthCheckResponseBuilder withData(String s, String s1) {
-        data.put(s, s1);
+    public HealthCheckResponseBuilder withData(String key, String value) {
+        data.put(key, value);
         return this;
     }
 
     @Override
-    public HealthCheckResponseBuilder withData(String s, long l) {
-        data.put(s, l);
+    public HealthCheckResponseBuilder withData(String key, long value) {
+        data.put(key, value);
         return this;
     }
 
     @Override
-    public HealthCheckResponseBuilder withData(String s, boolean b) {
-        data.put(s, b);
+    public HealthCheckResponseBuilder withData(String key, boolean value) {
+        data.put(key, value);
         return this;
     }
 
@@ -63,8 +63,8 @@ public class HealthCheckResponseBuilderImpl extends HealthCheckResponseBuilder {
     }
 
     @Override
-    public HealthCheckResponseBuilder status(boolean b) {
-        status = b ? HealthCheckResponse.Status.UP : HealthCheckResponse.Status.DOWN;
+    public HealthCheckResponseBuilder status(boolean up) {
+        status = up ? HealthCheckResponse.Status.UP : HealthCheckResponse.Status.DOWN;
         return this;
     }
 

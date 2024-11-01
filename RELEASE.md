@@ -37,7 +37,7 @@ In this example we assume 7.0.19.
 20. If everything is OK, then merge 7.0.19 branch into master via PR
 21. Delete the 7.0.19 branch after merge
 22. Upload the new release to the Eclipse download folder. 
-    Go to [glassfish_copy-staging-to-downloads](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_copy-staging-to-downloads/build?delay=0sec)
+    Go to [glassfish_copy-staging-to-downloads](https://ci.eclipse.org/glassfish/job/glassfish-website-publish-zips-from-staging/)
     - Enter the version to copy; 7.0.19
     - click [Build] button 
 23. Create the release on Github: https://github.com/eclipse-ee4j/glassfish/releases click "draft a new release"

@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>glassfish-external-tck-microprofile</artifactId>
-        <version>7.0.19-SNAPSHOT</version>
+        <version>7.0.20-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-microprofile-rest-client</artifactId>

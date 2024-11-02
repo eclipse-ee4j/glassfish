@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -287,11 +287,7 @@ public abstract class DomainXml implements Populator {
                     lock.unlock();
                 }
             }
-            String errorMessage = xsr.configWasFound();
 
-            if (errorMessage != null) {
-                LOG.log(WARNING, errorMessage);
-            }
         } catch (Exception e) {
             if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;

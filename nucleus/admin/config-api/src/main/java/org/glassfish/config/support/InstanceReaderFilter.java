@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -81,12 +82,6 @@ class InstanceReaderFilter extends ServerReaderFilter {
             // unchecked exceptions!!
             throw new XMLStreamException(Strings.get("InstanceReaderFilter.UnknownException", e.toString()), e);
         }
-    }
-
-    @Override
-    final String configWasFound() {
-        // preparser already threw an exception if the config wasn't found
-        return null;
     }
 
     /**

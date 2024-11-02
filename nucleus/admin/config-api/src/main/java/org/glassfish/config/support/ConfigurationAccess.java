@@ -36,6 +36,7 @@ import org.jvnet.hk2.annotations.Contract;
  * @author Jerome Dochez
  */
 @Contract
+@Deprecated(forRemoval = true, since = "7.1.0")
 public interface ConfigurationAccess {
 
     /**

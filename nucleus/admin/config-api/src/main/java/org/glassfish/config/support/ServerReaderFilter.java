@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,15 @@
 
 package org.glassfish.config.support;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -30,29 +36,36 @@ import javax.xml.stream.XMLStreamException;
  * @author Byron Nevins
  */
 abstract class ServerReaderFilter extends XMLStreamReaderFilter {
-    ServerReaderFilter(URL theDomainXml, XMLInputFactory theXif) throws XMLStreamException {
 
+    final File domainXml;
+    final XMLInputFactory xif;
+
+    private final InputStream stream;
+    private final FileLock lock;
+
+    ServerReaderFilter(URL theDomainXml, XMLInputFactory theXif) throws XMLStreamException {
         try {
-            domainXml = theDomainXml;
+            domainXml = new File(theDomainXml.toURI());
             xif = theXif;
-            stream = domainXml.openStream();
-            setParent(xif.createXMLStreamReader(stream, Charset.defaultCharset().toString()));
-        } catch (IOException e) {
+            FileInputStream fis = new FileInputStream(domainXml);
+            lock = fis.getChannel().lock(0, Long.MAX_VALUE, true);
+            stream = new BufferedInputStream(fis);
+            setParent(xif.createXMLStreamReader(stream, StandardCharsets.UTF_8.name()));
+        } catch (IOException | URISyntaxException e) {
             throw new XMLStreamException(e);
         }
     }
 
     @Override
-    final public void close() throws XMLStreamException {
+    public final void close() throws XMLStreamException {
         try {
+            if (lock.isValid()) {
+                lock.release();
+            }
             super.close();
             stream.close();
         } catch (Exception e) {
             throw new XMLStreamException(e);
         }
     }
-
-    final URL domainXml;
-    final XMLInputFactory xif;
-    final InputStream stream;
 }

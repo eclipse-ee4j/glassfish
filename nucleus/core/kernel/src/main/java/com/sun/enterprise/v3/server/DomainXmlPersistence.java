@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package com.sun.enterprise.v3.server;
 
 import com.sun.enterprise.config.modularity.ConfigModularityUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -28,17 +28,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
-import org.glassfish.common.util.admin.ManagedFile;
-import org.glassfish.config.support.ConfigurationAccess;
 import org.glassfish.config.support.ConfigurationPersistence;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
@@ -48,6 +44,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 /**
  * domain.xml persistence.
  *
@@ -55,7 +53,7 @@ import org.jvnet.hk2.config.IndentingXMLStreamWriter;
  */
 @Service
 @Singleton
-public class DomainXmlPersistence implements ConfigurationPersistence, ConfigurationAccess {
+public class DomainXmlPersistence implements ConfigurationPersistence {
 
     @Inject
     ServerEnvironmentImpl env;
@@ -64,143 +62,53 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
     @Inject
     ConfigModularityUtils modularityUtils;
 
-    DomDocument skippedDoc = null;
+    DomDocument skippedDoc;
 
     final XMLOutputFactory xmlFactory = XMLOutputFactory.newInstance();
 
-    final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(DomainXmlPersistence.class);
-
-
-    private synchronized ManagedFile getPidFile() throws IOException {
-        File location=null;
-        try {
-            // I am locking indefinitely with a 2 seconds timeOut.
-            location = new File(env.getConfigDirPath(), "lockfile");
-            if (!location.exists()) {
-                if (!location.createNewFile()) {
-                    if (!location.exists()) {
-                        String message = localStrings.getLocalString("cannotCreateLockfile",
-                                "Cannot create lock file at {0}, configuration changes will not be persisted",
-                                location);
-                        logger.log(Level.SEVERE, message);
-                        throw new IOException(message);
-                    }
-                }
-            }
-            return new ManagedFile(location, 2000, -1);
-        } catch (IOException e) {
-            logger.log(Level.SEVERE,
-                    localStrings.getLocalString("InvalidLocation",
-                            "Cannot obtain lockfile location {0}, configuration changes will not be persisted",
-                            location), e);
-            throw e;
-        }
-    }
+    final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DomainXmlPersistence.class);
 
     @Override
-    public Lock accessRead() throws IOException, TimeoutException {
-        return getPidFile().accessRead();
-    }
-
-    @Override
-    public Lock accessWrite() throws IOException, TimeoutException {
-        return getPidFile().accessWrite();
-    }
-
-    @Override
-    public void save(DomDocument doc) throws IOException {
+    public synchronized void save(DomDocument doc) throws IOException {
         if (modularityUtils.isIgnorePersisting() && !modularityUtils.isCommandInvocation()) {
-            assert skippedDoc == null || (doc == skippedDoc);
             skippedDoc = doc;
             return;
         }
         File destination = getDestination();
         if (destination == null) {
-            String msg = localStrings.getLocalString("NoLocation",
-                    "domain.xml cannot be persisted, null destination");
-            logger.severe(msg);
-            throw new IOException(msg);
+            throw new IOException("The domain.xml cannot be persisted, null destination");
         }
-        Lock writeLock = null;
+
+        // write to the temporary file
+        final File domainXmlTmp = File.createTempFile("domain", ".xml", destination.getParentFile());
+        if (!domainXmlTmp.exists()) {
+            throw new IOException("Cannot create temporary file when saving domain.xml");
+        }
+        try (OutputStream fos = new FileOutputStream(domainXmlTmp);
+            IndentingXMLStreamWriter writer = new IndentingXMLStreamWriter(
+                xmlFactory.createXMLStreamWriter(new BufferedOutputStream(fos)))) {
+            doc.writeTo(writer);
+        } catch (XMLStreamException e) {
+            throw new IOException("Configuration could not be saved to temporary file " + domainXmlTmp, e);
+        }
+
+        // backup the current file
+        final File backup = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
+        if (destination.exists()) {
+            Files.move(destination.toPath(), backup.toPath(), REPLACE_EXISTING);
+        }
+        // save the temp file to domain.xml
         try {
+            Files.move(domainXmlTmp.toPath(), destination.toPath(), REPLACE_EXISTING);
+        } catch (IOException e) {
             try {
-                writeLock = accessWrite();
-            } catch (TimeoutException e) {
-                String msg = localStrings.getLocalString("Timeout",
-                        "Timed out when waiting for write lock on configuration file");
-                logger.log(Level.SEVERE, msg);
-                throw new IOException(msg, e);
-
+                Files.move(backup.toPath(), destination.toPath(), REPLACE_EXISTING);
+            } catch (IOException e2) {
+                e.addSuppressed(e2);
             }
-
-            // get a temporary file
-            File f = File.createTempFile("domain", ".xml", destination.getParentFile());
-            if (!f.exists()) {
-                throw new IOException(localStrings.getLocalString("NoTmpFile",
-                        "Cannot create temporary file when saving domain.xml"));
-            }
-            // write to the temporary file
-            XMLStreamWriter writer = null;
-            try (OutputStream fos = getOutputStream(f)) {
-                writer = xmlFactory.createXMLStreamWriter(new BufferedOutputStream(fos));
-                IndentingXMLStreamWriter indentingXMLStreamWriter = new IndentingXMLStreamWriter(writer);
-                doc.writeTo(indentingXMLStreamWriter);
-                indentingXMLStreamWriter.close();
-            } catch (XMLStreamException e) {
-                String msg = localStrings.getLocalString("TmpFileNotSaved",
-                        "Configuration could not be saved to temporary file");
-                logger.log(Level.SEVERE, msg, e);
-                throw new IOException(e.getMessage(), e);
-                // return after calling finally clause, because since temp file couldn't be saved,
-                // renaming should not be attempted
-            } finally {
-                if (writer != null) {
-                    try {
-                        writer.close();
-                    } catch (XMLStreamException e) {
-                        logger.log(Level.SEVERE, localStrings.getLocalString("CloseFailed",
-                                "Cannot close configuration writer stream"), e);
-                        throw new IOException(e.getMessage(), e);
-                    }
-                }
-            }
-
-            // backup the current file
-            File backup = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
-            if (destination.exists() && backup.exists() && !backup.delete()) {
-                String msg = localStrings.getLocalString("BackupDeleteFailed",
-                        "Could not delete previous backup file at {0}" , backup.getAbsolutePath());
-                logger.severe(msg);
-                throw new IOException(msg);
-            }
-            if (destination.exists() && !FileUtils.renameFile(destination, backup)) {
-                String msg = localStrings.getLocalString("TmpRenameFailed",
-                        "Could not rename {0} to {1}",  destination.getAbsolutePath() , backup.getAbsolutePath());
-                logger.severe(msg);
-                throw new IOException(msg);
-            }
-            // save the temp file to domain.xml
-            if (!FileUtils.renameFile(f, destination)) {
-                String msg = localStrings.getLocalString("TmpRenameFailed",
-                        "Could not rename {0} to {1}",  f.getAbsolutePath() , destination.getAbsolutePath());
-                // try to rename backup to domain.xml (so that at least something is there)
-                if (!FileUtils.renameFile(backup, destination)) {
-                    msg += "\n" + localStrings.getLocalString("RenameFailed",
-                            "Could not rename backup to {0}", destination.getAbsolutePath());
-                }
-                logger.severe(msg);
-                throw new IOException(msg);
-            }
-        } catch(IOException e) {
-            logger.log(Level.SEVERE, localStrings.getLocalString("ioexception",
-                    "IOException while saving the configuration, changes not persisted"), e);
             throw e;
-        } finally {
-            if (writeLock != null) {
-                writeLock.unlock();
-            }
         }
+
         skippedDoc = null;
         saved(destination);
     }
@@ -220,10 +128,6 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
 
     protected File getDestination() throws IOException {
         return new File(env.getConfigDirPath(), "domain.xml");
-    }
-
-    protected OutputStream getOutputStream(File destination) throws IOException {
-        return new FileOutputStream(destination);
     }
 
     /*

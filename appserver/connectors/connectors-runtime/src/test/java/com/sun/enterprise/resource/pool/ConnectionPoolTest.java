@@ -31,7 +31,6 @@ import com.sun.enterprise.resource.pool.datastructure.DataStructure;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.logging.LogDomains;
 
-import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.RetryableUnavailableException;
@@ -94,7 +93,7 @@ public class ConnectionPoolTest {
     // they can probably also be made as a unit test here / or in a similar unit test
 
     @BeforeEach
-    public void createAndPopulateMocks() throws PoolingException, ResourceException {
+    public void createAndPopulateMocks() throws Exception {
         List<Object> mocks = new ArrayList<>();
 
         // Mock ManagedConnection
@@ -124,18 +123,18 @@ public class ConnectionPoolTest {
 
         // Make sure ConnectorRuntime singleton is initialized
         MyConnectorRuntime connectorRuntime = new MyConnectorRuntime();
-        ProcessEnvironment processEnvironment = new ProcessEnvironment();
-        connectorRuntime.setProcessEnvironment(processEnvironment);
         connectorRuntime.postConstruct();
     }
 
     private void createConnectionPool(int maxPoolSize, int maxWaitTimeInMillis, int poolResizeQuantity) throws PoolingException {
         PoolInfo poolInfo = ConnectionPoolTest.getPoolInfo();
-        MyConnectionPool.myMaxPoolSize = maxPoolSize;
-        MyConnectionPool.maxWaitTimeInMillis = maxWaitTimeInMillis;
-        MyConnectionPool.poolResizeQuantity = poolResizeQuantity;
 
-        connectionPool = new MyConnectionPool(poolInfo);
+        Hashtable<Object, Object> env = new Hashtable<>();
+        env.put("maxPoolSize", Integer.valueOf(maxPoolSize));
+        env.put("maxWaitTimeInMillis", Integer.valueOf(maxWaitTimeInMillis));
+        env.put("poolResizeQuantity", Integer.valueOf(poolResizeQuantity));
+
+        connectionPool = new MyConnectionPool(poolInfo, env);
         assertEquals(0, connectionPool.getSteadyPoolSize());
         assertEquals(maxPoolSize, connectionPool.getMaxPoolSize());
 
@@ -187,7 +186,7 @@ public class ConnectionPoolTest {
 
         // Test issue #24843: make the state of resource1 not busy anymore (it should not happen but it happens in rare cases),
         // resource should still be closed without throwing an exception.
-        resource1.getResourceState().setBusy(false);
+        connectionPool.setResourceStateToFree(resource1);
         connectionPool.resourceClosed(resource1);
         assertResourceIsNotBusy(resource1);
 
@@ -444,16 +443,15 @@ public class ConnectionPoolTest {
         // Clean the pool
         connectionPool.emptyPool();
         assertResourcesSize(0);
+
+        PoolStatus poolStatus = connectionPool.getPoolStatus();
+        assertEquals(0, poolStatus.getNumConnFree());
     }
 
     public static class MyConnectionPool extends ConnectionPool {
 
-        public static int myMaxPoolSize;
-        public static int maxWaitTimeInMillis;
-        public static int poolResizeQuantity;
-
-        public MyConnectionPool(PoolInfo poolInfo) throws PoolingException {
-            super(ConnectionPoolTest.getPoolInfo(), new Hashtable<>());
+        public MyConnectionPool(PoolInfo poolInfo, Hashtable env) throws PoolingException {
+            super(ConnectionPoolTest.getPoolInfo(), env);
         }
 
         @Override
@@ -463,6 +461,13 @@ public class ConnectionPoolTest {
             ConnectorConnectionPool connectorConnectionPool = ConnectionPoolObjectsUtils
                     .createDefaultConnectorPoolObject(poolInfo, null);
 
+            int myMaxPoolSize = (int) env.get("maxPoolSize");
+            int maxWaitTimeInMillis = (int) env.get("maxWaitTimeInMillis");
+            int poolResizeQuantity = (int) env.get("poolResizeQuantity");
+
+            assertTrue(myMaxPoolSize > 0);
+            assertTrue(poolResizeQuantity > 0);
+
             // Override some defaults
             connectorConnectionPool.setSteadyPoolSize("0");
             connectorConnectionPool.setMaxPoolSize("" + myMaxPoolSize);
@@ -471,12 +476,18 @@ public class ConnectionPoolTest {
 
             return connectorConnectionPool;
         }
+
+        protected void scheduleResizerTask() {
+            // Do not schedule any resize tasks
+        }
     }
 
     public class MyConnectorRuntime extends ConnectorRuntime {
+        private ProcessEnvironment processEnvironment = new ProcessEnvironment();
 
-        public void setProcessEnvironment(ProcessEnvironment processEnvironment) {
-            this.processEnvironment = processEnvironment;
+        public MyConnectorRuntime() throws Exception {
+            // Force 'injection' of private field processEnvironment
+            InjectionUtil.injectPrivateField(ConnectorRuntime.class, this, "processEnvironment", processEnvironment);
         }
 
         @Override
@@ -496,7 +507,7 @@ public class ConnectionPoolTest {
         }
     }
 
-    private static PoolInfo getPoolInfo() {
+    public static PoolInfo getPoolInfo() {
         SimpleJndiName jndiName = new SimpleJndiName("myPool");
         return new PoolInfo(jndiName);
     }

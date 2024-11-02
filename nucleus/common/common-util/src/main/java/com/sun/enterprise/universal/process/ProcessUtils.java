@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,6 +39,7 @@ import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
  * Includes a somewhat kludgy way to get the pid for "me". Another casualty of
@@ -86,7 +87,7 @@ public final class ProcessUtils {
      * @throws IOException
      */
     public static void saveCurrentPid(final File pidFile) throws IOException {
-        FileUtils.writeStringToFile(Long.toString(ProcessHandle.current().pid()), pidFile);
+        FileUtils.writeStringToFile(Long.toString(ProcessHandle.current().pid()), pidFile, ISO_8859_1);
     }
 
 
@@ -135,7 +136,7 @@ public final class ProcessUtils {
      */
     public static long loadPid(final File pidFile) throws IllegalArgumentException {
         try {
-            return Long.parseLong(FileUtils.readSmallFile(pidFile).trim());
+            return Long.parseLong(FileUtils.readSmallFile(pidFile, ISO_8859_1).trim());
         } catch (NumberFormatException | IOException e) {
             throw new IllegalArgumentException("Could not parse the PID file: " + pidFile, e);
         }

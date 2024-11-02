@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2024 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -59,7 +60,6 @@
     </modules>
 
     <properties>
-        <findbugs.skip>true</findbugs.skip>
         <stage.dir.name>stage</stage.dir.name>
         <stage.dir>${project.build.directory}/${stage.dir.name}</stage.dir>
         <temp.dir>${project.build.directory}/dependency</temp.dir>
@@ -90,7 +90,6 @@
                                 <excludes>META-INF/maven/**</excludes>
                                 <copyTypes>jar,war</copyTypes>
                                 <unpackTypes>zip,rar,war</unpackTypes>
-                                <silent>true</silent>
                                 <copyExcludes>war</copyExcludes>
                                 <mappings>
                                     <mapping>

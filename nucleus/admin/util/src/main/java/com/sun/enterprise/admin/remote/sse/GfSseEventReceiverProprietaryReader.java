@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,8 @@ import com.sun.enterprise.admin.remote.reader.ProprietaryReader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.glassfish.common.util.HttpParser;
+
 /**
  * Proprietary reader for SSE
  */
@@ -33,6 +36,6 @@ public class GfSseEventReceiverProprietaryReader implements ProprietaryReader<Gf
 
     @Override
     public GfSseEventReceiver readFrom(final InputStream is, final String contentType) throws IOException {
-        return new GfSseEventReceiver(is);
+        return new GfSseEventReceiver(is, HttpParser.getCharsetFromHeader(contentType));
     }
 }

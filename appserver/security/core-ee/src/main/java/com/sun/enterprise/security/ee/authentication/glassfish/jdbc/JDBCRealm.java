@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,11 +25,11 @@ import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationExcepti
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.DigestRealmBase;
-import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.Utility;
 
 import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -39,6 +39,7 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ import javax.security.auth.login.LoginException;
 import javax.sql.DataSource;
 
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
@@ -78,7 +80,7 @@ import static java.util.logging.Level.FINEST;
  * <li>group-name-column : column corresponding to group in group-table
  * </ul>
  *
- * @see com.sun.enterprise.security.ee.auth.login.SolarisLoginModule
+ * @see com.sun.enterprise.security.auth.login.SolarisLoginModule
  *
  */
 @Service
@@ -412,7 +414,7 @@ public final class JDBCRealm extends DigestRealmBase {
     private char[] hashPassword(char[] password) throws CharacterCodingException {
         byte[] bytes = null;
         char[] result = null;
-        String charSet = getProperty(PARAM_CHARSET);
+        Charset charSet = HttpParser.getCharset(getProperty(PARAM_CHARSET));
         bytes = Utility.convertCharArrayToByteArray(password, charSet);
 
         if (messageDigest != null) {
@@ -426,8 +428,9 @@ public final class JDBCRealm extends DigestRealmBase {
         if (HEX.equalsIgnoreCase(encoding)) {
             result = hexEncode(bytes);
         } else if (BASE64.equalsIgnoreCase(encoding)) {
-            result = base64Encode(bytes).toCharArray();
-        } else { // no encoding specified
+            result = Base64.getEncoder().encodeToString(bytes).toCharArray();
+        } else {
+            // no encoding specified
             result = Utility.convertByteArrayToCharArray(bytes, charSet);
         }
         return result;
@@ -444,12 +447,6 @@ public final class JDBCRealm extends DigestRealmBase {
         char[] result = new char[sb.length()];
         sb.getChars(0, sb.length(), result, 0);
         return result;
-    }
-
-    private String base64Encode(byte[] bytes) {
-        GFBase64Encoder encoder = new GFBase64Encoder();
-        return encoder.encode(bytes);
-
     }
 
     /**

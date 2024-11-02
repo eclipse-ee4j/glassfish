@@ -37,7 +37,6 @@
         <winsw.version>2.12.0</winsw.version>
         <winsw.url>https://github.com/winsw/winsw/releases/download/v${winsw.version}/WinSW.NET461.exe</winsw.url>
 
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <!-- We don't need it here and it would fail -->
         <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
     </properties>
@@ -146,13 +145,19 @@
                                 <mkdir dir="${dest}" />
                                 <xjc destdir="${dest}"
                                     schema="${project.basedir}/src/main/resources/xsd/schema/template-info.xsd"
-                                    package="com.sun.enterprise.admin.servermgmt.xml.templateinfo" />
+                                    package="com.sun.enterprise.admin.servermgmt.xml.templateinfo">
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
+                                </xjc>
                                 <xjc destdir="${dest}"
                                     schema="${project.basedir}/src/main/resources/xsd/schema/domain-info.xsd"
-                                    package="com.sun.enterprise.admin.servermgmt.xml.domaininfo" />
+                                    package="com.sun.enterprise.admin.servermgmt.xml.domaininfo">
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
+                                </xjc>
                                 <xjc destdir="${dest}"
                                     schema="${project.basedir}/src/main/resources/xsd/schema/stringsubs.xsd"
-                                    package="com.sun.enterprise.admin.servermgmt.xml.stringsubs" />
+                                    package="com.sun.enterprise.admin.servermgmt.xml.stringsubs">
+                                    <jvmarg value="-Dfile.encoding=${project.build.sourceEncoding}" />
+                                </xjc>
                             </target>
                         </configuration>
                     </execution>

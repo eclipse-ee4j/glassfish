@@ -80,6 +80,12 @@ public class GlassfishUrlClassLoader extends URLClassLoader {
         super(urls, parent, factory);
     }
 
+    // turn protected to public
+    @Override
+    public void addURL(URL url) {
+        super.addURL(url);
+    }
+
 
     @Override
     protected Class<?> findClass(final String name) throws ClassNotFoundException {

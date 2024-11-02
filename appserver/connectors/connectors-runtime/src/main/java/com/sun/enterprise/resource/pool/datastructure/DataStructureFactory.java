@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +22,6 @@ import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.logging.LogDomains;
 
 import java.lang.reflect.Constructor;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,40 +37,34 @@ public class DataStructureFactory {
     // TODO synchronize datastructure creation ?
     protected final static Logger _logger = LogDomains.getLogger(DataStructureFactory.class, LogDomains.RSR_LOGGER);
 
-    public static DataStructure getDataStructure(String className, String parameters, int maxPoolSize, ResourceHandler handler, String strategyClass) throws PoolingException {
+    public static DataStructure getDataStructure(String className, String parameters, int maxPoolSize, ResourceHandler handler) throws PoolingException {
         DataStructure dataStructure;
 
         if (className != null) {
             if (className.equals(ListDataStructure.class.getName())) {
-                dataStructure = new ListDataStructure(parameters, maxPoolSize, handler, strategyClass);
+                dataStructure = new ListDataStructure(parameters, maxPoolSize, handler);
             } else if (className.equals(RWLockDataStructure.class.getName())) {
-                dataStructure = new RWLockDataStructure(parameters, maxPoolSize, handler, strategyClass);
+                dataStructure = new RWLockDataStructure(parameters, maxPoolSize, handler);
             } else {
-                dataStructure = initializeCustomDataStructureInPrivilegedMode(className, parameters, maxPoolSize, handler, strategyClass);
+                dataStructure = initializeCustomDataStructureInPrivilegedMode(className, parameters, maxPoolSize, handler);
             }
         } else {
             debug("Initializing RWLock DataStructure");
-            dataStructure = new RWLockDataStructure(parameters, maxPoolSize, handler, strategyClass);
+            dataStructure = new RWLockDataStructure(parameters, maxPoolSize, handler);
         }
 
         return dataStructure;
     }
 
-    private static DataStructure initializeCustomDataStructureInPrivilegedMode(final String className, final String parameters, final int maxPoolSize, final ResourceHandler handler, final String strategyClass) throws PoolingException {
-        Object result = AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            @Override
-            public Object run() {
+    private static DataStructure initializeCustomDataStructureInPrivilegedMode(final String className, final String parameters, final int maxPoolSize, final ResourceHandler handler) throws PoolingException {
+        Object result = null;
+        try {
+            result = initializeDataStructure(className, parameters, maxPoolSize, handler);
+        } catch (Exception e) {
+            _logger.log(WARNING, "pool.datastructure.init.failure", className);
+            _logger.log(WARNING, "pool.datastructure.init.failure.exception", e);
+        }
 
-                Object result = null;
-                try {
-                    result = initializeDataStructure(className, parameters, maxPoolSize, handler, strategyClass);
-                } catch (Exception e) {
-                    _logger.log(WARNING, "pool.datastructure.init.failure", className);
-                    _logger.log(WARNING, "pool.datastructure.init.failure.exception", e);
-                }
-                return result;
-            }
-        });
         if (result != null) {
             return (DataStructure) result;
         } else {
@@ -80,12 +72,12 @@ public class DataStructureFactory {
         }
     }
 
-    private static DataStructure initializeDataStructure(String className, String parameters, int maxPoolSize, ResourceHandler handler, String strategyClass) throws Exception {
+    private static DataStructure initializeDataStructure(String className, String parameters, int maxPoolSize, ResourceHandler handler) throws Exception {
         DataStructure ds;
-        Object[] constructorParameters = new Object[] { parameters, maxPoolSize, handler, strategyClass };
+        Object[] constructorParameters = new Object[] { parameters, maxPoolSize, handler };
 
         Class class1 = Thread.currentThread().getContextClassLoader().loadClass(className);
-        Constructor constructor = class1.getConstructor(String.class, int.class, ResourceHandler.class, String.class);
+        Constructor constructor = class1.getConstructor(String.class, int.class, ResourceHandler.class);
         ds = (DataStructure) constructor.newInstance(constructorParameters);
         _logger.log(FINEST, "Using Pool Data Structure : ", className);
 

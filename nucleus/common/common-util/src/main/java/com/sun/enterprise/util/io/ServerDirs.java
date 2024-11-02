@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * The hierarchy of directories above a running DAS or server instance can get
@@ -127,7 +129,7 @@ public class ServerDirs {
         localPasswordFile = new File(configDir, "local-password");
 
         if (localPasswordFile.exists()) {
-            try (BufferedReader r = new BufferedReader(new FileReader(localPasswordFile))) {
+            try (BufferedReader r = new BufferedReader(new FileReader(localPasswordFile, UTF_8))) {
                 localPassword = r.readLine();
             }
         } else {

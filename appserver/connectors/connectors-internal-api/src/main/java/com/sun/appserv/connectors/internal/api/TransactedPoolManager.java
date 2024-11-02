@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,24 +30,30 @@ import org.jvnet.hk2.annotations.Contract;
 public interface TransactedPoolManager {
 
     /**
-     * Indicate that a resource is enlisted.
+     * Indicate that a resource is enlisted.<br>
+     * Expecting this method is called from the
+     * {@link com.sun.enterprise.resource.ResourceHandle#enlistedInTransaction(Transaction)} method and not directly from a
+     * pool manager.
+     *
      * @param tran Transaction to which the resource is enlisted
-     * @param res Resource that is enlisted
+     * @param resource Resource that is enlisted
      * @throws IllegalStateException when unable to enlist the resource
      */
-    void resourceEnlisted(Transaction tran, ResourceHandle res) throws IllegalStateException;
+    void resourceEnlisted(Transaction tran, ResourceHandle resource) throws IllegalStateException;
 
     /**
-     * registers the provided resource with the component & enlists the resource in the transaction
-     * @param handle resource-handle
+     * Registers the provided resource with the component & enlists the resource in the transaction
+     *
+     * @param resource Resource to be registered.
      * @throws PoolingException when unable to register the resource
      */
-    void registerResource(ResourceHandle handle) throws PoolingException;
+    void registerResource(ResourceHandle resource) throws PoolingException;
 
     /**
-     * unregisters the resource from the component and delists the resource from the transaction
-     * @param resource resource-handle
-     * @param xaresFlag
+     * Unregisters the resource from the component and delists the resource from the transaction
+     *
+     * @param resource Resource to be unregistered.
+     * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
     void unregisterResource(ResourceHandle resource, int xaresFlag);
 }

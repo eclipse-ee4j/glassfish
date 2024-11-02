@@ -32,10 +32,6 @@
     <name>admin-launcher</name>
     <description>Server Launching</description>
 
-    <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -67,15 +63,4 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
 </project>

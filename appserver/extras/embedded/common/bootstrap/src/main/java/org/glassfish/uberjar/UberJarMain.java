@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,8 @@
 
 package org.glassfish.uberjar;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
-import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -79,8 +79,8 @@ public class UberJarMain {
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(Constants.PLATFORM_PROPERTY_KEY,
-                            System.getProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name()));
+                    props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY,
+                            System.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name()));
 
                     long startTime = System.currentTimeMillis();
 

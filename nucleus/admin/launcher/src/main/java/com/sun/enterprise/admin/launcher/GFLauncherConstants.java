@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,14 +20,12 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.util.OS;
 
 /**
- *
  * @author bnevins
  */
 class GFLauncherConstants {
     static final String JAVA_NATIVE_SYSPROP_NAME = "java.library.path";
     static final String NEWLINE = System.getProperty("line.separator");
     static final String LIBDIR = "lib";
-    static final String PS = java.io.File.pathSeparator;
     static final String SPARC = "sparc";
     static final String SPARCV9 = "sparcv9";
     static final String X86 = "x86";

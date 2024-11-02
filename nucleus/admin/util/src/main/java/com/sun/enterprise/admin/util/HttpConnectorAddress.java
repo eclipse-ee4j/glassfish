@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,11 @@
 
 package com.sun.enterprise.admin.util;
 
-import com.sun.enterprise.universal.GFBase64Encoder;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Base64;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -29,6 +29,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class HttpConnectorAddress {
     static final String HTTP_CONNECTOR = "http";
@@ -92,8 +94,9 @@ public final class HttpConnectorAddress {
      * @throws IOException if there's a problem in connecting to the resource
      */
     public URLConnection openConnection(String path) throws IOException {
-        if (path == null || path.trim().length() == 0)
+        if (path == null || path.isBlank()) {
             path = this.path;
+        }
         final URLConnection cnx = this.openConnection(this.toURL(path));
         if (!(cnx instanceof HttpsURLConnection)) {
             return cnx;
@@ -248,37 +251,23 @@ public final class HttpConnectorAddress {
         return uc;
     }
 
-    public final String getBasicAuthString() {
-        /*
-         * taking care of the descripancies in the Base64Encoder, for very
-         * large lengths of passwords and/or usernames.
-         * Abhijit did the analysis and as per his suggestion, replacing
-         * a newline in Base64 encoded String by newline followed by a space
-         * should work for any length of password, independent of the
-         * web server buffer length. That investigation is still on, but
-         * in the meanwhile, it was found that the replacement of newline
-         * character with empty string "" works. Hence implementing the same.
-         * Date: 10/10/2003.
-         */
-        String cs = null, user = this.getUser(), pass = this.getPassword() != null ? new String(this.getPassword()) : null;
-        String up = (user == null) ? "" : user;
-        String pp = (pass == null) ? "" : pass;
-        cs = up + ":" + pp;
-        String enc = this.getBase64Encoded(cs);
-        enc = enc.replaceAll(System.getProperty("line.separator"), "");
-        return (AUTHORIZATION_TYPE + enc);
-    }
-
-    private String getBase64Encoded(String clearString) {
-        return new GFBase64Encoder().encode(clearString.getBytes());
+    public String getBasicAuthString() {
+        String user = this.getUser();
+        String pass = this.getPassword() == null ? null : new String(this.getPassword());
+        String up = user == null ? "" : user;
+        String pp = pass == null ? "" : pass;
+        String cs = up + ":" + pp;
+        String enc = Base64.getEncoder().encodeToString(cs.getBytes(UTF_8));
+        return AUTHORIZATION_TYPE + enc;
     }
 
     public static class BasicHostnameVerifier implements HostnameVerifier {
         private final String host;
 
         public BasicHostnameVerifier(String host) {
-            if (host == null)
+            if (host == null) {
                 throw new IllegalArgumentException("null host");
+            }
             this.host = host;
         }
 

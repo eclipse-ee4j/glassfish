@@ -576,6 +576,9 @@ public class PEFileLayout {
 
     public static final String MASTERPASSWORD_FILE = "master-password";
 
+    /**
+     * @return {@value #MASTERPASSWORD_FILE}
+     */
     public File getMasterPasswordFile() {
         return new File(getRepositoryDir(), MASTERPASSWORD_FILE);
     }

@@ -161,7 +161,7 @@ spec:
   }
 
   options {
-    buildDiscarder(logRotator(numToKeepStr: '10'))
+    buildDiscarder(logRotator(numToKeepStr: '2'))
 
     // to allow re-running a test stage
     preserveStashes()

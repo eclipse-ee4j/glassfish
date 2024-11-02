@@ -80,6 +80,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptySet;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
@@ -564,7 +565,7 @@ public class CompositeUtil {
             Enumeration<URL> urls = similarClass.getClassLoader().getResources("META-INF/restmodelextensions");
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
-                reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                reader = new BufferedReader(new InputStreamReader(url.openStream(), UTF_8));
                 while (reader.ready()) {
                     final String line = reader.readLine();
                     if ((line == null) || line.isEmpty()) {

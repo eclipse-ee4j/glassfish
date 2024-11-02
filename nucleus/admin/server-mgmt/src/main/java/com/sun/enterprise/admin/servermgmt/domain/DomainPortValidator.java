@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -117,14 +117,14 @@ public class DomainPortValidator {
         boolean portNotSpecified = false;
         boolean invalidPortSpecified = false;
         boolean defaultPortUsed = false;
-        if ((portStr != null) && !portStr.equals("")) {
+        if (portStr != null && !portStr.isEmpty()) {
             port = convertPortStr(portStr);
-            if ((port <= 0) || (port > PORT_MAX_VAL)) {
+            if (port <= 0 || port > PORT_MAX_VAL) {
                 invalidPortSpecified = true;
             }
         } else if (properties != null) {
             String property = properties.getProperty(key);
-            if ((property != null) && !property.equals("")) {
+            if (property != null && !property.isEmpty()) {
                 port = convertPortStr(property);
             } else {
                 portNotSpecified = true;

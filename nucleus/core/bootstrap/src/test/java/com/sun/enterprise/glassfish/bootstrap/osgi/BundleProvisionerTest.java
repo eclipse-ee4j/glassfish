@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.Util;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -50,7 +49,6 @@ class BundleProvisionerTest {
         Properties props = new Properties();
         Path cacheDir = Files.createTempDirectory("FelixCache");
         props.setProperty(FRAMEWORK_STORAGE, cacheDir.toFile().getAbsolutePath());
-        Util.substVars(props);
         long t0 = System.currentTimeMillis();
         Map<String, String> mm = props.entrySet().stream()
             .collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
@@ -66,8 +64,7 @@ class BundleProvisionerTest {
         osgiFramework.init();
         long t2 = System.currentTimeMillis();
         LOG.log(Level.INFO, LogFacade.OSGI_INIT_TIME, (t2-t1));
-        BundleProvisioner bundleProvisioner = BundleProvisioner
-            .createBundleProvisioner(osgiFramework.getBundleContext(), props);
+        BundleProvisioner bundleProvisioner = new BundleProvisioner(osgiFramework.getBundleContext(), props);
         bundleProvisioner.installBundles();
         long t3 = System.currentTimeMillis();
         LOG.log(Level.INFO, LogFacade.BUNDLE_INSTALLATION_TIME, (t3-t2));

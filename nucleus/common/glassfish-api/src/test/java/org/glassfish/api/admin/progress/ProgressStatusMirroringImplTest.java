@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,10 +74,10 @@ public class ProgressStatusMirroringImplTest {
         ProgressStatus ch2 = prog.createChild("A2", 0);
         assertNotNull(ch2);
         assertEquals(0, prog.currentStepCount);
-        parent.lastEvent = null;
+        parent.resetLastProgressStatusEvent();
         ch1.progress(1);
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         assertEquals(1, prog.currentStepCount);
         ch2.progress(2, "Some message");
         assertEquals(3, prog.currentStepCount);

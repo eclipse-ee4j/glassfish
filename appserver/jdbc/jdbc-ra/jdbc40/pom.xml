@@ -33,10 +33,6 @@
 
     <name>JDBC 40 related classes for JDBC Resource Adapter</name>
 
-    <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>

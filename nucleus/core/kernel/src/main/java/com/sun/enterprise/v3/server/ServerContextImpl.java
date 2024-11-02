@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import jakarta.inject.Inject;

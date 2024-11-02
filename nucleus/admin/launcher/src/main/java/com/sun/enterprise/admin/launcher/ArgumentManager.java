@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,11 +31,11 @@ import java.util.Map;
  *
  * @author bnevins
  */
-
+// copy pasted from hk2-core, com.sun.enterprise.module.bootstrap.ArgumentManager
 public class ArgumentManager {
 
-    private Map<String, String> map = new HashMap<>();
-    private List<String> args;
+    private final Map<String, String> map = new HashMap<>();
+    private final List<String> args;
 
     public static Map<String, String> argsToMap(String[] sargs) {
         return new ArgumentManager(sargs).getArgs();

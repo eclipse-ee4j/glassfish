@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author mmares
  */
 public class ProgressStatusImplTest {
@@ -47,27 +46,27 @@ public class ProgressStatusImplTest {
         ProgressStatusImpl psi = new ProgressStatusImpl("first", parent, null);
         assertThat(psi.getTotalStepCount(), lessThan(0));
         psi.setTotalStepCount(10);
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         assertEquals(10, psi.getTotalStepCount());
         psi = new ProgressStatusImpl("first", 10, parent, null);
         assertEquals(10, psi.getTotalStepCount());
         psi.progress(8);
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         psi.setTotalStepCount(6);
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         assertEquals(6, psi.getTotalStepCount());
         assertEquals(0, psi.getRemainingStepCount());
         psi.setTotalStepCount(10);
         assertEquals(10, psi.getTotalStepCount());
         assertEquals(4, psi.getRemainingStepCount());
         psi.complete();
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         psi.setTotalStepCount(15);
-        assertNull(parent.lastEvent);
+        assertNull(parent.getLastProgressStatusEvent());
         assertEquals(10, psi.getTotalStepCount());
     }
 
@@ -76,8 +75,8 @@ public class ProgressStatusImplTest {
         ProgressStatusImpl psi = new ProgressStatusImpl("first", 10, parent, null);
         assertEquals(10, psi.getRemainingStepCount());
         psi.progress(1);
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         assertEquals(9, psi.getRemainingStepCount());
         psi.progress(2);
         assertEquals(7, psi.getRemainingStepCount());
@@ -90,11 +89,11 @@ public class ProgressStatusImplTest {
         psi.progress(2, null);
         assertEquals(1, psi.getRemainingStepCount());
         psi.progress(1);
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         assertEquals(0, psi.getRemainingStepCount());
         psi.progress(1);
-        assertNull(parent.lastEvent);
+        assertNull(parent.getLastProgressStatusEvent());
         assertEquals(0, psi.getRemainingStepCount());
         psi = new ProgressStatusImpl("second", parent, null);
         assertThat(psi.getRemainingStepCount(), lessThan(0));
@@ -129,8 +128,8 @@ public class ProgressStatusImplTest {
         assertFalse(psi.isComplete());
         psi.complete();
         assertTrue(psi.isComplete());
-        assertNotNull(parent.lastEvent);
-        parent.lastEvent = null;
+        assertNotNull(parent.getLastProgressStatusEvent());
+        parent.resetLastProgressStatusEvent();
         psi = new ProgressStatusImpl("first", parent, null);
         assertFalse(psi.isComplete());
         psi.complete();
@@ -148,9 +147,9 @@ public class ProgressStatusImplTest {
         assertFalse(psi.isComplete());
         psi = new ProgressStatusImpl("first", 10, parent, null);
         psi.complete();
-        parent.lastEvent = null;
+        parent.resetLastProgressStatusEvent();
         psi.complete();
-        assertNull(parent.lastEvent);
+        assertNull(parent.getLastProgressStatusEvent());
     }
 
     @Test
@@ -162,9 +161,9 @@ public class ProgressStatusImplTest {
         ProgressStatus ch3 = psi.createChild("A.3", 10);
         assertEquals(0, psi.getRemainingStepCount());
         assertEquals(15, psi.getTotalStepCount());
-        parent.lastEvent = null;
+        parent.resetLastProgressStatusEvent();
         ch1.progress(1);
-        assertNotNull(parent.lastEvent);
+        assertNotNull(parent.getLastProgressStatusEvent());
         psi.complete();
         assertTrue(psi.isComplete());
         assertTrue(ch1.isComplete());

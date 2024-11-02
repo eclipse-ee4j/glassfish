@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,10 +40,10 @@ import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
- * User: Jerome Dochez
- * Date: Mar 25, 2008
- * Time: 11:36:46 AM
+ * @author Jerome Dochez 2008
  */
 @ExtendWith(ConfigApiJunit5Extension.class)
 public abstract class ConfigPersistence {
@@ -102,7 +102,7 @@ public abstract class ConfigPersistence {
         }
 
         // now check if we persisted correctly...
-        final String resultingXml = baos.toString();
+        final String resultingXml = baos.toString(UTF_8);
         logger.fine(resultingXml);
         assertResult(resultingXml);
     }

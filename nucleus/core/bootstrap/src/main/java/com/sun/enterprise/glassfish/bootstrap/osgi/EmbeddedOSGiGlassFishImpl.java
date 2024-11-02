@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,7 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.GlassFishDecorator;
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,12 +35,12 @@ import org.osgi.framework.ServiceRegistration;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-public class EmbeddedOSGiGlassFishImpl extends GlassFishDecorator {
+class EmbeddedOSGiGlassFishImpl extends GlassFishDecorator {
     private final Logger logger = LogFacade.BOOTSTRAP_LOGGER;
     private ServiceRegistration reg;
     private final BundleContext bundleContext;
 
-    public EmbeddedOSGiGlassFishImpl(GlassFish decoratedGf, BundleContext bundleContext) {
+    EmbeddedOSGiGlassFishImpl(GlassFish decoratedGf, BundleContext bundleContext) {
         super(decoratedGf);
         this.bundleContext = bundleContext;
     }
@@ -58,12 +58,12 @@ public class EmbeddedOSGiGlassFishImpl extends GlassFishDecorator {
     }
 
     private void registerService() {
-        reg = getBundleContext().registerService(GlassFish.class.getName(), this, null);
+        reg = bundleContext.registerService(GlassFish.class.getName(), this, null);
         logger.log(Level.CONFIG, LogFacade.SERVICE_REGISTERED, new Object[]{this, reg});
     }
 
     private void unregisterService() {
-        if (getBundleContext() != null) { // bundle is still active
+        if (bundleContext != null) { // bundle is still active
             try {
                 if (reg != null) {
                     reg.unregister();
@@ -73,9 +73,5 @@ public class EmbeddedOSGiGlassFishImpl extends GlassFishDecorator {
                 LogFacade.log(logger, Level.WARNING, LogFacade.SERVICE_UNREGISTRATION_EXCEPTION, e, e);
             }
         }
-    }
-
-    private BundleContext getBundleContext() {
-        return bundleContext;
     }
 }

@@ -17,7 +17,6 @@
 
 package org.glassfish.tests.utils.junit;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 
@@ -63,10 +62,14 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.jvnet.hk2.config.ConfigParser;
+import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
 import org.objectweb.asm.ClassReader;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
@@ -92,6 +95,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class HK2JUnit5Extension
     implements BeforeAllCallback, TestInstancePostProcessor, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
+    /**
+     * One second timeout set as system property before tests start.
+     * @see ConfigSupport
+     */
+    public static final Integer HK2_CONFIG_LOCK_TIME_OUT_IN_SECONDS = 1;
     private static final Logger LOG = Logger.getLogger(HK2JUnit5Extension.class.getName());
     private static final String CLASS_PATH_PROP = "java.class.path";
     private static final String DOT_CLASS = ".class";
@@ -104,6 +112,10 @@ public class HK2JUnit5Extension
     private StaticModulesRegistry modulesRegistry;
 
     private Namespace namespaceMethod;
+
+    static {
+        System.setProperty("org.glassfish.hk2.config.locktimeout", HK2_CONFIG_LOCK_TIME_OUT_IN_SECONDS.toString());
+    }
 
 
     @Override
@@ -229,8 +241,8 @@ public class HK2JUnit5Extension
     protected Properties getStartupContextProperties(final ExtensionContext context) {
         final Properties startupContextProperties = new Properties();
         final String rootPath = context.getRequiredTestClass().getResource("/").getPath();
-        startupContextProperties.put(Constants.INSTALL_ROOT_PROP_NAME, rootPath);
-        startupContextProperties.put(Constants.INSTANCE_ROOT_PROP_NAME, rootPath);
+        startupContextProperties.put(INSTALL_ROOT_PROP_NAME, rootPath);
+        startupContextProperties.put(INSTANCE_ROOT_PROP_NAME, rootPath);
         return startupContextProperties;
     }
 
@@ -250,7 +262,7 @@ public class HK2JUnit5Extension
         addOneConstant(locator, mockGenerator);
         addOneConstant(locator, startupContext);
         addOneConstant(locator, modulesRegistry);
-        String installRoot = startupContext.getArguments().getProperty(Constants.INSTALL_ROOT_PROP_NAME);
+        String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT_PROP_NAME);
         if (installRoot == null) {
             addOneConstant(locator, new ServerEnvironmentImpl());
         } else {
@@ -483,7 +495,7 @@ public class HK2JUnit5Extension
         final Set<String> exclude = excludedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         while (resources.hasMoreElements()) {
             final URL url = resources.nextElement();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), UTF_8))) {
                 while (true) {
                     final DescriptorImpl descriptor = new DescriptorImpl();
                     final boolean goOn = descriptor.readObject(reader);

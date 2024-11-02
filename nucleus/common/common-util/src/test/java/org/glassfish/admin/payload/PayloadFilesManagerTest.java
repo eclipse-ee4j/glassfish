@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,12 +25,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -1021,12 +1021,12 @@ public class PayloadFilesManagerTest {
         }
     }
 
-    private void writeFile(final File file, final String... content) throws FileNotFoundException {
-        PrintStream ps = new PrintStream(file);
-        for (String s : content) {
-            ps.println(s);
+    private void writeFile(final File file, final String... content) throws IOException {
+        try (PrintStream ps = new PrintStream(file, StandardCharsets.UTF_8)) {
+            for (String s : content) {
+                ps.println(s);
+            }
         }
-        ps.close();
     }
 
     private Properties fileXferProps() {
@@ -1035,37 +1035,12 @@ public class PayloadFilesManagerTest {
         return props;
     }
 
-//    private void testForBadChars(String initialPath) {
-//        URI uri = null;
-//        URI targetDirURI = null;
-//        try {
-//            PayloadFilesManager.Temp instance = new PayloadFilesManager.Temp(Logger.getAnonymousLogger());
-//            uri = URI.create(initialPath.replace(File.separator, "/"));
-//            targetDirURI = instance.getTargetDir().toURI();
-//
-//            //System.out.println("  " + initialPath + " -> " + uri.toASCIIString());
-//            String uriString = targetDirURI.relativize(uri).toASCIIString();
-//
-//            // trim the trailing slash for the directory
-//            if (uriString.endsWith("/")) {
-//                uriString = uriString.substring(0, uriString.length() - 1);
-//            }
-//            assertFalse("path " + uriString + " still contains bad character(s)",
-//                    uriString.contains("/") ||
-//                    uriString.contains("\\") ||
-//                    (uriString.contains(":") && File.separatorChar == '\\'));        } catch (Exception e) {
-//            fail("unexpected exception " + e.getMessage());
-//        }
-//    }
-
     private abstract class CommonTest {
         protected final static String payloadType = "application/zip";
 
-        protected abstract void addParts(final Payload.Outbound ob,
-                final PayloadFilesManager instance) throws Exception;
+        protected abstract void addParts(Payload.Outbound ob, PayloadFilesManager instance) throws Exception;
 
-        protected abstract void checkResults(final Payload.Inbound ib,
-                final PayloadFilesManager instance) throws Exception;
+        protected abstract void checkResults(Payload.Inbound ib, PayloadFilesManager instance) throws Exception;
 
         protected abstract PayloadFilesManager instance() throws IOException;
 

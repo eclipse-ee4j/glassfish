@@ -117,30 +117,33 @@
 
         <!-- GlassFish Components -->
 
-        <glassfish-corba.version>4.2.5</glassfish-corba.version>
         <grizzly.version>4.1.0-M1</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <pfl.version>4.1.2</pfl.version>
-        <gmbal.version>4.0.3</gmbal.version>
+        
+        <!-- ORB -->
+        <pfl.version>5.0.0</pfl.version>
+        <glassfish-corba.version>4.2.5</glassfish-corba.version> <!-- Note: patched in appserver/distributions/glassfish/pom.xml to support PFL 5 -->
+        <gmbal.version>4.0.3</gmbal.version> <!-- Note: patched in appserver/distributions/glassfish/pom.xml to support PFL 5 -->
+        
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
-        <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
+        <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
 
         <!-- 3rd party dependencies -->
 
-        <commons-io.version>2.16.1</commons-io.version>
-        <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.6.0.Final</jboss.logging.version>
+        <commons-io.version>2.17.0</commons-io.version>
+        <jboss.logging.annotation.version>3.0.2.Final</jboss.logging.annotation.version>
+        <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
-        <asm.version>9.7</asm.version>
-        <jsch.version>0.2.18</jsch.version>
+        <asm.version>9.7.1</asm.version>
+        <jsch.version>0.2.20</jsch.version>
         <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.14</ant.version>
+        <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.17.2</jackson.version>
+        <jackson.version>2.18.1</jackson.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
@@ -148,8 +151,8 @@
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
-        <easymock.version>5.3.0</easymock.version>
-        <junit.version>5.10.3</junit.version>
+        <easymock.version>5.4.0</easymock.version>
+        <junit.version>5.11.3</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -157,12 +160,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
         <legal.doc.source>${project.build.commonResourcesDirectory}/legal</legal.doc.source>
-        <findbugs.skip>false</findbugs.skip>
-        <findbugs.threshold>High</findbugs.threshold>
-        <findbugs.common>exclude-common.xml</findbugs.common>
-        <findbugs.exclude />
-        <findbugs.version>3.0.5</findbugs.version>
-        <findbugs.glassfish.logging.validLoggerPrefixes>jakarta.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
@@ -188,6 +185,7 @@
         <!-- GlassFishLogManager is a child of this module, so we cannot use it here yet. -->
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
+        <test.enableDefaultLogCfg>true</test.enableDefaultLogCfg>
     </properties>
 
     <dependencyManagement>
@@ -380,6 +378,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.grizzly</groupId>
+                <artifactId>grizzly-npn-api</artifactId>
+                <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
+                <version>${grizzly.npn.version}</version>
+            </dependency>
 
             <!-- GlassFish Management API -->
             <dependency>
@@ -424,7 +428,7 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.2</version>
                 <scope>test</scope>
             </dependency>
 
@@ -487,7 +491,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.4</version>
+                <version>5.0.8</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -550,7 +554,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.26.2</version>
+                <version>3.27.1</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -708,7 +712,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.14.0</version>
+                <version>3.17.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -719,7 +723,7 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
-                <version>1.10.14</version>
+                <version>1.10.15</version>
             </dependency>
             <dependency>
                 <groupId>com.github.mwiede</groupId>
@@ -813,7 +817,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.8.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -831,7 +835,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.10.1</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -848,7 +852,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.5.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -864,7 +868,7 @@
                         </excludes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
-                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                             <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
                         </systemPropertyVariables>
@@ -872,7 +876,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.5.1</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -887,7 +891,7 @@
                         </includes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
-                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                         </systemPropertyVariables>
                     </configuration>
@@ -908,11 +912,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.5.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <configLocation>org/glassfish/qa/config/checkstyle/checkstyle.xml</configLocation>
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
@@ -938,7 +942,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.17.0</version>
+                            <version>10.19.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -954,17 +958,17 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.2.4</version>
+                    <version>3.2.7</version>
                 </plugin>
                 <plugin>
                     <groupId>org.cyclonedx</groupId>
                     <artifactId>cyclonedx-maven-plugin</artifactId>
-                    <version>2.8.0</version>
+                    <version>2.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.9.0</version>
+                    <version>1.11.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
@@ -976,12 +980,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M15</version>
+                    <version>4.0.0-M16</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -995,11 +999,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.1.3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.1.3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -1012,7 +1016,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.8.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1276,7 +1280,8 @@
                                 <echo file="${basedir}/target/MANIFEST.MF">Manifest-Version: 1.0</echo>
                                 <copy toDir="${project.build.outputDirectory}/META-INF" overwrite="false">
                                     <fileset dir="${basedir}/target" includes="MANIFEST.MF">
-                                        <present targetdir="${project.build.outputDirectory}/META-INF"
+                                        <present
+                                            targetdir="${project.build.outputDirectory}/META-INF"
                                             present="srconly" />
                                     </fileset>
                                 </copy>
@@ -1344,35 +1349,6 @@
 
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <inherited>true</inherited>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <skip>${findbugs.skip}</skip>
-                    <threshold>${findbugs.threshold}</threshold>
-                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                    <excludeFilterFile>
-                        ${findbugs.common},${findbugs.exclude}
-                    </excludeFilterFile>
-                    <jvmArgs>-Dfindbugs.glassfish.logging.validLoggerPrefixes=${findbugs.glassfish.logging.validLoggerPrefixes}</jvmArgs>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.glassfish.findbugs</groupId>
-                            <artifactId>findbugs-logging-detectors</artifactId>
-                            <version>1.6</version>
-                        </plugin>
-                    </plugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.glassfish.findbugs</groupId>
-                        <artifactId>findbugs</artifactId>
-                        <version>1.7</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
@@ -1398,23 +1374,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <skip>${findbugs.skip}</skip>
-                    <threshold>${findbugs.threshold}</threshold>
-                    <excludeFilterFile>
-                        exclude-common.xml,${findbugs.exclude}
-                    </excludeFilterFile>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <profiles>
         <profile>
@@ -1543,32 +1502,6 @@
             </build>
         </profile>
         <profile>
-            <id>findbugs</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>run-findbugs</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>findbugs</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
@@ -1645,6 +1578,23 @@
             <properties>
                 <file.executable.suffix>.bat</file.executable.suffix>
             </properties>
+        </profile>
+
+        <profile>
+            <id>jdk23-test-annotation-processing</id>
+              <activation>
+              <jdk>[23,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <testCompilerArgument>-proc:full</testCompilerArgument>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

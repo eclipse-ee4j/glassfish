@@ -327,7 +327,6 @@
             <fileMode>640</fileMode>
             <includes>
                 <include>glassfish-jul-extension.jar</include>
-                <include>grizzly-npn-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/lib/bootstrap</outputDirectory>
         </fileSet>
@@ -379,7 +378,6 @@
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>appserver-domain.jar</exclude>
                 <exclude>glassfish-jul-extension.jar</exclude>
-                <exclude>grizzly-npn-api.jar</exclude>
                 <exclude>cli-optional.jar</exclude>
                 <exclude>appserver-cli.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>

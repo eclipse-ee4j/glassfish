@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +72,7 @@ public class AsadminInput {
     private final static LocalStringManager localStrings = new LocalStringManagerImpl(AsadminInput.class);
 
     public interface InputReader {
-        public Map<String,Properties> settings();
+        Map<String,Properties> settings();
     }
 
     /**
@@ -96,13 +98,11 @@ public class AsadminInput {
     }
 
     /**
-     * Returns a reader that can consume the specified version of asadmin input
-     *
-     * @return
+     * @return reader that can consume the specified version of asadmin input
      * @throws IOException
      */
     public static InputReader reader(final InputStream is) throws IOException {
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()));
         final String version = readVersionFromFirstLine(reader);
         return newReader(reader, version);
     }
@@ -139,7 +139,7 @@ public class AsadminInput {
         }
 
         private Map<String,Properties> loadSettings() throws IOException {
-            final Map<String,Properties> result = new HashMap<String,Properties>();
+            final Map<String,Properties> result = new HashMap<>();
             final Properties entireContent = new Properties();
             entireContent.load(reader);
             for (String propName : entireContent.stringPropertyNames()) {

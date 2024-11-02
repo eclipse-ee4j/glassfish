@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,15 +22,15 @@ import com.sun.logging.LogDomains;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 
 /**
@@ -66,9 +66,9 @@ public class ConnectorClassLoader extends ASURLClassLoader {
 
     public static synchronized ConnectorClassLoader getInstance() {
         if (classLoader == null) {
-            PrivilegedAction<ConnectorClassLoader> action = ConnectorClassLoader::new;
-            classLoader = AccessController.doPrivileged(action);
+            classLoader = new ConnectorClassLoader();
         }
+
         return classLoader;
     }
 
@@ -91,11 +91,11 @@ public class ConnectorClassLoader extends ASURLClassLoader {
         if (classLoader == null) {
             synchronized (ConnectorClassLoader.class) {
                 if (classLoader == null) {
-                    PrivilegedAction<ConnectorClassLoader> action = () -> new ConnectorClassLoader(parent);
-                    classLoader = AccessController.doPrivileged(action);
+                    classLoader = new ConnectorClassLoader(parent);
                 }
             }
         }
+
         return classLoader;
     }
 
@@ -108,18 +108,16 @@ public class ConnectorClassLoader extends ASURLClassLoader {
      * @param moduleDir the directory location where the RAR contents are exploded
      */
     public void addResourceAdapter(String rarName, String moduleDir) {
-
         try {
             File file = new File(moduleDir);
-            PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
-            ASURLClassLoader cl = AccessController.doPrivileged(action);
+            ASURLClassLoader cl = new ASURLClassLoader(parent);
 
             cl.appendURL(file.toURI().toURL());
             appendJars(file, cl);
             classLoaderChain.add(cl);
             rarModuleClassLoaders.put(rarName, cl);
         } catch (MalformedURLException ex) {
-            _logger.log(Level.SEVERE, "enterprise_util.connector_malformed_url", ex);
+            _logger.log(SEVERE, "enterprise_util.connector_malformed_url", ex);
         }
     }
 
@@ -150,7 +148,7 @@ public class ConnectorClassLoader extends ASURLClassLoader {
         if (classLoaderToRemove != null) {
             classLoaderChain.remove(classLoaderToRemove);
             rarModuleClassLoaders.remove(moduleName);
-            _logger.log(Level.WARNING, "enterprise_util.remove_connector", moduleName);
+            _logger.log(WARNING, "enterprise_util.remove_connector", moduleName);
         }
     }
 
@@ -199,7 +197,7 @@ public class ConnectorClassLoader extends ASURLClassLoader {
             }
         }
 
-        //Can't find requested class in parent and in our classloader chain
+        // Can't find requested class in parent and in our classloader chain
         throw new ClassNotFoundException(name);
     }
 
@@ -228,6 +226,7 @@ public class ConnectorClassLoader extends ASURLClassLoader {
                 strBuf.append(eclClasspath);
             }
         }
+
         return strBuf.toString();
     }
 }

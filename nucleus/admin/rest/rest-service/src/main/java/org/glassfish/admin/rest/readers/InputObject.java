@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -76,7 +77,7 @@ public abstract class InputObject extends ProviderUtil {
     public double getDouble(String key) throws InputException {
         Object o = getValue(key);
         try {
-            return o instanceof Number ? ((Number) o).doubleValue() : Double.valueOf((String) o).doubleValue();
+            return o instanceof Number ? ((Number) o).doubleValue() : Double.parseDouble((String) o);
         } catch (Exception e) {
             throw new InputException("InputObject[" + quote(key) + "] is not a number.");
         }
@@ -145,8 +146,9 @@ public abstract class InputObject extends ProviderUtil {
      */
     public boolean isNull(String key) {
         Object value = getValue(key);
-        if (value == null)
+        if (value == null) {
             return true;
+        }
         return false;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -60,7 +61,7 @@ public abstract class AdminCacheTstBase {
         }
         final File f = new File(dir, "qeen.junit");
         try (FileOutputStream fos = new FileOutputStream(f)) {
-            fos.write("Another One Bites the Dust".getBytes());
+            fos.write("Another One Bites the Dust".getBytes(UTF_8));
         }
         if (!f.exists()) {
             fail("AdminCache tests: Can not do this test. Can not write to files in " + dir.getPath() + " directory.");

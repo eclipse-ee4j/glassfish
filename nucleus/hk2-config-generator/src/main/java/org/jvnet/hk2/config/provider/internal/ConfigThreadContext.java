@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,43 +17,36 @@
 
 package org.jvnet.hk2.config.provider.internal;
 
-import java.security.AccessControlContext;
-import java.security.AccessController;
-
 /**
  * @author jwells
  *
  */
 public class ConfigThreadContext {
-    private static final ThreadLocal<ConfigThreadContext> tlc = new ThreadLocal<>();
 
-    private AccessControlContext acc;
+    private static final ThreadLocal<ConfigThreadContext> threadLocalContext = new ThreadLocal<>();
 
     /**
-     * Performs a runnable action while managing the callers AccessControlContext in thread local storage
+     * Performs a runnable action
      */
     public static void captureACCandRun(Runnable runnable) {
-      ConfigThreadContext ts = tlc.get();
-      if (null != ts && null != ts.acc) {
+      ConfigThreadContext threadContext = threadLocalContext.get();
+      if (threadContext != null) {
         // caller's original context already set
         runnable.run();
         return;
       }
 
-      boolean created = (null == ts);
+      boolean created = (null == threadContext);
       if (created) {
-        ts = new ConfigThreadContext();
-        tlc.set(ts);
+        threadContext = new ConfigThreadContext();
+        threadLocalContext.set(threadContext);
       }
-
-      ts.acc = AccessController.getContext();
 
       try {
         runnable.run();
       } finally {
-        ts.acc = null;
         if (created) {
-          tlc.set(null);
+          threadLocalContext.set(null);
         }
       }
     }

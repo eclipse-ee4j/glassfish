@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +18,27 @@
 package com.sun.enterprise.resource;
 
 public class ResourceState {
+
+    /**
+     * Indicates that a resource has been enlisted in a transaction.
+     *
+     * @see jakarta.transaction.Transaction#enlistResource(XAResource)
+     */
     private boolean enlisted;
+
+    /**
+     * The busy state reflects the moment the resource is taken from the connection pool. It should be set to {@code true}
+     * once it is taken from the pool, and it should be set to {@code false} once it is returned to the pool.
+     * <p>
+     * Setting to {@code true} happens at the moment the resource is taken from the pool (getResourceFromPool).<br>
+     * Setting to {@code false} happens at the moment the connection is returned to the pool (resourceClosed).
+     */
     private boolean busy;
+
+    /**
+     * Timestamp represents the time of resource creation, or the time the resource usage was complete and is handed back to
+     * the pool. The timestamp value is used in the remove idle and invalid resources logic of the resource pool resizer.
+     */
     private long timestamp;
 
     public boolean isEnlisted() {
@@ -58,8 +77,17 @@ public class ResourceState {
         touchTimestamp();
     }
 
+    /**
+     * Resets all fields, representing the constructor call situation.
+     */
+    public void reset() {
+        touchTimestamp();
+        setBusy(false);
+        setEnlisted(false);
+    }
+
     @Override
     public String toString() {
-        return "Enlisted :" + enlisted + " Busy :" + busy;
+        return "<ResourceState enlisted=" + enlisted + ", busy=" + busy + "/>";
     }
 }

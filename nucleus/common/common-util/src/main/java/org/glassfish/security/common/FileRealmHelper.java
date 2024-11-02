@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.security.common;
 
-import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.BufferedReader;
@@ -25,8 +24,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,7 +33,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import static com.sun.enterprise.util.Utility.convertCharArrayToByteArray;
-import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
+
 
 /**
  * Helper class for implementing file password authentication.
@@ -189,12 +188,7 @@ public final class FileRealmHelper {
         boolean ok = false;
 
         try {
-            ok = SSHA.verify(
-                    user.getSalt(),
-                    user.getHash(),
-                    convertCharArrayToByteArray(
-                        password, defaultCharset().displayName()), user.getAlgo());
-
+            ok = SSHA.verify(user.getSalt(), user.getHash(), convertCharArrayToByteArray(password, UTF_8), user.getAlgo());
         } catch (Exception e) {
             return null;
         }
@@ -206,9 +200,9 @@ public final class FileRealmHelper {
         return user.getGroups();
     }
 
-    /*
-     * Test whether their is a user in the FileRealm that has a password that has been set, i.e., something other than the
-     * resetKey.
+    /**
+     * Test whether their is a user in the FileRealm that has a password that
+     * has been set, i.e., something other than the resetKey.
      */
     public boolean hasAuthenticatableUser() {
         for (User user : userTable.values()) {
@@ -220,12 +214,13 @@ public final class FileRealmHelper {
         return false;
     }
 
-    // ---------------------------------------------------------------------
-    // File realm maintenance methods for admin.
-
     /**
-     * Return false if any char of the string is not alphanumeric or space or other permitted character. For a username it
-     * will allow an @ symbol. To allow for the case of type <i>username@foo.com</i>. It will not allow the same symbol for
+     * Return false if any char of the string is not alphanumeric or space
+     * or other permitted character.
+     * For a username it will allow an @ symbol. To allow for the case of type
+     * <i>username@foo.com</i>. It will not allow the same symbol for a group name
+     * @param s the name to be validated
+     * @param userName true if the string is a username, false if it is
      * a group name
      *
      * @param String the name to be validated
@@ -338,7 +333,7 @@ public final class FileRealmHelper {
      * This is equivalent to calling validateGroupName on every element of the groupList.
      *
      * @param groupList Array of group names to validate.
-     * @throws IASSecurityException Thrown if the value is not valid.
+     * @throws IllegalArgumentException Thrown if the value is not valid.
      *
      *
      */
@@ -399,11 +394,13 @@ public final class FileRealmHelper {
      * Update data for an existing user. User must exist.
      *
      * @param name Current name of the user to update.
-     * @param newName New name to give this user. It can be the same as the original name. Otherwise it must be a new user
-     * name which does not already exist as a user.
-     * @param password Cleartext password for the user. If non-null the user password is changed to this value. If null, the
-     * original password is retained.
-     * @param groupList List of groups to which user belongs.
+     * @param newName New name to give this user. It can be the same as
+     *     the original name. Otherwise it must be a new user name which
+     *     does not already exist as a user.
+     * @param password Cleartext password for the user. If non-null the user
+     *     password is changed to this value. If null, the original password
+     *     is retained.
+     * @param groups List of groups to which user belongs.
      * @throws IllegalArgumentException If there are problems adding user.
      */
     public synchronized void updateUser(String name, String newName, char[] password, String[] groups) throws IllegalArgumentException {
@@ -469,33 +466,20 @@ public final class FileRealmHelper {
      *
      * @throws IOException if there is a failure
      */
-    public void persist() throws IOException {
-        synchronized (FileRealmHelper.class) {
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(keyfile);
-
-                for (Map.Entry<String, User> uval : userTable.entrySet()) {
-                    String algo = uval.getValue().getAlgo();
-                    String entry = encodeUser(uval.getKey(), uval.getValue(), algo);
-                    out.write(entry.getBytes());
-                }
-            } catch (IOException e) {
-                throw e;
-
-            } catch (Exception e) {
-                String msg = sm.getString("filerealm.badwrite", e.toString());
-                throw new IOException(msg);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
+    public synchronized void persist() throws IOException {
+        try (FileOutputStream out = new FileOutputStream(keyfile)) {
+            for (Map.Entry<String, User> uval : userTable.entrySet()) {
+                String algo = uval.getValue().getAlgo();
+                String entry = encodeUser(uval.getKey(), uval.getValue(), algo);
+                out.write(entry.getBytes(UTF_8));
             }
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            String msg = sm.getString("filerealm.badwrite", keyfile);
+            throw new IOException(msg, e);
         }
     }
-
-    // ---------------------------------------------------------------------
-    // Private methods.
 
     /**
      * Add group names to the groups table. It is assumed all entries are valid group names.
@@ -539,15 +523,10 @@ public final class FileRealmHelper {
 
     /**
      * Load keyfile from config and populate internal cache.
-     *
      */
     private void loadKeyFile() throws IOException {
-        BufferedReader input = null;
-
-        try {
-            input = new BufferedReader(new FileReader(keyfile));
+        try (BufferedReader input = new BufferedReader(new FileReader(keyfile, UTF_8));) {
             while (input.ready()) {
-
                 String line = input.readLine();
                 if (line != null && !line.startsWith(COMMENT) && line.indexOf(FIELD_SEP) >= 0) {
                     User ud = decodeUser(line, groupSizeMap);
@@ -555,14 +534,7 @@ public final class FileRealmHelper {
                 }
             }
         } catch (Exception e) {
-            throw new IOException(e.toString());
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (Exception ex) {
-                }
-            }
+            throw new IOException("Could not load key file " + keyfile, e);
         }
     }
 
@@ -702,17 +674,15 @@ public final class FileRealmHelper {
         assert (user != null);
         // Copy the password to another reference before storing it to the
         // instance field.
-        byte[] pwdBytes = null;
-
+        final byte[] pwdBytes;
         try {
-            pwdBytes = Utility.convertCharArrayToByteArray(pwd, Charset.defaultCharset().displayName());
-        } catch (Exception ex) {
+            pwdBytes = convertCharArrayToByteArray(pwd, UTF_8);
+        } catch(Exception ex) {
             throw new IllegalArgumentException(ex);
         }
 
-        SecureRandom rng = SharedSecureRandomImpl.get();
         byte[] salt = new byte[SALT_SIZE];
-        rng.nextBytes(salt);
+        SECURE_RANDOM.nextBytes(salt);
         user.setSalt(salt);
         String algo = user.getAlgo();
         if (algo == null) {

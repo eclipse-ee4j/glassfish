@@ -1,0 +1,1 @@
+Tests starting GlassFish Embedded with configuration options

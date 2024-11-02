@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.nio.charset.Charset;
 import java.util.function.Function;
 
 import org.hamcrest.Description;
@@ -30,16 +31,34 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
+ * Matchers for text files.
+ *
  * @author David Matejcek
  */
 public class TextFileMatchers {
 
-    public static Matcher<File> hasLineCount(final long expected) {
-        return hasLineCount(equalTo(expected));
+    /**
+     * Creates a matcher for matching file's line count.
+     * File encoding.hsould be known or expected at least.
+     *
+     * @param expected expected number of lines.
+     * @param charset the file encoding
+     * @return generated matcher.
+     */
+    public static Matcher<File> hasLineCount(final long expected, final Charset charset) {
+        return hasLineCount(equalTo(expected), charset);
     }
 
 
-    public static Matcher<File> hasLineCount(final Matcher<Long> expected) {
+    /**
+     * Creates a matcher for matching file's line count.
+     * File encoding.hsould be known or expected at least.
+     *
+     * @param expected {@link Matcher} for expected number of lines.
+     * @param charset the file encoding
+     * @return generated matcher.
+     */
+    public static Matcher<File> hasLineCount(final Matcher<Long> expected, final Charset charset) {
         return new TypeSafeDiagnosingMatcher<>() {
 
             @Override
@@ -49,7 +68,7 @@ public class TextFileMatchers {
 
             @Override
             protected boolean matchesSafely(File item, Description mismatchDescription) {
-                try (LineNumberReader reader = new LineNumberReader(new FileReader(item))) {
+                try (LineNumberReader reader = new LineNumberReader(new FileReader(item, charset))) {
                     long lineCount = reader.lines().count();
                     boolean result = expected.matches(lineCount);
                     if (!result) {
@@ -64,6 +83,15 @@ public class TextFileMatchers {
     }
 
 
+    /**
+     * Creates a matcher for matching some file feature.
+     *
+     * @param fileGetter Converter of {@link File} instance to <code>T</code> type.
+     * @param expected {@link Matcher} for <code>T</code> instance obtained from
+     *            the <code>fileGetter</code>.
+     * @param <T> Type of the file's feature
+     * @return generated matcher.
+     */
     public static <T> Matcher<File> getterMatches(final Function<File, T> fileGetter, final Matcher<T> expected) {
         return new TypeSafeDiagnosingMatcher<>() {
 
@@ -83,7 +111,6 @@ public class TextFileMatchers {
                 }
                 return result;
             }
-
         };
     }
 }

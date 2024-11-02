@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,12 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +46,8 @@ import org.glassfish.api.ActionReport.MessagePart;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * CLI Utility class
@@ -66,7 +67,7 @@ public class CLIUtil {
      */
     public static Map<String, String> readPasswordFileOptions(final String passwordFileName, boolean withPrefix) throws CommandException {
 
-        Map<String, String> passwordOptions = new HashMap<String, String>();
+        Map<String, String> passwordOptions = new HashMap<>();
         boolean readStdin = passwordFileName.equals("-");
         InputStream is = null;
         try {
@@ -86,8 +87,9 @@ public class CLIUtil {
             throw new CommandException(e);
         } finally {
             try {
-                if (!readStdin && is != null)
+                if (!readStdin && is != null) {
                     is.close();
+                }
             } catch (final Exception ignore) {
             }
         }
@@ -103,19 +105,23 @@ public class CLIUtil {
             // remove leading "*" and ending "*" chars
             int beginIndex = 0;
             int endIndex = commandName.length();
-            if (commandName.startsWith("*"))
+            if (commandName.startsWith("*")) {
                 beginIndex = 1;
-            if (commandName.endsWith("*"))
+            }
+            if (commandName.endsWith("*")) {
                 endIndex = commandName.length() - 1;
+            }
             final String trimmedCommandName = commandName.substring(beginIndex, endIndex);
 
             // if pattern doesn't start with "_", remove hidden commands
             if (!trimmedCommandName.startsWith("_")) {
-                List<String> ncl = new ArrayList<String>();
-                for (String cmd : Arrays.asList(commands))
-                    if (!cmd.startsWith("_"))
+                List<String> ncl = new ArrayList<>();
+                for (String cmd : commands) {
+                    if (!cmd.startsWith("_")) {
                         ncl.add(cmd);
-                commands = ncl.toArray(new String[ncl.size()]);
+                    }
+                }
+                commands = ncl.toArray(String[]::new);
             }
 
             // sort commands in alphabetical order
@@ -130,8 +136,9 @@ public class CLIUtil {
             PrintWriter pw = new PrintWriter(sw);
             if (matchedCommands.length > 0 && matchedCommands.length < MAX_COMMANDS_TO_DISPLAY) {
                 pw.println(msg != null ? msg : strings.get("ClosestMatchedCommands"));
-                for (String eachCommand : matchedCommands)
+                for (String eachCommand : matchedCommands) {
                     pw.println("    " + eachCommand);
+                }
             } else {
                 // find the closest distance
                 final String nearestString = StringEditDistance.findNearest(trimmedCommandName, commands);
@@ -139,8 +146,9 @@ public class CLIUtil {
                 if (StringEditDistance.editDistance(trimmedCommandName, nearestString) < 5) {
                     pw.println(msg != null ? msg : strings.get("ClosestMatchedCommands"));
                     pw.println("    " + nearestString);
-                } else
+                } else {
                     throw new InvalidCommandException(commandName);
+                }
             }
             pw.flush();
             logger.severe(sw.toString());
@@ -153,12 +161,13 @@ public class CLIUtil {
      * Return all the commands that include pattern (just a literal string, not really a pattern) as a substring.
      */
     private static String[] getMatchedCommands(final String pattern, final String[] commands) {
-        List<String> matchedCommands = new ArrayList<String>();
-        for (int i = 0; i < commands.length; i++) {
-            if (commands[i].indexOf(pattern) >= 0)
-                matchedCommands.add(commands[i]);
+        List<String> matchedCommands = new ArrayList<>();
+        for (String command : commands) {
+            if (command.indexOf(pattern) >= 0) {
+                matchedCommands.add(command);
+            }
         }
-        return matchedCommands.toArray(new String[matchedCommands.size()]);
+        return matchedCommands.toArray(String[]::new);
     }
 
     /**
@@ -216,14 +225,14 @@ public class CLIUtil {
         RemoteCLICommand cmd = new RemoteCLICommand("list-commands", po, env);
         ActionReport report = cmd.executeAndReturnActionReport("list-commands");
         List<MessagePart> children = report.getTopMessagePart().getChildren();
-        List<String> rcmds = new ArrayList<String>(children.size());
-        for (ActionReport.MessagePart msg : children) {
+        List<String> rcmds = new ArrayList<>(children.size());
+        for (MessagePart msg : children) {
             if (!localnames.contains(msg.getMessage())) {
                 rcmds.add(msg.getMessage());
             }
         }
         Collections.sort(rcmds);
-        String[] remoteCommands = rcmds.toArray(new String[rcmds.size()]);
+        String[] remoteCommands = rcmds.toArray(String[]::new);
         Arrays.sort(remoteCommands);
         return remoteCommands;
     }
@@ -234,17 +243,13 @@ public class CLIUtil {
     public static void writeCommandToDebugLog(String cname, Environment env, String[] args, int exit) {
         File log = env.getDebugLogfile();
 
-        if (log == null)
+        if (log == null) {
             return;
+        }
 
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(log, true));
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            Date date = new Date();
-            out.write(dateFormat.format(date));
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(log, UTF_8, true))) {
+            out.write(Instant.now().toString());
             out.write(" EXIT: " + exit);
-
             out.write(" " + cname + " ");
 
             if (args != null) {
@@ -255,35 +260,25 @@ public class CLIUtil {
                     // file so let's truncate them.
                     String arg = args[i];
 
-                    if (i > 0 && arg.length() > maxPath && "--passwordfile".equals(args[i - 1]))
+                    if (i > 0 && arg.length() > maxPath && "--passwordfile".equals(args[i - 1])) {
                         arg = truncate(arg, maxPath);
+                    }
 
                     out.write(arg + " ");
                 }
             }
+            out.write("\n");
         } catch (IOException e) {
-            // It is just a debug file.
-        } finally {
-            if (out != null) {
-                try {
-                    out.write("\n");
-                } catch (Exception e) {
-                    // ignore
-                }
-                try {
-                    out.close();
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
+            throw new IllegalStateException("Could not write to the asadmin log file " + log, e);
         }
     }
 
     private static String truncate(String arg, int max) {
         int len = arg.length();
 
-        if (len < 20)
+        if (len < 20) {
             return arg;
+        }
 
         return "....." + arg.substring(len - max);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.Console;
+import java.util.logging.Level;
 
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
@@ -40,8 +42,8 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 public class LoginCommand extends CLICommand {
 
-    private String adminUser = null;
-    private char[] adminPassword = null;
+    private String adminUser;
+    private char[] adminPassword;
 
     private static final LocalStringsImpl strings = new LocalStringsImpl(LoginCommand.class);
 
@@ -61,26 +63,30 @@ public class LoginCommand extends CLICommand {
         boolean tryAgain = false;
         do {
             switch (DASUtils.pingDASWithAuth(programOpts, env)) {
-            case NONE:
-                tryAgain = false;
-                break;
-            case AUTHENTICATION:
-                if (tryAgain) // already tried once
-                    throw new CommandException(strings.get("InvalidCredentials", programOpts.getUser()));
-                tryAgain = true;
+                case NONE:
+                    tryAgain = false;
+                    break;
+                case AUTHENTICATION:
+                    if (tryAgain) { // already tried once
+                        throw new CommandException(strings.get("InvalidCredentials", programOpts.getUser()));
+                    }
+                    tryAgain = true;
 
-                // maybe we need a password?
-                programOpts.setInteractive(interactive);
-                adminPassword = getAdminPassword();
-                programOpts.setPassword(adminPassword, ProgramOptions.PasswordLocation.USER);
-                programOpts.setInteractive(false);
-                break;
-            case CONNECTION:
-                throw new CommandException(strings.get("ConnectException", programOpts.getHost(), "" + programOpts.getPort()));
-            case IO:
-                throw new CommandException(strings.get("IOException", programOpts.getHost(), "" + programOpts.getPort()));
-            case UNKNOWN:
-                throw new CommandException(strings.get("UnknownException", programOpts.getHost(), "" + programOpts.getPort()));
+                    // maybe we need a password?
+                    programOpts.setInteractive(interactive);
+                    adminPassword = getAdminPassword();
+                    programOpts.setPassword(adminPassword, ProgramOptions.PasswordLocation.USER);
+                    programOpts.setInteractive(false);
+                    break;
+                case CONNECTION:
+                    throw new CommandException(
+                        strings.get("ConnectException", programOpts.getHost(), "" + programOpts.getPort()));
+                case IO:
+                    throw new CommandException(
+                        strings.get("IOException", programOpts.getHost(), "" + programOpts.getPort()));
+                case UNKNOWN:
+                    throw new CommandException(
+                        strings.get("UnknownException", programOpts.getHost(), "" + programOpts.getPort()));
             }
         } while (tryAgain);
 
@@ -97,15 +103,17 @@ public class LoginCommand extends CLICommand {
         Console cons = System.console();
         String user = null;
         String defuser = programOpts.getUser();
-        if (defuser == null)
+        if (defuser == null) {
             defuser = SystemPropertyConstants.DEFAULT_ADMIN_USER;
+        }
         if (cons != null) {
             cons.printf("%s", strings.get("AdminUserPrompt", defuser));
             String val = cons.readLine();
-            if (val != null && val.length() > 0)
+            if (val != null && val.length() > 0) {
                 user = val;
-            else
+            } else {
                 user = defuser;
+            }
         }
         return user;
     }
@@ -127,8 +135,9 @@ public class LoginCommand extends CLICommand {
      * ".asadminpass" in user's home directory.
      */
     private void saveLogin(String host, final int port, final String user, final char[] passwd) {
-        if (!ok(host))
+        if (!ok(host)) {
             host = "localhost";
+        }
         // to avoid putting commas in the port number (e.g., "4,848")...
         String sport = Integer.toString(port);
         try {
@@ -145,7 +154,7 @@ public class LoginCommand extends CLICommand {
             logger.info(strings.get("LoginInfoStored", user, login.getHost(), sport, store.getName()));
         } catch (final Exception e) {
             logger.warning(strings.get("LoginInfoNotStored", host, sport));
-            printExceptionStackTrace(e);
+            logger.log(Level.FINER, "Could not save login!", e);
         }
     }
 }

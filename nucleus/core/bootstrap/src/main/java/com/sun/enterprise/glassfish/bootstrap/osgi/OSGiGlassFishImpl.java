@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.GlassFishDecorator;
-
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.osgi.framework.BundleContext;
@@ -32,10 +30,10 @@ import org.osgi.service.startlevel.StartLevel;
  * @author sanjeeb.sahoo@oracle.com
  */
 class OSGiGlassFishImpl extends GlassFishDecorator {
-    private int finalStartLevel;
+    private final int finalStartLevel;
     private final BundleContext bundleContext;
 
-    public OSGiGlassFishImpl(GlassFish decoratedGf, BundleContext bundleContext, int finalStartLevel)
+    OSGiGlassFishImpl(GlassFish decoratedGf, BundleContext bundleContext, int finalStartLevel)
             throws GlassFishException {
         super(decoratedGf);
         this.bundleContext = bundleContext;

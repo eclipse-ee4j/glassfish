@@ -130,6 +130,11 @@
                                             <zipfileset src="@{destfile}" excludes="@{includes}"/>
                                         </zip>
                                         <move file="@{destfile}.tmp" tofile="@{destfile}" />
+                                        
+                                        <loadfile property="message" srcFile="@{basedir}/@{includes}"/>
+                                        
+                                        <echo>${message}</echo>
+                                        
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
@@ -143,11 +148,6 @@
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
                                 
-                                <!-- To support Expression Language 6  -->
-                                <jarupdate
-                                    basedir="${patches}/jakarta.servlet.jsp.jstl-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.servlet.jsp.jstl-api.jar"
-                                />
                                 
                                 <!-- To support Expression Language 6 and Expressly 6-->
                                 <jarupdate
@@ -162,6 +162,25 @@
                                  <jarupdate
                                     basedir="${patches}/weld-osgi-bundle" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/weld-osgi-bundle.jar"
+                                />
+                                
+                                <!-- To support glassfish.pfl 5.0.0 -->
+                                
+                                <!-- Patch for gmbal 4.0.3 -->
+                                
+                                <jarupdate 
+                                    basedir="${patches}/gmbal" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/gmbal.jar"
+                                />
+                                
+                                <!-- Patch for glassfish-corba 4.2.5 -->
+                                <jarupdate
+                                    basedir="${patches}/glassfish-corba-internal-api" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/glassfish-corba-internal-api.jar"
+                                />
+                                <jarupdate
+                                    basedir="${patches}/glassfish-corba-orb" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/glassfish-corba-orb.jar"
                                 />
                             </target>
                         </configuration>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,9 +21,6 @@ import jakarta.validation.MessageInterpolator;
 import jakarta.validation.Payload;
 import jakarta.validation.metadata.ConstraintDescriptor;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +31,9 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Collections.enumeration;
+import static java.util.Collections.list;
 
 /**
  * Custom MessageInterpolatorImpl for HK2
@@ -249,19 +249,9 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
             // Load the LogStrings.properties for the argument Locale, from the ClassLoader
             // of the payload.
             if (!payload.isEmpty()) {
-                final Class payloadClass = payload.iterator().next();
+                final Class<?> payloadClass = payload.iterator().next();
                 String baseName = payloadClass.getPackage().getName() + ".LocalStrings";
-                ClassLoader cl;
-                if (System.getSecurityManager()!=null) {
-                    cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                        @Override
-                        public ClassLoader run() {
-                            return payloadClass.getClassLoader();
-                        }
-                    });
-                } else {
-                    cl = payloadClass.getClassLoader();
-                }
+                ClassLoader cl = payloadClass.getClassLoader();
 
                 try {
                     contextBundle = ResourceBundle.getBundle(baseName, locale, cl);
@@ -270,14 +260,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
                 }
             }
             try {
-                ClassLoader cl = System.getSecurityManager() == null
-                    ? Thread.currentThread().getContextClassLoader()
-                    : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                        @Override
-                        public ClassLoader run() {
-                            return Thread.currentThread().getContextClassLoader();
-                        }
-                    });
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 userBundle = ResourceBundle.getBundle(USER_VALIDATION_MESSAGES, locale, cl);
             } catch (MissingResourceException mre) {
                 userBundle = null;
@@ -293,6 +276,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
             if (contextBundle != null) {
                 return contextBundle.getObject(key);
             }
+
             return null;
         }
 
@@ -300,12 +284,13 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
         public Enumeration<String> getKeys() {
             Set<String> keys = new TreeSet<>();
             if (contextBundle != null) {
-                keys.addAll(Collections.list(contextBundle.getKeys()));
+                keys.addAll(list(contextBundle.getKeys()));
             }
             if (userBundle != null) {
-                keys.addAll(Collections.list(userBundle.getKeys()));
+                keys.addAll(list(userBundle.getKeys()));
             }
-            return Collections.enumeration(keys);
+
+            return enumeration(keys);
         }
     }
 

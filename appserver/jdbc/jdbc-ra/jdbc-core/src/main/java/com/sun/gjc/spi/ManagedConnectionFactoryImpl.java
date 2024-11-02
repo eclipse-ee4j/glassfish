@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import com.sun.gjc.monitoring.JdbcStatsProvider;
 import com.sun.gjc.util.SQLTraceDelegator;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConfigProperty;
 import jakarta.resource.spi.ConnectionManager;
@@ -45,7 +46,6 @@ import java.io.ObjectOutput;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,6 +65,7 @@ import javax.security.auth.Subject;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.jdbc.ConnectionValidation;
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.objects.TxIsolationLevel;
@@ -100,6 +101,9 @@ public abstract class ManagedConnectionFactoryImpl
 
     private static Logger _logger = LogDomains.getLogger(ManagedConnectionFactoryImpl.class, LogDomains.RSR_LOGGER);
     protected static final StringManager localStrings = StringManager.getManager(DataSourceObjectBuilder.class);
+
+    @Inject
+    protected InvocationManager invocationManager;
 
     protected DataSourceSpec spec = new DataSourceSpec();
     protected transient DataSourceObjectBuilder dataSourceObjectBuilder;
@@ -318,7 +322,7 @@ public abstract class ManagedConnectionFactoryImpl
 
         boolean connectionValidationRequired = (conVal == null) ?
                 false :
-                Boolean.valueOf(conVal.toLowerCase(Locale.getDefault()));
+                Boolean.parseBoolean(conVal.toLowerCase(Locale.getDefault()));
         if (!connectionValidationRequired) {
             return;
         }
@@ -524,7 +528,7 @@ public abstract class ManagedConnectionFactoryImpl
         if (transactionIsolation != null && !transactionIsolation.isEmpty()) {
             String guaranteeIsolationLevel = spec.getDetail(GUARANTEEISOLATIONLEVEL);
             if (guaranteeIsolationLevel != null && !guaranteeIsolationLevel.isEmpty()) {
-                boolean guarantee = Boolean.valueOf(guaranteeIsolationLevel);
+                boolean guarantee = Boolean.parseBoolean(guaranteeIsolationLevel);
                 if (guarantee) {
                     int tranIsolationInt = getTransactionIsolationInt(transactionIsolation);
                     try {
@@ -553,7 +557,7 @@ public abstract class ManagedConnectionFactoryImpl
         String delimiter = ",";
 
         if (sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
-            sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), getApplicationName(), getModuleName());
+            sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), invocationManager);
             StringTokenizer st = new StringTokenizer(sqlTraceListeners, delimiter);
 
             while (st.hasMoreTokens()) {
@@ -567,8 +571,8 @@ public abstract class ManagedConnectionFactoryImpl
                     // Load the listener class
                     try {
                         listenerClass = Thread.currentThread().getContextClassLoader().loadClass(sqlTraceListener);
-                    } catch (ClassNotFoundException ex) {
-                        _logger.log(SEVERE, "jdbc.sql_trace_listener_cnfe", sqlTraceListener);
+                    } catch (ClassNotFoundException e) {
+                        _logger.log(SEVERE, "Failed to load class: " + sqlTraceListener, e);
                     }
                     Class intf[] = listenerClass.getInterfaces();
                     for (Class interfaceName : intf) {
@@ -585,16 +589,8 @@ public abstract class ManagedConnectionFactoryImpl
                                         listener = (SQLTraceListener) constructor.newInstance(initargs);
                                     }
                                 }
-                            } catch (InstantiationException ex) {
-                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
-                            } catch (IllegalAccessException ex) {
-                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
-                            } catch (IllegalArgumentException ex) {
-                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
-                            } catch (InvocationTargetException ex) {
-                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
-                            } catch (SecurityException ex) {
-                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
+                            } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException ex) {
+                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex);
                             }
                             sqlTraceDelegator.registerSQLTraceListener(listener);
                         }
@@ -1333,7 +1329,7 @@ public abstract class ManagedConnectionFactoryImpl
         boolean poolProperty = false;
         String statementWrappingString = getStatementWrapping();
         if (statementWrappingString != null) {
-            poolProperty = Boolean.valueOf(statementWrappingString);
+            poolProperty = Boolean.parseBoolean(statementWrappingString);
         }
 
         if (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_ON
@@ -1431,7 +1427,7 @@ public abstract class ManagedConnectionFactoryImpl
         String stmtLeakReclaim = getStatementLeakReclaim();
         if (stmtLeakTimeout != null) {
             statementLeakTimeout = Integer.parseInt(stmtLeakTimeout) * 1000L;
-            statementLeakReclaim = Boolean.valueOf(stmtLeakReclaim);
+            statementLeakReclaim = Boolean.parseBoolean(stmtLeakReclaim);
             if (_logger.isLoggable(FINE)) {
                 _logger.log(FINE, "StatementLeakTimeout in seconds: " + statementLeakTimeout
                         + " & StatementLeakReclaim: " + statementLeakReclaim + " for pool : " + getPoolInfo());

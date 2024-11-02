@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,7 @@ import com.sun.enterprise.module.bootstrap.ModuleStartup;
 
 import java.util.Properties;
 
+import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
@@ -30,31 +32,43 @@ import org.glassfish.hk2.extras.ExtrasUtilities;
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-
 public class GlassFishImpl implements GlassFish {
 
+    private static final String CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
+
     private ModuleStartup gfKernel;
-    private ServiceLocator habitat;
-    volatile Status status = Status.INIT;
+    private ServiceLocator serviceLocator;
+    private volatile Status status;
 
-    public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator habitat, Properties gfProps) throws GlassFishException {
+    public GlassFishImpl(ModuleStartup gfKernel, ServiceLocator serviceLocator, Properties gfProps)
+        throws GlassFishException {
         this.gfKernel = gfKernel;
-        this.habitat = habitat;
-        /*
-            We enable a temporary distribution service until the HK2 Extras package is fixed so that we can enable
-            the topic distribution service provided by HK2.
-        */
-        ExtrasUtilities.enableTopicDistribution(habitat);
+        this.serviceLocator = serviceLocator;
+        this.status = Status.INIT;
 
-        configure(gfProps);
-    }
+        // We enable a temporary distribution service until the HK2 Extras package is fixed so that
+        // we can enable the topic distribution service provided by HK2.
+        ExtrasUtilities.enableTopicDistribution(serviceLocator);
 
-    private void configure(Properties gfProps) throws GlassFishException {
         // If there are custom configurations like http.port, https.port, jmx.port then configure them.
-        Configurator configurator = new ConfiguratorImpl(habitat);
-        configurator.configure(gfProps);
+        CommandRunner commandRunner = null;
+        for (String key : gfProps.stringPropertyNames()) {
+            if (!key.startsWith(CONFIG_PROP_PREFIX)) {
+                continue;
+            }
+            if (commandRunner == null) {
+                // only create the CommandRunner if needed
+                commandRunner = serviceLocator.getService(CommandRunner.class);
+            }
+            CommandResult result = commandRunner.run("set",
+                key.substring(CONFIG_PROP_PREFIX.length()) + "=" + gfProps.getProperty(key));
+            if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
+                throw new GlassFishException(result.getOutput(), result.getFailureCause());
+            }
+        }
     }
 
+    @Override
     public synchronized void start() throws GlassFishException {
         if (status == Status.STARTED || status == Status.STARTING || status == Status.DISPOSED) {
             throw new IllegalStateException("Already in " + status + " state.");
@@ -64,6 +78,7 @@ public class GlassFishImpl implements GlassFish {
         status = Status.STARTED;
     }
 
+    @Override
     public synchronized void stop() throws GlassFishException {
         if (status == Status.STOPPED || status == Status.STOPPING || status == Status.DISPOSED) {
             throw new IllegalStateException("Already in " + status + " state.");
@@ -73,6 +88,7 @@ public class GlassFishImpl implements GlassFish {
         status = Status.STOPPED;
     }
 
+    @Override
     public synchronized void dispose() throws GlassFishException {
         if (status == Status.DISPOSED) {
             throw new IllegalStateException("Already disposed.");
@@ -85,31 +101,36 @@ public class GlassFishImpl implements GlassFish {
             }
         }
         this.gfKernel = null;
-        this.habitat = null;
+        this.serviceLocator = null;
         this.status = Status.DISPOSED;
     }
 
+    @Override
     public Status getStatus() {
         return status;
     }
 
+    @Override
     public <T> T getService(Class<T> serviceType) throws GlassFishException {
         return getService(serviceType, null);
     }
 
+    @Override
     public synchronized <T> T getService(Class<T> serviceType, String serviceName) throws GlassFishException {
         if (status != Status.STARTED) {
             throw new IllegalArgumentException("Server is not started yet. It is in " + status + "state");
         }
 
-        return serviceName != null ? habitat.<T>getService(serviceType, serviceName) :
-                habitat.<T>getService(serviceType);
+        return serviceName == null ? serviceLocator.getService(serviceType)
+            : serviceLocator.getService(serviceType, serviceName);
     }
 
+    @Override
     public Deployer getDeployer() throws GlassFishException {
         return getService(Deployer.class);
     }
 
+    @Override
     public CommandRunner getCommandRunner() throws GlassFishException {
         return getService(CommandRunner.class);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,10 +28,8 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.Provider;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Locale;
@@ -41,6 +40,8 @@ import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.composite.RestModel;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -64,16 +65,8 @@ public class RestModelReader<T extends RestModel> implements MessageBodyReader<T
     public T readFrom(Class<T> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, String> mm,
             InputStream entityStream) throws WebApplicationException, IOException {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(entityStream));
-            StringBuilder sb = new StringBuilder();
-            String line = in.readLine();
-            while (line != null) {
-                sb.append(line);
-                line = in.readLine();
-            }
-
             final Locale locale = CompositeUtil.instance().getLocale(mm);
-            JSONObject o = new JSONObject(sb.toString());
+            JSONObject o = new JSONObject(new String(entityStream.readAllBytes(), UTF_8));
             T model = CompositeUtil.instance().unmarshallClass(locale, type, o);
             Set<ConstraintViolation<T>> cv = CompositeUtil.instance().validateRestModel(locale, model);
             if (!cv.isEmpty()) {
@@ -81,7 +74,7 @@ public class RestModelReader<T extends RestModel> implements MessageBodyReader<T
                         .entity(CompositeUtil.instance().getValidationFailureMessages(locale, cv, model)).build();
                 throw new WebApplicationException(response);
             }
-            return (T) model;
+            return model;
         } catch (JSONException ex) {
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getLocalizedMessage()).build());
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +44,7 @@ import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -257,49 +258,50 @@ public class FileLockTest {
         }
     }
 
+
     @Test
     public void lockAndReadTest() throws Exception {
-         File f = File.createTempFile("common-util-FileLockTest", "tmp");
-         try {
-             // Now let's try to write the file.
-             try (FileWriter fw = new FileWriter(f)) {
-                 fw.append("FileLockTest reading passed !");
-             }
+        File f = File.createTempFile("common-util-FileLockTest", "tmp");
+        try {
+            // Now let's try to write the file.
+            try (FileWriter fw = new FileWriter(f, UTF_8)) {
+                fw.append("FileLockTest reading passed !");
+            }
 
-             final ManagedFile managed = new ManagedFile(f, 1000, 1000);
-             Lock fl = managed.accessRead();
-             try (FileReader fr = new FileReader(f)) {
-                 char[] chars = new char[1024];
-                 fr.read(chars);
-             }
+            final ManagedFile managed = new ManagedFile(f, 1000, 1000);
+            Lock fl = managed.accessRead();
+            try (FileReader fr = new FileReader(f, UTF_8)) {
+                char[] chars = new char[1024];
+                fr.read(chars);
+            }
 
-             fl.unlock();
-         } finally {
-             f.delete();
-         }
-     }
+            fl.unlock();
+        } finally {
+            f.delete();
+        }
+    }
 
 
-     @Test
-     @DisabledOnOs(OS.WINDOWS)
-     public void lockForReadAndWriteTest_Unix() throws Exception {
-         final File file = File.createTempFile("common-util-FileLockTest", "tmp");
-         final Path filePath = file.toPath();
-         try {
-             // Now let's try to write the file.
-             final String message = "lockForReadAndWriteTest passed!";
-             Files.writeString(filePath, message);
-             assertEquals(message, Files.readString(filePath));
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    public void lockForReadAndWriteTest_Unix() throws Exception {
+        final File file = File.createTempFile("common-util-FileLockTest", "tmp");
+        final Path filePath = file.toPath();
+        try {
+            // Now let's try to write the file.
+            final String message = "lockForReadAndWriteTest passed!";
+            Files.writeString(filePath, message);
+            assertEquals(message, Files.readString(filePath));
 
-             final ManagedFile managed = new ManagedFile(file, 1000, 1000);
-             final Lock fl = managed.accessRead();
+            final ManagedFile managed = new ManagedFile(file, 1000, 1000);
+            final Lock fl = managed.accessRead();
 
-             final String message2 = "\nlockForReadAndWriteTest passed!";
-             Files.writeString(filePath, message2, StandardOpenOption.APPEND);
-             fl.unlock();
+            final String message2 = "\nlockForReadAndWriteTest passed!";
+            Files.writeString(filePath, message2, StandardOpenOption.APPEND);
+            fl.unlock();
 
-             assertThat(Files.readString(filePath), equalTo(message + message2));
-         } finally {
+            assertThat(Files.readString(filePath), equalTo(message + message2));
+        } finally {
             file.delete();
         }
     }

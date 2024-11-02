@@ -27,13 +27,10 @@ import jakarta.inject.Singleton;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Permission;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.UnrecoverableKeyException;
@@ -45,7 +42,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.PropertyPermission;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -280,10 +276,6 @@ public class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        if (processEnvironment.getProcessType().isStandaloneServer()) {
-            checkPermission(KEYSTORE_PASS_PROP);
-        }
-
         Key key = keyStores.get(keystoreIndex).getKey(alias, keyStorePasswords.get(keystoreIndex));
         if (key instanceof PrivateKey) {
             return (PrivateKey) key;
@@ -297,26 +289,6 @@ public class SecuritySupport {
      */
     public String[] getTokenNames() {
         return tokenNames.toArray(new String[tokenNames.size()]);
-    }
-
-    /**
-     * Check permission for the given key.
-     *
-     * @param key
-     */
-    private void checkPermission(String key) {
-        try {
-            // Checking a random permission to check if it is server.
-            Permission perm = new RuntimePermission("SSLPassword");
-            AccessController.checkPermission(perm);
-        } catch (AccessControlException e) {
-            String message = e.getMessage();
-            Permission perm = new PropertyPermission(key, "read");
-            if (message != null) {
-                message = message.replace(e.getPermission().toString(), perm.toString());
-            }
-            throw new AccessControlException(message, perm);
-        }
     }
 
     private int getTokenIndex(String token) {

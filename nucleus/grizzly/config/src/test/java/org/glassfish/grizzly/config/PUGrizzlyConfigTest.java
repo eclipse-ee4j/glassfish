@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,7 +66,7 @@ public class PUGrizzlyConfigTest {
     }
 
     @Test
-    public void puHttpHttpsSamePortConfig() throws IOException, InstantiationException {
+    public void puHttpHttpsSamePortConfig() throws Exception {
         GrizzlyConfig grizzlyConfig = null;
         try {
             grizzlyConfig = new GrizzlyConfig("grizzly-config-pu-http-https-same-port.xml");
@@ -79,9 +80,6 @@ public class PUGrizzlyConfigTest {
             HttpsURLConnection.setDefaultSSLSocketFactory(helper.getSSLSocketFactory());
             final String httpContent2 = helper.getContent(new URL("https://localhost:38082").openConnection());
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent2);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdownNetwork();
@@ -110,14 +108,14 @@ public class PUGrizzlyConfigTest {
 
     private String getXProtocolContent(String host, int port) throws IOException {
         try (Socket s = new Socket(host, port); OutputStream os = s.getOutputStream();) {
-            os.write("X-protocol".getBytes());
+            os.write("X-protocol".getBytes(UTF_8));
             os.flush();
             try (InputStream is = s.getInputStream(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 int b;
                 while ((b = is.read()) != -1) {
                     baos.write(b);
                 }
-                return new String(baos.toByteArray());
+                return new String(baos.toByteArray(), UTF_8);
             }
         }
     }

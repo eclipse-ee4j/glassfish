@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,13 +32,14 @@ import jakarta.inject.Scope;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.annotation.Annotation;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,6 +71,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.UnsatisfiedDependencyException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Base class for a CLI command. An instance of a subclass of this class is created using the getCommand method with the
@@ -106,7 +109,7 @@ public abstract class CLICommand implements PostConstruct {
     // operates on its arguments, so we can share a single instance.
     private static final InjectionManager injectionMgr = new InjectionManager();
 
-    private static String commandScope = null;
+    private static String commandScope;
 
     // tokens that are substituted in manual pages
     // the tokens are delimited with {}
@@ -214,9 +217,8 @@ public abstract class CLICommand implements PostConstruct {
     private static CLICommand getRemoteCommand(String name, ProgramOptions po, Environment env) throws CommandException {
         if (useRest()) {
             return new RemoteCLICommand(name, po, env);
-        } else {
-            return new RemoteCommand(name, po, env);
         }
+        return new RemoteCommand(name, po, env);
     }
 
     /**
@@ -262,6 +264,7 @@ public abstract class CLICommand implements PostConstruct {
      */
     public int execute(String... argv) throws CommandException {
         this.argv = argv;
+        checkSanity();
         initializePasswords();
         logger.finer("Prepare");
         prepare();
@@ -298,7 +301,7 @@ public abstract class CLICommand implements PostConstruct {
         return name;
     }
 
-    /*
+    /**
      * Return the command scope for this command.  The command scope is
      * a name space in which commands are defined. Command clients can specify a scope
      * to use in looking up a command. Currently this is only used for remote
@@ -308,7 +311,7 @@ public abstract class CLICommand implements PostConstruct {
         return commandScope;
     }
 
-    /*
+    /**
      * Set the command scope for this command.
      */
     public static void setCommandScope(String ctx) {
@@ -788,6 +791,19 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
+     * Does some basic checks of the current environment to verify that the command can work on the system.
+     * Can produce warnings, errors or throw exceptions.
+     */
+    protected void checkSanity() {
+        try {
+            InetAddress.getLocalHost();
+        } catch (UnknownHostException uhe) {
+            logger.log(Level.WARNING,
+                "Bad OS network configuration. DNS can not resolve the hostname: \n{0}", uhe.toString());
+        }
+    }
+
+    /**
      * Check if the current request is a help request, either because --help was specified as a program option or a command
      * option. If so, get the man page using the getManPage method, copy the content to System.out, and return true.
      * Otherwise return false. Subclasses may override this method to perform a different check or to use a different method
@@ -1122,16 +1138,17 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
-     * Display the given prompt and read a password without echoing it. Returns null if no console available.
+     * Display the given prompt and read a password without echoing it.
+     *
+     * @return null if no console available, read password otherwise.
      */
     protected char[] readPassword(String prompt) {
-        char[] pc = null;
+        char[] password = null;
         Console cons = System.console();
         if (cons != null) {
-            pc = cons.readPassword("%s", prompt);
-            // yes, yes, yes, it would be safer to not keep it in a String
+            password = cons.readPassword("%s", prompt);
         }
-        return pc;
+        return password;
     }
 
     /**
@@ -1229,29 +1246,6 @@ public abstract class CLICommand implements PostConstruct {
         // it is a supported command; do nothing
     }
 
-    /**
-     * Prints the exception message with level as FINER.
-     *
-     * @param e the exception object to print
-     */
-    protected void printExceptionStackTrace(java.lang.Throwable e) {
-        if (logger.isLoggable(Level.FINER)) {
-            /*
-            java.lang.StackTraceElement[] ste = e.getStackTrace();
-            for (int ii = 0; ii < ste.length; ii++)
-                printDebugMessage(ste[ii].toString());
-            */
-            final ByteArrayOutputStream output = new ByteArrayOutputStream(512);
-            e.printStackTrace(new java.io.PrintStream(output));
-            try {
-                output.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-            logger.finer(output.toString());
-        }
-    }
-
     protected static boolean ok(String s) {
         return s != null && !s.isEmpty();
     }
@@ -1265,17 +1259,13 @@ public abstract class CLICommand implements PostConstruct {
      * Read the named resource file and add the first token on each line to the set. Skip comment lines.
      */
     private static void file2Set(String file, Set<String> set) {
-        BufferedReader reader = null;
-        try {
-            InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
-            if (is == null) {
-                return; // in case the resource doesn't exist
-            }
-            reader = new BufferedReader(new InputStreamReader(is));
+        try (InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                // # indicates comment
                 if (line.startsWith("#")) {
-                    continue; // # indicates comment
+                    continue;
                 }
                 StringTokenizer tok = new StringTokenizer(line, " ");
                 // handles with or without space, rudimendary as of now
@@ -1283,15 +1273,7 @@ public abstract class CLICommand implements PostConstruct {
                 set.add(cmd);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ee) {
-                    // ignore
-                }
-            }
+            throw new IllegalStateException("Could not parse resource file " + file, e);
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,6 +41,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -175,7 +176,8 @@ public class PayloadImplTest {
 
         try {
             Payload.Outbound outboundPayload = PayloadImpl.Outbound.newInstance();
-            newVersion = populateFile(File.createTempFile("payload",".txt"), REPLACED_FILE_X.content);
+            newVersion = File.createTempFile("payload",".txt");
+            populateFile(newVersion, REPLACED_FILE_X.content);
             outboundPayload.requestFileReplacement("application/octet-stream",
                     new URI(REPLACED_FILE_X.path), "replacement",
                     null, newVersion, false);
@@ -211,7 +213,8 @@ public class PayloadImplTest {
         File zipFile = null;
         try {
             Payload.Outbound outboundPayload = PayloadImpl.Outbound.newInstance();
-            fileToBeAddedToPayload = populateFile(File.createTempFile("payload",".txt"), ADDED_FILE_Z.content);
+            fileToBeAddedToPayload = File.createTempFile("payload",".txt");
+            populateFile(fileToBeAddedToPayload, ADDED_FILE_Z.content);
             log("  Populated " + fileToBeAddedToPayload.getAbsolutePath());
 
             /*
@@ -278,7 +281,7 @@ public class PayloadImplTest {
 
     private String readFromFile(final File f) throws FileNotFoundException, IOException {
         final StringBuilder sb = new StringBuilder();
-        final LineNumberReader r = new LineNumberReader(new FileReader(f));
+        final LineNumberReader r = new LineNumberReader(new FileReader(f, UTF_8));
         try {
             String line;
             while ((line = r.readLine()) != null) {
@@ -341,11 +344,10 @@ public class PayloadImplTest {
         return f;
     }
 
-    private File populateFile(final File f, final String content) throws FileNotFoundException {
-        final PrintStream ps = new PrintStream(f);
-        ps.println(content);
-        ps.close();
-        return f;
+    private void populateFile(final File f, final String content) throws IOException {
+        try (PrintStream ps = new PrintStream(f, UTF_8)) {
+            ps.println(content);
+        }
     }
 
     private void cleanDir(final File d) {

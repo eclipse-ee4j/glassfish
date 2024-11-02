@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,8 +33,9 @@ import java.util.List;
  */
 class GFEmbeddedLauncher extends GFLauncher {
 
-    private boolean setup = false;
-    private File gfeJar, runServerJar;
+    private boolean setup;
+    private File gfeJar;
+    private File runServerJar;
     private File installDir;
     private File javaExe;
     private File domainDir;
@@ -50,9 +52,9 @@ class GFEmbeddedLauncher extends GFLauncher {
             + "JAVA_HOME - path to a JDK installation.  JRE installation is generally not good enough\n"
             + "GFE_DEBUG_PORT - optional debugging port.  It will start suspended.\n" + "\n*********  SPECIFIC MESSAGE ********\n";
 
-    private String[] DERBY_FILES = { "derby.jar", "derbyclient.jar", };
+    private final String[] DERBY_FILES = { "derby.jar", "derbyclient.jar", };
 
-    public GFEmbeddedLauncher(GFLauncherInfo info) {
+    GFEmbeddedLauncher(GFLauncherInfo info) {
         super(info);
 
     }
@@ -75,6 +77,7 @@ class GFEmbeddedLauncher extends GFLauncher {
     String getMainClass() throws GFLauncherException {
         String className = System.getenv(GFE_RUNSERVER_CLASS);
         if (className == null) {
+            // FIXME: Should not be there, it is a class from now unused tests
             return "org.glassfish.tests.embedded.EmbeddedMain";
         }
         return className;
@@ -139,7 +142,7 @@ class GFEmbeddedLauncher extends GFLauncher {
             adminAddresses.add(new HostAndPort("localhost", 4848, false));
             info.setAdminAddresses(adminAddresses);
         }
-        GFLauncherLogger.addLogFileHandler(getLogFilename(), info);
+        GFLauncherLogger.addLogFileHandler(getLogFilename());
 
         // super.fixLogFilename();
 

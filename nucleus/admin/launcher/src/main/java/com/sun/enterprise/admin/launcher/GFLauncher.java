@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.System.Logger;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -50,7 +52,6 @@ import static com.sun.enterprise.admin.launcher.GFLauncherConstants.FLASHLIGHT_A
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBMON_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NEWLINE;
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.COMMAND_LINE;
-import static com.sun.enterprise.admin.launcher.GFLauncherLogger.addLogFileHandler;
 import static com.sun.enterprise.universal.collections.CollectionUtils.propertiesToStringMap;
 import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
 import static com.sun.enterprise.universal.io.SmartFile.sanitize;
@@ -79,7 +80,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class GFLauncher {
 
     private static final LocalStringsImpl I18N = new LocalStringsImpl(GFLauncher.class);
-    protected static final System.Logger LOG = System.getLogger(GFLauncher.class.getName(), I18N.getBundle());
+    private static final Logger LOG = System.getLogger(GFLauncher.class.getName(), I18N.getBundle());
     private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncher.class);
 
     /**
@@ -302,7 +303,7 @@ public abstract class GFLauncher {
         setLogFilename(domainXML);
         resolveAllTokens();
         fixLogFilename();
-        addLogFileHandler(logFilename, callerParameters);
+        GFLauncherLogger.addLogFileHandler(logFilename);
 
         setJavaExecutable();
         setClasspath();
@@ -519,7 +520,11 @@ public abstract class GFLauncher {
 
     // unit tests will want 'fake' so that the glassFishProcess is not really started.
     enum LaunchType {
-        normal, debug, trace, fake
+        normal,
+        debug,
+        trace,
+        /** Useful just for unit tests so the server will not be started. */
+        fake
     }
 
     void setMode(LaunchType mode) {
@@ -894,7 +899,7 @@ public abstract class GFLauncher {
         OutputStreamWriter osw = null;
         BufferedWriter bw = null;
         try {
-            osw = new OutputStreamWriter(os);
+            osw = new OutputStreamWriter(os, Charset.defaultCharset());
             bw = new BufferedWriter(osw);
             for (String token : callerParameters.securityTokens) {
                 bw.write(token);

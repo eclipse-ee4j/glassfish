@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,6 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * after tests are finished.
  *
  * @author David Matejcek
+ * @author Ondro Mihalyi
  */
 public class GlassFishTestEnvironment {
     private static final Logger LOG = Logger.getLogger(GlassFishTestEnvironment.class.getName());
@@ -83,7 +86,6 @@ public class GlassFishTestEnvironment {
             // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
         }
-
         // This is the absolutely first start - if it fails, all other starts will fail too.
         // Note: --suspend implicitly enables --debug
         assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain",
@@ -95,7 +97,15 @@ public class GlassFishTestEnvironment {
      * @return {@link Asadmin} command api for tests.
      */
     public static Asadmin getAsadmin() {
-        return new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE);
+        return getAsadmin(true);
+    }
+
+    /**
+     * @param terse true means suitable and minimized for easy parsing.
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static Asadmin getAsadmin(boolean terse) {
+        return new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE, terse);
     }
 
     /**
@@ -104,6 +114,7 @@ public class GlassFishTestEnvironment {
     public static StartServ getStartServ() {
         return new StartServ(STARTSERV);
     }
+
 
     /**
      * @return {@link Asadmin} command api for tests.
@@ -146,6 +157,9 @@ public class GlassFishTestEnvironment {
     }
 
 
+    public static int getPort(HttpListenerType listenerType) {
+        return listenerType.getPort();
+    }
     /**
      * Creates a {@link Client} instance for the domain administrator.
      * Caller is responsible for closing.
@@ -209,6 +223,14 @@ public class GlassFishTestEnvironment {
         return connection;
     }
 
+    public static URI webSocketUri(final int port, final String context) throws URISyntaxException {
+        return webSocketUri(false, port, context);
+    }
+
+    public static URI webSocketUri(final boolean secured, final int port, final String context) throws URISyntaxException {
+        final String protocol = secured ? "wss" : "ws";
+        return new URI(protocol + "://localhost:" + port + context);
+    }
 
     /**
      * Creates the unencrypted password file on the local file system and uses it to create the user
@@ -249,6 +271,18 @@ public class GlassFishTestEnvironment {
         }
     }
 
+
+    /** Default is org.apache.derby.jdbc.ClientDataSource */
+    public static void switchDerbyPoolToEmbededded() {
+        final AsadminResult result = getAsadmin(true).exec(5_000, "set",
+            "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
+            "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
+            "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
+            "resources.jdbc-connection-pool.DerbyPool.property.URL=");
+        assertThat(result, asadminOK());
+        // Just to see the result in log.
+        assertThat(getAsadmin(true).exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*"), asadminOK());
+    }
 
     /**
      * Useful for a heuristic inside Eclipse and other environments.

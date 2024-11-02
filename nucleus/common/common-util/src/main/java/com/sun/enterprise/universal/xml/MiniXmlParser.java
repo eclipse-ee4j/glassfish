@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +44,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -277,7 +278,7 @@ public class MiniXmlParser {
     }
 
     private void createParser() throws FileNotFoundException, XMLStreamException {
-        reader = new InputStreamReader(new FileInputStream(domainXml));
+        reader = new InputStreamReader(new FileInputStream(domainXml), UTF_8);
         XMLInputFactory xif = getXmlInputFactory();
         // Set the resolver so that any external entity references, such
         // as a reference to a DTD, return an empty file.  The domain.xml

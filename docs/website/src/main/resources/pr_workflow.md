@@ -37,7 +37,7 @@ $ git commit -s -m "my commit message"
 ```
 * Push your changes in a remote branch of your fork.
 ```
-$ git push origin issues_1234
+$ git push origin issue_1234
 ```
 * Before raising a Pull Request, please raise an
 [issue](https://github.com/eclipse-ee4j/glassfish/issues)

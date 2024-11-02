@@ -103,6 +103,7 @@ public class FileArchiveTest {
 
     @AfterEach
     public void tearDown() {
+        assertThat(deplLogger.getHandlers(), arrayContainingInAnyOrder(handler));
         if (archiveDir != null) {
             clean(archiveDir);
         }
@@ -150,12 +151,15 @@ public class FileArchiveTest {
     }
 
     private void clean(final File dir) {
-        for (File f : dir.listFiles()) {
-            if (f.isDirectory()) {
-                clean(f);
-            }
-            if (!f.delete()) {
-                f.deleteOnExit();
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    clean(f);
+                }
+                if (!f.delete()) {
+                    f.deleteOnExit();
+                }
             }
         }
         if (!dir.delete()) {
@@ -384,29 +388,29 @@ public class FileArchiveTest {
     }
 
     private void createPreexistingDir() throws IOException {
-         for (String entryName : usualEntryNames) {
-             final File f = fileForPath(archiveDir, entryName);
-             final File parentDir = f.getParentFile();
-             if(parentDir != null) {
-                 parentDir.mkdirs();
-             }
-             try {
-                 f.createNewFile();
-             } catch (Exception ex) {
-                 throw new IOException(f.getAbsolutePath(), ex);
-             }
-         }
-     }
+        for (String entryName : usualEntryNames) {
+            final File f = fileForPath(archiveDir, entryName);
+            final File parentDir = f.getParentFile();
+            if (parentDir != null) {
+                parentDir.mkdirs();
+            }
+            try {
+                f.createNewFile();
+            } catch (Exception ex) {
+                throw new IOException(f.getAbsolutePath(), ex);
+            }
+        }
+    }
 
     private File fileForPath(File anchor, final String path) {
-         final String[] interveningDirNames = path.split("/");
-         File interveningDir = anchor;
-         for (int i = 0; i < interveningDirNames.length - 1; i++) {
-             String name = interveningDirNames[i];
-             interveningDir = new File(interveningDir, name + "/");
-         }
-         return new File(interveningDir,interveningDirNames[interveningDirNames.length - 1]);
-     }
+        final String[] interveningDirNames = path.split("/");
+        File interveningDir = anchor;
+        for (int i = 0; i < interveningDirNames.length - 1; i++) {
+            String name = interveningDirNames[i];
+            interveningDir = new File(interveningDir, name + "/");
+        }
+        return new File(interveningDir, interveningDirNames[interveningDirNames.length - 1]);
+    }
 
     @Test
     @DisabledOnOs(OS.WINDOWS)
@@ -422,6 +426,7 @@ public class FileArchiveTest {
         // Try to list the files.  This should fail with our logger getting one record.
         final Vector<String> fileList = new Vector<>();
         handler.reset();
+        assertThat(deplLogger.getHandlers(), arrayContainingInAnyOrder(handler));
         archive.getListOfFiles(lower, fileList, null /* embeddedArchives */, deplLogger);
 
         List<GlassFishLogRecord> logRecords = handler.getAll();

@@ -41,7 +41,7 @@ public class JobTestExtension implements BeforeAllCallback, AfterAllCallback {
     private static final String ORIG_INITIAL_DELAY = "origInitialDelay";
     private static final String ORIG_RETENTION_PERIOD = "origRetentionPeriod";
 
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {

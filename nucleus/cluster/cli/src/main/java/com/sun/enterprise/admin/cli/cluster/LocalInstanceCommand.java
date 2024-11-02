@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -295,7 +296,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             return true;
         }
 
-        if (NetUtils.isEqual(host1, host2)) {
+        if (NetUtils.isSameHost(host1, host2)) {
             // Hostnames don't exactly match, but refer to same IP. Match.
             return true;
         }

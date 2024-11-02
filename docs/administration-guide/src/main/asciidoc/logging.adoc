@@ -38,6 +38,14 @@ we recommend to use the
 or even better it's latest facade
 `https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.Logger.html[System.Logger]`.
 
+[WARNING]
+====
+Logs may contain sensitive information.
+Despite the {productName} in default configuration doesn't log any passwords,
+before you share logs with anyone else you should verify that you don't compromise your
+system by any information contained in logs, especially if you configured more verbose log levels.
+====
+
 [[log-manager]]
 ==== Log Manager
 
@@ -870,6 +878,14 @@ You can view the full syntax and options of the subcommand by typing
 You will probably need to set logger levels most often.
 Let's imagine that you would need to set the most verbose logging of an application
 using the `org.acme` package (and logger names).
+
+[WARNING]
+====
+Logs may contain sensitive information.
+Despite the {productName} in default configuration doesn't log any passwords,
+before you share logs with anyone else you should verify that you don't compromise your
+system by any information contained in logs, especially if you configured more verbose log levels.
+====
 
 Then you can edit the `logging.properties` file directly, what can be quite
 more complicated it you use more than one instance, see the xref:configuring-warning[warning].

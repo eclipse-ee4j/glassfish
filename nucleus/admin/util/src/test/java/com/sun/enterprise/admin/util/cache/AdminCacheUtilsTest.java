@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,7 @@ import java.io.IOException;
 import org.glassfish.api.admin.CommandModel;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -52,7 +53,7 @@ public class AdminCacheUtilsTest {
 
     @Test
     public void testSimpleGetProvider_byteArray() throws IOException {
-        final byte[] byteArray = "The Man Who Sold The World".getBytes();
+        final byte[] byteArray = "The Man Who Sold The World".getBytes(UTF_8);
         final DataProvider provider = acu.getProvider(byteArray.getClass());
         assertNotNull(provider);
         final byte[] data = toByteArray(byteArray, provider);
@@ -94,7 +95,8 @@ public class AdminCacheUtilsTest {
     }
 
 
-    @SuppressWarnings("unchecked") // yeah, we know that
+    // yeah, we know that
+    @SuppressWarnings("unchecked")
     private <T> T toInstance(final byte[] data, final Class<T> targetClass, final DataProvider provider)
         throws IOException {
         return (T) provider.toInstance(new ByteArrayInputStream(data), targetClass);

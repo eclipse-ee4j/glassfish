@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,6 @@ package org.glassfish.main.test.app.mrjar;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.util.jar.Manifest;
 
@@ -55,12 +53,6 @@ public class MultiReleaseTestBase {
     private static final String LIB_FILE_NAME = "mrlib.jar";
 
     protected static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
-
-    protected String readResponse(HttpURLConnection connection) throws Exception {
-        try (InputStream in = connection.getInputStream()) {
-            return new String(in.readAllBytes()).trim();
-        }
-    }
 
     protected static JavaArchive createMultiReleaseLibrary() throws IOException {
         return ShrinkWrap.create(JavaArchive.class, LIB_FILE_NAME)

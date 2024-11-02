@@ -83,9 +83,10 @@ public class Resizer extends TimerTask {
     }
 
     /**
-     * Resize the pool
+     * Resize the pool by removing idle and invalid resources.<br>
+     * Only when forced is true the pool size is scaled down with the pool resize quantity.
      *
-     * @param forced when force is true, scale down the pool.
+     * @param forced when force is true, scale down the pool with the pool resize quantity.
      */
     public void resizePool(boolean forced) {
 
@@ -125,13 +126,14 @@ public class Resizer extends TimerTask {
     }
 
     /**
-     * Scale down pool by a <code>size &lt;= pool-resize-quantity</code>
+     * Scale down pool by a <code>size &lt;= pool-resize-quantity</code> but only if forced is true
      *
-     * @param forced scale-down only when forced
-     * @param scaleDownQuantity no. of resources to remove
+     * @param scaleDownQuantity the number of resources to remove
+     * @param forced scale-down only when forced value is true
+     *
+     * TODO: move forced parameter out of this method and move it to the calling code
      */
     protected void scaleDownPool(int scaleDownQuantity, boolean forced) {
-
         if (pool.getResizeQuantity() > 0 && forced) {
 
             scaleDownQuantity = (scaleDownQuantity <= (dataStructure.getResourcesSize() - pool.getSteadyPoolSize())) ? scaleDownQuantity : 0;
@@ -232,7 +234,7 @@ public class Resizer extends TimerTask {
                     // validate if the connection is one in the freeConnectionsToValidate
                     if (freeConnectionsToValidate.contains(handle.toString())) {
                         Set<ManagedConnection> connectionsToTest = new HashSet<>();
-                        connectionsToTest.add((ManagedConnection) handle.getResource());
+                        connectionsToTest.add(handle.getResource());
                         Set<ManagedConnection> invalidConnections = handler.getInvalidConnections(connectionsToTest);
                         if (invalidConnections != null && !invalidConnections.isEmpty()) {
                             invalidConnectionsCount = validateAndRemoveResource(handle, invalidConnections);

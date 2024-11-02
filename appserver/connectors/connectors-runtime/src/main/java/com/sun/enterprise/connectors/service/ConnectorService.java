@@ -36,14 +36,14 @@ import com.sun.logging.LogDomains;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceConstants;
+
+import static java.util.logging.Level.SEVERE;
 
 
 /**
@@ -56,8 +56,7 @@ import org.glassfish.resourcebase.resources.api.ResourceConstants;
 public class ConnectorService implements ConnectorConstants {
     protected static final Logger _logger = LogDomains.getLogger(ConnectorService.class, LogDomains.RSR_LOGGER);
 
-    protected static final ConnectorRegistry _registry =
-            ConnectorRegistry.getInstance();
+    protected static final ConnectorRegistry _registry = ConnectorRegistry.getInstance();
 
     protected ConnectorRuntime _runtime;
     private ResourcesUtil resourcesUtil;
@@ -73,6 +72,7 @@ public class ConnectorService implements ConnectorConstants {
         if (resourcesUtil == null) {
             resourcesUtil = ResourcesUtil.createInstance();
         }
+
         return resourcesUtil;
     }
 
@@ -111,33 +111,27 @@ public class ConnectorService implements ConnectorConstants {
                 loadDeferredResources(defResConfig.getResourceAdapterConfig());
                 final String rarName = defResConfig.getRarName();
                 loadDeferredResourceAdapter(rarName);
-                final Resource[] resToLoad = defResConfig.getResourcesToLoad();
-                AccessController.doPrivileged(new PrivilegedAction() {
-                    @Override
-                    public Object run() {
-                        try {
-                            loadDeferredResources(resToLoad);
-                        } catch (Exception ex) {
-                            Object params[] = new Object[]{rarName, ex};
-                            _logger.log(Level.SEVERE, "failed.to.load.deferred.resources", params);
-                        }
-                        return null;
-                    }
-                });
+
+                try {
+                    loadDeferredResources(defResConfig.getResourcesToLoad());
+                } catch (Exception ex) {
+                    Object params[] = new Object[]{rarName, ex};
+                    _logger.log(SEVERE, "failed.to.load.deferred.resources", params);
+                }
             } catch (Exception ex) {
                 Object params[] = new Object[]{defResConfig.getRarName(), ex};
-                _logger.log(Level.SEVERE, "failed.to.load.deferred.ra", params);
+                _logger.log(SEVERE, "failed.to.load.deferred.ra", params);
                 return false;
             }
             return true;
         }
+
         return false;
     }
 
 
-    public void loadDeferredResourceAdapter(String rarModuleName)
-            throws ConnectorRuntimeException {
-        //load the RA if its not already loaded
+    public void loadDeferredResourceAdapter(String rarModuleName) throws ConnectorRuntimeException {
+        // load the RA if its not already loaded
         if (_registry.getActiveResourceAdapter(rarModuleName) == null) {
             try {
                 //Do this only for System RA
@@ -148,17 +142,9 @@ public class ConnectorService implements ConnectorConstants {
                                 new File(systemModuleLocation), _runtime.getSystemRARClassLoader(rarModuleName));
                     }
                     _runtime.createActiveResourceAdapter(systemModuleLocation, rarModuleName, null);
-                } /* not needed as long as standalone + embedded rars are loaded before recovery
-                else if (rarModuleName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1) {
-                    createActiveResourceAdapterForEmbeddedRar(rarModuleName);
-                } else{
-                    _runtime.createActiveResourceAdapter(ConnectorsUtil.getLocation(rarModuleName), rarModuleName, null);
-                }*/
+                }
             } catch (Exception e) {
-                ConnectorRuntimeException ce =
-                        new ConnectorRuntimeException(e.getMessage());
-                ce.initCause(e);
-                throw ce;
+                throw new ConnectorRuntimeException(e.getMessage(), e);
             }
         }
     }
@@ -249,7 +235,7 @@ public class ConnectorService implements ConnectorConstants {
         if (moduleDir != null) {
             desc = ConnectorDDTransformUtils.getConnectorDescriptor(moduleDir, rarName);
         } else {
-            _logger.log(Level.SEVERE,
+            _logger.log(SEVERE,
                     "rardeployment.no_module_deployed", rarName);
         }
         return desc;
@@ -322,14 +308,13 @@ public class ConnectorService implements ConnectorConstants {
      * @param loader  <code>ClassLoader</code> to verify.
      */
     public boolean checkAccessibility(String rarName, ClassLoader loader) {
-        ActiveResourceAdapter ar = _registry.getActiveResourceAdapter(rarName);
-        if (ar != null && loader != null) { // If RA is deployed
+        ActiveResourceAdapter activeResourceAdapter = _registry.getActiveResourceAdapter(rarName);
+        if (activeResourceAdapter != null && loader != null) { // If RA is deployed
 
-            ClassLoader rarLoader = ar.getClassLoader();
+            ClassLoader rarLoader = activeResourceAdapter.getClassLoader();
 
-            //If the RAR is not standalone.
-            if (rarLoader != null && ConnectorAdminServiceUtils.isEmbeddedConnectorModule(rarName)
-                /*&& (!(rarLoader instanceof ConnectorClassFinder))*/) {
+            // If the RAR is not standalone.
+            if (rarLoader != null && ConnectorAdminServiceUtils.isEmbeddedConnectorModule(rarName)) {
                 ClassLoader rarLoaderParent = rarLoader.getParent();
                 ClassLoader parent = loader;
                 while (true) {
@@ -338,12 +323,7 @@ public class ConnectorService implements ConnectorConstants {
                     }
 
                     final ClassLoader temp = parent;
-                    Object obj = AccessController.doPrivileged(new PrivilegedAction() {
-                        @Override
-                        public Object run() {
-                            return temp.getParent();
-                        }
-                    });
+                    Object obj = temp.getParent();
 
                     if (obj == null) {
                         break;
@@ -351,10 +331,12 @@ public class ConnectorService implements ConnectorConstants {
                         parent = (ClassLoader) obj;
                     }
                 }
+
                 // If no parent matches return false;
                 return false;
             }
         }
+
         return true;
     }
 }

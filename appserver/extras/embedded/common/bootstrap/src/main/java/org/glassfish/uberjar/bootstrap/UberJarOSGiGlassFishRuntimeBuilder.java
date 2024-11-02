@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,7 @@
 
 package org.glassfish.uberjar.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
-import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiFrameworkLauncher;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -36,7 +35,6 @@ import java.util.logging.Logger;
 
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
 import org.osgi.framework.Bundle;
@@ -46,8 +44,14 @@ import org.osgi.framework.BundleReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.util.tracker.ServiceTracker;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.util.io.FileUtils.USER_HOME;
+import static org.glassfish.embeddable.GlassFishProperties.CONFIG_FILE_URI_PROP_NAME;
+import static org.osgi.framework.Constants.BUNDLE_VERSION;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA;
 
@@ -66,13 +70,13 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     @Override
     public boolean handles(BootstrapProperties bsOptions) {
-        Platform platform = Platform.valueOf(bsOptions.getProperty(Constants.PLATFORM_PROPERTY_KEY));
-        if (platform == null) {
-            platform = Platform.Felix;
+        OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(bsOptions.getProperty(PLATFORM_PROPERTY_KEY));
+        if (osgiPlatform == null) {
+            osgiPlatform = OsgiPlatform.Felix;
         }
-        logger.log(Level.FINER, "platform = {0}", platform);
+        logger.log(Level.FINER, "platform = {0}", osgiPlatform);
         // TODO(Sahoo): Add support for generic OSGi platform
-        switch (platform) {
+        switch (osgiPlatform) {
             case Felix:
             case Equinox:
             case Knopflerfish:
@@ -84,12 +88,12 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     public void destroy() throws GlassFishException {
         if (framework == null) {
-            logger.finer("EmbeddedOSGIRuntimeBuilder.destroy called, but framework is null.");
+            logger.finer("UberJarOSGiGlassFishRuntimeBuilder.destroy called, but framework is null.");
         } else {
             try {
                 framework.stop();
                 framework.waitForStop(0);
-                logger.info("EmbeddedOSGIRuntimeBuilder.destroy, stopped framework " + framework);
+                logger.info("UberJarOSGiGlassFishRuntimeBuilder.destroy, stopped framework " + framework);
             } catch (InterruptedException ex) {
                 throw new GlassFishException(ex);
             } catch (BundleException ex) {
@@ -101,13 +105,13 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     @Override
     public GlassFishRuntime build(BootstrapProperties bsOptions) throws GlassFishException {
         String uberJarURI = bsOptions.getProperty(UBER_JAR_URI);
-        logger.log(Level.FINER, "EmbeddedOSGIRuntimeBuilder.build, uberJarUri={0}", uberJarURI);
+        logger.log(Level.FINER, "UberJarOSGiGlassFishRuntimeBuilder.build, uberJarUri={0}", uberJarURI);
 
         URI jar = null;
         try {
             jar = uberJarURI != null ? new URI(uberJarURI) : Util.whichJar(GlassFishRuntime.class);
-        } catch (URISyntaxException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
         }
 
         // XXX : Commented out by Prasad , we are again looking for instance root here. Why ?
@@ -117,32 +121,29 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         if (installRoot == null) {
             installRoot = getDefaultInstallRoot();
             bsOptions.setInstallRoot(installRoot);
-            bsOptions.setProperty(Constants.INSTALL_ROOT_URI_PROP_NAME, new File(installRoot).toURI().toString());
+            bsOptions.setProperty(INSTALL_ROOT_URI_PROP_NAME, new File(installRoot).toURI().toString());
         }
 
         // XXX : Assuming that this property will be set along with Bootstrap options.
         // This is a temporary hack, we need to separate the properties out between bootstrap and newGlassfish methods clearly
         // and not mix them in the code.
-        String instanceRoot = bsOptions.getProperty(Constants.INSTANCE_ROOT_PROP_NAME);
+        String instanceRoot = bsOptions.getProperty(INSTANCE_ROOT_PROP_NAME);
         if (instanceRoot == null) {
             instanceRoot = getDefaultInstanceRoot();
-            bsOptions.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot);
-            bsOptions.setProperty(Constants.INSTANCE_ROOT_URI_PROP_NAME, new File(instanceRoot).toURI().toString());
+            bsOptions.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
+            bsOptions.setProperty(INSTANCE_ROOT_URI_PROP_NAME, new File(instanceRoot).toURI().toString());
         }
         FileUtils.ensureWritableDir(new File(instanceRoot));
         try {
-            copyConfigFile(bsOptions.getProperty(GlassFishProperties.CONFIG_FILE_URI_PROP_NAME), instanceRoot);
+            copyConfigFile(bsOptions.getProperty(CONFIG_FILE_URI_PROP_NAME), instanceRoot);
         } catch (Exception ex) {
             throw new GlassFishException(ex);
         }
 
         String platform = bsOptions.getProperty(PLATFORM_PROPERTY_KEY);
         if (platform == null) {
-            platform = Platform.Felix.toString();
-            bsOptions.setProperty(PLATFORM_PROPERTY_KEY, platform);
+            bsOptions.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
         }
-
-       // readConfigProperties(installRoot, props);
 
         System.setProperty(UBER_JAR_URI, jar.toString()); // embedded-osgi-main module will need this to extract the modules.
 
@@ -151,7 +152,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         String autoStartBundleLocation = "jar:" + jar.toString() + "!/modules/installroot-builder_jar/," +
                 "jar:" + jar.toString() + "!/modules/instanceroot-builder_jar/," +
-                "jar:" + jar.toString() + "!/modules/kernel_jar/"; // TODO :: was modules/glassfish_jar
+                "jar:" + jar.toString() + "!/modules/kernel_jar/";
 
         if (isOSGiEnv()) {
             autoStartBundleLocation = autoStartBundleLocation +
@@ -161,24 +162,15 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         bsOptions.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
         System.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
 
-        System.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot);
-        System.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot);
+        System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot);
+        System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
 
         String version = loadVersion();
         bsOptions.setProperty(FRAMEWORK_SYSTEMPACKAGES_EXTRA, "org.glassfish.simpleglassfishapi; version=" + version);
 
-//        props.setProperty(org.osgi.framework.Constants.FRAMEWORK_BUNDLE_PARENT,
-//                org.osgi.framework.Constants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK);
-//        props.setProperty("org.osgi.framework.bootdelegation", "org.jvnet.hk2.component, " +
-//                "org.jvnet.hk2.component.*," +
-//                "org.jvnet.hk2.annotations," +
-//                "org.jvnet.hk2.annotations.*");
-//        props.setProperty("org.osgi.framework.bootdelegation", "*");
-
         bsOptions.setProperty(FRAMEWORK_STORAGE, instanceRoot + "/osgi-cache/Felix");
-//        }
 
-        logger.logp(Level.FINER, "EmbeddedOSGIRuntimeBuilder", "build", "Building file system {0}", bsOptions);
+        logger.logp(Level.FINER, "UberJarOSGiGlassFishRuntimeBuilder", "build", "Building file system {0}", bsOptions);
 
         try {
             if (!isOSGiEnv()) {
@@ -191,8 +183,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             autostartBundle.start(Bundle.START_TRANSIENT);
             logger.log(Level.FINER, "Started autostartBundle {0}", autostartBundle);
             return getService(GlassFishRuntime.class, context);
-        } catch (Throwable t) {
-            throw new GlassFishException(new Exception(t));
+        } catch (Exception e) {
+            throw new GlassFishException(e);
         }
     }
 
@@ -210,12 +202,13 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     public <T> T getService(Class<T> type, BundleContext context) throws Exception {
-        ServiceTracker tracker = new ServiceTracker(context, type.getName(), null);
+        ServiceTracker<?, T> tracker = new ServiceTracker<>(context, type.getName(), null);
         try {
             tracker.open(true);
-            return type.cast(tracker.waitForService(0));
+            return tracker.waitForService(0);
         } finally {
-            tracker.close(); // no need to track further
+            // no need to track further
+            tracker.close();
         }
     }
 
@@ -241,7 +234,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         URL manifestURL = UberJarOSGiGlassFishRuntimeBuilder.class.getResource("/META-INF/MANIFEST.MF");
         try (InputStream manifestStream = manifestURL.openStream()) {
             Manifest manifest = new Manifest(manifestStream);
-            return  manifest.getMainAttributes().getValue(org.osgi.framework.Constants.BUNDLE_VERSION);
+            return  manifest.getMainAttributes().getValue(BUNDLE_VERSION);
         } catch (IOException e) {
             throw new IllegalStateException("Could not load version from the manifest file.", e);
         }

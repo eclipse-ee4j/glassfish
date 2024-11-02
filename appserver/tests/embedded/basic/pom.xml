@@ -32,5 +32,6 @@
     <name>Basic tests for testing org.glassfish.embeddable APIs</name>
     <modules>
         <module>lifecycle</module>
+        <module>config</module>
     </modules>
 </project>

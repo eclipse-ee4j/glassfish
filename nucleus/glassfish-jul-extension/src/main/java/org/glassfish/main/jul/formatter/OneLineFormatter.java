@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,9 @@ package org.glassfish.main.jul.formatter;
 import java.util.Arrays;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
+import org.glassfish.main.jul.cfg.GlassFishLoggingConstants;
 import org.glassfish.main.jul.cfg.LogProperty;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 
@@ -31,6 +33,12 @@ import static org.glassfish.main.jul.formatter.OneLineFormatter.OneLineFormatter
 /**
  * Fast {@link Formatter} usable in tests or even in production if you need only simple logs with
  * time, level and messages.
+ * <p>
+ * Note that if you configured the formatter from your code (and not a property file),
+ * if you want to source class and method automatically detected, you have to enable
+ * {@link GlassFishLoggingConstants#KEY_CLASS_AND_METHOD_DETECTION_ENABLED}. Without that the output
+ * will contain just class and method fields manually set to the LogRecord or using {@link Logger}
+ * methods which have these parameters to do that.
  *
  * @author David Matejcek
  */

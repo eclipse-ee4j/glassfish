@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.utils.ConfigModelComparator;
 import org.glassfish.admin.rest.utils.DomConfigurator;
 import org.glassfish.admin.rest.utils.ResourceUtil;
@@ -45,6 +44,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.admin.rest.provider.ProviderUtil.KEY_COMMAND;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getEndXmlElement;
@@ -108,7 +108,7 @@ public abstract class BaseProvider<T> implements MessageBodyWriter<T> {
     @Override
     public void writeTo(T proxy, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        entityStream.write(getContent(proxy).getBytes(Constants.ENCODING));
+        entityStream.write(getContent(proxy).getBytes(UTF_8));
     }
 
     public abstract String getContent(T proxy);

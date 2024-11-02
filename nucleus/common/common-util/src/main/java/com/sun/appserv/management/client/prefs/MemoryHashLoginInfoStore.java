@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +18,6 @@
 package com.sun.appserv.management.client.prefs;
 
 import com.sun.enterprise.security.store.AsadminSecurityUtil;
-import com.sun.enterprise.universal.GFBase64Decoder;
-import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.Utility;
 
 import java.io.BufferedReader;
@@ -31,13 +29,17 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** A {@link LoginInfoStore} that reads the information from the default file ".gfclient/pass"
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
+ * A {@link LoginInfoStore} that reads the information from the default file ".gfclient/pass"
  * and stores it as a map in the memory. It is not guaranteed that the concurrent
  * modifications will yield consistent results. This class is <i> not </i> thread safe. The
  * serial access has to be ensured by the callers.
@@ -46,9 +48,6 @@ import java.util.Map;
 public class MemoryHashLoginInfoStore implements LoginInfoStore {
 
     private static final String DEFAULT_STORE_NAME = "pass";
-
-    private static final GFBase64Encoder encoder = new GFBase64Encoder();
-    private static final GFBase64Decoder decoder = new GFBase64Decoder();
 
     private Map<HostPortKey, LoginInfo> state;
     private final File store;
@@ -64,11 +63,11 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
         try {
             store = new File(AsadminSecurityUtil.GF_CLIENT_DIR, DEFAULT_STORE_NAME);
             if (store.createNewFile()) {
-                bw = new BufferedWriter(new FileWriter(store));
+                bw = new BufferedWriter(new FileWriter(store, UTF_8));
                 FileMapTransform.writePreamble(bw);
                 state = new HashMap<>();
             } else {
-                br = new BufferedReader(new FileReader(store));
+                br = new BufferedReader(new FileReader(store, UTF_8));
                 state = FileMapTransform.readAll(br);
             }
         } catch (final Exception e) {
@@ -149,53 +148,42 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
         return ( store.getAbsoluteFile().getAbsolutePath() );
     }
 
-    ///// PRIVATE METHODS /////
-    private void commit(final HostPortKey key, LoginInfo old) {
-        BufferedWriter writer = null;
-        try {
-            //System.out.println("before commit");
-            writer = new BufferedWriter(new FileWriter(store));
+    private void commit(final HostPortKey key, final LoginInfo old) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(store, UTF_8))) {
             FileMapTransform.writeAll(state.values(), writer);
-        }
-        catch(final Exception e) {
-            state.put(key, old); //try to roll back, first memory
-            try { // then disk, if the old value is not null
-                if (old != null) {
-                    writer = new BufferedWriter(new FileWriter(store));
-                    FileMapTransform.writeAll(state.values(), writer);
-                }
-            }
-            catch(final Exception ae) {
-                throw new RuntimeException("catastrophe, can't write it to file");
-            }//ignore, can't do much
-        }
-        finally {
+        } catch (final Exception e) {
+            // try to roll back, first memory
+            state.put(key, old);
+            // then disk, if the old value is not null
             try {
-                writer.close();
-            } catch(final Exception ee) {} //ignore
+                if (old != null) {
+                    try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(store, UTF_8))) {
+                        FileMapTransform.writeAll(state.values(), writer2);
+                    }
+                }
+            } catch (final Exception ae) {
+                throw new RuntimeException("Catastrophe, can't write it to file", ae);
+            }
         }
     }
 
-    private void protect()
-    {
+
+    private void protect() {
         /*
-             note: if this is Windows we still try 'chmod' -- they may have MKS or
-            some other UNIXy package for Windows.
-            cacls is too dangerous to use because it requires a "Y" to be written to
-            stdin of the cacls process.  If cacls doesn't exist or if they are using
-            a non-NTFS file system we would hang here forever.
+         * note: if this is Windows we still try 'chmod' -- they may have MKS or
+         * some other UNIXy package for Windows.
+         * cacls is too dangerous to use because it requires a "Y" to be written to
+         * stdin of the cacls process. If cacls doesn't exist or if they are using
+         * a non-NTFS file system we would hang here forever.
          */
-        try
-        {
-            if(store == null || !store.exists()) {
+        try {
+            if (store == null || !store.exists()) {
                 return;
             }
 
             ProcessBuilder pb = new ProcessBuilder("chmod", "0600", store.getAbsolutePath());
             pb.start();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             // we tried...
         }
     }
@@ -245,8 +233,8 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
             final String host     = uri.getHost();
             final int port        = uri.getPort();
             final String user     = uri.getUserInfo();
-            final char[] password = Utility.convertByteArrayToCharArray(decoder.decodeBuffer(encp), null);
-            return ( new LoginInfo(host, port, user, password) );
+            final char[] password = Utility.convertByteArrayToCharArray(Base64.getDecoder().decode(encp), UTF_8);
+            return new LoginInfo(host, port, user, password);
         }
         static String login2Line(final LoginInfo login) throws IOException, URISyntaxException {
             final String scheme   = "asadmin";
@@ -255,7 +243,8 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
             final String user     = login.getUser();
             final URI uri         = new URI(scheme, user, host, port, null, null, null);
             final char[] password = login.getPassword();
-            final String encp     = encoder.encode(Utility.convertCharArrayToByteArray(password,null));
+            final String encp = Base64.getEncoder()
+                .encodeToString(Utility.convertCharArrayToByteArray(password, UTF_8));
             final String line     = uri.toString() + ' ' + encp;
 
             return ( line );

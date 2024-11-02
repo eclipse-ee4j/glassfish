@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,13 +38,11 @@ import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -61,7 +59,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
@@ -82,6 +79,12 @@ import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.admin.AuthTokenManager;
+
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
@@ -352,19 +355,19 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 commandModel = getCommandModelFromCache();
                 if (commandModel != null) {
                     this.commandModelFromCache = true;
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST,
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST,
                                 "Command model for command {0} was successfully loaded from the cache. [Duration: {1} nanos]",
                                 new Object[] { name, System.nanoTime() - startNanos });
                     }
                 } else {
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, "Command model for command {0} is not in cache. It must be fatched from server.", name);
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST, "Command model for command {0} is not in cache. It must be fatched from server.", name);
                     }
                 }
             } catch (Exception ex) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
+                if (logger.isLoggable(FINEST)) {
+                    logger.log(FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
                 }
             }
         }
@@ -389,8 +392,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             return null;
         }
         eTag = eTag.substring(5).trim();
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, "Cached command model ETag is {0}", eTag);
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, "Cached command model ETag is {0}", eTag);
         }
         String content = cachedModel.substring(ind + 1).trim();
         CachedCommandModel result = parseMetadata(content, eTag);
@@ -404,9 +407,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * @return the etag to compare the command cache model
      */
     private CachedCommandModel parseMetadata(String str, String etag) {
-        if (logger.isLoggable(Level.FINER)) { // XXX - assume "debug" == "FINER"
+        if (logger.isLoggable(FINER)) { // XXX - assume "debug" == "FINER"
             logger.finer("------- RAW METADATA RESPONSE ---------");
-            logger.log(Level.FINER, "ETag: {0}", etag);
+            logger.log(FINER, "ETag: {0}", etag);
             logger.finer(str);
             logger.finer("------- RAW METADATA RESPONSE ---------");
         }
@@ -469,7 +472,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             this.usage = cm.getUsage();
             return cm;
         } catch (JSONException ex) {
-            logger.log(Level.FINER, "Can not parse command metadata", ex);
+            logger.log(FINER, "Can not parse command metadata", ex);
             return null;
         }
     }
@@ -503,8 +506,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * Run the command using the specified arguments. Return the output of the command.
      */
     public String executeCommand(ParameterMap opts) throws CommandException {
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "RemoteRestAdminCommand.executeCommand() - name: {0}", this.name);
+        if (logger.isLoggable(FINER)) {
+            logger.log(FINER, "RemoteRestAdminCommand.executeCommand() - name: {0}", this.name);
         }
         //Just to be sure. Cover get help
         if (opts != null && opts.size() == 1 && opts.containsKey("help")) {
@@ -714,8 +717,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                     pwp = new ParamsWithPayload(null, params);
                 }
                 ProprietaryWriter writer = ProprietaryWriterFactory.getWriter(pwp);
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "Writer to use {0}", writer.getClass().getName());
+                if (logger.isLoggable(FINER)) {
+                    logger.log(FINER, "Writer to use {0}", writer.getClass().getName());
                 }
                 writer.writeTo(pwp, urlConnection);
             }
@@ -723,15 +726,15 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             @Override
             public void useConnection(final HttpURLConnection urlConnection) throws CommandException, IOException {
                 String resultMediaType = urlConnection.getContentType();
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "Result type is {0}", resultMediaType);
-                    logger.log(Level.FINER, "URL connection is {0}", urlConnection.getClass().getName());
+                if (logger.isLoggable(FINER)) {
+                    logger.log(FINER, "Result type is {0}", resultMediaType);
+                    logger.log(FINER, "URL connection is {0}", urlConnection.getClass().getName());
                 }
                 if (resultMediaType != null && resultMediaType.startsWith(MEDIATYPE_SSE)) {
                     String instanceId = null;
                     boolean retryableCommand = false;
                     try {
-                        logger.log(Level.FINEST, "Response is SSE - about to read events");
+                        logger.log(FINEST, "Response is SSE - about to read events");
                         closeSse = false;
                         final ProprietaryReader<GfSseEventReceiver> reader = new GfSseEventReceiverProprietaryReader();
                         final GfSseEventReceiver eventReceiver = reader.readFrom(urlConnection.getInputStream(), resultMediaType);
@@ -739,13 +742,13 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                         do {
                             event = eventReceiver.readEvent();
                             if (event != null) {
-                                logger.log(Level.FINEST, "Event: {0}", event.getName());
+                                logger.log(FINEST, "Event: {0}", event.getName());
                                 fireEvent(event.getName(), event);
                                 if (AdminCommandState.EVENT_STATE_CHANGED.equals(event.getName())) {
                                     AdminCommandState acs = event.getData(AdminCommandState.class, MEDIATYPE_JSON);
                                     if (acs.getId() != null) {
                                         instanceId = acs.getId();
-                                        logger.log(Level.FINEST, "Command instance ID: {0}", instanceId);
+                                        logger.log(FINEST, "Command instance ID: {0}", instanceId);
                                     }
                                     if (acs.getState() == AdminCommandState.State.COMPLETED
                                             || acs.getState() == AdminCommandState.State.RECORDED
@@ -755,17 +758,17 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                                         }
                                         closeSse = true;
                                         if (!acs.isOutboundPayloadEmpty()) {
-                                            logger.log(Level.FINEST, "Romote command holds data. Must load it");
+                                            logger.log(FINEST, "Romote command holds data. Must load it");
                                             downloadPayloadFromManaged(instanceId);
                                         }
                                     } else if (acs.getState() == AdminCommandState.State.FAILED_RETRYABLE) {
-                                        logger.log(Level.INFO, strings.get("remotecommand.failedretryable", acs.getId()));
+                                        logger.log(INFO, strings.get("remotecommand.failedretryable", acs.getId()));
                                         if (acs.getActionReport() != null) {
                                             setActionReport(acs.getActionReport());
                                         }
                                         closeSse = true;
                                     } else if (acs.getState() == AdminCommandState.State.RUNNING_RETRYABLE) {
-                                        logger.log(Level.FINEST, "Command stores checkpoint and is retryable");
+                                        logger.log(FINEST, "Command stores checkpoint and is retryable");
                                         retryableCommand = true;
                                     }
                                 }
@@ -811,14 +814,14 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                         } else if (resultMediaType.startsWith("multipart/")) {
                             RestPayloadImpl.Inbound inbound = pwp.getPayloadInbound();
                             setActionReport(pwp.getActionReport());
-                            if (logger.isLoggable(Level.FINER)) {
-                                logger.log(Level.FINER, "------ PAYLOAD ------");
+                            if (logger.isLoggable(FINER)) {
+                                logger.log(FINER, "------ PAYLOAD ------");
                                 Iterator<Payload.Part> parts = inbound.parts();
                                 while (parts.hasNext()) {
                                     Payload.Part part = parts.next();
-                                    logger.log(Level.FINER, " - {0} [{1}]", new Object[] { part.getName(), part.getContentType() });
+                                    logger.log(FINER, " - {0} [{1}]", new Object[] { part.getName(), part.getContentType() });
                                 }
-                                logger.log(Level.FINER, "---- END PAYLOAD ----");
+                                logger.log(FINER, "---- END PAYLOAD ----");
                             }
                             PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, logger, null);
                             try {
@@ -853,7 +856,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             params.add("DEFAULT", jobId);
             command.executeCommand(params);
         } catch (CommandException ex) {
-            logger.log(Level.WARNING, strings.getString("remote.sse.canNotGetPayload", "Cannot retrieve payload. {0}"), ex.getMessage());
+            logger.log(WARNING, strings.getString("remote.sse.canNotGetPayload", "Cannot retrieve payload. {0}"), ex.getMessage());
         }
     }
 
@@ -870,10 +873,10 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             }
             addSubMessages("", ar.getTopMessagePart(), sb);
             this.output = sb.toString();
-            if (logger.isLoggable(Level.FINER)) {
-                logger.log(Level.FINER, "------ ACTION REPORT ------");
-                logger.log(Level.FINER, String.valueOf(actionReport));
-                logger.log(Level.FINER, "---- END ACTION REPORT ----");
+            if (logger.isLoggable(FINER)) {
+                logger.log(FINER, "------ ACTION REPORT ------");
+                logger.log(FINER, String.valueOf(actionReport));
+                logger.log(FINER, "---- END ACTION REPORT ----");
             }
         }
     }
@@ -989,12 +992,12 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             shouldTryCommandAgain = false;
             try {
                 final AuthenticationInfo authInfo = authenticationInfo();
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "URI: {0}", uriString);
-                    logger.log(Level.FINER, "URL: {0}", url.toURL(uriString).toString());
-                    logger.log(Level.FINER, "Method: {0}", httpMethod);
-                    logger.log(Level.FINER, "Password options: {0}", passwordOptions);
-                    logger.log(Level.FINER, "Using auth info: {0}", authInfo);
+                if (logger.isLoggable(FINER)) {
+                    logger.log(FINER, "URI: {0}", uriString);
+                    logger.log(FINER, "URL: {0}", url.toURL(uriString).toString());
+                    logger.log(FINER, "Method: {0}", httpMethod);
+                    logger.log(FINER, "Password options: {0}", passwordOptions);
+                    logger.log(FINER, "Using auth info: {0}", authInfo);
                 }
                 if (authInfo != null) {
                     url.setAuthenticationInfo(authInfo);
@@ -1017,8 +1020,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
                     urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.log(Level.FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                    if (logger.isLoggable(FINER)) {
+                        logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
                     }
                 }
                 urlConnection.setRequestMethod(httpMethod);
@@ -1042,7 +1045,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                      * Log at FINER; at FINE it would appear routinely when used from
                      * asadmin.
                      */
-                    logger.log(Level.FINER, "Following redirection to " + redirection);
+                    logger.log(FINER, "Following redirection to " + redirection);
                     url = followRedirection(url, redirection);
                     shouldTryCommandAgain = true;
                     /*
@@ -1072,7 +1075,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 logger.finer("doHttpCommand succeeds");
             } catch (AuthenticationException authEx) {
 
-                logger.log(Level.FINER, "DAS has challenged for credentials");
+                logger.log(FINER, "DAS has challenged for credentials");
 
                 /*
                  * Try to update the credentials if we haven't already done so.
@@ -1082,84 +1085,60 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                      * We already updated the credentials once, and the updated
                      * ones did not work.  No recourse.
                      */
-                    logger.log(Level.FINER, "Already tried with updated credentials; cannot authenticate");
+                    logger.log(FINER, "Already tried with updated credentials; cannot authenticate");
                     throw authEx;
                 }
 
                 /*
                  * Try to update the creds.
                  */
-                logger.log(Level.FINER, "Try to update credentials");
+                logger.log(FINER, "Try to update credentials");
                 if (!updateAuthentication()) {
                     /*
                      * No updated credentials are avaiable, so we
                      * have no more options.
                      */
-                    logger.log(Level.FINER, "Could not update credentials; cannot authenticate");
+                    logger.log(FINER, "Could not update credentials; cannot authenticate");
                     throw authEx;
                 }
                 /*
                  * We have another set of credentials we can try.
                  */
-                logger.log(Level.FINER, "Was able to update the credentials so will retry with the updated ones");
+                logger.log(FINER, "Was able to update the credentials so will retry with the updated ones");
                 askedUserForCredentials = true;
                 shouldTryCommandAgain = true;
                 continue;
 
             } catch (ConnectException ce) {
-                logger.log(Level.FINER, "doHttpCommand: connect exception {0}", ce);
+                logger.log(FINER, "doHttpCommand: connect exception {0}", ce);
                 // this really means nobody was listening on the remote server
                 // note: ConnectException extends IOException and tells us more!
                 String msg = strings.get("ConnectException", host, port + "");
                 throw new CommandException(msg, ce);
             } catch (UnknownHostException he) {
-                logger.log(Level.FINER, "doHttpCommand: host exception {0}", he);
+                logger.log(FINER, "doHttpCommand: host exception {0}", he);
                 // bad host name
                 String msg = strings.get("UnknownHostException", host);
                 throw new CommandException(msg, he);
             } catch (SocketException se) {
-                logger.log(Level.FINER, "doHttpCommand: socket exception {0}", se);
-                try {
-                    boolean serverAppearsSecure = NetUtils.isSecurePort(host, port);
-                    if (serverAppearsSecure && !shouldUseSecure) {
-                        if (retryUsingSecureConnection(host, port)) {
-                            // retry using secure connection
-                            shouldUseSecure = true;
-                            shouldTryCommandAgain = true;
-                            continue;
-                        }
-                    }
-                    throw new CommandException(se);
-                } catch (IOException io) {
-                    // XXX - logger.printExceptionStackTrace(io);
-                    throw new CommandException(io);
-                }
+                logger.log(FINER, "doHttpCommand: socket exception {0}", se);
+                throw new CommandException(se);
             } catch (SSLException se) {
-                logger.log(Level.FINER, "doHttpCommand: SSL exception {0}", se);
-                try {
-                    boolean serverAppearsSecure = NetUtils.isSecurePort(host, port);
-                    if (!serverAppearsSecure && secure) {
-                        logger.log(Level.SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
-                    }
-                    throw new CommandException(se);
-                } catch (IOException io) {
-                    // XXX - logger.printExceptionStackTrace(io);
-                    throw new CommandException(io);
+                logger.log(FINER, "doHttpCommand: SSL exception {0}", se);
+                if (secure) {
+                    logger.log(SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
                 }
+                throw new CommandException(se);
             } catch (SocketTimeoutException e) {
-                logger.log(Level.FINER, "doHttpCommand: read timeout {0}", e);
+                logger.log(FINER, "doHttpCommand: read timeout {0}", e);
                 throw new CommandException(strings.get("ReadTimeout", (float) readTimeout / 1000), e);
             } catch (IOException e) {
-                logger.log(Level.FINER, "doHttpCommand: IO exception {0}", e);
+                logger.log(FINER, "doHttpCommand: IO exception {0}", e);
                 throw new CommandException(strings.get("IOError", e.getMessage()), e);
             } catch (CommandException e) {
                 throw e;
             } catch (Exception e) {
-                // logger.log(Level.FINER, "doHttpCommand: exception", e);
-                logger.log(Level.FINER, "doHttpCommand: exception {0}", e);
-                ByteArrayOutputStream buf = new ByteArrayOutputStream();
-                e.printStackTrace(new PrintStream(buf));
-                logger.finer(buf.toString());
+                logger.log(FINER, "Something went wrong: " + e.getMessage(), e);
                 throw new CommandException(e);
             }
         } while (shouldTryCommandAgain);
@@ -1245,8 +1224,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      */
     private String checkConnect(HttpURLConnection urlConnection) throws IOException, CommandException {
         int code = urlConnection.getResponseCode();
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "Response code: " + code);
+        if (logger.isLoggable(FINER)) {
+            logger.log(FINER, "Response code: " + code);
         }
         if (code == -1) {
             URL url = urlConnection.getURL();
@@ -1373,8 +1352,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 commandModel = parseMetadata(json, eTag);
                 if (commandModel != null) {
                     commandModelFromCache = false;
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
                                 new Object[] { name, System.nanoTime() - startNanos });
                     }
                     try {
@@ -1384,8 +1363,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                         forCache.append(json);
                         AdminCacheUtils.getCache().put(createCommandCacheKey(), forCache.toString());
                     } catch (Exception ex) {
-                        if (logger.isLoggable(Level.WARNING)) {
-                            logger.log(Level.WARNING, AdminLoggerInfo.mCantPutToCache, new Object[] { createCommandCacheKey() });
+                        if (logger.isLoggable(WARNING)) {
+                            logger.log(WARNING, AdminLoggerInfo.mCantPutToCache, new Object[] { createCommandCacheKey() });
                         }
                     }
                 } else {

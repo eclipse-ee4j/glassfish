@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,9 +27,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
-import java.util.logging.Level;
 
 import javax.naming.Context;
 
@@ -38,6 +35,8 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.naming.util.LogFacade.logger;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 import static org.glassfish.common.util.ObjectInputOutputStreamFactoryFactory.getFactory;
 
 /**
@@ -61,15 +60,13 @@ public class NamingUtilsImpl implements NamingUtils {
 
 
     @Override
-    public NamingObjectFactory createLazyNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName,
-        boolean cacheResult) {
+    public NamingObjectFactory createLazyNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName, boolean cacheResult) {
         return new JndiNamingObjectFactory(name, jndiName, cacheResult);
     }
 
 
     @Override
-    public NamingObjectFactory createLazyInitializationNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName,
-        boolean cacheResult) {
+    public NamingObjectFactory createLazyInitializationNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName, boolean cacheResult) {
         return new JndiInitializationNamingObjectFactory(name, jndiName, cacheResult);
     }
 
@@ -80,13 +77,16 @@ public class NamingUtilsImpl implements NamingUtils {
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T makeCopyOfObject(T obj) {
         if (obj instanceof Context || !(obj instanceof Serializable)) {
             // XXX no copy ?
             return obj;
         }
-        logger.log(Level.FINE, "makeCopyOfObject({0})", obj);
+
+        logger.log(FINE, "makeCopyOfObject({0})", obj);
+
         try {
             // first serialize the object
             final byte[] data;
@@ -96,13 +96,16 @@ public class NamingUtilsImpl implements NamingUtils {
                 oos.flush();
                 data = bos.toByteArray();
             }
-            // now deserialize it
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                ObjectInputStream ois = getFactory().createObjectInputStream(bis)) {
-                return (T) AccessController.doPrivileged((PrivilegedExceptionAction<Object>) ois::readObject);
+
+            // Now deserialize it
+            try (
+                    ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                    ObjectInputStream ois = getFactory().createObjectInputStream(bis)) {
+
+                return (T) ois.readObject();
             }
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, EXCEPTION_COPY_MUTABLE, obj);
+            logger.log(SEVERE, EXCEPTION_COPY_MUTABLE, obj);
             throw new RuntimeException("Cant copy Serializable object " + obj, ex);
         }
     }

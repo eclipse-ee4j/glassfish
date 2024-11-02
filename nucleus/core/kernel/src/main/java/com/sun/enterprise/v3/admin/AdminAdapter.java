@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.LogHelper;
-import com.sun.enterprise.universal.GFBase64Decoder;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.uuid.UuidGenerator;
@@ -41,6 +40,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URLDecoder;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -86,6 +86,8 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Listen to admin commands...
  * @author dochez
@@ -96,7 +98,6 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     public final static String PREFIX_URI = "/" + VS_NAME;
     private final static LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(AdminAdapter.class);
     private final static Logger aalogger = KernelLoggerInfo.getLogger();
-    private static final GFBase64Decoder decoder = new GFBase64Decoder();
     private static final String BASIC = "Basic ";
 
     private static final String SET_COOKIE_HEADER = "Set-Cookie";
@@ -124,7 +125,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
-    private AdminEndpointDecider epd = null;
+    private AdminEndpointDecider epd;
 
     @Inject
     ServerContext sc;
@@ -146,7 +147,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
     final Class<? extends Privacy> privacyClass;
 
-    private boolean isRegistered = false;
+    private boolean isRegistered;
 
     CountDownLatch latch = new CountDownLatch(1);
 
@@ -245,13 +246,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
              * content type of the payload reflects its multi-part nature and
              * an implementation-specific content type will be set in the response.
              */
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
             report.writeReport(baos);
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             final Properties reportProps = new Properties();
             reportProps.setProperty("data-request-type", "report");
-            outboundPayload.addPart(0, report.getContentType(), "report",
-                    reportProps, bais);
+            outboundPayload.addPart(0, report.getContentType(), "report", reportProps, bais);
             res.setContentType(outboundPayload.getContentType());
             String commandName = req.getRequestURI().substring(getContextRoot().length() + 1);
             //Check session routing for commands that have @ExecuteOn(RuntimeType.SINGLE_INSTANCE)
@@ -406,7 +406,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             return new String[]{"", ""};
         }
         String enc = authHeader.substring(BASIC.length());
-        String dec = new String(decoder.decodeBuffer(enc));
+        String dec = new String(Base64.getDecoder().decode(enc), UTF_8);
         int i = dec.indexOf(':');
         if (i < 0) {
             return new String[] { "", "" };
@@ -598,18 +598,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             }
             String paramName = token.substring(0, token.indexOf("="));
             String value = token.substring(token.indexOf("=") + 1);
-
             try {
-                value = URLDecoder.decode(value, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                aalogger.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
-                        new Object[] { paramName, value });
-                continue;
-            }
-
-            try {
-                value = new String(decoder.decodeBuffer(value));
-            } catch (IOException e) {
+                value = new String(Base64.getUrlDecoder().decode(value), UTF_8);
+            } catch (IllegalArgumentException e) {
                 aalogger.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
                         new Object[] { paramName, value });
                 continue;

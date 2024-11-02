@@ -24,7 +24,6 @@ import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 
 import org.glassfish.embeddable.GlassFishProperties;
@@ -49,7 +48,7 @@ public class EmbeddedDomainXml extends GFDomainXml {
     static URL getDomainXml(StartupContext startupContext) throws IOException {
         String configFileURI = startupContext.getArguments().getProperty(GlassFishProperties.CONFIG_FILE_URI_PROP_NAME);
         if (configFileURI != null) { // user specified domain.xml
-            return URI.create(configFileURI).toURL();
+            return GlassFishProperties.filePathToAbsoluteURI(configFileURI).toURL();
         }
         String instanceRoot = startupContext.getArguments().getProperty(
                 "com.sun.aas.instanceRoot");

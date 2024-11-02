@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,11 +26,11 @@ import java.util.List;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.AMD64;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.JAVA_NATIVE_SYSPROP_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBDIR;
-import static com.sun.enterprise.admin.launcher.GFLauncherConstants.PS;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.SPARC;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.SPARCV9;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.X86;
 import static com.sun.enterprise.universal.io.SmartFile.sanitize;
+import static java.io.File.pathSeparatorChar;
 
 /**
  * The platform-specific code is ugly. That's why it is concentrated here.
@@ -73,11 +74,11 @@ class GFLauncherNativeHelper {
         // don't worry about extra PS's --> no problem-o
         // don't worry about duplicates -- SmartFile will get rid of them...
         StringBuilder sb = new StringBuilder();
-        sb.append(prefixFileString).append(PS);
-        sb.append(libFileString).append(PS);
-        sb.append(lib64FileString).append(PS);
-        sb.append(stockNativePathsString).append(PS);
-        sb.append(profilerFileString).append(PS);
+        sb.append(prefixFileString).append(pathSeparatorChar);
+        sb.append(libFileString).append(pathSeparatorChar);
+        sb.append(lib64FileString).append(pathSeparatorChar);
+        sb.append(stockNativePathsString).append(pathSeparatorChar);
+        sb.append(profilerFileString).append(pathSeparatorChar);
         sb.append(suffixFileString);
 
         // this looks dumb but there is a lot of potential cleaning going on here

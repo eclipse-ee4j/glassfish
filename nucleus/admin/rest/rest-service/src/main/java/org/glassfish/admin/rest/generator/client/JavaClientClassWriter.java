@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,12 +34,14 @@ import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.jvnet.hk2.config.ConfigModel;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author jdlee
  */
 public class JavaClientClassWriter implements ClientClassWriter {
-    private String className;
+    private final String className;
     private BufferedWriter source;
 
     private static final String TMPL_CLASS_HEADER = "package " + Constants.CLIENT_JAVA_PACKAGE + ";\n" + "import java.util.HashMap;\n"
@@ -85,7 +88,7 @@ public class JavaClientClassWriter implements ClientClassWriter {
                 RestLogging.restLogger.log(Level.SEVERE, RestLogging.FILE_CREATION_FAILED, classFile.getName());
             }
             classFile.deleteOnExit();
-            source = new BufferedWriter(new FileWriter(classFile));
+            source = new BufferedWriter(new FileWriter(classFile, UTF_8));
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -227,6 +230,7 @@ public class JavaClientClassWriter implements ClientClassWriter {
         }
     }
 
+    @Override
     public void done() {
         finishClass();
     }

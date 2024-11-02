@@ -1,4 +1,5 @@
 REM
+REM  Copyright (c) 2024 Contributors to the Eclipse Foundation.
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -35,6 +36,7 @@ REM  installation directory of GlassFish, and such resolution will not work
 REM  correctly unless the script happens to be run from the GlassFish installation
 REM  directory.
 REM
+REM  This file uses UTF-8 character encoding.
 
 set AS_IMQ_LIB=..\..\mq\lib
 set AS_IMQ_BIN=..\..\mq\bin

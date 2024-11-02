@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +33,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * This class implements an adapter for password manipulation a JCEKS. Note that although it uses locks ('synchronized'), it
@@ -131,7 +133,7 @@ public final class PasswordAdapter {
 
         final Key key = _pwdStore.getKey(alias, getMasterPassword());
         if (key != null) {
-            passwordString = new String(key.getEncoded());
+            passwordString = new String(key.getEncoded(), UTF_8);
         }
 
         return passwordString;
@@ -203,7 +205,7 @@ public final class PasswordAdapter {
      * This methods set alias, secretKey into JCEKS keystore.
      *
      * @param alias
-     * @param secretKey
+     * @param keyBytes
      * @exception CertificateException
      * @exception IOException
      * @exception KeyStoreException
@@ -251,8 +253,7 @@ public final class PasswordAdapter {
      */
     private static void writeKeyStoreToFile(final KeyStore keyStore, final File file, final char[] masterPassword)
         throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        final FileOutputStream out = new FileOutputStream(file);
-        try (out) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
             keyStore.store(out, masterPassword);
         }
     }

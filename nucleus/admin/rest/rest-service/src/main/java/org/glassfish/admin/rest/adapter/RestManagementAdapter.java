@@ -18,6 +18,8 @@
 package org.glassfish.admin.rest.adapter;
 
 import org.glassfish.admin.restconnector.Constants;
+import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.Response;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -31,5 +33,12 @@ public class RestManagementAdapter extends RestAdapter {
 
     public RestManagementAdapter() {
         super(new RestManagementResourceProvider());
+    }
+
+    @Override
+    public void service(Request req, Response res) {
+        req.setServerName(req.getLocalName());
+        req.setServerPort(req.getLocalPort());
+        super.service(req, res);
     }
 }

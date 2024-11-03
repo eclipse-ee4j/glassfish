@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,7 +40,7 @@ public class Util {
     private static GlassFishRuntime glassfishRuntime;
 
     public static synchronized GlassFish startGlassFish(String serverID, String installRoot,
-                                                        String instanceRoot, String configFileURI,
+                                                        String instanceRoot, String configFile,
                                                         boolean configFileReadOnly, int httpPort)
             throws GlassFishException {
         GlassFish glassfish = gfMap.get(serverID);
@@ -58,12 +59,12 @@ public class Util {
         if (instanceRoot != null) {
             glassfishProperties.setInstanceRoot(instanceRoot);
         }
-        if (configFileURI != null) {
-            glassfishProperties.setConfigFileURI(configFileURI);
+        if (configFile != null) {
+            glassfishProperties.setConfigFileURI(new File(configFile).toURI().toString());
             glassfishProperties.setConfigFileReadOnly(configFileReadOnly);
         }
 
-        if (instanceRoot==null && configFileURI==null) {
+        if (instanceRoot == null && configFile == null) {
             // only set port if embedded domain.xml is used
             if (httpPort != -1) {
                 glassfishProperties.setPort("http-listener", httpPort);
@@ -92,7 +93,7 @@ public class Util {
         Deployer deployer = glassfish.getDeployer();
         final int len = deployParams.size();
         if (len > 0) {
-            deployer.deploy(new File(app).toURI(), deployParams.toArray(new String[len]));
+            deployer.deploy(new File(app).toURI(), deployParams.toArray(String[]::new));
             System.out.println("Deployed [" + app + "] with parameters " + deployParams);
         } else {
             deployer.deploy(new File(app).toURI());

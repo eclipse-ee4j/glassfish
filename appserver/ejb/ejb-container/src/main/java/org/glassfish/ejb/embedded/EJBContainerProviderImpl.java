@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -184,8 +184,9 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                     _logger.info("[EJBContainerProviderImpl] Using instance location: " + l.instance_root.getCanonicalPath());
                     glassFishProperties.setInstanceRoot(l.instance_root.getCanonicalPath());
                 } else if (l.domain_file != null) {
-                    _logger.info("[EJBContainerProviderImpl] Using config file location: " + l.domain_file.toURI().toString());
-                    glassFishProperties.setConfigFileURI(l.domain_file.toURI().toString());
+                    String cfgFileUri = l.domain_file.toURI().toString();
+                    _logger.info("[EJBContainerProviderImpl] Using config file location: " + cfgFileUri);
+                    glassFishProperties.setConfigFileURI(cfgFileUri);
                 }
                 addWebContainerIfRequested(properties, glassFishProperties);
 

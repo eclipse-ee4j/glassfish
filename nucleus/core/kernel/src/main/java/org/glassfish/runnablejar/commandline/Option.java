@@ -85,7 +85,7 @@ public enum Option {
             "Set the location of domain configuration file (i.e., domain.xml) using which GlassFish should run.") {
         @Override
         public void handle(String value, Arguments arguments) {
-            arguments.glassFishProperties.setConfigFileURI(value);
+            arguments.glassFishProperties.setConfigFileURI(new File(value).toURI().toString());
         }
     },
     DOMAIN_DIR("domainDir", Set.of("instanceRoot"), "--domainDir=DIRECTORY, --instanceRoot=DIRECTORY",

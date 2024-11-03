@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AccessRequired;
@@ -42,7 +40,6 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.FailurePolicy;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.common.util.admin.ParameterMapExtractor;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -92,7 +89,7 @@ public class DeploymentCommandUtils {
         final Cluster containingCluster = domain.getClusterForInstance(target);
         if (containingCluster != null) {
             final ParameterMapExtractor extractor = new ParameterMapExtractor(command);
-            final ParameterMap pMap = extractor.extract(Collections.EMPTY_LIST);
+            final ParameterMap pMap = extractor.extract(Collections.emptyList());
             pMap.set("DEFAULT", appName);
 
             return ClusterOperationUtil.replicateCommand(
@@ -127,69 +124,57 @@ public class DeploymentCommandUtils {
         return targetName;
     }
 
+
+    /**
+     * @param targetDirectory existing or nonexisting (but creatable) target directory
+     * @param fileParam relative or absolute path
+     * @param appsDir If the fileParam resides within the applications directory then it has been
+     *            uploaded. In that case, move it.
+     * @return result
+     * @throws IOException
+     */
     public static File renameUploadedFileOrCopyInPlaceFile(
-            final File finalUploadDir,
+            final File targetDirectory,
             final File fileParam,
-            final Logger logger,
-            ServerEnvironment env) throws IOException {
+            final File appsDir) throws IOException {
         if (fileParam == null) {
             return null;
         }
-        /*
-         * If the fileParam resides within the applications directory then
-         * it has been uploaded.  In that case, rename it.
-         */
-        final File appsDir = env.getApplicationRepositoryPath();
 
-        /*
-         * The default answer is the in-place file, to handle the
-         * directory-deployment case or the in-place archive case if we ae
-         * not copying the in-place archive.
-         */
-        File result = fileParam;
-
-        if ( ! fileParam.isDirectory() && ! appsDir.toURI().relativize(fileParam.toURI()).isAbsolute()) {
-            /*
-             * The file lies within the apps directory, so it was
-             * uploaded.
-             */
-            result = new File(finalUploadDir, fileParam.getName());
+        // The default answer is the in-place file, to handle the
+        // directory-deployment case or the in-place archive case if we are
+        // not copying the in-place archive.
+        if (!fileParam.isDirectory() && !appsDir.toURI().relativize(fileParam.toURI()).isAbsolute()) {
+            // The file lies within the apps directory, so it was uploaded.
+            final File result = new File(targetDirectory, fileParam.getName());
             final long lastMod = fileParam.lastModified();
-            FileUtils.renameFile(fileParam, result);
-            if ( ! result.setLastModified(lastMod)) {
-                    logger.log(Level.FINE, "In renaming {0} to {1} could not setLastModified; continuing",
-                            new Object[] {fileParam.getAbsolutePath(),
-                                result.getAbsolutePath()
-                            });
+            if (!FileUtils.renameFile(fileParam, result)) {
+                throw new IOException(
+                    "Failed to move file " + fileParam.getAbsolutePath() + " to " + result.getAbsolutePath());
             }
-        } else {
-            final boolean copyInPlaceArchive = Boolean.valueOf(
-                    System.getProperty(COPY_IN_PLACE_ARCHIVE_PROP_NAME, "true"));
-            if ( ! fileParam.isDirectory() && copyInPlaceArchive) {
-                /*
-                 * The file was not uploaded and the in-place file is not a directory,
-                 * so copy the archive to the permanent location.
-                 */
-                final long startTime = System.currentTimeMillis();
-                result = new File(finalUploadDir, fileParam.getName());
-                FileUtils.copy(fileParam, result);
-                if ( ! result.setLastModified(fileParam.lastModified())) {
-                    logger.log(Level.FINE, "Could not set lastModified for {0}; continuing",
-                            result.getAbsolutePath());
-                }
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "*** In-place archive copy of {0} took {1} ms",
-                            new Object[]{
-                                fileParam.getAbsolutePath(),
-                                System.currentTimeMillis() - startTime});
-                }
+            if (!result.setLastModified(lastMod)) {
+                throw new IOException("Failed to set the last modified timestamp of file " + result.getAbsolutePath());
             }
+            return result;
+        }
+
+        final boolean copyInPlaceArchive = Boolean.valueOf(System.getProperty(COPY_IN_PLACE_ARCHIVE_PROP_NAME, "true"));
+        if (fileParam.isDirectory() || !copyInPlaceArchive) {
+            return fileParam;
+        }
+
+        // The file was not uploaded and the in-place file is not a directory,
+        // so copy the archive to the permanent location.
+        final File result = new File(targetDirectory, fileParam.getName());
+        FileUtils.copy(fileParam, result);
+        if (!result.setLastModified(fileParam.lastModified())) {
+            throw new IOException("Failed to set the last modified timestamp of file " + result.getAbsolutePath());
         }
         return result;
     }
 
-    private static StringBuilder getTargetResourceName(final Domain d,
-                final String target) {
+
+    private static StringBuilder getTargetResourceName(final Domain d, final String target) {
         final StringBuilder sb = new StringBuilder();
         ConfigBeanProxy p = d.getServerNamed(target);
         if (p == null) {

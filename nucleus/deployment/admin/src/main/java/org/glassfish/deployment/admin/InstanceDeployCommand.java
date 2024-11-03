@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -307,11 +307,11 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
             final ExtendedDeploymentContext deploymentContext,
             final Logger logger) throws IOException {
         final File finalAltDDDir = deploymentContext.getAppAltDDDir();
-        if ( ! finalAltDDDir.mkdirs()) {
-            logger.log(Level.FINE," Attempting to create directory {0} was reported as failed; attempting to continue",
-                    new Object[] {finalAltDDDir.getAbsolutePath()});
+        if (!finalAltDDDir.isDirectory() && !finalAltDDDir.mkdirs()) {
+            throw new IOException("Failed to create the directory " + finalAltDDDir.getAbsolutePath());
         }
-        DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile( finalAltDDDir, altdd, logger, env);
-        DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile( finalAltDDDir, runtimealtdd, logger, env);
+        File applicationsDir = env.getApplicationRepositoryPath();
+        DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, altdd, applicationsDir);
+        DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, runtimealtdd, applicationsDir);
     }
 }

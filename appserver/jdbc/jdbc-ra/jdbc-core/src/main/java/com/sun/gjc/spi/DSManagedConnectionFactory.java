@@ -51,7 +51,7 @@ import static java.util.logging.Level.SEVERE;
 @ConnectionDefinition(
     connectionFactory = DataSource.class,
     connectionFactoryImpl = AbstractDataSource.class,
-    connection = java.sql.Connection.class,
+    connection = Connection.class,
     connectionImpl = ConnectionHolder.class
 )
 public class DSManagedConnectionFactory extends ManagedConnectionFactoryImpl {

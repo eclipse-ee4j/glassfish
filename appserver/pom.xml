@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.19-SNAPSHOT</version>
+        <version>7.0.20-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -152,7 +152,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.3</microprofile.config-api.version>
-        <helidon-config.version>3.2.8</helidon-config.version>
+        <helidon-config.version>3.2.10</helidon-config.version>
 
 
         <!-- MicroProfile Health -->

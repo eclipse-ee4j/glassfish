@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.19-SNAPSHOT</version>
+        <version>7.0.20-SNAPSHOT</version>
         <relativePath>../appserver</relativePath>
     </parent>
     <groupId>org.glassfish.main.docs</groupId>
@@ -35,8 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <glassfish.version.5x>5.1.0</glassfish.version.5x>
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
-        <!-- TODO: Update after next release -->
-        <glassfish.version.7x>7.0.18</glassfish.version.7x>
+        <glassfish.version.7x>7.0.19</glassfish.version.7x>
         <glassfish.version.latest>${glassfish.version.7x}</glassfish.version.latest>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
     </properties>

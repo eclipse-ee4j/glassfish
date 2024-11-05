@@ -23,4 +23,7 @@ jobs:
         curl.exe -o ./apache-maven-3.9.9-bin.zip https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.zip
         tar -xf ./apache-maven-3.9.9-bin.zip
     - name: Build with Maven
-      run: ./apache-maven-3.9.9/bin/mvn -B clean install -Pstaging
+      # qa skips documentation - we check it on Jenkins CI
+      # We skip checkstyle too - we check it on Jenkins CI
+      run: ./apache-maven-3.9.9/bin/mvn -B -e clean install -Pstaging,qa -Dcheckstyle.skip=true
+

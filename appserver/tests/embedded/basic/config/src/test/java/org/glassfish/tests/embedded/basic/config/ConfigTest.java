@@ -43,33 +43,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfigTest {
 
-    public static final Logger logger = Logger.getLogger(ConfigTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConfigTest.class.getName());
 
-    static GlassFishRuntime runtime;
+    private static GlassFishRuntime runtime;
 
     @BeforeAll
     static void bootStrap() throws GlassFishException {
-                runtime = GlassFishRuntime.bootstrap();
+        runtime = GlassFishRuntime.bootstrap();
     }
+
 
     @ParameterizedTest
     @ArgumentsSource(ConfigFileArgumentsProvider.class)
-    void testConfigFile(String configFile) throws GlassFishException, IOException, URISyntaxException {
+    void testConfigFile(String configFile) throws Exception {
         GlassFishProperties gfp = new GlassFishProperties();
         gfp.setConfigFileURI(configFile);
 
         GlassFish instance1 = runtime.newGlassFish(gfp);
-        logger.info(() -> "Instance1 created" + instance1);
+        LOG.info(() -> "Instance1 created" + instance1);
         instance1.start();
-        logger.info("Instance1 started #1");
+        LOG.info("Instance1 started #1");
 
         final String domainName = instance1.getService(Domain.class).getName();
         assertTrue("myDomain".equals(domainName), "Domain name is " + domainName);
 
         instance1.stop();
-        logger.info("Instance1 stopped #1");
+        LOG.info("Instance1 stopped #1");
         instance1.dispose();
-        logger.info("Instance1 disposed");
+        LOG.info("Instance1 disposed");
         checkDisposed();
     }
 
@@ -91,7 +92,7 @@ public class ConfigTest {
     // throws exception if the temp dir is not cleaned out.
     private void checkDisposed() {
         String instanceRoot = System.getProperty("com.sun.aas.instanceRoot");
-        logger.info(() -> "Checking whether " + instanceRoot + " is disposed or not");
+        LOG.info(() -> "Checking whether " + instanceRoot + " is disposed or not");
         if (new File(instanceRoot).exists()) {
             throw new RuntimeException("Directory " + instanceRoot +
                     " is not cleaned up after glassfish.dispose()");

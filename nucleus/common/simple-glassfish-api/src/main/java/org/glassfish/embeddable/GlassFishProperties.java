@@ -38,7 +38,7 @@ public class GlassFishProperties {
 
     /** Key for specifying which instance root (aka domain dir) GlassFish should run with. */
     public static final String INSTANCE_ROOT_PROP_NAME = "com.sun.aas.instanceRoot";
-    /** Key for specifying which configuration file (domain.xml) GlassFish should run with. */
+    /** Key for specifying absolute URI which configuration file (domain.xml) GlassFish should run with. */
     public static final String CONFIG_FILE_URI_PROP_NAME = "org.glassfish.embeddable.configFileURI";
     /**
      * Key for specifying whether the specified configuration file (domain.xml) or config/domain.xml
@@ -130,35 +130,82 @@ public class GlassFishProperties {
         return gfProperties.getProperty(INSTANCE_ROOT_PROP_NAME);
     }
 
+
     /**
      * Optionally set the location of configuration file (i.e., domain.xml) using
      * which the GlassFish should run.
-     * <p/>
+     * <p>
+     * If the parameter does not start with <code>file:</code>, it is resolved as a local file path
+     * relative to the current directory.
+     * <p>
      * Unless specified, the configuration file is operated on read only mode.
      * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
      *
-     * @param configFileURI Location of configuration file. File path, or full URI with the schema, e.g. file:
+     * @param configFileURI Location of configuration file. File path, or full URI with the schema,
+     *            e.g. <code>file:</code>
      */
+    @Deprecated(forRemoval = true, since = "7.0.20")
     public void setConfigFileURI(String configFileURI) {
-        gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI);
+        if (configFileURI == null) {
+            gfProperties.remove(CONFIG_FILE_URI_PROP_NAME);
+            return;
+        }
+        if (configFileURI.startsWith("file:")) {
+            setConfigFile(URI.create(configFileURI));
+        } else {
+            setConfigFile(new File(configFileURI).toURI());
+        }
     }
 
     /**
-     * Get the configurationFileURI set using {@link #setConfigFileURI(String)}
+     * Optionally set the location of configuration file (i.e., domain.xml) using
+     * which the GlassFish should run. The file will be converted to the absolute URI.
+     * <p>
+     * Unless specified, the configuration file is operated on read only mode.
+     * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
+     *
+     * @param configFile Location of configuration file. File path, or full URI with the schema,
+     *            e.g. <code>file:</code>
+     */
+    public void setConfigFile(File configFile) {
+        if (configFile == null) {
+            gfProperties.remove(CONFIG_FILE_URI_PROP_NAME);
+            return;
+        }
+        setConfigFile(configFile.toURI());
+    }
+
+    /**
+     * Optionally set the location of configuration file (i.e., domain.xml) using
+     * which the GlassFish should run. The parameter must be an absolute URI or null.
+     * <p>
+     * Unless specified, the configuration file is operated on read only mode.
+     * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
+     *
+     * @param configFileURI Location of configuration file. File path, or full URI with the schema,
+     *            e.g. <code>file:</code>
+     * @throws IllegalArgumentException If the parameter is not an absolute URI or null.
+     */
+    public void setConfigFile(URI configFileURI) {
+        if (configFileURI == null) {
+            gfProperties.remove(CONFIG_FILE_URI_PROP_NAME);
+            return;
+        }
+        if (configFileURI.isAbsolute()) {
+            gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI.toString());
+            return;
+        }
+        throw new IllegalArgumentException("The URI is not absolute: " + configFileURI);
+    }
+
+    /**
+     * Get the absolute configurationFileURI set using {@link #setConfigFileURI(String)}
      *
      * @return The configurationFileURI set using {@link #setConfigFileURI(String)}
      */
-    public String getConfigFileURI() {
-        return gfProperties.getProperty(CONFIG_FILE_URI_PROP_NAME);
-    }
-
-    /**
-     * Get the absolute URI, with schema, set using {@link #setConfigFileURI(String)}. Internally uses {@link #filePathToAbsoluteURI(java.lang.String)}.
-     *
-     * @return The configurationFileURI set using {@link #setConfigFileURI(String)} converted to URI
-     */
-    public URI getAbsoluteConfigFileURI() {
-        return filePathToAbsoluteURI(getConfigFileURI());
+    public URI getConfigFileURI() {
+        String uri = gfProperties.getProperty(CONFIG_FILE_URI_PROP_NAME);
+        return uri == null ? null : URI.create(uri);
     }
 
     /**
@@ -254,23 +301,5 @@ public class GlassFishProperties {
             }
         }
         return port;
-    }
-
-    /**
-     * Converts to absolute URI with absolute path.
-     * If the filePath doesn't contain schema, it will add file: schema
-     *
-     * @param filePath Path to create the URI
-     * @return absolute URI
-     */
-    public static URI filePathToAbsoluteURI(String filePath) {
-        if (filePath == null) {
-            return null;
-        }
-        URI uri = URI.create(filePath);
-        if (!uri.isAbsolute()) {
-            return new File(filePath).getAbsoluteFile().toURI();
-        }
-        return uri;
     }
 }

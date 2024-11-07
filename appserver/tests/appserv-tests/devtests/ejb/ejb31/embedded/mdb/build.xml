@@ -141,8 +141,8 @@
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
-           <jvmarg value="-Dcom.sun.aas.imqBin=${env.GLASSFISH_HOME}/mq/bin" />
-           <jvmarg value="-Dcom.sun.aas.imqLib=${env.GLASSFISH_HOME}/mq/lib" />
+           <jvmarg value="-Dcom.sun.aas.imqBin=${env.S1AS_HOME}/../mq/bin" />
+           <jvmarg value="-Dcom.sun.aas.imqLib=${env.S1AS_HOME}/../mq/lib" />
            <arg line="${jndiroot}"/>
 <!--
            <jvmarg value="-Dorg.glassfish.ejb.embedded.keep-temporary-files=true"/>

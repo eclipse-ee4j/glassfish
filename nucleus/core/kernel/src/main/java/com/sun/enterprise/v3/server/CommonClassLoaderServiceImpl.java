@@ -185,7 +185,7 @@ public class CommonClassLoaderServiceImpl {
         if (derbyHomeProperty == null) {
             return installDir.toPath().resolve(Path.of("..", "javadb"));
         }
-        Path derbyHome = Path.of(derbyHomeProperty);
+        Path derbyHome = new File(derbyHomeProperty).toPath();
         if (derbyHome.isAbsolute()) {
             return derbyHome;
         }

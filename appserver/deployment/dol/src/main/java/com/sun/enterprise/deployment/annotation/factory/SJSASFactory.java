@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.deployment.annotation.factory;
 
+import com.sun.enterprise.deployment.util.DOLUtils;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -124,6 +126,7 @@ public class SJSASFactory extends Factory {
         if (answers == null || answers.isEmpty()) {
             return null;
         }
+        DOLUtils.getLogger().log(System.Logger.Level.INFO, "AnnotationHandler: " + onMe + " has matches: " + answers);
         return answers.get(0);
     }
 

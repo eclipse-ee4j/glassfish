@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.io.SmartFile;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -66,8 +64,8 @@ class GlassFishMainLauncher extends GFLauncher {
 
     @Override
     List<File> getMainModulepath() throws GFLauncherException {
-        return List
-            .of(SmartFile.sanitize(Path.of(getEnvProps().get(INSTALL_ROOT_PROPERTY), "lib", "bootstrap").toFile()));
+        Path installRoot = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY)).toPath();
+        return List.of(installRoot.resolve(Path.of("lib", "bootstrap")).toAbsolutePath().normalize().toFile());
     }
 
     @Override

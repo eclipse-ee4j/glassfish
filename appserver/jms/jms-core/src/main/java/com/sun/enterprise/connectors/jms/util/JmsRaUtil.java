@@ -342,9 +342,9 @@ public class JmsRaUtil {
             return;
         }
 
-        final Path imqLib = Path.of(imqLibPath);
+        final Path imqLib = new File(imqLibPath).toPath();
+        final Path deployedDir = new File(installRoot).toPath().resolve(SYSTEM_APP_DIR).resolve(DEFAULT_JMS_ADAPTER);
         final File imqLibRar = imqLib.resolve(MQ_RAR).toFile();
-        final Path deployedDir = Path.of(installRoot).resolve(SYSTEM_APP_DIR).resolve(DEFAULT_JMS_ADAPTER);
         final String installedMqVersion;
         final String deployedMqVersion;
         try {

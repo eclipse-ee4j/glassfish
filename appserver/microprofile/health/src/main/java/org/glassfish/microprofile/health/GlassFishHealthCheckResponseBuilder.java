@@ -22,7 +22,7 @@ import java.util.Optional;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
-public class HealthCheckResponseBuilderImpl extends HealthCheckResponseBuilder {
+public class GlassFishHealthCheckResponseBuilder extends HealthCheckResponseBuilder {
 
     private final Map<String, Object> data = new HashMap<>();
     private String name;

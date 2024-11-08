@@ -1,1 +1,1 @@
-org.glassfish.microprofile.health.HealthCheckResponseProviderImpl
+org.glassfish.microprofile.health.GlassFishHealthCheckResponseProvider

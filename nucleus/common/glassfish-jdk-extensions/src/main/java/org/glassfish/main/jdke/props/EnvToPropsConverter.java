@@ -53,7 +53,7 @@ public final class EnvToPropsConverter {
      * There is no guarantee the file does exist.
      *
      * @param envToSys - key is env name, value is system property name.
-     * @return map of system property names and files.
+     * @return map of system property names and absolute files.
      */
     public Map<String, File> convert(final Map<String, String> envToSys) {
         final Map<String, File> files = new HashMap<>(envToSys.size());
@@ -86,7 +86,7 @@ public final class EnvToPropsConverter {
      */
     public File convert(final String envPropertyName, final String systemPropertyName) {
         final String value = evaluate(envPropertyName, systemPropertyName);
-        return value == null ? null : toAbsoluteFile(Path.of(value));
+        return value == null ? null : toAbsoluteFile(new File(value));
     }
 
 
@@ -104,13 +104,10 @@ public final class EnvToPropsConverter {
     }
 
 
-    private File toAbsoluteFile(final Path path) {
-        File absoluteFile;
-        if (path.isAbsolute()) {
-            absoluteFile = path.normalize().toFile();
-        } else {
-            absoluteFile = anchor.resolve(path).normalize().toFile();
+    private File toAbsoluteFile(final File file) {
+        if (file.isAbsolute()) {
+            return file.toPath().normalize().toFile();
         }
-        return absoluteFile;
+        return anchor.resolve(file.toPath()).toAbsolutePath().normalize().toFile();
     }
 }

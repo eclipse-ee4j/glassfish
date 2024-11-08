@@ -128,11 +128,12 @@ public class ASenvPropertyReader {
     static class ASenvMap extends HashMap<String, String> {
         ASenvMap(File installDir) {
             new EnvToPropsConverter(installDir.toPath()).convert(ENV_TO_SYS_PROPERTY).entrySet()
-                .forEach(e -> this.put(e.getKey(), e.getValue().getAbsolutePath()));
-            put(JAVA_ROOT_PROPERTY, System.getProperty("java.home"));
-            put(JAVA_ROOT_PROPERTY_ASENV, System.getProperty("java.home"));
-            put(INSTALL_ROOT_PROPERTY, installDir.getAbsolutePath());
-            put(PRODUCT_ROOT_PROPERTY, installDir.getParentFile().getAbsolutePath());
+                .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
+            String javaHome = new File(System.getProperty("java.home")).toPath().toString();
+            put(JAVA_ROOT_PROPERTY, javaHome);
+            put(JAVA_ROOT_PROPERTY_ASENV, javaHome);
+            put(INSTALL_ROOT_PROPERTY, installDir.toPath().toString());
+            put(PRODUCT_ROOT_PROPERTY, installDir.getParentFile().toPath().toString());
             put(HOST_NAME_PROPERTY, getHostname());
         }
 
@@ -145,22 +146,6 @@ public class ASenvPropertyReader {
                 // ignore, go with "localhost"
             }
             return hostname;
-        }
-
-        private static boolean isValidJavaRoot(String javaRootName) {
-            if (!GFLauncherUtils.ok(javaRootName)) {
-                return false;
-            }
-
-            // look for ${javaRootName}/bin/java[.exe]
-            File f = new File(javaRootName);
-
-            if (GFLauncherUtils.isWindows()) {
-                f = new File(f, "bin/java.exe");
-            } else {
-                f = new File(f, "bin/java");
-            }
-            return f.exists();
         }
     }
 }

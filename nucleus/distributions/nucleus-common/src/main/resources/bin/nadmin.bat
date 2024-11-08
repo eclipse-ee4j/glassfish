@@ -23,10 +23,10 @@ echo "Unable to enable extensions"
 exit /B 1
 
 :ok
-set AS_INSTALL="%~dp0.."
+set AS_INSTALL=%~dp0..
 call "%AS_INSTALL%\config\asenv.bat"
 if "%AS_JAVA%x" == "x" goto UsePath
-set JAVA="%AS_JAVA%\bin\java"
+set JAVA=%AS_JAVA%\bin\java
 goto run
 
 :UsePath

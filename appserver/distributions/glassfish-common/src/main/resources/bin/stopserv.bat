@@ -17,4 +17,22 @@ REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
 
-java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%~dp0..\glassfish\admin-cli.jar" stop-domain %*
+VERIFY OTHER 2>nul
+setlocal ENABLEEXTENSIONS
+if ERRORLEVEL 0 goto ok
+echo "Unable to enable extensions"
+exit /B 1
+
+:ok
+set AS_INSTALL=%~dp0..
+call "%AS_INSTALL%\config\asenv.bat"
+if "%AS_JAVA%x" == "x" goto UsePath
+set JAVA=%AS_JAVA%\bin\java
+goto run
+
+:UsePath
+set JAVA=java
+
+:run
+set ASADMIN_CLASSPATH=%AS_INSTALL%\appserver-cli.jar;%ASADMIN_CLASSPATH%
+%JAVA% %ASADMIN_JVM_OPTIONS% --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" org.glassfish.admin.cli.AsadminMain stop-domain %*

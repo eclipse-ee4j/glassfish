@@ -244,14 +244,14 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
             File installRoot = new File(installRootValue);
             new EnvToPropsConverter(installRoot.toPath()).convert(pairs).entrySet()
-                .forEach(e -> System.setProperty(e.getKey(), e.getValue().getAbsolutePath()));
+                .forEach(e -> System.setProperty(e.getKey(), e.getValue().getPath()));
             System.setProperty(INSTALL_ROOT_PROP_NAME, installRootValue);
             System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
         }
 
         final String instanceRootValue = bootstrapProperties.getProperty(INSTANCE_ROOT_PROP_NAME);
         if (instanceRootValue != null && !instanceRootValue.isEmpty()) {
-            File instanceRoot = new File(instanceRootValue);
+            File instanceRoot = new File(instanceRootValue).toPath().normalize().toFile();
             System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
             System.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
         }

@@ -19,15 +19,26 @@ import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.ServletContext;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class HealthServletInitializer implements ServletContainerInitializer {
+
+    private static final String MICROPROFILE_HEALTH_SERVLET = "microprofile-health-servlet";
+    private static final String MICROPROFILE_HEALTH_ENABLED = "org.glassfish.microprofile.health.enabled";
+    private static final Logger LOGGER = Logger.getLogger(HealthServletInitializer.class.getName());
 
     @Override
     public void onStartup(Set<Class<?>> set, ServletContext servletContext) {
         if (servletContext.getContextPath().isEmpty()) {
             return;
         }
-        servletContext.addServlet("health", HealthServlet.class)
+
+        if (!Boolean.parseBoolean(System.getProperty(MICROPROFILE_HEALTH_ENABLED, "true"))) {
+            LOGGER.info("MicroProfile Health is disabled");
+            return;
+        }
+
+        servletContext.addServlet(MICROPROFILE_HEALTH_SERVLET, HealthServlet.class)
             .addMapping("/health", "/health/live", "/health/ready", "/health/started");
     }
 }

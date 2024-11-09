@@ -41,8 +41,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import static java.lang.System.Logger.Level.DEBUG;
-
 /**
  * This factory is responsible for initializing a ready to use AnnotationProcessor.
  *
@@ -117,7 +115,7 @@ public class SJSASFactory extends Factory {
         if (answers == null || answers.isEmpty()) {
             return null;
         }
-        DOLUtils.getLogger().log(DEBUG, "AnnotationHandler: " + onMe + " has matches: " + answers);
+        DOLUtils.getLogger().log(System.Logger.Level.INFO, "AnnotationHandler: " + onMe + " has matches: " + answers);
         return answers.get(0);
     }
 

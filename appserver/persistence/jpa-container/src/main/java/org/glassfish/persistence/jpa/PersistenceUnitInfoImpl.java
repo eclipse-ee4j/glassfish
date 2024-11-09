@@ -43,7 +43,6 @@ import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.deployment.common.DeploymentUtils.getRelativeEmbeddedModulePath;
 
@@ -84,7 +83,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
-        logger.log(FINE, () -> "PersistenceUnitInfoImpl created for " + persistenceUnitDescriptor.getName());
+        logger.info("PersistenceUnitInfoImpl created for " + persistenceUnitDescriptor.getName());
     }
 
     // Implementation of PersistenceUnitInfo interface

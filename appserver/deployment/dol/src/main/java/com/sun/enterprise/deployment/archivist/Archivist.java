@@ -20,8 +20,10 @@ package com.sun.enterprise.deployment.archivist;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.annotation.factory.AnnotatedElementHandlerFactory;
 import com.sun.enterprise.deployment.annotation.factory.SJSASFactory;
+import com.sun.enterprise.deployment.annotation.handlers.EntityManagerReferenceQualifiedHandler;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
@@ -40,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -55,6 +58,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.apf.AnnotationHandler;
 import org.glassfish.apf.AnnotationProcessor;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.ErrorHandler;
@@ -345,7 +349,31 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param archive the module archive
      * @param extensions map of extension archivists
      */
-    protected void postStandardDDsRead(T descriptor, ReadableArchive archive, Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
+    protected void postStandardDDsRead(T descriptor, ReadableArchive archive,
+        Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
+
+        Collection<? extends PersistenceUnitDescriptor> puds = descriptor.findReferencedPUs();
+        logger.fine("postStandardDDsRead: " + descriptor+ ", puds: " + puds);
+        for (PersistenceUnitDescriptor pud : puds) {
+            List<String> qualifiers = pud.getQualifiers();
+            if (!qualifiers.isEmpty()) {
+                logger.fine("PersistenceUnitDescriptor: " + pud.getName() + " qualifiers: " + qualifiers);
+                final boolean isFullAttribute = descriptor.isFullAttribute();
+                final AnnotationProcessor ap = annotationFactory.getAnnotationProcessor(isFullAttribute);
+                for (String qualifier : qualifiers) {
+                    String unitName = pud.getName();
+                    AnnotationHandler handler = null;
+                    try {
+                        Class<? extends Annotation> qualifierType = (Class<? extends Annotation>) descriptor.getClassLoader().loadClass(qualifier);
+                        handler = new EntityManagerReferenceQualifiedHandler(qualifierType, unitName);
+                    } catch (ClassNotFoundException e) {
+                        throw new IOException("Failed to load qualifier", e);
+                    }
+                    ap.pushAnnotationHandler(handler);
+                    logger.fine("Pushed qualifier handler: " + handler);
+                }
+            }
+        }
     }
 
 

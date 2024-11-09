@@ -16,9 +16,11 @@
 
 package test;
 
+import com.sun.appserv.test.util.results.SimpleReporterAdapter;
+
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
+
 public class ReportWatcher extends TestWatcher{
 
     private SimpleReporterAdapter stat;

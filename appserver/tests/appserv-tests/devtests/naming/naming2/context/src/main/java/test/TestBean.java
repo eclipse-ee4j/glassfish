@@ -17,9 +17,19 @@
 package test;
 
 import jakarta.annotation.Resource;
-import jakarta.ejb.*;
-import javax.naming.*;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+
+
 import java.util.Properties;
+
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
 @Singleton @Startup
 public class TestBean {

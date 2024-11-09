@@ -83,6 +83,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
+        logger.info("PersistenceUnitInfoImpl created for " + persistenceUnitDescriptor.getName());
     }
 
     // Implementation of PersistenceUnitInfo interface
@@ -327,14 +328,12 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     @Override
     public String getScopeAnnotationName() {
-        // TODO Auto-generated method stub
-        return null;
+        return persistenceUnitDescriptor.getScope();
     }
 
     @Override
     public List<String> getQualifierAnnotationNames() {
-        // TODO Auto-generated method stub
-        return null;
+        return persistenceUnitDescriptor.getQualifiers();
     }
 
 }

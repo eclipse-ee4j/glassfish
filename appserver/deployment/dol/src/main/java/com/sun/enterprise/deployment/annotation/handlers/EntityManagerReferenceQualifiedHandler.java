@@ -20,36 +20,70 @@ package com.sun.enterprise.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.MetadataSource;
-import com.sun.enterprise.deployment.annotation.context.AppClientContext;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.PersistenceProperty;
+import jakarta.persistence.SynchronizationType;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.logging.Level;
 
-import org.glassfish.apf.AnnotatedElementHandler;
-import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the
- * jakarta.persistence.PersistenceUnit annotation.
+ * This handler is responsible for handling the custom
+ * qualifier annotation used in place of the
+ * jakarta.persistence.PersistenceContext annotation.
  */
-@Service
-@AnnotationHandlerFor(PersistenceContext.class)
-public class EntityManagerReferenceHandler extends AbstractResourceHandler {
+public class EntityManagerReferenceQualifiedHandler extends EntityManagerReferenceHandler {
+    private Class<? extends Annotation> qualifierType;
+    private PersistenceContext effectivePC;
 
-    public EntityManagerReferenceHandler() {
+    static public class EffectivePC extends AnnotationLiteral<PersistenceContext> implements PersistenceContext {
+        String unitName;
+        EffectivePC(String unitName) {
+            this.unitName = unitName;
+        }
+        @Override
+        public String name() {
+            return "";
+        }
+
+        public String unitName() {
+            return unitName;
+        }
+
+        @Override
+        public PersistenceContextType type() {
+            return PersistenceContextType.TRANSACTION;
+        }
+
+        @Override
+        public SynchronizationType synchronization() {
+            return SynchronizationType.SYNCHRONIZED;
+        }
+
+        public PersistenceProperty[] properties() {
+            return new PersistenceProperty[0];
+        }
+    }
+    public EntityManagerReferenceQualifiedHandler(Class<? extends Annotation> qualifierType, String unitName) {
+        this.qualifierType = qualifierType;
+        this.effectivePC = new EffectivePC(unitName);
     }
 
+    @Override
+    public Class<? extends Annotation> getAnnotationType() {
+        return qualifierType;
+    }
 
     /**
      * Process a particular annotation which type is the same as the
@@ -64,34 +98,17 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
         throws AnnotationProcessorException {
-        AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
-        log(Level.FINE, ainfo, "Processing "+getAnnotationType()+" annotation");
-        if (aeHandler instanceof AppClientContext) {
-            // application client does not support @PersistenceContext
-            String msg = I18N.getLocalString("enterprise.deployment.annotation.handlers.invalidaehandler",
-                "Invalid annotation symbol found for this type of class.");
-            log(Level.WARNING, ainfo, msg);
-            return getDefaultProcessedResult();
-        }
-        PersistenceContext emRefAn = (PersistenceContext) ainfo.getAnnotation();
-        return processEmRef(ainfo, rcContexts, emRefAn);
+        log(Level.INFO, ainfo, "Processing "+ainfo.getAnnotation()+" annotation, effectivePC=" + effectivePC);
+        return processEmRef(ainfo, rcContexts, effectivePC);
     }
 
-
-    /**
-     * Process a particular annotation which type is the same as the
-     * one returned by @see getAnnotationType(). All information
-     * pertinent to the annotation and its context is encapsulated
-     * in the passed AnnotationInfo instance.
-     */
-    protected HandlerProcessingResult processEmRef(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts,
-        PersistenceContext emRefAn) throws AnnotationProcessorException {
+    protected HandlerProcessingResult processEmRef(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
         EntityManagerReferenceDescriptor emRefs[] = null;
 
         if (ElementType.FIELD.equals(ainfo.getElementType())) {
             Field f = (Field) ainfo.getAnnotatedElement();
             String targetClassName = f.getDeclaringClass().getName();
-            String logicalName = emRefAn.name();
+            String logicalName = effectivePC.name();
 
             // applying with default
             if (logicalName.isEmpty()) {
@@ -107,13 +124,13 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
                 emRef.addInjectionTarget(target);
                 if (emRef.getName().isEmpty()) {
                     // a new one
-                    processNewEmRefAnnotation(emRef, logicalName, emRefAn);
+                    processNewEmRefAnnotation(emRef, logicalName, effectivePC);
                 }
             }
         } else if (ElementType.METHOD.equals(ainfo.getElementType())) {
             Method m = (Method) ainfo.getAnnotatedElement();
             String targetClassName = m.getDeclaringClass().getName();
-            String logicalName = emRefAn.name();
+            String logicalName = effectivePC.name();
             if (logicalName.isEmpty()) {
                 // Derive javabean property name.
                 String propertyName = getInjectionMethodPropertyName(m, ainfo);
@@ -132,17 +149,17 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
                 emRef.addInjectionTarget(target);
                 if (emRef.getName().isEmpty()) {
                     // a new one
-                    processNewEmRefAnnotation(emRef, logicalName, emRefAn);
+                    processNewEmRefAnnotation(emRef, logicalName, effectivePC);
                 }
             }
         } else if (ElementType.TYPE.equals(ainfo.getElementType())) {
             // name() is required for TYPE-level usage
-            String logicalName = emRefAn.name();
+            String logicalName = effectivePC.name();
 
             if (logicalName.isEmpty()) {
                 log(Level.SEVERE, ainfo,
-                    I18N.getLocalString("enterprise.deployment.annotation.handlers.nonametypelevel",
-                        "TYPE-Level annotation symbol on class must specify name."));
+                        I18N.getLocalString("enterprise.deployment.annotation.handlers.nonametypelevel",
+                                "TYPE-Level annotation symbol on class must specify name."));
                 return getDefaultFailedResult();
             }
 
@@ -151,7 +168,7 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
                 if (emRef.getName().isEmpty()) {
                     // a new one
 
-                    processNewEmRefAnnotation(emRef, logicalName, emRefAn);
+                    processNewEmRefAnnotation(emRef, logicalName, effectivePC);
 
                 }
             }
@@ -160,45 +177,4 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
         return getDefaultProcessedResult();
     }
 
-
-    /**
-     * Return EntityManagerReferenceDescriptors with given name
-     * if exists or a new one without name being set.
-     */
-    protected EntityManagerReferenceDescriptor[] getEmReferenceDescriptors(String logicalName,
-        ResourceContainerContext[] rcContexts) {
-        EntityManagerReferenceDescriptor emRefs[] = new EntityManagerReferenceDescriptor[rcContexts.length];
-        for (int i = 0; i < rcContexts.length; i++) {
-            EntityManagerReferenceDescriptor emRef = rcContexts[i].getEntityManagerReference(logicalName);
-            if (emRef == null) {
-                emRef = new EntityManagerReferenceDescriptor();
-                rcContexts[i].addEntityManagerReferenceDescriptor(emRef);
-            }
-            emRefs[i] = emRef;
-        }
-
-        return emRefs;
-    }
-
-
-    protected void processNewEmRefAnnotation(EntityManagerReferenceDescriptor emRef, String logicalName,
-        PersistenceContext annotation) {
-        emRef.setName(logicalName);
-
-        if (!annotation.unitName().isEmpty()) {
-            emRef.setUnitName(annotation.unitName());
-        }
-
-        emRef.setPersistenceContextType(annotation.type());
-        emRef.setSynchronizationType(annotation.synchronization());
-
-        // Add each property from annotation to descriptor, unless
-        // it has been overridden within the .xml.
-        Map<String, String> existingProperties = emRef.getProperties();
-        for (PersistenceProperty next : annotation.properties()) {
-            if (!existingProperties.containsKey(next.name())) {
-                emRef.addProperty(next.name(), next.value());
-            }
-        }
-    }
 }

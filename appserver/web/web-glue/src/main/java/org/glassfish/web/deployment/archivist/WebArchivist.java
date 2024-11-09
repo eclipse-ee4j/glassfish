@@ -176,6 +176,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                 }
             }
         }
+        super.postStandardDDsRead(descriptor, archive, extensions);
     }
 
     /**

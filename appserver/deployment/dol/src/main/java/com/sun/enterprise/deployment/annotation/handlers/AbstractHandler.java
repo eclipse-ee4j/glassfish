@@ -61,7 +61,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
     protected AnnotationTypesProvider ejbProvider;
 
     @Override
-    public final Class<? extends Annotation> getAnnotationType() {
+    public Class<? extends Annotation> getAnnotationType() {
         return getClass().getAnnotation(AnnotationHandlerFor.class).value();
     }
 

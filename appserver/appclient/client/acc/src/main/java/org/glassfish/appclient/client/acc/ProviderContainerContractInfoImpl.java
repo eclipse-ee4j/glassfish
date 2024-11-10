@@ -48,7 +48,7 @@ import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
  */
 public class ProviderContainerContractInfoImpl extends ProviderContainerContractInfoBase {
 
-    private final ACCClassLoader classLoader;
+    private final TransformingClassLoader classLoader;
     private final Instrumentation inst;
     private final String applicationLocation;
 
@@ -63,7 +63,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
      * @param inst VM's instrumentation object
      */
     public ProviderContainerContractInfoImpl(
-            final ACCClassLoader classLoader,
+            final TransformingClassLoader classLoader,
             final Instrumentation inst,
             final String applicationLocation,
             final ConnectorRuntime connectorRuntime) {

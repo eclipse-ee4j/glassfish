@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,20 +60,11 @@ import org.glassfish.appclient.client.acc.JWSACCClassLoader;
  */
 public class JWSACCMain implements Runnable {
 
-//    /** path to a class in one of the app server lib jars downloaded by Java Web Start */
-//    private static final String APPSERVER_LIB_CLASS_NAME = "com.sun.enterprise.server.ApplicationServer";
-
     /** name of the permissions template */
     private static final String PERMISSIONS_TEMPLATE_NAME = "jwsclient.policy";
 
     /** placeholder used in the policy template to substitute dynamically-generated grant clauses */
     private static final String GRANT_CLAUSES_PROPERTY_EXPR = "${grant.clauses}";
-
-    /** line separator */
-    private static final String lineSep = System.getProperty("line.separator");
-
-    /** the user-specified security policy template to use */
-    private static String jwsPolicyTemplateURL = null;
 
     /** unpublished command-line argument conveying jwsacc information */
     private static final String JWSACC_ARGUMENT_PREFIX = "-jwsacc";
@@ -167,7 +158,8 @@ public class JWSACCMain implements Runnable {
              *components or the JVM will never exit.
              */
         } catch (Throwable thr) {
-           System.exit(1);
+            thr.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -191,14 +183,14 @@ public class JWSACCMain implements Runnable {
             System.setProperty("com.sun.aas.downloaded.appclient.jar", downloadedAppclientJarFile.getAbsolutePath());
 
             Thread.currentThread().setContextClassLoader(loader);
-
+            System.err.println("XXXX: JWSACCMain.run set CL to thread: " + loader);
             /*
              *Use the prepared class loader to load the ACC main method, prepare
              *the arguments to the constructor, and invoke the static main method.
              */
-            Class mainClass = Class.forName("com.sun.enterprise.appclient.MainWithModuleSupport",
+            Class<?> mainClass = Class.forName("com.sun.enterprise.appclient.MainWithModuleSupport",
                 true /* initialize */, loader);
-            Constructor constr = mainClass.getConstructor(new Class[] {String[].class, URL[].class});
+            Constructor<?> constr = mainClass.getDeclaredConstructor(String[].class, URL[].class);
             constr.newInstance(args, persistenceJarURLs);
         } catch(Throwable thr) {
             exitValue = 1;

@@ -18,7 +18,7 @@
 
 -->
 
-<!ENTITY commonBuild SYSTEM "file:./../annotations-common.xml">
+<!ENTITY commonBuild SYSTEM "./../annotations-common.xml">
 ]>
 
 <project name="Hello" default="core" basedir=".">

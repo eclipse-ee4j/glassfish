@@ -83,7 +83,7 @@ public class ACCStartupContext extends StartupContext {
          */
         URI jarURI = null;
         try {
-            jarURI = ACCClassLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            jarURI = ACCStartupContext.class.getProtectionDomain().getCodeSource().getLocation().toURI();
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }

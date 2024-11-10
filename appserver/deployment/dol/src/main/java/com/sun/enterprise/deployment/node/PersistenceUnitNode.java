@@ -113,7 +113,7 @@ public class PersistenceUnitNode extends DeploymentDescriptorNode {
         table.put(PersistenceTagNames.CLASS, "addClass");
         table.put(PersistenceTagNames.SHARED_CACHE_MODE, "setSharedCacheMode");
         table.put(PersistenceTagNames.VALIDATION_MODE, "setValidationMode");
-        table.put(PersistenceTagNames.SCOOPE, "setValidationMode");
+        table.put(PersistenceTagNames.SCOPE, "setValidationMode");
         table.put(PersistenceTagNames.QAULIFIER, "addQualifier");
         this.dispatchTable = table;
     }

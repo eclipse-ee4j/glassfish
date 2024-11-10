@@ -44,8 +44,8 @@ public final class EnvToPropsConverter {
     /**
      * Tries to resolve given keys.
      * <ul>
-     * <li>First tries {@link System#getenv(String)} using map key.
-     * <li>Then tries {@link System#getProperty(String)} using map value.
+     * <li>First tries {@link System#getProperty(String)} using map value.
+     * <li>Then tries {@link System#getenv(String)} using map key.
      * </ul>
      * Then if the retrieved value is relative, it is resolved against the anchor path from
      * constructor.
@@ -74,8 +74,8 @@ public final class EnvToPropsConverter {
     /**
      * Tries to resolve given keys.
      * <ul>
-     * <li>First tries {@link System#getenv(String)} using the first parameter.
-     * <li>Then tries {@link System#getProperty(String)} using the second parameter.
+     * <li>First tries {@link System#getProperty(String)} using the second parameter.
+     * <li>Then tries {@link System#getenv(String)} using the first parameter.
      * </ul>
      * Then if the retrieved value is relative, it is resolved against the anchor path from
      * constructor.
@@ -91,13 +91,13 @@ public final class EnvToPropsConverter {
 
 
     private String evaluate(final String envPropertyName, final String systemPropertyName) {
-        final String envValue = System.getenv(envPropertyName);
-        if (envValue != null) {
-            return envValue;
-        }
         final String sysValue = System.getProperty(systemPropertyName);
         if (sysValue != null) {
             return sysValue;
+        }
+        final String envValue = System.getenv(envPropertyName);
+        if (envValue != null) {
+            return envValue;
         }
 //        System.err.println("Missing env " + envPropertyName + " or system property " + systemPropertyName);
         return null;

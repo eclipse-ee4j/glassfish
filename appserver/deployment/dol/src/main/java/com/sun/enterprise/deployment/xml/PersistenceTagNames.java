@@ -41,6 +41,6 @@ public interface PersistenceTagNames extends TagNames {
     public static String SHARED_CACHE_MODE = "shared-cache-mode";
     public static String VALIDATION_MODE = "validation-mode";
     public static String SCOPE = "scope";
-    public static String QAULIFIER = "qualifier";
+    public static String QUALIFIER = "qualifier";
 
 }

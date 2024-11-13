@@ -45,11 +45,13 @@ import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.annotation.handlers.ConcurrencyResourceDefinition;
+import com.sun.enterprise.deployment.types.EntityManagerReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import com.sun.enterprise.naming.spi.NamingUtils;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.TransactionManager;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
@@ -671,10 +673,16 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
-            SimpleJndiName name = toLogicalJndiName(descriptor);
-            FactoryForEntityManagerWrapper value = new FactoryForEntityManagerWrapper(descriptor, this);
-            jndiBindings.add(new CompEnvBinding(name, value));
+
+            jndiBindings.add(
+                new CompEnvBinding(
+                        toLogicalJndiName(descriptor),
+                        createFactoryForEntityManager(descriptor)));
         }
+    }
+
+    public FactoryForEntityManagerWrapper createFactoryForEntityManager(EntityManagerReference descriptor) {
+        return new FactoryForEntityManagerWrapper(descriptor, this);
     }
 
     private CompEnvBinding getCompEnvBinding(final ResourceEnvReferenceDescriptor next) {
@@ -779,28 +787,33 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         return invocationManager.peekAppEnvironment();
     }
 
-    private class FactoryForEntityManagerWrapper implements NamingObjectProxy {
+    public class FactoryForEntityManagerWrapper implements NamingObjectProxy {
 
-        private final EntityManagerReferenceDescriptor entityManagerRefDescriptor;
+        private final EntityManagerReference entityManagerReference;
         private final ComponentEnvManager componentEnvManager;
 
-        FactoryForEntityManagerWrapper(EntityManagerReferenceDescriptor refDesc, ComponentEnvManager compEnvMgr) {
-            this.entityManagerRefDescriptor = refDesc;
+        FactoryForEntityManagerWrapper(EntityManagerReference entityManagerReference, ComponentEnvManager compEnvMgr) {
+            this.entityManagerReference = entityManagerReference;
             this.componentEnvManager = compEnvMgr;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        public Object create(Context ctx) {
-            EntityManagerWrapper emWrapper =
-                new EntityManagerWrapper(transactionManager, invocationManager, componentEnvManager, callFlowAgent);
+        public EntityManager create(Context ctx) {
+            EntityManagerWrapper entityManagerWrapper =
+                new EntityManagerWrapper(
+                    transactionManager,
+                    invocationManager,
+                    componentEnvManager,
+                    callFlowAgent);
 
-            emWrapper.initializeEMWrapper(
-                entityManagerRefDescriptor.getUnitName(),
-                entityManagerRefDescriptor.getPersistenceContextType(),
-                entityManagerRefDescriptor.getSynchronizationType(),
-                entityManagerRefDescriptor.getProperties());
+            entityManagerWrapper.initializeEMWrapper(
+                entityManagerReference.getUnitName(),
+                entityManagerReference.getPersistenceContextType(),
+                entityManagerReference.getSynchronizationType(),
+                entityManagerReference.getProperties());
 
-            return emWrapper;
+            return entityManagerWrapper;
         }
     }
 

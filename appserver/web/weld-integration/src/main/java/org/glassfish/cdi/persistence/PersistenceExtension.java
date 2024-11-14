@@ -44,22 +44,23 @@ public class PersistenceExtension implements Extension  {
 
         if (container instanceof ApplicationInfo applicationInfo) {
 
-            var descriptors = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class)
-                                             .getPersistenceUnitDescriptors();
+            var persistenceUnits = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class);
 
-            for (PersistenceUnitDescriptor descriptor : descriptors) {
+            if (persistenceUnits != null) {
+                for (PersistenceUnitDescriptor descriptor : persistenceUnits.getPersistenceUnitDescriptors()) {
 
-                var bean = afterBeanDiscovery.addBean().addType(EntityManager.class);
+                    var bean = afterBeanDiscovery.addBean().addType(EntityManager.class);
 
-                for (String qualifierClassName : descriptor.getQualifiers()) {
-                    bean.addQualifier(createAnnotationInstance(loadClass(qualifierClassName)));
+                    for (String qualifierClassName : descriptor.getQualifiers()) {
+                        bean.addQualifier(createAnnotationInstance(loadClass(qualifierClassName)));
+                    }
+
+                    if (descriptor.getScope() != null) {
+                        bean.scope((Class<? extends Annotation>)loadClass(descriptor.getScope()));
+                    }
+
+                    bean.createWith(e -> createEntityManager(descriptor.getName()));
                 }
-
-                if (descriptor.getScope() != null) {
-                    bean.scope((Class<? extends Annotation>)loadClass(descriptor.getScope()));
-                }
-
-                bean.createWith(e -> createEntityManager(descriptor.getName()));
             }
         }
     }

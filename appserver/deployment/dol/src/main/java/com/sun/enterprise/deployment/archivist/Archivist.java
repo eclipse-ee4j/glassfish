@@ -203,7 +203,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     /**
      * Set the applicable extension archivists for this archivist
      *
-     * @param descriptor for this archivist instnace
+     * @param list for this archivist instnace
      */
     public void setExtensionArchivists(List<ExtensionsArchivist<?>> list) {
         extensionsArchivists = list;
@@ -345,8 +345,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param archive the module archive
      * @param extensions map of extension archivists
      */
-    protected void postStandardDDsRead(T descriptor, ReadableArchive archive,
-        Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
+    protected void postStandardDDsRead(T descriptor, ReadableArchive archive, Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
     }
 
 
@@ -357,6 +356,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param archive the module archive
      */
     protected void postAnnotationProcess(T descriptor, ReadableArchive archive) throws IOException {
+        logger.fine("postAnnotationProcess: " + descriptor);
     }
 
 
@@ -560,6 +560,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      */
     protected ProcessingResult processAnnotations(T bundleDesc, ModuleScanner<T> scanner, ReadableArchive archive)
         throws AnnotationProcessorException, IOException {
+        logger.fine("Begin processing annotations for " + bundleDesc);
         if (scanner == null) {
             return null;
         }
@@ -614,6 +615,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
         try {
             return ap.process(ctx);
         } finally {
+            logger.fine("End processing annotations for " + bundleDesc);
             if (originalBundleClassLoader == null) {
                 bundleDesc.setClassLoader(null);
             }

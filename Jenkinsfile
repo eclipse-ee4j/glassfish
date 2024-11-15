@@ -94,7 +94,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.9.6-eclipse-temurin-17
+    image: maven:3.9.6-eclipse-temurin-21
     command:
     - cat
     tty: true

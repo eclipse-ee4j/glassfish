@@ -41,6 +41,7 @@ import jakarta.transaction.UserTransaction;
 import test.beans.TestBean;
 import test.beans.TestBeanInterface;
 import test.beans.artifacts.Preferred;
+import test.beans.artifacts.TestDatabase;
 import test.beans.wbinflib.AnotherTestBeanInWebInfLib;
 import test.beans.wbinflib.TestAlternativeBeanInWebInfLib;
 import test.beans.wbinflib.TestBeanInWebInfLib;
@@ -60,7 +61,7 @@ public class TestServlet extends HttpServlet {
     @PersistenceUnit(unitName = "pu1")
     private EntityManagerFactory emf_at_pu;
 
-    @Inject //@TestDatabase
+    @Inject @TestDatabase
     private EntityManager emf_at_inj;
 
     private @Resource

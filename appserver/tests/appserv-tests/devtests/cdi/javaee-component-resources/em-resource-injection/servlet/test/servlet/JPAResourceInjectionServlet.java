@@ -33,6 +33,7 @@ import jakarta.transaction.UserTransaction;
 
 import test.beans.TestBeanInterface;
 import test.beans.artifacts.Preferred;
+import test.beans.artifacts.TestDatabase;
 import test.util.JpaTest;
 
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
@@ -42,7 +43,7 @@ public class JPAResourceInjectionServlet extends HttpServlet {
     private EntityManagerFactory emf_at_pu;
 
     @Inject
-    //@TestDatabase
+    @TestDatabase
     private EntityManager emf_at_inj;
 
     private @Resource

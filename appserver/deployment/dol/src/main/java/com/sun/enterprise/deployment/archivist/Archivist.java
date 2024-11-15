@@ -346,33 +346,6 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param extensions map of extension archivists
      */
     protected void postStandardDDsRead(T descriptor, ReadableArchive archive, Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
-//
-//        Collection<? extends PersistenceUnitDescriptor> puds = descriptor.findReferencedPUs();
-//        logger.fine("postStandardDDsRead: " + descriptor + ", puds: " + puds);
-//
-//        for (PersistenceUnitDescriptor pud : puds) {
-//            List<String> qualifiers = pud.getQualifiers();
-//            if (!qualifiers.isEmpty()) {
-//                logger.fine("PersistenceUnitDescriptor: " + pud.getName() + " qualifiers: " + qualifiers);
-//
-//                final AnnotationProcessor ap = annotationFactory.getAnnotationProcessor(descriptor.isFullAttribute());
-//                for (String qualifier : qualifiers) {
-//                    String unitName = pud.getName();
-//                    AnnotationHandler handler = null;
-//                    try {
-//                        Class<? extends Annotation> qualifierType = (Class<? extends Annotation>)
-//                            descriptor.getClassLoader()
-//                                      .loadClass(qualifier);
-//                        handler = new EntityManagerReferenceQualifiedHandler(qualifierType, unitName);
-//                    } catch (ClassNotFoundException e) {
-//                        throw new IOException("Failed to load qualifier", e);
-//                    }
-//
-//                    ap.pushAnnotationHandler(handler);
-//                    logger.fine("Pushed qualifier handler: " + handler);
-//                }
-//            }
-//        }
     }
 
 

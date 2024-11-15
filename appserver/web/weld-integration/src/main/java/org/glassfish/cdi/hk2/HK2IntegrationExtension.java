@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
@@ -51,7 +52,7 @@ import static org.glassfish.cdi.hk2.HK2IntegrationUtilities.convertInjectionPoin
 public class HK2IntegrationExtension implements Extension {
     private final HashMap<Long, ActiveDescriptor<?>> foundWithHK2 = new HashMap<>();
     private final ServiceLocator locator = HK2IntegrationUtilities.getApplicationServiceLocator();
-
+    protected static final Logger logger = Logger.getLogger("org.glassfish.cdi");
     /**
      * Called by CDI, gathers up all of the injection points known to hk2.
      *
@@ -67,10 +68,12 @@ public class HK2IntegrationExtension implements Extension {
         Set<InjectionPoint> injectionPoints = injectionTarget.getInjectionPoints();
 
         for (InjectionPoint injectionPoint : injectionPoints) {
+            logger.fine("Processing injection point " + injectionPoint);
             Injectee injectee = convertInjectionPointToInjectee(injectionPoint);
 
             ActiveDescriptor<?> descriptor = locator.getInjecteeDescriptor(injectee);
             if (descriptor == null || descriptor.getServiceId() == null) {
+                logger.fine("Could not find descriptor for " + injectee);
                 continue;
             }
 

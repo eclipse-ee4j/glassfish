@@ -85,7 +85,7 @@ public class SecurityContextUtil implements PostConstruct {
         if (StubAdapter.isStub(effective_target)) {
             if (StubAdapter.isLocal(effective_target)) {
                 // XXX: Workaround for non-null connection object ri for local invocation.
-                ConnectionExecutionContext.setClientThreadID(Thread.currentThread().threadId());
+                ConnectionExecutionContext.setClientThreadID(Thread.currentThread().getId());
                 return null;
             }
         }

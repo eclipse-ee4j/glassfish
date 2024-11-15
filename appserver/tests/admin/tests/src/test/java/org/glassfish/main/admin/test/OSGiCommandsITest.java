@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -56,13 +55,14 @@ public class OSGiCommandsITest {
 
     @BeforeAll
     public static void waitOsgiReady() throws Exception {
-        for (int i = 0; i < 50; i++) {
+        long timeout = System.currentTimeMillis() + 10_000L;
+        while (System.currentTimeMillis() < timeout) {
             AsadminResult result = ASADMIN.exec("osgi", "lb");
             if (!result.isError()) {
                 return;
             }
             LOGGER.log(Level.INFO, "Waiting for OSGi to be ready...");
-            sleep(Duration.ofMillis(200));
+            sleep(10L);
         }
     }
 

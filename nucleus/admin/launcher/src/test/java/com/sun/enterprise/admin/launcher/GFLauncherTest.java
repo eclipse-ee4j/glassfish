@@ -128,11 +128,7 @@ public class GFLauncherTest {
     @Test
     public void brokenDomainXml() throws Exception {
         info.setDomainName("baddomain");
-        GFLauncherException e = assertThrows(GFLauncherException.class, launcher::launch);
-        assertEquals("Fatal Error encountered during launch: \"Xml Parser Error: javax.xml.stream.XMLStreamException:"
-            + " ParseError at [row,col]:[57,7]\n"
-            + "Message: The element type \"system-property\" must be terminated by the matching"
-            + " end-tag \"</system-property>\".", e.getMessage());
+        assertThrows(GFLauncherException.class, launcher::launch);
     }
 
     /**

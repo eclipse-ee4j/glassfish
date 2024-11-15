@@ -65,6 +65,7 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
         throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
+        log(Level.FINE, ainfo, "Processing "+getAnnotationType()+" annotation");
         if (aeHandler instanceof AppClientContext) {
             // application client does not support @PersistenceContext
             String msg = I18N.getLocalString("enterprise.deployment.annotation.handlers.invalidaehandler",
@@ -164,7 +165,7 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
      * Return EntityManagerReferenceDescriptors with given name
      * if exists or a new one without name being set.
      */
-    private EntityManagerReferenceDescriptor[] getEmReferenceDescriptors(String logicalName,
+    protected EntityManagerReferenceDescriptor[] getEmReferenceDescriptors(String logicalName,
         ResourceContainerContext[] rcContexts) {
         EntityManagerReferenceDescriptor emRefs[] = new EntityManagerReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
@@ -180,7 +181,7 @@ public class EntityManagerReferenceHandler extends AbstractResourceHandler {
     }
 
 
-    private void processNewEmRefAnnotation(EntityManagerReferenceDescriptor emRef, String logicalName,
+    protected void processNewEmRefAnnotation(EntityManagerReferenceDescriptor emRef, String logicalName,
         PersistenceContext annotation) {
         emRef.setName(logicalName);
 

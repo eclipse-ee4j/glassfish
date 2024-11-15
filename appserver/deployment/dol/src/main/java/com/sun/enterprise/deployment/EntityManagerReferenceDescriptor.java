@@ -51,6 +51,9 @@ public class EntityManagerReferenceDescriptor extends EnvironmentProperty implem
     public EntityManagerReferenceDescriptor() {
     }
 
+    public EntityManagerReferenceDescriptor(String unitName) {
+        this.unitName = unitName;
+    }
 
     @Override
     public void setUnitName(String unitName) {

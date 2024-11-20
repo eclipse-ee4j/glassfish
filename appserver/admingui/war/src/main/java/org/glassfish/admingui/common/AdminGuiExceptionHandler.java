@@ -19,6 +19,7 @@ import jakarta.faces.FacesException;
 import jakarta.faces.application.ViewExpiredException;
 import jakarta.faces.context.ExceptionHandler;
 import jakarta.faces.context.ExceptionHandlerWrapper;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ExceptionQueuedEvent;
 import jakarta.faces.event.ExceptionQueuedEventContext;
@@ -43,14 +44,15 @@ public class AdminGuiExceptionHandler extends ExceptionHandlerWrapper {
                     if (facesContext == null) {
                         continue;
                     }
+                    ExternalContext externalContext = facesContext.getExternalContext();
                     if (facesContext.getPartialViewContext().isAjaxRequest()) {
-                        facesContext.getExternalContext().getResponseOutputWriter().write(
+                        externalContext.getResponseOutputWriter().write(
                                 "<script type='text/javascript'>"
-                                        + "window.location.href = '" + facesContext.getExternalContext().getRequestContextPath() + "/';"
+                                        + "window.location.href = '" + externalContext.getRequestContextPath() + "/';"
                                         + "</script>");
                         facesContext.responseComplete();
                     } else {
-                        facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/");
+                        externalContext.redirect(externalContext.getRequestContextPath() + "/");
                     }
                 } catch (IOException e) {
                     throw new FacesException(e);

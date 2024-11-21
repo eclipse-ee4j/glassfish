@@ -397,10 +397,21 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
 
     private void initStandardStreamsLogging() {
         trace(GlassFishLogHandler.class, "initStandardStreamsLogging()");
+
+        LoggingPrintStream prevStdoutStream = this.stdoutStream;
+        LoggingPrintStream prevStderrStream = this.stderrStream;
+
         this.stdoutStream = LoggingPrintStream.create(STDOUT_LOGGER, INFO, 5000, configuration.getEncoding());
         this.stderrStream = LoggingPrintStream.create(STDERR_LOGGER, SEVERE, 1000, configuration.getEncoding());
         System.setOut(this.stdoutStream);
         System.setErr(this.stderrStream);
+
+        if (prevStdoutStream != null) {
+            prevStdoutStream.close();
+        }
+        if (prevStderrStream != null) {
+            prevStderrStream.close();
+        }
     }
 
 

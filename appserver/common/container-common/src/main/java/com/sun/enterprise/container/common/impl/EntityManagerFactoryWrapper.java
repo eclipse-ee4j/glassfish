@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,6 @@ import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.logging.LogDomains;
 
 import jakarta.persistence.Cache;
 import jakarta.persistence.EntityGraph;
@@ -39,7 +39,6 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
@@ -55,10 +54,9 @@ import org.glassfish.internal.api.Globals;
  *
  * @author Kenneth Saks
  */
-public class EntityManagerFactoryWrapper
-        implements EntityManagerFactory, Serializable {
+public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serializable {
 
-    static Logger _logger=LogDomains.getLogger(EntityManagerFactoryWrapper.class, LogDomains.UTIL_LOGGER);
+    private static final long serialVersionUID = 4719469920862714502L;
 
     private final String unitName;
 

@@ -30,7 +30,6 @@ import jakarta.resource.spi.ResourceAdapter;
 
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -73,6 +72,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * Destroys default pools and resources. Stops the Resource adapter
      * java bean.
      */
+    @Override
     public void destroy() {
         deactivateEndPoints();
         super.destroy();
@@ -80,10 +80,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
 
     private void deactivateEndPoints() {
         if (resourceadapter_ != null) {
-            //deactivateEndpoints as well!
-            Iterator<MessageEndpointFactoryInfo> iter = getAllEndpointFactories().iterator();
-            while (iter.hasNext()) {
-                MessageEndpointFactoryInfo element = iter.next();
+            for (MessageEndpointFactoryInfo element : getAllEndpointFactories()) {
                 try {
                     this.resourceadapter_.endpointDeactivation(
                             element.getEndpointFactory(), element.getActivationSpec());
@@ -111,15 +108,18 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * @param id Id of the endpoint factory.
      * @return <code>MessageEndpointFactoryIndo</code> object.
      */
+    @Override
     public MessageEndpointFactoryInfo getEndpointFactoryInfo(String id) {
         return factories_.get(id);
     }
 
+    @Override
     public void updateMDBRuntimeInfo(EjbMessageBeanDescriptor descriptor_, BeanPoolDescriptor poolDescriptor)
             throws ConnectorRuntimeException {
         //do nothing
     }
 
+    @Override
     public void validateActivationSpec(ActivationSpec spec) {
         //do nothing
     }
@@ -137,6 +137,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(ConnectorDescriptor cd, String moduleName) {
         return (cd.getInBoundDefined() && !ConnectorsUtil.isJMSRA(moduleName));
      }
@@ -148,6 +149,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * @param id   Unique identifier of the endpoint factory.
      * @param info <code>MessageEndpointFactoryInfo</code> object.
      */
+    @Override
     public void addEndpointFactoryInfo(
             String id, MessageEndpointFactoryInfo info) {
         factories_.put(id, info);
@@ -159,6 +161,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * @param id Unique identifier of the endpoint factory to be
      *           removed.
      */
+    @Override
     public void removeEndpointFactoryInfo(String id) {
         factories_.remove(id);
     }

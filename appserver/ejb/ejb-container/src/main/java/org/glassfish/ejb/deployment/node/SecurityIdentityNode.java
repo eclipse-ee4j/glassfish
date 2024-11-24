@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,14 +22,15 @@ import com.sun.enterprise.deployment.node.RunAsNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.w3c.dom.Node;
-import org.xml.sax.Attributes;
+
+import static com.sun.enterprise.deployment.xml.TagNames.RUNAS_SPECIFIED_IDENTITY;
+import static org.glassfish.ejb.deployment.EjbTagNames.USE_CALLER_IDENTITY;
 
 /**
  * This node handles all information relative to security-indentity tag
@@ -38,54 +39,47 @@ import org.xml.sax.Attributes;
  */
 public class SecurityIdentityNode extends DeploymentDescriptorNode<Descriptor> {
 
-    public static Node writeSecureIdentity(Node parent, String nodeName, EjbDescriptor descriptor) {
-        Node subNode = appendChild(parent, nodeName);
-        appendTextChild(subNode, TagNames.DESCRIPTION, descriptor.getSecurityIdentityDescription());
-        if (descriptor.getUsesCallerIdentity()) {
-            Node useCaller = subNode.getOwnerDocument().createElement(EjbTagNames.USE_CALLER_IDENTITY);
-            subNode.appendChild(useCaller);
-        } else {
-            RunAsNode runAs = new RunAsNode();
-            runAs.writeDescriptor(subNode, TagNames.RUNAS_SPECIFIED_IDENTITY, descriptor.getRunAsIdentity());
-        }
-        return subNode;
-    }
-
-
     public SecurityIdentityNode() {
-        registerElementHandler(new XMLElement(TagNames.RUNAS_SPECIFIED_IDENTITY), RunAsNode.class);
+        registerElementHandler(new XMLElement(RUNAS_SPECIFIED_IDENTITY), RunAsNode.class);
     }
 
 
     @Override
     public Descriptor getDescriptor() {
-        return null;
+        return getParentNodeDescriptor();
     }
 
 
     @Override
     protected Map<String, String> getDispatchTable() {
-        return Collections.emptyMap();
+        Map<String, String> table =  new HashMap<>();
+        table.put(USE_CALLER_IDENTITY, "setUsesCallerIdentity");
+        table.put(RUNAS_SPECIFIED_IDENTITY, "setRunAsIdentity");
+        return table;
     }
 
 
-    @Override
-    public void startElement(XMLElement element, Attributes attributes) {
-        if (EjbTagNames.USE_CALLER_IDENTITY.equals(element.getQName())) {
-            ((EjbDescriptor) getParentNode().getDescriptor()).setUsesCallerIdentity(true);
-        } else {
-            super.startElement(element, attributes);
-        }
-        return;
+    public EjbDescriptor getParentNodeDescriptor() {
+        return (EjbDescriptor) super.getParentNode().getDescriptor();
     }
 
 
-    @Override
-    public void setElementValue(XMLElement element, String value) {
-        if (TagNames.DESCRIPTION.equals(element.getQName())) {
-            ((EjbDescriptor) getParentNode().getDescriptor()).setSecurityIdentityDescription(value);
-        } else {
-            super.setElementValue(element, value);
+    /**
+     * @param parent parent node
+     * @param nodeName name of this node under the parent node.
+     * @param descriptor parent descriptor.
+     * @return new {@link Node}
+     */
+    public static Node writeSecureIdentity(Node parent, String nodeName, EjbDescriptor descriptor) {
+        Node secureIdentityNode = appendChild(parent, nodeName);
+        appendTextChild(secureIdentityNode, TagNames.DESCRIPTION, descriptor.getSecurityIdentityDescription());
+        if (Boolean.TRUE.equals(descriptor.getUsesCallerIdentity())) {
+            Node useCaller = secureIdentityNode.getOwnerDocument().createElement(USE_CALLER_IDENTITY);
+            secureIdentityNode.appendChild(useCaller);
+        } else if (Boolean.FALSE.equals(descriptor.getUsesCallerIdentity())) {
+            RunAsNode runAs = new RunAsNode();
+            runAs.writeDescriptor(secureIdentityNode, RUNAS_SPECIFIED_IDENTITY, descriptor.getRunAsIdentity());
         }
+        return secureIdentityNode;
     }
 }

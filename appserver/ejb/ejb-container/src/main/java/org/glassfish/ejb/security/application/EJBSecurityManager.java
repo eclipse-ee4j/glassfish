@@ -601,7 +601,8 @@ public final class EJBSecurityManager implements SecurityManager {
     }
 
     private RunAsIdentityDescriptor getRunAs(EjbDescriptor deploymentDescriptor) {
-        if (deploymentDescriptor.getUsesCallerIdentity()) {
+        if (!Boolean.FALSE.equals(deploymentDescriptor.getUsesCallerIdentity())) {
+            // true or null disable runAs
             return null;
         }
 

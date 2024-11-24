@@ -89,8 +89,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
                     this.resourceadapter_.endpointDeactivation(
                             element.getEndpointFactory(), element.getActivationSpec());
                 } catch (RuntimeException e) {
-                    _logger.warning(e.getMessage());
-                    _logger.log(Level.FINE, "Error during endpointDeactivation ", e);
+                    _logger.log(Level.SEVERE, "Error during endpointDeactivation ", e);
                 }
             }
         }

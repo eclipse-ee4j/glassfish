@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,13 +62,11 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      *          If there is a failure in loading
      *          or starting the resource adapter.
      */
+    @Override
     public void init(ResourceAdapter ra, ConnectorDescriptor desc, String moduleName, ClassLoader jcl)
             throws ConnectorRuntimeException {
         super.init(ra, desc, moduleName, jcl);
-        this.factories_ = new Hashtable<String, MessageEndpointFactoryInfo>();
-    }
-
-    public ActiveInboundResourceAdapterImpl() {
+        this.factories_ = new Hashtable<>();
     }
 
     /**

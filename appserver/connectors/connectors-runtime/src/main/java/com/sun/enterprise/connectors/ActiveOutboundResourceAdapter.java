@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -347,8 +347,7 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("Passing in the following properties " +
                     "before calling RA.start of " + this.moduleName_);
-            StringBuffer b = new StringBuffer();
-
+            StringBuilder b = new StringBuilder();
             for (ConnectorConfigProperty element : mergedProps) {
                 b.append("\nName: " + element.getName()
                         + " Value: " + element.getValue());

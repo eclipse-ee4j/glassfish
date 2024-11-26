@@ -138,7 +138,7 @@
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.3</xmlsec.version>
-        <woodstox.version>7.0.0</woodstox.version>
+        <woodstox.version>7.1.0</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->

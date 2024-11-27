@@ -151,8 +151,8 @@
         <krazo.version>3.0.1</krazo.version>
 
         <!-- MicroProfile Config -->
-        <microprofile.config-api.version>3.0.3</microprofile.config-api.version>
-        <helidon-config.version>3.2.10</helidon-config.version>
+        <microprofile.config-api.version>3.1</microprofile.config-api.version>
+        <helidon-config.version>3.2.11</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>

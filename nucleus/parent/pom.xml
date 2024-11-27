@@ -1509,6 +1509,37 @@
                                         </rule>
                                         
                                         <rule>
+                                            <groupId>org.glassfish</groupId>
+                                            <artifactId>jakarta.enterprise.concurrent</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                        
+                                        <rule>
+                                            <groupId>org.glassfish.jsftemplating</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                        
+                                        <rule>
                                             <groupId>org.glassfish.grizzly</groupId>
                                             <ignoreVersions>
                                                 <ignoreVersion>

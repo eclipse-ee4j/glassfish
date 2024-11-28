@@ -142,7 +142,7 @@
         <asm.version>9.7.1</asm.version>
         <jsch.version>0.2.21</jsch.version>
         <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.12</ant.version>
+        <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
         <jackson.version>2.18.1</jackson.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
@@ -451,7 +451,7 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.2</version>
                 <scope>test</scope>
             </dependency>
 
@@ -1166,6 +1166,21 @@
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>2.5.0-b..</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>2.4.0</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.external</groupId>
+                                            <artifactId>ant</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2,)</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>

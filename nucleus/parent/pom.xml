@@ -83,7 +83,7 @@
         <!-- Jakarta Web Services -->
 
         <!-- Jakarta XML Web Services -->
-        <jakarta.xml.ws-api.version>4.0.1</jakarta.xml.ws-api.version>
+        <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
 
         <!-- Jakarta SOAP (with Attachments)
        <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>

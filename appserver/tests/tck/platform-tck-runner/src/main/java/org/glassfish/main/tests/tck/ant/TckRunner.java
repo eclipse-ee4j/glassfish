@@ -183,7 +183,7 @@ public class TckRunner {
     }
 
     private Process startBash(final String command) throws IOException {
-        ProcessBuilder bash = new ProcessBuilder("/bin/bash", "-c", command).inheritIO().directory(cfg.getTargetDir());
+        ProcessBuilder bash = new ProcessBuilder("/bin/zsh", "-c", command).inheritIO().directory(cfg.getTargetDir());
         configureEnvironment(bash.environment());
         return bash.start();
     }
@@ -206,6 +206,7 @@ public class TckRunner {
         env.put("PATH", String.join(":",
             cfg.getJdkDirectory().getAbsolutePath() + "/bin",
             cfg.getAntDirectory().getAbsolutePath() + "/bin",
+            "/opt/homebrew/bin", // For macOs, to override BSD tar with GNU Tar etc
             "/usr/bin",
             "/bin"));
         env.put("CTS_HOME", cfg.getTargetDir().getAbsolutePath());

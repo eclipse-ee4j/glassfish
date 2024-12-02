@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.20</version>
+        <version>7.0.21-SNAPSHOT</version>
     </parent>
 
     <artifactId>embedded-ejb-smoke</artifactId>

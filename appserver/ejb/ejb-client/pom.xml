@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.ejb</groupId>
         <artifactId>ejb</artifactId>
-        <version>7.0.20-SNAPSHOT</version>
+        <version>7.0.20</version>
     </parent>
 
     <artifactId>ejb-client</artifactId>

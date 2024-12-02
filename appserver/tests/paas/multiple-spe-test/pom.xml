@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>multiple-spe-test</artifactId>
-    <version>7.0.20-SNAPSHOT</version>
+    <version>7.0.20</version>
     <name>Multiple SPE TesT</name>
     <packaging>pom</packaging>
     <modules>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.0.20-SNAPSHOT</version>
+        <version>7.0.20</version>
     </parent>
 
     <artifactId>embedded</artifactId>

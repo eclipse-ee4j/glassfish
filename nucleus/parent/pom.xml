@@ -136,8 +136,8 @@
         <!-- 3rd party dependencies -->
 
         <commons-io.version>2.18.0</commons-io.version>
-        <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.5.3.Final</jboss.logging.version>
+        <jboss.logging.annotation.version>3.0.3.Final</jboss.logging.annotation.version>
+        <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.7.1</asm.version>
         <jsch.version>0.2.21</jsch.version>

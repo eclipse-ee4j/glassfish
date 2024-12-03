@@ -9,6 +9,22 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## December 3, 2024 -- Eclipse GlassFish 7.0.20 Available
+
+All of us from GlassFish are joyful with the release of GlassFish 7.0.20!
+
+While working on GlassFish 7.1.0 and GlassFish 8, we didn't leave the stable 7.0.x series in the dark. In this release we updated a lot of our dependencies to their latest versions and did a large amount of testing to ensure everything worked as required. We also improved stability again by squashing a number of outstanding bugs.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+## November 1, 2024 -- Eclipse GlassFish 7.0.19 Available
+
+The full GlassFish team is happy to present you another great GlassFish release; Eclipse GlassFish 7.0.19!
+
+Download links are available from the [GlassFish Download page](download.md).
+
+This release is mostly just maintenance. It contains some updates, some code cleanup, few very important bug fixes and few new features to make your life easier.
+
 
 ## October 2, 2024 -- Eclipse GlassFish 7.0.18 Available
 
@@ -70,13 +86,13 @@ Download links are available from the [GlassFish Download page](download.md)
 
 ## February 29, 2024 -- Eclipse GlassFish 7.0.13 Available
 
-We are very happy to bring you Eclipse GlassFish 7.0.13. 
+We are very happy to bring you Eclipse GlassFish 7.0.13.
 
 Download links are available from the [GlassFish Download page](download.md).
 
-In the release for this month we replaced many synchronized blocks by reentrant locks (to accommodate JDK 21 virtual threads). 
+In the release for this month we replaced many synchronized blocks by reentrant locks (to accommodate JDK 21 virtual threads).
 
-We also looked at SSO between clusters, and fixed a long standing bug there. 
+We also looked at SSO between clusters, and fixed a long standing bug there.
 
 A long running investigation into potential resource leaks finally came to a conclusion, and resulted in many fixes throughout the code base. The admin console also saw various improvements, specifically with respect to loading.
 
@@ -85,13 +101,13 @@ Download links are available from the [GlassFish Download page](download.md)
 
 ## January 30, 2024 -- Eclipse GlassFish 7.0.12 Available
 
-We are very happy to bring you Eclipse GlassFish 7.0.12. 
+We are very happy to bring you Eclipse GlassFish 7.0.12.
 
 Download links are available from the [GlassFish Download page](download.md).
 
-This release we focused on finding and fixing the root cause of several "strange" WebSocket related bugs that we witnessed in the past. We also did a similar thing related to several issues with running apps on the default context root, especially where after authentication redirects happened to another URL. 
+This release we focused on finding and fixing the root cause of several "strange" WebSocket related bugs that we witnessed in the past. We also did a similar thing related to several issues with running apps on the default context root, especially where after authentication redirects happened to another URL.
 
-Furthermore we looked into problems with authentication and SSO in a cluster and did some initial fixes. Handling and processing of logging was looked at once again, something we have been improving a lot step by step through various iterations of releases. 
+Furthermore we looked into problems with authentication and SSO in a cluster and did some initial fixes. Handling and processing of logging was looked at once again, something we have been improving a lot step by step through various iterations of releases.
 
 Finally but not least a nasty ConcurrentModificationException was fixed, and a memory leak (via HK2) was solved.
 
@@ -100,13 +116,13 @@ Download links are available from the [GlassFish Download page](download.md).
 
 ## November 30, 2023 -- Eclipse GlassFish 7.0.11 Available
 
-We are happy to announce the release of Eclipse GlassFish 7.0.11. 
+We are happy to announce the release of Eclipse GlassFish 7.0.11.
 
 Download links are available from the [GlassFish Download page](download.md).
 
-This release sees an important fix where WebSockets would not work at all for applications on the default context root (e.g. https://example.com vs https://example.com/myapp). 
+This release sees an important fix where WebSockets would not work at all for applications on the default context root (e.g. https://example.com vs https://example.com/myapp).
 
-This month we have concentrated on the AdminGUI and fixed an assortment of small but annoying defects in it. Various major components were updated, such as Jersey (Jakarta REST), Tyrus (Jakarta WebSockets) and Mojarra (Jakarta Faces). 
+This month we have concentrated on the AdminGUI and fixed an assortment of small but annoying defects in it. Various major components were updated, such as Jersey (Jakarta REST), Tyrus (Jakarta WebSockets) and Mojarra (Jakarta Faces).
 
 To keep the project maintainable and well tested, several tests were added and improved as well.
 
@@ -119,9 +135,9 @@ The GlassFish team is very happy to present you another great release of GlassFi
 
 Download links are available from the [GlassFish Download page](download.md).
 
-In this release a 10 months long operation to get an internal dependency to the slf4j-api removed finally got to fruition. This involved the intense cooperation of multiple teams, and we're exceptionally happy to have finally been able to do this. 
+In this release a 10 months long operation to get an internal dependency to the slf4j-api removed finally got to fruition. This involved the intense cooperation of multiple teams, and we're exceptionally happy to have finally been able to do this.
 
-We also did a lot of work to make our builds repeatable, and we did a ton of refactoring to the internal security packages of GlassFish, making them easier to understand and therefore easier to maintain. Any external code depending on these internal packages (such as potentially custom LoginModules/Realms) may have to update (we recommend of course not depending on internal packages and using public APIs). 
+We also did a lot of work to make our builds repeatable, and we did a ton of refactoring to the internal security packages of GlassFish, making them easier to understand and therefore easier to maintain. Any external code depending on these internal packages (such as potentially custom LoginModules/Realms) may have to update (we recommend of course not depending on internal packages and using public APIs).
 
 As every release, we integrated many component updates, and did a number of smaller fixes.
 
@@ -151,7 +167,7 @@ Download links are available from the [GlassFish Download page](download.md).
 
 Another month, another new version of Eclipse GlassFish 7.0.7 released today.
 
-This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea33. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet. 
+This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea33. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet.
 
 This release also adds support for MicroProfile JWT 2.1, and has many components updated to their latest version. Several issues have again been fixed in the Admin Console. An important bug regarding Enterprise Beans method generation has been fixed, as has a remote access issue for Enterprise Beans.
 
@@ -182,7 +198,7 @@ Download links are available from the [GlassFish Download page](download.md).
 
 We are pleased to announce the release today of Eclipse GlassFish 7.0.4.
 
-The main features of this release are important bug fixes for things like a class loader leak, and again several fixes in the admin console such as the ability to upload a war file. 
+The main features of this release are important bug fixes for things like a class loader leak, and again several fixes in the admin console such as the ability to upload a war file.
 
 A new feature for ScatteredArchive has been added to GlassFsih Embedded.
 
@@ -190,7 +206,7 @@ Download links are available from the [GlassFish Download page](download.md).
 
 ## March 30, 2023 -- Eclipse GlassFish 7.0.3 Available
 
-We are pleased to announce the release today of Eclipse GlassFish 7.0.3. 
+We are pleased to announce the release today of Eclipse GlassFish 7.0.3.
 
 The main features of this release are various bug fixes for things like a StackOverflow exception, a deployment error, and creating JavaMail sessions using the admin console. Additionally components have been updated for Faces, Messaging, Persistence, and (MP) Config. Support for newer JDK versions has been solidified by a new HK2 release and ASM 9.5 integration.
 
@@ -198,7 +214,7 @@ Eclipse GlassFish 7.0.3 compiles and runs with JDK 11 to JDK 20 releases. MicroP
 
 ## February 27, 2023 -- Eclipse GlassFish 7.0.2 Available
 
-We are happy to announce the release of Eclipse GlassFish 7.0.2. 
+We are happy to announce the release of Eclipse GlassFish 7.0.2.
 
 The main features of this release are the updates of various components, fixing a wide array of issues. Specifically with WaSP 3.2.0 a major change is that it now includes the Pages Standard Tags, so the separate jar for this is no longer present in GlassFish. We also fixed an important regression where requesting a directory from the ClassLoader failed for exploded deploys. This now works again. Additionally the version (7.0.2 now) is reported correctly again, which can be important for package managers such as brew.
 
@@ -206,7 +222,7 @@ Eclipse GlassFish 7.0.2 compiles and runs with JDK 11 to JDK 19 releases. MicroP
 
 ## January 30, 2023 -- Eclipse GlassFish 7.0.1 Available
 
-We are pleased to announce the release of Eclipse GlassFish 7.0.1. 
+We are pleased to announce the release of Eclipse GlassFish 7.0.1.
 
 The main features of this release are an overhaul of some of the class loader mechanics (speeding up various operations), and making shutdown monitoring more reliable. A new docker image has been added as well (it will be officially published on docker hub later).
 Furthermore in this release a number of components have been updated to their latest version, and the code can now be build with JDK 20ea.
@@ -232,7 +248,7 @@ We are pleased to announce that with the milestone release 7.0.0-M8, Eclipse Gla
 * GlassFish 7.0.0-M8 is a [Jakarta EE 10 Full Profile](https://github.com/eclipse-ee4j/jakartaee-platform/issues/514) compatible implementation
 * GlassFish Web 7.0.0-M8 is a [Jakarta EE 10 Web Profile](https://github.com/eclipse-ee4j/jakartaee-platform/issues/534) compatible implementation
 
-You can download both milestone releases from the [Eclipse Foundation Download portal](https://download.eclipse.org/ee4j/glassfish/) to try out what's new in Jakarta EE 10. 
+You can download both milestone releases from the [Eclipse Foundation Download portal](https://download.eclipse.org/ee4j/glassfish/) to try out what's new in Jakarta EE 10.
 
 ## February 13, 2022 -- Eclipse GlassFish 6.2.5 Available
 

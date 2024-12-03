@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -115,7 +115,10 @@ public class ResourceAdapterNode extends RuntimeDescriptorNode<RuntimeDescriptor
     public Node writeDescriptor(Node parent, String nodeName, ResourceAdapter descriptor) {
         Element raNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(raNode, TagNames.DESCRIPTION, descriptor.getDescription());
-        setAttribute(raNode, RuntimeTagNames.JNDI_NAME, descriptor.getValue(ResourceAdapter.JNDI_NAME));
+        SimpleJndiName jndiName = (SimpleJndiName) descriptor.getValue(ResourceAdapter.JNDI_NAME);
+        if (jndiName != null) {
+            setAttribute(raNode, RuntimeTagNames.JNDI_NAME, jndiName.toString());
+        }
         setAttribute(raNode, RuntimeTagNames.MAX_POOL_SIZE,
             (String) descriptor.getValue(ResourceAdapter.MAX_POOL_SIZE));
         setAttribute(raNode, RuntimeTagNames.STEADY_POOL_SIZE,

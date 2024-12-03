@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,7 +30,6 @@ import jakarta.resource.spi.ResourceAdapter;
 
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -61,19 +61,18 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      *          If there is a failure in loading
      *          or starting the resource adapter.
      */
+    @Override
     public void init(ResourceAdapter ra, ConnectorDescriptor desc, String moduleName, ClassLoader jcl)
             throws ConnectorRuntimeException {
         super.init(ra, desc, moduleName, jcl);
-        this.factories_ = new Hashtable<String, MessageEndpointFactoryInfo>();
-    }
-
-    public ActiveInboundResourceAdapterImpl() {
+        this.factories_ = new Hashtable<>();
     }
 
     /**
      * Destroys default pools and resources. Stops the Resource adapter
      * java bean.
      */
+    @Override
     public void destroy() {
         deactivateEndPoints();
         super.destroy();
@@ -81,16 +80,12 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
 
     private void deactivateEndPoints() {
         if (resourceadapter_ != null) {
-            //deactivateEndpoints as well!
-            Iterator<MessageEndpointFactoryInfo> iter = getAllEndpointFactories().iterator();
-            while (iter.hasNext()) {
-                MessageEndpointFactoryInfo element = iter.next();
+            for (MessageEndpointFactoryInfo element : getAllEndpointFactories()) {
                 try {
                     this.resourceadapter_.endpointDeactivation(
                             element.getEndpointFactory(), element.getActivationSpec());
                 } catch (RuntimeException e) {
-                    _logger.warning(e.getMessage());
-                    _logger.log(Level.FINE, "Error during endpointDeactivation ", e);
+                    _logger.log(Level.SEVERE, "Error during endpointDeactivation ", e);
                 }
             }
         }
@@ -113,15 +108,18 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * @param id Id of the endpoint factory.
      * @return <code>MessageEndpointFactoryIndo</code> object.
      */
+    @Override
     public MessageEndpointFactoryInfo getEndpointFactoryInfo(String id) {
         return factories_.get(id);
     }
 
+    @Override
     public void updateMDBRuntimeInfo(EjbMessageBeanDescriptor descriptor_, BeanPoolDescriptor poolDescriptor)
             throws ConnectorRuntimeException {
         //do nothing
     }
 
+    @Override
     public void validateActivationSpec(ActivationSpec spec) {
         //do nothing
     }
@@ -139,6 +137,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(ConnectorDescriptor cd, String moduleName) {
         return (cd.getInBoundDefined() && !ConnectorsUtil.isJMSRA(moduleName));
      }
@@ -150,6 +149,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * @param id   Unique identifier of the endpoint factory.
      * @param info <code>MessageEndpointFactoryInfo</code> object.
      */
+    @Override
     public void addEndpointFactoryInfo(
             String id, MessageEndpointFactoryInfo info) {
         factories_.put(id, info);
@@ -161,6 +161,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * @param id Unique identifier of the endpoint factory to be
      *           removed.
      */
+    @Override
     public void removeEndpointFactoryInfo(String id) {
         factories_.remove(id);
     }

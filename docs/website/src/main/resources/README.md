@@ -9,6 +9,14 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## December 3, 2024 -- Eclipse GlassFish 7.0.20 Available
+
+All of us from GlassFish are joyful with the release of GlassFish 7.0.20!
+
+While working on GlassFish 7.1.0 and GlassFish 8, we didn't leave the stable 7.0.x series in the dark. In this release we updated a lot of our dependencies to their latest versions and did a large amount of testing to ensure everything worked as required. We also improved stability again by squashing a number of outstanding bugs.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## November 1, 2024 -- Eclipse GlassFish 7.0.19 Available
 
 The full GlassFish team is happy to present you another great GlassFish release; Eclipse GlassFish 7.0.19!

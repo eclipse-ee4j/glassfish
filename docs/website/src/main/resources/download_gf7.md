@@ -1,5 +1,26 @@
 # Eclipse GlassFish 7.x Downloads
 
+## Eclipse GlassFish 7.0.20
+
+Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the Jakarta EE 10 specification, which is a major new feature release. Jakarta EE 10 requires JDK 11 as a minimum, but also works on JDK 17 and JDK 21.
+
+GlassFish 7.0.20 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 23. MicroProfile support requires JDK 17 or higher.
+
+While working on GlassFish 7.1.0 and GlassFish 8, we didn't leave the stable 7.0.x series in the dark. In this release we updated a lot of our dependencies to their latest versions and did a large amount of testing to ensure everything worked as required. We also improved stability again by squashing a number of outstanding bugs.
+
+Download:
+
+* [Eclipse GlassFish 7.0.20, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.20.zip)
+* [Eclipse GlassFish 7.0.20, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.20.zip)
+* [Eclipse GlassFish Embedded 7.0.20, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.20/jar)
+* [Eclipse GlassFish Embedded 7.0.20, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.20/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.20 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.20)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
+
 ## GlassFish 7.0.19
 
 Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the Jakarta EE 10 specification, which is a major new feature release. Jakarta EE 10 requires JDK 11 as a minimum, but also works on JDK 17 and JDK 21.

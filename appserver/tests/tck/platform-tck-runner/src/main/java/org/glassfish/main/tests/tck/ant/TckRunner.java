@@ -206,6 +206,7 @@ public class TckRunner {
         env.put("PATH", String.join(":",
             cfg.getJdkDirectory().getAbsolutePath() + "/bin",
             cfg.getAntDirectory().getAbsolutePath() + "/bin",
+            "/opt/homebrew/bin", // For macOs, to override BSD tar with GNU Tar etc
             "/usr/bin",
             "/bin"));
         env.put("CTS_HOME", cfg.getTargetDir().getAbsolutePath());

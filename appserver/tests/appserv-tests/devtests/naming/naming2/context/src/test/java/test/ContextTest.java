@@ -17,17 +17,10 @@
 
 package test;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.junit.rules.TestWatcher;
+import com.sun.appserv.test.util.results.SimpleReporterAdapter;
 
 import jakarta.ejb.embeddable.EJBContainer;
+
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -36,16 +29,24 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
+import org.junit.rules.TestWatcher;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class ContextTest {
 
     private static final String NL = System.getProperty("line.separator");
     private static EJBContainer ejbContainer;
     private TestBean testBean;
-    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests", null);
 
     @Rule
     public TestWatcher reportWatcher = new ReportWatcher(stat, "Naming::naming2::ContextTest");

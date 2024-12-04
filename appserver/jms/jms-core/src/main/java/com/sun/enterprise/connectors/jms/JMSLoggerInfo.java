@@ -80,7 +80,7 @@ public class JMSLoggerInfo {
     public static final String SHUTDOWN_FAIL_GRIZZLY = LOGMSG_PREFIX + "-00009";
 
     @LogMessageInfo(
-            message = "Error occurs when shutting down JMSRA : {0}",
+            message = "Error occurs when shutting down JMSRA",
             level = "WARNING",
             cause = "unknown",
             action = "unknown"
@@ -110,14 +110,6 @@ public class JMSLoggerInfo {
             action = "unknown"
     )
     public static final String CLOSE_CONNECTION_FAILED = LOGMSG_PREFIX + "-00013";
-
-    @LogMessageInfo(
-            message = "rardeployment.mcfcreation_error {0}",
-            level = "WARNING",
-            cause = "unknown",
-            action = "unknown"
-    )
-    public static final String RARDEPLOYMENT_MCF_ERROR = LOGMSG_PREFIX + "-00014";
 
     @LogMessageInfo(
             message = "Exception while getting configured RMI port : {0}",

@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (c) 2024 Contributors to Eclipse Foundation.
-
-    This program and the accompanying materials are made available under the
-    terms of the Eclipse Public License v. 2.0, which is available at
-    http://www.eclipse.org/legal/epl-2.0.
-
-    This Source Code may also be made available under the following Secondary
-    Licenses when the conditions for such availability set forth in the
-    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
-    version 2 with the GNU Classpath Exception, which is available at
-    https://www.gnu.org/software/classpath/license.html.
-
-    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-
--->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -26,21 +10,25 @@
         <version>7.0.20-SNAPSHOT</version>
     </parent>
 
-    <artifactId>microprofile-health</artifactId>
+    <artifactId>health-glassfish</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>GlassFish MicroProfile Health</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+    </properties>
 
     <dependencies>
-        <!-- APIs -->
-        <dependency>
-            <groupId>org.eclipse.microprofile.health</groupId>
-            <artifactId>microprofile-health-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.glassfish.main.microprofile</groupId>
-            <artifactId>microprofile-config</artifactId>
+            <artifactId>microprofile-health</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -67,16 +55,21 @@
                     <instructions>
                         <!-- A list of packages that are exposed to classes outside the bundle -->
                         <Export-Package>
-                            org.glassfish.microprofile.health;
+                            org.glassfish.microprofile.impl;
                         </Export-Package>
                         <Import-Package>
-                            org.eclipse.microprofile.config;
-                            org.eclipse.microprofile.health.spi;
-                            org.eclipse.microprofile.health;
-                            jakarta.inject;
-                            jakarta.enterprise.context;
+                            jakarta.enterprise.context.spi;
+                            jakarta.enterprise.event;
                             jakarta.enterprise.inject;
                             jakarta.enterprise.inject.spi;
+                            jakarta.json.bind;
+                            jakarta.servlet;
+                            jakarta.servlet.http;
+                            org.eclipse.microprofile.health;
+                            org.glassfish.internal.api;
+                            org.glassfish.microprofile.health;
+                            org.glassfish.hk2.api;
+                            org.glassfish.hk2.utilities;
                         </Import-Package>
                     </instructions>
                 </configuration>

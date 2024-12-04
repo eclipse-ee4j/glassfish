@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.microprofile.health;
+package org.glassfish.microprofile.impl;
 
 import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.ServletContext;
@@ -29,7 +29,7 @@ public class HealthServletInitializer implements ServletContainerInitializer {
 
     @Override
     public void onStartup(Set<Class<?>> set, ServletContext servletContext) {
-        if (servletContext.getContextPath().isEmpty()) {
+         if (!servletContext.getContextPath().isEmpty()) {
             return;
         }
 

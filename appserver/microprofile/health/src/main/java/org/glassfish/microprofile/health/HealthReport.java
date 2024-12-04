@@ -19,5 +19,5 @@ import java.util.List;
 
 import org.eclipse.microprofile.health.HealthCheckResponse;
 
-public record Output(HealthCheckResponse.Status status, List<HealthCheckResponse> checks) {
+public record HealthReport(HealthCheckResponse.Status status, List<HealthCheckResponse> checks) {
 }

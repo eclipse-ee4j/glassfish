@@ -35,6 +35,7 @@
     <modules>
         <module>config</module>
         <module>health</module>
+        <module>health-glassfish</module>
         <module>connectors</module>
     </modules>
 </project>

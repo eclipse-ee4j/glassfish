@@ -609,53 +609,56 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
 
-    private void addJNDIBindings(final JndiNameEnvironment env, final ScopeType scope,
-        final Collection<JNDIBinding> jndiBindings) {
+    private void addJNDIBindings(final JndiNameEnvironment jndiNameEnvironment, final ScopeType scope, final Collection<JNDIBinding> jndiBindings) {
         // Create objects to be bound for each env dependency. Only add bindings that
         // match the given scope.
 
-        addEnvironmentProperties(scope, env.getEnvironmentProperties(), jndiBindings);
+        addEnvironmentProperties(scope, jndiNameEnvironment.getEnvironmentProperties(), jndiBindings);
 
-        for (ResourceEnvReferenceDescriptor descriptor : env.getResourceEnvReferenceDescriptors()) {
+        for (ResourceEnvReferenceDescriptor descriptor : jndiNameEnvironment.getResourceEnvReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
+
             descriptor.checkType();
             jndiBindings.add(getCompEnvBinding(descriptor));
         }
 
-        addAllDescriptorBindings(env, scope, jndiBindings);
+        addAllDescriptorBindings(jndiNameEnvironment, scope, jndiBindings);
 
-        for (EjbReferenceDescriptor descriptor : env.getEjbReferenceDescriptors()) {
+        for (EjbReferenceDescriptor descriptor : jndiNameEnvironment.getEjbReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
-            SimpleJndiName name = toLogicalJndiName(descriptor);
-            EjbReferenceProxy proxy = new EjbReferenceProxy(descriptor);
-            jndiBindings.add(new CompEnvBinding(name, proxy));
+
+            jndiBindings.add(
+                new CompEnvBinding(
+                        toLogicalJndiName(descriptor),
+                        new EjbReferenceProxy(descriptor)));
         }
 
-        for (MessageDestinationReferenceDescriptor descriptor : env.getMessageDestinationReferenceDescriptors()) {
+        for (MessageDestinationReferenceDescriptor descriptor : jndiNameEnvironment.getMessageDestinationReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
+
             jndiBindings.add(getCompEnvBinding(descriptor));
         }
 
-        addResourceReferences(scope, env.getResourceReferenceDescriptors(), jndiBindings);
+        addResourceReferences(scope, jndiNameEnvironment.getResourceReferenceDescriptors(), jndiBindings);
 
-        for (EntityManagerFactoryReferenceDescriptor descriptor : env.getEntityManagerFactoryReferenceDescriptors()) {
-
+        for (EntityManagerFactoryReferenceDescriptor descriptor : jndiNameEnvironment.getEntityManagerFactoryReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
 
-            SimpleJndiName name = toLogicalJndiName(descriptor);
-            Object value = new FactoryForEntityManagerFactoryWrapper(descriptor.getUnitName(), invocationManager, this);
-            jndiBindings.add(new CompEnvBinding(name, value));
+            jndiBindings.add(
+                new CompEnvBinding(
+                        toLogicalJndiName(descriptor),
+                        createFactoryForEntityManagerFactory(descriptor.getUnitName())));
         }
 
-        for (ServiceReferenceDescriptor descriptor : env.getServiceReferenceDescriptors()) {
+        for (ServiceReferenceDescriptor descriptor : jndiNameEnvironment.getServiceReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
@@ -664,12 +667,13 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 descriptor.setName(descriptor.getMappedName().toString());
             }
 
-            SimpleJndiName name = toLogicalJndiName(descriptor);
-            WebServiceRefProxy value = new WebServiceRefProxy(descriptor);
-            jndiBindings.add(new CompEnvBinding(name, value));
+            jndiBindings.add(
+                new CompEnvBinding(
+                        toLogicalJndiName(descriptor),
+                        new WebServiceRefProxy(descriptor)));
         }
 
-        for (EntityManagerReferenceDescriptor descriptor : env.getEntityManagerReferenceDescriptors()) {
+        for (EntityManagerReferenceDescriptor descriptor : jndiNameEnvironment.getEntityManagerReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
@@ -683,6 +687,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     public FactoryForEntityManagerWrapper createFactoryForEntityManager(EntityManagerReference descriptor) {
         return new FactoryForEntityManagerWrapper(descriptor, this);
+    }
+
+    public FactoryForEntityManagerFactoryWrapper createFactoryForEntityManagerFactory(String unitName) {
+        return new FactoryForEntityManagerFactoryWrapper(unitName, invocationManager, this);
     }
 
     private CompEnvBinding getCompEnvBinding(final ResourceEnvReferenceDescriptor next) {

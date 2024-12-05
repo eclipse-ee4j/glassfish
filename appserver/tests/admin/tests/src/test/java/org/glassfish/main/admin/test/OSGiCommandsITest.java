@@ -40,6 +40,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -51,12 +52,15 @@ public class OSGiCommandsITest {
 
     @BeforeAll
     public static void waitOsgiReady() throws Exception {
-        for (int i = 0; i < 5; i++) {
+        long timeout = System.currentTimeMillis() + 10_000L;
+        while (System.currentTimeMillis() < timeout) {
             AsadminResult result = ASADMIN.exec("osgi", "lb");
             if (!result.isError()) {
                 return;
             }
+            Thread.yield();
         }
+        fail("Timeout 10 s when waiting for OSGi to be ready");
     }
 
     @Test

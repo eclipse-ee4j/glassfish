@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -297,7 +297,7 @@ public class EJBUtils {
             return createRemoteBusinessObject(loader, businessInterface, delegate);
         } catch (Exception e) {
             NamingException ne = new NamingException(
-                "ejb ref resolution error for remote business interface" + businessInterface);
+                "ejb ref resolution error for remote business interface " + businessInterface);
             ne.initCause(e instanceof InvocationTargetException ? e.getCause() : e);
             throw ne;
         }

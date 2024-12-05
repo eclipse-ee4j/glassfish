@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -386,7 +386,7 @@ public class Audit extends AuditModule {
                 logger.finest("EJB: " + ejb.getEjbClassName());
 
                 // check and show run-as if present
-                if (!ejb.getUsesCallerIdentity()) {
+                if (Boolean.FALSE.equals(ejb.getUsesCallerIdentity())) {
                     RunAsIdentityDescriptor runas = ejb.getRunAsIdentity();
                     if (runas == null) {
                         logger.finest(" (ejb does not use caller " + "identity)");

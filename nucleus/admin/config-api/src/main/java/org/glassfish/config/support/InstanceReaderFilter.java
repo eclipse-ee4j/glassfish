@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,12 +40,14 @@ import static org.glassfish.config.support.Constants.SERVER;
  */
 class InstanceReaderFilter extends ServerReaderFilter {
 
-    InstanceReaderFilter(String theServerName, URL theDomainXml, XMLInputFactory theXif)
-            throws XMLStreamException, DomainXmlPreParserException {
+    private final String instanceName;
+    private final DomainXmlPreParser dxpp;
 
+    InstanceReaderFilter(String theServerName, URL theDomainXml, XMLInputFactory theXif)
+        throws XMLStreamException, DomainXmlPreParserException {
         super(theDomainXml, theXif);
         instanceName = theServerName;
-        dxpp = new DomainXmlPreParser(domainXml, xif, instanceName);
+        dxpp = new DomainXmlPreParser(theDomainXml, xif, instanceName);
     }
 
     /**
@@ -61,18 +64,22 @@ class InstanceReaderFilter extends ServerReaderFilter {
             XMLStreamReader reader = getParent();
             String elementName = reader.getLocalName();
 
-            if (!StringUtils.ok(elementName))
+            if (!StringUtils.ok(elementName)) {
                 return true; // famous last words:  "this can never happen" ;-)
+            }
 
             // possibly filter out from these 3 kinds of elements
-            if (elementName.equals(SERVER))
+            if (elementName.equals(SERVER)) {
                 return handleServer(reader);
+            }
 
-            if (elementName.equals(CONFIG))
+            if (elementName.equals(CONFIG)) {
                 return handleConfig(reader);
+            }
 
-            if (elementName.equals(CLUSTER))
+            if (elementName.equals(CLUSTER)) {
                 return handleCluster(reader);
+            }
 
             // keep everything else
             return false;
@@ -83,22 +90,12 @@ class InstanceReaderFilter extends ServerReaderFilter {
         }
     }
 
-    @Override
-    final String configWasFound() {
-        // preparser already threw an exception if the config wasn't found
-        return null;
-    }
-
     /**
      * @return true if we want to filter out this server element
      */
     private boolean handleServer(XMLStreamReader r) {
         String name = r.getAttributeValue(null, NAME);
-
-        if (StringUtils.ok(name) && dxpp.getServerNames().contains(name))
-            return false;
-
-        return true;
+        return !StringUtils.ok(name) || !dxpp.getServerNames().contains(name);
     }
 
     /**
@@ -106,11 +103,7 @@ class InstanceReaderFilter extends ServerReaderFilter {
      */
     private boolean handleConfig(XMLStreamReader reader) {
         String name = reader.getAttributeValue(null, NAME);
-
-        if (dxpp.getConfigName().equals(name))
-            return false;
-
-        return true;
+        return !dxpp.getConfigName().equals(name);
     }
 
     /**
@@ -121,13 +114,6 @@ class InstanceReaderFilter extends ServerReaderFilter {
     private boolean handleCluster(XMLStreamReader reader) {
         String name = reader.getAttributeValue(null, NAME);
         String myCluster = dxpp.getClusterName();
-
-        if (StringUtils.ok(myCluster) && myCluster.equals(name))
-            return false;
-
-        return true;
+        return !StringUtils.ok(myCluster) || !myCluster.equals(name);
     }
-
-    private final DomainXmlPreParser dxpp;
-    private final String instanceName;
 }

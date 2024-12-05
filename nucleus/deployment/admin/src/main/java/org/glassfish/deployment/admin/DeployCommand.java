@@ -87,6 +87,9 @@ import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Transaction;
 
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.deployment.admin.DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile;
+
 /**
  * Deploy command
  *
@@ -600,14 +603,14 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             final Logger logger) throws IOException {
         final File finalUploadDir = deploymentContext.getAppInternalDir();
         final File finalAltDDDir = deploymentContext.getAppAltDDDir();
-        if (!finalUploadDir.mkdirs()) {
-            logger.log(Level.FINE, " Attempting to create upload directory {0} was reported as failed; attempting to continue",
-                    new Object[] { finalUploadDir.getAbsolutePath() });
+        if (!finalUploadDir.isDirectory() && !finalUploadDir.mkdirs()) {
+            throw new IOException("Failed to create the upload directory " + finalUploadDir.getAbsolutePath());
         }
-        safeCopyOfApp = DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(finalUploadDir, originalPathValue, logger, env);
-        safeCopyOfDeploymentPlan = DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(finalUploadDir, deploymentplan, logger, env);
-        safeCopyOfAltDD = DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, altdd, logger, env);
-        safeCopyOfRuntimeAltDD = DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, runtimealtdd, logger, env);
+        File applicationsDir = env.getApplicationRepositoryPath();
+        safeCopyOfApp = renameUploadedFileOrCopyInPlaceFile(finalUploadDir, originalPathValue, applicationsDir);
+        safeCopyOfDeploymentPlan = renameUploadedFileOrCopyInPlaceFile(finalUploadDir, deploymentplan, applicationsDir);
+        safeCopyOfAltDD = renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, altdd, applicationsDir);
+        safeCopyOfRuntimeAltDD = renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, runtimealtdd, applicationsDir);
     }
 
     private void recordFileLocations(
@@ -925,7 +928,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             ActionReport subReport = context.getActionReport().addSubActionsReport();
             subReport.setActionExitCode(ActionReport.ExitCode.WARNING);
             subReport.setMessage(warningMsg);
-            context.getLogger().log(Level.WARNING, warningMsg);
+            context.getLogger().log(WARNING, warningMsg);
         }
     }
 

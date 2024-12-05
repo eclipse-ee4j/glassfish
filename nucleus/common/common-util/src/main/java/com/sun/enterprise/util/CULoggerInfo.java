@@ -243,11 +243,6 @@ public class CULoggerInfo {
     public static final String useNonexistentToken = LOGMSG_PREFIX + "-00039";
 
     @LogMessageInfo(
-            message = "File Lock not released on {0}",
-            level = "WARNING")
-    public static final String fileLockNotReleased = LOGMSG_PREFIX + "-00040";
-
-    @LogMessageInfo(
             message = "BundleTracker.removedBundle null bundleID for {0}",
             level="WARNING")
     public static final String NULL_BUNDLE = LOGMSG_PREFIX + "-00042";

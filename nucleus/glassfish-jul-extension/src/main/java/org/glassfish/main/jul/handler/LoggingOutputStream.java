@@ -137,6 +137,7 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
 
         private final LogRecordBuffer buffer;
         private final Logger logger;
+        private volatile boolean pumpClosed;
 
         private Pump(final Logger logger, final LogRecordBuffer buffer) {
             this.buffer = buffer;
@@ -151,7 +152,7 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
         @Override
         public void run() {
             // the thread will be interrupted by it's owner finally
-            while (true) {
+            while (!pumpClosed) {
                 try {
                     logAllPendingRecordsOrWait();
                 } catch (final Exception e) {
@@ -169,6 +170,7 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
          * The pump can be locked, waiting
          */
         void shutdown() {
+            pumpClosed = true;
             this.interrupt();
             // we interrupted waiting or working thread, now we have to process remaining records.
             logAllPendingRecords();

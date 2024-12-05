@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -212,7 +212,7 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         }
 
         // principal
-        if ( Boolean.FALSE.equals(ejbDescriptor.getUsesCallerIdentity()) ) {
+        if (Boolean.FALSE.equals(ejbDescriptor.getUsesCallerIdentity())) {
             RunAsIdentityDescriptor raid = ejbDescriptor.getRunAsIdentity();
             if ( raid != null && raid.getPrincipal() != null ) {
                 Node principalNode = appendChild(ejbNode, RuntimeTagNames.PRINCIPAL);

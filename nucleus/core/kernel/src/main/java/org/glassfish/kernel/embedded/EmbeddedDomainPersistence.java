@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,10 +62,8 @@ public class EmbeddedDomainPersistence extends DomainXmlPersistence {
                 URI uri = EmbeddedDomainXml.getDomainXml(startupContext).toURI();
                 if ("file".equalsIgnoreCase(uri.getScheme())) {
                     return new File(uri);
-                } else {
-                    // TODO :: localize the message.
-                    throw new IOException("configurationFile is writable but is not a file");
                 }
+                throw new IOException("configurationFile is writable but is not a file");
             } catch (URISyntaxException ex) {
                 throw new IOException(ex);
             }
@@ -76,9 +75,7 @@ public class EmbeddedDomainPersistence extends DomainXmlPersistence {
     public void save(DomDocument doc) throws IOException {
         File destination = getDestination();
         if (destination == null) {
-            String msg = localStrings.getLocalString("NoLocation",
-                    "domain.xml cannot be persisted, null destination");
-            logger.finer(msg);
+            logger.finer("domain.xml cannot be persisted, null destination");
             return;
         }
         super.save(doc);

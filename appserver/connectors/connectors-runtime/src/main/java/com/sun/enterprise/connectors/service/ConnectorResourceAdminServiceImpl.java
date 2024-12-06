@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,15 +66,15 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
         try {
             ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
         } catch (NamingException ne) {
-            _logger.log(Level.WARNING,
+            _logger.log(Level.INFO,
                 "Probably the pool {0} is not yet initialized (lazy-loading), trying to check ...", poolInfo);
             try {
                 checkAndLoadPool(poolInfo);
                 ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
             } catch (NamingException e) {
-                _logger.log(Level.SEVERE, "Second lookup failed for {0}: {1}", new Object[] {poolInfo, e});
+                _logger.log(Level.SEVERE, "Lookup failed for {0}: {1}", new Object[] {poolInfo, e});
                 throw new ConnectorRuntimeException(
-                    "Second lookup failed again for pool name " + jndiNameForPool + " or " + poolInfo, ne);
+                    "Failed to lookup pool name " + jndiNameForPool + " or " + poolInfo, ne);
             }
         }
 

@@ -156,16 +156,16 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     }
 
     /**
-     * EMFs for refered pus are created and stored in JPAApplication instance. The
+     * EntityManagerFactories for persistence units are created and stored in JPAApplication instance. The
      * JPAApplication instance is stored in given DeploymentContext to be retrieved
      * by load
      */
     @Override
-    public boolean prepare(DeploymentContext context) {
-        boolean prepared = super.prepare(context);
+    public boolean prepare(DeploymentContext deploymentContext) {
+        boolean prepared = super.prepare(deploymentContext);
         if (prepared) {
-            if (isEMFCreationRequired(context)) {
-                createEMFs(context);
+            if (isEntityManagerFactoryCreationRequired(deploymentContext)) {
+                createEntityManagerFactories(deploymentContext);
             }
         }
         return prepared;
@@ -199,10 +199,10 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
             if (!deployCommandParameters.origin.isCreateAppRef() || isTargetDas(deployCommandParameters)) {
                 Map<String, ExtendedDeploymentContext> deploymentContexts = context.getModuleDeploymentContexts();
                 for (DeploymentContext deploymentContext : deploymentContexts.values()) {
-                    // bundle level pus
+                    // bundle level persistence unit
                     iterateInitializedPUsAtApplicationPrepare(deploymentContext);
                 }
-                // app level pus
+                // app level persistence unit
                 iterateInitializedPUsAtApplicationPrepare(context);
             }
         } else if (event.is(Deployment.APPLICATION_DISABLED)) {
@@ -217,8 +217,8 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     /**
      * Returns unique identifier for this pu within application
      *
-     * @param pud The given pu
-     * @return Absolute pu root + pu name
+     * @param pud The given persistence unit
+     * @return Absolute persistence unit root + persistence unit name
      */
     private static String getUniquePuIdentifier(PersistenceUnitDescriptor pud) {
         return pud.getAbsolutePuRoot() + pud.getName();
@@ -259,38 +259,42 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     /**
      * CreateEMFs and save them in persistence
      *
-     * @param context
+     * @param deploymentContext
      */
-    private void createEMFs(DeploymentContext context) {
-        Application application = context.getModuleMetaData(Application.class);
-        Set<BundleDescriptor> bundles = application.getBundleDescriptors();
+    private void createEntityManagerFactories(DeploymentContext deploymentContext) {
+        Application application = deploymentContext.getModuleMetaData(Application.class);
 
-        // Iterate through all the bundles for the app and collect pu references in
+        // Iterate through all the bundles for the app and collect persistence unit references in
         // referencedPus
         boolean hasScopedResource = false;
-        final List<PersistenceUnitDescriptor> referencedPus = new ArrayList<>();
-        for (BundleDescriptor bundle : bundles) {
-            Collection<? extends PersistenceUnitDescriptor> pusReferencedFromBundle = bundle.findReferencedPUs();
-            for (PersistenceUnitDescriptor pud : pusReferencedFromBundle) {
-                referencedPus.add(pud);
-                if (hasScopedResource(pud)) {
+        final List<PersistenceUnitDescriptor> referencedPersistenceUnits = new ArrayList<>();
+        for (BundleDescriptor bundle : application.getBundleDescriptors()) {
+            for (PersistenceUnitDescriptor persistenceUnit : bundle.findReferencedPUs()) {
+                referencedPersistenceUnits.add(persistenceUnit);
+                if (hasScopedResource(persistenceUnit)) {
                     hasScopedResource = true;
                 }
             }
         }
+
         if (hasScopedResource) {
             // Scoped resources are registered by connector runtime after prepare(). That is
-            // too late for JPA
+            // too late for Jakarta Persistence.
             // This is a hack to initialize connectorRuntime for scoped resources
             connectorRuntime.registerDataSourceDefinitions(application);
         }
+
+        boolean usesCDI = true;
 
         // Iterate through all the PUDs for this bundle and if it is referenced, load
         // the corresponding pu
         PersistenceUnitDescriptorIterator pudIterator = new PersistenceUnitDescriptorIterator() {
             @Override
-            void visitPUD(PersistenceUnitDescriptor pud, DeploymentContext context) {
-                if (referencedPus.contains(pud)) {
+            void visitPUD(PersistenceUnitDescriptor persistenceUnitDescriptor, DeploymentContext deploymentContext) {
+                // EntityManager etc can be injected using CDI as well. Since CDI has the ability to programmatically
+                // look up beans, we can't check whether the persistence unit is actually referenced as referencedPus
+                // optimised for.
+                if (usesCDI || referencedPersistenceUnits.contains(persistenceUnitDescriptor)) {
                     boolean isDas = isDas();
 
                     // While running in embedded mode, it is not possible to guarantee that entity
@@ -304,25 +308,27 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                             .parseBoolean(startupContext.getArguments().getProperty("org.glassfish.persistence.embedded.weaving.enabled", "true"));
 
                     ProviderContainerContractInfo providerContainerContractInfo = weavingEnabled
-                            ? new ServerProviderContainerContractInfo(context, connectorRuntime, isDas)
-                            : new EmbeddedProviderContainerContractInfo(context, connectorRuntime, isDas);
+                            ? new ServerProviderContainerContractInfo(deploymentContext, connectorRuntime, isDas)
+                            : new EmbeddedProviderContainerContractInfo(deploymentContext, connectorRuntime, isDas);
 
                     try {
-                        ((ExtendedDeploymentContext) context).prepareScratchDirs();
+                        ((ExtendedDeploymentContext) deploymentContext).prepareScratchDirs();
                     } catch (IOException e) {
                         // There is no way to recover if we are not able to create the scratch dirs.
                         // Just rethrow the exception.
                         throw new RuntimeException(e);
                     }
 
-                    PersistenceUnitLoader persistenceUnitLoader = new PersistenceUnitLoader(pud, providerContainerContractInfo);
-                    // Store the puLoader in context. It is retrieved to execute java2db and to
+                    // Store the persistenceUnitLoader in context. It is retrieved to execute java2db and to
                     // store the loaded emfs in a JPAApplicationContainer object for cleanup
-                    context.addTransientAppMetaData(getUniquePuIdentifier(pud), persistenceUnitLoader);
+                    deploymentContext.addTransientAppMetaData(
+                        getUniquePuIdentifier(persistenceUnitDescriptor),
+                        new PersistenceUnitLoader(persistenceUnitDescriptor, providerContainerContractInfo));
                 }
             }
         };
-        pudIterator.iteratePUDs(context);
+
+        pudIterator.iteratePUDs(deploymentContext);
     }
 
     /**
@@ -340,13 +346,13 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
 
     /**
      * @param context
-     * @return true if emf creation is required false otherwise
+     * @return true if EntityManagerFactory creation is required false otherwise
      */
-    private boolean isEMFCreationRequired(DeploymentContext context) {
+    private boolean isEntityManagerFactoryCreationRequired(DeploymentContext context) {
         /*
-         * Here are various use cases that needs to be handled. This method handles EMF
-         * creation part, APPLICATION_PREPARED event handle handles java2db and closing
-         * of emf
+         * Here are various use cases that needs to be handled. This method handles
+         * EntityManagerFactory creation part, APPLICATION_PREPARED event handle handles
+         * java2db and closing of EntityManagerFactory
          *
          * To summarize, -Unconditionally create EMFs on DAS for java2db if it is
          * deploy. We will close this EMF in APPLICATION_PREPARED after java2db if
@@ -431,9 +437,10 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     }
 
     /**
-     * Does java2db on DAS and saves emfs created during prepare to ApplicationInfo
-     * maintained by DOL. ApplicationInfo is not available during prepare() so we
-     * can not directly use it there.
+     * Does java2db on DAS and saves entity manager factories created during prepare to ApplicationInfo
+     * maintained by DOL.
+     *
+     * ApplicationInfo is not available during prepare() so we can not directly use it there.
      *
      * @param context
      */
@@ -446,13 +453,13 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         // iterate through all the PersistenceUnitDescriptor for this bundle.
         PersistenceUnitDescriptorIterator pudIterator = new PersistenceUnitDescriptorIterator() {
             @Override
-            void visitPUD(PersistenceUnitDescriptor pud, DeploymentContext context) {
+            void visitPUD(PersistenceUnitDescriptor pud, DeploymentContext deploymentContext) {
                 // PersistenceUnitsDescriptor corresponds to persistence.xml. A bundle can only
                 // have one persitence.xml except
                 // when the bundle is an application which can have multiple persitence.xml
                 // under jars in root of ear and lib.
-                PersistenceUnitLoader persistenceUnitLoader = context.getTransientAppMetaData(getUniquePuIdentifier(pud), PersistenceUnitLoader.class);
-                if (persistenceUnitLoader != null) { // We have initialized PU
+                PersistenceUnitLoader persistenceUnitLoader = deploymentContext.getTransientAppMetaData(getUniquePuIdentifier(pud), PersistenceUnitLoader.class);
+                if (persistenceUnitLoader != null) { // We have initialized persistence unit
                     boolean saveEntityManagerFactory = true;
                     if (isDas()) { // We do validation and execute Java2DB only on DAS
 
@@ -460,26 +467,20 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                         // also. We should perform java2db only on first deploy
                         if (deployCommandParameters.origin.isDeploy()) {
 
-                            // Create EntityManager to trigger validation on PU
+                            // Create EntityManager to trigger validation on persistence unit
                             EntityManagerFactory entityManagerFactory = persistenceUnitLoader.getEMF();
-                            EntityManager entityManager = null;
-                            try {
-                                // Create EM to trigger any validations that are lazily performed by the
+                            try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+                                // Create entity manager to trigger any validations that are lazily performed by the
                                 // provider
-                                // EM creation also triggers DDL generation by provider.
-                                entityManager = entityManagerFactory.createEntityManager();
+                                //
+                                // Entity manager creation also triggers DDL generation by provider.
                             } catch (PersistenceException e) {
                                 // Exception indicates something went wrong while performing validation. Clean
                                 // up and rethrow to fail deployment
                                 entityManagerFactory.close();
 
-                                // Need to wrap exception in DeploymentException else deployment will not
-                                // fail.
+                                // Need to wrap exception in DeploymentException else deployment will not fail.
                                 throw new DeploymentException(e);
-                            } finally {
-                                if (entityManager != null) {
-                                    entityManager.close();
-                                }
                             }
 
                             persistenceUnitLoader.doJava2DB();

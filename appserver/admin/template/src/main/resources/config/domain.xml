@@ -223,6 +223,7 @@
         
         <!-- To enable attaching the flashlight agent to the current VM in OpenJDK 9+ -->
         <jvm-options>-Djdk.attach.allowAttachSelf=true</jvm-options>
+        <jvm-options>-XX:+EnableDynamicAgentLoading</jvm-options>
       </java-config>
       <network-config>
         <protocols>
@@ -419,6 +420,7 @@
 
              <!-- To enable attaching the flashlight agent to the current VM in OpenJDK 9+ -->
              <jvm-options>-Djdk.attach.allowAttachSelf=true</jvm-options>
+             <jvm-options>-XX:+EnableDynamicAgentLoading</jvm-options>
          </java-config>
          <availability-service>
              <web-container-availability/>

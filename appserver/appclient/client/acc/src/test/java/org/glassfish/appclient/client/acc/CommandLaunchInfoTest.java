@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.glassfish.appclient.client.acc.CommandLaunchInfo.ClientLaunchType;
+import org.glassfish.embeddable.client.UserError;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

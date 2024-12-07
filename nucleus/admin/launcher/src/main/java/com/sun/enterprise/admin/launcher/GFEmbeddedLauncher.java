@@ -69,8 +69,13 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     @Override
+    List<File> getMainModulepath() throws GFLauncherException {
+        return List.of();
+    }
+
+    @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        throw new GFLauncherException("not needed?!?");
+        return List.of();
     }
 
     @Override
@@ -172,8 +177,16 @@ class GFEmbeddedLauncher extends GFLauncher {
         cmdLine.clear();
         cmdLine.add(javaExe.getPath());
         addThreadDump(cmdLine);
-        cmdLine.add("-cp");
-        cmdLine.add(getClasspath());
+        if (getModulepath() != null) {
+            cmdLine.add("--module-path");
+            cmdLine.add(getModulepath());
+            cmdLine.add("--add-modules");
+            cmdLine.add("ALL-MODULE-PATH");
+        }
+        if (getClasspath() != null) {
+            cmdLine.add("-cp");
+            cmdLine.add(getClasspath());
+        }
         addDebug(cmdLine);
         cmdLine.add(getMainClass());
         cmdLine.add("--installdir");
@@ -221,6 +234,7 @@ class GFEmbeddedLauncher extends GFLauncher {
         setupDomainDir();
         setupJavaDB();
         setClasspath();
+        setModulepath();
     }
 
     private void setupDomainDir() throws GFLauncherException {

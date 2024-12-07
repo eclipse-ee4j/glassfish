@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.util.io;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.ObjectAnalyzer;
 
@@ -25,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

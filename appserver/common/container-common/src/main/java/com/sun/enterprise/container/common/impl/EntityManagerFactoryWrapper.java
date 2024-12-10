@@ -22,7 +22,6 @@ import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.logging.LogDomains;
 
 import jakarta.persistence.Cache;
 import jakarta.persistence.EntityGraph;
@@ -44,7 +43,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
@@ -53,43 +51,34 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 
 /**
- * Wrapper for application references to entity manager factories.
- * A new instance of this class will be created for each injected
- * EntityManagerFactory reference or each lookup of an EntityManagerFactory
- * reference within the component jndi environment.
+ * Wrapper for application references to entity manager factories. A new instance of this class will be created for each
+ * injected EntityManagerFactory reference or each lookup of an EntityManagerFactory reference within the component jndi
+ * environment.
  *
  * @author Kenneth Saks
  */
-public class EntityManagerFactoryWrapper
-        implements EntityManagerFactory, Serializable {
+public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serializable {
 
-    static Logger _logger=LogDomains.getLogger(EntityManagerFactoryWrapper.class, LogDomains.UTIL_LOGGER);
+    private static final long serialVersionUID = 4719469920862714502L;
 
     private final String unitName;
-
-    private transient InvocationManager invMgr;
+    private transient InvocationManager invocationManager;
+    private transient ComponentEnvManager componentEnvManager;
 
     private transient EntityManagerFactory entityManagerFactory;
 
-    private transient ComponentEnvManager compEnvMgr;
-
-    public EntityManagerFactoryWrapper(String unitName, InvocationManager invMgr,
-                                       ComponentEnvManager compEnvMgr) {
-
+    public EntityManagerFactoryWrapper(String unitName, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
         this.unitName = unitName;
-        this.invMgr = invMgr;
-        this.compEnvMgr = compEnvMgr;
+        this.invocationManager = invMgr;
+        this.componentEnvManager = compEnvMgr;
     }
 
     private EntityManagerFactory getDelegate() {
+        if (entityManagerFactory == null) {
+            entityManagerFactory = lookupEntityManagerFactory(invocationManager, componentEnvManager, unitName);
 
-        if( entityManagerFactory == null ) {
-            entityManagerFactory = lookupEntityManagerFactory(invMgr, compEnvMgr, unitName);
-
-            if( entityManagerFactory == null ) {
-                throw new IllegalStateException
-                    ("Unable to retrieve EntityManagerFactory for unitName "
-                     + unitName);
+            if (entityManagerFactory == null) {
+                throw new IllegalStateException("Unable to retrieve EntityManagerFactory for unitName " + unitName);
             }
         }
 
@@ -201,114 +190,102 @@ public class EntityManagerFactoryWrapper
         getDelegate().runInTransaction(work);
     }
 
-
     /**
-     * Lookup physical EntityManagerFactory based on current component
-     * invocation.
+     * Lookup physical EntityManagerFactory based on current component invocation.
+     *
      * @param invMgr invocationmanager
-     * @param emfUnitName unit name of entity manager factory or null if not
-     *                    specified.
-     * @return EntityManagerFactory or null if no matching factory could be
-     *         found.
+     * @param emfUnitName unit name of entity manager factory or null if not specified.
+     * @return EntityManagerFactory or null if no matching factory could be found.
      **/
-    static EntityManagerFactory lookupEntityManagerFactory(InvocationManager invMgr,
-            ComponentEnvManager compEnvMgr, String emfUnitName)
-    {
+    static EntityManagerFactory lookupEntityManagerFactory(InvocationManager invMgr, ComponentEnvManager compEnvMgr, String emfUnitName) {
+        ComponentInvocation componentInvocation = invMgr.getCurrentInvocation();
 
-        ComponentInvocation inv  =  invMgr.getCurrentInvocation();
+        EntityManagerFactory entityManagerFactory = null;
 
-        EntityManagerFactory emf = null;
-
-        if( inv != null ) {
+        if (componentInvocation != null) {
             Object desc = compEnvMgr.getCurrentJndiNameEnvironment();
             if (desc != null) {
-                emf = lookupEntityManagerFactory(inv.getInvocationType(),
-                    emfUnitName, desc);
+                entityManagerFactory = lookupEntityManagerFactory(componentInvocation.getInvocationType(), emfUnitName, desc);
             }
         }
 
-        return emf;
+        return entityManagerFactory;
     }
 
-    public static EntityManagerFactory lookupEntityManagerFactory(ComponentInvocationType invType,
-            String emfUnitName, Object descriptor) {
-
-        Application app = null;
+    public static EntityManagerFactory lookupEntityManagerFactory(ComponentInvocationType componentInvocationType, String emfUnitName, Object descriptor) {
+        Application application = null;
         BundleDescriptor module = null;
+        EntityManagerFactory entityManagerFactory = null;
 
-        EntityManagerFactory emf = null;
+        switch (componentInvocationType) {
 
-        switch (invType) {
+            case EJB_INVOCATION:
 
-        case EJB_INVOCATION:
+                if (descriptor instanceof EjbDescriptor) {
+                    EjbDescriptor ejbDesc = (EjbDescriptor) descriptor;
+                    module = (BundleDescriptor) ejbDesc.getEjbBundleDescriptor().getModuleDescriptor().getDescriptor();
+                    application = module.getApplication();
+                    break;
+                }
+                // EJB invocation in web bundle?
+                // fall through into web case...
 
-            if (descriptor instanceof EjbDescriptor) {
-                EjbDescriptor ejbDesc = (EjbDescriptor) descriptor;
-                module = (BundleDescriptor) ejbDesc.getEjbBundleDescriptor().getModuleDescriptor().getDescriptor();
-                app = module.getApplication();
+            case SERVLET_INVOCATION:
+
+                module = (WebBundleDescriptor) descriptor;
+                application = module.getApplication();
+
                 break;
-            }
-            // EJB invocation in web bundle?
-            // fall through into web case...
 
-        case SERVLET_INVOCATION:
+            case APP_CLIENT_INVOCATION:
 
-            module = (WebBundleDescriptor) descriptor;
-            app = module.getApplication();
+                module = (ApplicationClientDescriptor) descriptor;
+                application = module.getApplication();
 
-            break;
+                break;
 
-        case APP_CLIENT_INVOCATION:
+            default:
 
-            module = (ApplicationClientDescriptor) descriptor;
-            app = module.getApplication();
-
-            break;
-
-        default:
-
-            break;
+                break;
         }
 
         // First check module-level for a match.
         if (module != null) {
             if (emfUnitName != null) {
-                emf = module.getEntityManagerFactory(emfUnitName);
+                entityManagerFactory = module.getEntityManagerFactory(emfUnitName);
             } else {
-                Set<EntityManagerFactory> emFactories = module
-                        .getEntityManagerFactories();
+                Set<EntityManagerFactory> emFactories = module.getEntityManagerFactories();
                 if (emFactories.size() == 1) {
-                    emf = emFactories.iterator().next();
+                    entityManagerFactory = emFactories.iterator().next();
                 }
             }
         }
 
         // If we're in an .ear and no module-level persistence unit was
         // found, check for an application-level match.
-        if ((app != null) && (emf == null)) {
+        if ((application != null) && (entityManagerFactory == null)) {
             if (emfUnitName != null) {
 
-                emf = app.getEntityManagerFactory(emfUnitName, module);
+                entityManagerFactory = application.getEntityManagerFactory(emfUnitName, module);
 
             } else {
-                Set<EntityManagerFactory> emFactories = app
-                        .getEntityManagerFactories();
-                if (emFactories.size() == 1) {
-                    emf = emFactories.iterator().next();
+                Set<EntityManagerFactory> entityManagerFactories = application.getEntityManagerFactories();
+                if (entityManagerFactories.size() == 1) {
+                    entityManagerFactory = entityManagerFactories.iterator().next();
                 }
             }
         }
 
-        return emf;
+        return entityManagerFactory;
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
 
-        //Initialize the transients that were passed at ctor.
+        // Initialize the transients that were passed at ctor.
         ServiceLocator defaultServiceLocator = Globals.getDefaultHabitat();
-        invMgr        = defaultServiceLocator.getService(InvocationManager.class);
-        compEnvMgr    = defaultServiceLocator.getService(ComponentEnvManager.class);
+        invocationManager = defaultServiceLocator.getService(InvocationManager.class);
+        componentEnvManager = defaultServiceLocator.getService(ComponentEnvManager.class);
     }
 
 }

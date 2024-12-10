@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,7 @@ import javax.xml.stream.util.StreamReaderDelegate;
  *
  * @author Kohsuke Kawaguchi
  */
-abstract class XMLStreamReaderFilter extends StreamReaderDelegate {
+abstract class XMLStreamReaderFilter extends StreamReaderDelegate implements AutoCloseable {
     XMLStreamReaderFilter(XMLStreamReader reader) {
         super(reader);
     }

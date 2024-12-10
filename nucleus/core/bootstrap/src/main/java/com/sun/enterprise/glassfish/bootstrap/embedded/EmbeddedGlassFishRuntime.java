@@ -199,7 +199,7 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             }
 
             // If the user has specified a custom domain.xml then copy it.
-            URI configFileURI = gfProps.getAbsoluteConfigFileURI();
+            URI configFileURI = gfProps.getConfigFileURI();
             if(configFileURI != null) {
                 copy(configFileURI.toURL(), new File(instanceConfigDir, "domain.xml"), true);
             }

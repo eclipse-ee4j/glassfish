@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.connectors.jms.JMSLoggerInfo;
 import com.sun.enterprise.connectors.jms.config.JmsHost;
 import com.sun.enterprise.connectors.jms.config.JmsService;
@@ -50,7 +49,7 @@ import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 @Service
-public class JMSConfigListener implements ConfigListener{
+public class JMSConfigListener implements ConfigListener {
     // Injecting @Configured type triggers the corresponding change
     // events to be sent to this instance
 
@@ -59,9 +58,6 @@ public class JMSConfigListener implements ConfigListener{
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config serverConfig;
-
-    @Inject
-    private Servers servers;
 
     private ActiveJmsResourceAdapter aresourceAdapter;
 

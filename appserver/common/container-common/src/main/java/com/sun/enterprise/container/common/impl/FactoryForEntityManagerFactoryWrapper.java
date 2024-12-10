@@ -21,22 +21,20 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 
 import javax.naming.Context;
-import javax.naming.NamingException;
 
 import org.glassfish.api.invocation.InvocationManager;
 
 
 public class FactoryForEntityManagerFactoryWrapper implements NamingObjectFactory {
 
-    private final InvocationManager invMgr;
-    private final ComponentEnvManager compEnvMgr;
+    private final InvocationManager invocationManager;
+    private final ComponentEnvManager componentEnvManager;
     private final String unitName;
 
-    public FactoryForEntityManagerFactoryWrapper(String unitName, InvocationManager invMgr,
-        ComponentEnvManager compEnvMgr) {
+    public FactoryForEntityManagerFactoryWrapper(String unitName, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
         this.unitName = unitName;
-        this.invMgr = invMgr;
-        this.compEnvMgr = compEnvMgr;
+        this.invocationManager = invMgr;
+        this.componentEnvManager = compEnvMgr;
     }
 
 
@@ -45,10 +43,10 @@ public class FactoryForEntityManagerFactoryWrapper implements NamingObjectFactor
         return false;
     }
 
-
     @Override
-    public EntityManagerFactoryWrapper create(Context ic) throws NamingException {
-        return new EntityManagerFactoryWrapper(unitName, invMgr, compEnvMgr);
+    @SuppressWarnings("unchecked")
+    public EntityManagerFactoryWrapper create(Context ic) {
+        return new EntityManagerFactoryWrapper(unitName, invocationManager, componentEnvManager);
     }
 
 }

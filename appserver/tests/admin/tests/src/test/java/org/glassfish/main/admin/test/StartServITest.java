@@ -23,6 +23,7 @@ import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,6 +33,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
 /**
  * @author Ondro Mihalyi
@@ -65,6 +67,7 @@ public class StartServITest {
 
     @ParameterizedTest
     @ArgumentsSource(StartServArgumentsProvider.class)
+    @DisabledOnOs(value = WINDOWS, disabledReason = "startserv.bat is just trivial and doesn't give the error output")
     public void reportCorrectErrorIfAlreadyRunning(StartServ startServ) {
         try {
             AsadminResult result = startServ.withTextToWaitFor("Total startup time including CLI").exec(STARTSERV_DOMAIN_NAME);

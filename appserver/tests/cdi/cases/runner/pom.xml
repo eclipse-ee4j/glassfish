@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.cdi</groupId>
         <artifactId>cases</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M9</version>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.cases</groupId>

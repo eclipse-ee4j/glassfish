@@ -23,7 +23,7 @@
     Tests for "WD" (Web Distribution, aka Jakarta EE Web Profile)
 
  -->
-<suite name="QuickLookTests" verbose="2">
+<suite name="QuickLookTests" verbose="-1">
 
     <parameter name="admin.url" value="http://localhost:4848/__asadmin" />
     <parameter name="admin.user" value="admin" />
@@ -53,7 +53,7 @@
         </classes>
     </test>
 
-    <!--  
+    <!--
     <test name="adminconsole_tests">
         <classes>
             <class name="test.admin.AdminConsoleTests" />

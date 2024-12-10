@@ -68,7 +68,7 @@ public class ArchiveTest extends TestCase {
 
         ApplicationArchivist reader = (ApplicationArchivist) TestUtil.getByType(ApplicationArchivist.class);
         reader.setAnnotationProcessingRequested(true);
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
         reader.setClassLoader(classLoader);
 
@@ -127,7 +127,7 @@ public class ArchiveTest extends TestCase {
         File archive = new File(archiveDir, appArchiveName);
         assertTrue("Do not fing the archive "+archive.getAbsolutePath(), archive.exists());
 
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
 
         WebArchivist reader = (WebArchivist) TestUtil.getByType(WebArchivist.class);
@@ -236,7 +236,7 @@ public class ArchiveTest extends TestCase {
         File archive = new File(archiveDir, appArchiveName);
         assertTrue("Do not fing the archive "+archive.getAbsolutePath(), archive.exists());
 
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
 
         EjbArchivist reader = (EjbArchivist) TestUtil.getByType(EjbArchivist.class);

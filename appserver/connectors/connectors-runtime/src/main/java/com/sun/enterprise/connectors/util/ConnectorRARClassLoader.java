@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,10 +30,15 @@ import java.security.SecureClassLoader;
  * @author Sivakumar Thyagarajan
  */
 public class ConnectorRARClassLoader extends SecureClassLoader{
-    private JarResourceExtractor jarResources;
+
+    static {
+        registerAsParallelCapable();
+    }
+
+    private final JarResourceExtractor jarResources;
 
     public ConnectorRARClassLoader(String jarName, ClassLoader parent) {
-        super(parent);
+        super(jarName, parent);
         // Create the JarResource and suck in the .jar file.
         jarResources = new JarResourceExtractor(jarName);
     }

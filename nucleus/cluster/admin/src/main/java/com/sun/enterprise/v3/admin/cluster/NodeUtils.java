@@ -71,7 +71,7 @@ public class NodeUtils {
     static final String PARAM_TYPE = "type";
     static final String PARAM_INSTALL = "install";
     public static final String PARAM_WINDOWS_DOMAIN = "windowsdomain";
-    static final String LANDMARK_FILE = "glassfish/modules/admin-cli.jar";
+    static final String LANDMARK_FILE = "glassfish/admin-cli.jar";
     private static final String NL = System.lineSeparator();
     private TokenResolver resolver = null;
     private Logger logger = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -129,7 +129,7 @@ public class RarHandler extends AbstractArchiveHandler {
     public List<URI> getClassPathURIs(ReadableArchive archive) {
         List<URI> uris = super.getClassPathURIs(archive);
         try {
-            File archiveFile = new File(archive.getURI());
+            File archiveFile = new File(archive.getURI().getSchemeSpecificPart());
             if (archiveFile.exists() && archiveFile.isDirectory()) {
                 // add top level jars
                 uris.addAll(getLibDirectoryJarURIs(archiveFile));

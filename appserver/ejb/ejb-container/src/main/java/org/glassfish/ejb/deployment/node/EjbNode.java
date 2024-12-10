@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -181,7 +181,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
      * @param descriptor the EJB descriptor the security information to be retrieved
      */
     protected void writeSecurityIdentityDescriptor(Node parent, EjbDescriptor descriptor) {
-        if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity() == null) {
+        if (descriptor.getUsesCallerIdentity() == null && descriptor.getRunAsIdentity() == null) {
             return;
         }
         SecurityIdentityNode.writeSecureIdentity(parent, SECURITY_IDENTITY, descriptor);

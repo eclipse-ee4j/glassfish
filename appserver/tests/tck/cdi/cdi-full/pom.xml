@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>glassfish-external-tck-cdi-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M9</version>
     </parent>
 
     <artifactId>glassfish-external-tck-cdi</artifactId>

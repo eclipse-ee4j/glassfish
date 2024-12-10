@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,9 +38,9 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
 
     boolean SSL3_ENABLED = false;
 
-    boolean TLS_ENABLED = true;
+    boolean TLS_ENABLED = false;
 
-    boolean TLS11_ENABLED = true;
+    boolean TLS11_ENABLED = false;
 
     boolean TLS12_ENABLED = true;
 

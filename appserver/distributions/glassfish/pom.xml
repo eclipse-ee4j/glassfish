@@ -141,6 +141,10 @@
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
+                                <jarupdate if:set="java17orGreater"
+                                           basedir="${patches}/microprofile-health-api" includes="META-INF/MANIFEST.MF"
+                                           destfile="${glassfish.modules}/microprofile-health-api.jar"
+                                />
                                 <jarupdate
                                     basedir="${patches}/tyrus-client" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/tyrus-client.jar"

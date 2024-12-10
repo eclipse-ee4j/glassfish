@@ -72,7 +72,6 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
                 checkAndLoadPool(poolInfo);
                 ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
             } catch (NamingException e) {
-                _logger.log(Level.SEVERE, "Lookup failed for {0}: {1}", new Object[] {poolInfo, e});
                 throw new ConnectorRuntimeException(
                     "Failed to lookup pool name " + jndiNameForPool + " or " + poolInfo, ne);
             }

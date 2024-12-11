@@ -1185,9 +1185,9 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <!-- Jakarta EE 11 major versions to exclude -->
-                                        
+
                                         <rule>
                                             <groupId>jakarta.annotation</groupId>
                                             <artifactId>jakarta.annotation-api</artifactId>
@@ -1203,7 +1203,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.authentication</groupId>
                                             <artifactId>jakarta.authentication-api</artifactId>
@@ -1219,7 +1219,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.authorization</groupId>
                                             <artifactId>jakarta.authorization-api</artifactId>
@@ -1235,7 +1235,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.security.enterprise</groupId>
                                             <artifactId>jakarta.security.enterprise-api</artifactId>
@@ -1251,7 +1251,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.el</groupId>
                                             <artifactId>jakarta.el-api</artifactId>
@@ -1271,7 +1271,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.servlet</groupId>
                                             <artifactId>jakarta.servlet-api</artifactId>
@@ -1291,7 +1291,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.servlet.jsp</groupId>
                                             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -1311,7 +1311,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.validation</groupId>
                                             <ignoreVersions>
@@ -1326,7 +1326,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.faces</groupId>
                                             <ignoreVersions>
@@ -1341,7 +1341,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.enterprise.concurrent</groupId>
                                             <ignoreVersions>
@@ -1360,7 +1360,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.interceptor</groupId>
                                             <ignoreVersions>
@@ -1379,7 +1379,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.websocket</groupId>
                                             <ignoreVersions>
@@ -1394,7 +1394,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.persistence</groupId>
                                             <ignoreVersions>
@@ -1413,7 +1413,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.platform</groupId>
                                             <ignoreVersions>
@@ -1428,7 +1428,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.enterprise</groupId>
                                             <artifactId>jakarta.enterprise.cdi-api</artifactId>
@@ -1460,7 +1460,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.enterprise</groupId>
                                             <artifactId>jakarta.enterprise.lang-model</artifactId>
@@ -1492,7 +1492,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.ws.rs</groupId>
                                             <ignoreVersions>
@@ -1507,7 +1507,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>jakarta.mvc</groupId>
                                             <ignoreVersions>
@@ -1522,7 +1522,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish</groupId>
                                             <artifactId>jakarta.enterprise.concurrent</artifactId>
@@ -1538,7 +1538,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.jsftemplating</groupId>
                                             <ignoreVersions>
@@ -1553,7 +1553,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.grizzly</groupId>
                                             <ignoreVersions>
@@ -1568,7 +1568,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.hk2</groupId>
                                             <ignoreVersions>
@@ -1583,7 +1583,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.jersey</groupId>
                                             <ignoreVersions>
@@ -1598,7 +1598,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.expressly</groupId>
                                             <ignoreVersions>
@@ -1613,7 +1613,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.tyrus</groupId>
                                             <ignoreVersions>
@@ -1628,7 +1628,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.wasp</groupId>
                                             <ignoreVersions>
@@ -1643,7 +1643,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.soteria</groupId>
                                             <ignoreVersions>
@@ -1658,7 +1658,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.epicyro</groupId>
                                             <ignoreVersions>
@@ -1673,7 +1673,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.exousia</groupId>
                                             <ignoreVersions>
@@ -1688,7 +1688,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish</groupId>
                                             <artifactId>jakarta.faces</artifactId>
@@ -1704,7 +1704,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.glassfish.main</groupId>
                                             <ignoreVersions>
@@ -1719,7 +1719,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.eclipse.persistence</groupId>
                                             <ignoreVersions>
@@ -1738,7 +1738,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.hibernate.validator</groupId>
                                             <ignoreVersions>
@@ -1765,7 +1765,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.jboss.weld</groupId>
                                             <ignoreVersions>
@@ -1792,7 +1792,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>io.helidon.microprofile.config</groupId>
                                             <ignoreVersions>
@@ -1819,7 +1819,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                         <rule>
                                             <groupId>org.omnifaces</groupId>
                                             <artifactId>microprofile-jwt-auth</artifactId>
@@ -1835,7 +1835,7 @@
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
-                                        
+
                                     </rules>
                                 </ruleSet>
                             </configuration>
@@ -2100,23 +2100,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <file>
-                    <exists>${java.home}/../lib/tools.jar</exists>
-                </file>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools-jar</artifactId>
-                    <version>1</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>mac</id>
             <activation>

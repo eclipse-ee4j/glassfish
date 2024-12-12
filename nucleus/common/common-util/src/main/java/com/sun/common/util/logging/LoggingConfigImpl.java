@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -385,7 +385,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         LOG.log(Level.INFO, "deleteLoggingProperties(properties={0})", properties);
         loadLoggingProperties();
         remove(properties);
-        rewritePropertiesFileAndNotifyMonitoring();
+        rewritePropertiesFileAndNotifyMonitoring("");
         return setMissingDefaults(getLoggingProperties());
     }
 
@@ -394,10 +394,10 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
     public synchronized Map<String, String> deleteLoggingProperties(final Collection<String> properties,
         final String target) throws IOException {
         LOG.log(Level.INFO, "deleteLoggingProperties(properties={0}, target={1})", new Object[] {properties, target});
-        loadLoggingProperties();
+        loadLoggingProperties(target);
         remove(properties);
-        rewritePropertiesFileAndNotifyMonitoring();
-        return setMissingDefaults(getLoggingProperties());
+        rewritePropertiesFileAndNotifyMonitoring(target);
+        return setMissingDefaults(getLoggingProperties(target));
     }
 
     private void remove(final Collection<String> keys) {
@@ -405,9 +405,14 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         keys.forEach(toRealKeyAndDelete);
     }
 
-    private void rewritePropertiesFileAndNotifyMonitoring() throws IOException {
+    private void rewritePropertiesFileAndNotifyMonitoring(final String targetConfigName) throws IOException {
         LOG.finest("rewritePropertiesFileAndNotifyMonitoring");
-        File file = getLoggingPropertiesFile();
+        File file = null;
+        if (targetConfigName == null || targetConfigName.isEmpty()) {
+            file = getLoggingPropertiesFile();
+        } else {
+            file = getLoggingPropertiesFile(targetConfigName);
+        }
         File parentFile = file.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()) {
             throw new IOException(

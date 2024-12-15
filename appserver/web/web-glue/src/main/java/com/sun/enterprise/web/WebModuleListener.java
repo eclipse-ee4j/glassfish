@@ -189,12 +189,17 @@ final class WebModuleListener implements LifecycleListener {
         servletContext.setAttribute("com.sun.appserv.tldlistener.map", tldListenerMap);
 
         ServiceLocator defaultServices = webContainer.getServerContext().getDefaultServices();
-        final String servicesName = webModule.getComponentId();
-        ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(servicesName, defaultServices);
-        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
 
-        // set services for jsf injection
-        servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, webAppServices);
+        if (webModule.isSystemApplication()) {
+            final String servicesName = webModule.getComponentId();
+            ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(servicesName, defaultServices);
+            initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
+
+            // Set services for jsf injection
+            servletContext.setAttribute(Constants.SERVICE_LOCATOR_ATTRIBUTE, webAppServices);
+        } else {
+            servletContext.setAttribute(Constants.SERVICE_LOCATOR_ATTRIBUTE, defaultServices);
+        }
 
         SunWebAppImpl bean = webModule.getIasWebAppConfigBean();
 

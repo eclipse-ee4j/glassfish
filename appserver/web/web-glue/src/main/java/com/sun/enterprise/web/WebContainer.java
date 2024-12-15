@@ -20,7 +20,6 @@ package com.sun.enterprise.web;
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.HttpService;
@@ -28,9 +27,9 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.container.common.spi.CDIService;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
+import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.security.integration.RealmInitializer;
@@ -138,9 +137,16 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.types.Property;
 import org.xml.sax.EntityResolver;
 
+import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
 import static java.text.MessageFormat.format;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.web.LogFacade.DEFAULT_WEB_MODULE_CONFLICT;
+import static org.glassfish.web.LogFacade.DUPLICATE_CONTEXT_ROOT;
+import static org.glassfish.web.LogFacade.INVALID_ENCODED_CONTEXT_ROOT;
+import static org.glassfish.web.LogFacade.UNABLE_TO_SET_CONTEXT_ROOT;
 
 /**
  * Web container service
@@ -184,12 +190,6 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
     @Inject
     private ClassLoaderHierarchy classLoaderHierarchy;
-
-    @Inject
-    private ComponentEnvManager componentEnvManager;
-
-    @Inject
-    private Configs configs;
 
     @Inject
     @Optional
@@ -394,11 +394,11 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             setDebugLevel();
 
             String maxDepth = null;
-            org.glassfish.web.config.serverbeans.WebContainer configWC =
+            org.glassfish.web.config.serverbeans.WebContainer configWebContainer =
                 serverConfig.getExtensionByType(org.glassfish.web.config.serverbeans.WebContainer.class);
 
-            if (configWC != null) {
-                maxDepth = configWC.getPropertyValue(DISPATCHER_MAX_DEPTH);
+            if (configWebContainer != null) {
+                maxDepth = configWebContainer.getPropertyValue(DISPATCHER_MAX_DEPTH);
             }
             if (maxDepth != null) {
                 int depth = -1;
@@ -992,7 +992,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                     connector.setProxyHandler(propValue);
                 } else {
                     String msg = rb.getString(LogFacade.INVALID_HTTP_SERVICE_PROPERTY);
-                    logger.log(Level.WARNING, MessageFormat.format(msg, httpServiceProp.getName()));
+                    logger.log(WARNING, MessageFormat.format(msg, httpServiceProp.getName()));
 
                 }
             }
@@ -1105,8 +1105,8 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             vs.addValve((GlassFishValve) accessLogValve);
         }
 
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, LogFacade.VIRTUAL_SERVER_CREATED, vs_id);
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, LogFacade.VIRTUAL_SERVER_CREATED, vs_id);
         }
 
         /*
@@ -1537,199 +1537,209 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     /**
      * Creates and configures a web module and adds it to the specified virtual server.
      */
-    private WebModule loadWebModule(VirtualServer vs, WebModuleConfig wmInfo, String eeApplication, Properties deploymentProperties) throws Exception {
+    private WebModule loadWebModule(VirtualServer virtualServer, WebModuleConfig webModuleConfig, String eeApplication, Properties deploymentProperties) throws Exception {
 
-        String wmName = wmInfo.getName();
-        String wmContextPath = wmInfo.getContextPath();
+        String webModuleName = webModuleConfig.getName();
+        String webModuleContextPath = webModuleConfig.getContextPath();
 
-        if (wmContextPath.indexOf('%') != -1) {
+        if (webModuleContextPath.indexOf('%') != -1) {
             try {
-                RequestUtil.urlDecode(wmContextPath, "UTF-8");
+                RequestUtil.urlDecode(webModuleContextPath, "UTF-8");
             } catch (Exception e) {
-                String msg = rb.getString(LogFacade.INVALID_ENCODED_CONTEXT_ROOT);
-                msg = MessageFormat.format(msg, wmName, wmContextPath);
-                throw new Exception(msg);
+                throw new Exception(format(rb.getString(INVALID_ENCODED_CONTEXT_ROOT), webModuleName, webModuleContextPath));
             }
         }
 
-        if (wmContextPath.length() == 0 && vs.getDefaultWebModuleID() != null) {
-            String msg = rb.getString(LogFacade.DEFAULT_WEB_MODULE_CONFLICT);
-            msg = MessageFormat.format(msg, new Object[] { wmName, vs.getID() });
-            throw new Exception(msg);
+        if (webModuleContextPath.length() == 0 && virtualServer.getDefaultWebModuleID() != null) {
+            throw new Exception(format(rb.getString(DEFAULT_WEB_MODULE_CONFLICT), new Object[] { webModuleName, virtualServer.getID() }));
         }
 
-        wmInfo.setWorkDirBase(_appsWorkRoot);
-        wmInfo.setStubBaseDir(appsStubRoot);
+        webModuleConfig.setWorkDirBase(_appsWorkRoot);
+        webModuleConfig.setStubBaseDir(appsStubRoot);
 
         String displayContextPath = null;
-        if (wmContextPath.length() == 0) {
+        if (webModuleContextPath.length() == 0) {
             displayContextPath = "/";
         } else {
-            displayContextPath = wmContextPath;
+            displayContextPath = webModuleContextPath;
         }
 
         Map<String, AdHocServletInfo> adHocPaths = null;
         Map<String, AdHocServletInfo> adHocSubtrees = null;
-        WebModule ctx = (WebModule) vs.findChild(wmContextPath);
-        if (ctx != null) {
-            if (ctx instanceof AdHocWebModule) {
+
+        WebModule webModule = (WebModule) virtualServer.findChild(webModuleContextPath);
+        if (webModule != null) {
+            if (webModule instanceof AdHocWebModule) {
                 /*
                  * Found ad-hoc web module which has been created by web container in order to store mappings for ad-hoc paths and
                  * subtrees. All these mappings must be propagated to the context that is being deployed.
                  */
-                if (ctx.hasAdHocPaths()) {
-                    adHocPaths = ctx.getAdHocPaths();
+                if (webModule.hasAdHocPaths()) {
+                    adHocPaths = webModule.getAdHocPaths();
                 }
-                if (ctx.hasAdHocSubtrees()) {
-                    adHocSubtrees = ctx.getAdHocSubtrees();
+                if (webModule.hasAdHocSubtrees()) {
+                    adHocSubtrees = webModule.getAdHocSubtrees();
                 }
-                vs.removeChild(ctx);
-            } else if (Constants.DEFAULT_WEB_MODULE_NAME.equals(ctx.getModuleName())) {
+                virtualServer.removeChild(webModule);
+            } else if (DEFAULT_WEB_MODULE_NAME.equals(webModule.getModuleName())) {
                 /*
                  * Dummy context that was created just off of a docroot, (see VirtualServer.createSystemDefaultWebModuleIfNecessary()).
                  * Unload it so it can be replaced with the web module to be loaded
                  */
-                unloadWebModule(wmContextPath, ctx.getWebBundleDescriptor().getApplication().getRegistrationName(), vs.getName(), true,
-                        null);
-            } else if (!ctx.getAvailable()) {
+                unloadWebModule(
+                    webModuleContextPath,
+                    webModule.getWebBundleDescriptor().getApplication().getRegistrationName(),
+                    virtualServer.getName(),
+                    true,
+                    null);
+            } else if (!webModule.getAvailable()) {
                 /*
                  * Context has been marked unavailable by a previous call to disableWebModule. Mark the context as available and return
                  */
-                ctx.setAvailable(true);
-                return ctx;
+                webModule.setAvailable(true);
+                return webModule;
             } else {
-                String msg = rb.getString(LogFacade.DUPLICATE_CONTEXT_ROOT);
-                throw new Exception(MessageFormat.format(msg, vs.getID(), ctx.getModuleName(), displayContextPath, wmName));
+                throw new Exception(format(rb.getString(DUPLICATE_CONTEXT_ROOT), virtualServer.getID(), webModule.getModuleName(), displayContextPath, webModuleName));
             }
         }
 
-        if (logger.isLoggable(Level.FINEST)) {
-            Object[] params = { wmName, vs.getID(), displayContextPath };
-            logger.log(Level.FINEST, LogFacade.WEB_MODULE_LOADING, params);
+        if (logger.isLoggable(FINEST)) {
+            Object[] params = { webModuleName, virtualServer.getID(), displayContextPath };
+            logger.log(FINEST, LogFacade.WEB_MODULE_LOADING, params);
         }
 
         File docBase = null;
-        if (JWS_APPCLIENT_MODULE_NAME.equals(wmName)) {
+        if (JWS_APPCLIENT_MODULE_NAME.equals(webModuleName)) {
             docBase = new File(System.getProperty("com.sun.aas.installRoot"));
         } else {
-            docBase = wmInfo.getLocation();
+            docBase = webModuleConfig.getLocation();
         }
 
-        ctx = (WebModule) _embedded.createContext(wmName, wmContextPath, docBase, vs.getDefaultContextXmlLocation(),
-                vs.getDefaultWebXmlLocation(), useDOLforDeployment, wmInfo);
+        webModule = (WebModule)
+            _embedded.createContext(
+                    webModuleName,
+                    webModuleContextPath,
+                    docBase,
+                    virtualServer.getDefaultContextXmlLocation(),
+                    virtualServer.getDefaultWebXmlLocation(),
+                    useDOLforDeployment,
+                    webModuleConfig);
 
         // for now disable JNDI
-        ctx.setUseNaming(false);
+        webModule.setUseNaming(false);
 
         // Set JSR 77 object name and attributes
-        Engine engine = (Engine) vs.getParent();
+        Engine engine = (Engine) virtualServer.getParent();
         if (engine != null) {
-            ctx.setEngineName(engine.getName());
-            ctx.setJvmRoute(engine.getJvmRoute());
+            webModule.setEngineName(engine.getName());
+            webModule.setJvmRoute(engine.getJvmRoute());
         }
+
         String eeServer = _serverContext.getInstanceName();
         String domain = _serverContext.getDefaultDomainName();
-        // String[] javaVMs = J2EEModuleUtil.getjavaVMs();
-        ctx.setDomain(domain);
+        webModule.setDomain(domain);
 
-        ctx.setEEServer(eeServer);
-        ctx.setEEApplication(eeApplication);
+        webModule.setEEServer(eeServer);
+        webModule.setEEApplication(eeApplication);
         // turn on container internal cache by default as in v2
         // ctx.setCachingAllowed(false);
-        ctx.setCacheControls(vs.getCacheControls());
-        ctx.setBean(wmInfo.getBean());
+        webModule.setCacheControls(virtualServer.getCacheControls());
+        webModule.setBean(webModuleConfig.getBean());
 
         if (adHocPaths != null) {
-            ctx.addAdHocPaths(adHocPaths);
+            webModule.addAdHocPaths(adHocPaths);
         }
         if (adHocSubtrees != null) {
-            ctx.addAdHocSubtrees(adHocSubtrees);
+            webModule.addAdHocSubtrees(adHocSubtrees);
         }
 
         // Object containing web.xml information
-        WebBundleDescriptor wbd = wmInfo.getDescriptor();
+        WebBundleDescriptor webBundleDescriptor = webModuleConfig.getDescriptor();
 
         // Set the context root
-        if (wbd != null) {
-            ctx.setContextRoot(wbd.getContextRoot());
+        if (webBundleDescriptor != null) {
+            webModule.setContextRoot(webBundleDescriptor.getContextRoot());
         } else {
             // Should never happen.
-            logger.log(Level.WARNING, LogFacade.UNABLE_TO_SET_CONTEXT_ROOT, wmInfo);
+            logger.log(WARNING, UNABLE_TO_SET_CONTEXT_ROOT, webModuleConfig);
         }
 
         //
         // Ensure that the generated directory for JSPs in the document root
         // (i.e. those that are serviced by a system default-web-module)
         // is different for each virtual server.
-        String wmInfoWorkDir = wmInfo.getWorkDir();
-        if (wmInfoWorkDir != null) {
-            StringBuilder workDir = new StringBuilder(wmInfo.getWorkDir());
-            if (wmName.equals(Constants.DEFAULT_WEB_MODULE_NAME)) {
+        String webModuleConfigWorkDir = webModuleConfig.getWorkDir();
+        if (webModuleConfigWorkDir != null) {
+            StringBuilder workDir = new StringBuilder(webModuleConfig.getWorkDir());
+            if (webModuleName.equals(DEFAULT_WEB_MODULE_NAME)) {
                 workDir.append("-");
-                workDir.append(FileUtils.makeFriendlyFilename(vs.getID()));
+                workDir.append(FileUtils.makeFriendlyFilename(virtualServer.getID()));
             }
-            ctx.setWorkDir(workDir.toString());
+            webModule.setWorkDir(workDir.toString());
         }
 
-        ClassLoader parentLoader = wmInfo.getParentLoader();
+        ClassLoader parentLoader = webModuleConfig.getParentLoader();
         if (parentLoader == null) {
             // Use the shared classloader as the parent for all
             // standalone web-modules
             parentLoader = _serverContext.getSharedClassLoader();
         }
-        ctx.setParentClassLoader(parentLoader);
+        webModule.setParentClassLoader(parentLoader);
 
-        if (wbd != null) {
+        if (webBundleDescriptor != null) {
             // Determine if an alternate DD is set for this web-module in
             // the application
-            ctx.configureAlternateDD(wbd);
-            ctx.configureWebServices(wbd);
+            webModule.configureAlternateDD(webBundleDescriptor);
+            webModule.configureWebServices(webBundleDescriptor);
         }
 
         // Object containing sun-web.xml information
         SunWebAppImpl iasBean = null;
 
-        // The default context is the only case when wbd == null
-        if (wbd != null) {
-            iasBean = (SunWebAppImpl) wbd.getSunDescriptor();
+        // The default context is the only case when WebBundleDescriptor == null
+        if (webBundleDescriptor != null) {
+            iasBean = (SunWebAppImpl) webBundleDescriptor.getSunDescriptor();
         }
 
-        // set the sun-web config bean
-        ctx.setIasWebAppConfigBean(iasBean);
+        // Set the sun-web config bean
+        webModule.setIasWebAppConfigBean(iasBean);
 
         // Configure SingleThreadedServletPools, work/tmp directory etc
-        ctx.configureMiscSettings(iasBean, vs, displayContextPath);
+        webModule.configureMiscSettings(iasBean, virtualServer, displayContextPath);
 
         // Configure alternate docroots if dummy web module
-        if (ctx.getID().startsWith(Constants.DEFAULT_WEB_MODULE_NAME)) {
-            ctx.setAlternateDocBases(vs.getProperties());
+        if (webModule.getID().startsWith(DEFAULT_WEB_MODULE_NAME)) {
+            webModule.setAlternateDocBases(virtualServer.getProperties());
         }
 
         // Configure the class loader delegation model, classpath etc
-        Loader loader = ctx.configureLoader(iasBean);
+        Loader loader = webModule.configureLoader(iasBean);
 
         // Set the class loader on the DOL object
-        if (wbd != null && wbd.hasWebServices()) {
-            wbd.addExtraAttribute("WEBLOADER", loader);
+        if (webBundleDescriptor != null && webBundleDescriptor.hasWebServices()) {
+            webBundleDescriptor.addExtraAttribute("WEBLOADER", loader);
         }
 
-        for (LifecycleListener listener : ctx.findLifecycleListeners()) {
+        for (LifecycleListener listener : webModule.findLifecycleListeners()) {
             if (listener instanceof ContextConfig) {
-                ((ContextConfig) listener).setClassLoader(wmInfo.getAppClassLoader());
+                ((ContextConfig) listener).setClassLoader(webModuleConfig.getAppClassLoader());
             }
         }
 
         // Configure the session manager and other related settings
-        ctx.configureSessionSettings(wbd, wmInfo);
+        webModule.configureSessionSettings(webBundleDescriptor, webModuleConfig);
 
         // set i18n info from locale-charset-info tag in sun-web.xml
-        ctx.setI18nInfo();
+        webModule.setI18nInfo();
 
-        if (wbd != null) {
-            String resourceType = wmInfo.getObjectType();
+        if (webBundleDescriptor != null) {
+            String resourceType = webModuleConfig.getObjectType();
             boolean isSystem = resourceType != null && resourceType.startsWith("system-");
-            // security will generate policy for system default web module
-            if (!wmName.startsWith(Constants.DEFAULT_WEB_MODULE_NAME)) {
+
+            webModule.setSystemApplication(isSystem);
+
+            // Security will generate policy for system default web module
+            if (!webModuleName.startsWith(DEFAULT_WEB_MODULE_NAME)) {
                 // TODO : v3 : dochez Need to remove dependency on security
                 Realm realm = serviceLocator.getService(Realm.class);
                 if ("null".equals(eeApplication)) {
@@ -1738,65 +1748,63 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                      * specify their own
                      */
                     if (realm != null && realm instanceof RealmInitializer) {
-                        ((RealmInitializer) realm).initializeRealm(wbd, isSystem, vs.getAuthRealmName());
-                        ctx.setRealm(realm);
+                        ((RealmInitializer) realm).initializeRealm(webBundleDescriptor, isSystem, virtualServer.getAuthRealmName());
+                        webModule.setRealm(realm);
                     }
                 } else {
                     if (realm != null && realm instanceof RealmInitializer) {
-                        ((RealmInitializer) realm).initializeRealm(wbd, isSystem, null);
-                        ctx.setRealm(realm);
+                        ((RealmInitializer) realm).initializeRealm(webBundleDescriptor, isSystem, null);
+                        webModule.setRealm(realm);
                     }
                 }
             }
 
-            // post processing DOL object for standalone web module
-            if (wbd.getApplication() != null && wbd.getApplication().isVirtual()) {
-                wbd.visit(new WebValidatorWithoutCL());
+            // Post processing DOL object for standalone web module
+            if (webBundleDescriptor.getApplication() != null && webBundleDescriptor.getApplication().isVirtual()) {
+                webBundleDescriptor.visit(new WebValidatorWithoutCL());
             }
         }
 
         // Add virtual server mime mappings, if present
-        addMimeMappings(ctx, vs.getMimeMap());
+        addMimeMappings(webModule, virtualServer.getMimeMap());
 
-        String moduleName = Constants.DEFAULT_WEB_MODULE_NAME;
+        String moduleName = DEFAULT_WEB_MODULE_NAME;
         String monitoringNodeName = moduleName;
-        if (wbd != null && wbd.getApplication() != null) {
+        if (webBundleDescriptor != null && webBundleDescriptor.getApplication() != null) {
             // Not a dummy web module
-            com.sun.enterprise.deployment.Application app = wbd.getApplication();
-            ctx.setStandalone(app.isVirtual());
-            // S1AS BEGIN WORKAROUND FOR 6174360
+            Application app = webBundleDescriptor.getApplication();
+            webModule.setStandalone(app.isVirtual());
             if (app.isVirtual()) {
                 // Standalone web module
                 moduleName = app.getRegistrationName();
-                monitoringNodeName = wbd.getModuleID();
+                monitoringNodeName = webBundleDescriptor.getModuleID();
             } else {
                 // Nested (inside EAR) web module
-                moduleName = wbd.getModuleDescriptor().getArchiveUri();
+                moduleName = webBundleDescriptor.getModuleDescriptor().getArchiveUri();
                 StringBuilder sb = new StringBuilder();
                 sb.append(app.getRegistrationName()).append(MONITORING_NODE_SEPARATOR).append(moduleName);
                 monitoringNodeName = sb.toString().replaceAll("\\.", "\\\\.").replaceAll("_war", "\\\\.war");
             }
-            // S1AS END WORKAROUND FOR 6174360
         }
-        ctx.setModuleName(moduleName);
-        ctx.setMonitoringNodeName(monitoringNodeName);
+        webModule.setModuleName(moduleName);
+        webModule.setMonitoringNodeName(monitoringNodeName);
 
         List<String> servletNames = new ArrayList<>();
-        if (wbd != null) {
-            for (WebComponentDescriptor webCompDesc : wbd.getWebComponentDescriptors()) {
+        if (webBundleDescriptor != null) {
+            for (WebComponentDescriptor webCompDesc : webBundleDescriptor.getWebComponentDescriptors()) {
                 if (webCompDesc.isServlet()) {
                     servletNames.add(webCompDesc.getCanonicalName());
                 }
             }
         }
 
-        webStatsProviderBootstrap.registerApplicationStatsProviders(monitoringNodeName, vs.getName(), servletNames);
+        webStatsProviderBootstrap.registerApplicationStatsProviders(monitoringNodeName, virtualServer.getName(), servletNames);
 
-        vs.addChild(ctx);
+        virtualServer.addChild(webModule);
 
-        ctx.loadSessions(deploymentProperties);
+        webModule.loadSessions(deploymentProperties);
 
-        return ctx;
+        return webModule;
     }
 
     /*
@@ -1813,16 +1821,14 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * default web module, or null if the virtual server no longer has any default-web-module
      */
 
-    protected void updateDefaultWebModule(VirtualServer virtualServer, String[] listenerNames, WebModuleConfig wmInfo)
-            throws LifecycleException {
-
+    protected void updateDefaultWebModule(VirtualServer virtualServer, String[] listenerNames, WebModuleConfig webModuleConfig) throws LifecycleException {
         String defaultContextPath = null;
-        if (wmInfo != null) {
-            defaultContextPath = wmInfo.getContextPath();
+        if (webModuleConfig != null) {
+            defaultContextPath = webModuleConfig.getContextPath();
         }
         if (defaultContextPath != null && !defaultContextPath.startsWith("/")) {
             defaultContextPath = "/" + defaultContextPath;
-            wmInfo.getDescriptor().setContextRoot(defaultContextPath);
+            webModuleConfig.getDescriptor().setContextRoot(defaultContextPath);
         }
 
         Connector[] connectors = _embedded.findConnectors();
@@ -1896,9 +1902,8 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * virtual server's docroot
      */
     public void unloadWebModule(String contextRoot, String appName, String virtualServers, boolean dummy, Properties props) {
-
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, LogFacade.LOADING_WEB_MODULE, new Object[] { contextRoot, virtualServers });
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, LogFacade.LOADING_WEB_MODULE, new Object[] { contextRoot, virtualServers });
         }
 
         // tomcat contextRoot starts with "/"
@@ -1937,10 +1942,10 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                     } catch (Exception ex) {
                         String msg = rb.getString(LogFacade.EXCEPTION_DURING_DESTROY);
                         msg = MessageFormat.format(msg, contextRoot, host.getName());
-                        logger.log(Level.WARNING, msg, ex);
+                        logger.log(WARNING, msg, ex);
                     }
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, LogFacade.CONTEXT_UNDEPLOYED, new Object[] { contextRoot, host });
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST, LogFacade.CONTEXT_UNDEPLOYED, new Object[] { contextRoot, host });
                     }
                     hasBeenUndeployed = true;
                     host.fireContainerEvent(Deployer.REMOVE_EVENT, context);
@@ -1998,8 +2003,8 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 context = (Context) host.findChild(contextRoot);
                 if (context != null) {
                     context.setAvailable(false);
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST, LogFacade.CONTEXT_DISABLED, new Object[] { contextRoot, host });
+                    if (logger.isLoggable(FINEST)) {
+                        logger.log(FINEST, LogFacade.CONTEXT_DISABLED, new Object[] { contextRoot, host });
                     }
                     hasBeenSuspended = true;
                 }
@@ -2007,7 +2012,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         }
 
         if (!hasBeenSuspended) {
-            logger.log(Level.WARNING, LogFacade.DISABLE_WEB_MODULE_ERROR, contextRoot);
+            logger.log(WARNING, LogFacade.DISABLE_WEB_MODULE_ERROR, contextRoot);
         }
 
         return hasBeenSuspended;
@@ -2022,7 +2027,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             _debug = 1;
         } else if (logLevel.equals(Level.FINER)) {
             _debug = 2;
-        } else if (logLevel.equals(Level.FINEST)) {
+        } else if (logLevel.equals(FINEST)) {
             _debug = 5;
         } else {
             _debug = 0;
@@ -2185,7 +2190,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 } catch (Exception ex) {
                     String msg = rb.getString(LogFacade.EXCEPTION_DURING_DESTROY);
                     msg = MessageFormat.format(msg, wm.getPath(), vs.getName());
-                    logger.log(Level.WARNING, msg, ex);
+                    logger.log(WARNING, msg, ex);
                 }
             }
         }
@@ -2254,7 +2259,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      */
     void removeDummyModule(VirtualServer vs) {
         WebModule ctx = (WebModule) vs.findChild("");
-        if (ctx != null && Constants.DEFAULT_WEB_MODULE_NAME.equals(ctx.getModuleName())) {
+        if (ctx != null && DEFAULT_WEB_MODULE_NAME.equals(ctx.getModuleName())) {
             unloadWebModule("", ctx.getWebBundleDescriptor().getApplication().getRegistrationName(), vs.getName(), true, null);
         }
     }
@@ -2337,7 +2342,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 } catch (Exception e) {
                     String msg = rb.getString(LogFacade.DESTROY_VS_ERROR);
                     msg = MessageFormat.format(msg, virtualServer.getID());
-                    logger.log(Level.WARNING, msg, e);
+                    logger.log(WARNING, msg, e);
                 }
             }
         }
@@ -2356,7 +2361,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         final VirtualServer vs = (VirtualServer) getEngine().findChild(vsBean.getId());
 
         if (vs == null) {
-            logger.log(Level.WARNING, LogFacade.CANNOT_UPDATE_NON_EXISTENCE_VS, vsBean.getId());
+            logger.log(WARNING, LogFacade.CANNOT_UPDATE_NON_EXISTENCE_VS, vsBean.getId());
             return;
         }
 

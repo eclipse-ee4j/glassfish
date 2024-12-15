@@ -241,6 +241,8 @@ public class WebModule extends PwcWebModule implements Context {
     // true if standalone WAR, false if embedded in EAR file
     private boolean isStandalone = true;
 
+    private boolean isSystemApplication;
+
     private final ServiceLocator services;
 
     /**
@@ -1176,6 +1178,20 @@ public class WebModule extends PwcWebModule implements Context {
     @Override
     protected boolean isStandaloneModule() {
         return isStandalone;
+    }
+
+    /**
+     * @return the isSystemApplication
+     */
+    public boolean isSystemApplication() {
+        return isSystemApplication;
+    }
+
+    /**
+     * @param isSystemApplication the isSystemApplication to set
+     */
+    public void setSystemApplication(boolean isSystemApp) {
+        this.isSystemApplication = isSystemApp;
     }
 
     /**

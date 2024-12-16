@@ -371,9 +371,10 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             */
             String serverInfo = System.getProperty("product.name");
 
-            serverVersion = serverInfo == null ? Version.getProductId() : serverInfo;
+            // null means users prefer not to disclose the server info.
+            serverVersion = serverInfo == null ? Version.getProductId() : (serverInfo.isEmpty() ? null : serverInfo);
 
-            if (isXPoweredByEnabled && (serverVersion != null && !serverVersion.isEmpty())) {
+            if (isXPoweredByEnabled && serverVersion != null) {
                 xPoweredBy = "Servlet/6.0 JSP/3.1"
                         + "(" + serverVersion
                         + " Java/"
@@ -396,7 +397,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             final HttpResponsePacket response = request.getResponse();
 
             // Set response "Server" header
-            if (serverVersion != null && !serverVersion.isEmpty()) {
+            if (serverVersion != null) {
                 response.addHeader(Header.Server, serverVersion);
             }
 

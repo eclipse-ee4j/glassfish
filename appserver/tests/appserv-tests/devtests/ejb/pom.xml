@@ -17,7 +17,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.glassfish.main</groupId>
@@ -25,63 +26,52 @@
         <version>7.0.23-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.main.tests</groupId>
-    <artifactId>tests</artifactId>
+    <artifactId>ant-tests-ejb</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish devtests ejb</name>
-    <modules>
-        <!-- module>quicklook</module -->
-    </modules>
     <dependencies>
-      <dependency>
-        <groupId>ant-contrib</groupId>
-        <artifactId>ant-contrib</artifactId>
-        <version>1.0b3</version>
-      </dependency>
+        <dependency>
+            <groupId>ant-contrib</groupId>
+            <artifactId>ant-contrib</artifactId>
+            <version>1.0b3</version>
+        </dependency>
     </dependencies>
     <build>
-      <plugins>
-        <plugin>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <dependencies>
-            <dependency>
-              <groupId>com.sun</groupId>
-              <artifactId>tools</artifactId>
-              <version>1.8.0</version>
-              <scope>system</scope>
-              <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
-           </dependency>
-         </dependencies>
-          <executions>
-            <execution>
-              <id>id.test</id>
-              <phase>test</phase>
-              <configuration>
-                <target name="antTests">
-                  <property name="testMods" value="all"/>
-                  <property name="ant-contrib-path" value="${maven.dependency.ant-contrib.ant-contrib.jar.path}"/>
-                    <ant antfile="build.xml" target="antTests"/>
-                </target>
-              </configuration>
-              <goals>
-                <goal>run</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>id.clean</id>
-              <phase>clean</phase>
-              <configuration>
-                <target name="clean-result">
-                  <property name="ant-contrib-path" value="${maven.dependency.ant-contrib.ant-contrib.jar.path}"/>
-                  <ant antfile="build.xml" target="clean-result"/>
-                </target>
-              </configuration>
-              <goals>
-                <goal>run</goal>
-              </goals>
-            </execution>
-
-          </executions>
-        </plugin>
-      </plugins>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>id.test</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <target name="antTests">
+                                <property name="testMods" value="all" />
+                                <property name="ant-contrib-path"
+                                    value="${maven.dependency.ant-contrib.ant-contrib.jar.path}" />
+                                <ant antfile="build.xml" target="antTests" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>id.clean</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target name="clean-result">
+                                <property name="ant-contrib-path"
+                                    value="${maven.dependency.ant-contrib.ant-contrib.jar.path}" />
+                                <ant antfile="build.xml" target="clean-result" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

@@ -188,7 +188,7 @@ spec:
           dumpSysInfo()
           sh '''
             # Validate the structure in all submodules (especially version ids)
-            mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+            mvn -B -e -fae crash -Ptck,set-version-id,staging
             # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
             mvn -B -e install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles

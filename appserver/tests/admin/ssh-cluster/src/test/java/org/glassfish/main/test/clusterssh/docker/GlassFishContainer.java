@@ -27,7 +27,8 @@ import org.testcontainers.containers.Network;
 public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
 
     public GlassFishContainer(Network network, String hostname, String logPrefix, String command) {
-        super("eclipse-temurin:17.0.13_11-jdk");
+        super("mcr.microsoft.com/windows/nanoserver:ltsc2025");
+//        super("eclipse-temurin:17.0.13_11-jdk");
         withNetwork(network)
         .withEnv("TZ", "UTC").withEnv("LC_ALL", "en_US.UTF-8")
         .withStartupAttempts(1)

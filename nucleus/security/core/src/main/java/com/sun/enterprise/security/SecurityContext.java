@@ -289,7 +289,8 @@ public class SecurityContext extends AbstractSecurityContext {
     public static SecurityContext getCurrent() {
         SecurityContext securityContext = currentSecurityContext.get();
         if (securityContext == null) {
-            securityContext = defaultSecurityContext;
+            securityContext = generateDefaultSecurityContext();
+            currentSecurityContext.set(securityContext);
         }
 
         return securityContext;

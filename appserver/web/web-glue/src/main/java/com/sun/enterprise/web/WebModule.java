@@ -1180,18 +1180,12 @@ public class WebModule extends PwcWebModule implements Context {
         return isStandalone;
     }
 
-    /**
-     * @return the isSystemApplication
-     */
     public boolean isSystemApplication() {
         return isSystemApplication;
     }
 
-    /**
-     * @param isSystemApplication the isSystemApplication to set
-     */
-    public void setSystemApplication(boolean isSystemApp) {
-        this.isSystemApplication = isSystemApp;
+    public void setSystemApplication(boolean isSystemApplication) {
+        this.isSystemApplication = isSystemApplication;
     }
 
     /**

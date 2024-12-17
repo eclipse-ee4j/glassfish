@@ -34,5 +34,6 @@
     <modules>
         <module>admin-extension</module>
         <module>tests</module>
+        <module>ssh-cluster</module>
     </modules>
 </project>

@@ -230,7 +230,11 @@ public final class ProcessUtils {
                         System.out.flush();
                     }
                 }
-                Thread.yield();
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    LOG.log(TRACE, "Interrupted while waiting", e);
+                }
             }
             return false;
         } finally {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -194,10 +194,11 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
             try {
                 logger.info("Installing " + getArchiveName() + " into " + host + ":" + sshInstallDir);
-                String unzipCommand = "cd '" + sshInstallDir + "'; jar -xvf " + getArchiveName();
+                String unzipCommand = "set -x; cd '" + sshInstallDir
+                    + "'; unpack=\"$(command -v unzip)\" || unpack=\"jar -xvf\"; ${unpack} " + getArchiveName();
                 int status = sshLauncher.runCommand(unzipCommand, outStream);
                 if (status != 0) {
-                    logger.info(Strings.get("jar.failed", host, outStream.toString()));
+                    logger.info(Strings.get("unpack.failed", host, outStream.toString()));
                     throw new CommandException("Remote command output: " + outStream.toString());
                 }
                 if (logger.isLoggable(Level.FINER)) {
@@ -206,7 +207,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 }
             }
             catch (IOException ioe) {
-                logger.info(Strings.get("jar.failed", host, outStream.toString()));
+                logger.info(Strings.get("unpack.failed", host, outStream.toString()));
                 throw new IOException(ioe);
             }
 

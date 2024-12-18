@@ -407,13 +407,13 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
     private void rewritePropertiesFileAndNotifyMonitoring(final String targetConfigName) throws IOException {
         LOG.finest("rewritePropertiesFileAndNotifyMonitoring");
-        File file = null;
+        final File file;
         if (targetConfigName == null || targetConfigName.isEmpty()) {
             file = getLoggingPropertiesFile();
         } else {
             file = getLoggingPropertiesFile(targetConfigName);
         }
-        File parentFile = file.getParentFile();
+        final File parentFile = file.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()) {
             throw new IOException(
                 "Directory '" + parentFile + "' does not exist, cannot create logging.properties file!");

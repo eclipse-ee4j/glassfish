@@ -204,7 +204,8 @@ public class StopDomainCommand extends LocalDomainCommand {
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final Supplier<Boolean> deathSign;
         if (isLocal()) {
-            deathSign = () -> !ProcessUtils.isListening(addr) && !ProcessUtils.isAlive(watchedPid);
+            // watch process id first to reduce the number of opened ephemeral ports
+            deathSign = () -> !ProcessUtils.isAlive(watchedPid) && !ProcessUtils.isListening(addr);
         } else {
             deathSign = () -> !ProcessUtils.isListening(addr);
         }

@@ -232,7 +232,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             setWebLoggers(propertyValue);
         }
 
-        closePropFile("");
+        closePropFile(null);
         return property;
     }
 
@@ -298,7 +298,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             m.put(key, property);
 
         }
-        closePropFile("");
+        closePropFile(null);
         return m;
     }
 
@@ -385,7 +385,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         LOG.log(Level.INFO, "deleteLoggingProperties(properties={0})", properties);
         loadLoggingProperties();
         remove(properties);
-        rewritePropertiesFileAndNotifyMonitoring("");
+        rewritePropertiesFileAndNotifyMonitoring(null);
         return setMissingDefaults(getLoggingProperties());
     }
 

@@ -79,11 +79,6 @@
         </dependency>
         <dependency>
             <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>json</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
             <artifactId>prototype</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -131,7 +126,7 @@
                             <outputDirectory>${dependencies.extra.directory}</outputDirectory>
                             <includeArtifactIds>
                                 commons-io,
-                                dojo-ajax-nodemo,json,prototype,
+                                dojo-ajax-nodemo,prototype,
                                 woodstock-webui-jsf,woodstock-webui-jsf-suntheme
                             </includeArtifactIds>
                             <includeScope>provided</includeScope>

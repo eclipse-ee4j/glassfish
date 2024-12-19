@@ -168,7 +168,6 @@
         <woodstock.version>6.0.1</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
         <woodstock-dojo-ajax-nodemo.version>1.12.4</woodstock-dojo-ajax-nodemo.version>
-        <woodstock-json.version>2.0</woodstock-json.version>
         <woodstock-prototype.version>1.7.3</woodstock-prototype.version>
 
         <!-- Other -->

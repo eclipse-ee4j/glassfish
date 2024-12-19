@@ -39,6 +39,7 @@ import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
@@ -233,7 +234,8 @@ public final class ProcessUtils {
                 try {
                     Thread.sleep(100L);
                 } catch (InterruptedException e) {
-                    LOG.log(TRACE, "Interrupted while waiting", e);
+                    LOG.log(WARNING, "Interrupted while waiting", e);
+                    break;
                 }
             }
             return false;

@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.glassfish.bootstrap.cp;
 
-import com.sun.enterprise.glassfish.bootstrap.StartupContextCfgFactory;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
+import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfgFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +30,7 @@ import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ASADMIN_ARGS;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -37,6 +38,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 
@@ -48,9 +50,11 @@ class ClassLoaderBuilderIT {
     @Test
     void createLauncher_Felix() throws Exception {
         StartupContextCfg cfg = createStartupContextCfg();
-        ClassLoader loader = ClassLoaderBuilder.createLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
+        assertEquals("-something", cfg.getProperty(ASADMIN_ARGS),
+            ASADMIN_ARGS + " wasn't written through to startup context cfg.");
+        ClassLoader loader = ClassLoaderBuilder.createOSGiFrameworkLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
         assertNotNull(loader);
-        Class<?> osgiClass = loader.loadClass("org.osgi.framework.Bundle");
+        Class<?> osgiClass = loader.loadClass("org.osgi.framework.BundleReference");
         assertNotNull(osgiClass);
         Class<?> clazz = loader.loadClass("org.apache.felix.framework.Felix");
         assertNotNull(clazz);
@@ -81,17 +85,17 @@ class ClassLoaderBuilderIT {
         Path jarFilesDir = detectBasedir().toPath().resolve(Path.of("target", "test-osgi"));
         Files.copy(jarFilesDir.resolve("glassfish-jul-extension.jar"), bootstrapDir.resolve("glassfish-jul-extension.jar"));
         Files.copy(jarFilesDir.resolve("org.apache.felix.main.jar"), felixBin.resolve("felix.jar"));
-        Files.copy(jarFilesDir.resolve("simple-glassfish-api.jar"), modulesDir.resolve("simple-glassfish-api.jar"));
-        Files.copy(jarFilesDir.resolve(Path.of("..", "glassfish.jar")), modulesDir.resolve("glassfish.jar"));
+        Files.copy(jarFilesDir.resolve("simple-glassfish-api.jar"), bootstrapDir.resolve("simple-glassfish-api.jar"));
+        Files.copy(jarFilesDir.resolve(Path.of("..", "glassfish.jar")), bootstrapDir.resolve("glassfish.jar"));
 
-        Properties properties = new Properties();
+        Properties args = new Properties();
         Path cfgDir = Files.createDirectories(installRoot.resolve(Path.of("config")));
         Files.createFile(cfgDir.resolve("osgi.properties"));
-        properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.toFile().getAbsolutePath());
+        args.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.toFile().getAbsolutePath());
+        args.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
+        args.setProperty(ASADMIN_ARGS, "-something");
 
-        properties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
-
-        return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, files, new String[0]);
+        return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, files, args);
     }
 
 

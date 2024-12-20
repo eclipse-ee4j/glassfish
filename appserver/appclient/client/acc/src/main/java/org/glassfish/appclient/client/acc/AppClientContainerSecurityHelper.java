@@ -66,7 +66,7 @@ public class AppClientContainerSecurityHelper {
             final ApplicationClientDescriptor acDesc, final boolean isTextAuth)
             throws ReflectiveOperationException, InjectionException, IOException {
 
-        this.classLoader = (classLoader == null) ? Thread.currentThread().getContextClassLoader() : classLoader;
+        this.classLoader = classLoader;
 
         initLoginConfig();
         CallbackHandler callbackHandler = initSecurity(callerSuppliedCallbackHandler, acDesc);
@@ -105,7 +105,7 @@ public class AppClientContainerSecurityHelper {
          * config file contains a blank then ConfigFile class expects the URL to contain a blank, not %20 for example. So, we
          * need to use the deprecated File.toURL() method to create such a URL.
          */
-        System.setProperty("java.security.auth.login.config", configFile.toURL().toString());
+        System.setProperty("java.security.auth.login.config", configFile.toURI().toURL().toString());
     }
 
     /**

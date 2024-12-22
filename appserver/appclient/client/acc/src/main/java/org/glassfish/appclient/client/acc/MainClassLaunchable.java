@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -71,8 +72,8 @@ public class MainClassLaunchable implements Launchable {
         // There is no developer-provided descriptor possible so just use a default one.
         if (acDesc == null) {
             ReadableArchive tempArchive = null;
-            PrivilegedAction<ACCClassLoader> action = () -> new ACCClassLoader(loader.getURLs(), loader.getParent());
-            final ACCClassLoader tempLoader = AccessController.doPrivileged(action);
+            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
+            final TransformingClassLoader tempLoader = AccessController.doPrivileged(action);
             tempArchive = createArchive(tempLoader, mainClass);
             final AppClientArchivist acArchivist = getArchivist(tempArchive, tempLoader);
             archivist.setClassLoader(tempLoader);
@@ -109,9 +110,10 @@ public class MainClassLaunchable implements Launchable {
         final ZipEntry mainClassEntry = new ZipEntry(mainClassResourceName);
         jos.putNextEntry(mainClassEntry);
         InputStream is = loader.getResourceAsStream(mainClassResourceName);
+        Objects.requireNonNull(is, "Resource not found " + mainClassResourceName + " by class loader " + loader);
         int bytesRead;
-        byte[] buffer = new byte[1024];
-        while ( (bytesRead = is.read(buffer)) != -1) {
+        byte[] buffer = new byte[4096];
+        while ((bytesRead = is.read(buffer)) != -1) {
             jos.write(buffer, 0, bytesRead);
         }
         is.close();
@@ -119,12 +121,9 @@ public class MainClassLaunchable implements Launchable {
         jos.close();
 
         MemoryMappedArchive mma = new MemoryMappedArchive(baos.toByteArray());
-        /*
-         * Some archive-related processing looks for the file type from the URI, so set it
-         * to something.
-         */
+        // Some archive-related processing looks for the file type from the URI,
+        // so set it to something.
         mma.setURI(URI.create("file:///tempClient.jar"));
-
         return mma;
     }
 

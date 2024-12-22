@@ -72,11 +72,12 @@ public class SimpleBMPBean implements EntityBean {
                 //Do a flush and then get a connection for the last iteration
                 if(i ==4) {
                     if(!flushConnectionPool()) {
+                        System.err.println("********i=" + i + ", break");
                         break;
                     }
                 }
                 conn = ds.getConnection();
-                System.out.println("********i=" + i + "conn=" + ds.getConnection(conn));
+                System.err.println("********i=" + i + ", conn=" + ds.getConnection(conn));
 
                 if (i == 0) {
                     firstConnection = ds.getConnection(conn);
@@ -84,7 +85,7 @@ public class SimpleBMPBean implements EntityBean {
                     lastConnection = ds.getConnection(conn);
                 }
                 passed = (firstConnection != lastConnection);
-
+                System.err.println("********i=" + i + ", different connections: " + passed);
             } catch (Exception e) {
                 e.printStackTrace();
                 passed = false;
@@ -93,6 +94,7 @@ public class SimpleBMPBean implements EntityBean {
                     try {
                         conn.close();
                     } catch (Exception e1) {
+                        throw new IllegalStateException(e1);
                     }
                 }
             }
@@ -116,6 +118,7 @@ public class SimpleBMPBean implements EntityBean {
         try {
             con = ds.getConnection();
         } catch(Exception ex) {
+            ex.printStackTrace();
             passed = false;
         }
         return passed;

@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.admin.cli;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +23,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**

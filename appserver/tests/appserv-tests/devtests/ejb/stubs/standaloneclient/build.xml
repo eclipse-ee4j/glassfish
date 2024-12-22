@@ -32,42 +32,39 @@
     <target name="all" depends="build, run_default, run_cosnaming"/>
 
     <target name="clean" depends="init-common">
-      <antcall  target="clean-common"/>
+        <antcall  target="clean-common"/>
     </target>
 
     <target name="build" depends="init-common">
-       <mkdir dir="${build.classes.dir}"/>
-       <echo message="common.xml: Compiling test source files" level="verbose"/>
-       <javac srcdir="client"
+        <mkdir dir="${build.classes.dir}"/>
+        <echo message="common.xml: Compiling test source files" level="verbose"/>
+        <javac srcdir="client"
               destdir="${build.classes.dir}"
-              classpath="${s1astest.classpath}:${build.classes.dir}"
+              classpath="${s1astest.classpath}"
               debug="on"
               failonerror="true"/>
     </target>
 
     <target name="runclient_nooverride" depends="init-common">
-       <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${assemble.dir}/ejb-stubs-ejbappAppClient/ejb-stubs-ejbapp-clientClient.jar:${mvn.lib.dir}/reporter.jar"
-           classname="${simple.client}">
-           <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-           <jvmarg value="-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true" />
-           <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
-           <arg value="${ic.props}"/>
-        </java>
+        <antcall target="runclient-own">
+            <param name="appclient.standalone.classpath.ext"
+                value="${assemble.dir}/ejb-stubs-ejbappAppClient/ejb-stubs-ejbapp-clientClient.jar" />
+            <param name="mainClass" value="${simple.client}" />
+            <param name="args" value="ejb/ejb_stubs_ejbapp_HelloBean ${ic.props}" />
+        </antcall>
     </target>
 
-<!--This target is used to test that using no-arg InitialContext and
+    <!--This target is used to test that using no-arg InitialContext and
     not setting any vm params will still work, assuming the default
     port is set to 3700.  Don't want to put this in the set of automatic
     tests run b/c of the port change possibility.  However, if the
     default port of 3700 is set, this test should work.   -->
     <target name="runclient_setnothing" depends="init-common">
-       <java  fork="on"
+        <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${assemble.dir}/ejb-stubs-ejbappAppClient.jar:${mvn.lib.dir}/reporter.jar"
               classname="${simple.client}">
-           <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
+            <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
         </java>
     </target>
 
@@ -94,17 +91,12 @@
 
 
     <target name="runclient_withoverride" depends="init-common">
-       <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${assemble.dir}/ejb-stubs-ejbappAppClient.jar:${mvn.lib.dir}/reporter.jar"
-           classname="${simple.client}">
-            <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-             <jvmarg
-                    value="-Dcom.sun.ejb.portable.jndi.propertyfilename=jndi.properties.s1as8_default"/>
-            <jvmarg value="${jndi.clash}"/>
-           <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
-           <arg value="jndi.properties.s1as8_default"/>
-        </java>
+        <antcall target="runclient-own">
+            <param name="appclient.standalone.classpath.ext" value="${assemble.dir}/ejb-stubs-ejbappAppClient.jar" />
+            <param name="appclient.standalone.jvmargs.ext" value="-Dcom.sun.ejb.portable.jndi.propertyfilename=jndi.properties.s1as8_default ${jndi.clash}" />
+            <param name="mainClass" value="${se.client}" />
+            <param name="args" value="ejb/ejb_stubs_ejbapp_HelloBean jndi.properties.s1as8_default" />
+        </antcall>
     </target>
 
 

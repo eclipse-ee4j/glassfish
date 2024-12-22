@@ -33,6 +33,7 @@
     <name>GlassFish Nucleus Common modules</name>
 
     <modules>
+        <module>glassfish-jdk-extensions</module>
         <module>simple-glassfish-api</module>
         <module>internal-api</module>
         <module>common-util</module>

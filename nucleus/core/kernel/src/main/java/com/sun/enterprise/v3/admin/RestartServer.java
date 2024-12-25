@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.v3.admin;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.process.JavaClassRunner;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
@@ -98,7 +97,7 @@ public class RestartServer {
             // show up in the ServiceLocator.
             GlassFish gfKernel = glassfishProvider.get();
             while (gfKernel == null) {
-                Thread.yield();
+                Thread.onSpinWait();
                 gfKernel = glassfishProvider.get();
             }
 
@@ -134,13 +133,13 @@ public class RestartServer {
 
     private void reincarnate() throws Exception {
         if (setupReincarnationWithAsadmin() || setupReincarnationWithOther()) {
-            doReincarnation();
+            scheduleReincarnation();
         } else {
             throw new IllegalStateException(strings.get("restart.server.noStartupInfo", props));
         }
     }
 
-    private void doReincarnation() throws RDCException {
+    private void scheduleReincarnation() throws RDCException {
         try {
             final String[] sysProps;
             if (Boolean.parseBoolean(System.getenv("AS_SUPER_DEBUG"))) {
@@ -150,8 +149,7 @@ public class RestartServer {
                 sysProps = normalProps;
             }
 
-            JavaClassRunner runner = new JavaClassRunner(classpath, sysProps, classname, args);
-            runner.run();
+            Runtime.getRuntime().addShutdownHook(new StartServerShutdownHook(classpath, sysProps, classname, args));
         } catch (Exception e) {
             throw new RDCException(e);
         }

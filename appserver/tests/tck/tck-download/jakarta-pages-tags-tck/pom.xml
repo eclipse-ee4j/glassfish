@@ -33,7 +33,7 @@
 
 
     <properties>
-        <tck.test.pages.file>jakarta-tags-tck-3.0.0.zip</tck.test.pages.file>
+        <tck.test.pages.file>jakarta-tags-tck-3.0.1.zip</tck.test.pages.file>
         <tck.test.pages.url>https://download.eclipse.org/jakartaee/tags/3.0/${tck.test.pages.file}</tck.test.pages.url>
     </properties>
 

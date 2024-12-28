@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -93,11 +92,7 @@ public class PingConnectionPool implements AdminCommand {
     @Inject
     private Applications applications;
 
-    @Param(
-        optional = true,
-        alias = "targetName",
-        obsolete = true,
-        defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, alias = "targetName", obsolete = true)
     private String target;
 
     /**

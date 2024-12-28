@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,8 +71,7 @@ public final class Constants {
     /**
      * The Eclipse WASP Pages servlet class name.
      */
-    public static final String APACHE_JSP_SERVLET_CLASS =
-        "org.glassfish.wasp.servlet.JspServlet";
+    public static final String APACHE_JSP_SERVLET_CLASS = "org.glassfish.wasp.servlet.JspServlet";
 
     public static final String JSP_URL_PATTERN="*.jsp";
 
@@ -82,11 +81,9 @@ public final class Constants {
 
     public static final String ACCESS_LOG_PROPERTY = "accesslog";
 
-    public static final String ACCESS_LOG_BUFFER_SIZE_PROPERTY =
-        "accessLogBufferSize";
+    public static final String ACCESS_LOG_BUFFER_SIZE_PROPERTY = "accessLogBufferSize";
 
-    public static final String ACCESS_LOG_WRITE_INTERVAL_PROPERTY =
-        "accessLogWriteInterval";
+    public static final String ACCESS_LOG_WRITE_INTERVAL_PROPERTY = "accessLogWriteInterval";
 
     public static final String ACCESS_LOGGING_ENABLED = "accessLoggingEnabled";
 
@@ -94,13 +91,12 @@ public final class Constants {
 
     public static final String ERROR_REPORT_VALVE = "errorReportValve";
 
-    // services attribute in ServletContext
-    public static final String HABITAT_ATTRIBUTE = "org.glassfish.servlet.habitat";
+    // Services attribute in ServletContext
+    public static final String SERVICE_LOCATOR_ATTRIBUTE = "org.glassfish.servlet.habitat";
 
     // WebModule attributes in ServletContext
     // available only during ServletContextListener.contextInitialized
-    public static final String DEPLOYMENT_CONTEXT_ATTRIBUTE =
-        "com.sun.enterprise.web.WebModule.DeploymentContext";
+    public static final String DEPLOYMENT_CONTEXT_ATTRIBUTE = "com.sun.enterprise.web.WebModule.DeploymentContext";
     public static final String IS_DISTRIBUTABLE_ATTRIBUTE = "com.sun.enterprise.web.WebModule.isDistributable";
     public static final String ENABLE_HA_ATTRIBUTE = "com.sun.enterprise.web.WebModule.enableHA";
 }

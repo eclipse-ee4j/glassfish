@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -81,7 +81,7 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
 
     private void checkRunning() throws CommandException {
         programOpts.setInteractive(false); // don't prompt for password
-        if (ProcessUtils.isListening(adminAddress) && isThisDAS(getDomainRootDir())) {
+        if (isThisDAS(getDomainRootDir()) && ProcessUtils.isListening(adminAddress)) {
             String msg = strings.get("domain.is.running", getDomainName(), getDomainRootDir());
             throw new IllegalStateException(msg);
         }

@@ -188,7 +188,7 @@ class StartServerShutdownHook extends Thread {
     }
 
 
-    private static ProcessBuilder prepareStartup(Instant now, String classpath, String[] sysprops, String classname,
+    private static ProcessBuilder prepareStartup(Instant startTime, String classpath, String[] sysprops, String classname,
         String[] args) {
         final Path javaExecutable = detectJavaExecutable();
         final List<String> cmdline = new ArrayList<>();
@@ -217,21 +217,19 @@ class StartServerShutdownHook extends Thread {
             // To avoid conflict of the debug port used both by old and new JVM,
             // we will force waiting for the end of the old JVM.
             outerCommand = new ArrayList<>();
+            outerCommand.add("nohup");
             outerCommand.add("bash");
             outerCommand.add("-c");
-            outerCommand.add("tail --pid=" + ProcessHandle.current().pid() + " -f /dev/null && "
-                + cmdline.stream().collect(Collectors.joining(" ")));
+            // waitpid is not everywhere.
+            outerCommand.add("(waitpid -e " + ProcessHandle.current().pid() + " || sleep 1) && '"
+                + cmdline.stream().collect(Collectors.joining("' '"))
+                + (LOG_RESTART ? "' > '" + LOGDIR.resolve("restart-" + startTime + "-new.log'") : "'"));
         }
 
         final ProcessBuilder builder = new ProcessBuilder(outerCommand);
         builder.directory(new File(System.getProperty("user.dir")));
-        if (LOG_RESTART) {
-            builder.redirectErrorStream(true);
-            builder.redirectOutput(LOGDIR.resolve("restart-" + now + "-new.log").toFile());
-        } else {
-            builder.redirectError(Redirect.DISCARD);
-            builder.redirectOutput(Redirect.DISCARD);
-        }
+        builder.redirectError(Redirect.DISCARD);
+        builder.redirectOutput(Redirect.DISCARD);
         return builder;
     }
 

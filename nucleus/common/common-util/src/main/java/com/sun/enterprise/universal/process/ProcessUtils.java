@@ -34,9 +34,6 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import static com.sun.enterprise.util.StringUtils.ok;
@@ -76,23 +73,7 @@ public final class ProcessUtils {
      * @return true if the handle was not found or exited before timeout. False otherwise.
      */
     public static boolean waitWhileIsAlive(final long pid, Duration timeout, boolean printDots) {
-        Optional<ProcessHandle> handle = ProcessHandle.of(pid);
-        if (handle.isEmpty()) {
-            return true;
-        }
-        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
-        try {
-            handle.get().onExit().get(timeout.toSeconds(), TimeUnit.SECONDS);
-            return true;
-        } catch (TimeoutException e) {
-            LOG.log(TRACE, "Timeout while waiting for exit of process with id " + pid + ". Returning false.", e);
-            return false;
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.log(TRACE, "Exception while waiting for exit of process with id " + pid + ". Returning true.", e);
-            return true;
-        } finally {
-            DotPrinter.stopWaiting(dotPrinter);
-        }
+        return waitFor(() -> !isAlive(pid), timeout, printDots);
     }
 
 
@@ -115,13 +96,28 @@ public final class ProcessUtils {
      */
     public static boolean isAlive(final long pid) {
         Optional<ProcessHandle> handle = ProcessHandle.of(pid);
-        if (handle.isEmpty()) {
+        return handle.isPresent() ? isAlive(handle.get()) : false;
+    }
+
+
+    /**
+     * The {@link Process#isAlive()} returns true even for zombies so we implemented
+     * this method which considers zombies as dead.
+     *
+     * @param process
+     * @return true if the process with is alive.
+     */
+    public static boolean isAlive(final ProcessHandle process) {
+        if (!process.isAlive()) {
             return false;
         }
-        if (!handle.get().isAlive()) {
-            return false;
-        }
-        Info info = handle.get().info();
+        // This is a trick to avoid zombies on some systems (ie containers on Jenkins)
+        // Operating system there does the cleanup much later, so we can still access
+        // zombies to process their output despite for us would be better we would
+        // not see them any more.
+        // The ProcessHandle.onExit blocks forever for zombies in docker containers
+        // without proper process reaper.
+        final Info info = process.info();
         if (info.commandLine().isEmpty() && !(OS.isWindowsForSure() && info.command().isPresent())) {
             LOG.log(TRACE, "Could not retrieve command line for the pid {0},"
                 + " therefore we assume that the process stopped.");
@@ -129,7 +125,6 @@ public final class ProcessUtils {
         }
         return true;
     }
-
 
     /**
      * Blocks until the endpoint closes the connection or timeout comes first.

@@ -104,7 +104,6 @@ public class RestartServer {
                 }
                 scheduleReincarnation();
             }
-            // else we just return a special int from System.exit()
             gfKernel.stop();
         } catch (Exception e) {
             throw new Error(strings.get("restart.server.failure"), e);
@@ -116,6 +115,7 @@ public class RestartServer {
         } else {
             restartType = debug ? RESTART_DEBUG_ON : RESTART_DEBUG_OFF;
         }
+        // return a special int from System.exit()
         System.exit(restartType);
     }
 

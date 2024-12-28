@@ -67,6 +67,7 @@ public class GlassFishTestEnvironment {
     private static final File ASADMIN = findAsadmin();
     private static final File STARTSERV = findStartServ();
     private static final File KEYTOOL = findKeyTool();
+    private static final File JARSIGNER = findJarSigner();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
@@ -130,6 +131,10 @@ public class GlassFishTestEnvironment {
     }
 
 
+    public static JarSigner getJarSigner() {
+        return new JarSigner(JARSIGNER);
+    }
+
     /**
      * @return project's target directory.
      */
@@ -161,6 +166,7 @@ public class GlassFishTestEnvironment {
     public static int getPort(HttpListenerType listenerType) {
         return listenerType.getPort();
     }
+
     /**
      * Creates a {@link Client} instance for the domain administrator.
      * Caller is responsible for closing.
@@ -320,6 +326,9 @@ public class GlassFishTestEnvironment {
         return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.exe" : "bin/keytool");
     }
 
+    private static File findJarSigner() {
+        return new File(System.getProperty("java.home"), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
+    }
 
     private static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");

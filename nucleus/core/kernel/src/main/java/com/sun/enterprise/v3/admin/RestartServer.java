@@ -56,13 +56,11 @@ public class RestartServer {
     private String[] args;
     private String serverName = "";
     private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
-    private static final String magicProperty = "-DAS_RESTART=" + ProcessHandle.current().pid();
-    private static final String[] normalProps = { magicProperty };
+    private static final String AS_RESTART_PID = "-DAS_RESTART=" + ProcessHandle.current().pid();
+    private static final String[] normalProps = { AS_RESTART_PID };
     private static final int RESTART_NORMAL = 10;
     private static final int RESTART_DEBUG_ON = 11;
     private static final int RESTART_DEBUG_OFF = 12;
-    private static final String[] debuggerProps = { magicProperty, "-Xdebug",
-            "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1323" };
 
     protected final void setDebug(Boolean b) {
         debug = b;
@@ -100,12 +98,14 @@ public class RestartServer {
                 Thread.onSpinWait();
                 gfKernel = glassfishProvider.get();
             }
-
+            if (!verbose) {
+                if (!setupReincarnationWithAsadmin() && !setupReincarnationWithOther()) {
+                    throw new IllegalStateException(strings.get("restart.server.noStartupInfo", props));
+                }
+                scheduleReincarnation();
+            }
             // else we just return a special int from System.exit()
             gfKernel.stop();
-            if (!verbose) {
-                reincarnate();
-            }
         } catch (Exception e) {
             throw new Error(strings.get("restart.server.failure"), e);
         }
@@ -131,25 +131,9 @@ public class RestartServer {
         logger.info(strings.get("restart.server.init"));
     }
 
-    private void reincarnate() throws Exception {
-        if (setupReincarnationWithAsadmin() || setupReincarnationWithOther()) {
-            scheduleReincarnation();
-        } else {
-            throw new IllegalStateException(strings.get("restart.server.noStartupInfo", props));
-        }
-    }
-
     private void scheduleReincarnation() throws RDCException {
         try {
-            final String[] sysProps;
-            if (Boolean.parseBoolean(System.getenv("AS_SUPER_DEBUG"))) {
-                // very very difficult to debug this stuff otherwise!
-                sysProps = debuggerProps;
-            } else {
-                sysProps = normalProps;
-            }
-
-            Runtime.getRuntime().addShutdownHook(new StartServerShutdownHook(classpath, sysProps, classname, args));
+            Runtime.getRuntime().addShutdownHook(new StartServerShutdownHook(classpath, normalProps, classname, args));
         } catch (Exception e) {
             throw new RDCException(e);
         }

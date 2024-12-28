@@ -8,7 +8,6 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.microprofile.health.HealthReporter;
-
 import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "healthcheck-service")

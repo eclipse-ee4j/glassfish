@@ -75,7 +75,7 @@ public class SecurityContext extends AbstractSecurityContext {
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;
 
-    private ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
+    private final ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     /*
      * This creates a new SecurityContext object. Note: that the docs for Subject state that the internal sets (eg. the

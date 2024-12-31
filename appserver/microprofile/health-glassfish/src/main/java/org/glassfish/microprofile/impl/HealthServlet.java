@@ -55,6 +55,8 @@ public class HealthServlet extends HttpServlet {
 
         Jsonb jsonb = JsonbBuilder.create();
         String json = jsonb.toJson(healthReport);
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json");
         resp.getWriter().println(json);
     }
 

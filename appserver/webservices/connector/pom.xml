@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.webservices</groupId>
         <artifactId>webservices</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.21</version>
     </parent>
 
     <artifactId>webservices-connector</artifactId>

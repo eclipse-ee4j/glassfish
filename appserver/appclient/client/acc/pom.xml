@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.appclient</groupId>
         <artifactId>client</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.21</version>
     </parent>
 
     <artifactId>gf-client-module</artifactId>

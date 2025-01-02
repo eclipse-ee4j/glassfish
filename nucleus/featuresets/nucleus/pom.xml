@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>nucleus-featuresets</artifactId>
-        <version>7.0.21</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>nucleus</artifactId>

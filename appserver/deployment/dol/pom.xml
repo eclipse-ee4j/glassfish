@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.deployment</groupId>
         <artifactId>deployment</artifactId>
-        <version>7.0.21</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>dol</artifactId>

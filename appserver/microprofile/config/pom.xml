@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.microprofile</groupId>
         <artifactId>microprofile-parent</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>microprofile-config</artifactId>

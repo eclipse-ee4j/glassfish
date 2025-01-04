@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.hk2.cdi</groupId>
         <artifactId>basic</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.hk2.cdi.basic</groupId>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -237,7 +237,26 @@ public final class ClassGenerator {
         if (anchorClass == null || loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
             return false;
         }
-        // Use MethodHandles.Lookup only if the anchor run-time Package defined by CL.
-        return Objects.equals(anchorClass.getPackage(), loader.getDefinedPackage(targetPackageName));
+        // Use MethodHandles.Lookup only if the anchor class has the same package
+        // and anchor class is visible to the application classloader.
+        return Objects.equals(anchorClass.getPackageName(), targetPackageName) && isVisible(anchorClass, loader);
+    }
+
+    /**
+     * Checks that the anchor class {@code anchorClass} is visible to the application
+     * classloader {@code loader}.
+     *
+     * @param anchorClass the anchor class
+     * @param loader the application classloader
+     */
+    private static boolean isVisible(Class<?> anchorClass, ClassLoader loader) {
+        ClassLoader anchorLoader = anchorClass.getClassLoader();
+        while (loader != null) {
+            if (loader.equals(anchorLoader)) {
+                return true;
+            }
+            loader = loader.getParent();
+        }
+        return false;
     }
 }

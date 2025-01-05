@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,6 @@ import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
 import java.time.Duration;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.glassfish.api.Param;
@@ -111,8 +110,7 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
         if (kill) {
             try {
                 File lastPid = getServerDirs().getLastPidFile();
-                File watchedPid = getServerDirs().getPidFile();
-                ProcessUtils.kill(lastPid, watchedPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
+                ProcessUtils.kill(lastPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
             } catch (KillNotPossibleException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
                 return -1;
@@ -150,10 +148,20 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
          * most likely means we're talking to the wrong server.
          */
         programOpts.setInteractive(false);
-        RemoteCLICommand cmd = new RemoteCLICommand("_stop-instance", programOpts, env);
+
+        final Long pid = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        final boolean printDots = !programOpts.isTerse();
+        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
+        final RemoteCLICommand cmd = new RemoteCLICommand("_stop-instance", programOpts, env);
         try {
             cmd.executeAndReturnOutput("_stop-instance", "--force", force.toString());
-            waitForDeath();
+            if (printDots) {
+                System.out.print(Strings.get("StopInstance.waitForDeath") + " ");
+            }
+            final boolean dead = ProcessUtils.waitWhileIsAlive(pid, timeout, printDots);
+            if (!dead) {
+                throw new CommandException(Strings.get("StopInstance.instanceNotDead", DEATH_TIMEOUT_MS / 1000));
+            }
         } catch (Exception e) {
             // The server may have died so fast we didn't have time to
             // get the (always successful!!) return data.  This is NOT AN ERROR!
@@ -161,30 +169,13 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             if (kill) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    File watchedPid = getServerDirs().getPidFile();
-                    ProcessUtils.kill(prevPid, watchedPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
+                    ProcessUtils.kill(prevPid, timeout, printDots);
                     return;
                 } catch (Exception ex) {
                     e.addSuppressed(ex);
                 }
             }
             throw e;
-        }
-    }
-
-    /**
-     * Wait for the server to die.
-     */
-    private void waitForDeath() throws CommandException {
-        if (!programOpts.isTerse()) {
-            // use stdout because logger always appends a newline
-            System.out.print(Strings.get("StopInstance.waitForDeath") + " ");
-        }
-        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
-        final Supplier<Boolean> deathSign = () -> !ProcessUtils.isAlive(getServerDirs().getPidFile());
-        final boolean dead = ProcessUtils.waitFor(deathSign, timeout, !programOpts.isTerse());
-        if (!dead) {
-            throw new CommandException(Strings.get("StopInstance.instanceNotDead", DEATH_TIMEOUT_MS / 1000));
         }
     }
 }

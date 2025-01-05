@@ -68,7 +68,7 @@ public class SecurityContext extends AbstractSecurityContext {
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;
 
-    private Principal sessionPrincipal;
+    private final ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     /*
      * This creates a new SecurityContext object. Note: that the docs for Subject state that the internal sets (eg. the
@@ -321,11 +321,15 @@ public class SecurityContext extends AbstractSecurityContext {
     }
 
     public Principal getSessionPrincipal() {
-        return sessionPrincipal;
+        return sessionPrincipal.get();
     }
 
     public void setSessionPrincipal(Principal sessionPrincipal) {
-        this.sessionPrincipal = sessionPrincipal;
+        if (sessionPrincipal != null) {
+            this.sessionPrincipal.set(sessionPrincipal);
+        } else {
+            this.sessionPrincipal.remove();
+        }
     }
 
     public Set<Principal> getPrincipalSet() {

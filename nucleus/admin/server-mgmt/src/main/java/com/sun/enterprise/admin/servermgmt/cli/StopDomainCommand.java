@@ -28,7 +28,6 @@ import java.io.File;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.time.Duration;
-import java.util.function.Supplier;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -143,8 +142,7 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    File watchedPid = getServerDirs().getPidFile();
-                    ProcessUtils.kill(prevPid, watchedPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
+                    ProcessUtils.kill(prevPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
                 } catch (KillNotPossibleException e) {
                     throw new CommandException(e.getMessage(), e);
                 }
@@ -169,11 +167,26 @@ public class StopDomainCommand extends LocalDomainCommand {
      */
     protected void doCommand() throws CommandException {
         // run the remote stop-domain command and throw away the output
-        RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
-        File watchedPid = isLocal() ? getServerDirs().getPidFile() : null;
+        final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
+        final File watchedPid = isLocal() ? getServerDirs().getPidFile() : null;
+        final Long oldPid = ProcessUtils.loadPid(watchedPid);
+        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
+        final boolean printDots = !programOpts.isTerse();
         try {
             cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
-            waitForDeath(watchedPid);
+            if (printDots) {
+                // use stdout because logger always appends a newline
+                System.out.print(Strings.get("StopDomain.WaitDASDeath") + " ");
+            }
+            final boolean dead;
+            if (isLocal()) {
+                dead = ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
+            } else {
+                dead = ProcessUtils.waitWhileListening(addr, timeout, printDots);
+            }
+            if (!dead) {
+                throw new CommandException(Strings.get("StopDomain.DASNotDead", timeout.toSeconds()));
+            }
         } catch (Exception e) {
             // The domain server may have died so fast we didn't have time to
             // get the (always successful!!) return data.  This is NOT AN ERROR!
@@ -181,36 +194,13 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (kill && isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    ProcessUtils.kill(prevPid, watchedPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
+                    ProcessUtils.kill(prevPid, timeout, printDots);
                     return;
                 } catch (Exception ex) {
                     e.addSuppressed(ex);
                 }
             }
             throw e;
-        }
-    }
-
-    /**
-     * Wait for the server to die.
-     *
-     * @param watchedPid
-     */
-    private void waitForDeath(File watchedPid) throws CommandException {
-        if (!programOpts.isTerse()) {
-            // use stdout because logger always appends a newline
-            System.out.print(Strings.get("StopDomain.WaitDASDeath") + " ");
-        }
-        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
-        final Supplier<Boolean> deathSign;
-        if (isLocal()) {
-            deathSign = () -> !ProcessUtils.isListening(addr) && !ProcessUtils.isAlive(watchedPid);
-        } else {
-            deathSign = () -> !ProcessUtils.isListening(addr);
-        }
-        final boolean dead = ProcessUtils.waitFor(deathSign, timeout, !programOpts.isTerse());
-        if (!dead) {
-            throw new CommandException(Strings.get("StopDomain.DASNotDead", timeout.toSeconds()));
         }
     }
 }

@@ -1650,6 +1650,9 @@ public class CommandRunnerImpl implements CommandRunner {
     }
 
     private ParameterMap maskSecretParameters(ParameterMap parameters) {
+        if (parameters == null) {
+            return parameters;
+        }
         final ParameterMap maskedParameters = new ParameterMap(parameters);
         maskedParameters.entrySet().forEach(entry -> {
             if (PASSWORD_ATTRIBUTE_NAMES.contains(entry.getKey())) {

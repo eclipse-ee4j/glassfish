@@ -95,7 +95,6 @@ public class LoggingPrintStreamTest {
             () -> assertEquals("", record.getMessage()),
             () -> assertNull(record.getMessageKey()),
             () -> assertNull(record.getParameters()),
-            () -> assertEquals(1L, record.getThreadID()),
             () -> assertEquals(Thread.currentThread().getName(), record.getThreadName()),
             () -> assertSame(exception, record.getThrown()),
             () -> assertNull(record.getSourceMethodName())

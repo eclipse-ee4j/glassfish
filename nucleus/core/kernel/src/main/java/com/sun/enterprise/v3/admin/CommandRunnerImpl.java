@@ -129,6 +129,7 @@ import org.jvnet.hk2.config.UnsatisfiedDependencyException;
 
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.common.util.Constants.PASSWORD_ATTRIBUTE_NAMES;
 
 /**
  * Encapsulates the logic needed to execute a server-side command (for example,
@@ -1642,10 +1643,20 @@ public class CommandRunnerImpl implements CommandRunner {
     private void publishCommandInvokedEvent(ExecutionContext invocation, Subject subject) {
         final CommandInvokedEvent event = new CommandInvokedEvent(
                 invocation.name(),
-                invocation.parameters(),
+                maskSecretParameters(invocation.parameters()),
                 subject);
         eventService.getCommandInvokedTopic()
                 .publish(event);
+    }
+
+    private ParameterMap maskSecretParameters(ParameterMap parameters) {
+        final ParameterMap maskedParameters = new ParameterMap(parameters);
+        maskedParameters.entrySet().forEach(entry -> {
+            if (PASSWORD_ATTRIBUTE_NAMES.contains(entry.getKey())) {
+                entry.setValue(List.of("*******"));
+            }
+        });
+        return maskedParameters;
     }
 
     /*

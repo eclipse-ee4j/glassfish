@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,6 +43,7 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandException;
 
+import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
@@ -331,22 +332,15 @@ public abstract class LocalServerCommand extends CLICommand {
         logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2})",
             new Object[] {oldPid, oldAdminAddress, newAdminAddress});
 
-        final Supplier<Boolean> signStop = () -> {
-            if (!ProcessUtils.isListening(oldAdminAddress)) {
-                return true;
-            }
-            int newPid = getServerPid();
-            if (newPid < 0) {
-                // is listening, but not responding.
-                // Could be also another application, but then
-                // remote _restart-domain call should already fail.
-                return true;
-            }
-            // stopped and started again
-            return oldPid != newPid;
-        };
+        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final boolean printDots = !programOpts.isTerse();
-        if (!ProcessUtils.waitFor(signStop, Duration.ofMillis(CLIConstants.DEATH_TIMEOUT_MS), printDots)) {
+        final boolean stopped;
+        if (isLocal()) {
+            stopped = ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
+        } else {
+            stopped = ProcessUtils.waitWhileListening(oldAdminAddress, timeout, printDots);
+        }
+        if (!stopped) {
             throw new CommandException(I18N.get("restartDomain.noGFStart"));
         }
         logger.log(CONFIG, "Server instance is stopped, now we wait for the start on {0}", newAdminAddress);
@@ -383,7 +377,7 @@ public abstract class LocalServerCommand extends CLICommand {
 
 
     /**
-     * Get uptime from the server.
+     * @return uptime from the server.
      */
     protected final long getUptime() throws CommandException {
         RemoteCLICommand cmd = new RemoteCLICommand("uptime", programOpts, env);

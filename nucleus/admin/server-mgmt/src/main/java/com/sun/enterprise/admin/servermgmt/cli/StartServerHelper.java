@@ -78,21 +78,21 @@ public class StartServerHelper {
             boolean debug) {
         this.terse = terse;
         this.launcher = launcher;
-        info = launcher.getInfo();
+        this.info = launcher.getInfo();
 
         if (info.isDomain()) {
-            serverOrDomainName = info.getDomainName();
+            this.serverOrDomainName = info.getDomainName();
         } else {
-            serverOrDomainName = info.getInstanceName();
+            this.serverOrDomainName = info.getInstanceName();
         }
 
-        addresses = info.getAdminAddresses();
+        this.addresses = info.getAdminAddresses();
         this.serverDirs = serverDirs;
-        pidFile = serverDirs.getPidFile();
+        this.pidFile = serverDirs.getPidFile();
         this.masterPassword = masterPassword;
 
         // it will be < 0 if both --debug is false and debug-enabled=false in jvm-config
-        debugPort = launcher.getDebugPort();
+        this.debugPort = launcher.getDebugPort();
     }
 
 
@@ -205,13 +205,7 @@ public class StartServerHelper {
             return;
         }
         LOG.log(DEBUG, "Waiting for death of the parent process with pid={0}", pid);
-        final Supplier<Boolean> parentDeathSign = () -> {
-            if (pid != null && ProcessUtils.isAlive(pid)) {
-                return false;
-            }
-            return !isListeningOnAnyEndpoint();
-        };
-        if (!ProcessUtils.waitFor(parentDeathSign, Duration.ofMillis(DEATH_TIMEOUT_MS), false)) {
+        if (!ProcessUtils.waitWhileIsAlive(pid, Duration.ofMillis(DEATH_TIMEOUT_MS), false)) {
             throw new CommandException(I18N.get("deathwait_timeout", DEATH_TIMEOUT_MS));
         }
         LOG.log(DEBUG, "Parent process with PID={0} is dead and all admin endpoints are free.", pid);

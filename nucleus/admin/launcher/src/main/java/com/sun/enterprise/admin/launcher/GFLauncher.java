@@ -870,7 +870,7 @@ public abstract class GFLauncher {
             final String msg = strings.get("serverStopped", callerParameters.getType());
             processWhacker = new ProcessWhacker(p, msg);
 
-            runtime.addShutdownHook(new Thread(processWhacker));
+            runtime.addShutdownHook(new Thread(processWhacker, "GlassFish Process Whacker Shutdown Hook"));
         } else {
             processWhacker.setProcess(p);
         }

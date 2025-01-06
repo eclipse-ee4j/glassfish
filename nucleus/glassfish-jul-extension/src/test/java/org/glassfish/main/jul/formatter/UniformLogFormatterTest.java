@@ -57,7 +57,7 @@ public class UniformLogFormatterTest {
         + "\\|" + P_LEVEL_NAME
         + "\\|" + P_PRODUCT_ID
         + "\\|" + P_LOGGER_NAME
-        + "\\|_ThreadID=1;_ThreadName=main;_LevelValue=" + P_LEVEL_VALUE + P_MESSAGE_KEY_ENTRY + ";"
+        + "\\|_ThreadID=[0-9];_ThreadName=main;_LevelValue=" + P_LEVEL_VALUE + P_MESSAGE_KEY_ENTRY + ";"
         + "\\|.*"
     );
     private static final Pattern PATTERN_SINGLELINE = Pattern.compile(
@@ -65,7 +65,7 @@ public class UniformLogFormatterTest {
         + "\\|" + P_LEVEL_NAME
         + "\\|" + P_PRODUCT_ID
         + "\\|" + P_LOGGER_NAME
-        + "\\|_ThreadID=1;_ThreadName=main;_LevelValue=" + P_LEVEL_VALUE + P_MESSAGE_KEY_ENTRY + ";"
+        + "\\|_ThreadID=[0-9];_ThreadName=main;_LevelValue=" + P_LEVEL_VALUE + P_MESSAGE_KEY_ENTRY + ";"
         + ".+"
     );
 

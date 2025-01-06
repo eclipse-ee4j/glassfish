@@ -30,12 +30,7 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <!--
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                    -->
+                    <release>11</release>
                 </configuration>
             </plugin>
         </plugins>

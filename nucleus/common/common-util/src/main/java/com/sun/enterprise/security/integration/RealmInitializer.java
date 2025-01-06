@@ -23,7 +23,7 @@ package com.sun.enterprise.security.integration;
  */
 public interface RealmInitializer {
 
-    void initializeRealm(Object bundledescriptor, String realmName);
+    void initializeRealm(Object bundledescriptor, boolean isSystemApp, String realmName);
 
     /**
      * Sets the virtual server on which the web module (with which this RealmAdapter is associated with) has been deployed.

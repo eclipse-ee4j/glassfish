@@ -287,7 +287,7 @@ public class KernelLoggerInfo {
             level = "SEVERE")
     public static final String cantDetermineLocation = LOGMSG_PREFIX + "-00040";
 
-   @LogMessageInfo(
+    @LogMessageInfo(
             message = "Application deployment failed: {0}",
             cause = "The deployment command for an application failed as indicated in the message.",
             action = "Check the application and redeploy.",
@@ -453,11 +453,11 @@ public class KernelLoggerInfo {
     public static final String exceptionAutodeployment = LOGMSG_PREFIX + "-00067";
 
     @LogMessageInfo(
-            message = "Exception while sending an event.",
-            cause = "An exception occurred while sending an event.",
+            message = "Exception while registering an event listener.",
+            cause = "An exception occurred while registering an event listener.",
             action = "Check the system logs and contact support.",
             level = "SEVERE")
-    public static final String exceptionSendEvent = LOGMSG_PREFIX + "-00068";
+    public static final String exceptionRegisterEventListener = LOGMSG_PREFIX + "-00068";
 
     @LogMessageInfo(
             message = "Exception while dispatching an event",

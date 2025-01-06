@@ -242,6 +242,8 @@ public class WebModule extends PwcWebModule implements Context {
     // true if standalone WAR, false if embedded in EAR file
     private boolean isStandalone = true;
 
+    private boolean isSystemApplication;
+
     private final ServiceLocator services;
 
     /**
@@ -1180,6 +1182,14 @@ public class WebModule extends PwcWebModule implements Context {
     @Override
     protected boolean isStandaloneModule() {
         return isStandalone;
+    }
+
+    public boolean isSystemApplication() {
+        return isSystemApplication;
+    }
+
+    public void setSystemApplication(boolean isSystemApplication) {
+        this.isSystemApplication = isSystemApplication;
     }
 
     /**
@@ -2126,7 +2136,7 @@ public class WebModule extends PwcWebModule implements Context {
         }
 
         if (realm instanceof RealmInitializer) {
-            ((RealmInitializer) realm).initializeRealm(this.getWebBundleDescriptor(), ((VirtualServer) parent).getAuthRealmName());
+            ((RealmInitializer) realm).initializeRealm(this.getWebBundleDescriptor(), false, ((VirtualServer) parent).getAuthRealmName());
             ((RealmInitializer) realm).setVirtualServer(getParent());
             ((RealmInitializer) realm).updateWebSecurityManager();
             setRealm(realm);

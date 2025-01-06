@@ -176,7 +176,7 @@ final class WebModuleListener implements LifecycleListener {
          */
         Map<URI, List<String>> tldListenerMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
-            // Skip any JSF related TLDs for non-JSF apps
+            // Skip any Faces related TLDs for non-Faces apps
             if ("jsfTld".equals(tldProvider.getName()) && !webModule.isJsfApplication()) {
                 continue;
             }
@@ -189,12 +189,14 @@ final class WebModuleListener implements LifecycleListener {
         servletContext.setAttribute("com.sun.appserv.tldlistener.map", tldListenerMap);
 
         ServiceLocator defaultServices = webContainer.getServerContext().getDefaultServices();
-        final String servicesName = webModule.getComponentId();
-        ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(servicesName, defaultServices);
-        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
 
-        // set services for jsf injection
-        servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, webAppServices);
+        // Set services for Faces injection
+        if (webModule.isSystemApplication()) {
+            // A system application like the Admin GUI needs to load services from the war archive
+            servletContext.setAttribute(Constants.SERVICE_LOCATOR_ATTRIBUTE, createWebAppServices(webModule, defaultServices));
+        } else {
+            servletContext.setAttribute(Constants.SERVICE_LOCATOR_ATTRIBUTE, defaultServices);
+        }
 
         SunWebAppImpl bean = webModule.getIasWebAppConfigBean();
 
@@ -272,6 +274,13 @@ final class WebModuleListener implements LifecycleListener {
             invocationManager.postInvoke(webComponentInvocation);
         }
 
+    }
+
+    private ServiceLocator createWebAppServices(WebModule webModule, ServiceLocator defaultServices) {
+        ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(webModule.getComponentId(), defaultServices);
+        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
+
+        return webAppServices;
     }
 
     private static void initializeServicesFromClassLoader(ServiceLocator serviceLocator, ClassLoader classLoader) {

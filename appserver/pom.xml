@@ -140,7 +140,7 @@
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>4.0.0</jakarta.pages-api.version>
         <jstl-api.version>3.0.2</jstl-api.version>
-        <wasp.version>4.0.0-M2</wasp.version>
+        <wasp.version>4.0.0</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.2</xmlsec.version>

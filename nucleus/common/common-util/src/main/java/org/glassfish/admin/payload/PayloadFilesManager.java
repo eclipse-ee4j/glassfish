@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -457,7 +457,7 @@ public abstract class PayloadFilesManager {
                 dirTimestamps.put(extractedFile, lastModified);
             }
             postExtract(extractedFile);
-            logger.log(Level.CONFIG, "Extracted transferred entry {0} of size {1} B to {2}",
+            logger.log(Level.FINER, "Extracted transferred entry {0} of size {1} B to {2}",
                 new Object[] {part.getName(), extractedFile.length(), extractedFile});
             reportExtractionSuccess();
             return extractedFile;

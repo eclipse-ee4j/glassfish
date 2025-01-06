@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -1088,7 +1088,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.19-SNAPSHOT</version>
+                    <version>1.0.19</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>

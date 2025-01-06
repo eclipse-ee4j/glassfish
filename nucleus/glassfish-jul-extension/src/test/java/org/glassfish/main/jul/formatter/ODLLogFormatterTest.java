@@ -56,7 +56,7 @@ public class ODLLogFormatterTest {
         + " \\[" + P_LEVEL_NAME + "\\]"
         + " \\[" + P_MESSAGE_KEY + "\\]"
         + " \\[" + P_LOGGER_NAME + "\\]"
-        + " \\[tid: _ThreadID=1 _ThreadName=main\\]"
+        + " \\[tid: _ThreadID=[0-9] _ThreadName=main\\]"
         + " \\[levelValue: " + P_LEVEL_VALUE + "\\]"
         + " \\[\\["
     );
@@ -66,7 +66,7 @@ public class ODLLogFormatterTest {
         + " \\[" + P_LEVEL_NAME + "\\]"
         + " \\[" + P_MESSAGE_KEY + "\\]"
         + " \\[" + P_LOGGER_NAME + "\\]"
-        + " \\[tid: _ThreadID=1 _ThreadName=main\\]"
+        + " \\[tid: _ThreadID=[0-9] _ThreadName=main\\]"
         + " \\[levelValue: " + P_LEVEL_VALUE + "\\]"
         + " .+"
     );

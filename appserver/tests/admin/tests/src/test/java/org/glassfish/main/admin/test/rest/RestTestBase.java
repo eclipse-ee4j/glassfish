@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,7 @@ package org.glassfish.main.admin.test.rest;
 
 import com.sun.enterprise.util.io.FileUtils;
 
+import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
@@ -26,12 +27,12 @@ import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
 import org.glassfish.main.admin.test.webapp.HelloServlet;
@@ -48,6 +49,8 @@ import org.junit.jupiter.api.TestInfo;
 
 import static com.sun.enterprise.util.io.FileUtils.ensureWritableDir;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getTargetDirectory;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,7 +58,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RestTestBase {
 
-    private static final Logger LOG = Logger.getLogger(RestTestBase.class.getName());
+    private static final Logger LOG = System.getLogger(RestTestBase.class.getName());
 
     protected static final String CONTEXT_ROOT_MANAGEMENT = "/management";
 
@@ -97,6 +100,12 @@ public class RestTestBase {
             File reportFile = new File(reportDir, testInfo.getTestClass().orElseThrow().getName() + "-server.log");
             try (InputStream readEntity = response.readEntity(InputStream.class)) {
                 FileUtils.copy(readEntity, reportFile);
+            }
+        } catch (ProcessingException e) {
+            if (e.getCause() instanceof ConnectException) {
+                LOG.log(ERROR, "Unable to backup the server.log using REST, server is not listening on " + baseAdminUrl);
+            } else {
+                throw e;
             }
         }
     }
@@ -160,7 +169,7 @@ public class RestTestBase {
         Map<String, ?> extraProperties = (Map<String, ?>) body.get("extraProperties");
         if (extraProperties != null) {
             List<Map<String, String>> instanceList = (List<Map<String, String>>) extraProperties.get("instanceList");
-            LOG.log(Level.INFO, "Found instances: {0}", instanceList);
+            LOG.log(INFO, "Found instances: {0}", instanceList);
             if (instanceList != null && !instanceList.isEmpty()) {
                 for (Map<String, String> instance : instanceList) {
                     String instanceName = instance.get("name");
@@ -261,7 +270,7 @@ public class RestTestBase {
 
     protected Map<String, String> getChildResources(Response response) {
         Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
-        LOG.log(Level.INFO, "responseMap: \n{0}", responseMap);
+        LOG.log(INFO, "responseMap: \n{0}", responseMap);
         Map<String, Map> extraProperties = (Map<String, Map>) responseMap.get("extraProperties");
         if (extraProperties != null) {
             return extraProperties.get("childResources");
@@ -291,7 +300,7 @@ public class RestTestBase {
 
     protected static File getEar(final String appName) {
         final EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class).addAsModule(getWar(appName), "simple.war");
-        LOG.info(ear.toString(true));
+        LOG.log(INFO, ear.toString(true));
         try {
             File tempFile = File.createTempFile(appName, ".ear");
             ear.as(ZipExporter.class).exportTo(tempFile, true);
@@ -303,7 +312,7 @@ public class RestTestBase {
 
     protected static File getWar(final String appName) {
         final WebArchive war = ShrinkWrap.create(WebArchive.class).addPackage(HelloServlet.class.getPackage());
-        LOG.info(war.toString(true));
+        LOG.log(INFO, war.toString(true));
         try {
             File tempFile = File.createTempFile(appName, ".war");
             war.as(ZipExporter.class).exportTo(tempFile, true);

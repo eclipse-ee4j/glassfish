@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -272,7 +272,7 @@ public class EJBContainerImpl extends EJBContainer {
         Cleanup(EJBContainerImpl container) {
             this.container = container;
             Runtime.getRuntime().addShutdownHook(
-                    cleanupThread = new Thread(this, "EJBContainerImplCleanup"));
+                    cleanupThread = new Thread(this, "GlassFish EJBContainerImpl Cleanup Shutdown Hook"));
         }
 
         void disable() {

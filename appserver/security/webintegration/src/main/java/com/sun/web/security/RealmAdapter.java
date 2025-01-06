@@ -212,6 +212,8 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     private static String defaultSystemProviderID = getDefaultSystemProviderID();
 
     private String moduleID;
+    private boolean isSystemApp;
+
     private BaseAuthenticationService authenticationService;
 
     @Inject
@@ -264,7 +266,8 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     }
 
     @Override
-    public void initializeRealm(Object descriptor, String initialRealmName) {
+    public void initializeRealm(Object descriptor, boolean isSystemApp, String initialRealmName) {
+        this.isSystemApp = isSystemApp;
         this.webBundleDescriptor = (WebBundleDescriptor) descriptor;
 
         realmName = findRealmName(initialRealmName);

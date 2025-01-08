@@ -77,20 +77,17 @@
 
     <target name="javaee-comp">
         <record name="javaee-comp.output" action="start" />
-            <ant dir="javaee-component-resource-typesafe-injection" target="${javaee-comp-target}"/>
-            <ant dir="jpa-resource-injection" target="${javaee-comp-target}"/>
-            <ant dir="jpa-resource-injection-non-serializable" target="${javaee-comp-target}"/>
-            <ant dir="jpa-resource-injection-passivating-scope" target="${javaee-comp-target}"/>
-            <ant dir="jpa-resource-injection-with-singleton-ejb-producer" target="${javaee-comp-target}"/>
-            <ant dir="no-interface-ejb" target="${javaee-comp-target}"/>
-            <ant dir="jms-resource-producer-field" target="${javaee-comp-target}"/>
-<!-- TODO: Investigate
-            <ant dir="jms-resource-producer-field-in-library-jar" target="${javaee-comp-target}"/>
--->
-            <ant dir="em-resource-injection" target="${javaee-comp-target}"/>
-            <ant dir="em-injection-no-interface-ejb" target="${javaee-comp-target}"/>
-            <ant dir="em-resource-injection-with-resource-declaration-in-another-jar" target="${javaee-comp-target}"/>
-            <ant dir="slsb-injection-into-sessionscoped" target="${javaee-comp-target}"/>
+            <run-cdi-test path="javaee-component-resource-typesafe-injection" target="${javaee-comp-target}"/>
+            <run-cdi-test path="jpa-resource-injection" target="${javaee-comp-target}"/>
+            <run-cdi-test path="jpa-resource-injection-non-serializable" target="${javaee-comp-target}"/>
+            <run-cdi-test path="jpa-resource-injection-passivating-scope" target="${javaee-comp-target}"/>
+            <run-cdi-test path="jpa-resource-injection-with-singleton-ejb-producer" target="${javaee-comp-target}"/>
+            <run-cdi-test path="no-interface-ejb" target="${javaee-comp-target}"/>
+            <run-cdi-test path="jms-resource-producer-field" target="${javaee-comp-target}"/>
+            <run-cdi-test path="em-resource-injection" target="${javaee-comp-target}"/>
+            <run-cdi-test path="em-injection-no-interface-ejb" target="${javaee-comp-target}"/>
+            <run-cdi-test path="em-resource-injection-with-resource-declaration-in-another-jar" target="${javaee-comp-target}"/>
+            <run-cdi-test path="slsb-injection-into-sessionscoped" target="${javaee-comp-target}"/>
         <record name="javaee-comp.output" action="stop" />
     </target>
 
@@ -106,4 +103,32 @@
                 ant unsetup (unsets all resources for javaee-comp tests)
         </echo>
     </target>
+    
+    <macrodef name="run-cdi-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+            <attribute name="path" />
+            <attribute name="target" />
+            <sequential>
+                <local name="do-run-test" />
+                <condition property="do-run-test" else="false">
+                    <or>
+                        <equals arg1="${env.cdi_all_javaee_component}" arg2="@{path}" />
+                        <not>
+                            <isset property="env.cdi_all_javaee_component" />
+                        </not>
+                    </or>
+                </condition>
+
+                <sequential if:true="${do-run-test}">
+                    <local name="absolute.path" />
+                    <property name="absolute.path" location="@{path}" />
+                    <echo message="${line.separator}" />
+                    <echo message=" *************************" />
+                    <echo message=" * Running @{path} " />
+                    <echo message=" * Path: ${absolute.path} " />
+                    <echo message=" *************************" />
+                    <echo message="${line.separator}" />
+                    <ant dir="@{path}" target="@{target}" />
+                </sequential>
+            </sequential>
+        </macrodef>
 </project>

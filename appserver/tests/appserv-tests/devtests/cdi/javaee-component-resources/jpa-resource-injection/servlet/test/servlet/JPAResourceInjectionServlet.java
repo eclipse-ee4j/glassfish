@@ -46,41 +46,37 @@ public class JPAResourceInjectionServlet extends HttpServlet {
     @TestDatabase
     private EntityManagerFactory emf1;
 
-    private @Resource
-    UserTransaction utx;
+    private @Resource UserTransaction utx;
 
     @Inject
     @Preferred
     TestBeanInterface tbi;
 
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException,
-            IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter writer = response.getWriter();
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
-        System.out.println("JPAResourceInjectionServlet::@PersistenceUnit " +
-                        "CDI EntityManagerFactory=" + emf1);
+        System.out.println("JPAResourceInjectionServlet::@PersistenceUnit " + "CDI EntityManagerFactory=" + emf1);
 
         EntityManager em = emf1.createEntityManager();
-        System.out.println("JPAResourceInjectionServlet::createEM" +
-                        "EntityManager=" + em);
+        System.out.println("JPAResourceInjectionServlet::createEM" + "EntityManager=" + em);
         String testcase = request.getParameter("testcase");
         System.out.println("testcase=" + testcase);
 
         if (testcase != null) {
             JpaTest jt = new JpaTest(em, utx);
             boolean status = false;
+            
             if ("llinit".equals(testcase)) {
                 status = jt.lazyLoadingInit();
             } else if ("llfind".equals(testcase)) {
                 status = jt.lazyLoadingByFind(1);
             } else if ("llquery".equals(testcase)) {
                 status = jt.lazyLoadingByQuery("Carla");
-            } else if ("llinj".equals(testcase)){
-                status = ((tbi != null) &&
-                        (tbi.testDatasourceInjection().trim().length()==0));
+            } else if ("llinj".equals(testcase)) {
+                status = ((tbi != null) && (tbi.testDatasourceInjection().trim().length() == 0));
             }
+            
             if (status) {
                 msg += "";// pass
             } else {

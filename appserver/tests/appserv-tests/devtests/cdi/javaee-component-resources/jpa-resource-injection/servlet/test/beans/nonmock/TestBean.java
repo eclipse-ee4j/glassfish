@@ -24,13 +24,13 @@ import test.beans.TestBeanInterface;
 import test.beans.artifacts.Preferred;
 import test.beans.artifacts.TestDatabase;
 
-
 @RequestScoped
 @Preferred
-public class TestBean implements TestBeanInterface{
+public class TestBean implements TestBeanInterface {
     public static boolean testBeanInvoked = false;
 
-    @Inject @TestDatabase
+    @Inject
+    @TestDatabase
     EntityManagerFactory emf;
 
     @Override
@@ -46,7 +46,7 @@ public class TestBean implements TestBeanInterface{
 
     @Override
     public String testDatasourceInjection() {
-        return (emf==null ? "typesafe injection into testbean failed" : "");
+        return (emf == null ? "typesafe injection into testbean failed" : "");
     }
 
 }

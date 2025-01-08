@@ -43,8 +43,7 @@ public class Employee implements java.io.Serializable {
         this.lastName = lastName;
     }
 
-    public Employee(int id, String firstName, String lastName,
-            Department department) {
+    public Employee(int id, String firstName, String lastName, Department department) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -53,6 +52,7 @@ public class Employee implements java.io.Serializable {
 
     // ===========================================================
     // getters and setters for the state fields
+    
     @Id
     @Column(name = "ID")
     public int getId() {
@@ -84,6 +84,7 @@ public class Employee implements java.io.Serializable {
     // ===========================================================
     // getters and setters for the association fields
     // @ManyToOne
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DEPARTMENT_ID")
     public Department getDepartment() {
@@ -93,12 +94,10 @@ public class Employee implements java.io.Serializable {
     @Transient
     public Department getDepartmentNoWeaving() {
         try {
-            java.lang.reflect.Field f = Employee.class
-                    .getDeclaredField("department");
+            java.lang.reflect.Field f = Employee.class.getDeclaredField("department");
             return (Department) f.get(this);
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException(
-                    "Please change argument to getDeclaredField", e);
+            throw new RuntimeException("Please change argument to getDeclaredField", e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -109,9 +108,11 @@ public class Employee implements java.io.Serializable {
     }
 
     public String toString() {
-        return "Employee id=" + getId() + ", firstName=" + getFirstName()
-                + ", lastName=" + getLastName() + ", department="
-                + getDepartment();
+        return 
+            "Employee id=" + getId() + 
+            ", firstName=" + getFirstName() + 
+            ", lastName=" + getLastName() + 
+            ", department=" + getDepartment();
     }
 
 }

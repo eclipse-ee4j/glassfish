@@ -101,7 +101,7 @@
         <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <!-- Implementations -->
-        <soteria.version>4.0.0-SNAPSHOT</soteria.version>
+        <soteria.version>4.0.0</soteria.version>
         <exousia.version>3.0.0-M3</exousia.version>
         <epicyro.version>3.1.0</epicyro.version>
         <!-- Dependencies -->

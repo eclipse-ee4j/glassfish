@@ -82,6 +82,6 @@ public class ParameterMapTest {
     }
 
     static boolean valueIsMasked(Map.Entry<String, List<String>> entry) {
-        return entry.getValue().size() == 1 && entry.getValue().getFirst().startsWith("*");
+        return entry.getValue().size() == 1 && entry.getValue().get(0).startsWith("*");
     }
 }

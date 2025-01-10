@@ -256,7 +256,6 @@ public class GlassFishTestEnvironment {
         }
     }
 
-
     /**
      * This will delete the jobs.xml file
      */

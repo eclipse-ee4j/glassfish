@@ -14,6 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 */
 package org.glassfish.main.test.extras.commandlogger;
 
+import com.google.common.collect.Streams;
+
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -24,11 +26,17 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.CollectLogFiles;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import static java.util.stream.Stream.of;
 
 /**
  *
@@ -58,7 +66,11 @@ public class CommandLoggerITest {
         clearLogFile();
 
         // execute some write command, it doesn't have to complete successfully
-        ASADMIN.exec("delete-system-property", "X");
+        ASADMIN.exec("delete-system-property", "propertyX");
+        ASADMIN.withPassword("AS_ADMIN_ALIASPASSWORD", "secretPassword")
+                .exec("create-password-alias", "mytestalias");
+        ASADMIN.resetPasswords();
+        ASADMIN.exec("delete-password-alias", "mytestalias");
         // execute some read command
         ASADMIN.exec("list-applications", "--long");
         // exxecute some internal command
@@ -68,14 +80,17 @@ public class CommandLoggerITest {
                 .collect()
                 .getServerLogLines();
 
+        assertCommandNotLogged(lines, "secretPassword");
         if (logWriteOp) {
-            assertCommandLogged(lines, "admin", "delete-system-property X");
+            assertCommandLogged(lines, "admin", "delete-system-property", "propertyX");
+            assertCommandLogged(lines, "admin", "create-password-alias", "mytestalias");
         } else {
             assertCommandNotLogged(lines, "delete-system-property");
+            assertCommandNotLogged(lines, "create-password-alias");
         }
 
         if (logReadOp) {
-            assertCommandLogged(lines, "admin", "list-applications --long");
+            assertCommandLogged(lines, "admin", "list-applications", "--long");
         } else {
             assertCommandNotLogged(lines, "list-applications");
         }
@@ -96,11 +111,13 @@ public class CommandLoggerITest {
         assertThat("log", lines, everyItem(not(containsString(command))));
     }
 
-    private void assertCommandLogged(final List<String> lines, String user, String fullCommand) {
-        assertThat("server.log", lines, hasItem(allOf(containsString(user),
-                containsString(fullCommand)
-        )
-        ));
+    private void assertCommandLogged(final List<String> lines, String user, String... commandParts) {
+        final Matcher[] containsAllStrings = Streams.concat(of(containsString(user)),
+                Arrays.stream(commandParts)
+                        .map(CoreMatchers::containsString))
+                .toArray(Matcher[]::new);
+
+        assertThat("server.log", lines, hasItem(allOf(containsAllStrings)));
     }
 
 }

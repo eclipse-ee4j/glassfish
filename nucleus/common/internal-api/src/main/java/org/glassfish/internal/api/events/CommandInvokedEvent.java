@@ -69,7 +69,11 @@ public class CommandInvokedEvent {
 
     public CommandInvokedEvent(String commandName, ParameterMap parameters, Subject subject) {
         this.commandName = commandName;
-        this.parameters = parameters;
+        if (parameters != null) {
+            this.parameters = parameters;
+        } else {
+            this.parameters = new ParameterMap();
+        }
         this.subject = subject;
     }
 
@@ -77,10 +81,16 @@ public class CommandInvokedEvent {
     private final ParameterMap parameters;
     private final Subject subject;
 
+    /**
+     * @return Name of the executed command
+     */
     public String getCommandName() {
         return commandName;
     }
 
+    /**
+     * @return Parameters used with the command. If not parameters, the result is an empty map. Never null.
+     */
     public ParameterMap getParameters() {
         return parameters;
     }

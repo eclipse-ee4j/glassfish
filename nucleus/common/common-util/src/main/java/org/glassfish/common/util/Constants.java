@@ -16,6 +16,8 @@
 
 package org.glassfish.common.util;
 
+import java.util.Set;
+
 /**
  * These are constants that can be used throughout the server
  *
@@ -37,4 +39,17 @@ public class Constants {
      */
     public final static int IMPORTANT_RUN_LEVEL_SERVICE = 50;
 
+    /*
+     * This is a list of attribute names that hold passwords for various admin commands. We need to mask their value during logging.
+     */
+    public final static Set<String> PASSWORD_ATTRIBUTE_NAMES = Set.of(
+            "sshpassword", /* create-node-ssh , setup-ssh , update-node, update-node-ssh */
+            "dbpassword", /* jms-availability-service */
+            "password", /* change-admin-password */
+            "newpassword", /* change-admin-password */
+            "jmsdbpassword", /* configure-jms-cluster */
+            "mappedpassword", /* create-connector-security-map, update-connector-security-map */
+            "userpassword", /* create-file-user , update-file-user */
+            "aliaspassword" /* create-password-alias , update-password-alias */
+    );
 }

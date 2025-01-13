@@ -8,7 +8,6 @@
   <projectId>glassfish</projectId>
   <buildScan>
     <obfuscation>
-      <username>#{'eclipse-' + env['EF_SHORT_NAME'] + '-bot'}</username>
       <ipAddresses>0.0.0.0</ipAddresses>
     </obfuscation>
     <publishing>
@@ -16,7 +15,7 @@
         <![CDATA[authenticated]]>
       </onlyIf>
     </publishing>
-    <backgroundBuildScanUpload>#{isFalse(env['CI'])}</backgroundBuildScanUpload>
+    <backgroundBuildScanUpload>#{isFalse(env['CI']) and isFalse(env['JENKINS_URL'])}</backgroundBuildScanUpload>
   </buildScan>
   <buildCache>
     <local>
@@ -24,7 +23,7 @@
     </local>
     <remote>
       <enabled>false</enabled>
-      <storeEnabled>#{isTrue(env['CI'])}</storeEnabled>
+      <storeEnabled>#{isTrue(env['CI']) or isTrue(env['JENKINS_URL'])}</storeEnabled>
     </remote>
   </buildCache>
 </develocity>

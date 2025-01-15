@@ -16,6 +16,9 @@
 
 package org.glassfish.api.admin;
 
+import java.util.List;
+import java.util.Set;
+
 import org.jvnet.hk2.component.MultiMap;
 
 /**
@@ -51,4 +54,22 @@ public class ParameterMap extends MultiMap<String, String> {
         add(k, v);
         return this;
     }
+
+    /**
+     * Get a copy of this map with values of secret parameters changed into *******" to hide their values.
+     * Parameters which are not secret, remain without any change.
+     *
+     * @param secretParameters A set of parameter names which are considered secret. Not null.
+     * @return A copy of this map with masked values
+     */
+    public ParameterMap getMaskedMap(Set<String> secretParameters) {
+        final ParameterMap maskedParameters = new ParameterMap(this);
+        maskedParameters.entrySet().forEach(entry -> {
+            if (secretParameters.contains(entry.getKey())) {
+                entry.setValue(List.of("*******"));
+            }
+        });
+        return maskedParameters;
+    }
+
 }

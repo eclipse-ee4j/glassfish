@@ -72,6 +72,7 @@ public class GlassFishTestEnvironment {
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
     private static final int ASADMIN_START_DOMAIN_TIMEOUT = 30_000;
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 300_000;
 
     static {
         LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
@@ -87,9 +88,11 @@ public class GlassFishTestEnvironment {
             // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
         }
+        final int timeout = isStartDomainSuspendEnabled()
+                ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
         // This is the absolutely first start - if it fails, all other starts will fail too.
         // Note: --suspend implicitly enables --debug
-        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain",
+        assertThat(asadmin.exec(timeout,"start-domain",
                 isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
     }
 
@@ -262,7 +265,6 @@ public class GlassFishTestEnvironment {
             doIO(() -> Files.delete(passwordFile));
         }
     }
-
 
     /**
      * This will delete the jobs.xml file

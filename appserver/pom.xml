@@ -688,19 +688,11 @@
                 <version>${microprofile.config-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.helidon.microprofile.config</groupId>
-                <artifactId>helidon-microprofile-config</artifactId>
+                <groupId>io.helidon</groupId>
+                <artifactId>helidon-bom</artifactId>
                 <version>${helidon-config.version}</version>
-            </dependency>
-            <dependency>
-            <groupId>io.helidon.common</groupId>
-                <artifactId>helidon-common-types</artifactId>
-                <version>${helidon-config.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.helidon.service</groupId>
-                <artifactId>helidon-service-registry</artifactId>
-                <version>${helidon-config.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- MicroProfile JWT -->

@@ -99,7 +99,6 @@ public class HealthReporter {
         Stream<HealthCheck> healthChecks = applicationHealthChecks.values()
                 .stream()
                 .flatMap(Collection::stream);
-//                Stream.concat(reportKind.healthChecks(), applicationHealthChecks.stream());
 
         List<HealthCheckResponse> healthCheckResults = healthChecks
                 .map(HealthReporter::callHealthCheck)
@@ -120,18 +119,17 @@ public class HealthReporter {
     }
 
 
-    public void addHealthCheck(String contextPath, HealthCheck healthCheck) {
-        applicationHealthChecks.computeIfAbsent(contextPath, k -> new CopyOnWriteArrayList<>())
+    public void addHealthCheck(String contextName, HealthCheck healthCheck) {
+        applicationHealthChecks.computeIfAbsent(contextName, k -> new CopyOnWriteArrayList<>())
                 .add(healthCheck);
-//        applicationHealthChecks.add(healthCheck);
     }
 
-    public void removeHealthCheck(String contextPath, HealthCheck healthCheck) {
-        applicationHealthChecks.get(contextPath).remove(healthCheck);
+    public void removeHealthCheck(String contextName, HealthCheck healthCheck) {
+        applicationHealthChecks.get(contextName).remove(healthCheck);
     }
 
-    public void removeAllHealthChecksFrom(String contextPath) {
-        applicationHealthChecks.remove(contextPath);
+    public void removeAllHealthChecksFrom(String contextName) {
+        applicationHealthChecks.remove(contextName);
     }
 
     private static Optional<HealthCheckResponse.Status> getValue(String value) {

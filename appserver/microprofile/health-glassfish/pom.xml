@@ -15,7 +15,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -57,20 +56,10 @@
                         <Export-Package>
                             org.glassfish.microprofile.impl;
                         </Export-Package>
-                        <Import-Package>
-                            jakarta.enterprise.context.spi;
-                            jakarta.enterprise.event;
-                            jakarta.enterprise.inject;
-                            jakarta.enterprise.inject.spi;
-                            jakarta.json.bind;
-                            jakarta.servlet;
-                            jakarta.servlet.http;
-                            org.eclipse.microprofile.health;
-                            org.glassfish.internal.api;
-                            org.glassfish.microprofile.health;
-                            org.glassfish.hk2.api;
-                            org.glassfish.hk2.utilities;
-                        </Import-Package>
+                        <Include-Resource>
+                            {maven-resources},
+                            META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/,
+                        </Include-Resource>
                     </instructions>
                 </configuration>
                 <executions>

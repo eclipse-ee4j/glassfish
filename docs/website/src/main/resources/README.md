@@ -9,6 +9,14 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## January 3, 2024 -- Eclipse GlassFish 7.0.21 Available
+
+We're over the moon to present you our first release of 2025: GlassFish 7.0.21!
+
+This release was all about hunting down a few nasty bugs reported by GlassFish users: restart hanging on fast machines (including ephemeral ports appearing when stopping GlassFish), random 403 responses for authenticated sessions and Faces that was failing to initialize on GlassFish embedded. We're proud to announce that after a lot of research and a lot of work, we were able to squash them all. A special thanks to our users for reporting these and helping us to narrow them down!
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## December 3, 2024 -- Eclipse GlassFish 7.0.20 Available
 
 All of us from GlassFish are joyful with the release of GlassFish 7.0.20!

@@ -24,12 +24,12 @@ Export-Package: org.eclipse.microprofile.rest.client;version="2.1";uses:
  .context,jakarta.enterprise.inject,jakarta.enterprise.util,jakarta.inje
  ct",org.eclipse.microprofile.rest.client.spi;version="1.1.1";uses:="org
  .eclipse.microprofile.rest.client"
-Import-Package: jakarta.enterprise.context;version="[3,5)";resolution:=o
- ptional,jakarta.enterprise.inject;version="[3,5)";resolution:=optional,
- jakarta.enterprise.util;version="[3,5)";resolution:=optional,jakarta.in
+Import-Package: jakarta.enterprise.context;version="[3,4)";resolution:=o
+ ptional,jakarta.enterprise.inject;version="[3,4)";resolution:=optional,
+ jakarta.enterprise.util;version="[3,4)";resolution:=optional,jakarta.in
  ject;resolution:=optional;version="[2.0,3)",org.eclipse.microprofile.co
  nfig;version="[3,4)";resolution:=optional,jakarta.annotation;version="[
- 2.1,4)",jakarta.ws.rs.core;version="[3.1,5)",java.lang,java.lang.annota
+ 2.1,3)",jakarta.ws.rs.core;version="[3.1,4)",java.lang,java.lang.annota
  tion,java.lang.invoke,java.net,java.security,java.util,java.util.concur
  rent,java.util.function,java.util.logging,java.util.stream,javax.net.ss
  l,org.eclipse.microprofile.rest.client;version="[2.1,2.2)",org.eclipse.

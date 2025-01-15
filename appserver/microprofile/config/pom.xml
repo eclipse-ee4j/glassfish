@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2022, 2025 Contributors to Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,14 @@
         <dependency>
             <groupId>io.helidon.microprofile.config</groupId>
             <artifactId>helidon-microprofile-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.common</groupId>
+            <artifactId>helidon-common-types</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.service</groupId>
+            <artifactId>helidon-service-registry</artifactId>
         </dependency>
 
         <dependency>
@@ -88,6 +96,7 @@
                                 The helidon MP config dependency tree, illustrating what we actually output to the GF bundle
                             -->
                             groupId=io.helidon.common;artifactId=helidon-common,
+                            groupId=io.helidon.common;artifactId=helidon-common-buffers,
                             groupId=io.helidon.common;artifactId=helidon-common-config,
                             groupId=io.helidon.common;artifactId=helidon-common-configurable,
                             groupId=io.helidon.common;artifactId=helidon-common-context,
@@ -96,6 +105,7 @@
                             groupId=io.helidon.common;artifactId=helidon-common-service-loader,
                             groupId=io.helidon.common;artifactId=helidon-common-types,
 
+
                             groupId=io.helidon.config;artifactId=helidon-config,
                             groupId=io.helidon.config;artifactId=helidon-config-mp,
                             groupId=io.helidon.config;artifactId=helidon-config-yaml,
@@ -103,6 +113,10 @@
                             groupId=io.helidon.builder;artifactId=helidon-builder-api,
                             groupId=io.helidon.inject;artifactId=helidon-inject-api,
                             groupId=io.helidon.logging;artifactId=helidon-logging-common,
+                            groupId=io.helidon.service;artifactId=helidon-service-registry,
+                            groupId=io.helidon.service;artifactId=helidon-service-metadata,
+                            groupId=io.helidon.metadata;artifactId=helidon-metadata-hson,
+                            
                             artifactId=snakeyaml,
                         </Embed-Dependency>
 

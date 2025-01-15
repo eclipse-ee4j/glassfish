@@ -536,7 +536,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
                 inv.parameters(parameters).inbound(inboundPayload).outbound(outboundPayload).execute();
                 try {
                     // note it has become extraordinarily difficult to change the reporter!
-                    CommandRunnerImpl.ExecutionContext inv2 = (CommandRunnerImpl.ExecutionContext) inv;
+                    CommandRunnerExecutionContext inv2 = (CommandRunnerExecutionContext) inv;
                     report = inv2.report();
                 }
                 catch(Exception e) {

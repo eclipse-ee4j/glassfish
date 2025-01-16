@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -232,21 +233,11 @@ class JvmOptionsElement {
         if (null == options) {
             throw new IllegalArgumentException();
         }
-        //Need to exclude the gogo shell args that was added for issue 14173.
-        //Otherwise performance tuner breaks saying that noop=true is not valid
-        //because it does not begin with a '-'.
-        String gogoArgs = "-Dgosh.args=--noshutdown -c noop=true";
-        if (!options.equals(gogoArgs)) {
-            //4923404
-            QuotedStringTokenizer strTok = new QuotedStringTokenizer(options, " \t");
-            //4923404
-            while (strTok.hasMoreTokens()) {
-                String option = strTok.nextToken();
-                checkValidOption(option);
-                jvmOptions.add(option);
-            }
-        } else {
-            jvmOptions.add(gogoArgs);
+        QuotedStringTokenizer strTok = new QuotedStringTokenizer(options, " \t");
+        while (strTok.hasMoreTokens()) {
+            String option = strTok.nextToken();
+            checkValidOption(option);
+            jvmOptions.add(option);
         }
         next = DEFAULT;
     }
@@ -297,7 +288,7 @@ class JvmOptionsElement {
         if (jvmOptions.isEmpty()) {
             return "";
         }
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         final Iterator it = jvmOptions.iterator();
         while (it.hasNext()) {
             sb.append(it.next());

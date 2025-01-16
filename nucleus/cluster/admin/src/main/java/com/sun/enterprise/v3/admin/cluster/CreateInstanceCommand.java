@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -22,15 +22,18 @@ import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.util.ExceptionUtil;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.InstanceDirs;
+import com.sun.enterprise.v3.admin.cluster.SecureAdminBootstrapHelper.BootstrapException;
 
 import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,10 +56,10 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -91,8 +94,6 @@ public class CreateInstanceCommand implements AdminCommand {
     private Servers servers;
     @Inject
     private ServerEnvironment env;
-    @Inject
-    private ServerContext serverContext;
     @Param(name = "node", alias = "nodeagent")
     String node;
     @Param(name = "config", optional = true)
@@ -231,12 +232,11 @@ public class CreateInstanceCommand implements AdminCommand {
         Properties pro = listInstances.report().getExtraProperties();
         if (pro != null){
             List<HashMap> instanceList = (List<HashMap>) pro.get("instanceList");
-            if (instanceList == null)
+            if (instanceList == null) {
                 return;
+            }
             for (HashMap instanceMap : instanceList) {
-                final File nodeDirFile = (nodeDir != null
-                        ? new File(nodeDir)
-                        : defaultLocalNodeDirFile());
+                final File nodeDirFile = nodeDir == null ? defaultLocalNodeDirFile() : new File(nodeDir);
                 File instanceDir = new File(new File(nodeDirFile.toString(), theNode.getName()), instance);
                 String instanceName = (String)instanceMap.get("name");
                 File instanceListDir = new File(new File(nodeDirFile.toString(), theNode.getName()), instance);
@@ -249,30 +249,6 @@ public class CreateInstanceCommand implements AdminCommand {
                 }
             }
         }
-    }
-
-    /**
-     * Returns the directory for the selected instance that is on the local
-     * system.
-     * @param instanceName name of the instance
-     * @return File for the local file system location of the instance directory
-     * @throws IOException
-     */
-    private File getLocalInstanceDir() throws IOException {
-        /*
-         * Pass the node directory parent and the node directory name explicitly
-         * or else InstanceDirs will not work as we want if there are multiple
-         * nodes registered on this node.
-         *
-         * If the configuration recorded an explicit directory for the node,
-         * then use it.  Otherwise, use the default node directory of
-         * ${installDir}/glassfish/nodes/${nodeName}.
-         */
-        final File nodeDirFile = (nodeDir != null
-                ? new File(nodeDir)
-                : defaultLocalNodeDirFile());
-        InstanceDirs instanceDirs = new InstanceDirs(nodeDirFile.toString(), theNode.getName(), instance);
-        return instanceDirs.getInstanceDir();
     }
 
     private File defaultLocalNodeDirFile() {
@@ -293,119 +269,71 @@ public class CreateInstanceCommand implements AdminCommand {
         return env.getInstanceRoot();
     }
 
-    /**
-     *
-     * Delivers bootstrap files for secure admin locally, because the instance
-     * is on the same system as the DAS (and therefore on the same system where
-     * this command is running).
-     *
-     * @return 0 if successful, 1 otherwise
-     */
-    private int bootstrapSecureAdminLocally() {
-        final ActionReport report = ctx.getActionReport();
-
-        try {
-            final SecureAdminBootstrapHelper bootHelper =
-                    SecureAdminBootstrapHelper.getLocalHelper(
-                    env.getInstanceRoot(),
-                    getLocalInstanceDir());
-            bootHelper.bootstrapInstance();
-            bootHelper.close();
-            return 0;
-        }
-        catch (IOException ex) {
-            return reportFailure(ex, report);
-        }
-        catch (SecureAdminBootstrapHelper.BootstrapException ex) {
-            return reportFailure(ex, report);
-        }
-    }
-
-    private int reportFailure(final Exception ex, final ActionReport report) {
-        String msg = Strings.get("create.instance.local.boot.failed", instance, node, nodeHost);
-        logger.log(Level.SEVERE, msg, ex);
-        report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-        report.setMessage(msg);
-        return 1;
-    }
-
-    /**
-     * Delivers bootstrap files for secure admin remotely, because the instance
-     * is NOT on the same system as the DAS.
-     *
-     * @return 0 if successful; 1 otherwise
-     */
-    private int bootstrapSecureAdminRemotely() {
-        ActionReport report = ctx.getActionReport();
-        // nodedir is the root of where all the node dirs will be created.
-        // add the name of the node as that is where the instance files should be created
-        String thisNodeDir = null;
-        if (nodeDir != null)
-            thisNodeDir = nodeDir + "/" + node;
-        try {
-            final SecureAdminBootstrapHelper bootHelper =
-                    SecureAdminBootstrapHelper.getRemoteHelper(
-                    habitat,
-                    getDomainInstanceDir(),
-                    thisNodeDir,
-                    instance,
-                    theNode, logger);
-            bootHelper.bootstrapInstance();
-            bootHelper.close();
-            return 0;
-        }
-        catch (Exception ex) {
-            String exmsg = ex.getMessage();
-            if (exmsg == null) {
-                // The root cause message is better than no message at all
-                exmsg = ExceptionUtil.getRootCause(ex).toString();
-            }
-            String msg = Strings.get(
-                    "create.instance.remote.boot.failed",
-                    instance,
-
-
-
-                    // DCOMFIX
-                    (ex instanceof SecureAdminBootstrapHelper.BootstrapException
-                    ? ((SecureAdminBootstrapHelper.BootstrapException) ex).sshSettings() : null),
-                    exmsg,
-
-
-
-
-                    nodeHost);
-            logger.log(Level.SEVERE, msg, ex);
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setMessage(msg);
-            return 1;
-        }
-    }
-
     private void createInstanceFilesystem(AdminCommandContext context) {
         ActionReport report = ctx.getActionReport();
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
-        NodeUtils nodeUtils = new NodeUtils(habitat, logger);
-        Server dasServer =
-                servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
-        String dasHost = dasServer.getAdminHost();
-        String dasPort = Integer.toString(dasServer.getAdminPort());
+        try {
+            Server dasServer = servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
+            final SSHLauncher sshL = theNode.isLocal() ? null : new SSHLauncher(theNode);
+            List<String> command = generateCommand(dasServer, sshL);
+            String humanCommand = makeCommandHuman(command);
+            if (userManagedNodeType()) {
+                String msg = Strings.get("create.instance.config", instance, humanCommand);
+                msg = StringUtils.cat(NL, registerInstanceMessage, msg);
+                report.setMessage(msg);
+                return;
+            }
 
-        ArrayList<String> command = new ArrayList<String>();
-        String humanCommand = null;
+            // First error message displayed if we fail
+            String firstErrorMessage = Strings.get("create.instance.filesystem.failed", instance, node, nodeHost);
 
-        if (!theNode.isLocal()) {
-            // Only specify the DAS host if the node is remote. See issue 13993
-            command.add("--host");
-            command.add(dasHost);
+            // Run the command on the node and handle errors.
+            NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+            StringBuilder output = new StringBuilder();
+            nodeUtils.runAdminCommandOnNode(theNode, command, ctx, firstErrorMessage, humanCommand, output);
+
+            if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
+                // something went wrong with the nonlocal command don't continue but set status to
+                // warning because config was updated correctly or we would not be here.
+                report.setActionExitCode(ActionReport.ExitCode.WARNING);
+                return;
+            }
+
+            // If it was successful say so and display the command output
+            String msg = Strings.get("create.instance.success", instance, nodeHost);
+            if (!terse) {
+                msg = StringUtils.cat(NL, output.toString().trim(), registerInstanceMessage, msg);
+            }
+            report.setMessage(msg);
+
+            try (SecureAdminBootstrapHelper bootstrapHelper = createBootstrapHelper(sshL)) {
+                bootstrapHelper.bootstrapInstance();
+            }
+        } catch (IOException | BootstrapException e) {
+            String message = Strings.get("create.instance.boot.failed", instance, node, e.getMessage());
+            logger.log(Level.SEVERE, message, e);
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setMessage(message);
         }
+        if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
+            // something went wrong with the nonlocal command don't continue but set status to
+            // warning because config was updated correctly or we would not be here.
+            report.setActionExitCode(ActionReport.ExitCode.WARNING);
+        }
+    }
 
+
+    private List<String> generateCommand(Server dasServer, SSHLauncher sshL) throws BootstrapException {
+        List<String> command = new ArrayList<>();
+        if (!theNode.isLocal()) {
+            command.add("--host");
+            command.add(resolveAdminHost(sshL));
+        }
         command.add("--port");
-        command.add(dasPort);
+        command.add(Integer.toString(dasServer.getAdminPort()));
 
         command.add("_create-instance-filesystem");
-
         if (nodeDir != null) {
             command.add("--nodedir");
             command.add(StringUtils.quotePathIfNecessary(nodeDir));
@@ -413,57 +341,31 @@ public class CreateInstanceCommand implements AdminCommand {
 
         command.add("--node");
         command.add(node);
-
         command.add(instance);
+        return command;
+    }
 
-        humanCommand = makeCommandHuman(command);
-        if (userManagedNodeType()) {
-            String msg = Strings.get("create.instance.config",
-                    instance, humanCommand);
-            msg = StringUtils.cat(NL, registerInstanceMessage, msg);
-            report.setMessage(msg);
-            return;
-        }
 
-        // First error message displayed if we fail
-        String firstErrorMessage = Strings.get("create.instance.filesystem.failed",
-                instance, node, nodeHost);
-
-        StringBuilder output = new StringBuilder();
-
-        // Run the command on the node and handle errors.
-        nodeUtils.runAdminCommandOnNode(theNode, command, ctx, firstErrorMessage,
-                humanCommand, output);
-
-        if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
-            // something went wrong with the nonlocal command don't continue but set status to warning
-            // because config was updated correctly or we would not be here.
-            report.setActionExitCode(ActionReport.ExitCode.WARNING);
-            return;
-        }
-
-        // If it was successful say so and display the command output
-        String msg = Strings.get("create.instance.success",
-                instance, nodeHost);
-        if (!terse) {
-            msg = StringUtils.cat(NL,
-                    output.toString().trim(), registerInstanceMessage, msg);
-        }
-        report.setMessage(msg);
-
-        // Bootstrap secure admin files
+    private SecureAdminBootstrapHelper createBootstrapHelper(SSHLauncher sshL) throws IOException, BootstrapException {
         if (theNode.isLocal()) {
-            bootstrapSecureAdminLocally();
+            /*
+             * Pass the node directory parent and the node directory name explicitly
+             * or else InstanceDirs will not work as we want if there are multiple
+             * nodes registered on this node.
+             *
+             * If the configuration recorded an explicit directory for the node,
+             * then use it.  Otherwise, use the default node directory of
+             * ${installDir}/glassfish/nodes/${nodeName}.
+             */
+            final File nodeDirFile = nodeDir == null ? defaultLocalNodeDirFile() : new File(nodeDir);
+            final File localInstanceDir = new InstanceDirs(nodeDirFile.toString(), theNode.getName(), instance)
+                .getInstanceDir();
+            return SecureAdminBootstrapHelper.getLocalHelper(env.getInstanceRoot(), localInstanceDir);
         }
-        else {
-            bootstrapSecureAdminRemotely();
-        }
-        if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
-
-            // something went wrong with the nonlocal command don't continue but set status to warning
-            // because config was updated correctly or we would not be here.
-            report.setActionExitCode(ActionReport.ExitCode.WARNING);
-        }
+        // nodedir is the root of where all the node dirs will be created.
+        // add the name of the node as that is where the instance files should be created
+        String thisNodeDir = nodeDir == null ? null : (nodeDir + "/" + node);
+        return SecureAdminBootstrapHelper.getRemoteHelper(sshL, getDomainInstanceDir(), thisNodeDir, instance, theNode);
     }
 
     /**
@@ -477,8 +379,7 @@ public class CreateInstanceCommand implements AdminCommand {
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
             NodeUtils nodeUtils = new NodeUtils(habitat, logger);
-            Server dasServer =
-                    servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
+            Server dasServer = servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
             String dasHost = dasServer.getAdminHost();
             String dasPort = Integer.toString(dasServer.getAdminPort());
 
@@ -541,12 +442,24 @@ public class CreateInstanceCommand implements AdminCommand {
 
     // verbose but very readable...
     private boolean userManagedNodeType() {
-        if(theNode.isLocal())
+        if (theNode.isLocal()) {
             return false;
+        }
 
-        if(theNode.getType().equals("SSH"))
+        if (theNode.getType().equals("SSH")) {
             return false;
+        }
 
         return true;
+    }
+
+
+    private String resolveAdminHost(SSHLauncher sshLauncher) throws BootstrapException {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(InetAddress.getByName(sshLauncher.getHost()), sshLauncher.getPort()));
+            return socket.getLocalAddress().getHostName();
+        } catch (IOException e) {
+            throw new BootstrapException("Failed to resolve the admin host visible from the remote node " + node, e);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,14 +37,16 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;
@@ -66,7 +68,9 @@ import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROP
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
+import static java.util.Locale.ENGLISH;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -192,11 +196,11 @@ public abstract class GFLauncher {
     ////// PUBLIC api area starts here ////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+
     /**
-     * Launches the server. Any fatal error results in a GFLauncherException No unchecked Throwables of any kind will be
-     * thrown.
+     * Launches the server.
      *
-     * @throws com.sun.enterprise.admin.launcher.GFLauncherException
+     * @throws GFLauncherException if launch failed.
      */
     public final void launch() throws GFLauncherException {
         if (isDebugSuspend()) {
@@ -210,12 +214,10 @@ public abstract class GFLauncher {
             if (!setupCalledByClients) {
                 setup();
             }
-            // Typically invokes launchInstance()
             internalLaunch();
         } catch (GFLauncherException gfe) {
             throw gfe;
-        } catch (Throwable t) {
-            // hk2 might throw a java.lang.Error
+        } catch (Exception t) {
             throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
         } finally {
             GFLauncherLogger.removeLogFileHandler();
@@ -232,28 +234,6 @@ public abstract class GFLauncher {
         launch();
     }
 
-    public final void launchJVM(List<String> cmdsIn) throws GFLauncherException {
-        try {
-            setup(); // we only use one thing -- the java executable
-            List<String> commands = new LinkedList<>();
-            commands.add(javaExe);
-
-            for (String cmd : cmdsIn) {
-                commands.add(cmd);
-            }
-
-            ProcessBuilder processBuilder = new ProcessBuilder(commands);
-            Process process = processBuilder.start();
-            ProcessStreamDrainer.drain("launchJVM", process); // just to be safe
-        } catch (GFLauncherException gfe) {
-            throw gfe;
-        } catch (Throwable t) {
-            // hk2 might throw a java.lang.Error
-            throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
-        } finally {
-            GFLauncherLogger.removeLogFileHandler();
-        }
-    }
 
     public void setup() throws GFLauncherException, MiniXmlParserException {
         asenvProps = getAsEnvConfReader().getProps();
@@ -444,7 +424,7 @@ public abstract class GFLauncher {
             return;
         }
 
-        List<String> cmds = null;
+        final List<String> cmds;
 
         // Use launchctl bsexec on MacOS versions before 10.10
         // otherwise use regular startup.
@@ -464,14 +444,21 @@ public abstract class GFLauncher {
             cmds.add("bsexec");
             cmds.add("/");
             cmds.addAll(getCommandLine());
+        } else if (System.getProperty("os.name").toLowerCase(ENGLISH).contains("win")
+            && !getInfo().isVerboseOrWatchdog()) {
+            cmds = prepareWindowsEnvironment(getCommandLine(), getInfo().getConfigDir().toPath());
+        } else if (!getInfo().isVerboseOrWatchdog()) {
+            cmds = new ArrayList<>();
+            cmds.add("nohup");
+            cmds.addAll(getCommandLine());
         } else {
             cmds = getCommandLine();
         }
 
+        System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
 
-        // Change the directory if there is one specified, o/w stick with the
-        // default.
+        // Change the directory if there is one specified, o/w stick with the default.
         try {
             processBuilder.directory(getInfo().getConfigDir());
         } catch (Exception e) {
@@ -936,18 +923,18 @@ public abstract class GFLauncher {
         }
     }
 
-    private String getDeadProcessTrace(Process sp) throws GFLauncherException {
-        // returns null in case the glassFishProcess is NOT dead
-        try {
-            int ev = sp.exitValue();
-            ProcessStreamDrainer psd1 = getProcessStreamDrainer();
-            String output = psd1.getOutErrString();
-            String trace = strings.get("server_process_died", ev, output);
-            return trace;
-        } catch (IllegalThreadStateException e) {
-            // the glassFishProcess is still running and we are ok
+    /** @returns null in case the process is NOT dead or succeeded */
+    private String getDeadProcessTrace(Process process) throws GFLauncherException {
+        if (process.isAlive()) {
             return null;
         }
+        int ev = process.exitValue();
+        if (ev == 0) {
+            return null;
+        }
+        ProcessStreamDrainer psd1 = getProcessStreamDrainer();
+        String output = psd1.getOutErrString();
+        return strings.get("server_process_died", ev, output);
     }
 
     private void setupUpgradeSecurity() throws GFLauncherException {
@@ -1027,11 +1014,10 @@ public abstract class GFLauncher {
 
         if (flashlightJarFile.isFile()) {
             return "javaagent:" + getCleanPath(flashlightJarFile);
-        } else {
-            String msg = strings.get("no_flashlight_agent", flashlightJarFile);
-            GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
-            throw new GFLauncherException(msg);
         }
+        String msg = strings.get("no_flashlight_agent", flashlightJarFile);
+        GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
+        throw new GFLauncherException(msg);
     }
 
     private static String getCleanPath(File f) {
@@ -1122,7 +1108,72 @@ public abstract class GFLauncher {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    private static List<String> prepareWindowsEnvironment(final List<String> command, final Path configDir) throws GFLauncherException {
+        final List<String> cmds;
+        Path psFile;
+        Path batFile;
+        try {
+            batFile = Files.createFile(configDir.resolve("gfstart.bat"));
+            psFile = Files.createFile(configDir.resolve("gfstart.ps1"));
+            StringBuilder batContent = new StringBuilder(8192);
+            batContent.append("@echo off\n");
+            ListIterator<String> itemsOfCommand = command.listIterator();
+            while (itemsOfCommand.hasNext()) {
+                String line = itemsOfCommand.next();
+                if (!itemsOfCommand.hasPrevious()) {
+                    batContent.append("  ");
+                }
+                // Java System options wrap just values and it should have been already done.
+                boolean wrap = line.contains(" ") && !line.startsWith("-D");
+                if (wrap) {
+                    batContent.append('"');
+                }
+                batContent.append(line);
+                if (wrap) {
+                    batContent.append('"');
+                }
+                if (itemsOfCommand.hasNext()) {
+                    batContent.append(" ^");
+                }
+                batContent.append('\n');
+            }
+            batContent.append("< %1\n");
+            Files.writeString(batFile, batContent, UTF_8, StandardOpenOption.CREATE);
+
+            StringBuilder psContent = new StringBuilder(8192);
+            psContent.append("param(\n");
+            psContent.append("    [Parameter(Mandatory=$true)]\n");
+            psContent.append("    [string]$BatchFilePath\n");
+            psContent.append(")\n");
+            psContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
+            psContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
+            psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
+
+            psContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
+            psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath < $tempFile\"\n");
+            psContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
+            psContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
+            psContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
+            psContent.append("Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings\n");
+
+            psContent.append("Start-ScheduledTask -TaskName $taskName\n");
+            psContent.append("Start-Sleep -Seconds 5\n");
+            psContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
+
+            Files.writeString(psFile, psContent, UTF_8, StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            throw new GFLauncherException(e);
+        }
+        cmds = new ArrayList<>();
+        cmds.add("powershell.exe");
+        cmds.add("-File");
+        cmds.add("\"" + psFile.toFile().getAbsolutePath() + "\"");
+        cmds.add("-BatchFilePath");
+        cmds.add("\"" + batFile.toFile().getAbsolutePath() + "\"");
+        return cmds;
+    }
+
+
     private static class ProcessWhacker implements Runnable {
 
         private final String message;

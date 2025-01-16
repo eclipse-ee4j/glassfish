@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,8 +50,8 @@ import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
 @Service(name = "start-local-instance")
 @ExecuteOn(RuntimeType.DAS)
 @PerLookup
-public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
-                                        implements StartServerCommand {
+public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implements StartServerCommand {
+
     @Param(optional = true, shortName = "v", defaultValue = "false")
     private boolean verbose;
 
@@ -61,9 +61,11 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
     @Param(optional = true, shortName = "d", defaultValue = "false")
     private boolean debug;
 
-    @Param(name = "dry-run", shortName = "n", optional = true,
-            defaultValue = "false")
+    @Param(name = "dry-run", shortName = "n", optional = true, defaultValue = "false")
     private boolean dry_run;
+
+    private GFLauncherInfo info;
+    private GFLauncher launcher;
 
     // handled by superclass
     //@Param(name = "instance_name", primary = true, optional = false)
@@ -104,10 +106,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
      */
     @Override
     protected int executeCommand() throws CommandException {
-
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer(toString());
-        }
+        logger.finer(() -> toString());
 
         if (sync.equals("none")) {
             logger.info(Strings.get("Instance.nosync"));
@@ -150,37 +149,36 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
 
             getLauncher().launch();
 
-            if (verbose || watchdog) { // we can potentially loop forever here...
-                while (true) {
-                    int returnValue = getLauncher().getExitValue();
-
-                    switch (returnValue) {
-                        case RESTART_NORMAL:
-                            logger.info(Strings.get("restart"));
-                            break;
-                        case RESTART_DEBUG_ON:
-                            logger.info(Strings.get("restartChangeDebug", "on"));
-                            getInfo().setDebug(true);
-                            break;
-                        case RESTART_DEBUG_OFF:
-                            logger.info(Strings.get("restartChangeDebug", "off"));
-                            getInfo().setDebug(false);
-                            break;
-                        default:
-                            return returnValue;
-                    }
-
-                    if (env.debug()) {
-                        System.setProperty(CLIConstants.WALL_CLOCK_START_PROP,
-                                            "" + System.currentTimeMillis());
-                    }
-                    getLauncher().relaunch();
-                }
-
-            } else {
+            if (!verbose && !watchdog) {
                 helper.waitForServerStart();
                 helper.report();
                 return SUCCESS;
+            }
+
+            // we can potentially loop forever here...
+            while (true) {
+                int returnValue = getLauncher().getExitValue();
+                switch (returnValue) {
+                    case RESTART_NORMAL:
+                        logger.info(Strings.get("restart"));
+                        break;
+                    case RESTART_DEBUG_ON:
+                        logger.info(Strings.get("restartChangeDebug", "on"));
+                        getInfo().setDebug(true);
+                        break;
+                    case RESTART_DEBUG_OFF:
+                        logger.info(Strings.get("restartChangeDebug", "off"));
+                        getInfo().setDebug(false);
+                        break;
+                    default:
+                        return returnValue;
+                }
+
+                if (env.debug()) {
+                    System.setProperty(CLIConstants.WALL_CLOCK_START_PROP,
+                                        "" + System.currentTimeMillis());
+                }
+                getLauncher().relaunch();
             }
         } catch (GFLauncherException gfle) {
             throw new CommandException(gfle.getMessage());
@@ -238,9 +236,8 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
             args.add("--node");
             args.add(node);
         }
-        if (ok(instanceName))
-         {
-            args.add(instanceName);     // the operand
+        if (ok(instanceName)) {
+            args.add(instanceName); // the operand
         }
 
         if (logger.isLoggable(Level.FINER)) {
@@ -278,8 +275,4 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
     public String toString() {
         return ObjectAnalyzer.toStringWithSuper(this);
     }
-
-    private GFLauncherInfo info;
-    private GFLauncher launcher;
-
 }

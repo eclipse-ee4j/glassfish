@@ -54,7 +54,6 @@ import static org.testcontainers.utility.MountableFile.forHostPath;
 @TestMethodOrder(OrderAnnotation.class)
 public class SshClusterITest {
 
-
     private static final Logger LOG = System.getLogger(SshClusterITest.class.getName());
 
     private static final String MSG_NODE_STARTED = "NODE STARTED!";
@@ -70,6 +69,7 @@ public class SshClusterITest {
         .resolve(Path.of("node1", "agent", "logs", "server.log"));
     private static final String PATH_DOCKER_ASADMIN = PATH_DOCKER_GF_ROOT.resolve(Path.of("bin", "asadmin")).toString();
 
+    private static final String PATH_ETC_ENVIRONMENT = "/etc/environment";
     private static final String PATH_SSH_USERDIR = "/root/.ssh";
     private static final String PATH_PRIVATE_KEY = PATH_SSH_USERDIR + "/id_rsa";
     private static final String PATH_SSHD_CFG = "/etc/ssh/sshd_config";
@@ -87,13 +87,13 @@ public class SshClusterITest {
         .withClasspathResourceMapping("password_update.txt", "/password_update.txt", READ_ONLY)
         .withClasspathResourceMapping("password.txt", "/password.txt", READ_ONLY)
         .withExposedPorts(4848)
-        .withAsTrace(LOG.isLoggable(TRACE))
+        .withAsTrace(false)
         .waitingFor(
             Wait.forLogMessage(".*Total startup time including CLI.*", 1).withStartupTimeout(Duration.ofSeconds(60L)));
 
     @SuppressWarnings("resource")
     private static final GlassFishContainer AS_NODE_1 = new GlassFishContainer(network, "node1", "N1", getCommandNode())
-        .withAsTrace(LOG.isLoggable(TRACE))
+        .withAsTrace(false)
         .withExposedPorts(22, 4848, 8080)
         .waitingFor(
             Wait.forLogMessage(".*" + MSG_NODE_STARTED + ".*", 1).withStartupTimeout(Duration.ofSeconds(60L)));
@@ -211,23 +211,29 @@ public class SshClusterITest {
         final StringBuilder command = new StringBuilder();
         command.append("echo \"***************** Useful informations about node1 *****************\"");
         command.append(" && set -x && set -e");
+
+        // Replace the original which did not mention java -> affects ssh clients
+        command.append(" && echo \"JAVA_HOME=${JAVA_HOME}\" > " + PATH_ETC_ENVIRONMENT);
+        command.append(" && echo \"PATH=${PATH}\" >> " + PATH_ETC_ENVIRONMENT);
+
         command.append(" && apt-get update && apt-get install -y unzip openssh-server");
         command.append(" && echo 'PermitRootLogin prohibit-password' > " + PATH_SSHD_CFG);
         command.append(" && echo 'PasswordAuthentication no' >> " + PATH_SSHD_CFG);
         command.append(" && echo 'PubkeyAuthentication yes' >> " + PATH_SSHD_CFG);
         command.append(" && echo 'ChallengeResponseAuthentication no' >> " + PATH_SSHD_CFG);
-        command.append(" && echo 'UsePAM no' >> " + PATH_SSHD_CFG);
+        // UsePAM no would mean that the /etc/environment file would not be used.
+        command.append(" && echo 'UsePAM yes' >> " + PATH_SSHD_CFG);
         command.append(" && echo 'AllowUsers root' >> " + PATH_SSHD_CFG);
-        command.append(" && echo 'LogLevel DEBUG3' >> " + PATH_SSHD_CFG);
+        command.append(" && echo 'LogLevel INFO' >> " + PATH_SSHD_CFG);
         command.append(" && echo 'Subsystem sftp /usr/lib/openssh/sftp-server' >> " + PATH_SSHD_CFG);
-
         command.append(" && cat " + PATH_SSHD_CFG);
+
         // Bug in sshd - doesn't create it automatically
         command.append(getCommandCreatePrivateDir("/var/run/sshd"));
         // The directory must exist to create the file. The content must be private.
         command.append(" && mkdir -p /root/.ssh");
         command.append(" && cat /adminkey.pub >> /root/.ssh/authorized_keys");
-        command.append(getCommandCreatePrivateDir("/root/.ssh"));
+        command.append(getCommandCreatePrivateDir(PATH_SSH_USERDIR));
         command.append(" && sshd -E " + PATH_SSHD_LOG);
         command.append(" && sleep 1");
         command.append(" && ps -lAf");

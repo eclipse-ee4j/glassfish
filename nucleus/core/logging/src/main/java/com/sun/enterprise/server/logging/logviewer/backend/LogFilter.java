@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,7 @@ import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -47,7 +48,6 @@ import javax.management.AttributeList;
 
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.logging.LogLevel;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -67,12 +67,6 @@ public class LogFilter {
     // This is the name of the Results Attribute that we send out to the
     // Admin front end.
     private static final String RESULTS_ATTRIBUTE = "Results";
-
-    // Load the custom level class for query purpose.
-    private static final Level[] GF_CUSTOM_LEVELS = new Level[] {
-        LogLevel.ALERT,
-        LogLevel.EMERGENCY
-    };
 
     private static final String NV_SEPARATOR = ";";
 
@@ -246,26 +240,20 @@ public class LogFilter {
         }
     }
 
-    /*
-        This function is used to get log file details from logging.properties file for given target.
+
+    /**
+     * This function is used to get log file details from logging.properties file for given target.
      */
-
     private String getInstanceLogFileDetails(Server targetServer) throws IOException {
-
-        String logFileDetailsForServer = "";
-        String targetConfigName = "";
-
         Cluster clusterForInstance = targetServer.getCluster();
-        if (clusterForInstance != null) {
-            targetConfigName = clusterForInstance.getConfigRef();
-        } else {
+        final String targetConfigName;
+        if (clusterForInstance == null) {
             targetConfigName = targetServer.getConfigRef();
+        } else {
+            targetConfigName = clusterForInstance.getConfigRef();
         }
 
-        logFileDetailsForServer = loggingConfig.getLoggingFileDetails(targetConfigName);
-
-        return logFileDetailsForServer;
-
+        return loggingConfig.getLoggingFileDetails(targetConfigName);
     }
 
     /*
@@ -281,40 +269,38 @@ public class LogFilter {
             logFileDetailsForServer = TranslatedConfigView.getTranslatedValue(logFileDetailsForServer).toString();
             logFileDetailsForServer = new File(logFileDetailsForServer).getAbsolutePath();
             return logFileDetailsForServer;
+        }
+        // getting log file for instance from logging.properties
+        String logFileDetailsForInstance = getInstanceLogFileDetails(targetServer);
+        Node node = domain.getNodes().getNode(serverNode);
+        String loggingDir = "";
+        String loggingFile = "";
+
+        // replacing instanceRoot value if it's there
+        if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getNodeDir() != null) {
+            // this code is used if no changes made in logging.properties file
+            loggingDir = node.getNodeDir() + File.separator + serverNode
+                + File.separator + targetServerName;
+            loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
+        } else if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getInstallDir() != null) {
+            loggingDir = node.getInstallDir() + File.separator + "glassfish" + File.separator + "nodes"
+                + File.separator + serverNode + File.separator + targetServerName;
+            loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
         } else {
-            // getting log file for instance from logging.properties
-            String logFileDetailsForInstance = getInstanceLogFileDetails(targetServer);
-            Node node = domain.getNodes().getNode(serverNode);
-            String loggingDir = "";
-            String loggingFile = "";
+            loggingFile = logFileDetailsForInstance;
+        }
 
-            // replacing instanceRoot value if it's there
-            if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getNodeDir() != null) {
-                // this code is used if no changes made in logging.properties file
-                loggingDir = node.getNodeDir() + File.separator + serverNode
-                    + File.separator + targetServerName;
-                loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
-            } else if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getInstallDir() != null) {
-                loggingDir = node.getInstallDir() + File.separator + "glassfish" + File.separator + "nodes"
-                    + File.separator + serverNode + File.separator + targetServerName;
-                loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
-            } else {
-                loggingFile = logFileDetailsForInstance;
-            }
+        if (node.isLocal()) {
+            // if local just returning log file to view
+            return loggingFile;
+        } else {
+            // if remote then need to download log file on DAS and returning that log file for view
+            String logFileName = logFileDetailsForInstance.substring(logFileDetailsForInstance.lastIndexOf(File.separator) + 1, logFileDetailsForInstance.length());
+            File instanceFile = null;
+            instanceFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer, domain, LOGGER,
+                targetServerName, env.getInstanceRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
 
-            if (node.isLocal()) {
-                // if local just returning log file to view
-                return loggingFile;
-            } else {
-                // if remote then need to download log file on DAS and returning that log file for view
-                String logFileName = logFileDetailsForInstance.substring(logFileDetailsForInstance.lastIndexOf(File.separator) + 1, logFileDetailsForInstance.length());
-                File instanceFile = null;
-                instanceFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer, domain, LOGGER,
-                    targetServerName, env.getInstanceRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
-
-                return instanceFile.getAbsolutePath();
-            }
-
+            return instanceFile.getAbsolutePath();
         }
 
     }
@@ -336,77 +322,73 @@ public class LogFilter {
                 requestedCount, fromDate, toDate,
                 logLevel, onlyLevel, listOfModules,
                 nameValueMap, anySearch);
-        } else {
-            // for Instance it's going through this loop. This will use ssh utility to get file from instance machine(remote machine) and
-            // store under glassfish/domains/domain1/logs/<instance name>/ directory which is used to get LogFile object.
-            // Right now user needs to go through this URL to setup and configure ssh http://wikis.sun.com/display/GlassFish/3.1SSHSetup
+        }
 
-            String serverNode = targetServer.getNodeRef();
-            Node node = domain.getNodes().getNode(serverNode);
-            String loggingDir = "";
-            String instanceLogFileName = "";
+        String serverNode = targetServer.getNodeRef();
+        Node node = domain.getNodes().getNode(serverNode);
+        Path loggingDir;
+        String instanceLogFileName;
+        try {
+            // getting lof file details for given target.
+            instanceLogFileName = getInstanceLogFileDetails(targetServer);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
+            return new AttributeList();
+        }
+
+
+        if (node.isLocal()) {
+
+            loggingDir = new LogFilterForInstance().getLoggingDirectoryForNode(instanceLogFileName, node, serverNode, instanceName);
+
+            File logsDir = loggingDir.toFile();
+            File allLogFileNames[] = logsDir.listFiles();
+
+
+            boolean noFileFound = true;
+
+            if (allLogFileNames != null) { // This check for,  if directory doesn't present or missing on machine. It happens due to bug 16451
+                for (File file : allLogFileNames) {
+                    String fileName = file.getName();
+                    // code to remove . and .. file which is return
+                    if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
+                        && !fileName.contains(".log.")) {
+                        noFileFound = false;
+                        break;
+                    }
+                }
+            }
+
+            if (noFileFound) {
+                // this loop is used when user has changed value for server.log but not restarted the server.
+                loggingDir = new LogFilterForInstance().getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileName, node, serverNode, instanceName);
+
+            }
+
+            instanceLogFile = loggingDir.resolve(logFileName).toFile();
+
+            // verifying loggingFile presents or not if not then changing logFileName value to server.log. It means wrong name is coming
+            // from GUI to back end code.
+            if (!instanceLogFile.exists()) {
+                instanceLogFile = loggingDir.resolve("server.log").toFile();
+            } else {
+                loggingDir = new File(instanceLogFileName).toPath().getParent();
+                instanceLogFile = new File(loggingDir + File.separator + logFileName);
+                if (!instanceLogFile.exists()) {
+                    instanceLogFile = new File(instanceLogFileName);
+                }
+            }
+
+        } else {
             try {
-                // getting lof file details for given target.
-                instanceLogFileName = getInstanceLogFileDetails(targetServer);
+                // this code is used when the node is not local.
+                instanceLogFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer,
+                    domain, LOGGER, instanceName, env.getInstanceRoot().getAbsolutePath(), logFileName, instanceLogFileName);
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
                 return new AttributeList();
             }
 
-
-            if (node.isLocal()) {
-
-                loggingDir = new LogFilterForInstance().getLoggingDirectoryForNode(instanceLogFileName, node, serverNode, instanceName);
-
-                File logsDir = new File(loggingDir);
-                File allLogFileNames[] = logsDir.listFiles();
-
-
-                boolean noFileFound = true;
-
-                if (allLogFileNames != null) { // This check for,  if directory doesn't present or missing on machine. It happens due to bug 16451
-                    for (File file : allLogFileNames) {
-                        String fileName = file.getName();
-                        // code to remove . and .. file which is return
-                        if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
-                            && !fileName.contains(".log.")) {
-                            noFileFound = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (noFileFound) {
-                    // this loop is used when user has changed value for server.log but not restarted the server.
-                    loggingDir = new LogFilterForInstance().getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileName, node, serverNode, instanceName);
-
-                }
-
-                instanceLogFile = new File(loggingDir + File.separator + logFileName);
-
-                // verifying loggingFile presents or not if not then changing logFileName value to server.log. It means wrong name is coming
-                // from GUI to back end code.
-                if (!instanceLogFile.exists()) {
-                    instanceLogFile = new File(loggingDir + File.separator + "server.log");
-                } else if (!instanceLogFile.exists()) {
-                    loggingDir = instanceLogFileName.substring(0, instanceLogFileName.lastIndexOf(File.separator));
-                    instanceLogFile = new File(loggingDir + File.separator + logFileName);
-                    if (!instanceLogFile.exists()) {
-                        instanceLogFile = new File(instanceLogFileName);
-                    }
-                }
-
-            } else {
-                try {
-                    // this code is used when the node is not local.
-                    instanceLogFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer,
-                        domain, LOGGER, instanceName, env.getInstanceRoot().getAbsolutePath(), logFileName, instanceLogFileName);
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
-                    return new AttributeList();
-                }
-
-            }
         }
 
         LogFile logFile = null;
@@ -669,7 +651,7 @@ public class LogFilter {
     protected boolean allChecks(LogFile.LogEntry entry, Instant fromDate, Instant toDate,
         String queryLevel, boolean onlyLevel, List listOfModules, Properties nameValueMap, String anySearch) {
         if (DEBUG) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append(dateTimeCheck(entry.getLoggedDateTime(), fromDate, toDate));
             buf.append(",");
             buf.append(levelCheck(entry.getLoggedLevel(), queryLevel, onlyLevel));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,28 +18,44 @@
 package org.glassfish.cluster.ssh.sftp;
 
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 
-import org.glassfish.cluster.ssh.util.SSHUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.System.Logger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.glassfish.cluster.ssh.launcher.SSHSession;
+
+import static java.lang.System.Logger.Level.TRACE;
+
+/**
+ * SFTP client.
+ *
+ * @see SSHSession
+ */
 public class SFTPClient implements AutoCloseable {
+    private static final Logger LOG = System.getLogger(SFTPClient.class.getName());
+    /**
+     * This is required on Linux based hosts; directories are not in the list on Windows.
+     */
+    private static final Predicate<LsEntry> PREDICATE_NO_DOTS = p -> !".".equals(p.getFilename())
+        && !"..".equals(p.getFilename());
 
-    private Session session = null;
+    private final ChannelSftp sftpChannel;
 
-    private ChannelSftp sftpChannel = null;
-
-    public SFTPClient(Session session) throws JSchException {
-        this.session = session;
-        sftpChannel = (ChannelSftp) session.openChannel("sftp");
-        sftpChannel.connect();
-        SSHUtil.register(session);
-    }
-
-    public ChannelSftp getSftpChannel() {
-        return sftpChannel;
+    public SFTPClient(ChannelSftp channel) throws JSchException {
+        this.sftpChannel = channel;
+        this.sftpChannel.connect();
     }
 
     /**
@@ -48,28 +64,139 @@ public class SFTPClient implements AutoCloseable {
      */
     @Override
     public void close() {
-        if (session != null) {
-            SSHUtil.unregister(session);
-            session = null;
+        if (sftpChannel != null) {
+            sftpChannel.disconnect();
         }
     }
 
+    public ChannelSftp getSftpChannel() {
+        return sftpChannel;
+    }
+
+
+    public Path getHome() throws SftpException {
+        return Path.of(sftpChannel.getHome());
+    }
+
+
     /**
-     * Checks if the given path exists.
+     * Makes sure that the directory exists, by creating it if necessary.
      */
-    public boolean exists(String path) throws SftpException {
-        return _stat(normalizePath(path))!=null;
+    public void mkdirs(Path path) throws SftpException {
+        if (existsDirectory(path)) {
+            return;
+        }
+        Path current = Path.of("/");
+        for (Path part : path.normalize()) {
+            current = current.resolve(part);
+            if (existsDirectory(current)) {
+                continue;
+            }
+            sftpChannel.mkdir(current.toString());
+        }
+    }
+
+    public boolean existsDirectory(Path path) throws SftpException {
+        SftpATTRS attrs = stat(path);
+        return attrs != null && attrs.isDir();
+    }
+
+
+    public boolean isEmptyDirectory(Path path) throws SftpException {
+        SftpATTRS attrs = stat(path);
+        return attrs != null && attrs.isDir() && ls(path, e -> true).isEmpty();
+    }
+
+
+    /**
+     * Recursively deletes the specified directory.
+     *
+     * @param path
+     * @param onlyContent
+     * @param exclude
+     * @throws SftpException
+     */
+    public void rmDir(Path path, boolean onlyContent, Path... exclude) throws SftpException {
+        if (!exists(path)) {
+            return;
+        }
+        // We use recursion while the channel is stateful
+        sftpChannel.cd(path.getParent().toString());
+        List<LsEntry> content = lsDetails(path, p -> true);
+        for (LsEntry entry : content) {
+            final String filename = entry.getFilename();
+            final Path entryPath = path.resolve(filename);
+            if (matches(filename, exclude)) {
+                LOG.log(TRACE, "Skipping excluded {0}", entryPath);
+                continue;
+            }
+            if (entry.getAttrs().isDir()) {
+                rmDir(entryPath, false, getSubFilter(filename, exclude));
+            } else {
+                LOG.log(TRACE, "Deleting file {0}", entryPath);
+                sftpChannel.rm(entryPath.toString());
+            }
+        }
+        if (!onlyContent) {
+            sftpChannel.cd(path.getParent().toString());
+            LOG.log(TRACE, "Deleting directory {0}", path);
+            sftpChannel.rmdir(path.toString());
+        }
+    }
+
+
+    private static boolean matches(String firstName, Path... exclusions) {
+        if (exclusions == null) {
+            return false;
+        }
+        return Arrays.stream(exclusions).filter(p -> p.getNameCount() == 1)
+            .anyMatch(p -> p.getFileName().toString().equals(firstName));
+    }
+
+
+    private static Path[] getSubFilter(String firstName, Path... exclusions) {
+        if (exclusions == null) {
+            return new Path[0];
+        }
+        return Arrays.stream(exclusions).filter(p -> p.getNameCount() > 1).filter(p -> p.startsWith(firstName))
+            .map(p -> p.subpath(1, p.getNameCount())).toArray(Path[]::new);
+    }
+
+
+    public void put(File localFile, Path remoteFile) throws SftpException {
+        sftpChannel.cd(remoteFile.getParent().toString());
+        sftpChannel.put(localFile.getAbsolutePath(), remoteFile.toString());
     }
 
     /**
-     * Graceful stat that returns null if the path doesn't exist.
+     * Deletes the specified remote file.
+     *
+     * @param path
+     * @throws SftpException
      */
-    public SftpATTRS _stat(String path) throws SftpException {
+    public void rm(Path path) throws SftpException {
+        sftpChannel.cd(path.getParent().toString());
+        sftpChannel.rm(path.toString());
+    }
+
+
+    /**
+     * @return true if the given path exists.
+     */
+    public boolean exists(Path path) throws SftpException {
+        return stat(path) != null;
+    }
+
+
+    /**
+     * Graceful stat that returns null if the path doesn't exist.
+     * This method follows symlinks.
+     */
+    public SftpATTRS stat(Path path) throws SftpException {
         try {
-            return sftpChannel.stat(normalizePath(path));
+            return sftpChannel.stat(path.toString());
         } catch (SftpException e) {
-            int c = e.id;
-            if (c == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+            if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 return null;
             }
             throw e;
@@ -77,40 +204,47 @@ public class SFTPClient implements AutoCloseable {
     }
 
     /**
-     * Makes sure that the directory exists, by creating it if necessary.
+     * Graceful lstat that returns null if the path doesn't exist.
+     * This method does not follow symlinks.
      */
-    public void mkdirs(String path, int posixPermission) throws SftpException {
-        // remove trailing slash if present
-        if (path.endsWith("/")) {
-            path = path.substring(0, path.length() - 1);
+    public SftpATTRS lstat(Path path) throws SftpException {
+        try {
+            return sftpChannel.lstat(path.toString());
+        } catch (SftpException e) {
+            if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+                return null;
+            }
+            throw e;
         }
-
-        path = normalizePath(path);
-        SftpATTRS attrs = _stat(path);
-        if (attrs != null && attrs.isDir()) {
-            return;
-        }
-
-        int idx = path.lastIndexOf("/");
-        if (idx>0) {
-            mkdirs(path.substring(0,idx), posixPermission);
-        }
-        sftpChannel.mkdir(path);
-        sftpChannel.chmod(posixPermission, path);
     }
 
-    public void chmod(String path, int permissions) throws SftpException {
-        path = normalizePath(path);
-        sftpChannel.chmod(permissions, path);
+    public void setTimeModified(Path path, long millisSinceUnixEpoch) throws SftpException {
+        sftpChannel.setMtime(path.toString(), (int) (millisSinceUnixEpoch / 1000));
     }
 
-    // Commands run in a shell on Windows need to have forward slashes.
-    public static String normalizePath(String path){
-        return path.replaceAll("\\\\","/");
+    public void chmod(Path path, int permissions) throws SftpException {
+        sftpChannel.chmod(permissions, path.toString());
     }
 
-    public void cd(String path) throws SftpException {
-        path = normalizePath(path);
-        sftpChannel.cd(path);
+    public void cd(Path path) throws SftpException {
+        sftpChannel.cd(path.toString());
+    }
+
+
+    public void download(Path remoteFile, Path localFile) throws IOException, SftpException {
+        try (InputStream inputStream = sftpChannel.get(remoteFile.toString())) {
+            Files.copy(inputStream, localFile);
+        }
+    }
+
+    public List<String> ls(Path path, Predicate<LsEntry> filter) throws SftpException {
+        return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS)).map(LsEntry::getFilename)
+            .collect(Collectors.toList());
+    }
+
+
+    public List<LsEntry> lsDetails(Path path, Predicate<LsEntry> filter) throws SftpException {
+        return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS))
+            .collect(Collectors.toList());
     }
 }

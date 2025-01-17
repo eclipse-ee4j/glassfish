@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +19,6 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.universal.glassfish.TokenResolver;
 import com.sun.enterprise.util.StringUtils;
-
-import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,8 +70,6 @@ public class SetupSshCommand implements AdminCommand {
     private String realPass;
     TokenResolver resolver = new TokenResolver();
 
-    @Inject
-    SSHLauncher sshL;
 
     private void validate() throws CommandException {
         user = resolver.resolve(user);
@@ -82,7 +78,7 @@ public class SetupSshCommand implements AdminCommand {
             throw new CommandException(Strings.get("setup.ssh.null.sshpass"));
         }
         // obtain real password
-        realPass = sshL.expandPasswordAlias(sshpassword);
+        realPass = SSHLauncher.expandPasswordAlias(sshpassword);
 
         if (realPass == null) {
             throw new CommandException(Strings.get("setup.ssh.unalias.error", sshpassword));
@@ -128,9 +124,6 @@ public class SetupSshCommand implements AdminCommand {
     public final void execute(AdminCommandContext context) {
         logger = context.getLogger();
 
-        // initialize logger for SSHLauncher
-        sshL.init(logger);
-
         ActionReport report = context.getActionReport();
 
         try {
@@ -143,7 +136,7 @@ public class SetupSshCommand implements AdminCommand {
 
         for (String node : hosts) {
             File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
-            sshL.init(user, node, port, realPass, keyFile, sshkeypassphrase, logger);
+            SSHLauncher sshL = new SSHLauncher(user, node, port, realPass, keyFile, sshkeypassphrase);
             if (generatekey) {
                 if (sshkeyfile != null || SSHUtil.getExistingKeyFile() != null) {
                     if (sshL.checkConnection()) {
@@ -154,15 +147,13 @@ public class SetupSshCommand implements AdminCommand {
             }
             try {
                 sshL.setupKey(node, sshpublickeyfile, generatekey, realPass);
-            }
-            catch (IOException ce) {
+            } catch (IOException ce) {
                 logger.log(Level.INFO, "SSH key setup failed: " + ce);
                 report.setMessage(Strings.get("setup.ssh.failed", ce.getMessage()));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
-            }
-            catch (Exception e) {
-                //handle KeyStoreException
+            } catch (Exception e) {
+                // handle KeyStoreException
                 if (logger.isLoggable(Level.FINER)) {
                     logger.log(Level.FINER, "Keystore error: ", e);
                 }
@@ -185,7 +176,7 @@ public class SetupSshCommand implements AdminCommand {
         String key = "";
 
         if (sshkeypassphrase != null && !sshkeypassphrase.isEmpty()) {
-            key = sshL.expandPasswordAlias(sshkeypassphrase);
+            key = SSHLauncher.expandPasswordAlias(sshkeypassphrase);
 
             if (key == null) {
                 throw new CommandException("setup.ssh.null.keypassphrase");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +17,14 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import jakarta.inject.Inject;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Path;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
@@ -43,8 +42,6 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
     private int port;
     @Param(optional = true)
     private String sshkeyfile;
-    @Inject
-    private SSHLauncher sshLauncher;
 
     @Override
     String getRawRemoteUser() {
@@ -86,11 +83,10 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
     @Override
     void deleteFromHosts() throws CommandException {
         try {
-            List<String> files = getListOfInstallFiles(getInstallDir());
-
+            Path installDir = Path.of(getInstallDir());
             for (String host : hosts) {
                 File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
-                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
+                SSHLauncher sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase);
 
                 if (keyFile != null && !sshLauncher.checkConnection()) {
                     //key auth failed, so use password auth
@@ -99,18 +95,15 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
 
                 if (promptPass) {
                     sshpassword = getSSHPassword(host);
-                    //re-initialize
-                    sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
+                    sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase);
                 }
 
-                try (SFTPClient sftpClient = sshLauncher.getSFTPClient()) {
-                    if (!sftpClient.exists(getInstallDir())) {
+                try (SSHSession session = sshLauncher.openSession();
+                    SFTPClient sftpClient = session.createSFTPClient()) {
+                    if (!sftpClient.exists(installDir)) {
                         throw new IOException(getInstallDir() + " Directory does not exist");
                     }
-                    deleteRemoteFiles(sftpClient, files, getInstallDir(), getForce());
-                    if (isRemoteDirectoryEmpty(sftpClient, getInstallDir())) {
-                        sftpClient.getSftpChannel().rmdir(getInstallDir());
-                    }
+                    sftpClient.rmDir(installDir, false);
                 }
             }
         } catch (CommandException ce) {

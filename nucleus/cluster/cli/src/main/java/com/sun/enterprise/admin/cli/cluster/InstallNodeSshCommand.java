@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,30 +17,28 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
-import jakarta.inject.Inject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.SEVERE;
 
 /**
  * @author Byron Nevins
@@ -54,8 +52,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
     int port;
     @Param(optional = true)
     String sshkeyfile;
-    @Inject
-    private SSHLauncher sshLauncher;
+
     //storing password to prevent prompting twice
     private final Map<String, char[]> sshPasswords = new HashMap<>();
 
@@ -104,36 +101,35 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
         // And it makes the signature simpler for other subclasses...
         try {
             copyToHostsInternal(zipFile, binDirFiles);
-        }
-        catch (CommandException ex) {
+        } catch (CommandException ex) {
             throw ex;
-        }
-        catch (JSchException ex) {
+        } catch (JSchException ex) {
             throw new CommandException(ex);
-        }
-        catch (InterruptedException ex) {
-            throw new CommandException(ex);
-        }
-        catch (IOException ex) {
-            throw new CommandException(ex);
+        } catch (IOException e) {
+            // Note: CommandException is not printed to logs.
+            logger.log(SEVERE,
+                "Failed to copy zip file " + zipFile + " and to make binary files " + binDirFiles + " executable.", e);
+            throw new CommandException("Failed to copy zip file " + zipFile + " and to make binary files " + binDirFiles
+                + " executable. Reason: " + e.getMessage(), e);
         }
     }
 
-    private void copyToHostsInternal(File zipFile, ArrayList<String> binDirFiles) throws JSchException, IOException, InterruptedException, CommandException {
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+
+    private void copyToHostsInternal(File zipFile, ArrayList<String> binDirFiles)
+        throws JSchException, IOException, CommandException {
 
         boolean prompt = promptPass;
         for (String host : hosts) {
             File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
-            sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
+            SSHLauncher sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase);
 
             if (getSshKeyFile() != null && !sshLauncher.checkConnection()) {
-                //key auth failed, so use password auth
+                // key auth failed, so use password auth
                 prompt = true;
             }
 
             if (prompt) {
-                String sshpass = null;
+                final String sshpass;
                 if (sshPasswords.containsKey(host)) {
                     sshpass = String.valueOf(sshPasswords.get(host));
                 } else {
@@ -141,134 +137,72 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 }
 
                 //re-initialize
-                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpass, keyFile, sshkeypassphrase, logger);
+                sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpass, keyFile, sshkeypassphrase);
                 prompt = false;
             }
 
-            String sshInstallDir = getInstallDir().replace('\\', '/');
-
-            SFTPClient sftpClient = sshLauncher.getSFTPClient();
-            ChannelSftp sftpChannel = sftpClient.getSftpChannel();
-            try {
-                if (!sftpClient.exists(sshInstallDir)) {
-                    sftpClient.mkdirs(sshInstallDir, 0755);
-                }
-            }
-            catch (SftpException ioe) {
-                logger.info(Strings.get("mkdir.failed", sshInstallDir, host));
-                throw new IOException(ioe);
-            }
-
-            //delete the sshInstallDir contents if non-empty
-            try {
-                //get list of file in DAS sshInstallDir
-                List<String> files = getListOfInstallFiles(sshInstallDir);
-                deleteRemoteFiles(sftpClient, files, sshInstallDir, getForce());
-            }
-            catch (SftpException ex) {
-                logger.finer("Failed to remove sshInstallDir contents");
-                throw new IOException(ex);
-            }
-            catch (IOException ex) {
-                logger.finer("Failed to remove sshInstallDir contents");
-                throw new IOException(ex);
-            }
-
-            String zip = zipFile.getCanonicalPath();
-            try {
-                logger.info("Copying " + zip + " (" + zipFile.length() + " bytes)"
-                        + " to " + host + ":" + sshInstallDir);
-                // TODO: Looks like we need to quote the paths to scp in case they contain spaces.
-                sftpChannel.cd(sftpChannel.getHome());
-                sftpChannel.cd(sshInstallDir);
-                sftpChannel.put(zipFile.getAbsolutePath(), zipFile.getName());
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Copied " + zip + " to " + host + ":" +
-                                                                sshInstallDir);
-                }
-            }
-            catch (SftpException ex) {
-                logger.info(Strings.get("cannot.copy.zip.file", zip, host));
-                throw new IOException(ex);
-            }
-
-            try {
-                logger.info("Installing " + getArchiveName() + " into " + host + ":" + sshInstallDir);
-                String unzipCommand = "set -x; cd '" + sshInstallDir
-                    + "'; unpack=\"$(command -v unzip)\" || unpack=\"jar -xvf\"; ${unpack} " + getArchiveName();
-                int status = sshLauncher.runCommand(unzipCommand, outStream);
-                if (status != 0) {
-                    logger.info(Strings.get("unpack.failed", host, outStream.toString()));
-                    throw new CommandException("Remote command output: " + outStream.toString());
-                }
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Installed " + getArchiveName() + " into " +
-                                    host + ":" + sshInstallDir);
-                }
-            }
-            catch (IOException ioe) {
-                logger.info(Strings.get("unpack.failed", host, outStream.toString()));
-                throw new IOException(ioe);
-            }
-
-            try {
-                logger.info("Removing " + host + ":" + sshInstallDir + "/" + getArchiveName());
-                sftpChannel.cd(sftpChannel.getHome());
-                sftpChannel.rm(sshInstallDir + "/" + getArchiveName());
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Removed " + host + ":" + sshInstallDir + "/" +
-                                                            getArchiveName());
-                }
-            }
-            catch (SftpException ioe) {
-                logger.info(Strings.get("remove.glassfish.failed", host, sshInstallDir));
-                throw new IOException(ioe);
-            }
-            sftpClient.close();
-
-            sftpClient = sshLauncher.getSFTPClient();
-
-            // unjarring doesn't retain file permissions, hence executables need
-            // to be fixed with proper permissions
-            logger.info("Fixing file permissions of all bin files under " + host + ":" + sshInstallDir);
-            try {
-                if (binDirFiles.isEmpty()) {
-                    //binDirFiles can be empty if the archive isn't a fresh one
-                    searchAndFixBinDirectoryFiles(sshInstallDir, sftpClient);
-                }
-                else {
-                    for (String binDirFile : binDirFiles) {
-                        sftpClient.chmod(sshInstallDir + "/" + binDirFile, 0755);
-                    }
-                }
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Fixed file permissions of all bin files " +
-                                    "under " + host + ":" + sshInstallDir);
-                }
-            }
-            catch (SftpException ioe) {
-                logger.info(Strings.get("fix.permissions.failed", host, sshInstallDir));
-                throw new IOException(ioe);
-            }
-
-            if (Constants.v4) {
-                logger.info("Fixing file permissions for nadmin file under " + host + ":"
-                            + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + "/lib");
+            Path sshInstallDir = Path.of(getInstallDir());
+            try (SSHSession session = sshLauncher.openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
                 try {
-                    sftpClient.chmod((sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + "/lib/nadmin"), 0755);
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.finer("Fixed file permission for nadmin under " +
-                                    host + ":" + sshInstallDir + "/" +
-                                    SystemPropertyConstants.getComponentName() +
-                                    "/lib/nadmin");
+                    sftpClient.rmDir(sshInstallDir, true);
+                } catch (SftpException e) {
+                    throw new IOException("Failed to remove content of " + sshInstallDir + ". Cause: " + e.getMessage(),
+                        e);
+                }
+
+                try {
+                    if (!sftpClient.exists(sshInstallDir)) {
+                        sftpClient.mkdirs(sshInstallDir);
+                        if (sshLauncher.getCapabilities().isChmodSupported()) {
+                            sftpClient.chmod(sshInstallDir, 0755);
+                        }
+                    }
+                } catch (SftpException ioe) {
+                    throw new IOException(Strings.get("mkdir.failed", sshInstallDir, host), ioe);
+                }
+
+                final Path remoteZipFile = sshInstallDir.resolve(zipFile.getName());
+                try {
+                    logger.info(() -> "Copying " + zipFile + " (" + zipFile.length() + " bytes)" + " to " + host + ":"
+                        + sshInstallDir);
+                    sftpClient.put(zipFile, remoteZipFile);
+                    logger.finer(() -> "Copied " + zipFile + " to " + host + ":" + remoteZipFile);
+                } catch (SftpException ex) {
+                    throw new IOException(Strings.get("cannot.copy.zip.file", zipFile, host), ex);
+                }
+
+                logger.info(() -> "Unpacking " + remoteZipFile + " on " + host + " to " + sshInstallDir);
+                session.unzip(remoteZipFile, sshInstallDir);
+                logger.finer(() -> "Unpacked " + getArchiveName() + " into " + host + ":" + sshInstallDir);
+
+                try {
+                    logger.info(() -> "Removing " + host + ":" + remoteZipFile);
+                    sftpClient.rm(remoteZipFile);
+                    logger.finer(() -> "Removed " + host + ":" + remoteZipFile);
+                } catch (SftpException e) {
+                    throw new IOException("Failed to remove file " + remoteZipFile + " from host " + host, e);
+                }
+
+                // zip doesn't retain file permissions, hence executables need
+                // to be fixed with proper permissions
+                if (sshLauncher.getCapabilities().isChmodSupported()) {
+                    logger.info(() -> "Fixing file permissions of all bin files under " + host + ":" + sshInstallDir);
+                    try {
+                        if (binDirFiles.isEmpty()) {
+                            // binDirFiles can be empty if the archive isn't a fresh one
+                            searchAndFixBinDirectoryFiles(sshInstallDir, sftpClient);
+                        } else {
+                            for (String binDirFile : binDirFiles) {
+                                sftpClient.chmod(sshInstallDir.resolve(binDirFile), 0755);
+                            }
+                        }
+                        logger.finer(
+                            () -> "Fixed file permissions of all bin files under " + host + ":" + sshInstallDir);
+                    } catch (SftpException ioe) {
+                        throw new IOException(Strings.get("fix.permissions.failed", host, sshInstallDir), ioe);
                     }
                 }
-                catch (SftpException ioe) {
-                    logger.info(Strings.get("fix.permissions.failed", host, sshInstallDir));
-                    throw new IOException(ioe);
-                }
             }
-            sftpClient.close();
         }
     }
 
@@ -279,14 +213,12 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      * @param sftpClient ftp client handle
      * @throws SftpException
      */
-    private void searchAndFixBinDirectoryFiles(String installDir, SFTPClient sftpClient) throws SftpException {
-        for (LsEntry directoryEntry : (List<LsEntry>) sftpClient.getSftpChannel().ls(installDir)) {
-            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals("..")) {
-                continue;
-            } else if (directoryEntry.getAttrs().isDir()) {
-                String subDir = installDir + "/" + directoryEntry.getFilename();
+    private void searchAndFixBinDirectoryFiles(Path installDir, SFTPClient sftpClient) throws SftpException {
+        for (LsEntry directoryEntry : sftpClient.lsDetails(installDir, e -> true)) {
+            if (directoryEntry.getAttrs().isDir()) {
+                Path subDir = installDir.resolve(directoryEntry.getFilename());
                 if (directoryEntry.getFilename().equals("bin")) {
-                    fixAllFiles(subDir, sftpClient);
+                    fixFilePermissions(subDir, sftpClient);
                 } else {
                     searchAndFixBinDirectoryFiles(subDir, sftpClient);
                 }
@@ -301,52 +233,12 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      * @param sftpClient ftp client handle
      * @throws SftpException
      */
-    private void fixAllFiles(String binDir, SFTPClient sftpClient) throws SftpException {
-        for (LsEntry directoryEntry : (List<LsEntry>) sftpClient.getSftpChannel().ls(binDir)) {
-            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals("..")) {
-                continue;
-            } else {
-                String fName = binDir + "/" + directoryEntry.getFilename();
-                sftpClient.chmod(fName, 0755);
-            }
+    private void fixFilePermissions(Path binDir, SFTPClient sftpClient) throws SftpException {
+        for (String directoryEntry : sftpClient.ls(binDir, entry -> !entry.getAttrs().isDir())) {
+            sftpClient.chmod(binDir.resolve(directoryEntry), 0755);
         }
     }
 
-    /**
-     * Determines if GlassFish is installed on remote host at specified location.
-     * Uses SSH launcher to execute 'asadmin version'
-     * @param host remote host
-     * @throws JSchException
-     * @throws CommandException
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    private void checkIfAlreadyInstalled(String host, String sshInstallDir) throws JSchException, CommandException, IOException, InterruptedException {
-        //check if an installation already exists on remote host
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        try {
-            String asadmin = Constants.v4 ? "/lib/nadmin' version --local --terse" : "/bin/asadmin' version --local --terse";
-            String cmd = "'" + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + asadmin;
-            int status = sshLauncher.runCommand(cmd, outStream);
-            if (status == 0) {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer(host + ":'" + cmd + "'" +
-                                " returned [" + outStream.toString() + "]");
-                }
-                throw new CommandException(Strings.get("install.dir.exists", sshInstallDir));
-            }
-            else {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer(host + ":'" + cmd + "'" +
-                                " failed [" + outStream.toString() + "]");
-                }
-            }
-        }
-        catch (IOException ex) {
-            logger.info(Strings.get("glassfish.install.check.failed", host));
-            throw new IOException(ex);
-        }
-    }
 
     @Override
     final void precopy() throws CommandException {
@@ -357,7 +249,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
         boolean prompt = promptPass;
         for (String host : hosts) {
             File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
-            sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
+            SSHLauncher sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase);
 
             if (keyFile != null && !sshLauncher.checkConnection()) {
                 //key auth failed, so use password auth
@@ -367,19 +259,15 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
             if (prompt) {
                 String sshpass = getSSHPassword(host);
                 sshPasswords.put(host, sshpass.toCharArray());
-                //re-initialize
-                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpass, keyFile, sshkeypassphrase, logger);
+                sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpass, keyFile, sshkeypassphrase);
                 prompt = false;
             }
 
-            String sshInstallDir = getInstallDir().replaceAll("\\\\", "/");
-
-            try {
-                SFTPClient sftpClient = sshLauncher.getSFTPClient();
+            Path sshInstallDir = Path.of(getInstallDir());
+            try (SSHSession session = sshLauncher.openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
                 if (sftpClient.exists(sshInstallDir)) {
-                    checkIfAlreadyInstalled(host, sshInstallDir);
+                    checkIfAlreadyInstalled(session, host, sshInstallDir);
                 }
-                sftpClient.close();
             } catch (SftpException ex) {
                 throw new CommandException(ex);
             } catch (IOException ex) {
@@ -389,6 +277,31 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
             } catch (InterruptedException ex) {
                 throw new CommandException(ex);
             }
+        }
+    }
+
+
+    /**
+     * Determines if GlassFish is installed on remote host at specified location.
+     * Uses SSH launcher to execute 'asadmin version'
+     * @param host remote host
+     * @throws JSchException
+     * @throws CommandException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    private void checkIfAlreadyInstalled(SSHSession session, String host, Path sshInstallDir)
+        throws JSchException, CommandException, IOException, InterruptedException {
+        //check if an installation already exists on remote host
+        try {
+            String asadmin = Constants.v4 ? "/lib/nadmin' version --local --terse" : "/bin/asadmin' version --local --terse";
+            String cmd = "'" + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + asadmin;
+            int status = session.exec(cmd);
+            if (status == 0) {
+                throw new CommandException(Strings.get("install.dir.exists", sshInstallDir));
+            }
+        } catch (IOException ex) {
+            throw new IOException(Strings.get("glassfish.install.check.failed", host), ex);
         }
     }
 }

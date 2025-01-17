@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +17,12 @@
 
 package org.glassfish.cluster.ssh.util;
 
-import com.jcraft.jsch.Session;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.glassfish.api.admin.CommandException;
 
@@ -35,42 +32,6 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
  * @author Rajiv Mordani
  */
 public class SSHUtil {
-
-    private static final List<Session> activeConnections = new ArrayList<>();
-
-    /**
-     * Registers a connection for cleanup when the plugin is stopped.
-     *
-     * @param session The connection.
-     */
-    public static synchronized void register(Session session) {
-        if (!activeConnections.contains(session)) {
-            activeConnections.add(session);
-        }
-    }
-
-
-    /**
-     * Unregisters a connection for cleanup when the plugin is stopped.
-     *
-     * @param session The connection.
-     */
-    public static synchronized void unregister(Session session) {
-        session.disconnect();
-        activeConnections.remove(session);
-    }
-
-
-    /**
-     * Convert empty string to null.
-     */
-    public static String checkString(String s) {
-        if (s == null || s.isEmpty()) {
-            return null;
-        }
-        return s;
-    }
-
 
     /**
      * @return null or id_rsa/id_dsa/identity at user's home directory

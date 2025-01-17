@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package org.glassfish.cluster.ssh.launcher;
 
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -30,134 +28,97 @@ import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.io.FileUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.lang.Runtime.Version;
+import java.lang.System.Logger;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
+import java.util.function.Function;
 
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.util.SSHUtil;
-import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.RelativePathResolver;
-import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * @author Rajiv Mordani, Krishna Deepak
  */
-@Service(name="SSHLauncher")
-@PerLookup
 public class SSHLauncher {
 
+    private static final int SSH_PORT_DEFAULT = 22;
     private static final String SSH_DIR_NAME = ".ssh";
     private static final String AUTH_KEY_FILE = "authorized_keys";
     private static final int DEFAULT_TIMEOUT_MSEC = 120000; // 2 minutes
     private static final String SSH_KEYGEN = "ssh-keygen";
-    private static final char LINE_SEP = System.getProperty("line.separator").charAt(0);
 
-    /**
-     * The host name which to connect to via ssh
-     */
-    private String host;
+    private static final Logger LOG = System.getLogger(SSHLauncher.class.getName());
 
-    /**
-     * The port on which the ssh daemon is running
-     */
-    private int port;
-
-    /**
-     * The user name to use for authenticating with the ssh daemon
-     */
-    private String userName;
-
-    /**
-     * The name of private key file.
-     */
-    private File keyFile;
-
-    /**
-     * The connection object that represents the connection to the host
-     * via ssh
-     */
-    private Session session;
-
-    private String authType;
-
-    private String keyPassPhrase;
-
-    private String knownHostsLocation;
-
-    private Logger logger;
-
-    private String password;
-
-    // Password before it has been expanded. Used for debugging.
-    private String rawPassword = null;
-    private String rawKeyPassPhrase = null;
-
-    public void init(Logger logger) {
-        this.logger = logger;
+    static {
+        JSch.setLogger(new JavaSystemJschLogger());
     }
 
+    /** The host name which to connect to via ssh */
+    private final String host;
+
+    /** The port on which the ssh daemon is running */
+    private final int port;
+
+    /** The user name to use for authenticating with the ssh daemon */
+    private final String userName;
+
+    /** The name of private key file. */
+    private final File keyFile;
+
+    private final String keyPassPhraseParameter;
+    private final String keyPassPhrase;
+
+    /** Password before it has been expanded. */
+    private final String passwordParameter;
+    private final String password;
+    private final RemoteSystemCapabilities capabilities;
+
+
     /**
-     * Initialize the SSHLauncher use a Node config object
+     * Initialize the SSHLauncher use a {@link Node} config object
+     *
      * @param node
-     * @param logger
      */
-    public void init(Node node, Logger logger) {
-        this.logger = logger;
-        int port;
-        String host;
+    public SSHLauncher(Node node) {
+        final SshConnector connector = node.getSshConnector();
+        this.host = getHost(node);
+        LOG.log(DEBUG, "Connecting to host {0}", host);
+        this.port = getPort(connector);
 
-        SshConnector connector = node.getSshConnector();
-
-        host = connector.getSshHost();
-        if (SSHUtil.checkString(host) != null) {
-            this.host = host;
-        } else {
-            this.host = node.getNodeHost();
-        }
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Connecting to host " + host);
-        }
-
-        //XXX Why do we need this again?  This is already done above and set to host
-        String sshHost = connector.getSshHost();
-        if (sshHost != null) {
-            this.host = sshHost;
-        }
-
-        SshAuth sshAuth = connector.getSshAuth();
-        String userName = null;
-        if (sshAuth != null) {
-            userName = sshAuth.getUserName();
-            this.keyFile = sshAuth.getKeyfile() == null ? null : new File(sshAuth.getKeyfile());
-            this.rawPassword = sshAuth.getPassword();
-            this.rawKeyPassPhrase = sshAuth.getKeyPassphrase();
-        }
-        try {
-            port = Integer.parseInt(connector.getSshPort());
-        } catch(NumberFormatException nfe) {
-            port = 22;
-        }
-
-        init(userName, this.host, port, this.rawPassword, keyFile,
-                this.rawKeyPassPhrase, logger);
+        final SshAuth sshAuth = connector.getSshAuth();
+        this.userName = getUserName(sshAuth == null ? null : sshAuth.getUserName());
+        this.keyFile = sshAuth == null || sshAuth.getKeyfile() == null
+            ? SSHUtil.getExistingKeyFile()
+            : new File(sshAuth.getKeyfile());
+        this.passwordParameter = sshAuth == null ? null : sshAuth.getPassword();
+        this.password = passwordParameter == null || passwordParameter.isEmpty()
+            ? null
+            : expandPasswordAlias(passwordParameter);
+        this.keyPassPhraseParameter = sshAuth == null ? null : sshAuth.getKeyPassphrase();
+        this.keyPassPhrase = keyPassPhraseParameter == null || keyPassPhraseParameter.isEmpty()
+            ? null
+            : expandPasswordAlias(keyPassPhraseParameter);
+        this.capabilities = analyzeRemote();
+        LOG.log(DEBUG, "SSH client configuration: {0}", this);
     }
 
+
     /**
-     * Initialize the SSHLauncher using a private key file
+     * Initialize the SSHLauncher
      *
      * @param userName
      * @param host
@@ -165,363 +126,180 @@ public class SSHLauncher {
      * @param password
      * @param keyFile
      * @param keyPassPhrase
-     * @param logger
      */
-    public void init(String userName, String host, int port, String password, File keyFile, String keyPassPhrase, Logger logger) {
-        this.port = port == 0 ? 22 : port;
-
+    public SSHLauncher(String userName, String host, int port, String password, File keyFile, String keyPassPhrase) {
         this.host = host;
+        this.port = port == 0 ? SSH_PORT_DEFAULT : port;
         this.keyFile = keyFile == null ? SSHUtil.getExistingKeyFile(): keyFile;
-        this.logger = logger;
-        this.userName = SSHUtil.checkString(userName) == null ? System.getProperty("user.name") : userName;
-        this.rawPassword = password;
-        this.password = expandPasswordAlias(password);
-        this.rawKeyPassPhrase = keyPassPhrase;
-        this.keyPassPhrase = expandPasswordAlias(keyPassPhrase);
-
-        File knownHosts = FileUtils.USER_HOME.toPath().resolve(Path.of(SSH_DIR_NAME, "known_hosts")).toFile();
-        if (knownHosts.exists()) {
-            knownHostsLocation = knownHosts.getAbsolutePath();
-        }
-        logger.log(Level.FINER, "SSH info is {0}", this);
+        this.userName = getUserName(userName);
+        this.passwordParameter = password;
+        this.password = password == null || password.isEmpty() ? null : expandPasswordAlias(password);
+        this.keyPassPhraseParameter = keyPassPhrase;
+        this.keyPassPhrase = keyPassPhrase == null || keyPassPhrase.isEmpty()
+            ? null
+            : expandPasswordAlias(keyPassPhrase);
+        this.capabilities = analyzeRemote();
+        LOG.log(DEBUG, "SSH client configuration: {0}", this);
     }
 
-    private void openConnection() throws JSchException {
-        assert session == null;
+
+    /**
+     * @return the remote host or IP address
+     */
+    public String getHost() {
+        return this.host;
+    }
+
+
+    /**
+     * @return the remote port supporting SSH
+     */
+    public int getPort() {
+        return this.port;
+    }
+
+
+    /**
+     * @return preloaded {@link RemoteSystemCapabilities}
+     */
+    public RemoteSystemCapabilities getCapabilities() {
+        return this.capabilities;
+    }
+
+
+    /**
+     * Open the {@link SSHSession}.
+     *
+     * @return open {@link SSHSession}
+     * @throws JSchException
+     */
+    public SSHSession openSession() throws JSchException {
         JSch jsch = new JSch();
-        JSch.setLogger(new JavaSystemJschLogger(logger != null ? logger.getName() + ".ssh" : JSch.class.getName()));
 
         // Client Auth
         String message = "";
         boolean triedAuthentication = false;
         // Private key file is provided - Public Key Authentication
         if (keyFile != null) {
-            if (logger.isLoggable(Level.FINER)) {
-                logger.finer("Specified key file is " + keyFile);
-            }
+            LOG.log(DEBUG, () -> "Specified key file is " + keyFile);
             if (keyFile.exists()) {
                 triedAuthentication = true;
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Specified key file exists at " + keyFile);
-                }
+                LOG.log(DEBUG, () -> "Adding identity for private key at " + keyFile);
                 jsch.addIdentity(keyFile.getAbsolutePath(), keyPassPhrase);
             } else {
                 message = "Specified key file does not exist \n";
             }
-        } else if (SSHUtil.checkString(password) == null) {
+        } else if (password == null || password.isEmpty()) {
             message += "No key or password specified - trying default keys \n";
-            logger.fine("keyfile and password are null. Will try to authenticate with default key file if available");
+            LOG.log(DEBUG, "keyfile and password are null. Will try to authenticate with default key file if available");
             // check the default key locations if no authentication
             // method is explicitly configured.
             Path home = FileUtils.USER_HOME.toPath();
-            for (String keyName : Arrays.asList("id_rsa", "id_dsa", "identity")) {
+            for (String keyName : List.of("id_rsa", "id_dsa", "id_ecdsa", "identity")) {
                 message += "Tried to authenticate using " + keyName + "\n";
                 File key = home.resolve(Path.of(SSH_DIR_NAME, keyName)).toFile();
                 if (key.exists()) {
                     triedAuthentication = true;
-                    jsch.addIdentity(key.getAbsolutePath());
+                    jsch.addIdentity(key.getAbsolutePath(), keyPassPhrase);
                 }
             }
         }
 
-        session = jsch.getSession(userName, host, port);
-        session.setConfig("StrictHostKeyChecking", "no");
-        // Password Auth
-        if (SSHUtil.checkString(password) != null) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Authenticating with password " + getPrintablePassword(password));
-            }
-            triedAuthentication = true;
-            session.setPassword(password);
-        }
-        if (!triedAuthentication) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Could not authenticate");
-            }
-            throw new JSchException("Could not authenticate. " + message);
-        }
-        SSHUtil.register(session);
-        session.connect();
-    }
-
-    /**
-     * Executes a command on the remote system via ssh, optionally sending
-     * lines of data to the remote process's System.in.
-     *
-     * @param command the command to execute in the form of an argv style list
-     * @param os stream to receive the output from the command
-     * @param stdinLines optional data to be sent to the process's System.in
-     *        stream; null if no input should be sent
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public int runCommand(List<String> command, OutputStream os,
-            List<String> stdinLines) throws JSchException, IOException,
-                                            InterruptedException
-    {
-        return runCommand(commandListToQuotedString(command), os, stdinLines);
-    }
-
-    public int runCommand(List<String> command, OutputStream os)
-                                            throws JSchException, IOException,
-                                            InterruptedException
-    {
-        return runCommand(command, os, null);
-    }
-
-    /**
-     * WARNING! This method does not handle paths with spaces in them.
-     * To use this method you must make sure all paths in the command string
-     * are quoted correctly.  Otherwise use the methods that take command as
-     * a list instead.
-     */
-    public int runCommand(String command, OutputStream os) throws JSchException, IOException,
-                                            InterruptedException
-    {
-        return runCommand(command, os, null);
-    }
-
-    /**
-     * Executes a command on the remote system via ssh, optionally sending
-     * lines of data to the remote process's System.in.
-     *
-     * WARNING! This method does not handle paths with spaces in them.
-     * To use this method you must make sure all paths in the command string
-     * are quoted correctly.  Otherwise use the methods that take command as
-     * a list instead.
-     *
-     * @param command the command to execute
-     * @param os stream to receive the output from the command
-     * @param stdinLines optional data to be sent to the process's System.in stream; null if no input should be sent
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public int runCommand(String command, OutputStream os,
-            List<String> stdinLines) throws JSchException, IOException,
-                                            InterruptedException
-    {
-        command = SFTPClient.normalizePath(command);
-        return runCommandAsIs(command, os, stdinLines);
-    }
-
-    /**
-     * Executes a command on the remote system via ssh without normalizing
-     * the command line
-     *
-     * @param command the command to execute
-     * @param os stream to receive the output from the command
-     * @param stdinLines optional data to be sent to the process's System.in
-     *        stream; null if no input should be sent
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
-     **/
-    public int runCommandAsIs(List<String> command, OutputStream os,
-            List<String> stdinLines) throws JSchException, IOException,
-                                            InterruptedException
-    {
-        return runCommandAsIs(commandListToQuotedString(command), os, stdinLines);
-    }
-
-    private int runCommandAsIs(String command, OutputStream os,
-            List<String> stdinLines) throws JSchException, IOException,
-                                            InterruptedException
-    {
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Running command " + command + " on host: " + this.host);
-        }
-        boolean createNewSession = false;
-        if (session == null) {
-            createNewSession = true;
-        }
-        if(createNewSession) {
-            openConnection();
-        }
-
-        int status = exec(command, os, listInputStream(stdinLines));
-
-        if(createNewSession) {
-            SSHUtil.unregister(session);
-            session = null;
-        }
-        return status;
-    }
-
-    /**
-     * To be called for after opening the connection using openConnection()
-     *
-     * @param command
-     * @param os
-     * @param is
-     * @return
-     * @throws JSchException
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    private int exec(final String command, final OutputStream os,
-                     final InputStream is)
-            throws JSchException, IOException, InterruptedException {
-        ChannelExec execChannel = (ChannelExec) session.openChannel("exec");
+        final Session session = jsch.getSession(userName, host, port);
         try {
-            execChannel.setInputStream(is);
-            execChannel.setCommand(command);
-            InputStream in = execChannel.getInputStream();
-            execChannel.connect();
-            PumpThread t1 = new PumpThread(in, os);
-            t1.start();
-            PumpThread t2 = new PumpThread(execChannel.getErrStream(), os);
-            t2.start();
-
-            t1.join();
-            t2.join();
-
-            return execChannel.getExitStatus();
-        } finally {
-            execChannel.disconnect();
-        }
-    }
-
-    /**
-     * To be called for after opening the connection using openConnection()
-     */
-    private int exec(final String command, final OutputStream os)
-            throws JSchException, IOException, InterruptedException {
-        return exec(command, os, null);
-    }
-
-    private InputStream listInputStream(final List<String> stdinLines) throws IOException {
-        if (stdinLines == null) {
-            return null;
-        }
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        for (String line : stdinLines) {
-            baos.write(line.getBytes());
-            baos.write(LINE_SEP);
-        }
-        return new ByteArrayInputStream(baos.toByteArray());
-    }
-
-    /**
-     * Pumps {@link InputStream} to {@link OutputStream}.
-     *
-     * @author Kohsuke Kawaguchi
-     */
-    private static final class PumpThread extends Thread {
-        private final InputStream in;
-        private final OutputStream out;
-
-        public PumpThread(InputStream in, OutputStream out) {
-            super("pump thread");
-            this.in = in;
-            this.out = out;
-        }
-
-        @Override
-        public void run() {
-            byte[] buf = new byte[1024];
-            try {
-                while(true) {
-                    int len = in.read(buf);
-                    if(len<0) {
-                        in.close();
-                        return;
-                    }
-                    out.write(buf,0,len);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            // TODO: Insecure, maybe we could create an input field and allow user to check the host key?
+            session.setConfig("StrictHostKeyChecking", "accept-new");
+            session.setUserInfo(new GlassFishSshUserInfo());
+            // Password Auth
+            if (password != null && !password.isEmpty()) {
+                LOG.log(DEBUG, () -> "Authenticating with password " + getPrintablePassword(password));
+                triedAuthentication = true;
+                session.setPassword(password);
             }
-        }
-    }
-
-    public void pingConnection() throws JSchException, InterruptedException
-    {
-        logger.fine("Pinging connection for host: " + this.host);
-        openConnection();
-        SSHUtil.unregister(session);
-        session = null;
-    }
-
-
-    /**
-     * Validate user provided args.
-     * Check connecton to host.
-     * Check that the install dir is correct
-     *
-     * @param landmarkPath must be relative to the installdir
-     */
-    public void validate(String host, int port,
-        String userName, String password,
-        File keyFile, String keyPassPhrase,
-        String installDir, String landmarkPath,
-        Logger logger) throws IOException {
-        boolean validInstallDir = false;
-        init(userName, host,  port, password, keyFile, keyPassPhrase, logger);
-
-        try {
-            openConnection();
-            logger.fine("Connection settings valid");
-            String testPath = installDir;
-            if (StringUtils.ok(testPath)) {
-                try (SFTPClient sftpClient = new SFTPClient(session)) {
-                    // Validate if installDir exists
-                    if (sftpClient.exists(testPath)) {
-                        // installDir exists. Now check for landmark if provided
-                        if (StringUtils.ok(landmarkPath)) {
-                            testPath = installDir + "/" + landmarkPath;
-                        }
-                        validInstallDir = sftpClient.exists(testPath);
-                    } else {
-                        validInstallDir = false;
-                    }
-                }
-                SSHUtil.unregister(session);
-                session = null;
-
-                if (!validInstallDir) {
-                    String msg = "Invalid install directory: could not find " +
-                            testPath + " on " + host;
-                    throw new FileNotFoundException(msg);
-                }
-                logger.fine("Node home validated");
+            if (!triedAuthentication) {
+                throw new JSchException("Could not authenticate. " + message);
             }
-        } catch (JSchException ex) {
-            throw new IOException(ex);
-        } catch (SftpException ex) {
-            throw new IOException(ex);
-        }
-    }
-
-
-    public SFTPClient getSFTPClient() throws JSchException {
-        openConnection();
-        return new SFTPClient(session);
-    }
-
-    public String expandPasswordAlias(String alias) {
-
-        String expandedPassword = null;
-
-        if (alias == null) {
-            return null;
-        }
-
-        try {
-            expandedPassword = RelativePathResolver.getRealPasswordFromAlias(alias);
+            session.connect();
+            return new SSHSession(session, getCapabilities());
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Expansion failed for {0}: {1}", new Object[] {alias, e.getMessage()});
-            return null;
+            session.disconnect();
+            throw e;
         }
-
-        return expandedPassword;
     }
 
-    public boolean isPasswordAlias(String alias) {
+
+    /**
+     * Open and close the session.
+     *
+     * @throws JSchException
+     */
+    public void pingConnection() throws JSchException {
+        LOG.log(DEBUG, () -> "Trying to establish connection to host: " + this.host);
+        try (SSHSession session = openSession()) {
+            LOG.log(INFO, () -> "Establishing SSH connection to host " + this.host + " succeeded!");
+        }
+    }
+
+
+    /**
+     * Check if the remote path exists.
+     * This method is a shortcut to simplify your code as it uses {@link SSHSession}
+     * and {@link SFTPClient}.
+     *
+     * @param path absolute path
+     * @return true if the path exists in the SFTP server.
+     * @throws SSHException
+     */
+    public boolean exists(Path path) throws SSHException {
+        try (SSHSession session = openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
+            return sftpClient.exists(path);
+        } catch (JSchException | SftpException e) {
+            String msg = "Failed to check if the file exists: " + path + " on host " + host;
+            LOG.log(WARNING, msg, e);
+            throw new SSHException(msg, e);
+        }
+    }
+
+
+    /**
+     * Connects to the remote SSH server and does some simple analysis to be able to work both
+     * with Linux or Windows based operating systems.
+     *
+     * @return {@link RemoteSystemCapabilities}
+     */
+    private RemoteSystemCapabilities analyzeRemote() {
+        try (SSHSession session = openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
+            Map<String, String> env = session.detectShellEnv();
+            LOG.log(DEBUG, "Environment of the operating system obtained for the SSH client: {0}", env);
+
+            StringBuilder outputBuilder = new StringBuilder();
+            // java must be available in the environment.
+            // If you use docker java images, check UsePam=yes and /etc/environment
+            // By default images configure ENV properties just for the container app, not for ssh clients.
+            final int code = session.exec(Arrays.asList("java", "-XshowSettings:properties", "-version"), null,
+                outputBuilder);
+            if (code != 0) {
+                throw new IllegalStateException(
+                    "Could not execute the java command on the host " + host + ". Output: " + outputBuilder);
+            }
+
+            String[] output = outputBuilder.toString().split("\\R");
+            String javaHome = getValue("java.home", output);
+            Version javaVersion = getProperty("java.version", output, Version::parse);
+            OperatingSystem os = getProperty("os.name", output, OperatingSystem::parse);
+            return new RemoteSystemCapabilities(javaHome, javaVersion, os);
+        } catch (JSchException | SSHException e) {
+            String msg = "Failed to analyze the remote system.";
+            LOG.log(WARNING, msg, e);
+            throw new IllegalStateException(msg, e);
+        }
+    }
+
+
+    private boolean isPasswordAlias(String alias) {
         // Check if the passed string is specified using the alias syntax
         String aliasName = RelativePathResolver.getAlias(alias);
-        return (aliasName != null);
+        return aliasName != null;
     }
 
     /**
@@ -564,9 +342,7 @@ public class SSHLauncher {
         throws IOException, InterruptedException {
 
         File key = keyFile;
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Key = " + keyFile);
-        }
+        LOG.log(DEBUG, () -> "Key = " + keyFile);
         if (key.exists()) {
             if (checkConnection()) {
                 throw new IOException("SSH public key authentication is already configured for " + userName + "@" + node);
@@ -585,21 +361,11 @@ public class SSHLauncher {
         if (passwd == null) {
             throw new IOException("SSH password is required for distributing the public key. You can specify the SSH password in a password file and pass it through --passwordfile option.");
         }
-        try {
-            JSch jsch = new JSch();
-            Session s1 = jsch.getSession(userName, host, port);
-            s1.setConfig("StrictHostKeyChecking", "no");
-            s1.setPassword(passwd);
-            s1.connect();
-
-            if (!s1.isConnected()) {
+        try (SSHSession session = openSession(passwd)) {
+            if (!session.isOpen()) {
                 throw new IOException("SSH password authentication failed for user " + userName + " on host " + node);
             }
-            try (SFTPClient sftp = new SFTPClient(s1)) {
-                ChannelSftp sftpChannel = sftp.getSftpChannel();
-
-                this.session = s1;
-
+            try (SFTPClient sftp = session.createSFTPClient()) {
                 if (key.exists()) {
 
                     // fixes .ssh file mode
@@ -614,56 +380,62 @@ public class SSHLauncher {
                         throw new IOException("Public key file " + pubKeyFile + " does not exist.");
                     }
 
+                    final Path remoteSshDir;
                     try {
-                        if (!sftp.exists(SSH_DIR_NAME)) {
-                            logger.fine(SSH_DIR_NAME + " does not exist");
-                            sftpChannel.cd(sftpChannel.getHome());
-                            sftpChannel.mkdir(SSH_DIR_NAME);
-                            sftpChannel.chmod(0700, SSH_DIR_NAME);
+                        remoteSshDir = sftp.getHome().resolve(SSH_DIR_NAME);
+                    } catch (SftpException e) {
+                        throw new IOException("Could not resolve home directory of the remote user: " + e.getMessage(),
+                            e);
+                    }
+                    try {
+                        if (!sftp.exists(remoteSshDir)) {
+                            LOG.log(DEBUG, () -> SSH_DIR_NAME + " does not exist");
+                            sftp.mkdirs(remoteSshDir);
+                            if (getCapabilities().isChmodSupported()) {
+                                sftp.chmod(remoteSshDir, 0700);
+                            }
                         }
-                    } catch (Exception e) {
+                    } catch (SftpException e) {
                         throw new IOException("Error while creating .ssh directory on remote host: " + e.getMessage(), e);
                     }
 
                     // copy over the public key to remote host
-                    // scp.put(pubKey.getAbsolutePath(), "key.tmp", ".ssh", "0600");
+                    final Path remoteKeyTmp = remoteSshDir.resolve("key.tmp");
                     try {
-                        sftpChannel.cd(SSH_DIR_NAME);
-                        sftpChannel.put(pubKey.getAbsolutePath(), "key.tmp");
-                        sftpChannel.chmod(0600, "key.tmp");
+                        sftp.put(pubKey, remoteKeyTmp);
+                        if (getCapabilities().isChmodSupported()) {
+                            sftp.chmod(remoteKeyTmp, 0600);
+                        }
                     } catch (SftpException ex) {
                         throw new IOException("Unable to copy the public key", ex);
                     }
 
                     // append the public key file contents to authorized_keys file on remote host
-                    String mergeCommand = "cd .ssh; cat key.tmp >> " + AUTH_KEY_FILE;
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.finer("mergeCommand = " + mergeCommand);
-                    }
-                    if (exec(mergeCommand, new ByteArrayOutputStream()) != 0) {
+                    final Path authKeyFile = remoteSshDir.resolve(AUTH_KEY_FILE);
+                    String mergeCommand = "cat " + remoteKeyTmp + " >> " + authKeyFile;
+                    LOG.log(DEBUG, () -> "mergeCommand = " + mergeCommand);
+                    if (session.exec(mergeCommand) != 0) {
                         throw new IOException("Failed to propogate the public key " + pubKeyFile + " to " + host);
                     }
-                    logger.info("Copied keyfile " + pubKeyFile + " to " + userName + "@" + host);
+                    LOG.log(INFO, "Copied keyfile " + pubKeyFile + " to " + userName + "@" + host);
 
-                    // remove the public key file on remote host
-                    if (exec("rm .ssh/key.tmp", new ByteArrayOutputStream()) != 0) {
-                        logger.warning("WARNING: Failed to remove the public key file key.tmp on remote host " + host);
-                    }
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.finer("Removed the temporary key file on remote host");
-                    }
-
-                    // Lets fix all the permissions
-                    // On MKS, chmod doesn't work as expected. StrictMode needs to be disabled
-                    // for connection to go through
-                    logger.info("Fixing file permissions for home(755), .ssh(700) and authorized_keys file(644)");
                     try {
-                        sftpChannel.cd(sftpChannel.getHome());
-                        sftpChannel.chmod(0755, ".");
-                        sftpChannel.chmod(0700, SSH_DIR_NAME);
-                        sftpChannel.chmod(0644, SSH_DIR_NAME + "/" + AUTH_KEY_FILE);
-                    } catch (SftpException ex) {
-                        throw new IOException("Unable to fix file permissions", ex);
+                        sftp.rm(remoteKeyTmp);
+                        LOG.log(DEBUG, "Removed the temporary key file on remote host");
+                    } catch (SftpException e) {
+                        LOG.log(WARNING, "WARNING: Failed to remove the public key file key.tmp on remote host " + host);
+                    }
+
+                    if (capabilities.isChmodSupported()) {
+                        LOG.log(INFO, "Fixing file permissions for home(755), .ssh(700) and authorized_keys file(600)");
+                        try {
+                            sftp.cd(sftp.getHome());
+                            sftp.chmod(remoteSshDir.getParent(), 0755);
+                            sftp.chmod(remoteSshDir, 0700);
+                            sftp.chmod(authKeyFile, 0600);
+                        } catch (SftpException ex) {
+                            throw new IOException("Unable to fix file permissions", ex);
+                        }
                     }
                 }
             }
@@ -672,54 +444,37 @@ public class SSHLauncher {
         }
     }
 
-
-    public static byte[] toByteArray(InputStream input) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        byte[] buf = new byte[4096];
-        int len;
-        while ((len = input.read(buf)) >= 0) {
-           output.write(buf, 0, len);
-        }
-        byte[] o = output.toByteArray();
-        output.close();
-        return o;
-    }
-
     /**
      * Check if we can authenticate using public key auth
      * @return true|false
      */
     public boolean checkConnection() {
-        boolean status = false;
+        LOG.log(DEBUG, "Checking connection...");
         JSch jsch = new JSch();
         Session sess = null;
-
         try {
-            logger.finer("Checking connection...");
-            jsch.addIdentity(keyFile.getAbsolutePath(), rawKeyPassPhrase);
+            jsch.addIdentity(keyFile.getAbsolutePath(), keyPassPhrase);
             sess = jsch.getSession(userName, host, port);
             sess.setConfig("StrictHostKeyChecking", "no");
             sess.connect();
-            status = sess.isConnected();
-            if (status) {
-                logger.info("Successfully connected to " + userName + "@" + host + " using keyfile " + keyFile);
+            if (sess.isConnected()) {
+                LOG.log(INFO, () -> "Successfully connected to " + userName + "@" + host + " using keyfile " + keyFile);
+                return true;
             }
-        }
-        catch (JSchException ex) {
+            return false;
+        } catch (JSchException ex) {
             Throwable t = ex.getCause();
             if (t != null) {
                 String msg = t.getMessage();
-                logger.warning("Failed to connect or authenticate: " + msg);
+                LOG.log(WARNING, "Failed to connect or authenticate: " + msg);
             }
-            if (logger.isLoggable(Level.FINER)) {
-                logger.log(Level.FINER, "Failed to connect or autheticate: ", ex);
-            }
+            LOG.log(DEBUG, "Failed to connect or autheticate: ", ex);
+            return false;
         } finally {
             if (sess != null) {
                 sess.disconnect();
             }
         }
-        return status;
     }
 
     /**
@@ -727,40 +482,36 @@ public class SSHLauncher {
      * @return true|false
      */
     public boolean checkPasswordAuth() {
-        boolean status = false;
+        LOG.log(DEBUG, "Checking connection...");
         JSch jsch = new JSch();
         Session sess = null;
-
         try {
-            if(logger.isLoggable(Level.FINER)) {
-                logger.finer("Checking connection...");
-            }
             sess = jsch.getSession(userName, host, port);
             sess.setConfig("StrictHostKeyChecking", "no");
             sess.setPassword(password);
             sess.connect();
-            status = sess.isConnected();
-            if (status) {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.finer("Successfully connected to " + userName + "@" + host + " using password authentication");
-                }
+            if (sess.isConnected()) {
+                LOG.log(DEBUG,
+                    () -> "Successfully connected to " + userName + "@" + host + " using password authentication");
+                return true;
             }
-        }
-        catch (JSchException ex) {
-            Throwable t = ex.getCause();
-            if (t != null) {
-                String msg = t.getMessage();
-                logger.warning("Failed to connect or authenticate: " + msg);
-            }
-            if (logger.isLoggable(Level.FINER)) {
-                logger.log(Level.FINER, "Failed to connect or autheticate: ", ex);
-            }
+            return false;
+        } catch (JSchException ex) {
+            LOG.log(ERROR, "Failed to connect or autheticate: ", ex);
+            return false;
         } finally {
             if (sess != null) {
                 sess.disconnect();
             }
         }
-        return status;
+    }
+
+    @Override
+    public String toString() {
+        String displayPassword = getPrintablePassword(passwordParameter);
+        String displayKeyPassPhrase = getPrintablePassword(keyPassPhraseParameter);
+        return String.format("host=%s port=%d user=%s password=%s keyFile=%s keyPassPhrase=%s, capabilities=%s", host, port, userName,
+            displayPassword, keyFile, displayKeyPassPhrase, capabilities);
     }
 
     /**
@@ -768,15 +519,13 @@ public class SSHLauncher {
       */
     private boolean generateKeyPair() throws IOException {
         String keygenCmd = findSSHKeygen();
-        if(logger.isLoggable(Level.FINER)) {
-            logger.finer("Using " + keygenCmd + " to generate key pair");
-        }
+        LOG.log(DEBUG, () -> "Using " + keygenCmd + " to generate key pair");
 
         if (!setupSSHDir()) {
             throw new IOException("Failed to set proper permissions on .ssh directory");
         }
 
-        StringBuffer k = new StringBuffer();
+        StringBuilder k = new StringBuilder();
         List<String> cmdLine = new ArrayList<>();
         cmdLine.add(keygenCmd);
         k.append(keygenCmd);
@@ -784,21 +533,20 @@ public class SSHLauncher {
         k.append(" ").append("-t");
         cmdLine.add("rsa");
         k.append(" ").append("rsa");
+
         cmdLine.add("-N");
         k.append(" ").append("-N");
-
-        if (rawKeyPassPhrase != null && rawKeyPassPhrase.length() > 0) {
-            cmdLine.add(rawKeyPassPhrase);
-            k.append(" ").append(getPrintablePassword(rawKeyPassPhrase));
-        } else {
-            //special handling for empty passphrase on Windows
+        if (keyPassPhrase == null) {
+            k.append(" ").append("\"\"");
+            // special handling for empty passphrase on Windows
             if(OS.isWindows()) {
                 cmdLine.add("\"\"");
-                k.append(" ").append("\"\"");
             } else {
                 cmdLine.add("");
-                k.append(" ").append("");
             }
+        } else {
+            cmdLine.add(keyPassPhrase);
+            k.append(" ").append(getPrintablePassword(keyPassPhrase));
         }
         cmdLine.add("-f");
         k.append(" ").append("-f");
@@ -808,12 +556,10 @@ public class SSHLauncher {
 
         ProcessManager pm = new ProcessManager(cmdLine);
 
-        if(logger.isLoggable(Level.FINER)) {
-            logger.finer("Command = " + k);
-        }
+        LOG.log(DEBUG, () -> "Command = " + k);
         pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
 
-        if (logger.isLoggable(Level.FINER)) {
+        if (LOG.isLoggable(DEBUG)) {
             pm.setEcho(true);
         } else {
             pm.setEcho(false);
@@ -822,23 +568,17 @@ public class SSHLauncher {
 
         try {
             exit = pm.execute();
-        }
-        catch (ProcessManagerException ex) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Error while executing ssh-keygen: " + ex.getMessage());
-            }
+        } catch (ProcessManagerException ex) {
+            LOG.log(DEBUG, () -> "Error while executing ssh-keygen.", ex);
             exit = 1;
         }
-        if (exit == 0){
-            logger.info(keygenCmd + " successfully generated the identification " + keyFile);
+        if (exit == 0) {
+            LOG.log(INFO, () -> keygenCmd + " successfully generated the identification " + keyFile);
         } else {
-            if(logger.isLoggable(Level.FINER)) {
-                logger.finer(pm.getStderr());
-            }
-            logger.info(keygenCmd + " failed");
+            LOG.log(WARNING, () -> keygenCmd + " failed. It produced standard error output:\n" + pm.getStderr()
+                + "\n and standard output:\n" + pm.getStdout());
         }
-
-        return (exit == 0) ? true : false;
+        return exit == 0;
     }
 
     /**
@@ -860,16 +600,14 @@ public class SSHLauncher {
             }
         }
 
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Paths = " + paths);
-        }
+        LOG.log(DEBUG, () -> "Paths = " + paths);
 
         File exe = ProcessUtils.getExe(SSH_KEYGEN);
         if( exe != null){
             return exe.getPath();
         }
 
-        for (String s :paths) {
+        for (String s : paths) {
             File f = new File(s + SSH_KEYGEN);
             if (f.canExecute()) {
                 return f.getAbsolutePath();
@@ -879,7 +617,7 @@ public class SSHLauncher {
     }
 
     /**
-      * Create .ssh directory and set the permissions correctly
+      * Create .ssh directory on this host and set the permissions correctly
       */
     private boolean setupSSHDir() throws IOException {
         boolean ret = true;
@@ -888,7 +626,7 @@ public class SSHLauncher {
             if (!f.mkdirs()) {
                 throw new IOException("Failed to create " + f.getPath());
             }
-            logger.log(Level.INFO, "Created directory {0}", f);
+            LOG.log(INFO, "Created directory {0}", f);
         }
 
         if (!f.setReadable(false, false) || !f.setReadable(true)) {
@@ -903,49 +641,81 @@ public class SSHLauncher {
             ret = false;
         }
 
-        logger.finer("Fixed the .ssh directory permissions to 0700");
+        LOG.log(DEBUG, "Fixed the .ssh directory permissions to 0700");
         return ret;
     }
 
-    @Override
-    public String toString() {
 
-        String displayPassword = getPrintablePassword(rawPassword);
-        String displayKeyPassPhrase = getPrintablePassword(rawKeyPassPhrase);
-
-        return String.format("host=%s port=%d user=%s password=%s keyFile=%s keyPassPhrase=%s authType=%s knownHostFile=%s",
-            host, port, userName, displayPassword, keyFile,
-            displayKeyPassPhrase, authType, knownHostsLocation);
+    private SSHSession openSession(String passwordParam) throws JSchException {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(userName, host, port);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.setPassword(passwordParam);
+        session.connect();
+        return new SSHSession(session);
     }
 
-    /**
-     * Take a command in the form of a list and convert it to a command string.
-     * If any string in the list has spaces then the string is quoted before
-     * being added to the final command string.
-     *
-     * @param command
-     * @return
-     */
-    private static String commandListToQuotedString(List<String> command) {
-        if(command.size()==1) {
-            return command.get(0);
-        }
-        StringBuilder commandBuilder  = new StringBuilder();
-        boolean first = true;
 
-        for (String s : command) {
-            if (!first) {
-                commandBuilder.append(" ");
-            } else {
-                first = false;
+    /**
+     * @param alias The alias in the format of <code>${ALIAS=aliasname}</code>
+     * @return expanded password
+     */
+    public static String expandPasswordAlias(String alias) {
+        String expandedPassword = null;
+        if (alias == null) {
+            return null;
+        }
+        try {
+            expandedPassword = RelativePathResolver.getRealPasswordFromAlias(alias);
+        } catch (Exception e) {
+            LOG.log(WARNING, "Expansion failed for {0}: {1}", new Object[] {alias, e.getMessage()});
+            return null;
+        }
+        return expandedPassword;
+    }
+
+    private static String getHost(Node node) {
+        SshConnector sshConnector = node.getSshConnector();
+        String sshHost = sshConnector.getSshHost();
+        return sshHost == null || sshHost.isEmpty() ? node.getNodeHost() : sshConnector.getSshHost();
+    }
+
+
+    private static int getPort(final SshConnector connector) {
+        try {
+            int sshPort = Integer.parseInt(connector.getSshPort());
+            return sshPort > 0 ? sshPort : SSH_PORT_DEFAULT;
+        } catch(NumberFormatException nfe) {
+            return SSH_PORT_DEFAULT;
+        }
+    }
+
+
+    private static String getUserName(final String userName) {
+        return userName == null || userName.isEmpty() ? System.getProperty("user.name") : userName;
+    }
+
+
+    private static <T> T getProperty(String key, String[] lines, Function<String, T> converter) {
+        String value = getValue(key, lines);
+        if (value == null) {
+            return null;
+        }
+        return converter.apply(value);
+    }
+
+
+    private static String getValue(String keyName, String[] propertiesOutputLines) {
+        for (String line : propertiesOutputLines) {
+            int equalSignPosition = line.indexOf('=');
+            if (equalSignPosition <= 0) {
+                continue;
             }
-            if (s.contains(" ")) {
-                // Quote parts of the command that contain a space
-                commandBuilder.append(FileUtils.quoteString(s));
-            } else {
-                commandBuilder.append(s);
+            String key = line.substring(0, equalSignPosition).strip();
+            if (keyName.equals(key)) {
+                return equalSignPosition == line.length() - 1 ? "" : line.substring(equalSignPosition + 1).strip();
             }
         }
-        return commandBuilder.toString();
+        return null;
     }
 }

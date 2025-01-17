@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,8 @@ import org.glassfish.cluster.ssh.connect.NodeRunner;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.RelativePathResolver;
+
+import static java.util.logging.Level.WARNING;
 
 /**
  * Utility methods for operating on Nodes
@@ -71,12 +74,11 @@ public class NodeUtils {
     static final String PARAM_TYPE = "type";
     static final String PARAM_INSTALL = "install";
     public static final String PARAM_WINDOWS_DOMAIN = "windowsdomain";
-    static final String LANDMARK_FILE = "glassfish/modules/admin-cli.jar";
+    static final Path LANDMARK_FILE = Path.of("glassfish", "modules", "admin-cli.jar");
     private static final String NL = System.lineSeparator();
     private TokenResolver resolver = null;
     private Logger logger = null;
     private ServiceLocator habitat = null;
-    SSHLauncher sshL = null;
 
     NodeUtils(ServiceLocator habitat, Logger logger) {
         this.logger = logger;
@@ -86,7 +88,6 @@ public class NodeUtils {
         Map<String, String> systemPropsMap =
                 new HashMap<String, String>((Map) (System.getProperties()));
         resolver = new TokenResolver(systemPropsMap);
-        sshL = habitat.getService(SSHLauncher.class);
     }
 
     static boolean isSSHNode(Node node) {
@@ -110,7 +111,7 @@ public class NodeUtils {
         command.add("version");
         command.add("--local");
         command.add("--terse");
-        NodeRunner nr = new NodeRunner(habitat, logger);
+        NodeRunner nr = new NodeRunner(habitat);
 
         StringBuilder output = new StringBuilder();
         try {
@@ -118,11 +119,9 @@ public class NodeUtils {
             if (commandStatus != 0) {
                 return "unknown version: " + output.toString();
             }
-        }
-        catch (Exception e) {
-            throw new CommandValidationException(
-                    Strings.get("failed.to.run", command.toString(),
-                    node.getNodeHost()), e);
+        } catch (Exception e) {
+            throw new CommandValidationException(Strings.get("failed.to.run", command.toString(), node.getNodeHost()),
+                e);
         }
         return output.toString().trim();
     }
@@ -181,11 +180,6 @@ public class NodeUtils {
         // i.e. check to see if the hostname is this machine?
         // todo
         if (nodehost.equals("localhost")) {
-            return;
-        }
-
-        // BN says: Shouldn't this be a fatal error?!?  TODO
-        if (sshL == null) {
             return;
         }
 
@@ -249,20 +243,14 @@ public class NodeUtils {
         if (StringUtils.ok(p)) {
             try {
                 expandedPassword = RelativePathResolver.getRealPasswordFromAlias(p);
-            }
-            catch (IllegalArgumentException e) {
-                throw new CommandValidationException(
-                        Strings.get("no.such.password.alias", p));
-            }
-            catch (Exception e) {
-                throw new CommandValidationException(
-                        Strings.get("no.such.password.alias", p),
-                        e);
+            } catch (IllegalArgumentException e) {
+                throw new CommandValidationException(Strings.get("no.such.password.alias", p));
+            } catch (Exception e) {
+                throw new CommandValidationException(Strings.get("no.such.password.alias", p), e);
             }
 
             if (expandedPassword == null) {
-                throw new CommandValidationException(
-                        Strings.get("no.such.password.alias", p));
+                throw new CommandValidationException(Strings.get("no.such.password.alias", p));
             }
         }
     }
@@ -292,13 +280,11 @@ public class NodeUtils {
      * @param node  Node to connect to
      * @throws CommandValidationException
      */
-    private void pingSSHConnection(Node node) throws
-            CommandValidationException {
+    private void pingSSHConnection(Node node) throws CommandValidationException {
+        SSHLauncher sshL = new SSHLauncher(node);
         try {
-            sshL.init(node, logger);
             sshL.pingConnection();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String m1 = e.getMessage();
             String m2 = "";
             Throwable e2 = e.getCause();
@@ -306,10 +292,8 @@ public class NodeUtils {
                 m2 = e2.getMessage();
             }
             String msg = Strings.get("ssh.bad.connect", node.getNodeHost(), "SSH");
-            logger.warning(StringUtils.cat(": ", msg, m1, m2,
-                    sshL.toString()));
-            throw new CommandValidationException(StringUtils.cat(NL,
-                    msg, m1, m2));
+            logger.log(WARNING, StringUtils.cat(": ", msg, m1, m2), e);
+            throw new CommandValidationException(StringUtils.cat(NL, msg, m1, m2), e);
         }
     }
 
@@ -344,24 +328,20 @@ public class NodeUtils {
 
         int port = Integer.parseInt(resolver.resolve(sshport));
 
+        // sshpassword and sshkeypassphrase may be password alias.
+        // Those aliases are handled by sshLauncher
+        Path resolvedInstallDir = new File(resolver.resolve(installdir)).toPath();
+        String keyFile = resolver.resolve(sshkeyfile);
+        String host = resolver.resolve(nodehost);
+        SSHLauncher sshLauncher = new SSHLauncher(resolver.resolve(sshuser), resolver.resolve(nodehost), port,
+            sshpassword, keyFile == null ? null : new File(keyFile), sshkeypassphrase);
         try {
-            // sshpassword and sshkeypassphrase may be password alias.
-            // Those aliases are handled by sshLauncher
-            String resolvedInstallDir = resolver.resolve(installdir);
-
-            String keyFile = resolver.resolve(sshkeyfile);
-            sshL.validate(resolver.resolve(nodehost),
-                    port,
-                    resolver.resolve(sshuser),
-                    sshpassword,
-                    keyFile == null ? null : new File(keyFile),
-                    sshkeypassphrase,
-                    resolvedInstallDir,
-                    // Landmark file to ensure valid GF install
-                    LANDMARK_FILE,
-                    logger);
-        }
-        catch (IOException e) {
+            Path pathToCheck = resolvedInstallDir.resolve(LANDMARK_FILE);
+            if (!sshLauncher.exists(pathToCheck)) {
+                throw new FileNotFoundException(
+                    "Invalid install directory: could not find " + pathToCheck + " on " + host);
+            }
+        } catch (IOException e) {
             String m1 = e.getMessage();
             String m2 = "";
             Throwable e2 = e.getCause();
@@ -370,17 +350,11 @@ public class NodeUtils {
             }
             if (e instanceof FileNotFoundException) {
                 if (!installFlag) {
-                    logger.warning(StringUtils.cat(": ", m1, m2, sshL.toString()));
-                    throw new CommandValidationException(StringUtils.cat(NL,
-                            m1, m2));
+                    throw new CommandValidationException(StringUtils.cat(NL, m1, m2), e);
                 }
-            }
-            else {
+            } else {
                 String msg = Strings.get("ssh.bad.connect", nodehost, "SSH");
-                logger.warning(StringUtils.cat(": ", msg, m1, m2,
-                        sshL.toString()));
-                throw new CommandValidationException(StringUtils.cat(NL,
-                        msg, m1, m2));
+                throw new CommandValidationException(StringUtils.cat(NL, msg, m1, m2), e);
             }
         }
     }
@@ -448,7 +422,7 @@ public class NodeUtils {
                     nodeHost, installDir, humanCommand);
         }
 
-        NodeRunner nr = new NodeRunner(habitat, logger);
+        NodeRunner nr = new NodeRunner(habitat);
         try {
             int status = nr.runAdminCommandOnNode(node, output, command, context);
             if (status != 0) {
@@ -466,13 +440,12 @@ public class NodeUtils {
             }
         }
         catch (SSHCommandExecutionException ec) {
-            msg2 = Strings.get("node.ssh.bad.connect",
-                    nodeName, nodeHost, ec.getMessage());
+            msg2 = Strings.get("node.ssh.bad.connect", nodeName, nodeHost, ec.getMessage());
             // Log some extra info
             String msg = Strings.get("node.command.failed.ssh.details",
                     nodeName, nodeHost, ec.getCommandRun(), ec.getMessage(),
                     ec.getSSHSettings());
-            logger.warning(StringUtils.cat(": ", msg1, msg, msg3));
+            logger.log(WARNING, StringUtils.cat(": ", msg1, msg, msg3), ec);
         }
         catch (ProcessManagerException ex) {
             msg2 = Strings.get("node.command.failed.local.details",

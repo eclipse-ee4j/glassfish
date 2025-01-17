@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,9 +24,10 @@ import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.SSHCommandExecutionException;
@@ -35,17 +36,14 @@ import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.hk2.api.ServiceLocator;
 
 public class NodeRunner {
+    private static final Logger LOG = System.getLogger(NodeRunner.class.getName());
     private static final String NL = System.lineSeparator();
     private static final String AUTH_TOKEN_STDIN_LINE_PREFIX = "option." + AuthTokenManager.AUTH_TOKEN_OPTION_NAME + "=";
-    private final ServiceLocator habitat;
-    private final Logger logger;
-    private String lastCommandRun = null;
+    private String lastCommandRun;
     private final AuthTokenManager authTokenManager;
 
-    public NodeRunner(ServiceLocator habitat, Logger logger) {
-        this.logger = logger;
-        this.habitat = habitat;
-        authTokenManager = habitat.getService(AuthTokenManager.class);
+    public NodeRunner(ServiceLocator locator) {
+        this.authTokenManager = locator.getService(AuthTokenManager.class);
     }
 
     public String getLastCommandRun() {
@@ -140,7 +138,7 @@ public class NodeRunner {
 
         lastCommandRun = commandListToString(fullcommand);
 
-        trace("Running command locally: " + lastCommandRun);
+        LOG.log(Level.DEBUG,"Running command locally: " + lastCommandRun);
         ProcessManager pm = new ProcessManager(fullcommand);
         pm.setStdinLines(stdinLines);
 
@@ -174,7 +172,7 @@ public class NodeRunner {
         String type = node.getType();
 
         if ("SSH".equals(type)) {
-            NodeRunnerSsh nrs = new NodeRunnerSsh(habitat, logger);
+            NodeRunnerSsh nrs = new NodeRunnerSsh();
             int result = nrs.runAdminCommandOnRemoteNode(node, output, args, stdinLines);
             lastCommandRun = nrs.getLastCommandRun();
             return result;
@@ -183,9 +181,6 @@ public class NodeRunner {
         throw new UnsupportedOperationException("Node is not of type SSH");
     }
 
-    private void trace(String s) {
-        logger.fine(String.format("%s: %s", this.getClass().getSimpleName(), s));
-    }
 
     private String commandListToString(List<String> command) {
         StringBuilder fullCommand = new StringBuilder();

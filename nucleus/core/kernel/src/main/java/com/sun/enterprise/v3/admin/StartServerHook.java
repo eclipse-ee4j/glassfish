@@ -56,6 +56,8 @@ class StartServerShutdownHook extends Thread {
 
     private static final Logger LOG = System.getLogger(StartServerShutdownHook.class.getName());
     private static final boolean LOG_RESTART = Boolean.parseBoolean(System.getenv("AS_RESTART_LOGFILES"));
+    private static final Path CFGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "config").toPath()
+        .toAbsolutePath();
     private static final Path LOGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "logs").toPath()
         .toAbsolutePath();
     private static final Predicate<Thread> FILTER_OTHER_HOOKS = t -> t.getName().startsWith("GlassFish")
@@ -211,7 +213,9 @@ class StartServerShutdownHook extends Thread {
         }
 
         final List<String> outerCommand;
-        if (OS.isWindows() || OS.isDarwin()) {
+        if (OS.isWindows()) {
+            outerCommand = List.of(CFGDIR.resolve("gfstart.bat").toString());
+        } else if (OS.isDarwin()) {
             outerCommand = cmdline;
         } else {
             // To avoid conflict of the debug port used both by old and new JVM,

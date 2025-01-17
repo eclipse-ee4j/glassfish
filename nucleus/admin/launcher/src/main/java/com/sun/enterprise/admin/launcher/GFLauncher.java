@@ -24,7 +24,6 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
-import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedWriter;
@@ -37,7 +36,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,8 +67,9 @@ import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.util.Collections.emptyList;
-import static java.util.Locale.ENGLISH;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -444,30 +443,31 @@ public abstract class GFLauncher {
             cmds.add("bsexec");
             cmds.add("/");
             cmds.addAll(getCommandLine());
-        } else if (System.getProperty("os.name").toLowerCase(ENGLISH).contains("win")
-            && !getInfo().isVerboseOrWatchdog()) {
-            cmds = prepareWindowsEnvironment(getCommandLine(), getInfo().getConfigDir().toPath());
-        } else if (!getInfo().isVerboseOrWatchdog()) {
+        } else if (isWindows()) {
+            cmds = prepareWindowsEnvironment(getCommandLine(), getInfo().getConfigDir().toPath(),
+                getInfo().isVerboseOrWatchdog());
+        } else if (getInfo().isVerboseOrWatchdog()) {
+            cmds = getCommandLine();
+        } else {
+            // Usual usage on Linux based systems
             cmds = new ArrayList<>();
             cmds.add("nohup");
             cmds.addAll(getCommandLine());
-        } else {
-            cmds = getCommandLine();
         }
 
         System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
+        System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
 
         // Change the directory if there is one specified, o/w stick with the default.
         try {
             processBuilder.directory(getInfo().getConfigDir());
         } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
 
         // Run the glassFishProcess and attach Stream Drainers
         try {
-            closeStandardStreamsMaybe();
-
             // We have to abandon server.log file to avoid file locking issues on Windows.
             // From now on the server.log file is owned by the server, not by launcher.
             GFLauncherLogger.removeLogFileHandler();
@@ -1067,54 +1067,25 @@ public abstract class GFLauncher {
         }
     }
 
-    private void closeStandardStreamsMaybe() {
-        // see issue 12832
-        // Windows bug/feature -->
-        // Say glassFishProcess A (ssh) creates Process B (asadmin start-instance )
-        // which then fires up Process C (the instance).
-        // Process B exits but Process A does NOT. Process A is waiting for
-        // Process C to exit.
-        // The solution is to close down the standard streams BEFORE creating
-        // Process C. Then Process A becomes convinced that the glassFishProcess it created
-        // has finished.
-        // If there is a console that means the user is sitting at the terminal
-        // directly and we don't have to worry about it.
-        // Note that the issue is inside SSH -- not inside GF code per se. I.e.
-        // Process B absolutely positively does exit whether or not this code runs...
-        // don't run this unless we have to because our "..." messages disappear.
 
-        if (System.console() == null && OS.isWindows() && !callerParameters.isVerboseOrWatchdog()) {
-            String sname;
-
-            if (callerParameters.isDomain()) {
-                sname = callerParameters.getDomainName();
-            } else {
-                sname = callerParameters.getInstanceName();
-            }
-
-            System.out.println(strings.get("ssh", sname));
-            try {
-                System.in.close();
-            } catch (Exception e) { // ignore
-            }
-            try {
-                System.err.close();
-            } catch (Exception e) { // ignore
-            }
-            try {
-                System.out.close();
-            } catch (Exception e) { // ignore
-            }
-        }
+    private static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
     }
 
-    private static List<String> prepareWindowsEnvironment(final List<String> command, final Path configDir) throws GFLauncherException {
-        final List<String> cmds;
+
+    private static boolean isSSHSession() {
+        return System.getenv("SSH_CLIENT") != null || System.getenv("SSH_CONNECTION") != null
+            || System.getenv("SSH_TTY") != null;
+    }
+
+
+    private static List<String> prepareWindowsEnvironment(final List<String> command, final Path configDir,
+        final boolean bindToCaller) throws GFLauncherException {
         Path psFile;
         Path batFile;
         try {
-            batFile = Files.createFile(configDir.resolve("gfstart.bat"));
-            psFile = Files.createFile(configDir.resolve("gfstart.ps1"));
+            batFile = configDir.resolve("gfstart.bat");
+            psFile = configDir.resolve("gfstart.ps1");
             StringBuilder batContent = new StringBuilder(8192);
             batContent.append("@echo off\n");
             ListIterator<String> itemsOfCommand = command.listIterator();
@@ -1137,34 +1108,39 @@ public abstract class GFLauncher {
                 }
                 batContent.append('\n');
             }
-            batContent.append("< %1\n");
-            Files.writeString(batFile, batContent, UTF_8, StandardOpenOption.CREATE);
+            if (!bindToCaller) {
+                batContent.append("< %1\n");
+            }
+            Files.writeString(batFile, batContent, UTF_8, TRUNCATE_EXISTING, CREATE);
 
             StringBuilder psContent = new StringBuilder(8192);
             psContent.append("param(\n");
             psContent.append("    [Parameter(Mandatory=$true)]\n");
             psContent.append("    [string]$BatchFilePath\n");
             psContent.append(")\n");
-            psContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
-            psContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
-            psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
+            if (bindToCaller || !isSSHSession()) {
+                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow\n");
+            } else {
+                psContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
+                psContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
+                psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
 
-            psContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
-            psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath < $tempFile\"\n");
-            psContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
-            psContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
-            psContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
-            psContent.append("Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings\n");
+                psContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
+                psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath < $tempFile\"\n");
+                psContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
+                psContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
+                psContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
+                psContent.append("Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings\n");
 
-            psContent.append("Start-ScheduledTask -TaskName $taskName\n");
-            psContent.append("Start-Sleep -Seconds 5\n");
-            psContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
-
-            Files.writeString(psFile, psContent, UTF_8, StandardOpenOption.CREATE);
+                psContent.append("Start-ScheduledTask -TaskName $taskName\n");
+                psContent.append("Start-Sleep -Seconds 5\n");
+                psContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
+            }
+            Files.writeString(psFile, psContent, UTF_8, TRUNCATE_EXISTING, CREATE);
         } catch (IOException e) {
             throw new GFLauncherException(e);
         }
-        cmds = new ArrayList<>();
+        final List<String> cmds = new ArrayList<>();
         cmds.add("powershell.exe");
         cmds.add("-File");
         cmds.add("\"" + psFile.toFile().getAbsolutePath() + "\"");

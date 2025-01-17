@@ -444,8 +444,8 @@ public abstract class GFLauncher {
             cmds.add("/");
             cmds.addAll(getCommandLine());
         } else if (isWindows()) {
-            cmds = prepareWindowsEnvironment(getCommandLine(), getInfo().getConfigDir().toPath(),
-                getInfo().isVerboseOrWatchdog());
+            boolean preloadStdin = !getInfo().isVerbose() && isSSHSession();
+            cmds = prepareWindowsEnvironment(getCommandLine(), getInfo().getConfigDir().toPath(), preloadStdin);
         } else if (getInfo().isVerboseOrWatchdog()) {
             cmds = getCommandLine();
         } else {
@@ -458,6 +458,9 @@ public abstract class GFLauncher {
         System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
         System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
+        if (getInfo().isVerbose()) {
+            processBuilder.inheritIO();
+        }
 
         // Change the directory if there is one specified, o/w stick with the default.
         try {
@@ -621,7 +624,7 @@ public abstract class GFLauncher {
         }
     }
 
-    private void setLogFilename(MiniXmlParser domainXML) throws GFLauncherException {
+    private void setLogFilename(MiniXmlParser domainXML) {
         logFilename = domainXML.getLogFilename();
 
         if (logFilename == null) {
@@ -790,7 +793,7 @@ public abstract class GFLauncher {
         }
     }
 
-    void setJvmOptions() throws GFLauncherException {
+    void setJvmOptions() {
         domainXMLJvmOptionsAsList.clear();
 
         if (domainXMLjvmOptions != null) {
@@ -1080,7 +1083,7 @@ public abstract class GFLauncher {
 
 
     private static List<String> prepareWindowsEnvironment(final List<String> command, final Path configDir,
-        final boolean bindToCaller) throws GFLauncherException {
+        final boolean stdinPreloaded) throws GFLauncherException {
         Path psFile;
         Path batFile;
         try {
@@ -1108,7 +1111,7 @@ public abstract class GFLauncher {
                 }
                 batContent.append('\n');
             }
-            if (!bindToCaller) {
+            if (stdinPreloaded) {
                 batContent.append("< %1\n");
             }
             Files.writeString(batFile, batContent, UTF_8, TRUNCATE_EXISTING, CREATE);
@@ -1118,15 +1121,29 @@ public abstract class GFLauncher {
             psContent.append("    [Parameter(Mandatory=$true)]\n");
             psContent.append("    [string]$BatchFilePath\n");
             psContent.append(")\n");
-            if (bindToCaller || !isSSHSession()) {
-                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow\n");
-            } else {
+
+            psContent.append("$pidFile = \"").append(new File(configDir.toFile(), "pid").getAbsolutePath()).append("\"\n");
+            psContent.append("if (Test-Path $pidFile) {\n");
+            psContent.append("    Remove-Item $pidFile -Force\n");
+            psContent.append("}\n");
+            if (stdinPreloaded) {
                 psContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
                 psContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
                 psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
-
+            }
+            if (!isSSHSession()) {
+                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow -Wait -PassThru");
+                if (stdinPreloaded) {
+                    psContent.append(" < $tempFile");
+                }
+                psContent.append('\n');
+            } else {
+                psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath");
+                if (stdinPreloaded) {
+                    psContent.append(" < $tempFile");
+                }
+                psContent.append("\"\n");
                 psContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
-                psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath < $tempFile\"\n");
                 psContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
                 psContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
                 psContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
@@ -1136,12 +1153,25 @@ public abstract class GFLauncher {
                 psContent.append("Start-Sleep -Seconds 5\n");
                 psContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
             }
+            psContent.append("$start = Get-Date\n");
+            psContent.append("$timeout = 60\n");
+            psContent.append("while (-not (Test-Path $pidFile)) {\n");
+            psContent.append("    if ((New-TimeSpan -Start $start -End (Get-Date)).TotalSeconds -gt $timeout) {\n");
+            psContent.append("        Write-Error \"Timeout waiting for GlassFish to start (pid file not created within $timeout seconds)\"\n");
+            psContent.append("        exit 1\n");
+            psContent.append("    }\n");
+            psContent.append("    Start-Sleep -Seconds 1\n");
+            psContent.append("}\n");
+
             Files.writeString(psFile, psContent, UTF_8, TRUNCATE_EXISTING, CREATE);
         } catch (IOException e) {
             throw new GFLauncherException(e);
         }
         final List<String> cmds = new ArrayList<>();
         cmds.add("powershell.exe");
+        if (stdinPreloaded) {
+            cmds.add("-noninteractive");
+        }
         cmds.add("-File");
         cmds.add("\"" + psFile.toFile().getAbsolutePath() + "\"");
         cmds.add("-BatchFilePath");

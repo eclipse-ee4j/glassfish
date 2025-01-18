@@ -440,7 +440,7 @@ If you decide to use the `s1as` and `glassfish-instance` aliases with
 your own certificates, you will first need to disable secure admin (if
 enabled) and then change or delete the exiting `s1as` alias from both
 the `keystore.jks` keystore and `cacerts.jks` truststore for the DAS.
-You can use the `--changealias` or`--delete` option of `keytool` to
+You can use the `--changealias` or `--delete` option of `keytool` to
 accomplish this. Then, import your own certificates.
 
 When you enable secure admin, the DAS and the instances then have copies

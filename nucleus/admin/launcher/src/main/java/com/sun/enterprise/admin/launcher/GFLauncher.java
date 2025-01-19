@@ -458,9 +458,6 @@ public abstract class GFLauncher {
         System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
         System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-        if (getInfo().isVerbose()) {
-            processBuilder.inheritIO();
-        }
 
         // Change the directory if there is one specified, o/w stick with the default.
         try {

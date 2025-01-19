@@ -213,9 +213,7 @@ class StartServerShutdownHook extends Thread {
         }
 
         final List<String> outerCommand;
-        if (OS.isWindows()) {
-            outerCommand = List.of(CFGDIR.resolve("gfstart.bat").toString());
-        } else if (OS.isDarwin()) {
+        if (OS.isWindows() || OS.isDarwin()) {
             outerCommand = cmdline;
         } else {
             // To avoid conflict of the debug port used both by old and new JVM,

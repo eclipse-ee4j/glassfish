@@ -15,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-def secrets = [
-  [path: 'cbi/glassfish/develocity.eclipse.org', secretValues: [
-    [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
-    ]
-  ]
-]
 
 def dumpSysInfo() {
   sh """
@@ -72,14 +66,12 @@ def generateAntPodTemplate(job) {
           timeout(time: 1, unit: 'HOURS') {
             withAnt(installation: 'apache-ant-latest') {
               dumpSysInfo()
-              withVault([vaultSecrets: secrets]) {
-                  sh """
-                    mkdir -p ${WORKSPACE}/appserver/tests
-                    tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-                    export CLASSPATH=${WORKSPACE}/glassfish7/javadb
-                    ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-                  """
-              }
+              sh """
+                mkdir -p ${WORKSPACE}/appserver/tests
+                tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+                export CLASSPATH=${WORKSPACE}/glassfish7/javadb
+                ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+              """
             }
           }
         } finally {
@@ -194,20 +186,18 @@ spec:
         checkout scm
         container('maven') {
           dumpSysInfo()
-          withVault([vaultSecrets: secrets]) {
-              sh '''
-                # Validate the structure in all submodules (especially version ids)
-                mvn -B -e -fae clean validate -Ptck,set-version-id,staging
-                # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-                mvn -B -e install -Pfastest,staging -T4C
-                ./gfbuild.sh archive_bundles
-                ./gfbuild.sh archive_embedded
-                mvn -B -e clean -Pstaging
-                tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-                ls -la ${WORKSPACE}/bundles
-                ls -la ${WORKSPACE}/embedded
-              '''
-          }
+          sh '''
+            # Validate the structure in all submodules (especially version ids)
+            mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+            # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+            mvn -B -e install -Pfastest,staging -T4C
+            ./gfbuild.sh archive_bundles
+            ./gfbuild.sh archive_embedded
+            mvn -B -e clean -Pstaging
+            tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+            ls -la ${WORKSPACE}/bundles
+            ls -la ${WORKSPACE}/embedded
+          '''
         }
         archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
         archiveArtifacts artifacts: 'embedded/*', onlyIfSuccessful: true
@@ -220,11 +210,9 @@ spec:
         container('maven') {
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
-            withVault([vaultSecrets: secrets]) {
-                sh '''
-                    mvn -B -e clean install -Pstaging,qa
-                '''
-            }
+            sh '''
+                mvn -B -e clean install -Pstaging,qa
+            '''
           }
         }
       }
@@ -257,11 +245,9 @@ spec:
         container('maven') {
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
-            withVault([vaultSecrets: secrets]) {
-                sh '''
-                    mvn -B -e clean install -Pstaging -f docs -amd
-                '''
-            }
+            sh '''
+                mvn -B -e clean install -Pstaging -f docs -amd
+            '''
           }
         }
       }

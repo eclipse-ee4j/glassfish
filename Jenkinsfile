@@ -127,6 +127,9 @@ spec:
       readOnly: true
     - name: maven-repo-local-storage
       mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
+    - mountPath: "/home/jenkins/.m2/.develocity"
+      name: "develocity-storage"
+      readOnly: false
     resources:
       limits:
         memory: "8Gi"
@@ -154,6 +157,9 @@ spec:
         path: settings-security.xml
   - name: maven-repo-local-storage
     emptyDir: {}
+  - emptyDir:
+      medium: ""
+    name: "develocity-storage"
 """
     }
   }

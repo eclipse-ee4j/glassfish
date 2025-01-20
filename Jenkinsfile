@@ -16,7 +16,7 @@
  */
 
 def secrets = [
-  [path: 'cbi/ee4j.glassfish/develocity.eclipse.org', secretValues: [
+  [path: 'cbi/glassfish/develocity.eclipse.org', secretValues: [
     [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
     ]
   ]

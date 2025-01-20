@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,8 +14,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.cluster.ssh.connect;
+
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
@@ -26,17 +27,17 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
  */
 
 final class Strings {
+    final private static LocalStringsImpl strings = new LocalStringsImpl(Strings.class);
+
     private Strings() {
         // no instances allowed!
     }
 
-    final static String get(String indexString) {
+    static final String get(String indexString) {
         return strings.get(indexString);
     }
 
-    final static String get(String indexString, Object... objects) {
+    static final String get(String indexString, Object... objects) {
         return strings.get(indexString, objects);
     }
-
-    final private static LocalStringsImpl strings = new LocalStringsImpl(Strings.class);
 }

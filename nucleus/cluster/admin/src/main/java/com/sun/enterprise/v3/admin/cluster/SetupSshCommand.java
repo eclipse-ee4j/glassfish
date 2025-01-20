@@ -35,6 +35,7 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.cluster.ssh.launcher.SSHKeyInstaller;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
@@ -146,9 +147,11 @@ public class SetupSshCommand implements AdminCommand {
                 }
             }
             try {
-                sshL.setupKey(node, sshpublickeyfile, generatekey, realPass);
+                SSHKeyInstaller installer = new SSHKeyInstaller(sshL);
+                File pubKeyFile = sshpublickeyfile == null ? null : new File(sshpublickeyfile);
+                installer.setupKey(node, pubKeyFile, generatekey, realPass);
             } catch (IOException ce) {
-                logger.log(Level.INFO, "SSH key setup failed: " + ce);
+                logger.log(Level.INFO, "SSH key setup failed.", ce);
                 report.setMessage(Strings.get("setup.ssh.failed", ce.getMessage()));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;

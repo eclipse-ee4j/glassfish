@@ -16,19 +16,40 @@
 
 package org.glassfish.cluster.ssh.launcher;
 
+import com.jcraft.jsch.JSchException;
+
 import java.io.IOException;
 
 /**
  * Communication failure or unsuccessful command.
+ * As usually we lack to have detailed information about what happened, this exception
+ * adds the cause to its message, separated just by a space.
+ * Exception instances then can be layered without losing the information.
  */
 public class SSHException extends IOException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * @param message
+     * @param cause the description of the cause will be appended to the message in parameter.
+     */
     public SSHException(String message, Exception cause) {
-        super(message, cause);
+        super(message + ' ' + toCauseMessage(cause), cause);
     }
 
+    /**
+     * @param message what happened.
+     */
     public SSHException(String message) {
         super(message);
+    }
+
+
+    private static String toCauseMessage(Exception e) {
+        if (e instanceof SSHException || e instanceof JSchException) {
+            return e.getMessage();
+        }
+        // note: SftpException contains also an error id.
+        return e.toString();
     }
 }

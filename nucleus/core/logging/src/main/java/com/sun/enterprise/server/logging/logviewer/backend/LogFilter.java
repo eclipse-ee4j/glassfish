@@ -293,15 +293,14 @@ public class LogFilter {
         if (node.isLocal()) {
             // if local just returning log file to view
             return loggingFile;
-        } else {
-            // if remote then need to download log file on DAS and returning that log file for view
-            String logFileName = logFileDetailsForInstance.substring(logFileDetailsForInstance.lastIndexOf(File.separator) + 1, logFileDetailsForInstance.length());
-            File instanceFile = null;
-            instanceFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer, domain, LOGGER,
-                targetServerName, env.getInstanceRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
-
-            return instanceFile.getAbsolutePath();
         }
+        // if remote then need to download log file on DAS and returning that log file for view
+        String logFileName = logFileDetailsForInstance.substring(logFileDetailsForInstance.lastIndexOf(File.separator) + 1, logFileDetailsForInstance.length());
+        File instanceFile = null;
+        instanceFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer, domain,
+            targetServerName, env.getInstanceRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
+
+        return instanceFile.getAbsolutePath();
 
     }
 
@@ -383,7 +382,7 @@ public class LogFilter {
             try {
                 // this code is used when the node is not local.
                 instanceLogFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer,
-                    domain, LOGGER, instanceName, env.getInstanceRoot().getAbsolutePath(), logFileName, instanceLogFileName);
+                    domain, instanceName, env.getInstanceRoot().getAbsolutePath(), logFileName, instanceLogFileName);
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
                 return new AttributeList();
@@ -391,17 +390,15 @@ public class LogFilter {
 
         }
 
-        LogFile logFile = null;
         File loggingFileExists = new File(instanceLogFile.getAbsolutePath());
         if (!loggingFileExists.exists()) {
             LOGGER.log(Level.WARNING, LogFacade.INSTANCE_LOG_FILE_NOT_FOUND, instanceLogFile.getAbsolutePath());
             return new AttributeList();
         }
-        logFile = getLogFile(instanceLogFile.getAbsolutePath());
+        final LogFile logFile = getLogFile(instanceLogFile.getAbsolutePath());
         boolean forwd = (forward == null) ? true : forward.booleanValue();
         boolean nxt = (next == null) ? true : next.booleanValue();
-        long reqCount = (requestedCount == null) ?
-            logFile.getIndexSize() : requestedCount.intValue();
+        long reqCount = (requestedCount == null) ? logFile.getIndexSize() : requestedCount.intValue();
         long startingRecord;
         if (fromRecord == -1) {
             // In this case next/previous (before/after) don't mean much since

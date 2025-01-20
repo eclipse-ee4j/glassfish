@@ -17,6 +17,7 @@
 package org.glassfish.cluster.ssh.launcher;
 
 import java.lang.Runtime.Version;
+import java.nio.charset.Charset;
 
 /**
  * Detected capabilities of the remote operating system.
@@ -26,16 +27,19 @@ public class RemoteSystemCapabilities {
     private final String javaHome;
     private final Version javaVersion;
     private final OperatingSystem operatingSystem;
+    private final Charset charset;
 
     /**
      * @param javaHome - it is a string, because we want to use it as it is reported from the operating system.
      * @param javaVersion
      * @param operatingSystem
+     * @param charset
      */
-    RemoteSystemCapabilities(String javaHome, Version javaVersion, OperatingSystem operatingSystem) {
+    RemoteSystemCapabilities(String javaHome, Version javaVersion, OperatingSystem operatingSystem, Charset charset) {
         this.javaHome = javaHome;
         this.javaVersion = javaVersion;
         this.operatingSystem = operatingSystem;
+        this.charset = charset;
     }
 
 
@@ -64,10 +68,17 @@ public class RemoteSystemCapabilities {
     }
 
 
+    /**
+     * @return detected charset used by the remote system.
+     */
+    public Charset getCharset() {
+        return charset;
+    }
+
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "[os=" + operatingSystem + ", javaHome=" + javaHome
+        return getClass().getSimpleName() + "[os=" + operatingSystem + ", charset=" + charset + ", javaHome=" + javaHome
             + ", javaVersion=" + javaVersion + "]";
     }
 }

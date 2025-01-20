@@ -33,32 +33,30 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.SSHCommandExecutionException;
 import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
-import org.glassfish.hk2.api.ServiceLocator;
 
+/**
+ * This class is responsible for running asadmin commands on nodes.
+ */
 public class NodeRunner {
     private static final Logger LOG = System.getLogger(NodeRunner.class.getName());
-    private static final String NL = System.lineSeparator();
     private static final String AUTH_TOKEN_STDIN_LINE_PREFIX = "option." + AuthTokenManager.AUTH_TOKEN_OPTION_NAME + "=";
-    private String lastCommandRun;
-    private final AuthTokenManager authTokenManager;
 
-    public NodeRunner(ServiceLocator locator) {
-        this.authTokenManager = locator.getService(AuthTokenManager.class);
+    private final AuthTokenManager authTokenManager;
+    private String lastCommandRun;
+
+    /**
+     *
+     * @param authTokenManager Used to generate the auth token.
+     */
+    public NodeRunner(AuthTokenManager authTokenManager) {
+        this.authTokenManager = authTokenManager;
     }
 
+    /**
+     * @return the last command we tried to execute. Useful for error logs.
+     */
     public String getLastCommandRun() {
         return lastCommandRun;
-    }
-
-    public boolean isSshNode(Node node) {
-
-        if (node == null) {
-            throw new IllegalArgumentException("Node is null");
-        }
-        if (node.getType() == null) {
-            return false;
-        }
-        return node.getType().equals("SSH");
     }
 
     /**
@@ -78,6 +76,7 @@ public class NodeRunner {
      *              command (like start-local-instance) as well as an
      *              parameters for the command. It does not include the
      *              string "asadmin" itself.
+     * @param context Used to get the Subject and to generate a token for it.
      * @return      The status of the asadmin command. Typically 0 if the
      *              command was successful else 1.
      *
@@ -98,7 +97,6 @@ public class NodeRunner {
             UnsupportedOperationException,
             IllegalArgumentException {
 
-
         if (node == null) {
             throw new IllegalArgumentException("Node is null");
         }
@@ -110,9 +108,12 @@ public class NodeRunner {
 
         if (node.isLocal()) {
             return runAdminCommandOnLocalNode(node, output, args, stdinLines);
-        } else {
+        }
+        final String type = node.getType();
+        if ("SSH".equals(type)) {
             return runAdminCommandOnRemoteNode(node, output, args, stdinLines);
         }
+        throw new UnsupportedOperationException("Node type is not supported: " + type);
     }
 
     private int runAdminCommandOnLocalNode(Node node, StringBuilder output,
@@ -138,7 +139,7 @@ public class NodeRunner {
 
         lastCommandRun = commandListToString(fullcommand);
 
-        LOG.log(Level.DEBUG,"Running command locally: " + lastCommandRun);
+        LOG.log(Level.DEBUG,"Running command locally: {0}", lastCommandRun);
         ProcessManager pm = new ProcessManager(fullcommand);
         pm.setStdinLines(stdinLines);
 
@@ -154,7 +155,7 @@ public class NodeRunner {
 
             if (StringUtils.ok(stderr)) {
                 if (output.length() > 0) {
-                    output.append(NL);
+                    output.append(System.lineSeparator());
                 }
                 output.append(stderr);
             }
@@ -167,18 +168,10 @@ public class NodeRunner {
             List<String> stdinLines) throws
             SSHCommandExecutionException, IllegalArgumentException,
             UnsupportedOperationException {
-
-        // don't want to call a config object proxy more than absolutely necessary!
-        String type = node.getType();
-
-        if ("SSH".equals(type)) {
-            NodeRunnerSsh nrs = new NodeRunnerSsh();
-            int result = nrs.runAdminCommandOnRemoteNode(node, output, args, stdinLines);
-            lastCommandRun = nrs.getLastCommandRun();
-            return result;
-        }
-
-        throw new UnsupportedOperationException("Node is not of type SSH");
+        NodeRunnerSsh nrs = new NodeRunnerSsh();
+        int result = nrs.runAdminCommandOnRemoteNode(node, output, args, stdinLines);
+        lastCommandRun = nrs.getLastCommandRun();
+        return result;
     }
 
 

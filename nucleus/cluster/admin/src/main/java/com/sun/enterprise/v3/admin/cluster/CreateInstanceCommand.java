@@ -289,7 +289,7 @@ public class CreateInstanceCommand implements AdminCommand {
             String firstErrorMessage = Strings.get("create.instance.filesystem.failed", instance, node, nodeHost);
 
             // Run the command on the node and handle errors.
-            NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+            NodeUtils nodeUtils = new NodeUtils(habitat);
             StringBuilder output = new StringBuilder();
             nodeUtils.runAdminCommandOnNode(theNode, command, ctx, firstErrorMessage, humanCommand, output);
 
@@ -378,7 +378,7 @@ public class CreateInstanceCommand implements AdminCommand {
             ActionReport report = ctx.getActionReport();
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
-            NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+            NodeUtils nodeUtils = new NodeUtils(habitat);
             Server dasServer = servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
             String dasHost = dasServer.getAdminHost();
             String dasPort = Integer.toString(dasServer.getAdminPort());

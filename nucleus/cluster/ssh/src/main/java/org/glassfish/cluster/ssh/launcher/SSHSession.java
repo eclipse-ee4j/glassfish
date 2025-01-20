@@ -16,6 +16,7 @@
 
 package org.glassfish.cluster.ssh.launcher;
 
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelShell;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -53,13 +55,14 @@ public class SSHSession implements AutoCloseable {
 
     /**
      * This constructor uses GENERIC operating system. Suitable just for operations where
-     * you don't care about commands available on the operating system.
+     * you don't care about commands available on the operating system and you are happy
+     * with the default UTF-8 charset in outputs (might be corrupted)..
      *
      * @param session
      */
     SSHSession(Session session) {
         this.session = session;
-        this.capabilities = new RemoteSystemCapabilities(null, null, OperatingSystem.GENERIC);
+        this.capabilities = new RemoteSystemCapabilities(null, null, OperatingSystem.GENERIC, UTF_8);
     }
 
 
@@ -91,16 +94,11 @@ public class SSHSession implements AutoCloseable {
      * @throws SSHException
      */
     public Map<String, String> detectShellEnv() throws SSHException {
-        ChannelShell shell;
-        try {
-            shell = (ChannelShell) session.openChannel("shell");
-        } catch (JSchException e) {
-            throw new SSHException("Could not open the shell session.", e);
-        }
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8192);
+        final ChannelShell shell = openChannel(session, "shell");
         try {
             // Command is executable both in Linux and Windows os
-            shell.setInputStream(listInputStream(List.of("env || set")));
+            shell.setInputStream(listInputStream(List.of("env || set"), UTF_8));
             shell.setPty(false);
             InputStream in = shell.getInputStream();
             PumpThread t1 = new PumpThread(in, outputStream);
@@ -108,48 +106,14 @@ public class SSHSession implements AutoCloseable {
             shell.connect();
             t1.join();
             // Don't check the exit code, returns -1 on windows.
+            // Expect UTF-8 for now. It will be probably different on Windows,
+            // but we will parse it from the output.
             String output = outputStream.toString(UTF_8);
             LOG.log(DEBUG, () -> "Environment options - command output: \n" + output);
             return parseProperties(output);
         } catch (Exception e) {
-            throw new SSHException(
-                "Could not detect shell environment options. Output: " + outputStream.toString(UTF_8), e);
-        } finally {
-            shell.disconnect();
-        }
-    }
-
-
-    /**
-     * Detects default system properties of the remote java command.
-     *
-     * @return map of system properties
-     * @throws SSHException
-     */
-    public Map<String, String> detectJavaSystemProperties() throws SSHException {
-        ChannelShell shell;
-        try {
-            shell = (ChannelShell) session.openChannel("shell");
-        } catch (JSchException e) {
-            throw new SSHException("Could not open the shell session.", e);
-        }
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8192);
-        try {
-            // Command is executable both in Linux and Windows os
-            shell.setInputStream(listInputStream(List.of("env || set")));
-            shell.setPty(false);
-            InputStream in = shell.getInputStream();
-            PumpThread t1 = new PumpThread(in, outputStream);
-            t1.start();
-            shell.connect();
-            t1.join();
-            // Don't check the exit code, returns -1 on windows.
-            String output = outputStream.toString(UTF_8);
-            LOG.log(DEBUG, () -> "Environment options - command output: \n" + output);
-            return parseProperties(output);
-        } catch (Exception e) {
-            throw new SSHException(
-                "Could not detect shell environment options. Output: " + outputStream.toString(UTF_8), e);
+            throw new SSHException("Could not detect shell environment options. Output: "
+                + outputStream.toString(UTF_8), e);
         } finally {
             shell.disconnect();
         }
@@ -176,15 +140,11 @@ public class SSHSession implements AutoCloseable {
         }
 
         final StringBuilder output = new StringBuilder();
-        try {
-            int status = exec(unzipCommand, null, output);
-            if (status != 0) {
-                throw new SSHException("Failed unpacking glassfish zip file. Output: " + output + ".");
-            }
-            LOG.log(DEBUG, () -> "Unpacked " + remoteZipFile + " to directory " + remoteDir);
-        } catch (JSchException e) {
-            throw new SSHException("Failed unpacking glassfish zip file. Output: " + output + ".", e);
+        final int status = exec(unzipCommand, null, output);
+        if (status != 0) {
+            throw new SSHException("Failed unpacking glassfish zip file. Output: " + output + ".");
         }
+        LOG.log(DEBUG, () -> "Unpacked " + remoteZipFile + " to directory " + remoteDir);
     }
 
 
@@ -198,11 +158,9 @@ public class SSHSession implements AutoCloseable {
      * @param output - empty collector of the output. Can be null.
      * @return exit code
      * @throws SSHException
-     * @throws JSchException
      */
-    public int exec(List<String> command, List<String> stdinLines, StringBuilder output)
-        throws SSHException, JSchException {
-        return exec(commandListToQuotedString(command), listInputStream(stdinLines), output);
+    public int exec(List<String> command, List<String> stdinLines, StringBuilder output) throws SSHException {
+        return exec(commandListToQuotedString(command), listInputStream(stdinLines, capabilities.getCharset()), output);
     }
 
 
@@ -216,7 +174,7 @@ public class SSHSession implements AutoCloseable {
      * @return exit code
      * @throws SSHException
      */
-    public int exec(List<String> command, List<String> stdinLines) throws JSchException, SSHException {
+    public int exec(List<String> command, List<String> stdinLines) throws SSHException {
         return exec(commandListToQuotedString(command), stdinLines);
     }
 
@@ -231,8 +189,8 @@ public class SSHSession implements AutoCloseable {
      * @return exit code
      * @throws SSHException
      */
-    public int exec(String command, List<String> stdinLines) throws JSchException, SSHException {
-        return exec(command, listInputStream(stdinLines));
+    public int exec(String command, List<String> stdinLines) throws SSHException {
+        return exec(command, listInputStream(stdinLines, capabilities.getCharset()));
     }
 
 
@@ -240,12 +198,11 @@ public class SSHSession implements AutoCloseable {
      * SFTP exec command without STDIN and without reading the output.
      * Executes a command on the remote system via ssh.
      *
-     * @param command - command to execute. If it has arguments, better use {@link #exec(List)}.
+     * @param command - command to execute. If it has arguments, better use {@link #exec(List, List)}.
      * @return exit code
      * @throws SSHException
      */
-    public int exec(final String command)
-        throws JSchException, SSHException {
+    public int exec(final String command) throws SSHException {
         return exec(command, (InputStream) null);
     }
 
@@ -260,7 +217,7 @@ public class SSHSession implements AutoCloseable {
      * @return exit code
      * @throws SSHException
      */
-    public int exec(final String command, final InputStream stdin) throws JSchException, SSHException {
+    public int exec(final String command, final InputStream stdin) throws SSHException {
         return exec(command, stdin, null);
     }
 
@@ -272,14 +229,31 @@ public class SSHSession implements AutoCloseable {
      *
      * @param command - command to execute. If it has arguments, better use {@link #exec(List, List, StringBuilder)}.
      * @param stdin - stream used to fake standard input in STDIN stream. Can be null.
+     * @param output
      * @return exit code
      * @throws SSHException
      */
-    public int exec(final String command, final InputStream stdin, final StringBuilder output)
-        throws JSchException, SSHException {
+    public int exec(final String command, final InputStream stdin, final StringBuilder output) throws SSHException {
+        return exec(command, stdin, output, capabilities.getCharset());
+    }
+
+
+    /**
+     * SFTP exec command.
+     * Executes a command on the remote system via ssh, optionally sending
+     * lines of data to the remote process's System.in.
+     *
+     * @param command - command to execute. If it has arguments, better use {@link #exec(List, List, StringBuilder)}.
+     * @param stdin - stream used to fake standard input in STDIN stream. Can be null.
+     * @param output
+     * @return exit code
+     * @throws SSHException
+     */
+    int exec(final String command, final InputStream stdin, final StringBuilder output, final Charset charset)
+        throws SSHException {
         LOG.log(INFO, () -> "Executing command " + command + " on host: " + session.getHost());
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8192);
-        final ChannelExec execChannel = (ChannelExec) session.openChannel("exec");
+        final ChannelExec execChannel = openChannel(session, "exec");
         try {
             execChannel.setInputStream(stdin);
             execChannel.setCommand(command);
@@ -293,7 +267,7 @@ public class SSHSession implements AutoCloseable {
             t1.join();
             t2.join();
             if (output != null || LOG.isLoggable(DEBUG)) {
-                String commandOutput = outputStream.toString(UTF_8);
+                String commandOutput = outputStream.toString(charset);
                 LOG.log(DEBUG, () -> "Command output: \n" + commandOutput);
                 if (output != null) {
                     output.append(commandOutput);
@@ -304,7 +278,7 @@ public class SSHSession implements AutoCloseable {
             }
             return -1;
         } catch (Exception e) {
-            throw new SSHException("Command " + command + " failed. Output: " + outputStream.toString(UTF_8), e);
+            throw new SSHException("Command " + command + " failed. Output: " + outputStream.toString(charset), e);
         } finally {
             execChannel.disconnect();
         }
@@ -313,10 +287,10 @@ public class SSHSession implements AutoCloseable {
 
     /**
      * @return new {@link SFTPClient}
-     * @throws JSchException
+     * @throws SSHException if the connection failed, ie because the server does not support SFTP.
      */
-    public SFTPClient createSFTPClient() throws JSchException {
-        return new SFTPClient((ChannelSftp) session.openChannel("sftp"));
+    public SFTPClient createSFTPClient() throws SSHException {
+        return new SFTPClient((ChannelSftp) openChannel(session, "sftp"));
     }
 
 
@@ -360,19 +334,29 @@ public class SSHSession implements AutoCloseable {
     }
 
 
-    private static InputStream listInputStream(final List<String> stdinLines) {
+    private static InputStream listInputStream(final List<String> stdinLines, Charset charset) {
         if (stdinLines == null) {
             return null;
         }
         try {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             for (String line : stdinLines) {
-                baos.write(line.getBytes(UTF_8));
+                baos.write(line.getBytes(charset));
                 baos.write('\n');
             }
             return new ByteArrayInputStream(baos.toByteArray());
         } catch (IOException e) {
             throw new IllegalStateException("Cannot copy the input to UTF-8 byte array input stream.", e);
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Channel> T openChannel(Session session, String type) throws SSHException {
+        try {
+            return (T) session.openChannel(type);
+        } catch (JSchException e) {
+            throw new SSHException("Could not open the session of type=" + type, e);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,7 +67,7 @@ import org.jvnet.hk2.annotations.Service;
 })
 public class StartInstanceCommand implements AdminCommand {
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator locator;
 
     @Inject
     private Nodes nodes;
@@ -114,13 +114,13 @@ public class StartInstanceCommand implements AdminCommand {
     StartInstanceCommand(ServiceLocator habitat_, String iname_, boolean debug_, ServerEnvironment env_) {
         instanceName = iname_;
         debug = debug_;
-        habitat = habitat_;
-        nodes = habitat.getService(Nodes.class);
+        locator = habitat_;
+        nodes = locator.getService(Nodes.class);
 
         // env:  neither getByType or getByContract works.  Not worth the effort
         //to find the correct magic incantation for HK2!
         env = env_;
-        servers = habitat.getService(Servers.class);
+        servers = locator.getService(Servers.class);
     }
 
     /**
@@ -200,7 +200,7 @@ public class StartInstanceCommand implements AdminCommand {
     }
 
     private void startInstance(AdminCommandContext ctx) {
-        NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+        NodeUtils nodeUtils = new NodeUtils(locator);
         ArrayList<String> command = new ArrayList<>();
         String humanCommand = null;
 

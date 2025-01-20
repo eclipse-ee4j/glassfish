@@ -28,6 +28,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.cluster.ssh.launcher.SSHKeyInstaller;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
@@ -81,7 +82,8 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
             }
         } else {
             final File keyFile = new File(sshkeyfile);
-            promptPass = SSHUtil.validateKeyFile(keyFile);
+            SSHUtil.validateKeyFile(keyFile);
+            promptPass = true;
             if (SSHUtil.isEncryptedKey(keyFile)) {
                 sshkeypassphrase = getSSHPassphrase(false);
             }
@@ -119,7 +121,9 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
             }
 
             try {
-                sshL.setupKey(node, sshpublickeyfile, generatekey, sshpassword);
+                SSHKeyInstaller installer = new SSHKeyInstaller(sshL);
+                File pubKeyFile = sshpublickeyfile == null ? null : new File(sshpublickeyfile);
+                installer.setupKey(node, pubKeyFile, generatekey, sshpassword);
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "SSH key setup failed: ", e);
                 throw new CommandException(Strings.get("KeySetupFailed", e.getMessage()), e);

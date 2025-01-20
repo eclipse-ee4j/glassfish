@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -606,8 +606,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
     }
 
     /**
-     * Return a logging file details in the logging.properties file.
-     *
+     * @return a logging file path from the logging.properties file.
      * @throws IOException If an I/O error occurs
      */
     public synchronized String getLoggingFileDetails() throws IOException {
@@ -631,7 +630,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
 
     /**
-     * @return a logging file details in the logging.properties file for given target.
+     * @return a logging file path in the logging.properties file for given target.
      * @throws IOException If an I/O error occurs
      */
     public synchronized String getLoggingFileDetails(String targetConfigName) throws IOException {

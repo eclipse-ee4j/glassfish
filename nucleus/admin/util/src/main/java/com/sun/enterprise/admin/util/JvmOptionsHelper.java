@@ -78,13 +78,13 @@ final public class JvmOptionsHelper {
         }
         final Set alreadyExist = new HashSet();
         JvmOptionsElement last = last();
-        for (int i = 0; i < options.length; i++) {
-            if (!head.hasOption(options[i])) {
-                JvmOptionsElement x = new JvmOptionsElement(options[i]);
+        for (String option : options) {
+            if (!head.hasOption(option)) {
+                JvmOptionsElement x = new JvmOptionsElement(option);
                 last.setNext(x);
                 last = x;
             } else {
-                alreadyExist.add(options[i]);
+                alreadyExist.add(option);
             }
         }
         return toStringArray(alreadyExist);
@@ -115,9 +115,9 @@ final public class JvmOptionsHelper {
         }
 
         final Set donotExist = new HashSet();
-        for (int i = 0; i < options.length; i++) {
-            if (!head.deleteJvmOption(options[i])) {
-                donotExist.add(options[i]);
+        for (String option : options) {
+            if (!head.deleteJvmOption(option)) {
+                donotExist.add(option);
             }
         }
         return toStringArray(donotExist);
@@ -209,6 +209,7 @@ class JvmOptionsElement {
             throw new UnsupportedOperationException();
         }
     };
+
     private final Set jvmOptions = new LinkedHashSet();
     private JvmOptionsElement next;
 

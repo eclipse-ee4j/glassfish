@@ -16,8 +16,6 @@
  */
 package com.sun.enterprise.v3.admin.cluster;
 
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.admin.remote.ServerRemoteRestAdminCommand;
 import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
@@ -51,6 +49,7 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
@@ -87,7 +86,7 @@ import org.jvnet.hk2.annotations.Service;
 public class StopInstanceCommand extends StopServer implements AdminCommand, PostConstruct {
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private ServerContext serverContext;
     @Inject
@@ -121,8 +120,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
                 errorMessage = callInstance();
             }
         }  else {
-            errorMessage = Strings.get("stop.instance.notDas",
-                    env.getRuntimeType().toString());
+            errorMessage = Strings.get("stop.instance.notDas", env.getRuntimeType().toString());
         }
 
         if(errorMessage == null && !kill) {
@@ -174,15 +172,13 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
                     Supplier<Boolean> check = () -> {
                         try {
                             return ftpClient.exists(pidFilePath);
-                        } catch (SftpException e) {
+                        } catch (SSHException e) {
                             return false;
                         }
                     };
                     errorMessage = pollForRealDeath(check);
                 }
-            } catch (JSchException ex) {
-                //could not get to other host
-            } catch (SftpException ex) {
+            } catch (SSHException ex) {
                 //could not get to other host
             }
         }
@@ -194,7 +190,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
 
     @Override
     public void postConstruct() {
-        helper = new RemoteInstanceCommandHelper(habitat);
+        helper = new RemoteInstanceCommandHelper(locator);
     }
 
     private String initializeInstance() {
@@ -239,7 +235,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
 
         try {
             logger.info(Strings.get("stop.instance.init", instanceName));
-            RemoteRestAdminCommand rac = new ServerRemoteRestAdminCommand(habitat, "_stop-instance",
+            RemoteRestAdminCommand rac = new ServerRemoteRestAdminCommand(locator, "_stop-instance",
                     host, port, false, "admin", null, logger);
 
             // notice how we do NOT send in the instance's name as an operand!!
@@ -264,7 +260,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
 
         String nodeName = instance.getNodeRef();
         Node node = nodes.getNode(nodeName);
-        NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+        NodeUtils nodeUtils = new NodeUtils(locator);
 
         // asadmin command to run on instances node
         ArrayList<String> command = new ArrayList<String>();

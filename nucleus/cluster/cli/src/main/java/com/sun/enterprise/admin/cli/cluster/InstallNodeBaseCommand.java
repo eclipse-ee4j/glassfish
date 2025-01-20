@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -42,6 +42,8 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINER;
 
 /**
  * @author Rajiv Mordani
@@ -83,24 +85,21 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
     @Override
     protected int executeCommand() throws CommandException {
         File zipFile = null;
-
         try {
-            ArrayList<String> binDirFiles = new ArrayList<String>();
+            ArrayList<String> binDirFiles = new ArrayList<>();
             precopy();
             zipFile = createZipFileIfNeeded(binDirFiles);
             copyToHosts(zipFile, binDirFiles);
-        }
-        catch (CommandException e) {
+        } catch (CommandException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new CommandException(e);
-        }
-        finally {
+        } finally {
             if (!save && delete) {
                 if (zipFile != null) {
-                    if (!zipFile.delete())
+                    if (!zipFile.delete()) {
                         zipFile.deleteOnExit();
+                    }
                 }
             }
         }
@@ -128,22 +127,7 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
         File zipFileLocation = null;
         File glassFishZipFile = null;
 
-        if (archive != null) {
-            archive = archive.replace('\\', '/');
-            archiveName = archive.substring(archive.lastIndexOf("/") + 1, archive.length());
-            zipFileLocation = new File(archive.substring(0, archive.lastIndexOf("/")));
-            glassFishZipFile = new File(archive);
-            if (glassFishZipFile.exists() && !create) {
-                if (logger.isLoggable(Level.FINER))
-                    logger.finer("Found " + archive);
-                delete = false;
-                return glassFishZipFile;
-            }
-            else if (!zipFileLocation.canWrite()) {
-                throw new IOException("Cannot write to " + archive);
-            }
-        }
-        else {
+        if (archive == null) {
             zipFileLocation = new File(".");
             if (!zipFileLocation.canWrite()) {
                 zipFileLocation = new File(System.getProperty("java.io.tmpdir"));
@@ -151,7 +135,19 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
             glassFishZipFile = File.createTempFile("glassfish", ".zip", zipFileLocation);
             String filePath = glassFishZipFile.getCanonicalPath();
             filePath = filePath.replaceAll("\\\\", "/");
-            archiveName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+            archiveName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length());
+        } else {
+            archive = archive.replace('\\', '/');
+            archiveName = archive.substring(archive.lastIndexOf("/") + 1, archive.length());
+            zipFileLocation = new File(archive.substring(0, archive.lastIndexOf("/")));
+            glassFishZipFile = new File(archive);
+            if (glassFishZipFile.exists() && !create) {
+                logger.log(FINER, "Found {0}", archive);
+                delete = false;
+                return glassFishZipFile;
+            } else if (!zipFileLocation.canWrite()) {
+                throw new IOException("Cannot write to " + archive);
+            }
         }
 
         FileListerRelative lister = new FileListerRelative(installRoot);
@@ -161,31 +157,25 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
         List<String> resultFiles1 = Arrays.asList(files);
         ArrayList<String> resultFiles = new ArrayList<String>(resultFiles1);
 
-        if (logger.isLoggable(Level.FINER))
-            logger.finer("Number of files to be zipped = " +
-                                                            resultFiles.size());
+        logger.finer(() -> "Number of files to be zipped = " + resultFiles.size());
 
         Iterator<String> iter = resultFiles.iterator();
         while (iter.hasNext()) {
             String fileName = iter.next();
-            String fPath = fileName.substring(fileName.lastIndexOf("/") + 1);
+            String fPath = fileName.substring(fileName.lastIndexOf('/') + 1);
             if (fPath.equals(glassFishZipFile.getName())) {
-                if (logger.isLoggable(Level.FINER))
-                    logger.finer("Removing file = " + fileName);
+                logger.log(FINER, "Removing file = {0}", fileName);
                 iter.remove();
                 continue;
             }
             if (fileName.contains("domains") || fileName.contains("nodes")) {
                 iter.remove();
-            }
-            else if (isFileWithinBinDirectory(fileName)) {
+            } else if (isFileWithinBinDirectory(fileName)) {
                 binDirFiles.add(fileName);
             }
         }
 
-        if (logger.isLoggable(Level.FINER))
-            logger.finer("Final number of files to be zipped = " +
-                                                            resultFiles.size());
+        logger.finer(() -> "Final number of files to be zipped = " + resultFiles.size());
 
         String[] filesToZip = new String[resultFiles.size()];
         filesToZip = resultFiles.toArray(filesToZip);
@@ -218,8 +208,9 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
 
         char[] buffer = new char[4096];
         int n;
-        while ((n = reader.read(buffer)) >= 0)
+        while ((n = reader.read(buffer)) >= 0) {
             sw.write(buffer, 0, n);
+        }
 
         return sw.toString();
     }

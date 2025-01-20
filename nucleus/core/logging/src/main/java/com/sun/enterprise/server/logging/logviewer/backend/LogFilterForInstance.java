@@ -18,9 +18,7 @@
 package com.sun.enterprise.server.logging.logviewer.backend;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
@@ -33,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
@@ -45,7 +44,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public class LogFilterForInstance {
 
-    public File downloadGivenInstanceLogFile(ServiceLocator habitat, Server targetServer, Domain domain, Logger logger,
+    public File downloadGivenInstanceLogFile(ServiceLocator habitat, Server targetServer, Domain domain,
         String instanceName, String domainRoot, String logFileName, String instanceLogFileName) throws IOException {
 
         // method is used from logviewer back end code logfilter.
@@ -107,22 +106,21 @@ public class LogFilterForInstance {
                 sftpClient.download(loggingFile, instanceLogFile.toPath());
             }
             return instanceLogFile;
-        } catch (JSchException ex) {
-            throw new IOException("Unable to download instance log file from SSH Node", ex);
-        } catch (SftpException ex) {
-            throw new IOException("Unable to download instance log file from SSH Node", ex);
+        } catch (SSHException ex) {
+            throw new SSHException(
+                "Unable to download log file of instance " + instanceName + " from SSH Node " + node.getName() + '.',
+                ex);
         }
     }
 
 
+    /**
+     * Download log files of all instances of the node.
+     */
     public void downloadAllInstanceLogFiles(ServiceLocator habitat, Server targetServer, Domain domain, Logger logger,
                                             String instanceName, Path tempDirectoryOnServer, String instanceLogFileDirectory)
             throws IOException {
 
-        // method is used from collect-log-files command
-        // for Instance it's going through this loop. This will use ssh utility to get file from instance machine(remote machine) and
-        // store in  tempDirectoryOnServer which is used to create zip file.
-        // Right now user needs to go through this URL to setup and configure ssh http://wikis.sun.com/display/GlassFish/3.1SSHSetup
         String sNode = targetServer.getNodeRef();
         Nodes nodes = domain.getNodes();
         Node node = nodes.getNode(sNode);
@@ -159,10 +157,9 @@ public class LogFilterForInstance {
                         sftpClient.download(sourceDir.resolve(fileName), tempDirectoryOnServer.resolve(fileName));
                     }
                 }
-            } catch (JSchException ex) {
-                throw new IOException("Unable to download instance log file from SSH Node", ex);
-            } catch (SftpException ex) {
-                throw new IOException("Unable to download instance log file from SSH Node", ex);
+            } catch (Exception e) {
+                throw new SSHException("Unable to download log file of instance " + instanceName + " from SSH Node "
+                    + node.getName() + '.', e);
             }
         }
     }
@@ -237,10 +234,9 @@ public class LogFilterForInstance {
                     List<String> instanceLogFileNames = sftpClient.ls(loggingDir, this::isAcceptable);
                     instanceLogFileNamesAsString.addAll(instanceLogFileNames);
                 }
-            } catch (JSchException ex) {
-                throw new IOException("Unable to download instance log file from SSH Node", ex);
-            } catch (SftpException ex) {
-                throw new IOException("Unable to download instance log file from SSH Node", ex);
+            } catch (SSHException e) {
+                throw new SSHException("Unable to download log file of instance " + instanceName + " from SSH Node "
+                    + node.getName() + '.', e);
             }
         }
         return instanceLogFileNamesAsString;

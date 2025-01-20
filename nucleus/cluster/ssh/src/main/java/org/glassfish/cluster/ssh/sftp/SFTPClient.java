@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.glassfish.cluster.ssh.launcher.RemoteSystemCapabilities;
+import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 
 import static java.lang.System.Logger.Level.TRACE;
@@ -53,9 +55,20 @@ public class SFTPClient implements AutoCloseable {
 
     private final ChannelSftp sftpChannel;
 
-    public SFTPClient(ChannelSftp channel) throws JSchException {
+    /**
+     * Creates the instance which immediately tries to open the SFTP connection..
+     *
+     * @param channel
+     * @throws SSHException if the connection could not be established, usually because the SSH
+     *             server doesn't support SFTP.
+     */
+    public SFTPClient(ChannelSftp channel) throws SSHException {
         this.sftpChannel = channel;
-        this.sftpChannel.connect();
+        try {
+            this.sftpChannel.connect();
+        } catch (JSchException e) {
+            throw new SSHException("Failed to connect to the SFTP server. Is it correctly configured on the server?", e);
+        }
     }
 
     /**
@@ -69,20 +82,26 @@ public class SFTPClient implements AutoCloseable {
         }
     }
 
-    public ChannelSftp getSftpChannel() {
-        return sftpChannel;
-    }
 
-
-    public Path getHome() throws SftpException {
-        return Path.of(sftpChannel.getHome());
+    /**
+     * @return Configured SSH server home directory. Usually user's home directory.
+     * @throws SSHException Command failed.
+     */
+    public Path getHome() throws SSHException {
+        try {
+            return Path.of(sftpChannel.getHome());
+        } catch (SftpException e) {
+            throw new SSHException("Could not resolve SFTP Home path.", e);
+        }
     }
 
 
     /**
      * Makes sure that the directory exists, by creating it if necessary.
+     * @param path the remote path
+     * @throws SSHException Command failed.
      */
-    public void mkdirs(Path path) throws SftpException {
+    public void mkdirs(Path path) throws SSHException {
         if (existsDirectory(path)) {
             return;
         }
@@ -92,17 +111,32 @@ public class SFTPClient implements AutoCloseable {
             if (existsDirectory(current)) {
                 continue;
             }
-            sftpChannel.mkdir(current.toString());
+            try {
+                sftpChannel.mkdir(current.toString());
+            } catch (SftpException e) {
+                throw new SSHException("Failed to create the directory " + path + '.', e);
+            }
         }
     }
 
-    public boolean existsDirectory(Path path) throws SftpException {
+
+    /**
+     * @param path
+     * @return true if the path exists and is a directory
+     * @throws SSHException Command failed.
+     */
+    public boolean existsDirectory(Path path) throws SSHException {
         SftpATTRS attrs = stat(path);
         return attrs != null && attrs.isDir();
     }
 
 
-    public boolean isEmptyDirectory(Path path) throws SftpException {
+    /**
+     * @param path
+     * @return true if the path exists, is a directory and is empty.
+     * @throws SSHException Command failed.
+     */
+    public boolean isEmptyDirectory(Path path) throws SSHException {
         SftpATTRS attrs = stat(path);
         return attrs != null && attrs.isDir() && ls(path, e -> true).isEmpty();
     }
@@ -114,38 +148,42 @@ public class SFTPClient implements AutoCloseable {
      * @param path
      * @param onlyContent
      * @param exclude
-     * @throws SftpException
+     * @throws SSHException Command failed. Usually some file is not removable or is open.
      */
-    public void rmDir(Path path, boolean onlyContent, Path... exclude) throws SftpException {
+    public void rmDir(Path path, boolean onlyContent, Path... exclude) throws SSHException {
         if (!exists(path)) {
             return;
         }
         // We use recursion while the channel is stateful
-        sftpChannel.cd(path.getParent().toString());
+        cd(path.getParent());
         List<LsEntry> content = lsDetails(path, p -> true);
         for (LsEntry entry : content) {
             final String filename = entry.getFilename();
             final Path entryPath = path.resolve(filename);
-            if (matches(filename, exclude)) {
+            if (isExcludedFromDeletion(filename, exclude)) {
                 LOG.log(TRACE, "Skipping excluded {0}", entryPath);
                 continue;
             }
             if (entry.getAttrs().isDir()) {
-                rmDir(entryPath, false, getSubFilter(filename, exclude));
+                rmDir(entryPath, false, getSubDirectoryExclusions(filename, exclude));
             } else {
                 LOG.log(TRACE, "Deleting file {0}", entryPath);
-                sftpChannel.rm(entryPath.toString());
+                rm(entryPath);
             }
         }
         if (!onlyContent) {
-            sftpChannel.cd(path.getParent().toString());
-            LOG.log(TRACE, "Deleting directory {0}", path);
-            sftpChannel.rmdir(path.toString());
+            try {
+                sftpChannel.cd(path.getParent().toString());
+                LOG.log(TRACE, "Deleting directory {0}", path);
+                sftpChannel.rmdir(path.toString());
+            } catch (SftpException e) {
+                throw new SSHException("Failed to delete directory: " + path + '.', e);
+            }
         }
     }
 
 
-    private static boolean matches(String firstName, Path... exclusions) {
+    private static boolean isExcludedFromDeletion(String firstName, Path... exclusions) {
         if (exclusions == null) {
             return false;
         }
@@ -154,7 +192,7 @@ public class SFTPClient implements AutoCloseable {
     }
 
 
-    private static Path[] getSubFilter(String firstName, Path... exclusions) {
+    private static Path[] getSubDirectoryExclusions(String firstName, Path... exclusions) {
         if (exclusions == null) {
             return new Path[0];
         }
@@ -163,88 +201,188 @@ public class SFTPClient implements AutoCloseable {
     }
 
 
-    public void put(File localFile, Path remoteFile) throws SftpException {
-        sftpChannel.cd(remoteFile.getParent().toString());
-        sftpChannel.put(localFile.getAbsolutePath(), remoteFile.toString());
+    /**
+     * Upload local file to the remote file.
+     *
+     * @param localFile
+     * @param remoteFile
+     * @throws SSHException Command failed.
+     */
+    public void put(File localFile, Path remoteFile) throws SSHException {
+        try {
+            sftpChannel.cd(remoteFile.getParent().toString());
+            sftpChannel.put(localFile.getAbsolutePath(), remoteFile.toString());
+        } catch (SftpException e) {
+            throw new SSHException(
+                "Failed to upload the local file " + localFile + " to remote file " + remoteFile + '.', e);
+        }
     }
+
+
+    /**
+     * Downloads the remote file to the local file. The local file must not exist yet.
+     *
+     * @param remoteFile
+     * @param localFile
+     * @throws SSHException Command failed.
+     */
+    public void download(Path remoteFile, Path localFile) throws SSHException {
+        try (InputStream inputStream = sftpChannel.get(remoteFile.toString())) {
+            Files.copy(inputStream, localFile);
+        } catch (SftpException | IOException e) {
+            throw new SSHException(
+                "Failed to download the remote file " + remoteFile + " to local file " + localFile + '.', e);
+        }
+    }
+
 
     /**
      * Deletes the specified remote file.
      *
      * @param path
-     * @throws SftpException
+     * @throws SSHException
      */
-    public void rm(Path path) throws SftpException {
-        sftpChannel.cd(path.getParent().toString());
-        sftpChannel.rm(path.toString());
+    public void rm(Path path) throws SSHException {
+        try {
+            sftpChannel.cd(path.getParent().toString());
+            sftpChannel.rm(path.toString());
+        } catch (SftpException e) {
+            throw new SSHException("Failed to remove path " + path + '.', e);
+        }
     }
 
 
     /**
-     * @return true if the given path exists.
+     * @param path
+     * @return true if the remote path exists.
+     * @throws SSHException Command failed.
      */
-    public boolean exists(Path path) throws SftpException {
+    public boolean exists(Path path) throws SSHException {
         return stat(path) != null;
     }
 
 
     /**
-     * Graceful stat that returns null if the path doesn't exist.
-     * This method follows symlinks.
+     * Providing file details. This method follows symlinks.
+     *
+     * @param path
+     * @return {@link SftpATTRS} or null if the path doesn't exist.
+     * @throws SSHException Command failed.
      */
-    public SftpATTRS stat(Path path) throws SftpException {
+    public SftpATTRS stat(Path path) throws SSHException {
         try {
             return sftpChannel.stat(path.toString());
         } catch (SftpException e) {
             if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 return null;
             }
-            throw e;
+            throw new SSHException("Failed to call SFTP stat for " + path + '.', e);
         }
     }
 
+
     /**
-     * Graceful lstat that returns null if the path doesn't exist.
-     * This method does not follow symlinks.
+     * Providing file details. This method does not follow symlinks.
+     *
+     * @param path
+     * @return {@link SftpATTRS} or null if the path doesn't exist.
+     * @throws SSHException Command failed.
      */
-    public SftpATTRS lstat(Path path) throws SftpException {
+    public SftpATTRS lstat(Path path) throws SSHException {
         try {
             return sftpChannel.lstat(path.toString());
         } catch (SftpException e) {
             if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 return null;
             }
-            throw e;
+            throw new SSHException("Failed to call SFTP lstat for " + path + '.', e);
         }
     }
 
-    public void setTimeModified(Path path, long millisSinceUnixEpoch) throws SftpException {
-        sftpChannel.setMtime(path.toString(), (int) (millisSinceUnixEpoch / 1000));
-    }
 
-    public void chmod(Path path, int permissions) throws SftpException {
-        sftpChannel.chmod(permissions, path.toString());
-    }
-
-    public void cd(Path path) throws SftpException {
-        sftpChannel.cd(path.toString());
-    }
-
-
-    public void download(Path remoteFile, Path localFile) throws IOException, SftpException {
-        try (InputStream inputStream = sftpChannel.get(remoteFile.toString())) {
-            Files.copy(inputStream, localFile);
+    /**
+     * Calls SFTP MTIME for given path and millis.
+     *
+     * @param path
+     * @param millisSinceUnixEpoch
+     * @throws SSHException Command failed.
+     */
+    public void setTimeModified(Path path, long millisSinceUnixEpoch) throws SSHException {
+        try {
+            sftpChannel.setMtime(path.toString(), (int) (millisSinceUnixEpoch / 1000));
+        } catch (SftpException e) {
+            throw new SSHException("Failed to set time modification for path " + path + '.', e);
         }
     }
 
-    public List<String> ls(Path path, Predicate<LsEntry> filter) throws SftpException {
-        return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS)).map(LsEntry::getFilename)
-            .collect(Collectors.toList());
+
+    /**
+     * Calls SFTP CHMOD. Note that this command is not supported on Windows.
+     *
+     * @param path
+     * @param permissions
+     * @throws SSHException Command failed.
+     * @see RemoteSystemCapabilities#isChmodSupported()
+     */
+    public void chmod(Path path, int permissions) throws SSHException {
+        try {
+            sftpChannel.chmod(permissions, path.toString());
+        } catch (SftpException e) {
+            throw new SSHException(
+                "Failed to call chmod for remote path " + path + " and permissions " + permissions + ".", e);
+        }
     }
 
 
-    public List<LsEntry> lsDetails(Path path, Predicate<LsEntry> filter) throws SftpException {
-        return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS))
-            .collect(Collectors.toList());
+    /**
+     * Changes the current directory on the remote SFTP server.
+     *
+     * @param path
+     * @throws SSHException Command failed.
+     */
+    public void cd(Path path) throws SSHException {
+        try {
+            sftpChannel.cd(path.toString());
+        } catch (SftpException e) {
+            throw new SSHException("Failed to change the remote directory to " + path + '.', e);
+        }
+    }
+
+
+    /**
+     * Lists file names the given remote directory. Excludes current directory and the parent
+     * directory links (dot, double dot)
+     *
+     * @param path
+     * @param filter additional filter, ie. to filter by file extension.
+     * @return list of file names in the given directory
+     * @throws SSHException Command failed.
+     */
+    public List<String> ls(Path path, Predicate<LsEntry> filter) throws SSHException {
+        try {
+            return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS))
+                .map(LsEntry::getFilename).collect(Collectors.toList());
+        } catch (SftpException e) {
+            throw new SSHException("Failed to list remote directory " + path + '.', e);
+        }
+    }
+
+
+    /**
+     * Lists entries in the given remote directory. Excludes current directory and the parent
+     * directory links (dot, double dot)
+     *
+     * @param path
+     * @param filter additional filter, ie. to filter by file extension.
+     * @return list of file names in the given directory
+     * @throws SSHException Command failed.
+     */
+    public List<LsEntry> lsDetails(Path path, Predicate<LsEntry> filter) throws SSHException {
+        try {
+            return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS))
+                .collect(Collectors.toList());
+        } catch (SftpException e) {
+            throw new SSHException("Failed to list remote directory " + path + '.', e);
+        }
     }
 }

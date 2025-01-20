@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Node;
@@ -38,7 +38,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public abstract class PingNodeRemoteCommand implements AdminCommand {
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator locator;
     @Inject
     private Nodes nodes;
     @Param(name = "name", primary = true)
@@ -55,7 +55,7 @@ public abstract class PingNodeRemoteCommand implements AdminCommand {
         Node theNode = null;
 
         logger = context.getLogger();
-        NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+        NodeUtils nodeUtils = new NodeUtils(locator);
 
         // Make sure Node is valid
         theNode = nodes.getNode(name);

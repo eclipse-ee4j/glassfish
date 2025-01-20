@@ -116,7 +116,7 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
     /**
      * Get SSH key passphrase from password file or user.
      */
-    String getSSHPassphrase(boolean verifyConn) throws CommandException {
+    String getSSHPassphrase(boolean verifyConn) {
         String passphrase = getFromPasswordFile("AS_ADMIN_SSHKEYPASSPHRASE");
 
         if (passphrase != null) {
@@ -144,7 +144,7 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
     /**
      * Get domain master password from password file or user.
      */
-    String getMasterPassword(String domain) throws CommandException {
+    String getMasterPassword(String domain) {
         String masterPass = getFromPasswordFile("AS_ADMIN_MASTERPASSWORD");
 
         //get password from user if not found in password file
@@ -231,10 +231,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                     }
                 }
             }
-        }
-        catch (IOException ioe) {
+        } catch (IOException e) {
             if (logger.isLoggable(Level.FINER)) {
-                logger.finer(ioe.getMessage());
+                logger.log(Level.FINER, e.getMessage(), e);
             }
         }
         return expandedPassword;

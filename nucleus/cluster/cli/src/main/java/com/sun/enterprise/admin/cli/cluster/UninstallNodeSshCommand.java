@@ -101,7 +101,7 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
                 try (SSHSession session = sshLauncher.openSession();
                     SFTPClient sftpClient = session.createSFTPClient()) {
                     if (!sftpClient.exists(installDir)) {
-                        throw new IOException(getInstallDir() + " Directory does not exist");
+                        throw new IOException("Directory does not exist: " + getInstallDir());
                     }
                     sftpClient.rmDir(installDir, false);
                 }

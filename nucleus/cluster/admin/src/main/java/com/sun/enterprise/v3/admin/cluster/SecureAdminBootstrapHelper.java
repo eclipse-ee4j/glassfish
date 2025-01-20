@@ -17,9 +17,7 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.util.io.FileUtils;
@@ -32,6 +30,7 @@ import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.nio.file.Path;
 
+import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
@@ -51,13 +50,12 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
         Path.of("config", "keystore.jks"),
         Path.of("config", "cacerts.jks")
     };
-    private static final String[] SECURE_ADMIN_FILE_DIRS_TO_CREATE = new String[] {"config"};
+    private static final Path[] SECURE_ADMIN_FILE_DIRS_TO_CREATE = new Path[] {Path.of("config")};
 
     /**
      * Creates a new helper for delivering files needed for secure admin to the remote instance.
-     * @param sshL
      *
-     * @param adminHost host or ip address of host which hosts DAS.
+     * @param sshL
      * @param dasInstanceDir directory of the local instance - source for the required files
      * @param remoteNodeDir directory of the remote node on the remote system
      * @param instance name of the instance on the remote node to bootstrap
@@ -111,7 +109,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
     /**
      * Cleans up any allocated resources.
      */
-    protected abstract void mkdirs(String dirURI) throws IOException;
+    protected abstract void mkdirs(Path dir) throws IOException;
 
     @Override
     public void close() {
@@ -164,7 +162,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
     }
 
     private void mkdirs() throws IOException {
-        for (String dirPath : SECURE_ADMIN_FILE_DIRS_TO_CREATE) {
+        for (Path dirPath : SECURE_ADMIN_FILE_DIRS_TO_CREATE) {
             mkdirs(dirPath);
         }
     }
@@ -234,42 +232,33 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
             launcher = sshLauncher;
             try {
                 session = launcher.openSession();
-            } catch (JSchException e) {
-                throw new BootstrapException(launcher, e);
+            } catch (SSHException e) {
+                throw new BootstrapException(e);
             }
             try {
                 ftpClient = session.createSFTPClient();
-            } catch (JSchException e) {
+            } catch (SSHException e) {
                 if (session != null) {
                     session.close();
                 }
-                throw new BootstrapException(launcher, e);
+                throw new BootstrapException(e);
             }
         }
 
         @Override
-        protected void mkdirs(String dir) throws IOException {
-            Path remoteDir = remoteInstanceDir.resolve(Path.of(dir));
+        protected void mkdirs(Path dir) throws IOException {
+            Path remoteDir = remoteInstanceDir.resolve(dir);
             LOG.log(Level.DEBUG, "Trying to create directories for remote path {0}", remoteDir);
-            int instanceDirPermissions;
-            try {
-                SftpATTRS attrs = ftpClient.lstat(remoteNodeDir);
-                if (attrs == null) {
-                    throw new IOException("Remote path " + remoteNodeDir + " does not exist.");
-                }
-                instanceDirPermissions = attrs.getPermissions();
-            } catch (SftpException ex) {
-                throw new IOException(remoteNodeDir.toString(), ex);
+            SftpATTRS attrs = ftpClient.lstat(remoteNodeDir);
+            if (attrs == null) {
+                throw new IOException("Remote path " + remoteNodeDir + " does not exist.");
             }
+            int instanceDirPermissions = attrs.getPermissions();
             LOG.log(Level.DEBUG, "Creating remote bootstrap directory " + remoteDir + " with permissions "
                 + Integer.toOctalString(instanceDirPermissions));
-            try {
-                ftpClient.mkdirs(remoteDir);
-                if (launcher.getCapabilities().isChmodSupported()) {
-                    ftpClient.chmod(remoteDir, instanceDirPermissions);
-                }
-            } catch (SftpException ex) {
-                throw new IOException(remoteDir.toString(), ex);
+            ftpClient.mkdirs(remoteDir);
+            if (launcher.getCapabilities().isChmodSupported()) {
+                ftpClient.chmod(remoteDir, instanceDirPermissions);
             }
         }
 
@@ -285,11 +274,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
 
         @Override
         void writeToFile(final Path remotePath, final File localFile) throws IOException {
-            try {
-                ftpClient.put(localFile, remotePath);
-            } catch (SftpException ex) {
-                throw new IOException(ex);
-            }
+            ftpClient.put(localFile, remotePath);
         }
 
         @Override
@@ -298,21 +283,17 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
             try {
                 setLastModified(remoteDomainXML, 0);
             } catch (IOException ex) {
-                throw new BootstrapException(launcher, ex);
+                throw new BootstrapException(ex);
             }
             LOG.log(Level.DEBUG, "Backdated the instance's copy of domain.xml");
         }
 
+        /**
+         * Times over ssh are expressed as seconds since 01 Jan 1970.
+         */
         @Override
         void setLastModified(final Path path, final long when) throws IOException {
-            /*
-             * Times over ssh are expressed as seconds since 01 Jan 1970.
-             */
-            try {
-                ftpClient.setTimeModified(path, when);
-            } catch (SftpException e) {
-                throw new IOException(e);
-            }
+            ftpClient.setTimeModified(path, when);
         }
     }
 
@@ -329,8 +310,8 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
         }
 
         @Override
-        protected void mkdirs(String dir) {
-            final File newDir = new File(newInstanceDirURI.resolve(dir));
+        protected void mkdirs(Path dir) {
+            final File newDir = Path.of(newInstanceDirURI).resolve(dir).toFile();
             if (!newDir.exists() && !newDir.mkdirs()) {
                 throw new RuntimeException(Strings.get("secure.admin.boot.errCreDir", newDir.getAbsolutePath()));
             }
@@ -339,15 +320,15 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
         @Override
         public void copyBootstrapFiles() throws IOException {
             for (Path relativePathToFile : SECURE_ADMIN_FILE_REL_URIS_TO_COPY) {
-                final File origin = new File(existingInstanceDirURI.resolve(relativePathToFile.toString()));
-                final File dest = new File(newInstanceDirURI.resolve(relativePathToFile.toString()));
+                final File origin = Path.of(existingInstanceDirURI).resolve(relativePathToFile).toFile();
+                final File dest = Path.of(newInstanceDirURI).resolve(relativePathToFile).toFile();
                 FileUtils.copy(origin, dest);
             }
         }
 
         @Override
         protected void backdateInstanceDomainXML() throws BootstrapException {
-            final File newDomainXMLFile = new File(newInstanceDirURI.resolve(DOMAIN_XML_PATH.toString()));
+            final File newDomainXMLFile = Path.of(newInstanceDirURI).resolve(DOMAIN_XML_PATH).toFile();
             if (!newDomainXMLFile.setLastModified(0)) {
                 throw new RuntimeException(Strings.get("secure.admin.boot.errSetLastMod", newDomainXMLFile.getAbsolutePath()));
             }
@@ -356,10 +337,6 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
 
     public static class BootstrapException extends Exception {
         private static final long serialVersionUID = -5488899043810477670L;
-
-        public BootstrapException(final SSHLauncher launcher, final Exception ex) {
-            super(ex.getMessage() + "; SSH settings: " + launcher, ex);
-        }
 
         public BootstrapException(final String message, final Exception ex) {
             super(message + "; Cause: " + ex.getMessage(), ex);

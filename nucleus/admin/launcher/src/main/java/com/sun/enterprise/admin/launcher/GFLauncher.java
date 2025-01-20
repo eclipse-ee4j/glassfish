@@ -179,7 +179,6 @@ public abstract class GFLauncher {
      * The process which is running GlassFish
      */
     private Process glassFishProcess;
-    private ProcessWhacker processWhacker;
     private ProcessStreamDrainer processStreamDrainer;
 
     /**
@@ -831,35 +830,10 @@ public abstract class GFLauncher {
 
     private void wait(final Process p) throws GFLauncherException {
         try {
-            setShutdownHook(p);
             p.waitFor();
             exitValue = p.exitValue();
         } catch (InterruptedException ex) {
             throw new GFLauncherException("verboseInterruption", ex, ex);
-        }
-    }
-
-    private void setShutdownHook(final Process p) {
-        // ON UNIX a ^C on the console will also kill DAS
-        // On Windows a ^C on the console will not kill DAS
-        // We want UNIX behavior on Windows
-        // note that the hook thread will run in both cases:
-        // 1. the server died on its own, e.g. with a stop-domain
-        // 2. a ^C (or equivalent signal) was received by the console
-        // note that exitValue is still set to -1
-
-        // if we are restarting we may get many many processes.
-        // Each time this method is called we reset the Process reference inside
-        // the processWhacker
-
-        if (processWhacker == null) {
-            Runtime runtime = Runtime.getRuntime();
-            final String msg = strings.get("serverStopped", callerParameters.getType());
-            processWhacker = new ProcessWhacker(p, msg);
-
-            runtime.addShutdownHook(new Thread(processWhacker, "GlassFish Process Whacker Shutdown Hook"));
-        } else {
-            processWhacker.setProcess(p);
         }
     }
 
@@ -1129,7 +1103,7 @@ public abstract class GFLauncher {
                 psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
             }
             if (!isSSHSession()) {
-                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow -Wait -PassThru");
+                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow -PassThru");
                 if (stdinPreloaded) {
                     psContent.append(" < $tempFile");
                 }
@@ -1174,30 +1148,5 @@ public abstract class GFLauncher {
         cmds.add("-BatchFilePath");
         cmds.add("\"" + batFile.toFile().getAbsolutePath() + "\"");
         return cmds;
-    }
-
-
-    private static class ProcessWhacker implements Runnable {
-
-        private final String message;
-        private Process process;
-
-        ProcessWhacker(Process p, String msg) {
-            message = msg;
-            process = p;
-        }
-
-        void setProcess(Process p) {
-            process = p;
-        }
-
-        @Override
-        public void run() {
-            // we are in a shutdown hook -- most of the JVM is gone.
-            // logger won't work anymore...
-            System.out.println(message);
-            process.destroy();
-        }
-
     }
 }

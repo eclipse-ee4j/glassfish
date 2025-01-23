@@ -60,10 +60,10 @@ def antjobs = [
 ]
 
 def parallelStagesMap = antjobs.collectEntries {
-  ["${it}": generateAntPodTemplate(it)]
+  ["${it}": generateAntPodTemplate(it, secrets)]
 }
 
-def generateAntPodTemplate(job) {
+def generateAntPodTemplate(job, secrets) {
   return {
     node {
       stage("${job}") {

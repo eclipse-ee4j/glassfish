@@ -72,13 +72,17 @@ def generateAntPodTemplate(job) {
           timeout(time: 1, unit: 'HOURS') {
             withAnt(installation: 'apache-ant-latest') {
               dumpSysInfo()
-              withVault([vaultSecrets: secrets]) {
-                  sh """
-                    mkdir -p ${WORKSPACE}/appserver/tests
-                    tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-                    export CLASSPATH=${WORKSPACE}/glassfish7/javadb
-                    ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-                  """
+              try {
+                withVault([vaultSecrets: secrets]) {
+                    sh """
+                      mkdir -p ${WORKSPACE}/appserver/tests
+                      tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+                      export CLASSPATH=${WORKSPACE}/glassfish7/javadb
+                      ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+                    """
+                }
+              } catch (err) {
+                echo "withVault failed with: ${err}"
               }
             }
           }

@@ -199,6 +199,7 @@ spec:
         container('maven') {
           dumpSysInfo()
           withVault([vaultSecrets: secrets]) {
+              sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
               sh '''
                 # Validate the structure in all submodules (especially version ids)
                 mvn -B -e -fae clean validate -Ptck,set-version-id,staging
@@ -225,6 +226,7 @@ spec:
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
             withVault([vaultSecrets: secrets]) {
+                sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
                 sh '''
                     mvn -B -e clean install -Pstaging,qa
                 '''
@@ -262,6 +264,7 @@ spec:
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
             withVault([vaultSecrets: secrets]) {
+                sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
                 sh '''
                     mvn -B -e clean install -Pstaging -f docs -amd
                 '''

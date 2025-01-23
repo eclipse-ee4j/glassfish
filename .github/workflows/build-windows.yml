@@ -22,6 +22,8 @@ jobs:
       run: |
         curl.exe -o ./apache-maven-3.9.9-bin.zip https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.zip
         tar -xf ./apache-maven-3.9.9-bin.zip
+    - name: Use develocity extensions
+      run: cp .mvn/develocity-extensions.xml .mvn/extensions.xml
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI

@@ -103,19 +103,17 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
             copyToHostsInternal(zipFile, binDirFiles);
         } catch (CommandException ex) {
             throw ex;
-        } catch (IOException e) {
+        } catch (SSHException e) {
             // Note: CommandException is not printed to logs.
             logger.log(SEVERE,
                 "Failed to copy zip file " + zipFile + " and to make binary files " + binDirFiles + " executable.", e);
-            throw new CommandException("Failed to copy zip file " + zipFile + " and to make binary files " + binDirFiles
-                + " executable. Reason: " + e.getMessage(), e);
+            throw new CommandException(e.getMessage(), e);
         }
     }
 
 
     private void copyToHostsInternal(File zipFile, ArrayList<String> binDirFiles)
-        throws IOException, CommandException {
-
+        throws SSHException, CommandException {
         boolean prompt = promptPass;
         for (String host : hosts) {
             File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
@@ -167,21 +165,15 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 // to be fixed with proper permissions
                 if (sshLauncher.getCapabilities().isChmodSupported()) {
                     logger.info(() -> "Fixing file permissions of all bin files under " + host + ":" + sshInstallDir);
-                    try {
-                        if (binDirFiles.isEmpty()) {
-                            // binDirFiles can be empty if the archive isn't a fresh one
-                            searchAndFixBinDirectoryFiles(sshInstallDir, sftpClient);
-                        } else {
-                            for (String binDirFile : binDirFiles) {
-                                sftpClient.chmod(sshInstallDir.resolve(binDirFile), 0755);
-                            }
+                    if (binDirFiles.isEmpty()) {
+                        // binDirFiles can be empty if the archive isn't a fresh one
+                        searchAndFixBinDirectoryFiles(sshInstallDir, sftpClient);
+                    } else {
+                        for (String binDirFile : binDirFiles) {
+                            sftpClient.chmod(sshInstallDir.resolve(binDirFile), 0755);
                         }
-                        logger.finer(
-                            () -> "Fixed file permissions of all bin files under " + host + ":" + sshInstallDir);
-                    } catch (SSHException e) {
-                        throw new IOException("Could not set permissions on commands in bin directories under "
-                            + sshInstallDir + " directory on host " + host + ". Cause: " + e, e);
                     }
+                    logger.finer(() -> "Fixed file permissions of all bin files under " + host + ":" + sshInstallDir);
                 }
             }
         }

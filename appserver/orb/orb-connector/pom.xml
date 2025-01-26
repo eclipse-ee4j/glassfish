@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.orb</groupId>
         <artifactId>orb</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>orb-connector</artifactId>
@@ -46,7 +46,6 @@
     </developers>
 
     <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
     </properties>
 

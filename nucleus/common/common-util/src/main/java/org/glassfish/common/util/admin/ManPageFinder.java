@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +20,6 @@ package org.glassfish.common.util.admin;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +28,8 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *  A utility class that gets the plain text man page for the
@@ -83,15 +84,10 @@ public class ManPageFinder {
             s = classLoader.getResourceAsStream((String)it.next());
         }
 
-        if (s == null)
+        if (s == null) {
             return null;
-        Reader r;
-        try {
-            r = new InputStreamReader(s, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            r = new InputStreamReader(s);
         }
-        return new BufferedReader(r);
+        return new BufferedReader(new InputStreamReader(s, UTF_8));
     }
 
     private static Iterator getPossibleLocations(final String cmdName,
@@ -100,13 +96,15 @@ public class ManPageFinder {
             final String[] locales = getLocaleLocations(locale);
             private int i = 0;
             private int j = 0;
-            private String helpdir = getHelpDir(cmdClass);
-            private String commandName = cmdName;
+            private final String helpdir = getHelpDir(cmdClass);
+            private final String commandName = cmdName;
 
+            @Override
             public boolean hasNext() {
                 return i < locales.length && j < sections.length;
             }
 
+            @Override
             public Object next() throws NoSuchElementException{
                 if (!hasNext()) {
                     throw new NoSuchElementException();
@@ -116,13 +114,15 @@ public class ManPageFinder {
 
                 if (j == sections.length) {
                     i++;
-                    if (i < locales.length)
+                    if (i < locales.length) {
                         j = 0;
+                    }
                 }
-                logger.log(Level.FINE, "Trying to get this manpage: {0}", result);
+                logger.log(Level.FINER, "Trying to get this manpage: {0}", result);
                 return result;
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
@@ -141,15 +141,16 @@ public class ManPageFinder {
         String language = locale.getLanguage();
         String country = locale.getCountry();
         String variant = locale.getVariant();
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         l.add("");
 
         if (language != null && language.length() > 0) {
             l.add("/" + language);
             if (country != null && country.length() > 0) {
                 l.add("/" + language + "_" + country);
-                if (variant != null && variant.length() > 0)
+                if (variant != null && variant.length() > 0) {
                     l.add("/" + language + "_" + country + "_" + variant);
+                }
             }
         }
         Collections.reverse(l);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,13 @@ public class GlassFishErrorServiceImpl implements ErrorService {
 
     String findBundleExceptionText(Throwable throwable) {
         while (throwable != null) {
-            if (throwable instanceof BundleException) {
+            boolean isBundleException = false;
+            try {
+                isBundleException = throwable instanceof BundleException;
+            } catch (NoClassDefFoundError | Exception e) {
+                // BundleException not found - ignore, we don't run in OSGi, e.g. GlassFish Embedded
+            }
+            if (isBundleException) {
                 BundleException bundleException = (BundleException) throwable;
                 return FelixPrettyPrinter.prettyPrintExceptionMessage(bundleException.getMessage());
             }

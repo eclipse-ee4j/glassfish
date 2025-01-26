@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,13 +29,14 @@ import java.util.List;
 
 import org.glassfish.api.admin.CommandException;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+
 /**
  * @author Rajiv Mordani
  */
 public class SSHUtil {
 
     private static final List<Session> activeConnections = new ArrayList<>();
-    private static final String NL = System.lineSeparator();
 
     /**
      * Registers a connection for cleanup when the plugin is stopped.
@@ -98,9 +99,9 @@ public class SSHUtil {
     public static boolean isEncryptedKey(File keyFile) throws CommandException {
         boolean res = false;
         try {
-            String f = FileUtils.readSmallFile(keyFile);
+            String f = FileUtils.readSmallFile(keyFile, ISO_8859_1).trim();
             if (f.startsWith("-----BEGIN ") && f.contains("ENCRYPTED")
-                    && f.endsWith(" PRIVATE KEY-----" + NL)) {
+                    && f.endsWith(" PRIVATE KEY-----")) {
                 res=true;
             }
         }
@@ -124,11 +125,11 @@ public class SSHUtil {
         if (!file.getName().endsWith(".pub")) {
             String key = null;
             try {
-                key = FileUtils.readSmallFile(file);
+                key = FileUtils.readSmallFile(file, ISO_8859_1).trim();
             } catch (IOException ioe) {
                 throw new CommandException(Strings.get("unable.to.read.key", file, ioe.getMessage()));
             }
-            if (!key.startsWith("-----BEGIN ") && !key.endsWith(" PRIVATE KEY-----" + NL)) {
+            if (!key.startsWith("-----BEGIN ") && !key.endsWith(" PRIVATE KEY-----")) {
                 throw new CommandException(Strings.get("invalid.key.file", file));
             }
         }

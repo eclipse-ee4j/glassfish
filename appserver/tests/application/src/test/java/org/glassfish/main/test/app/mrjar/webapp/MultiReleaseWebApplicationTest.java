@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.test.app.mrjar.MultiReleaseTestBase;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -81,7 +82,7 @@ public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
                 // Check version of loaded class file
-                () -> assertThat(Integer.parseInt(readResponse(connection)), equalTo(V11))
+                () -> assertThat(Integer.parseInt(HttpParser.readResponseInputStream(connection)), equalTo(V11))
             );
         } finally {
             connection.disconnect();
@@ -98,7 +99,7 @@ public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
                 // Check version of loaded class file
-                () -> assertThat(Integer.parseInt(readResponse(connection)), equalTo(V17))
+                () -> assertThat(Integer.parseInt(HttpParser.readResponseInputStream(connection)), equalTo(V17))
             );
         } finally {
             connection.disconnect();

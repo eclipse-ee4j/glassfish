@@ -23,11 +23,29 @@
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>nucleus-common</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>simple-glassfish-api</artifactId>
     <packaging>glassfish-jar</packaging>
 
     <name>Simple Public APIs of Glassfish</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
 </project>

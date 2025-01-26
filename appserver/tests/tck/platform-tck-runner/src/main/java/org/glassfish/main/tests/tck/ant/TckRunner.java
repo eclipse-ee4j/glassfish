@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -206,6 +206,7 @@ public class TckRunner {
         env.put("PATH", String.join(":",
             cfg.getJdkDirectory().getAbsolutePath() + "/bin",
             cfg.getAntDirectory().getAbsolutePath() + "/bin",
+            "/opt/homebrew/bin", // For macOs, to override BSD tar with GNU Tar etc
             "/usr/bin",
             "/bin"));
         env.put("CTS_HOME", cfg.getTargetDir().getAbsolutePath());
@@ -218,6 +219,7 @@ public class TckRunner {
         env.put("GF_LOGGING_CFG_VI", cfg.getServerLoggingProperties().getAbsolutePath());
         env.put("DATABASE", "JavaDB");
         env.put("CLIENT_LOGGING_CFG", cfg.getClientLoggingProperties().getAbsolutePath());
+        env.put("ENABLE_RERUN", "false");
 
         LOG.log(Level.DEBUG, "Configured environment: \n{0}", env);
     }

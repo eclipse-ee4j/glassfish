@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>cmp-support-sqlstore</artifactId>
@@ -45,7 +45,6 @@
     </developers>
 
     <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <!-- We don't need it here and it would fail -->
         <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
     </properties>

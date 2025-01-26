@@ -55,7 +55,8 @@ public class PoolTxHelper {
      * Check whether the local resource can be put back to pool If true, unenlist the resource
      *
      * @param h ResourceHandle to be verified
-     * @return boolean
+     * @return true if the resource handle is eligible for reuse, otherwise false. NOTE in case of true, this method alters
+     * the handle state to enlisted=false
      */
     public boolean isLocalResourceEligibleForReuse(ResourceHandle h) {
         boolean result = false;
@@ -70,8 +71,16 @@ public class PoolTxHelper {
                 }
                 return result;
             }
+
             h.getResourceState().setEnlisted(false);
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, "Pool: isLocalResourceEligibleForReuse, eligible=true, enlisted changed to true for handle=" + h);
+            }
             result = true;
+        }
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE, "Pool: isLocalResourceEligibleForReuse, eligible=false, handle=" + h);
         }
         return result;
     }
@@ -153,7 +162,6 @@ public class PoolTxHelper {
      * @return boolean indicating whether thegiven non-xa resource is in transaction
      */
     private boolean isNonXAResourceInTransaction(JavaEETransaction tran, ResourceHandle resource) {
-
         return resource.equals(tran.getNonXAResource());
     }
 
@@ -175,6 +183,9 @@ public class PoolTxHelper {
      * @param resource Resource to be enlisted in the transaction
      */
     public void resourceEnlisted(Transaction tran, ResourceHandle resource) {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE, "Pool: resourceEnlisted START, tran=" + tran + ", resource=" + resource + ", poolInfo=" + poolInfo);
+        }
         try {
             JavaEETransaction j2eetran = (JavaEETransaction) tran;
             Set set = j2eetran.getResources(poolInfo);
@@ -192,7 +203,7 @@ public class PoolTxHelper {
         ResourceState state = resource.getResourceState();
         state.setEnlisted(true);
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Pool [ " + poolInfo + " ]: resourceEnlisted: " + resource);
+            _logger.log(Level.FINE, "Pool: resourceEnlisted END, tran=" + tran + ", resource=" + resource);
         }
     }
 
@@ -205,6 +216,10 @@ public class PoolTxHelper {
      * @return delisted resources
      */
     public List<ResourceHandle> transactionCompleted(Transaction tran, int status, PoolInfo poolInfo) {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE, "Pool: transactionCompleted START, tran= " + tran + ", poolInfo=" + poolInfo);
+        }
+
         JavaEETransaction j2eetran;
         List<ResourceHandle> delistedResources = new ArrayList<>();
         try {
@@ -232,6 +247,10 @@ public class PoolTxHelper {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Pool: transactionCompleted: " + resource);
             }
+        }
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE, "Pool: transactionCompleted END, tran= " + tran);
         }
         return delistedResources;
     }

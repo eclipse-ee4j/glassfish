@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,57 +21,53 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 
+class ProcessStreamDrainerWorker implements Runnable {
 
-///////////////////////////////////////////////////////////////////////////
+    private final BufferedInputStream reader;
+    private final PrintStream redirect;
+    private StringBuilder sb;
 
-class ProcessStreamDrainerWorker implements Runnable
-{
-    ProcessStreamDrainerWorker(InputStream in, PrintStream Redirect, boolean save)
-    {
-        if(in == null)
+    ProcessStreamDrainerWorker(InputStream in, PrintStream Redirect, boolean save) {
+        if (in == null) {
             throw new NullPointerException("InputStream argument was null.");
+        }
 
         reader = new BufferedInputStream(in);
         redirect = Redirect;
 
-        if(save) {
+        if (save) {
             sb = new StringBuilder();
         }
     }
 
-    public void run()
-    {
-        if(reader == null)
+
+    @Override
+    public void run() {
+        if (reader == null) {
             return;
-
-        try
-        {
-            int count = 0;
-            byte[] buffer = new byte[4096];
-
-            while ((count = reader.read(buffer)) != -1)
-            {
-                if(redirect != null)
-                    redirect.write(buffer, 0, count);
-
-               if(sb != null)
-                   sb.append(new String(buffer, 0, count));
-            }
         }
-        catch (IOException e)
-        {
+
+        try {
+            byte[] buffer = new byte[8192];
+            Charset charset = Charset.defaultCharset();
+            int count = 0;
+            while ((count = reader.read(buffer)) != -1) {
+                if (redirect != null) {
+                    redirect.write(buffer, 0, count);
+                }
+
+                if (sb != null) {
+                    sb.append(new String(buffer, 0, count, charset));
+                }
+            }
+        } catch (IOException e) {
         }
     }
+
 
     String getString() {
-        if(sb != null)
-            return sb.toString();
-        else
-            return "";
+        return sb == null ? "" : sb.toString();
     }
-
-    private final   BufferedInputStream reader;
-    private final   PrintStream         redirect;
-    private         StringBuilder       sb;
 }

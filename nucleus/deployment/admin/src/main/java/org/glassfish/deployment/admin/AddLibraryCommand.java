@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.v3.server.CommonClassLoaderServiceImpl;
 import com.sun.enterprise.v3.server.DomainXmlPersistence;
 
 import jakarta.inject.Inject;
@@ -46,6 +48,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import static org.glassfish.deployment.admin.DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile;
+
 @Service(name="add-library")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
@@ -71,6 +75,9 @@ public class AddLibraryCommand implements AdminCommand {
     @Inject
     UnprocessedConfigListener ucl;
 
+    @Inject
+    CommonClassLoaderServiceImpl commonCLService;
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AddLibraryCommand.class);
 
     public void execute(AdminCommandContext context) {
@@ -79,30 +86,32 @@ public class AddLibraryCommand implements AdminCommand {
         final Logger logger = context.getLogger();
 
         File libDir = env.getLibPath();
+        boolean typeCommon = true;
 
         if (type.equals("app")) {
             libDir = new File(libDir, "applibs");
+            typeCommon = false;
         }
 
         // rename or copy the library file to the appropriate
         // library directory
         try {
-            List<UnprocessedChangeEvent> unprocessed =
-                new ArrayList<UnprocessedChangeEvent>();
-
-            StringBuffer msg = new StringBuffer();
-
+            List<UnprocessedChangeEvent> unprocessed = new ArrayList<>();
+            StringBuilder msg = new StringBuilder();
             for (File libraryFile : files) {
                 if (libraryFile.exists()) {
-                    DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(
-                        libDir, libraryFile, logger, env);
-                    PropertyChangeEvent pe = new PropertyChangeEvent(libDir,
-                        "add-library", null, libraryFile);
-                    UnprocessedChangeEvent uce = new UnprocessedChangeEvent(
-                        pe, "add-library");
-                    unprocessed.add(uce);
+                    File resultFile = renameUploadedFileOrCopyInPlaceFile(libDir, libraryFile,
+                        env.getApplicationRepositoryPath());
+                    if (typeCommon) {
+                        commonCLService.addToClassPath(resultFile.toURI().toURL());
+                    } else {
+                        PropertyChangeEvent pe = new PropertyChangeEvent(libDir, "add-library", null, resultFile);
+                        UnprocessedChangeEvent uce = new UnprocessedChangeEvent(pe, "add-library");
+                        unprocessed.add(uce);
+                    }
                 } else {
-                    msg.append(localStrings.getLocalString("lfnf","Library file not found", libraryFile.getAbsolutePath()));
+                    msg.append(
+                        localStrings.getLocalString("lfnf", "Library file not found", libraryFile.getAbsolutePath()));
                 }
             }
             if (msg.length() > 0) {
@@ -112,10 +121,8 @@ public class AddLibraryCommand implements AdminCommand {
             }
 
             // set the restart required flag
-            UnprocessedChangeEvents uces = new UnprocessedChangeEvents(
-                unprocessed);
-            List<UnprocessedChangeEvents> ucesList =
-                new ArrayList<UnprocessedChangeEvents>();
+            UnprocessedChangeEvents uces = new UnprocessedChangeEvents(unprocessed);
+            List<UnprocessedChangeEvents> ucesList = new ArrayList<>();
             ucesList.add(uces);
             ucl.unprocessedTransactedEvents(ucesList);
 

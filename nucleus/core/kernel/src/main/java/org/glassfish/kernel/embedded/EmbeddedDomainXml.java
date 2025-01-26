@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,13 +48,15 @@ public class EmbeddedDomainXml extends GFDomainXml {
 
     static URL getDomainXml(StartupContext startupContext) throws IOException {
         String configFileURI = startupContext.getArguments().getProperty(GlassFishProperties.CONFIG_FILE_URI_PROP_NAME);
-        if (configFileURI != null) { // user specified domain.xml
+        if (configFileURI != null) {
+            // user specified domain.xml
             return URI.create(configFileURI).toURL();
         }
         String instanceRoot = startupContext.getArguments().getProperty(
                 "com.sun.aas.instanceRoot");
         File domainXml = new File(instanceRoot, "config/domain.xml");
-        if (domainXml.exists()) { // domain/config/domain.xml, if exists.
+        if (domainXml.exists()) {
+            // domain/config/domain.xml, if exists.
             return domainXml.toURI().toURL();
         }
         return EmbeddedDomainXml.class.getClassLoader().getResource(

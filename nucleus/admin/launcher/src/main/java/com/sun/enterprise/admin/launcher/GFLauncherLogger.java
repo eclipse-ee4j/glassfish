@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,16 +20,17 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.main.jul.formatter.ODLLogFormatter;
+import org.glassfish.main.jul.handler.SimpleLogHandler;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
@@ -37,7 +38,8 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 /**
- * A POL (plain old logger).
+ * Special logger for launchers used to start server in separate JVMs.
+ * After that the launcher instance dies, but first it must close all ouputs, specially log files.
  *
  * @author bnevins
  */
@@ -50,19 +52,22 @@ public class GFLauncherLogger {
     @LoggerInfo(subsystem = "Launcher", description = "Launcher Logger", publish = true)
     public static final String LOGGER_NAME = "jakarta.enterprise.launcher";
 
-    private final static Logger logger;
+    /**
+     * Logger just for the launcher that only uses the standard output and doesn't send logs to
+     * any other handler.
+     */
+    private final static Logger LOG;
     private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncherLogger.class);
+    private static final Handler HANDLER_STDOUT;
     private static FileHandler logfileHandler;
 
     static {
-        /*
-         * Create a Logger just for the launcher that only uses the Handlers we set up. This makes sure that when we change the
-         * log level for the Handler, we don't interfere with subsequent use of the Logger by asadmin.
-         */
-        logger = Logger.getLogger(LOGGER_NAME, SHARED_LOGMESSAGE_RESOURCE);
-        logger.setLevel(INFO);
-        logger.setUseParentHandlers(false);
-        logger.addHandler(new ConsoleHandler());
+        LOG = Logger.getLogger(LOGGER_NAME, SHARED_LOGMESSAGE_RESOURCE);
+        LOG.setLevel(INFO);
+        LOG.setUseParentHandlers(false);
+        HANDLER_STDOUT = new SimpleLogHandler(System.out);
+        HANDLER_STDOUT.setFormatter(new SimpleFormatter());
+        LOG.addHandler(HANDLER_STDOUT);
     }
 
     @LogMessageInfo(message = "Single and double quote characters are not allowed in the CLASSPATH environmental variable.  "
@@ -88,42 +93,37 @@ public class GFLauncherLogger {
     // use LocalStrings for < INFO level...
 
     public static void warning(String msg, Object... objs) {
-        logger.log(WARNING, msg, objs);
+        LOG.log(WARNING, msg, objs);
     }
 
     public static void info(String msg, Object... objs) {
-        logger.log(INFO, msg, objs);
+        LOG.log(INFO, msg, objs);
     }
 
     public static void severe(String msg, Object... objs) {
-        logger.log(SEVERE, msg, objs);
+        LOG.log(SEVERE, msg, objs);
     }
 
     public static void fine(String msg, Object... objs) {
-        if (logger.isLoggable(FINE)) {
-            logger.fine(strings.get(msg, objs));
+        if (LOG.isLoggable(FINE)) {
+            LOG.fine(strings.get(msg, objs));
         }
     }
 
-    ///////////////////////// non-public below //////////////////////////////
-
-    static synchronized void setConsoleLevel(Level level) {
-        for (Handler handler : logger.getHandlers()) {
-            if (ConsoleHandler.class.isAssignableFrom(handler.getClass())) {
-                handler.setLevel(level);
-            }
-        }
+    static void setConsoleLevel(Level level) {
+        HANDLER_STDOUT.setLevel(level);
     }
+
 
     /**
-     * IMPORTANT! The server's logfile is added to the *local* logger. But it is never removed. The files are kept open by
-     * the logger. One really bad result is that Windows will not be able to delete that server after stopping it. Solution:
-     * remove the file handler when done.
+     * IMPORTANT! The server's logfile is added to the *local* LOG.
+     * The files are kept open by the handler, so don't forget to close the handler
+     * calling {@link #removeLogFileHandler()}.
      *
      * @param logFile The logfile
      * @throws GFLauncherException if the info object has not been setup
      */
-    static synchronized void addLogFileHandler(String logFile, GFLauncherInfo info) throws GFLauncherException {
+    static void addLogFileHandler(String logFile) throws GFLauncherException {
         try {
             if (logFile == null || logfileHandler != null) {
                 return;
@@ -131,7 +131,7 @@ public class GFLauncherLogger {
             logfileHandler = new FileHandler(logFile, true);
             logfileHandler.setFormatter(new ODLLogFormatter());
             logfileHandler.setLevel(INFO);
-            logger.addHandler(logfileHandler);
+            LOG.addHandler(logfileHandler);
         } catch (IOException e) {
             // should be seen in verbose and watchdog modes for debugging
             e.printStackTrace();
@@ -139,11 +139,12 @@ public class GFLauncherLogger {
 
     }
 
-    static synchronized void removeLogFileHandler() {
-        if (logfileHandler != null) {
-            logger.removeHandler(logfileHandler);
-            logfileHandler.close();
-            logfileHandler = null;
+    static void removeLogFileHandler() {
+        FileHandler handler = logfileHandler;
+        logfileHandler = null;
+        if (handler != null) {
+            LOG.removeHandler(handler);
+            handler.close();
         }
     }
 

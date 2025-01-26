@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
+    Copyright (c) 2024 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>nucleus-core</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -129,6 +129,15 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>com.sun.enterprise.glassfish.bootstrap.osgi.GlassFishMainActivator</Bundle-Activator>
+                    </instructions>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -138,7 +147,7 @@
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
-                        <phase>generate-test-resources</phase>
+                        <phase>pre-integration-test</phase>
                         <configuration>
                             <includeArtifactIds>org.apache.felix.main,simple-glassfish-api,glassfish-jul-extension</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/test-osgi</outputDirectory>
@@ -146,15 +155,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Bundle-Activator>com.sun.enterprise.glassfish.bootstrap.osgi.GlassFishMainActivator</Bundle-Activator>
-                    </instructions>
-                </configuration>
             </plugin>
         </plugins>
     </build>

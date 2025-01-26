@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.RequestDispatcher;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -82,6 +84,7 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
                 new Class[] {WebBundleDescriptorImpl.class}, new Class[] {Application.class});
     }
 
+    @Override
     public <V> V loadMetaData(Class<V> type, DeploymentContext dc) {
 
         WebBundleDescriptorImpl wbd = dc.getModuleMetaData(WebBundleDescriptorImpl.class);
@@ -98,14 +101,16 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
             String contextRoot = params.contextroot;
             if(contextRoot==null) {
                 contextRoot = wbd.getContextRoot();
-                if("".equals(contextRoot))
+                if("".equals(contextRoot)) {
                     contextRoot = null;
+                }
             }
             if(contextRoot==null) {
                 contextRoot = params.previousContextRoot;
             }
-            if(contextRoot==null)
+            if(contextRoot==null) {
                 contextRoot = ((GenericHandler)dc.getArchiveHandler()).getDefaultApplicationNameFromArchiveName(dc.getOriginalSource());
+            }
 
             if (!contextRoot.startsWith("/")) {
                 contextRoot = "/" + contextRoot;
@@ -168,6 +173,7 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
     }
 
 
+    @Override
     public void unload(WebApplication webApplication, DeploymentContext dc) {
 
     }
@@ -183,17 +189,14 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
         final WebBundleDescriptorImpl wbd = dc.getModuleMetaData(
             WebBundleDescriptorImpl.class);
         try {
-            final File outDir = dc.getScratchDir(env.kCompileJspDirName);
+            final File outDir = dc.getScratchDir(ServerEnvironment.kCompileJspDirName);
             final File inDir  = dc.getSourceDir();
 
-            StringBuilder classpath = new StringBuilder(
-                super.getCommonClassPath());
+            StringBuilder classpath = new StringBuilder(super.getCommonClassPath());
             classpath.append(File.pathSeparatorChar);
-            classpath.append(ASClassLoaderUtil.getModuleClassPath(
-                    sc.getDefaultServices(),
-                    wbd.getApplication().getName(),
-                    dc.getCommandParameters(
-                        DeployCommandParameters.class).libraries));
+            final DeployCommandParameters dcParams = dc.getCommandParameters(DeployCommandParameters.class);
+            classpath.append(ASClassLoaderUtil.getModuleClassPath(sc.getDefaultServices(),
+                wbd.getApplication().getName(), dcParams.libraries));
             classpath.append(File.pathSeparatorChar);
             classpath.append(super.getModuleClassPath(dc));
             JSPCompiler.compile(inDir, outDir, wbd, classpath.toString(), sc);

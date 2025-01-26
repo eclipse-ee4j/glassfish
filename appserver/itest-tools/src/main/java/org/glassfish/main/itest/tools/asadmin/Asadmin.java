@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.main.itest.tools.asadmin;
 
 import com.sun.enterprise.universal.process.ProcessManager;
@@ -21,6 +20,11 @@ import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,12 +41,12 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Tool for executing asadmin/asadmin.bat commands.
- * The tool is stateless.
+ * Tool for executing asadmin/asadmin.bat commands. The tool is stateless.
  *
  * @author David Matejcek
  */
 public class Asadmin {
+
     private static final Logger LOG = Logger.getLogger(Asadmin.class.getName());
 
     private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
@@ -57,22 +61,37 @@ public class Asadmin {
     private final File asadmin;
     private final String adminUser;
     private final File adminPasswordFile;
+    private final boolean terse;
     private final Map<String, String> environment = new HashMap<>();
-
+    private final Map<String, String> additionalPasswords = new HashMap<>();
 
     /**
      * Creates a stateless instance of the tool.
      *
      * @param asadmin - executable file
      * @param adminUser - username authorized to use the domain
-     * @param adminPasswordFile - a file containing admin's password set as <code>AS_ADMIN_PASSWORD=...</code>
+     * @param adminPasswordFile - a file containing admin's password set as
+     * <code>AS_ADMIN_PASSWORD=...</code>
      */
     public Asadmin(final File asadmin, final String adminUser, final File adminPasswordFile) {
+        this(asadmin, adminUser, adminPasswordFile, false);
+    }
+
+    /**
+     * Creates a stateless instance of the tool.
+     *
+     * @param asadmin - executable file
+     * @param adminUser - username authorized to use the domain
+     * @param adminPasswordFile - a file containing admin's password set as
+     * <code>AS_ADMIN_PASSWORD=...</code>
+     * @param terse - to produce output, minimized and suitable for parsing.
+     */
+    public Asadmin(final File asadmin, final String adminUser, final File adminPasswordFile, final boolean terse) {
         this.asadmin = asadmin;
         this.adminUser = adminUser;
         this.adminPasswordFile = adminPasswordFile;
+        this.terse = terse;
     }
-
 
     /**
      * Adds environment property set for the asadmin execution.
@@ -86,6 +105,27 @@ public class Asadmin {
         return this;
     }
 
+    /**
+     * Adds a password to the password file.
+     *
+     * @param name Name in the password file
+     * @param secretValue Value in the password file
+     * @return this
+     */
+    public Asadmin withPassword(final String name, final String secretValue) {
+        this.additionalPasswords.put(name, secretValue);
+        return this;
+    }
+
+    /**
+     * Removes all custom passwords.
+     *
+     * @return this
+     */
+    public Asadmin resetPasswords() {
+        this.additionalPasswords.clear();
+        return this;
+    }
 
     /**
      * @return asadmin command file name
@@ -93,7 +133,6 @@ public class Asadmin {
     public String getCommandName() {
         return asadmin.getName();
     }
-
 
     public <T> KeyAndValue<T> getValue(final String key, final Function<String, T> transformer) {
         List<KeyAndValue<T>> result = get(key, transformer);
@@ -106,20 +145,19 @@ public class Asadmin {
         return result.get(0);
     }
 
-
     public <T> List<KeyAndValue<T>> get(final String key, final Function<String, T> transformer) {
         AsadminResult result = exec("get", key);
         assertThat(result, asadminOK());
         return Arrays.stream(result.getStdOut().split(System.lineSeparator())).map(KEYVAL_SPLITTER)
-            .filter(Objects::nonNull).map(kv -> new KeyAndValue<>(kv.getKey(), transformer.apply(kv.getValue())))
-            .collect(Collectors.toList());
+                .filter(Objects::nonNull).map(kv -> new KeyAndValue<>(kv.getKey(), transformer.apply(kv.getValue())))
+                .collect(Collectors.toList());
     }
 
-
     /**
-     * Executes the command with arguments asynchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms timeout.
-     * The command can be attached by the attach command.
-     * You should find the job id in the {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
+     * Executes the command with arguments asynchronously with
+     * {@value #DEFAULT_TIMEOUT_MSEC} ms timeout. The command can be attached by
+     * the attach command. You should find the job id in the
+     * {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
      *
      * @param args
      * @return {@link AsadminResult} never null.
@@ -129,7 +167,8 @@ public class Asadmin {
     }
 
     /**
-     * Executes the command with arguments synchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms timeout.
+     * Executes the command with arguments synchronously with
+     * {@value #DEFAULT_TIMEOUT_MSEC} ms timeout.
      *
      * @param args
      * @return {@link AsadminResult} never null.
@@ -137,8 +176,10 @@ public class Asadmin {
     public AsadminResult exec(final String... args) {
         return exec(DEFAULT_TIMEOUT_MSEC, false, args);
     }
+
     /**
-     * Executes the command with arguments synchronously with given timeout in millis.
+     * Executes the command with arguments synchronously with given timeout in
+     * millis.
      *
      * @param timeout timeout in millis
      * @param args command and arguments.
@@ -148,27 +189,48 @@ public class Asadmin {
         return exec(timeout, false, args);
     }
 
+    private File getPasswordFile() {
+        try {
+            if (!additionalPasswords.isEmpty()) {
+                final Path tempPasswordFile = Files.createTempFile("pwd", "txt");
+                Files.copy(adminPasswordFile.toPath(), tempPasswordFile, StandardCopyOption.REPLACE_EXISTING);
+                String additionalContent = additionalPasswords.entrySet().stream()
+                        .map(entry -> entry.getKey() + "=" + entry.getValue())
+                        .collect(Collectors.joining("\n"));
+                Files.writeString(tempPasswordFile, "\n" + additionalContent, StandardOpenOption.APPEND);
+                return tempPasswordFile.toFile();
+            }
+            return adminPasswordFile;
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create the temporary password file.", e);
+        }
+
+    }
+
     /**
      * Executes the command with arguments.
      *
      * @param timeout timeout in millis
-     * @param detachedAndTerse detached command is executed asynchronously, can be attached later by the attach command.
+     * @param detachedAndTerse detached command is executed asynchronously, can
+     * be attached later by the attach command.
      * @param args command and arguments.
      * @return {@link AsadminResult} never null.
      */
     private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = Arrays.asList(args);
         LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})",
-            new Object[] {timeout, detachedAndTerse, parameters});
+                new Object[]{timeout, detachedAndTerse, parameters});
         final List<String> command = new ArrayList<>();
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
         command.add(adminUser);
         command.add("--passwordfile");
-        command.add(adminPasswordFile.getAbsolutePath());
+        command.add(getPasswordFile().getAbsolutePath());
         if (detachedAndTerse) {
-            command.add("--terse");
+            command.add("--terse=true");
             command.add("--detach");
+        } else {
+            command.add("--terse=" + terse);
         }
         command.addAll(parameters);
 
@@ -213,4 +275,5 @@ public class Asadmin {
         }
         return result;
     }
+
 }

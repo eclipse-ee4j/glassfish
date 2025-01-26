@@ -20,6 +20,8 @@ import java.util.Properties;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import org.glassfish.main.jul.cfg.GlassFishLoggingConstants;
+
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.CLASS_LOG_MANAGER_GLASSFISH;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.JVM_OPT_LOGGING_MANAGER;
 import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.stacktrace;
@@ -33,15 +35,20 @@ import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
  * in the JVM starts the initialization.
  * <p>
  * Simply said - this must be the first thing application must execute.
+ * <p>
+ * As an example, when you enable GC logging, it will be always faster than this class.
+ * That is why is this class deprecated and we recommend to use the
+ * {@link GlassFishLoggingConstants#JVM_OPT_LOGGING_MANAGER} and other related options
+ * which guarantee that the log manager will be set.
  *
  * @author David Matejcek
  */
+@Deprecated
 public final class GlassFishLogManagerInitializer {
 
     private GlassFishLogManagerInitializer() {
         // hidden
     }
-
 
 
     /**

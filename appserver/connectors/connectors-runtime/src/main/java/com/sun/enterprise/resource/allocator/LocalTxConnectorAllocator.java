@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +41,9 @@ import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
 /**
+ * LocalTransaction Connector Allocator, used for transaction level:
+ * {@link com.sun.appserv.connectors.internal.api.ConnectorConstants#LOCAL_TRANSACTION_INT}.
+ *
  * @author Tony Ng
  */
 public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
@@ -70,7 +73,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
         try {
             ManagedConnection mc = mcf.createManagedConnection(subject, reqInfo);
 
-            ResourceHandle resource = createResourceHandle(mc, spec, this, info);
+            ResourceHandle resource = createResourceHandle(mc, spec, this);
             ConnectionEventListener l = new LocalTxConnectionEventListener(resource);
             mc.addConnectionEventListener(l);
             resource.setListener(l);
@@ -88,10 +91,8 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
     public void fillInResourceObjects(ResourceHandle resource)
             throws PoolingException {
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
-
+            ManagedConnection mc = resource.getResource();
             Object con = mc.getConnection(subject, reqInfo);
-
             ConnectorXAResource xares = (ConnectorXAResource) resource.getXAResource();
             xares.setUserHandle(con);
             resource.fillInResourceObjects(con, xares);
@@ -104,7 +105,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
     public void destroyResource(ResourceHandle resource)
             throws PoolingException {
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
+            ManagedConnection mc = resource.getResource();
             XAResource xares = resource.getXAResource();
             forceTransactionCompletion(xares);
             mc.destroy();

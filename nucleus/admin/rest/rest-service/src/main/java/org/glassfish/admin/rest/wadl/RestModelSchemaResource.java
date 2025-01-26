@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +45,8 @@ import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author jdlee
@@ -55,7 +58,7 @@ public class RestModelSchemaResource extends LegacyCompositeResource {
     @GET
     @Path("old")
     public String getSchema() throws JAXBException, IOException {
-        Set<Class<?>> classes = new TreeSet<Class<?>>(new Comparator<Class<?>>() {
+        Set<Class<?>> classes = new TreeSet<>(new Comparator<Class<?>>() {
             @Override
             public int compare(Class<?> t, Class<?> t1) {
                 return t.getName().compareTo(t1.getName());
@@ -71,16 +74,16 @@ public class RestModelSchemaResource extends LegacyCompositeResource {
                 RestLogging.restLogger.log(Level.WARNING, null, ex);
             }
         }
-        JAXBContext jc = JAXBContext.newInstance(classes.toArray(new Class<?>[classes.size()]));
+        JAXBContext jc = JAXBContext.newInstance(classes.toArray(Class[]::new));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         jc.generateSchema(new MySchemaOutputResolver(baos));
-        return new String(baos.toByteArray());
+        return new String(baos.toByteArray(), UTF_8);
     }
 
     @GET
     @Path("test1")
     public String getSchema1() throws JAXBException, IOException {
-        Set<Class<?>> classes = new TreeSet<Class<?>>(new Comparator<Class<?>>() {
+        Set<Class<?>> classes = new TreeSet<>(new Comparator<Class<?>>() {
             @Override
             public int compare(Class<?> t, Class<?> t1) {
                 return t.getName().compareTo(t1.getName());
@@ -94,10 +97,10 @@ public class RestModelSchemaResource extends LegacyCompositeResource {
         } catch (ClassNotFoundException ex) {
             RestLogging.restLogger.log(Level.WARNING, null, ex);
         }
-        JAXBContext jc = JAXBContext.newInstance(classes.toArray(new Class<?>[classes.size()]));
+        JAXBContext jc = JAXBContext.newInstance(classes.toArray(Class[]::new));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         jc.generateSchema(new MySchemaOutputResolver(baos));
-        return new String(baos.toByteArray());
+        return new String(baos.toByteArray(), UTF_8);
     }
 
     @GET
@@ -182,7 +185,7 @@ public class RestModelSchemaResource extends LegacyCompositeResource {
     };
 
     private Set<String> locateRestModels() {
-        Set<String> classes = new HashSet<String>();
+        Set<String> classes = new HashSet<>();
 
         List<ActiveDescriptor<?>> widgetDescriptors = Globals.getDefaultBaseServiceLocator()
                 .getDescriptors(BuilderHelper.createContractFilter(RestModel.class.getName()));
@@ -209,7 +212,7 @@ public class RestModelSchemaResource extends LegacyCompositeResource {
 
         ByteArrayOutputStream baos;
 
-        public MySchemaOutputResolver(ByteArrayOutputStream baos) {
+        private MySchemaOutputResolver(ByteArrayOutputStream baos) {
             this.baos = baos;
         }
 

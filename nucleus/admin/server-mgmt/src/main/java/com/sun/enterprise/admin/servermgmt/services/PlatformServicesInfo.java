@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,11 +34,35 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICE_NAM
  * @author Byron Nevins
  */
 public class PlatformServicesInfo {
+
+    // set at construction-time
+    final ServerDirs serverDirs;
+    final AppserverServiceType type;
+    // accessed by classes in this package
+    String fqsn;
+    String serviceName;
+    boolean dryRun;
+    String osUser;
+    boolean trace;
+    File libDir;
+    String smfFullServiceName;
+    File asadminScript;
+    boolean force;
+    String serviceUser;
+    Date date;
+    File passwordFile;
+    String appserverUser;
+    // private to this implementation
+    private File installRootDir;
+    int sPriority;
+    int kPriority;
+
     public PlatformServicesInfo(ServerDirs sDirs, AppserverServiceType theType) {
         serverDirs = sDirs;
 
-        if (serverDirs == null || serverDirs.getServerDir() == null)
+        if (serverDirs == null || serverDirs.getServerDir() == null) {
             throw new RuntimeException(Strings.get("bad.server.dirs"));
+        }
 
         type = theType;
         kPriority = 20;
@@ -45,8 +70,9 @@ public class PlatformServicesInfo {
     }
 
     public void validate() {
-        if (!StringUtils.ok(serviceName))
+        if (!StringUtils.ok(serviceName)) {
             serviceName = serverDirs.getServerName();
+        }
 
         date = new Date();
         setInstallRootDir();
@@ -92,8 +118,9 @@ public class PlatformServicesInfo {
     }
 
     public void setAppServerUser(String user) {
-        if (StringUtils.ok(user))
+        if (StringUtils.ok(user)) {
             appserverUser = user;
+        }
     }
 
     @Override
@@ -107,28 +134,32 @@ public class PlatformServicesInfo {
     private void setLibDir() {
         libDir = SmartFile.sanitize(new File(installRootDir, "lib"));
 
-        if (!libDir.isDirectory())
+        if (!libDir.isDirectory()) {
             throw new RuntimeException(Strings.get("internal.error", "Not a directory: " + libDir));
+        }
     }
 
     private void setInstallRootDir() {
         String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
-        if (!StringUtils.ok(ir))
+        if (!StringUtils.ok(ir)) {
             throw new RuntimeException(
                     Strings.get("internal.error", "System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        }
 
         installRootDir = SmartFile.sanitize(new File(ir));
 
-        if (!installRootDir.isDirectory())
+        if (!installRootDir.isDirectory()) {
             throw new RuntimeException(Strings.get("internal.error", "Not a directory: " + installRootDir));
+        }
     }
 
     private void setAsadmin() {
         String s = SystemPropertyConstants.getAsAdminScriptLocation();
 
-        if (!StringUtils.ok(s))
+        if (!StringUtils.ok(s)) {
             throw new RuntimeException(Strings.get("internal.error", "Can't get Asadmin script location"));
+        }
 
         asadminScript = SmartFile.sanitize(new File(s));
 
@@ -136,26 +167,4 @@ public class PlatformServicesInfo {
             throw new RuntimeException(Strings.get("noAsadminScript", asadminScript));
         }
     }
-
-    // set at construction-time
-    final ServerDirs serverDirs;
-    final AppserverServiceType type;
-    // accessed by classes in this package
-    String fqsn;
-    String serviceName;
-    boolean dryRun;
-    String osUser;
-    boolean trace;
-    File libDir;
-    String smfFullServiceName;
-    File asadminScript;
-    boolean force;
-    String serviceUser;
-    Date date = null;
-    File passwordFile;
-    String appserverUser;
-    // private to this implementation
-    private File installRootDir;
-    int sPriority;
-    int kPriority;
 }

@@ -81,7 +81,7 @@ public class ConnectorXAResource implements XAResource {
     @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
         try {
-            ManagedConnection managedConnection = (ManagedConnection) getResourceHandle().getResource();
+            ManagedConnection managedConnection = getResourceHandle().getResource();
             managedConnection.getLocalTransaction().commit();
         } catch (Exception ex) {
             handleResourceException(ex);
@@ -96,7 +96,7 @@ public class ConnectorXAResource implements XAResource {
         try {
             ResourceHandle handle = getResourceHandle();
             if (!localHandle_.equals(handle)) {
-                ManagedConnection managedConnection = (ManagedConnection) handle.getResource();
+                ManagedConnection managedConnection = handle.getResource();
                 managedConnection.associateConnection(userHandle);
                 LocalTxConnectionEventListener listener = (LocalTxConnectionEventListener) handle.getListener();
 
@@ -122,7 +122,7 @@ public class ConnectorXAResource implements XAResource {
 
                 ResourceHandle handle = listener.removeAssociation(userHandle);
                 if (handle != null) { // not needed, just to be sure.
-                    ManagedConnection associatedConnection = (ManagedConnection) handle.getResource();
+                    ManagedConnection associatedConnection = handle.getResource();
                     associatedConnection.associateConnection(userHandle);
                     _logger.log(FINE, "connection_sharing_reset_association", userHandle);
                 }
@@ -177,7 +177,7 @@ public class ConnectorXAResource implements XAResource {
     public void rollback(Xid xid) throws XAException {
         try {
             ResourceHandle handle = getResourceHandle();
-            ManagedConnection managedConnection = (ManagedConnection) handle.getResource();
+            ManagedConnection managedConnection = handle.getResource();
             managedConnection.getLocalTransaction().rollback();
         } catch (Exception ex) {
             handleResourceException(ex);
@@ -211,7 +211,7 @@ public class ConnectorXAResource implements XAResource {
             }
 
             if (resourceHandle.getResourceState().isUnenlisted()) {
-                ManagedConnection managedConnection = (ManagedConnection) resourceHandle.getResource();
+                ManagedConnection managedConnection = resourceHandle.getResource();
 
                 // Begin the local transaction if first time
                 // this ManagedConnection is used in this JTA transaction
@@ -236,8 +236,8 @@ public class ConnectorXAResource implements XAResource {
             // Clear the associations and Map all associated handles back to their actual Managed Connection.
             Map<Object, ResourceHandle> associatedHandles = listener.getAssociatedHandlesAndClearMap();
             for (Entry<Object, ResourceHandle> userHandleEntry : associatedHandles.entrySet()) {
-                ResourceHandle associatedHandle = (ResourceHandle) userHandleEntry.getValue();
-                ManagedConnection associatedConnection = (ManagedConnection) associatedHandle.getResource();
+                ResourceHandle associatedHandle = userHandleEntry.getValue();
+                ManagedConnection associatedConnection = associatedHandle.getResource();
                 associatedConnection.associateConnection(userHandleEntry.getKey());
                 _logger.log(FINE, "connection_sharing_reset_association", userHandleEntry.getKey());
             }

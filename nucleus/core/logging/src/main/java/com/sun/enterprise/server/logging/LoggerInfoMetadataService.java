@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -176,7 +176,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                 if (size == 0) {
                     continue;
                 }
-                URL urls[] = new URL[size];
+                URL[] urls = new URL[size];
                 try {
                     for (int i=0; i < size; i++) {
                         urls[i] = uris[i].toURL();
@@ -226,7 +226,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
             return null;
         }
         @Override
-        protected Enumeration findResources(java.lang.String name) throws IOException {
+        protected Enumeration<URL> findResources(String name) throws IOException {
             return null;
         }
         @Override
@@ -234,11 +234,11 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
             return null;
         }
         @Override
-        protected Class findClass(java.lang.String name) throws ClassNotFoundException {
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
             throw new ClassNotFoundException("Class not found: " + name);
         }
         @Override
-        protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             throw new ClassNotFoundException("Class not found: " + name);
         }
     }

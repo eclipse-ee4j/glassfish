@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +30,8 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * The RepositoryManager serves as a common base class for the following PEDomainsManager, PEInstancesManager,
  * AgentManager (the SE Node Agent). Its purpose is to abstract out any shared functionality related to lifecycle
@@ -40,18 +43,10 @@ import java.io.File;
 public class MasterPasswordFileManager extends KeystoreManager {
 
     private static final String MASTER_PASSWORD_ALIAS = "master-password";
-    private static final String ENCODED_CHARSET = "UTF-8";
-    private static final int SALT_SIZE = 8;
 
     private static final StringManager _strMgr = StringManager.getManager(MasterPasswordFileManager.class);
 
-    /** Creates a new instance of RepositoryManager */
-    public MasterPasswordFileManager() {
-        super();
-    }
-
     /**
-     *
      * @return The password protecting the master password keywtore
      */
     private char[] getMasterPasswordPassword() throws RepositoryException {
@@ -77,7 +72,7 @@ public class MasterPasswordFileManager extends KeystoreManager {
         final File pwdFile = layout.getMasterPasswordFile();
         try {
             PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(), getMasterPasswordPassword());
-            p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, masterPassword.getBytes());
+            p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, masterPassword.getBytes(UTF_8));
             chmod("600", pwdFile);
         } catch (Exception ex) {
             throw new RepositoryException(_strMgr.getString("masterPasswordFileNotCreated", pwdFile), ex);
@@ -88,22 +83,20 @@ public class MasterPasswordFileManager extends KeystoreManager {
      * Return the master password stored in the master password keystore.
      *
      * @param config
+     * @return null if the password file does not exist, the password otherwise.
      * @throws RepositoryException
-     * @return
      */
     public String readMasterPasswordFile(RepositoryConfig config) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         final File pwdFile = layout.getMasterPasswordFile();
-        if (pwdFile.exists()) {
-            try {
-                PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(), getMasterPasswordPassword());
-                return p.getPasswordForAlias(MASTER_PASSWORD_ALIAS);
-            } catch (Exception ex) {
-                throw new RepositoryException(_strMgr.getString("masterPasswordFileNotRead", pwdFile), ex);
-            }
-        } else {
-            //Return null if the password file does not exist.
+        if (!pwdFile.exists()) {
             return null;
+        }
+        try {
+            PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(), getMasterPasswordPassword());
+            return p.getPasswordForAlias(MASTER_PASSWORD_ALIAS);
+        } catch (Exception ex) {
+            throw new RepositoryException(_strMgr.getString("masterPasswordFileNotRead", pwdFile), ex);
         }
     }
 
@@ -126,9 +119,9 @@ public class MasterPasswordFileManager extends KeystoreManager {
     /**
      * Changes the master password in the master password file
      *
-     * @param saveMasterPassword
-     * @param config
+     * @param pwdFile
      * @param newPassword
+     * @param saveMasterPassword
      * @throws RepositoryException
      */
     public void changeMasterPasswordInMasterPasswordFile(File pwdFile, String newPassword, boolean saveMasterPassword)
@@ -137,7 +130,7 @@ public class MasterPasswordFileManager extends KeystoreManager {
         if (saveMasterPassword) {
             try {
                 PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(), getMasterPasswordPassword());
-                p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, newPassword.getBytes());
+                p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, newPassword.getBytes(UTF_8));
                 chmod("600", pwdFile);
             } catch (Exception ex) {
                 throw new RepositoryException(_strMgr.getString("masterPasswordFileNotCreated", pwdFile), ex);

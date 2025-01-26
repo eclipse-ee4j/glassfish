@@ -413,7 +413,9 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      */
     @Override
     public void removeConnectionEventListener(ConnectionEventListener listener) {
-        listener = null;
+        if (this.listener == listener) {
+            this.listener = null;
+        }
     }
 
     /**
@@ -572,12 +574,13 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
         activeConnectionHandle = null;
 
         ce.setConnectionHandle(connHolderObject);
-        listener.connectionClosed(ce);
-
+        if (listener != null) {
+            listener.connectionClosed(ce);
+        }
     }
 
     /**
-     * This method is called by the <code>ConnectionHolder</code> when it detects a connecion
+     * This method is called by the <code>ConnectionHolder</code> when it detects a connection
      * related error.
      *
      * @param        e        Exception that has occurred during an operation on the physical connection
@@ -587,7 +590,6 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     void connectionErrorOccurred(Exception e,
             com.sun.jdbcra.spi.ConnectionHolder connHolderObject) {
 
-         ConnectionEventListener cel = this.listener;
          ConnectionEvent ce = null;
          ce = e == null ? new ConnectionEvent(this, ConnectionEvent.CONNECTION_ERROR_OCCURRED)
                     : new ConnectionEvent(this, ConnectionEvent.CONNECTION_ERROR_OCCURRED, e);
@@ -595,11 +597,11 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
              ce.setConnectionHandle(connHolderObject);
          }
 
-         cel.connectionErrorOccurred(ce);
+         if (listener != null) {
+             listener.connectionErrorOccurred(ce);
+         }
          isUsable = false;
     }
-
-
 
     /**
      * This method is called by the <code>XAResource</code> object when its start method

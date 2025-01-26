@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,8 +32,6 @@ import com.sun.enterprise.deployment.web.ServletFilterMapping;
 import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
 import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.universal.GFBase64Decoder;
-import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.web.deploy.LoginConfigDecorator;
 import com.sun.enterprise.web.pwc.PwcWebModule;
@@ -70,6 +68,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -184,9 +183,6 @@ public class WebModule extends PwcWebModule implements Context {
     private static final String ALTERNATE_FROM = "from=";
     private static final String ALTERNATE_DOCBASE = "dir=";
 
-    private static final GFBase64Encoder gfEncoder = new GFBase64Encoder();
-    private static final GFBase64Decoder gfDecoder = new GFBase64Decoder();
-
     private static final String WS_SERVLET_CONTEXT_LISTENER = "com.sun.xml.ws.transport.http.servlet.WSServletContextListener";
 
     // ----------------------------------------------------- Instance Variables
@@ -244,6 +240,8 @@ public class WebModule extends PwcWebModule implements Context {
 
     // true if standalone WAR, false if embedded in EAR file
     private boolean isStandalone = true;
+
+    private boolean isSystemApplication;
 
     private final ServiceLocator services;
 
@@ -540,7 +538,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         DeploymentContext deploymentContext = getWebModuleConfig().getDeploymentContext();
         if (deploymentContext != null) {
-            directoryDeployed = Boolean.valueOf(deploymentContext.getAppProps().getProperty(DIRECTORY_DEPLOYED));
+            directoryDeployed = Boolean.parseBoolean(deploymentContext.getAppProps().getProperty(DIRECTORY_DEPLOYED));
         }
 
         if (webBundleDescriptor != null) {
@@ -847,7 +845,7 @@ public class WebModule extends PwcWebModule implements Context {
         return servletInfo.getServletName();
     }
 
-    /*
+    /**
      * Removes the given ad-hoc path from this web module.
      *
      * @param path The ad-hoc path to remove
@@ -864,13 +862,10 @@ public class WebModule extends PwcWebModule implements Context {
     }
 
     private Set<String> getBundleRoles(WebBundleDescriptor webBundleDescriptor) {
-        return
-            webBundleDescriptor.getRoles()
-                               .stream().map(e -> e.getName())
-                               .collect(toSet());
+        return webBundleDescriptor.getRoles().stream().map(Role::getName).collect(toSet());
     }
 
-    /*
+    /**
      * Removes the given ad-hoc path from this web module.
      *
      * @param subtree The ad-hoc subtree to remove
@@ -1183,6 +1178,14 @@ public class WebModule extends PwcWebModule implements Context {
     @Override
     protected boolean isStandaloneModule() {
         return isStandalone;
+    }
+
+    public boolean isSystemApplication() {
+        return isSystemApplication;
+    }
+
+    public void setSystemApplication(boolean isSystemApplication) {
+        this.isSystemApplication = isSystemApplication;
     }
 
     /**
@@ -1519,7 +1522,7 @@ public class WebModule extends PwcWebModule implements Context {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             manager.writeSessions(baos, false);
-            props.setProperty(getObjectName(), gfEncoder.encode(baos.toByteArray()));
+            props.setProperty(getObjectName(), Base64.getEncoder().encodeToString(baos.toByteArray()));
         } catch (Exception ex) {
             String msg = rb.getString(LogFacade.UNABLE_TO_SAVE_SESSIONS_DURING_REDEPLOY);
             msg = MessageFormat.format(msg, getName());
@@ -1545,7 +1548,7 @@ public class WebModule extends PwcWebModule implements Context {
         String sessions = deploymentProperties.getProperty(getObjectName());
         if (sessions != null) {
             try {
-                ByteArrayInputStream bais = new ByteArrayInputStream(gfDecoder.decodeBuffer(sessions));
+                ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(sessions));
                 manager.readSessions(bais);
             } catch (Exception ex) {
                 String msg = rb.getString(LogFacade.UNABLE_TO_RESTORE_SESSIONS_DURING_REDEPLOY);

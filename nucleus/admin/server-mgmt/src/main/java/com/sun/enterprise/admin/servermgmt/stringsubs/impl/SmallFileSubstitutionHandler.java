@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +30,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.logging.Level;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Creates {@link Reader} and {@link Writer} for the String substitution file. Its handles the small files which can be
  * processed differently for faster and better performance comparative to larger files.
@@ -51,7 +54,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
                 char[] buffer = new char[(int) _inputFile.length()];
                 int count = 0;
                 try {
-                    _reader = new InputStreamReader(new FileInputStream(_inputFile));
+                    _reader = new InputStreamReader(new FileInputStream(_inputFile), UTF_8);
                     count = _reader.read(buffer);
                 } finally {
                     _reader.close();
@@ -67,7 +70,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
     @Override
     public Writer getWriter() {
         try {
-            _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_inputFile)));
+            _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_inputFile), UTF_8));
         } catch (FileNotFoundException e) {
             _logger.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }

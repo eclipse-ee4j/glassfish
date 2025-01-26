@@ -38,7 +38,10 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Locale;
@@ -742,7 +745,7 @@ public final class FileUtils {
 
 
     /**
-     * Copies a file.
+     * Copies a file or directory.
      *
      * @param fin File to copy
      * @param fout New file
@@ -761,6 +764,34 @@ public final class FileUtils {
         }
         Files.copy(fin.toPath(), fout.toPath(), StandardCopyOption.REPLACE_EXISTING);
         LOG.log(DEBUG, "Successfully copyied file {0} to {1}", fin, fout);
+    }
+
+
+    /**
+     * Computes file or directory size. Follows symlinks just for the provided parameter, but not
+     * for files under the tree.
+     *
+     * @param fileOrDirectory
+     * @return summary of sizes of regular files.
+     * @throws IOException if any file size cannot be read.
+     */
+    public static long getSize(File fileOrDirectory) throws IOException {
+        try {
+            return Files.walk(fileOrDirectory.getCanonicalFile().toPath())
+                .filter(p -> Files.isRegularFile(p, LinkOption.NOFOLLOW_LINKS)).mapToLong(FileUtils::getRegularFileSize)
+                .sum();
+        } catch (IllegalStateException e) {
+            throw new IOException("Could not read size of " + fileOrDirectory, e);
+        }
+    }
+
+
+    private static long getRegularFileSize(Path path) {
+        try {
+            return Files.size(path);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read file size for " + path, e);
+        }
     }
 
 
@@ -945,14 +976,15 @@ public final class FileUtils {
      * file to be read is <code> small </code>.
      *
      * @param file Absolute path of the file
+     * @param charset file charset
      * @return String representing the contents of the file. Lines are separated by
      *         {@link System#lineSeparator()}.
      * @throws java.io.IOException if there is an i/o error.
      * @throws java.io.FileNotFoundException if the file could not be found
      */
-    public static String readSmallFile(final File file) throws IOException {
+    public static String readSmallFile(final File file, final Charset charset) throws IOException {
         final StringBuilder sb = new StringBuilder();
-        try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bf = new BufferedReader(new FileReader(file, charset))) {
             String line;
             while ((line = bf.readLine()) != null) {
                 sb.append(line);
@@ -970,10 +1002,11 @@ public final class FileUtils {
      *
      * @param s The String to write to the file
      * @param f The file to write the String to
+     * @param charset file charset
      * @throws IOException if any errors
      */
-    public static void writeStringToFile(String s, File f) throws IOException {
-        try (Writer writer = new PrintWriter(f)) {
+    public static void writeStringToFile(String s, File f, Charset charset) throws IOException {
+        try (Writer writer = new PrintWriter(f, charset)) {
             writer.write(s);
         } finally {
             f.setReadable(true);
@@ -1054,7 +1087,7 @@ public final class FileUtils {
         private Throwable lastError;
         private final File out;
 
-        public FileOutputStreamWork(File out) {
+        private FileOutputStreamWork(File out) {
             this.out = out;
         }
 

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.grizzly</groupId>
         <artifactId>nucleus-grizzly</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>nucleus-grizzly-all</artifactId>
@@ -44,10 +44,6 @@
         </developer>
     </developers>
 
-    <properties>
-        <findbugs.skip>true</findbugs.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
@@ -64,6 +60,11 @@
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http2</artifactId>
+        </dependency>
+        <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-npn-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>

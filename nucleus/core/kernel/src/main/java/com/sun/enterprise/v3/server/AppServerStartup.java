@@ -78,7 +78,7 @@ import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.NO_FORCED_SHUTDOWN;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.NO_FORCED_SHUTDOWN;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Embedded;
 import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Server;

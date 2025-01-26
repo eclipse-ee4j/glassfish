@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -85,7 +85,7 @@ public class ASClassLoaderUtil {
      * specified "libraries" defined for the module.
      */
     public static String getModuleClassPath(ServiceLocator serviceLocator, String moduleId, String deploymentLibs) {
-        deplLogger.log(FINE, () -> "ASClassLoaderUtil.getModuleClassPath " + "for module Id : " + moduleId);
+        deplLogger.log(FINE, () -> "ASClassLoaderUtil.getModuleClassPath for moduleId: " + moduleId);
 
         StringBuilder classpath = new StringBuilder(getModulesClasspath(serviceLocator));
 
@@ -95,7 +95,7 @@ public class ASClassLoaderUtil {
         }
 
         addDeployParamLibrariesForModule(classpath, moduleId, deploymentLibs, serviceLocator);
-        deplLogger.log(FINE, () -> "Final classpath: " + classpath.toString());
+        deplLogger.log(FINE, () -> "Final classpath: " + classpath);
 
         return classpath.toString();
     }
@@ -146,7 +146,7 @@ public class ASClassLoaderUtil {
             return null;
         }
 
-        return getDeployParamLibrariesAsURLs(env, libraries.toArray(new String[libraries.size()]), new URL[libraries.size()]);
+        return getDeployParamLibrariesAsURLs(env, libraries.toArray(String[]::new), new URL[libraries.size()]);
     }
 
     /**
@@ -254,12 +254,11 @@ public class ASClassLoaderUtil {
      * @throws IOException if an i/o error while constructing the urls
      */
     public static List<URL> getURLsAsList(File[] dirs, File[] jarDirs, boolean ignoreZip) throws IOException {
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
 
         // Adds all directories
         if (dirs != null) {
-            for (int i = 0; i < dirs.length; i++) {
-                File dir = dirs[i];
+            for (File dir : dirs) {
                 if (dir.isDirectory() || dir.canRead()) {
                     URL url = dir.toURI().toURL();
                     list.add(url);
@@ -273,15 +272,11 @@ public class ASClassLoaderUtil {
 
         // Adds all the jars
         if (jarDirs != null) {
-            for (int i = 0; i < jarDirs.length; i++) {
-                File jarDir = jarDirs[i];
-
+            for (File jarDir : jarDirs) {
                 if (jarDir.isDirectory() || jarDir.canRead()) {
                     File[] files = jarDir.listFiles();
 
-                    for (int j = 0; j < files.length; j++) {
-                        File jar = files[j];
-
+                    for (File jar : files) {
                         if (isJar(jar) || (!ignoreZip && isZip(jar))) {
                             list.add(jar.toURI().toURL());
 
@@ -297,14 +292,17 @@ public class ASClassLoaderUtil {
         return list;
     }
 
+    /**
+     * Converts the list to an array
+     *
+     * @param list
+     * @return an array, never null
+     */
     public static URL[] convertURLListToArray(List<URL> list) {
-        // converts the list to an array
-        URL[] urls = new URL[0];
-        if (list != null && list.size() > 0) {
-            urls = new URL[list.size()];
-            urls = list.toArray(urls);
+        if (list != null && !list.isEmpty()) {
+            return list.toArray(URL[]::new);
         }
-        return urls;
+        return new URL[0];
     }
 
     /**
@@ -317,7 +315,7 @@ public class ASClassLoaderUtil {
      * @return urlList URL list from the given classpath
      */
     public static List<URL> getURLsFromClasspath(String classpath, String delimiter, String rootPath) {
-        final List<URL> urls = new ArrayList<URL>();
+        final List<URL> urls = new ArrayList<>();
 
         if (isEmpty(classpath)) {
             return urls;
@@ -420,7 +418,7 @@ public class ASClassLoaderUtil {
             libDirLibraries = getURLs(null, new File[] { new File(appRoot, libPath) }, true);
         }
 
-        List<URL> allLibDirLibraries = new ArrayList<URL>();
+        List<URL> allLibDirLibraries = new ArrayList<>();
         for (URL url : libDirLibraries) {
             allLibDirLibraries.add(url);
         }
@@ -437,12 +435,12 @@ public class ASClassLoaderUtil {
     }
 
     public static List<URI> getLibDirectoryJarURIs(File moduleLibDirectory) throws Exception {
-        List<URI> libLibraryURIs = new ArrayList<URI>();
+        List<URI> libLibraryURIs = new ArrayList<>();
         File[] jarFiles = moduleLibDirectory.listFiles(pathname -> pathname.getAbsolutePath().endsWith(".jar"));
 
         if (jarFiles != null && jarFiles.length > 0) {
             for (File jarFile : jarFiles) {
-                libLibraryURIs.add(Util.toURI(jarFile.toURL()));
+                libLibraryURIs.add(Util.toURI(jarFile.toURI().toURL()));
             }
         }
 

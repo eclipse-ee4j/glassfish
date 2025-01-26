@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-main-aggregator</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-qa-config</artifactId>
@@ -19,6 +19,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
                     <executions>
                         <execution>
                             <id>default-compile</id>
@@ -32,6 +33,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.2</version>
                     <executions>
                         <execution>
                             <id>default-test</id>
@@ -41,6 +43,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
                     <executions>
                         <execution>
                             <id>default-testResources</id>

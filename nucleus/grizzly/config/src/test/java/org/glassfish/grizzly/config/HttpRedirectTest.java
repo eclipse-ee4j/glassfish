@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import javax.net.SocketFactory;
 import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -127,12 +128,12 @@ public class HttpRedirectTest {
         try {
             Socket s = socketFactory.createSocket("localhost", 48480);
             OutputStream out = s.getOutputStream();
-            out.write(("GET " + resourceURL + " HTTP/1.1\n").getBytes());
-            out.write(("Host: " + host + ':' + Integer.toString(port) + '\n').getBytes());
-            out.write("\n".getBytes());
+            out.write(("GET " + resourceURL + " HTTP/1.1\n").getBytes(UTF_8));
+            out.write(("Host: " + host + ':' + Integer.toString(port) + '\n').getBytes(UTF_8));
+            out.write("\n".getBytes(UTF_8));
             out.flush();
             InputStream in = s.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
             boolean found = false;
 
             for (String line = br.readLine(); line != null; line = br.readLine()) {
@@ -156,8 +157,6 @@ public class HttpRedirectTest {
             if (!found) {
                 fail("Unable to find Location header in response - no redirect occurred.");
             }
-        } catch (Exception e) {
-            fail(e.toString());
         } finally {
             grizzlyConfig.shutdownNetwork();
         }

@@ -427,15 +427,24 @@ attempted breaches. Noting repeated failed logon attempts or a
 surprising pattern of security events can prevent serious problems.
 
 |Set logging for security and SSL messages. a|
-Consider setting module log levels for
-table.jakarta.enterprise.system.ssl.security and
-jakarta.enterprise.system.core.security. You can set a level from Severe
-to Finest (the default is Info), but be aware that the finer logging
-levels may produce a large log file.
+Consider setting module log levels for +
+`jakarta.enterprise.system.security.ssl` +
+and +
+`jakarta.enterprise.system.core.security`. +
+You can set a level from `SEVERE` to `FINEST` (the default is `INFO`),
+but be aware that the finer logging levels may produce a large log file
+and may contain sensitive information.
 
-By default, {productName} logging messages are recorded in the server
-log, and you can set the file rotation limit, as described in
+By default, {productName} logging messages are recorded in the `server.log` file,
+and you can set the file rotation limit, as described in
 xref:reference-manual.adoc#rotate-log[`rotate-log`(1)]
+
+|Ensure that you don't share sensitive information in logs.
+|Logs may contain sensitive information.
+Despite the ${productName} in default configuration doesn't log any passwords,
+before you share logs with anyone else you should verify that you don't compromise your
+system by any information contained in logs, especially if you configured
+more verbose log levels.
 
 |Ensure that you have correctly assigned users to the correct groups.
 |Make sure you have assigned the desired set of users to the right

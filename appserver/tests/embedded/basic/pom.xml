@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.tests</groupId>
         <artifactId>embedded</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>basic</artifactId>
@@ -32,5 +32,6 @@
     <name>Basic tests for testing org.glassfish.embeddable APIs</name>
     <modules>
         <module>lifecycle</module>
+        <module>config</module>
     </modules>
 </project>

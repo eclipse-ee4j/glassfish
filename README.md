@@ -28,9 +28,9 @@ The Zip distributions can be found on following paths:
 
 ### Execution
 
-* `mvn clean install` - Full build including documentation, automatic QA and maven managed tests. Excludes just Ant and TCK tests. Typical time: 15 minutes.
-* `mvn clean install -Pqa` - Building all distribution artifacts, running QA and all maven managed tests. Excludes Ant, TCK and documentation. Typical time: 10 minutes.
-* `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests. Excludes QA, integration tests, Ant, TCK and documentation. Typical time: 7 minutes.
+* `mvn clean install` - Full build including documentation, automatic QA, checkstyle and all maven managed tests. Excludes just Ant and TCK tests. Typical time: 15 minutes.
+* `mvn clean install -Pqa` - Building all distribution artifacts, running QA, checkstyle and all maven managed tests. Excludes Ant, TCK and documentation. Typical time: 10 minutes.
+* `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests. Excludes QA, checkstyle, integration tests, Ant, TCK and documentation. Typical time: 7 minutes.
 * `mvn clean install -Pfastest -T4C` - Building all distribution artifacts as fast as possible. Excludes everything not serving this purpose. Typical time: 1.5 minutes.
 
 You can use also some maven optimizations, see [Maven documentation](https://maven.apache.org/ref/3.9.5/maven-embedder/cli.html).
@@ -95,6 +95,12 @@ They are quite old and have high technical debt, but at this moment they still p
 * `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_full_profile_all` - Usual time: 4 minutes
 
 * many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
+
+### Pull request workflow
+
+The pull request workflow is described on [Eclipse GlassFish / workflow](https://glassfish.org/pr_workflow).
+
+Build server results of pull requests can be found at [CI Glassfish](https://ci.eclipse.org/glassfish/).
 
 ## Basic Usage
 

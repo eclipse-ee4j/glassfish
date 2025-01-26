@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -655,6 +656,10 @@ public class Catalina extends Embedded {
      * Shutdown hook which will perform a clean shutdown of Catalina if needed.
      */
     protected class CatalinaShutdownHook extends Thread {
+
+        CatalinaShutdownHook() {
+            super("GlassFish Catalina Shutdown Hook");
+        }
 
         public void run() {
 

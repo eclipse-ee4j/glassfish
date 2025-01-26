@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,6 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -55,40 +54,37 @@ import org.glassfish.web.deployment.runtime.JspConfig;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.runtime.WebProperty;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+
 public final class JSPCompiler {
+
+    private static final Logger LOG = LogFacade.getLogger();
+
 
     public static void compile(File inWebDir, File outWebDir, WebBundleDescriptor wbd, ServerContext serverContext)
         throws DeploymentException {
-            //to resolve ambiguity
-        final String amb = null;
-        compile(inWebDir, outWebDir, wbd, amb, serverContext);
+        compile(inWebDir, outWebDir, wbd, (String) null, serverContext);
     }
 
-    public static void compile(File inWebDir, File outWebDir,
-                               WebBundleDescriptor wbd, List classpathList,
-                               ServerContext serverContext)
-        throws DeploymentException {
-        String classpath = null;
-        if (classpathList != null) {
-            classpath = getClasspath(classpathList);
-        }
+
+    public static void compile(File inWebDir, File outWebDir, WebBundleDescriptor wbd, List<String> classpathList,
+        ServerContext serverContext) throws DeploymentException {
+        String classpath = classpathList == null ? null : getClasspath(classpathList);
         compile(inWebDir, outWebDir, wbd, classpath, serverContext);
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    public static void compile(File inWebDir, File outWebDir,
-                               WebBundleDescriptor wbd, String classpath,
-                               ServerContext serverContext)
-            throws DeploymentException {
+    public static void compile(File inWebDir, File outWebDir, WebBundleDescriptor wbd, String classpath,
+        ServerContext serverContext) throws DeploymentException {
+        LOG.log(Level.FINEST, "Compiling JSP: in={0}, out={1}, classpath={2}",
+            new Object[] {inWebDir, outWebDir, classpath});
         JspC jspc = new JspC();
 
-        if (classpath != null && classpath.length() >0) {
+        if (classpath != null && !classpath.isEmpty()) {
             jspc.setClassPath(classpath);
         }
 
-        // START SJSAS 6311155
         String appName = wbd.getApplication().getName();
 
         // so far, this is not segragated per web bundle, all web-bundles will get the
@@ -96,7 +92,6 @@ public final class JSPCompiler {
         String sysClassPath = ASClassLoaderUtil.getModuleClassPath(
             serverContext.getDefaultServices(), appName, null);
         jspc.setSystemClassPath(sysClassPath);
-        // END SJSAS 6311155
 
         verify(inWebDir, outWebDir);
 
@@ -104,7 +99,7 @@ public final class JSPCompiler {
         jspc.setOutputDir(outWebDir.getAbsolutePath());
         jspc.setUriroot(inWebDir.getAbsolutePath());
         jspc.setCompile(true);
-        logger.log(Level.INFO, LogFacade.START_MESSAGE);
+        LOG.log(INFO, LogFacade.START_MESSAGE);
 
         try {
             jspc.execute();
@@ -121,15 +116,13 @@ public final class JSPCompiler {
 
             if(files == null || files.length <= 0) {
                 if (!outWebDir.delete()) {
-                    logger.log(Level.FINE, LogFacade.CANNOT_DELETE_FILE, outWebDir);
+                    LOG.log(FINE, LogFacade.CANNOT_DELETE_FILE, outWebDir);
                 }
             }
 
-            logger.log(Level.INFO, LogFacade.FINISH_MESSAGE);
+            LOG.log(INFO, LogFacade.FINISH_MESSAGE);
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////
 
     private static void verify(File inWebDir, File outWebDir) throws DeploymentException {
         // inWebDir must exist, outWebDir must either exist or be creatable
@@ -139,7 +132,7 @@ public final class JSPCompiler {
 
         if (!FileUtils.safeIsDirectory(outWebDir)) {
             if (!outWebDir.mkdirs()) {
-                logger.log(Level.FINE, LogFacade.CANNOT_DELETE_FILE, outWebDir);
+                LOG.log(FINE, LogFacade.CANNOT_DELETE_FILE, outWebDir);
             }
 
             if (!FileUtils.safeIsDirectory(outWebDir)) {
@@ -148,9 +141,7 @@ public final class JSPCompiler {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    private static String getClasspath(List paths) {
+    private static String getClasspath(List<String> paths) {
         if (paths == null) {
             return null;
         }
@@ -160,14 +151,12 @@ public final class JSPCompiler {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        for (Iterator it = paths.iterator(); it.hasNext(); ) {
-            String path = (String)it.next();
+        for (String path : paths) {
             if (first) {
                 first = false;
             } else {
                 sb.append(File.pathSeparatorChar);
             }
-
             sb.append(path);
         }
 
@@ -177,8 +166,6 @@ public final class JSPCompiler {
 
         return classpath;
     }
-
-    ////////////////////////////////////////////////////////////////////////////
 
     /**
      * Configures the given JspC instance with the jsp-config properties
@@ -196,36 +183,28 @@ public final class JSPCompiler {
             return;
         }
 
-        // START SJSAS 6384538
         if (sunWebApp.sizeWebProperty() > 0) {
             WebProperty[] props = sunWebApp.getWebProperty();
-            for (int i = 0; i < props.length; i++) {
-                String pName = props[i].getAttributeValue("name");
-                String pValue = props[i].getAttributeValue("value");
+            for (WebProperty prop : props) {
+                String pName = prop.getValue("name");
+                String pValue = prop.getValue("value");
                 if (pName == null || pValue == null) {
                     throw new IllegalArgumentException(
                         "Missing sun-web-app property name or value");
                 }
                 if ("enableTldValidation".equals(pName)) {
                     jspc.setIsValidationEnabled(
-                        Boolean.valueOf(pValue).booleanValue());
+                        Boolean.parseBoolean(pValue));
                 }
             }
         }
-        // END SJSAS 6384538
 
-        // START SJSAS 6170435
-        /*
-         * Configure JspC with the init params of the JspServlet
-         */
+        // Configure JspC with the init params of the JspServlet
         Set<WebComponentDescriptor> set = wbd.getWebComponentDescriptors();
         if (!set.isEmpty()) {
-            Iterator<WebComponentDescriptor> iterator = set.iterator();
-            while (iterator.hasNext()) {
-                WebComponentDescriptor webComponentDesc = iterator.next();
+            for (WebComponentDescriptor webComponentDesc : set) {
                 if ("jsp".equals(webComponentDesc.getCanonicalName())) {
-                    Enumeration<InitializationParameter> en
-                    = webComponentDesc.getInitializationParameters();
+                    Enumeration<InitializationParameter> en = webComponentDesc.getInitializationParameters();
                     if (en != null) {
                         while (en.hasMoreElements()) {
                             InitializationParameter initP = en.nextElement();
@@ -236,19 +215,16 @@ public final class JSPCompiler {
                 }
             }
         }
-        // END SJSAS 6170435
 
-        /*
-         * Configure JspC with jsp-config properties from sun-web.xml,
-         * which override JspServlet init params of the same name.
-         */
+        // Configure JspC with jsp-config properties from sun-web.xml,
+        // which override JspServlet init params of the same name.
         JspConfig jspConfig = sunWebApp.getJspConfig();
         if (jspConfig == null) {
             return;
         }
         WebProperty[] props = jspConfig.getWebProperty();
         for (int i=0; props!=null && i<props.length; i++) {
-            configureJspc(jspc, props[i].getAttributeValue("name"), props[i].getAttributeValue("value"));
+            configureJspc(jspc, props[i].getValue("name"), props[i].getValue("value"));
         }
     }
 
@@ -267,31 +243,23 @@ public final class JSPCompiler {
         }
 
         if ("xpoweredBy".equals(pName)) {
-            jspc.setXpoweredBy(Boolean.valueOf(pValue).booleanValue());
+            jspc.setXpoweredBy(Boolean.parseBoolean(pValue));
         } else if ("classdebuginfo".equals(pName)) {
-            jspc.setClassDebugInfo(Boolean.valueOf(pValue).booleanValue());
+            jspc.setClassDebugInfo(Boolean.parseBoolean(pValue));
         } else if ("enablePooling".equals(pName)) {
-            jspc.setPoolingEnabled(Boolean.valueOf(pValue).booleanValue());
+            jspc.setPoolingEnabled(Boolean.parseBoolean(pValue));
         } else if ("trimSpaces".equals(pName)) {
-            jspc.setTrimSpaces(Boolean.valueOf(pValue).booleanValue());
+            jspc.setTrimSpaces(Boolean.parseBoolean(pValue));
         } else if ("genStrAsCharArray".equals(pName)) {
-            jspc.setGenStringAsCharArray(Boolean.valueOf(pValue).booleanValue());
+            jspc.setGenStringAsCharArray(Boolean.parseBoolean(pValue));
         } else if ("errorOnUseBeanInvalidClassAttribute".equals(pName)) {
-            jspc.setErrorOnUseBeanInvalidClassAttribute(Boolean.valueOf(pValue).booleanValue());
+            jspc.setErrorOnUseBeanInvalidClassAttribute(Boolean.parseBoolean(pValue));
         } else if ("ignoreJspFragmentErrors".equals(pName)) {
-            jspc.setIgnoreJspFragmentErrors(Boolean.valueOf(pValue).booleanValue());
+            jspc.setIgnoreJspFragmentErrors(Boolean.parseBoolean(pValue));
         } else if ("compilerSourceVM".equals(pName)) {
             jspc.setCompilerSourceVM(pValue);
         } else if ("compilerTargetVM".equals(pName)) {
             jspc.setCompilerTargetVM(pValue);
         }
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    private static final Logger logger = LogFacade.getLogger();
-
-    ////////////////////////////////////////////////////////////////////////////
-
 }

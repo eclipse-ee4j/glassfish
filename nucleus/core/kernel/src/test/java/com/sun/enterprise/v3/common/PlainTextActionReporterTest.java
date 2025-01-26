@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import org.glassfish.api.ActionReport;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -163,6 +164,6 @@ public class PlainTextActionReporterTest {
         try (PrintStream stream = new PrintStream(outputStream)) {
             report.writeReport(stream);
         }
-        return outputStream.toString();
+        return outputStream.toString(UTF_8);
     }
 }

@@ -132,6 +132,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
@@ -1031,13 +1032,13 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     }
 
     private List<String> getHostAndPort(HttpRequest request) throws IOException {
-        boolean isWebServerRequest = false;
-        Enumeration headerNames = ((HttpServletRequest) request.getRequest()).getHeaderNames();
+        Enumeration<String> headerNames = ((HttpServletRequest) request.getRequest()).getHeaderNames();
 
         String[] hostPort = null;
         boolean isHeaderPresent = false;
+        boolean isWebServerRequest = false;
         while (headerNames.hasMoreElements()) {
-            String headerName = (String) headerNames.nextElement();
+            String headerName = headerNames.nextElement();
             String hostVal;
             if (headerName.equalsIgnoreCase("Host")) {
                 hostVal = ((HttpServletRequest) request.getRequest()).getHeader(headerName);
@@ -1051,7 +1052,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
         // If the port in the Header is empty (it refers to the default port), which is
         // not one of the GlassFish listener ports -> GF is front-ended by a proxy (LB plugin)
-        boolean isHostPortNullOrEmpty = ((hostPort.length <= 1) || (hostPort[1] == null || hostPort[1].trim().isEmpty()));
+        boolean isHostPortNullOrEmpty = ((hostPort.length <= 1) || (hostPort[1] == null || hostPort[1].isBlank()));
         if (!isHeaderPresent) {
             isWebServerRequest = false;
         } else if (isHostPortNullOrEmpty) {
@@ -1071,6 +1072,10 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                         // does not match with the hostname in the
                         // listener-To avoid performance overhead
                         localHostAdresses = NetUtils.getHostAddresses();
+                        if (localHostAdresses == null) {
+                            // The foreach would throw NPE and getHostAddresses would return null.
+                            break;
+                        }
 
                         InetAddress hostAddress = InetAddress.getByName(hostPort[0]);
                         for (InetAddress inetAdress : localHostAdresses) {
@@ -1140,7 +1145,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         // Is redirecting disabled?
         if (redirectPort <= 0) {
             LOG.fine("SSL redirect is disabled");
-            hresponse.sendError(SC_FORBIDDEN, URLEncoder.encode(hrequest.getRequestURI(), "UTF-8"));
+            hresponse.sendError(SC_FORBIDDEN, URLEncoder.encode(hrequest.getRequestURI(), UTF_8));
             return (false);
         }
 
@@ -1166,7 +1171,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
             hresponse.sendRedirect(url.toString());
             return false;
         } catch (MalformedURLException e) {
-            hresponse.sendError(SC_INTERNAL_SERVER_ERROR, URLEncoder.encode(hrequest.getRequestURI(), "UTF-8"));
+            hresponse.sendError(SC_INTERNAL_SERVER_ERROR, URLEncoder.encode(hrequest.getRequestURI(), UTF_8));
             return false;
         }
     }

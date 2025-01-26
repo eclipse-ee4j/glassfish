@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1363,7 +1363,8 @@ public abstract class EjbBeanDescriptor extends CommonResourceDescriptor impleme
     @Override
     public void setRunAsIdentity(RunAsIdentityDescriptor desc) {
         if (usesCallerIdentity == null || usesCallerIdentity) {
-            throw new IllegalStateException("Cannot set RunAs identity when using caller identity");
+            throw new IllegalStateException("Cannot set RunAs identity when using caller identity."
+                + " Set usesCallerIdentity to false first.");
         }
         this.runAsIdentity = desc;
     }
@@ -1371,9 +1372,6 @@ public abstract class EjbBeanDescriptor extends CommonResourceDescriptor impleme
 
     @Override
     public RunAsIdentityDescriptor getRunAsIdentity() {
-        if (usesCallerIdentity == null || usesCallerIdentity) {
-            throw new IllegalStateException("Cannot get RunAs identity when using caller identity");
-        }
         return runAsIdentity;
     }
 

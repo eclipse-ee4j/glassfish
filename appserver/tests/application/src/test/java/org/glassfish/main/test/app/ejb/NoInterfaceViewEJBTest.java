@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,12 +18,12 @@ package org.glassfish.main.test.app.ejb;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.file.Files;
 
+import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -79,8 +79,8 @@ public class NoInterfaceViewEJBTest {
         try {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
-                () -> assertThat(readResponse(connection), equalTo(NoInterfaceViewEJB.class.getName()))
-            );
+                () -> assertThat(HttpParser.readResponseInputStream(connection),
+                    equalTo(NoInterfaceViewEJB.class.getName()))            );
         } finally {
             connection.disconnect();
         }
@@ -202,7 +202,7 @@ public class NoInterfaceViewEJBTest {
         try {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
-                () -> assertThat(readResponse(connection),
+                () -> assertThat(HttpParser.readResponseInputStream(connection),
                         containsString("Illegal non-business method access on no-interface view"))
             );
         } finally {
@@ -217,7 +217,7 @@ public class NoInterfaceViewEJBTest {
         try {
             assertAll(
                 () -> assertThat(connection.getResponseCode(), equalTo(200)),
-                () -> assertThat(readResponse(connection),
+                () -> assertThat(HttpParser.readResponseInputStream(connection),
                         containsString("Illegal non-business method access on no-interface view"))
             );
         } finally {
@@ -256,12 +256,6 @@ public class NoInterfaceViewEJBTest {
         return format("/%s/%s", APP_NAME, path);
     }
 
-    private String readResponse(URLConnection connection) throws IOException {
-        try (InputStream in = connection.getInputStream()) {
-            return new String(in.readAllBytes());
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private <T> T readEntity(URLConnection connection, Class<T> type) throws Exception {
         Method valueOf;
@@ -270,6 +264,6 @@ public class NoInterfaceViewEJBTest {
         } catch (NoSuchMethodException e) {
             valueOf = type.getDeclaredMethod("valueOf", String.class);
         }
-        return (T) valueOf.invoke(null, readResponse(connection));
+        return (T) valueOf.invoke(null, HttpParser.readResponseInputStream(connection));
     }
 }

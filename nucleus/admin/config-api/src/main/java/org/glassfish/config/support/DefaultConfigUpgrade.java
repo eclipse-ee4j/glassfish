@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -146,6 +146,7 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.problemParsingS
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.problemParsingThreadPoolElement;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.problemParsingTransportConfig;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.runningDefaultConfigUpgrade;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
@@ -1595,7 +1596,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
 
     private void createParser(InputStream template) throws FileNotFoundException, XMLStreamException {
         if (template != null) {
-            reader = new InputStreamReader(template);
+            reader = new InputStreamReader(template, UTF_8);
             parser = XMLInputFactory.newFactory().createXMLStreamReader("domain.xml", reader);
         }
     }

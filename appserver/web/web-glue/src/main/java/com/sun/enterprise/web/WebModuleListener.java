@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +28,7 @@ import com.sun.enterprise.web.jsp.ResourceInjectorImpl;
 
 import jakarta.servlet.ServletContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -82,15 +83,17 @@ final class WebModuleListener implements LifecycleListener {
      */
     private final WebBundleDescriptor webBundleDescriptor;
     private final WebContainer webContainer;
+    private boolean includeInitialized;
+    private List<String> includeJars;
+
 
     /**
      * Constructor.
      *
      * @param webContainer
-     * @param explodedLocation The location where this web module is exploded
      * @param wbd descriptor for this module.
      */
-    public WebModuleListener(WebContainer webContainer, WebBundleDescriptor wbd) {
+    WebModuleListener(WebContainer webContainer, WebBundleDescriptor wbd) {
         this.webContainer = webContainer;
         this.webBundleDescriptor = wbd;
     }
@@ -173,7 +176,7 @@ final class WebModuleListener implements LifecycleListener {
          */
         Map<URI, List<String>> tldListenerMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
-            // Skip any JSF related TLDs for non-JSF apps
+            // Skip any Faces related TLDs for non-Faces apps
             if ("jsfTld".equals(tldProvider.getName()) && !webModule.isJsfApplication()) {
                 continue;
             }
@@ -186,12 +189,14 @@ final class WebModuleListener implements LifecycleListener {
         servletContext.setAttribute("com.sun.appserv.tldlistener.map", tldListenerMap);
 
         ServiceLocator defaultServices = webContainer.getServerContext().getDefaultServices();
-        final String servicesName = webModule.getComponentId();
-        ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(servicesName, defaultServices);
-        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
 
-        // set services for jsf injection
-        servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, webAppServices);
+        // Set services for Faces injection
+        if (webModule.isSystemApplication()) {
+            // A system application like the Admin GUI needs to load services from the war archive
+            servletContext.setAttribute(Constants.SERVICE_LOCATOR_ATTRIBUTE, createWebAppServices(webModule, defaultServices));
+        } else {
+            servletContext.setAttribute(Constants.SERVICE_LOCATOR_ATTRIBUTE, defaultServices);
+        }
 
         SunWebAppImpl bean = webModule.getIasWebAppConfigBean();
 
@@ -207,8 +212,8 @@ final class WebModuleListener implements LifecycleListener {
         if (bean != null && bean.getJspConfig() != null) {
             WebProperty[] props = bean.getJspConfig().getWebProperty();
             for (WebProperty prop : props) {
-                String pname = prop.getAttributeValue("name");
-                String pvalue = prop.getAttributeValue("value");
+                String pname = prop.getValue("name");
+                String pvalue = prop.getValue("value");
                 if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE, LogFacade.JSP_CONFIG_PROPERTY, "[" + webModule.getID() + "] is [" + pname + "] = [" + pvalue + "]");
                 }
@@ -239,7 +244,7 @@ final class WebModuleListener implements LifecycleListener {
             _logger.log(FINE, LogFacade.SYS_CLASSPATH, webModule.getID() + " is " + sysClassPath);
         }
 
-        if (sysClassPath.equals("")) {
+        if (sysClassPath.isEmpty()) {
             // In embedded mode, services returns SingleModulesRegistry and
             // it has no modules.
             // Try "java.class.path" system property instead.
@@ -271,6 +276,13 @@ final class WebModuleListener implements LifecycleListener {
 
     }
 
+    private ServiceLocator createWebAppServices(WebModule webModule, ServiceLocator defaultServices) {
+        ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(webModule.getComponentId(), defaultServices);
+        initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
+
+        return webAppServices;
+    }
+
     private static void initializeServicesFromClassLoader(ServiceLocator serviceLocator, ClassLoader classLoader) {
         DynamicConfigurationService dcs =
                     serviceLocator.getService(DynamicConfigurationService.class);
@@ -281,9 +293,6 @@ final class WebModuleListener implements LifecycleListener {
             _logger.log(Level.SEVERE, ex, ex::getMessage);
         }
     }
-
-    private boolean includeInitialized;
-    private List<String> includeJars;
 
     private void initIncludeJars() {
         if (includeInitialized) {
@@ -321,12 +330,12 @@ final class WebModuleListener implements LifecycleListener {
         return false;
     }
 
-    /*
+    /**
      * Remove unnecessary system jars, to improve performance
      */
     private String trimSysClassPath(String sysClassPath) {
 
-        if (sysClassPath == null || sysClassPath.equals("")) {
+        if (sysClassPath == null || sysClassPath.isEmpty()) {
             return "";
         }
         initIncludeJars();
@@ -334,16 +343,15 @@ final class WebModuleListener implements LifecycleListener {
             // revert to previous behavior, i.e. no trimming
             return sysClassPath;
         }
-        String sep = System.getProperty("path.separator");
         StringBuilder ret = new StringBuilder();
-        StringTokenizer tokenizer = new StringTokenizer(sysClassPath, sep);
+        StringTokenizer tokenizer = new StringTokenizer(sysClassPath, File.pathSeparator);
         String mySep = "";
         while (tokenizer.hasMoreElements()) {
             String path = tokenizer.nextToken();
             if (included(path)) {
                 ret.append(mySep);
                 ret.append(path);
-                mySep = sep;
+                mySep = File.pathSeparator;
             }
         }
         return ret.toString();

@@ -51,6 +51,7 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class RemoteCommand extends CLICommand {
          * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
          * superclass.
          */
-        public CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password,
+        private CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password,
             Logger logger, String authToken) throws CommandException {
             super(name, host, port, secure, user, password, logger, getCommandScope(), authToken, true /* prohibitDirectoryUploads */);
             sessionCache = AsadminSecurityUtil.getGfClientSessionFile(host, port);
@@ -641,7 +642,7 @@ public class RemoteCommand extends CLICommand {
                 try {
                     if (r != null) {
                         br = new BufferedReader(r);
-                        PrintWriter pw = new PrintWriter(System.out);
+                        PrintWriter pw = new PrintWriter(System.out, false, Charset.defaultCharset());
                         char[] buf = new char[8192];
                         int cnt;
                         while ((cnt = br.read(buf)) > 0) {

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.jdbc.jdbc-ra</groupId>
         <artifactId>jdbc-ra</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,10 +32,6 @@
     <packaging>glassfish-jar</packaging>
 
     <name>JDBC 40 related classes for JDBC Resource Adapter</name>
-
-    <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
-    </properties>
 
     <dependencies>
         <dependency>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +26,7 @@ import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,7 +63,7 @@ public final class SMFService extends ServiceAdapter {
     public static final String NO_START_INSTANCES_PROPERTY = "startinstances=false";
     public static final String SVCCFG = "/usr/sbin/svccfg";
     public static final String SVCADM = "/usr/sbin/svcadm";
-    public static final String MANIFEST_HOME = "/var/svc/manifest/application/GlassFish/";
+    public static final File MANIFEST_HOME = new File("/var/svc/manifest/application/GlassFish");
     private static final String NULL_VALUE = "null";
     private static final StringManager sm = StringManager.getManager(SMFService.class);
     private static final String nullArgMsg = sm.getString("null_arg");
@@ -93,15 +94,16 @@ public final class SMFService extends ServiceAdapter {
      */
     @Override
     public void createServiceInternal() {
-        boolean previousManifestExists = new File(getManifestFilePath()).exists();
+        File manifestFile = getManifestFile();
+        boolean previousManifestExists = manifestFile.exists();
         try {
             isConfigValid(); //safe, throws exception if not valid
             if (info.trace) {
                 printOut(toString());
             }
-            validateManifest(getManifestFilePath());
+            validateManifest(manifestFile);
             previousManifestExists = false;
-            ServicesUtils.tokenReplaceTemplateAtDestination(tokensAndValues(), getManifestFileTemplatePath(), getManifestFilePath());
+            ServicesUtils.tokenReplaceTemplateAtDestination(tokensAndValues(), getManifestTemplateFile(), getManifestFile());
             validateService();
             importService();
         } catch (final Exception e) {
@@ -242,9 +244,9 @@ public final class SMFService extends ServiceAdapter {
                 throw new RuntimeException(msg);
             }
         }
-        final File mf = new File(getManifestFileTemplatePath());
+        final File mf = getManifestTemplateFile();
         if (!mf.exists()) {
-            final String msg = sm.getString("serviceTemplateNotFound", getManifestFileTemplatePath());
+            final String msg = sm.getString("serviceTemplateNotFound", getManifestTemplateFile());
             throw new RuntimeException(msg);
         }
 
@@ -272,9 +274,8 @@ public final class SMFService extends ServiceAdapter {
      * Qualified Service Name </b> is invalid, a RuntimeException results.
      */
     @Override
-    public String getManifestFilePath() {
-        final String fn = new StringBuilder().append(MANIFEST_HOME).append(info.fqsn).append("/").append(MANIFEST_FILE_SUFFIX).toString();
-        return (fn);
+    public File getManifestFile() {
+        return MANIFEST_HOME.toPath().resolve(Path.of(info.fqsn, MANIFEST_FILE_SUFFIX)).toFile();
     }
 
     /**
@@ -283,7 +284,7 @@ public final class SMFService extends ServiceAdapter {
      * set before calling this method, otherwise a runtime exception results.
      */
     @Override
-    public String getManifestFileTemplatePath() {
+    public File getManifestTemplateFile() {
         String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
         if (!ok(ir)) {
             throw new RuntimeException("Internal Error - System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
@@ -295,10 +296,7 @@ public final class SMFService extends ServiceAdapter {
         }
 
         File templatesDir = new File(rootDir, REL_PATH_TEMPLATES);
-        String filename = MANIFEST_FILE_TEMPL_SUFFIX;
-
-        File f = new File(templatesDir, filename);
-        return f.getPath();
+        return new File(templatesDir, MANIFEST_FILE_TEMPL_SUFFIX);
     }
 
     private static boolean ok(String s) {
@@ -328,8 +326,8 @@ public final class SMFService extends ServiceAdapter {
      */
     @Override
     public String getSuccessMessage() {
-        String msg = Strings.get("SMFServiceCreated", info.smfFullServiceName, info.type.toString(), info.serverDirs.getServerParentDir(),
-                getManifestFilePath(), info.serviceName);
+        String msg = Strings.get("SMFServiceCreated", info.smfFullServiceName, info.type.toString(),
+            info.serverDirs.getServerParentDir(), getManifestFile(), info.serviceName);
 
         if (info.dryRun) {
             msg += Strings.get("dryrun");
@@ -372,13 +370,12 @@ public final class SMFService extends ServiceAdapter {
     }
 
     private boolean canCreateManifest() {
-        final File mh = new File(MANIFEST_HOME);
         boolean ok = true;
-        if (!mh.exists()) {
-            ok = mh.mkdirs();
+        if (!MANIFEST_HOME.exists()) {
+            ok = MANIFEST_HOME.mkdirs();
         }
         if (ok) {
-            if (!mh.canWrite()) {
+            if (!MANIFEST_HOME.canWrite()) {
                 ok = false;
             }
         }
@@ -422,19 +419,20 @@ public final class SMFService extends ServiceAdapter {
     private boolean serviceNameExists(final String sn) {
         boolean exists = false;
         try {
-            final String[] cmd = new String[] { "/usr/bin/svcs", sn };
+            final String[] cmd = new String[] {"/usr/bin/svcs", sn};
             ProcessManager pm = new ProcessManager(cmd);
             pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
-            pm.execute();
-            exists = true;
+            int exitCode = pm.execute();
+            if (exitCode == 0) {
+                exists = true;
+            }
         } catch (final Exception e) {
-            //returns a non-zero status -- the service does not exist, status is already set
+            // Do nothing, status is already set.
         }
-        return (exists);
+        return exists;
     }
 
-    private void validateManifest(final String manifestPath) throws Exception {
-        final File manifest = new File(manifestPath);
+    private void validateManifest(final File manifest) throws Exception {
         final File manifestParent = manifest.getParentFile();
         final String msg = sm.getString("smfLeftoverFiles", manifest.getParentFile().getAbsolutePath());
 
@@ -456,12 +454,12 @@ public final class SMFService extends ServiceAdapter {
             }
         }
         if (info.trace) {
-            printOut("Manifest validated: " + manifestPath);
+            printOut("Manifest validated: " + manifest);
         }
     }
 
     private void validateService() throws Exception {
-        final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFilePath() };
+        final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFile().getAbsolutePath() };
         final ProcessManager pm = new ProcessManager(cmda);
         pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
         pm.execute();
@@ -471,7 +469,7 @@ public final class SMFService extends ServiceAdapter {
     }
 
     private boolean importService() throws Exception {
-        final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFilePath() };
+        final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFile().getAbsolutePath() };
         final ProcessManager pm = new ProcessManager(cmda);
         pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
         if (info.dryRun) {
@@ -488,7 +486,7 @@ public final class SMFService extends ServiceAdapter {
     }
 
     private void cleanupManifest() throws RuntimeException {
-        final File manifest = new File(getManifestFilePath());
+        final File manifest = getManifestFile();
         if (manifest.exists()) {
             if (!manifest.delete()) {
                 manifest.deleteOnExit();

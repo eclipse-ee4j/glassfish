@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,14 @@ package com.sun.enterprise.config.modularity;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 import java.util.StringTokenizer;
 
+import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.config.support.Singleton;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -40,6 +44,14 @@ public class GetSetModularityHelper {
 
     @Inject
     private Domain domain;
+
+    @Inject
+    private ServiceLocator serviceLocator;
+
+    @PostConstruct
+    public void initDefaultResources() {
+        serviceLocator.getAllServices(DefaultResourceProxy.class);
+    }
 
     /**
      * @param prefix the entire . separated string
@@ -90,7 +102,7 @@ public class GetSetModularityHelper {
         //        TODO temporary hard coded service names till all elements are supported, being tracked as part of FPP-121
         if (dottedName.contains("monitor"))
             return;
-        if (dottedName.contains("mdb-container") || dottedName.contains("ejb-container.") || dottedName.contains("web-container.")
+        if (dottedName.contains("mdb-container") || dottedName.contains("ejb-container.") || dottedName.endsWith("ejb-container") || dottedName.contains("web-container.")
                 || dottedName.contains("cdi-service") || dottedName.contains("batch-runtime-configuration")
                 || dottedName.contains("managed-job-config")) {
             //TODO improve performance to improve command execution time

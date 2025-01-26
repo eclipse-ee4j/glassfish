@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,8 @@
 
 package org.glassfish.embeddable;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Properties;
 
 /**
@@ -36,7 +38,7 @@ public class GlassFishProperties {
 
     /** Key for specifying which instance root (aka domain dir) GlassFish should run with. */
     public static final String INSTANCE_ROOT_PROP_NAME = "com.sun.aas.instanceRoot";
-    /** Key for specifying which configuration file (domain.xml) GlassFish should run with. */
+    /** Key for specifying absolute URI which configuration file (domain.xml) GlassFish should run with. */
     public static final String CONFIG_FILE_URI_PROP_NAME = "org.glassfish.embeddable.configFileURI";
     /**
      * Key for specifying whether the specified configuration file (domain.xml) or config/domain.xml
@@ -128,26 +130,82 @@ public class GlassFishProperties {
         return gfProperties.getProperty(INSTANCE_ROOT_PROP_NAME);
     }
 
+
     /**
      * Optionally set the location of configuration file (i.e., domain.xml) using
      * which the GlassFish should run.
-     * <p/>
+     * <p>
+     * If the parameter does not start with <code>file:</code>, it is resolved as a local file path
+     * relative to the current directory.
+     * <p>
      * Unless specified, the configuration file is operated on read only mode.
      * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
      *
-     * @param configFileURI Location of configuration file.
+     * @param configFileURI Location of configuration file. File path, or full URI with the schema,
+     *            e.g. <code>file:</code>
      */
+    @Deprecated(forRemoval = true, since = "7.0.20")
     public void setConfigFileURI(String configFileURI) {
-        gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI);
+        if (configFileURI == null) {
+            gfProperties.remove(CONFIG_FILE_URI_PROP_NAME);
+            return;
+        }
+        if (configFileURI.startsWith("file:")) {
+            setConfigFile(URI.create(configFileURI));
+        } else {
+            setConfigFile(new File(configFileURI).toURI());
+        }
     }
 
     /**
-     * Get the configurationFileURI set using {@link #setConfigFileURI(String)}
+     * Optionally set the location of configuration file (i.e., domain.xml) using
+     * which the GlassFish should run. The file will be converted to the absolute URI.
+     * <p>
+     * Unless specified, the configuration file is operated on read only mode.
+     * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
+     *
+     * @param configFile Location of configuration file. File path, or full URI with the schema,
+     *            e.g. <code>file:</code>
+     */
+    public void setConfigFile(File configFile) {
+        if (configFile == null) {
+            gfProperties.remove(CONFIG_FILE_URI_PROP_NAME);
+            return;
+        }
+        setConfigFile(configFile.toURI());
+    }
+
+    /**
+     * Optionally set the location of configuration file (i.e., domain.xml) using
+     * which the GlassFish should run. The parameter must be an absolute URI or null.
+     * <p>
+     * Unless specified, the configuration file is operated on read only mode.
+     * To writeback any changes, call {@link #setConfigFileReadOnly(boolean)} with 'false'.
+     *
+     * @param configFileURI Location of configuration file. File path, or full URI with the schema,
+     *            e.g. <code>file:</code>
+     * @throws IllegalArgumentException If the parameter is not an absolute URI or null.
+     */
+    public void setConfigFile(URI configFileURI) {
+        if (configFileURI == null) {
+            gfProperties.remove(CONFIG_FILE_URI_PROP_NAME);
+            return;
+        }
+        if (configFileURI.isAbsolute()) {
+            gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI.toString());
+            return;
+        }
+        throw new IllegalArgumentException("The URI is not absolute: " + configFileURI);
+    }
+
+    /**
+     * Get the absolute configurationFileURI set using {@link #setConfigFileURI(String)}
      *
      * @return The configurationFileURI set using {@link #setConfigFileURI(String)}
      */
-    public String getConfigFileURI() {
-        return gfProperties.getProperty(CONFIG_FILE_URI_PROP_NAME);
+    public URI getConfigFileURI() {
+        String uri = gfProperties.getProperty(CONFIG_FILE_URI_PROP_NAME);
+        return uri == null ? null : URI.create(uri);
     }
 
     /**
@@ -176,6 +234,10 @@ public class GlassFishProperties {
     /**
      * Set the port number for a network listener that the GlassFish server
      * should use.
+     *
+     * In the default configuration, all listeners are disabled. This method will enable the listener if it's disabled.
+     * If the port is 0 or a negative value, it will disable the network listener.
+     *
      * <p/>
      * Examples:
      * <p/>
@@ -184,6 +246,7 @@ public class GlassFishProperties {
      * <pre>
      *      setPort("http-listener", 8080); // GlassFish will listen on HTTP port 8080
      *      setPort("https-listener", 8181); // GlassFish will listen on HTTPS port 8181
+     *      setPort("http-listener", 0); // GlassFish will disable the HTTP listener
      * </pre>
      * <p/>
      * 2. When the custom configuration file (domain.xml) is used, then the
@@ -207,8 +270,12 @@ public class GlassFishProperties {
         if (networkListener != null) {
             String key = String.format(NETWORK_LISTENER_KEY, networkListener);
             if (key != null) {
-                gfProperties.setProperty(key + ".port", Integer.toString(port));
-                gfProperties.setProperty(key + ".enabled", "true");
+                if (port <= 0) {
+                    gfProperties.setProperty(key + ".enabled", "false");
+                } else {
+                    gfProperties.setProperty(key + ".port", Integer.toString(port));
+                    gfProperties.setProperty(key + ".enabled", "true");
+                }
             }
         }
     }

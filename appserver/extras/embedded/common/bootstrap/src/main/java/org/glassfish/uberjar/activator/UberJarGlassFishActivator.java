@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,8 @@
 
 package org.glassfish.uberjar.activator;
 
-import com.sun.enterprise.glassfish.bootstrap.Constants;
-import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -39,7 +39,6 @@ import org.osgi.framework.launch.Framework;
  *
  * @author bhavanishankar@dev.java.net
  */
-
 public class UberJarGlassFishActivator implements BundleActivator {
 
     private static Logger logger = Logger.getLogger("embedded-glassfish");
@@ -53,40 +52,6 @@ public class UberJarGlassFishActivator implements BundleActivator {
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         privilegedStart(bundleContext);
-
-/*
-        Properties props = new Properties();
-        props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Constants.Platform.Felix.toString());
-
-        logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
-                ", classloader = " + getClass().getClassLoader());
-
-        Framework framework = (Framework) bundleContext.getBundle(0); // or loop until you find the framework bundle.
-        logger.info("framework bundle = " + framework);
-        props.put("Framework", framework);
-
-        // Use the bundle Jar URI.
-        props.setProperty(UBER_JAR_URI, bundleContext.getBundle().getLocation());
-
-        long startTime = System.currentTimeMillis();
-        GlassFishRuntime gfr = GlassFishRuntime.bootstrap(
-                props, getClass().getClassLoader());  // don't use thread context classloader, otherwise the META-INF/services will not be found.
-        long timeTaken = System.currentTimeMillis() - startTime;
-
-        logger.info("created gfr = " + gfr + ", timeTaken = " + timeTaken);
-
-        startTime = System.currentTimeMillis();
-        GlassFish gf = gfr.newGlassFish(props);
-        timeTaken = System.currentTimeMillis() - startTime;
-        System.out.println("created gf = " + gf + ", timeTaken = " + timeTaken);
-
-
-        startTime = System.currentTimeMillis();
-        gf.start();
-        timeTaken = System.currentTimeMillis() - startTime;
-        System.out.println("started gf, timeTaken = " + timeTaken);
-
-*/
     }
 
     private void privilegedStart(final BundleContext bundleContext) throws Exception {
@@ -95,7 +60,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name());
+                    props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
 
                     logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
                             ", classloader = " + getClass().getClassLoader());
@@ -138,5 +103,4 @@ public class UberJarGlassFishActivator implements BundleActivator {
     public void stop(BundleContext bundleContext) throws Exception {
         logger.info("EmbeddedGlassFishActivator is stopped");
     }
-
 }

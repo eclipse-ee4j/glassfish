@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +33,8 @@ import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * populate the a DomDocument from the given configuration snippet file containing a config bean configuration.
  *
@@ -53,9 +56,9 @@ public class ConfigurationPopulator {
 
     public void run(ConfigParser parser) {
         try {
-            InputStream is = new ByteArrayInputStream(xmlContent.getBytes());
-            XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(is, "utf-8");
-            parser.parse(reader, doc, Dom.unwrap((ConfigBeanProxy) parent));
+            InputStream is = new ByteArrayInputStream(xmlContent.getBytes(UTF_8));
+            XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(is, UTF_8.name());
+            parser.parse(reader, doc, Dom.unwrap(parent));
         } catch (XMLStreamException e) {
             LOG.log(Level.SEVERE, ConfigApiLoggerInfo.DEFAULT_CFG_READ_FAILED, e);
         }

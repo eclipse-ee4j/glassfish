@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +26,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.MessageBodyReader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -43,6 +42,8 @@ import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.composite.RestModel;
 import org.glassfish.admin.rest.utils.Util;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -66,16 +67,8 @@ public class RestModelListReader implements MessageBodyReader<List<RestModel>> {
             MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
         try {
             Locale locale = CompositeUtil.instance().getLocale(httpHeaders);
-            List<RestModel> list = new ArrayList<RestModel>();
-            BufferedReader in = new BufferedReader(new InputStreamReader(entityStream));
-            StringBuilder sb = new StringBuilder();
-            String line = in.readLine();
-            while (line != null) {
-                sb.append(line);
-                line = in.readLine();
-            }
-
-            JSONArray array = new JSONArray(sb.toString());
+            List<RestModel> list = new ArrayList<>();
+            JSONArray array = new JSONArray(new String(entityStream.readAllBytes(), UTF_8));
             Class<?> modelType = null;
             if (genericType instanceof ParameterizedType) {
                 final ParameterizedType pt = (ParameterizedType) genericType;

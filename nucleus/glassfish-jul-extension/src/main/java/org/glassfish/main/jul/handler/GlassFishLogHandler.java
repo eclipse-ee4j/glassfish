@@ -96,7 +96,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
 
     private GlassFishLogHandlerConfiguration configuration;
 
-    private final Timer rotationTimer = new Timer("log-rotation-timer-for-" + getClass().getSimpleName());
+    private final Timer rotationTimer = new Timer("log-rotation-timer-for-" + getClass().getSimpleName(), true);
 
     private volatile GlassFishLogHandlerStatus status;
     private LoggingPump pump;
@@ -340,7 +340,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
 
         final Formatter formatter = configuration.getFormatterConfiguration();
         setFormatter(formatter);
-        if (isRollRequired(configuration.getLogFile(), formatter)) {
+        if (isRollRequired(configuration.getLogFile(), formatter, this.configuration.getEncoding())) {
             logFileManager.roll();
         }
         // Output is disabled after the creation of the LogFileManager.
@@ -397,10 +397,21 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
 
     private void initStandardStreamsLogging() {
         trace(GlassFishLogHandler.class, "initStandardStreamsLogging()");
+
+        LoggingPrintStream prevStdoutStream = this.stdoutStream;
+        LoggingPrintStream prevStderrStream = this.stderrStream;
+
         this.stdoutStream = LoggingPrintStream.create(STDOUT_LOGGER, INFO, 5000, configuration.getEncoding());
         this.stderrStream = LoggingPrintStream.create(STDERR_LOGGER, SEVERE, 1000, configuration.getEncoding());
         System.setOut(this.stdoutStream);
         System.setErr(this.stderrStream);
+
+        if (prevStdoutStream != null) {
+            prevStdoutStream.close();
+        }
+        if (prevStderrStream != null) {
+            prevStderrStream.close();
+        }
     }
 
 
@@ -467,11 +478,11 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
     }
 
 
-    private static boolean isRollRequired(final File logFile, final Formatter formatter) {
+    private static boolean isRollRequired(final File logFile, final Formatter formatter, final Charset expectedCharset) {
         if (logFile.length() == 0) {
             return false;
         }
-        final String detectedFormatterName = new LogFormatDetector().detectFormatter(logFile);
+        final String detectedFormatterName = new LogFormatDetector().detectFormatter(logFile, expectedCharset);
         return detectedFormatterName == null || !formatter.getClass().getName().equals(detectedFormatterName);
     }
 

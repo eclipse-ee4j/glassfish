@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,10 +51,10 @@ public abstract class OsgiShellService {
      */
     protected OsgiShellService(final ActionReport report) {
         this.report = report;
-        this.stdoutBytes = new ByteArrayOutputStream(1024);
-        this.stdout = new PrintStream(stdoutBytes);
-        this.stderrBytes = new ByteArrayOutputStream(1024);
-        this.stderr = new PrintStream(stderrBytes);
+        this.stdoutBytes = new ByteArrayOutputStream(8192);
+        this.stdout = new PrintStream(stdoutBytes, false, UTF_8);
+        this.stderrBytes = new ByteArrayOutputStream(8192);
+        this.stderr = new PrintStream(stderrBytes, false, UTF_8);
     }
 
 
@@ -69,8 +69,6 @@ public abstract class OsgiShellService {
     public ActionReport exec(final String cmdName, final String cmd) throws Exception {
         LOG.log(Level.FINE, "exec: {0}", cmd);
         execCommand(cmdName, cmd);
-        stdout.flush();
-        stderr.flush();
         return generateReport();
     }
 
@@ -86,9 +84,11 @@ public abstract class OsgiShellService {
 
 
     private ActionReport generateReport() {
+        stdout.flush();
         final String output = stdoutBytes.toString(UTF_8);
         report.setMessage(output);
 
+        stderr.flush();
         final String errors = stderrBytes.toString(UTF_8);
         if (errors.isEmpty()) {
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);

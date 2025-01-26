@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +20,11 @@ package com.sun.enterprise.v3.admin;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.process.JavaClassRunner;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -58,13 +56,11 @@ public class RestartServer {
     private String[] args;
     private String serverName = "";
     private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
-    private static final String magicProperty = "-DAS_RESTART=" + ProcessHandle.current().pid();
-    private static final String[] normalProps = { magicProperty };
+    private static final String AS_RESTART_PID = "-DAS_RESTART=" + ProcessHandle.current().pid();
+    private static final String[] normalProps = { AS_RESTART_PID };
     private static final int RESTART_NORMAL = 10;
     private static final int RESTART_DEBUG_ON = 11;
     private static final int RESTART_DEBUG_OFF = 12;
-    private static final String[] debuggerProps = { magicProperty, "-Xdebug",
-            "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1323" };
 
     protected final void setDebug(Boolean b) {
         debug = b;
@@ -99,17 +95,18 @@ public class RestartServer {
             // show up in the ServiceLocator.
             GlassFish gfKernel = glassfishProvider.get();
             while (gfKernel == null) {
-                Thread.yield();
+                Thread.onSpinWait();
                 gfKernel = glassfishProvider.get();
             }
-
-            // else we just return a special int from System.exit()
-            gfKernel.stop();
             if (!verbose) {
-                reincarnate();
+                if (!setupReincarnationWithAsadmin() && !setupReincarnationWithOther()) {
+                    throw new IllegalStateException(strings.get("restart.server.noStartupInfo", props));
+                }
+                scheduleReincarnation();
             }
+            gfKernel.stop();
         } catch (Exception e) {
-            context.getLogger().severe(strings.get("restart.server.failure", e));
+            throw new Error(strings.get("restart.server.failure"), e);
         }
 
         final int restartType;
@@ -118,6 +115,7 @@ public class RestartServer {
         } else {
             restartType = debug ? RESTART_DEBUG_ON : RESTART_DEBUG_OFF;
         }
+        // return a special int from System.exit()
         System.exit(restartType);
     }
 
@@ -126,34 +124,16 @@ public class RestartServer {
     ///////// ALL PRIVATE BELOW ////////////////////
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
-    private void init(AdminCommandContext context) throws IOException {
+    private void init(AdminCommandContext context) {
         logger = context.getLogger();
         props = Globals.get(StartupContext.class).getArguments();
         verbose = Boolean.parseBoolean(props.getProperty("-verbose", "false"));
         logger.info(strings.get("restart.server.init"));
     }
 
-    private void reincarnate() throws Exception {
-        if (setupReincarnationWithAsadmin() || setupReincarnationWithOther()) {
-            doReincarnation();
-        } else {
-            logger.severe(strings.get("restart.server.noStartupInfo", strings.get("restart.server.asadminError"),
-                    strings.get("restart.server.nonAsadminError")));
-        }
-    }
-
-    private void doReincarnation() throws RDCException {
+    private void scheduleReincarnation() throws RDCException {
         try {
-            final String[] sysProps;
-            if (Boolean.parseBoolean(System.getenv("AS_SUPER_DEBUG"))) {
-                // very very difficult to debug this stuff otherwise!
-                sysProps = debuggerProps;
-            } else {
-                sysProps = normalProps;
-            }
-
-            JavaClassRunner runner = new JavaClassRunner(classpath, sysProps, classname, args);
-            runner.run();
+            Runtime.getRuntime().addShutdownHook(new StartServerShutdownHook(classpath, normalProps, classname, args));
         } catch (Exception e) {
             throw new RDCException(e);
         }

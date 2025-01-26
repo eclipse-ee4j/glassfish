@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +27,6 @@ import com.sun.enterprise.util.io.FileUtils;
 import jakarta.inject.Singleton;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +44,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Utility file to copy the security related config files from the passed non-embedded instanceDir to the embedded server
@@ -174,10 +175,10 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
         private static final String FILE = "file";
         private static final String INSTANCE_DIR_PLACEHOLDER = "${com.sun.aas.instanceRoot}";
 
-        DomainXmlSecurityParser(File domainXml) throws XMLStreamException, FileNotFoundException {
+        DomainXmlSecurityParser(File domainXml) throws XMLStreamException, IOException {
             xif.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
             xif.setProperty("javax.xml.stream.isValidating", true);
-            xmlReader = xif.createXMLStreamReader(new FileReader(domainXml));
+            xmlReader = xif.createXMLStreamReader(new FileReader(domainXml, UTF_8));
         }
 
         private String replaceInstanceDir(String fromInstanceDir, String keyFileName) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +23,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -62,7 +64,7 @@ public class MonitorCommand extends CLICommand {
             MonitorTask monitorTask = new MonitorTask(timer, getRemoteArgs(), programOpts, env, type, filter, fileName);
             timer.scheduleAtFixedRate(monitorTask, 0, (long) interval * 1000);
             boolean done = false;
-            final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            final BufferedReader in = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
 
             while (!done) {
                 String str = "";

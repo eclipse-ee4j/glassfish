@@ -136,6 +136,10 @@ public class EJBContainerTransactionManager {
      * Handle transaction requirements, if any, before invoking bean method
      */
     final void preInvokeTx(EjbInvocation inv) throws Exception {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("preInvokeTx START, inv=" + inv);
+        }
+
         // Get existing Tx status: this tells us if the client
         // started a transaction which was propagated on this invocation.
         Integer preInvokeTxStatus = inv.getPreInvokeTxStatus();
@@ -161,6 +165,9 @@ public class EJBContainerTransactionManager {
                 } catch (SystemException ex) {
                     throw new EJBException(ex);
                 }
+            }
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("preInvokeTx END (1), inv=" + inv);
             }
             return;
         }
@@ -275,6 +282,10 @@ public class EJBContainerTransactionManager {
             default:
                 throw new EJBException("Bad transaction attribute");
         }
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("preInvokeTx END (2), inv=" + inv);
+        }
     }
 
     /**
@@ -282,6 +293,9 @@ public class EJBContainerTransactionManager {
      * no-op in those containers that do not need this callback
      */
     private void startNewTx(Transaction prevTx, EjbInvocation inv) throws Exception {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("startNewTx START, inv=" + inv + "\n    prevTx=" + prevTx);
+        }
 
         container.checkUnfinishedTx(prevTx, inv);
 
@@ -313,12 +327,19 @@ public class EJBContainerTransactionManager {
         // a Synchronization object with the TM, the afterCompletion
         // will get called.
         container.afterBegin(context);
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("startNewTx END, inv=" + inv);
+        }
     }
 
     /**
      * Use caller transaction to execute a bean method
      */
     protected void useClientTx(Transaction prevTx, EjbInvocation inv) {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("useClientTx START, inv=" + inv + "\n    prevTx=" + prevTx);
+        }
         Transaction clientTx;
         int status=-1;
         int prevStatus=-1;
@@ -410,12 +431,19 @@ public class EJBContainerTransactionManager {
                 }
             }
         }
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("useClientTx END, inv=" + inv);
+        }
      }
 
     /**
      * Handle transaction requirements, if any, after invoking bean method
      */
     protected void postInvokeTx(EjbInvocation inv) throws Exception {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("postInvokeTx START, inv=" + inv);
+        }
 
         Throwable exception = inv.exception;
 
@@ -436,6 +464,9 @@ public class EJBContainerTransactionManager {
                 inv.exception = ((BaseContainer.PreInvokeException)exception).exception;
             }
 
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("postInvokeTx END (1), inv=" + inv);
+            }
             return;
         }
 
@@ -533,6 +564,10 @@ public class EJBContainerTransactionManager {
 
         // XXX If any of the TM commit/rollback/suspend calls throws an
         // exception, should the transaction be rolled back if not already so ?
+
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("postInvokeTx END (2), inv=" + inv);
+        }
      }
 
     final UserTransaction getUserTransaction() {
@@ -664,6 +699,10 @@ public class EJBContainerTransactionManager {
 
     // this is the counterpart of startNewTx
     private Throwable completeNewTx(EJBContextImpl context, Throwable exception, int status) throws Exception {
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("completeNewTx START, context=" + context + ", status=" + status + ", exception=" + exception);
+        }
+
         Throwable newException = exception;
         if (exception instanceof BaseContainer.PreInvokeException) {
             newException = ((BaseContainer.PreInvokeException) exception).exception;
@@ -672,6 +711,10 @@ public class EJBContainerTransactionManager {
         if (status == Status.STATUS_NO_TRANSACTION) {
             // no tx was started, probably an exception was thrown
             // before tm.begin() was called
+
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("completeNewTx END (1), context=" + context);
+            }
             return newException;
         }
 
@@ -684,6 +727,10 @@ public class EJBContainerTransactionManager {
             // EJB2.0 section 18.3.1, Table 15
             // Rollback the Tx we started
             destroyBeanAndRollback(context, null);
+
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("completeNewTx END (2), context=" + context);
+            }
             return processSystemException(newException);
         }
         try {
@@ -705,15 +752,25 @@ public class EJBContainerTransactionManager {
                     transactionManager.commit();
                 }
             }
+
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("completeNewTx END (3), context=" + context);
+            }
             return newException;
         } catch (RollbackException ex) {
             _logger.log(Level.FINE, "ejb.transaction_abort_exception", ex);
             // EJB2.0 section 18.3.6
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("completeNewTx END (4), context=" + context);
+            }
             return new EJBException("Transaction aborted", ex);
         } catch (Exception ex) {
             _logger.log(Level.FINE, "ejb.cmt_exception", ex);
             // Commit or rollback failed.
             // EJB2.0 section 18.3.6
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.fine("completeNewTx END (5), context=" + context);
+            }
             return new EJBException("Unable to complete" + " container-managed transaction.", ex);
         }
     }

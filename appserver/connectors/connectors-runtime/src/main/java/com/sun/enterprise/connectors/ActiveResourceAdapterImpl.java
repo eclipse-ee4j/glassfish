@@ -33,6 +33,7 @@ import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
 import jakarta.resource.spi.ManagedConnectionFactory;
 
 import java.util.Set;
@@ -41,6 +42,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
@@ -64,12 +66,14 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     private static Logger _logger = LogDomains.getLogger(ActiveResourceAdapterImpl.class, LogDomains.RSR_LOGGER);
     private final StringManager localStrings = StringManager.getManager(ActiveResourceAdapterImpl.class);
 
+    @Inject
+    protected ServiceLocator locator;
+
     protected ConnectorDescriptor desc_;
     protected String moduleName_;
     protected ClassLoader jcl_;
     protected ConnectionDefDescriptor[] connectionDefs_;
     protected ConnectorRuntime connectorRuntime_;
-
 
     /**
      * Constructor.
@@ -385,17 +389,18 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     }
 
 
-    protected ManagedConnectionFactory instantiateMCF(String mcfClass, ClassLoader loader) throws Exception {
+    protected ManagedConnectionFactory instantiateMCF(String mcfClassName, ClassLoader loader) throws Exception {
         ManagedConnectionFactory mcf = null;
+        Class<?> mcfClass;
         if (jcl_ != null) {
-            mcf = (ManagedConnectionFactory) jcl_.loadClass(mcfClass).getDeclaredConstructor().newInstance();
+            mcfClass = jcl_.loadClass(mcfClassName);
         } else if (loader != null) {
-            mcf = (ManagedConnectionFactory) loader.loadClass(mcfClass).getDeclaredConstructor().newInstance();
+            mcfClass = loader.loadClass(mcfClassName);
+
         } else {
-            // mcf = (ManagedConnectionFactory) Class.forName(mcfClass).newInstance();
-            mcf = (ManagedConnectionFactory) Thread.currentThread().getContextClassLoader().loadClass(mcfClass)
-                .getDeclaredConstructor().newInstance();
+            mcfClass = Thread.currentThread().getContextClassLoader().loadClass(mcfClassName);
         }
+        mcf = locator.createAndInitialize((Class<ManagedConnectionFactory>)mcfClass);
         setLogWriter(mcf);
         return mcf;
     }

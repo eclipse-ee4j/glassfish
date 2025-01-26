@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +19,9 @@ package org.glassfish.config.support;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
 
@@ -30,8 +29,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +44,7 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationCleanup;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import org.glassfish.config.support.DomainXmlPreParser.DomainXmlPreParserException;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -66,7 +67,6 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.totalTimeToPars
 import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 
 /**
  * Locates and parses the portion of <tt>domain.xml</tt> that we care.
@@ -77,7 +77,7 @@ import static java.util.logging.Level.WARNING;
  */
 public abstract class DomainXml implements Populator {
 
-    private static final Logger LOG = Logger.getLogger(DomainXml.class.getName());
+    private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
 
     @Inject
     StartupContext context;
@@ -90,10 +90,9 @@ public abstract class DomainXml implements Populator {
     XMLInputFactory xif;
     @Inject
     ServerEnvironmentImpl env;
-    @Inject
-    ConfigurationAccess configAccess;
 
-    final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DomainXml.class);
+
+    protected abstract DomDocument getDomDocument();
 
     @Override
     public void run(ConfigParser parser) throws ConfigPopulatorException {
@@ -112,11 +111,11 @@ public abstract class DomainXml implements Populator {
             parseDomainXml(parser, domainURL, instance);
         } catch (NoBackupException ex) {
             /* Both files do not exists or are empty */
-            throwParseError(ex);
+            throw new ConfigPopulatorException("Failed to parse domain.xml", ex);
         } catch (Throwable ex) {
             if (domainURL == null || isBackupFile(domainURL)) {
                 /* Already tried backup file */
-                throwParseError(ex);
+                throw new ConfigPopulatorException("Failed to parse domain.xml", ex);
             }
             /* Retry with backup file*/
             try {
@@ -124,24 +123,16 @@ public abstract class DomainXml implements Populator {
                 parseDomainXml(parser, getAlternativeDomainXml(env), instance);
             } catch (Throwable e) {
                 e.addSuppressed(ex);
-                throwParseError(e);
+                throw new ConfigPopulatorException("Failed to parse domain.xml", e);
             }
         }
         if (isBackupFile(domainURL)) {
-            Lock writeLock = null;
+            Path destination = env.getConfigDirPath().toPath().resolve(ServerEnvironmentImpl.kConfigXMLFileName);
+            Path backup = env.getConfigDirPath().toPath().resolve(ServerEnvironmentImpl.kConfigXMLFileNameBackup);
             try {
-                writeLock = configAccess.accessWrite();
-                File destination = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileName);
-                File backup = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
-                if (!destination.exists() || (destination.delete() && !destination.exists())) {
-                    FileUtils.renameFile(backup, destination);
-                }
-            } catch (IOException | TimeoutException e) {
-                /* We can safely ignore it as it is not so important */
-            } finally {
-                if (writeLock != null) {
-                    writeLock.unlock();
-                }
+                Files.move(backup, destination, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                LOG.log(Level.SEVERE, "Restoring backup failed!", e);
             }
         }
 
@@ -166,10 +157,6 @@ public abstract class DomainXml implements Populator {
 
     protected boolean isBackupFile(URL url) {
         return url.getPath().endsWith(ServerEnvironmentImpl.kConfigXMLFileNameBackup);
-    }
-
-    private void throwParseError(Throwable parent) {
-        throw new ConfigPopulatorException(localStrings.getLocalString("ConfigParsingFailed", "Failed to parse domain.xml"), parent);
     }
 
     protected void decorate() {
@@ -228,8 +215,7 @@ public abstract class DomainXml implements Populator {
         private static final long serialVersionUID = 1L;
 
         private NoBackupException(File configDirectory) {
-            super(localStrings.getLocalString("NoUsableConfigFile", "No usable configuration file at {0}",
-                    configDirectory.getAbsolutePath()));
+            super("No usable configuration file at " + configDirectory.getAbsolutePath());
         }
 
     }
@@ -252,7 +238,6 @@ public abstract class DomainXml implements Populator {
         long startNano = System.nanoTime();
 
         try {
-            ServerReaderFilter xsr = null;
             // Set the resolver so that any external entity references, such
             // as a reference to a DTD, return an empty file.  The domain.xml
             // file doesn't support entity references.
@@ -263,42 +248,27 @@ public abstract class DomainXml implements Populator {
                 }
             });
 
-            if (env.getRuntimeType() == RuntimeType.DAS || env.getRuntimeType() == RuntimeType.EMBEDDED) {
-                xsr = new DasReaderFilter(domainXml, xif);
-            } else if (env.getRuntimeType() == RuntimeType.INSTANCE) {
-                xsr = new InstanceReaderFilter(env.getInstanceName(), domainXml, xif);
-            } else {
-                throw new RuntimeException("Internal Error: Unknown server type: " + env.getRuntimeType());
+            try (ServerReaderFilter readerFilter = createReaderFilter(domainXml)) {
+                parser.parse(readerFilter, getDomDocument());
             }
 
-            Lock lock = null;
-            try {
-                // lock the domain.xml for reading if not embedded
-                try {
-                    lock = configAccess.accessRead();
-                } catch (Exception e) {
-                    // ignore
-                }
-                parser.parse(xsr, getDomDocument());
-                xsr.close();
-            } finally {
-                if (lock != null) {
-                    lock.unlock();
-                }
-            }
-            String errorMessage = xsr.configWasFound();
-
-            if (errorMessage != null) {
-                LOG.log(WARNING, errorMessage);
-            }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException) e;
-            }
-            throw new RuntimeException("Fatal Error. Unable to parse " + domainXml, e);
+            throw new RuntimeException("Unable to parse " + domainXml, e);
         }
         LOG.log(CONFIG, totalTimeToParseDomain, System.nanoTime() - startNano);
     }
 
-    protected abstract DomDocument getDomDocument();
+
+    private ServerReaderFilter createReaderFilter(final URL domainXml)
+        throws XMLStreamException, DomainXmlPreParserException {
+        if (env.getRuntimeType() == RuntimeType.DAS || env.getRuntimeType() == RuntimeType.EMBEDDED) {
+            return new DasReaderFilter(domainXml, xif);
+        } else if (env.getRuntimeType() == RuntimeType.INSTANCE) {
+            return new InstanceReaderFilter(env.getInstanceName(), domainXml, xif);
+        } else {
+            throw new RuntimeException("Unknown server type: " + env.getRuntimeType());
+        }
+    }
 }

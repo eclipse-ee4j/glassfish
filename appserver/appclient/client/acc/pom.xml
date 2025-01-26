@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.appclient</groupId>
         <artifactId>client</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>gf-client-module</artifactId>
@@ -69,7 +69,6 @@
 
         <standalone.classifier>lib</standalone.classifier>
         <acc.osgi.module.classifier>module</acc.osgi.module.classifier>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
 
     <dependencies>

@@ -88,7 +88,7 @@ public class FileUtilsTest {
         File outputDir = new File(tempDir, "outputDir");
         File testDir = new File(FileUtilsTest.class.getResource("/process").toURI());
         FileUtils.copy(testDir, outputDir);
-        assertEquals(testDir.length(), outputDir.length());
+        assertEquals(FileUtils.getSize(testDir), FileUtils.getSize(outputDir));
     }
 
 

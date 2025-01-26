@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,11 +17,12 @@
 package com.sun.enterprise.resource.pool.datastructure;
 
 import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.resource.ClientSecurityInfo;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.ResourceHandler;
+
+import jakarta.resource.spi.ManagedConnection;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,9 +81,9 @@ public class RWLockDataStructureTest {
                 // We use constructor to generate ResourceHandle mock
                 // because we depend on an internal state of this object.
                 createMockBuilder(ResourceHandle.class)
-                    .withConstructor(Object.class, ResourceSpec.class, ResourceAllocator.class, ClientSecurityInfo.class)
+                            .withConstructor(ManagedConnection.class, ResourceSpec.class, ResourceAllocator.class)
                     // Actual constructor arguments does not matter
-                    .withArgs(null, null, null, null)
+                            .withArgs(null, null, null)
                     .createNiceMock());
         }
 
@@ -107,7 +108,7 @@ public class RWLockDataStructureTest {
         int resourceCount = RESOURCE_COUNT / 2;
         int taskCount = TASK_COUNT / 2;
 
-        DataStructure dataStructure = new RWLockDataStructure(null, resourceCount, handler, null);
+        DataStructure dataStructure = new RWLockDataStructure(null, resourceCount, handler);
 
         List<Callable<Integer>> tasks = new ArrayList<>(taskCount);
         for (int i = 0; i < taskCount; i++) {
@@ -158,8 +159,8 @@ public class RWLockDataStructureTest {
         allocator = createNiceMock(ResourceAllocator.class);
 
         ResourceHandle resource = createMockBuilder(ResourceHandle.class)
-                .withConstructor(Object.class, ResourceSpec.class, ResourceAllocator.class, ClientSecurityInfo.class)
-                .withArgs(null, null, null, null)
+                .withConstructor(ManagedConnection.class, ResourceSpec.class, ResourceAllocator.class)
+                .withArgs(null, null, null)
                 .createNiceMock();
 
         expect(handler.createResource(allocator)).andThrow(new PoolingException());
@@ -169,7 +170,7 @@ public class RWLockDataStructureTest {
 
         replay(resource, handler, allocator);
 
-        DataStructure dataStructure = new RWLockDataStructure(null, 1, handler, null);
+        DataStructure dataStructure = new RWLockDataStructure(null, 1, handler);
 
         assertAll(
             () -> assertThrows(PoolingException.class, () -> dataStructure.addResource(allocator, 1)),
@@ -188,7 +189,7 @@ public class RWLockDataStructureTest {
     @Timeout(value = 10, threadMode = ThreadMode.SEPARATE_THREAD)
     public void testGetResource() throws Exception {
 
-        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler, null);
+        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler);
 
         assertThat("Add Resources", dataStructure.addResource(allocator, RESOURCE_COUNT), equalTo(RESOURCE_COUNT));
 
@@ -223,7 +224,7 @@ public class RWLockDataStructureTest {
     @Timeout(value = 10, threadMode = ThreadMode.SEPARATE_THREAD)
     public void testReturnResource() throws Exception {
 
-        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler, null);
+        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler);
 
         assertThat("Add Resources", dataStructure.addResource(allocator, RESOURCE_COUNT), equalTo(RESOURCE_COUNT));
         assertThat("Free List Size", dataStructure.getFreeListSize(), equalTo(RESOURCE_COUNT));
@@ -261,7 +262,7 @@ public class RWLockDataStructureTest {
     @Timeout(value = 10, threadMode = ThreadMode.SEPARATE_THREAD)
     public void testRemoveResource() throws Exception {
 
-        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler, null);
+        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler);
 
         assertThat("Add Resources", dataStructure.addResource(allocator, RESOURCE_COUNT), equalTo(RESOURCE_COUNT));
 
@@ -295,7 +296,7 @@ public class RWLockDataStructureTest {
     @Test
     public void testRemoveAll() throws PoolingException {
 
-        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler, null);
+        DataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler);
 
         dataStructure.addResource(allocator, RESOURCE_COUNT);
         assertThat("Resources Size", dataStructure.getResourcesSize(), equalTo(RESOURCE_COUNT));
@@ -313,7 +314,7 @@ public class RWLockDataStructureTest {
     @Timeout(value = 10, threadMode = ThreadMode.SEPARATE_THREAD)
     public void testRaceConditions() throws Exception {
 
-        RWLockDataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler, null);
+        RWLockDataStructure dataStructure = new RWLockDataStructure(null, RESOURCE_COUNT, handler);
 
         for (int i = 0; i < RESOURCE_COUNT; i++) {
             // requires handler.createResource(allocator)

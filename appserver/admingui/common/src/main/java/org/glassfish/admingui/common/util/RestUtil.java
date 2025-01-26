@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,7 +41,6 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,6 +70,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static org.glassfish.common.util.Constants.PASSWORD_ATTRIBUTE_NAMES;
 
 /**
  *
@@ -169,7 +169,7 @@ public class RestUtil {
                     neutralizeForLog(GuiUtil.getCommonMessage("LOG_REST_REQUEST_INFO",
                             new Object[] {
                                     endpoint,
-                                    (useData && "post".equals(method)) ? data : attrs, method
+                                    (useData && "post".equals(method)) ? data : maskedAttr, method
                             })));
         }
 
@@ -286,7 +286,7 @@ public class RestUtil {
 
         for (Map.Entry<String, Object> e : attrs.entrySet()) {
             String key = e.getKey().toLowerCase(GuiUtil.guiLocale);
-            if (pswdAttrList.contains(key)) {
+            if (PASSWORD_ATTRIBUTE_NAMES.contains(key)) {
                 masked.put(e.getKey(), "*******");
             } else {
                 masked.put(e.getKey(), e.getValue());
@@ -967,17 +967,4 @@ public class RestUtil {
         }
     }
 
-    /*
-     * This is a list of attribute name of password for different command. We need to mask its value during logging.
-     */
-    private static final List<String> pswdAttrList = Arrays.asList(
-            "sshpassword", /* create-node-ssh , setup-ssh , update-node, update-node-ssh */
-            "dbpassword", /* jms-availability-service */
-            "jmsdbpassword", /* configure-jms-cluster */
-            "password", /* change-admin-password */
-            "newpassword", /* change-admin-password */
-            "jmsdbpassword", /* configure-jms-cluster */
-            "mappedpassword", /* create-connector-security-map, update-connector-security-map */
-            "userpassword", /* create-file-user , update-file-user */
-            "aliaspassword" /* create-password-alias , update-password-alias */);
 }

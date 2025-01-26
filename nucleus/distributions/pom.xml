@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.distributions</groupId>
@@ -59,7 +59,6 @@
     </modules>
 
     <properties>
-        <findbugs.skip>true</findbugs.skip>
         <stage.dir.name>stage</stage.dir.name>
         <stage.dir>${project.build.directory}/${stage.dir.name}</stage.dir>
         <temp.dir>${project.build.directory}/dependency</temp.dir>

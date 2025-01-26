@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
 
@@ -34,6 +34,7 @@
 
     <properties>
         <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
+        <test.enableDefaultLogCfg>false</test.enableDefaultLogCfg>
     </properties>
 
     <dependencies>

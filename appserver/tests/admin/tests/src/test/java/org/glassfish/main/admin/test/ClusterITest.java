@@ -16,7 +16,6 @@
  */
 package org.glassfish.main.admin.test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,7 +59,7 @@ public class ClusterITest {
     private static final String INSTANCE_NAME_2 = "eein2";
     private static final String URL1 = "http://localhost:" + PORT1;
     private static final String URL2 = "http://localhost:" + PORT2;
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
     private static final AtomicBoolean INSTANCES_REACHABLE = new AtomicBoolean();
     private static final AtomicBoolean APP_DEPLOYED = new AtomicBoolean();
 
@@ -79,13 +78,9 @@ public class ClusterITest {
     @Test
     @Order(2)
     public void deployAppToClusterTest() {
-        String warFile = getWar().getAbsolutePath();
+        String warFile = TestResources.createSimpleWarDeployment(TEST_APP_NAME).getAbsolutePath();
         assertThat(ASADMIN.exec("deploy", "--target", CLUSTER_NAME, "--name", TEST_APP_NAME, "--contextroot", TEST_APP_NAME,
                 warFile), asadminOK());
-    }
-
-    private static File getWar() {
-        return TestResources.createSimpleWarDeployment(TEST_APP_NAME);
     }
 
     @Test

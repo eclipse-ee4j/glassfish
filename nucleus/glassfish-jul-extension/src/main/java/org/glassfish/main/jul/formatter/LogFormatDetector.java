@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package org.glassfish.main.jul.formatter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.charset.Charset;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,15 +77,16 @@ public class LogFormatDetector {
 
     /**
      * @param logFile
+     * @param expectedCharset
      * @return full class name of the concrete detected {@link Formatter} or null if the file is
      *         null or could not be read.
      */
-    public String detectFormatter(final File logFile) {
+    public String detectFormatter(final File logFile, final Charset expectedCharset) {
         if (logFile == null || !logFile.canRead()) {
             return null;
         }
         final String firstLine;
-        try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(logFile, expectedCharset))) {
             firstLine = br.readLine();
         } catch (Exception e) {
             GlassFishLoggingTracer.error(getClass(), e.getMessage(), e);

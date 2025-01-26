@@ -45,6 +45,13 @@ public class GlassFishLoggingConstants {
      * existence.
      */
     public static final String JVM_OPT_LOGGING_MANAGER = "java.util.logging.manager";
+
+    /**
+     * System property name to ask the starting log manager to block until application finishes
+     * the configuration.
+     */
+    public static final String JVM_OPT_LOGGING_CFG_BLOCK = "java.util.logging.config.block";
+
     /**
      * System property name defining property file which will be automatically loaded on startup.
      * Usually it is named <code>logging.properties</code>
@@ -52,7 +59,7 @@ public class GlassFishLoggingConstants {
     public static final String JVM_OPT_LOGGING_CFG_FILE = "java.util.logging.config.file";
     /**
      * System property telling the GlassFishLogManager to use defaults if there would not be any
-     * logging.properties neither set by {@value #JVM_OPT_LOGGING_CFG_FILE} nor available on classpath.
+     * logging.properties set by {@value #JVM_OPT_LOGGING_CFG_FILE}.
      * <p>
      * Defaults use the SimpleLogHandler and level INFO or level set by
      * {@value #JVM_OPT_LOGGING_CFG_DEFAULT_LEVEL}
@@ -76,6 +83,9 @@ public class GlassFishLoggingConstants {
      * <p>
      * If the property is not set, GJULE makes the decision based on the (<code>*.printSource</code>
      * property) - if any formatter requires this feature, the feature is enabled.
+     * This applies just when the formatter is set from the supplied log manager configuration,
+     * not when you configure formatter from your code.
+     *
      * <p>
      * It is disabled otherwise.
      */

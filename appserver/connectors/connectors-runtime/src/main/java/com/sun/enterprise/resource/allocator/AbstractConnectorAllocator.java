@@ -93,7 +93,7 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
     @Override
     public boolean isConnectionValid(ResourceHandle h) {
         HashSet<ManagedConnection> conn = new HashSet<>();
-        conn.add((ManagedConnection) h.getResource());
+        conn.add(h.getResource());
         Set<?> invalids = null;
         try {
             invalids = getInvalidConnections(conn);
@@ -135,7 +135,7 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
     @Override
     public void cleanup(ResourceHandle h) throws PoolingException {
         try {
-            ManagedConnection mc = (ManagedConnection) h.getResource();
+            ManagedConnection mc = h.getResource();
             mc.cleanup();
         } catch (Exception ex) {
             _logger.log(Level.WARNING, "managed_con.cleanup-failed", ex);
@@ -146,7 +146,7 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
     @Override
     public boolean matchConnection(ResourceHandle h) {
         Set<ManagedConnection> set = new HashSet<>();
-        set.add((ManagedConnection) h.getResource());
+        set.add(h.getResource());
         try {
             ManagedConnection mc = mcf.matchManagedConnections(set, subject, reqInfo);
             return mc != null;
@@ -157,9 +157,8 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
 
     @Override
     public void closeUserConnection(ResourceHandle resource) throws PoolingException {
-
         try {
-            ManagedConnection mc = (ManagedConnection) resource.getResource();
+            ManagedConnection mc = resource.getResource();
             mc.cleanup();
         } catch (ResourceException ex) {
             throw new PoolingException(ex);
@@ -177,8 +176,8 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
         throw new UnsupportedOperationException();
     }
 
-    protected ResourceHandle createResourceHandle(Object resource, ResourceSpec spec,
-                                                  ResourceAllocator alloc, ClientSecurityInfo info) {
+    protected ResourceHandle createResourceHandle(ManagedConnection resource, ResourceSpec spec,
+            ResourceAllocator alloc) {
 
         ConnectorConstants.PoolType pt = ConnectorConstants.PoolType.STANDARD_POOL;
         try {
@@ -187,9 +186,9 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
             _logger.log(Level.WARNING,"unable_to_determine_pool_type", spec.getPoolInfo());
         }
         if (pt == ConnectorConstants.PoolType.ASSOCIATE_WITH_THREAD_POOL) {
-            return new AssocWithThreadResourceHandle(resource, spec, alloc, info);
+            return new AssocWithThreadResourceHandle(resource, spec, alloc);
         } else {
-            return new ResourceHandle(resource, spec, alloc, info);
+            return new ResourceHandle(resource, spec, alloc);
         }
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.17-SNAPSHOT</version>
+        <version>7.0.22-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -82,14 +82,14 @@
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>4.0.1</jakarta.faces-api.version>
-        <mojarra.version>4.0.7</mojarra.version>
+        <mojarra.version>4.0.9</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
         <tyrus.version>2.1.5</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.0.3</jakarta.concurrent-api.version>
+        <jakarta.concurrent-api.version>3.0.4</jakarta.concurrent-api.version>
         <concurrent.version>3.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
@@ -99,17 +99,17 @@
         <soteria.version>3.0.3</soteria.version>
         <exousia.version>2.1.2</exousia.version>
         <epicyro.version>3.0.0</epicyro.version>
-        <nimbus.version>9.40</nimbus.version>
+        <nimbus.version>9.47</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
-        <openmq.version>6.4.0</openmq.version>
+        <openmq.version>6.5.0</openmq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
-        <eclipselink.version>4.0.3</eclipselink.version>
-        <eclipselink.asm.version>9.7.0</eclipselink.asm.version>
+        <eclipselink.version>4.0.5</eclipselink.version>
+        <eclipselink.asm.version>9.7.1</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -133,17 +133,17 @@
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>3.1.1</jakarta.pages-api.version>
-        <jstl-api.version>3.0.0</jstl-api.version>
+        <jstl-api.version>3.0.2</jstl-api.version>
         <wasp.version>3.2.2</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
-        <xmlsec.version>4.0.2</xmlsec.version>
-        <woodstox.version>7.0.0</woodstox.version>
+        <xmlsec.version>4.0.3</xmlsec.version>
+        <woodstox.version>7.1.0</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->
         <jakarta.cdi-api.version>4.0.1</jakarta.cdi-api.version>
-        <weld.version>5.1.2.Final</weld.version>
+        <weld.version>5.1.4.Final</weld.version>
         <jboss.classfilewriter.version>1.3.1.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->
@@ -151,8 +151,8 @@
         <krazo.version>3.0.1</krazo.version>
 
         <!-- MicroProfile Config -->
-        <microprofile.config-api.version>3.0.3</microprofile.config-api.version>
-        <helidon-config.version>3.2.8</helidon-config.version>
+        <microprofile.config-api.version>3.1</microprofile.config-api.version>
+        <helidon-config.version>3.2.11</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
@@ -168,7 +168,6 @@
         <woodstock.version>6.0.1</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
         <woodstock-dojo-ajax-nodemo.version>1.12.4</woodstock-dojo-ajax-nodemo.version>
-        <woodstock-json.version>2.0</woodstock-json.version>
         <woodstock-prototype.version>1.7.3</woodstock-prototype.version>
 
         <!-- Other -->
@@ -468,7 +467,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.17.0</version>
+                <version>1.17.1</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -681,14 +680,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <!-- Cannot be in nucleus-parent, because it is built under it -->
-        <dependency>
-            <groupId>org.glassfish.main</groupId>
-            <artifactId>glassfish-jul-extension</artifactId>
-        </dependency>
-    </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -720,7 +711,7 @@
                         <dependency>
                             <groupId>org.codehaus.plexus</groupId>
                             <artifactId>plexus-utils</artifactId>
-                            <version>4.0.1</version>
+                            <version>4.0.2</version>
                         </dependency>
                     </dependencies>
                 </plugin>

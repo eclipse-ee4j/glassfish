@@ -35,6 +35,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
@@ -196,7 +197,7 @@ public class GlassFishLogManagerLifeCycleTest {
      * is loggable or not when we simply don't know. All records then go to the StartupQueue, which
      * means also some memory requirements.
      */
-    @Test
+    @RepeatedTest(value = 1000, failureThreshold = 1)
     @Order(100)
     @Timeout(5)
     public void reconfigureWithoutResolvingLevelsWithincompleteconfiguration() throws Exception {

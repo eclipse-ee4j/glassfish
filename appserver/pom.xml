@@ -90,7 +90,7 @@
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.4</jakarta.concurrent-api.version>
-        <concurrent.version>3.0.0</concurrent.version>
+        <concurrent.version>3.0.1</concurrent.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>

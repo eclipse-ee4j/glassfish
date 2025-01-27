@@ -19,13 +19,13 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
@@ -83,7 +83,7 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
     @Override
     void deleteFromHosts() throws CommandException {
         try {
-            Path installDir = Path.of(getInstallDir());
+            SFTPPath installDir = SFTPPath.of(getInstallDir());
             for (String host : hosts) {
                 File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
                 SSHLauncher sshLauncher = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase);

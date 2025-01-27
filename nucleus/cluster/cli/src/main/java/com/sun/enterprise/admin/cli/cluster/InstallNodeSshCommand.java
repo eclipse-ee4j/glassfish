@@ -24,8 +24,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.glassfish.api.Param;
@@ -34,6 +34,7 @@ import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
@@ -94,7 +95,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
     }
 
     @Override
-    void copyToHosts(File zipFile, ArrayList<String> binDirFiles) throws CommandException {
+    void copyToHosts(File zipFile, List<SFTPPath> binDirFiles) throws CommandException {
         // exception handling is too complicated to mess with in the real method.
         // the idea is to catch everything here and re-throw as one kind
         // the caller is just going to do it anyway so we may as well do it here.
@@ -112,7 +113,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
     }
 
 
-    private void copyToHostsInternal(File zipFile, ArrayList<String> binDirFiles)
+    private void copyToHostsInternal(File zipFile, List<SFTPPath> binDirFiles)
         throws SSHException, CommandException {
         boolean prompt = promptPass;
         for (String host : hosts) {
@@ -137,7 +138,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 prompt = false;
             }
 
-            Path sshInstallDir = Path.of(getInstallDir());
+            SFTPPath sshInstallDir = SFTPPath.of(getInstallDir());
             try (SSHSession session = sshLauncher.openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
                 sftpClient.rmDir(sshInstallDir, true);
                 if (!sftpClient.exists(sshInstallDir)) {
@@ -147,9 +148,9 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                     }
                 }
 
-                final Path remoteZipFile = sshInstallDir.resolve(zipFile.getName());
+                final SFTPPath remoteZipFile = sshInstallDir.resolve(zipFile.getName());
                 logger.info(() -> "Copying " + zipFile + " (" + zipFile.length() + " bytes)" + " to " + host + ":"
-                    + sshInstallDir);
+                    + remoteZipFile);
                 sftpClient.put(zipFile, remoteZipFile);
                 logger.finer(() -> "Copied " + zipFile + " to " + host + ":" + remoteZipFile);
 
@@ -169,7 +170,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                         // binDirFiles can be empty if the archive isn't a fresh one
                         searchAndFixBinDirectoryFiles(sshInstallDir, sftpClient);
                     } else {
-                        for (String binDirFile : binDirFiles) {
+                        for (SFTPPath binDirFile : binDirFiles) {
                             sftpClient.chmod(sshInstallDir.resolve(binDirFile), 0755);
                         }
                     }
@@ -182,19 +183,21 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
     /**
      * Recursively list install dir and identify "bin" directory. Change permissions
      * of files under "bin" directory.
-     * @param installDir GlassFish install root
+     * @param dir GlassFish install root
      * @param sftpClient ftp client handle
      * @throws SftpException
      */
-    private void searchAndFixBinDirectoryFiles(Path installDir, SFTPClient sftpClient) throws SSHException {
-        for (LsEntry directoryEntry : sftpClient.lsDetails(installDir, e -> true)) {
-            if (directoryEntry.getAttrs().isDir()) {
-                Path subDir = installDir.resolve(directoryEntry.getFilename());
-                if (directoryEntry.getFilename().equals("bin")) {
-                    fixFilePermissions(subDir, sftpClient);
+    private void searchAndFixBinDirectoryFiles(SFTPPath dir, SFTPClient sftpClient) throws SSHException {
+        for (LsEntry entry : sftpClient.lsDetails(dir, e -> true)) {
+            SFTPPath subPath = dir.resolve(entry.getFilename());
+            if (entry.getAttrs().isDir()) {
+                if (entry.getFilename().equals("bin")) {
+                    fixFilePermissions(subPath, sftpClient);
                 } else {
-                    searchAndFixBinDirectoryFiles(subDir, sftpClient);
+                    searchAndFixBinDirectoryFiles(subPath, sftpClient);
                 }
+            } else if ("nadmin".equals(entry.getFilename())) {
+                sftpClient.chmod(subPath, 0755);
             }
         }
     }
@@ -206,7 +209,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      * @param sftpClient ftp client handle
      * @throws SftpException
      */
-    private void fixFilePermissions(Path binDir, SFTPClient sftpClient) throws SSHException {
+    private void fixFilePermissions(SFTPPath binDir, SFTPClient sftpClient) throws SSHException {
         for (String directoryEntry : sftpClient.ls(binDir, entry -> !entry.getAttrs().isDir())) {
             sftpClient.chmod(binDir.resolve(directoryEntry), 0755);
         }
@@ -236,7 +239,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 prompt = false;
             }
 
-            Path sshInstallDir = Path.of(getInstallDir());
+            SFTPPath sshInstallDir = SFTPPath.of(getInstallDir());
             try (SSHSession session = sshLauncher.openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
                 if (sftpClient.exists(sshInstallDir)) {
                     checkIfAlreadyInstalled(session, host, sshInstallDir);

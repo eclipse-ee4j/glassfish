@@ -53,6 +53,7 @@ import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
@@ -167,11 +168,11 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
             //use SFTPClient to see if file exists.
             SSHLauncher launcher = new SSHLauncher(node);
             try (SSHSession session = launcher.openSession(); SFTPClient ftpClient = session.createSFTPClient()) {
-                if (ftpClient.exists(pidFilePath)){
+                if (ftpClient.exists(SFTPPath.of(pidFilePath))){
                     // server still not down, do we poll?
                     Supplier<Boolean> check = () -> {
                         try {
-                            return ftpClient.exists(pidFilePath);
+                            return ftpClient.exists(SFTPPath.of(pidFilePath));
                         } catch (SSHException e) {
                             return false;
                         }

@@ -34,6 +34,7 @@ import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 
 /**
  * Bootstraps the secure admin-related files, either over ssh (copying files from the
@@ -172,8 +173,8 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
      */
     private static abstract class RemoteHelper extends SecureAdminBootstrapHelper {
         final File dasInstanceDir;
-        final Path remoteNodeDir;
-        final Path remoteInstanceDir;
+        final SFTPPath remoteNodeDir;
+        final SFTPPath remoteInstanceDir;
 
         RemoteHelper(
                 final File dasInstanceDir,
@@ -181,7 +182,6 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
                 final String instance,
                 final Node node) {
             this.dasInstanceDir = dasInstanceDir;
-
             this.remoteNodeDir = remoteNodeDirUnixStyle(node, remoteNodeDir);
             this.remoteInstanceDir = this.remoteNodeDir.resolve(instance);
         }
@@ -194,18 +194,19 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
          * Use the node dir if it was specified when the node was created.
          * Otherwise derive it: ${remote-install-dir}/glassfish/${node-name}
          */
-        private static Path remoteNodeDirUnixStyle(final Node node, final String remoteNodeDir) {
+        private static SFTPPath remoteNodeDirUnixStyle(final Node node, final String remoteNodeDir) {
             if (remoteNodeDir == null) {
-                return Path.of(node.getInstallDirUnixStyle()).resolve(Path.of("glassfish", "nodes", node.getName()));
+                return SFTPPath.of(node.getInstallDirUnixStyle())
+                    .resolve(SFTPPath.ofRelativePath("glassfish", "nodes", node.getName()));
             }
-            return Path.of(remoteNodeDir);
+            return SFTPPath.of(remoteNodeDir);
         }
 
 
         @Override
         protected void copyBootstrapFiles() throws FileNotFoundException, IOException {
             for (Path fileRelativePath : SECURE_ADMIN_FILE_REL_URIS_TO_COPY) {
-                Path remoteFilePath = remoteInstanceDir.resolve(fileRelativePath);
+                SFTPPath remoteFilePath = remoteInstanceDir.resolve(fileRelativePath);
                 try {
                     writeToFile(remoteFilePath, dasInstanceDir.toPath().resolve(fileRelativePath).toFile());
                     LOG.log(Level.DEBUG, "Copied bootstrap file to {0}", remoteFilePath);
@@ -247,7 +248,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
 
         @Override
         protected void mkdirs(Path dir) throws IOException {
-            Path remoteDir = remoteInstanceDir.resolve(dir);
+            SFTPPath remoteDir = remoteInstanceDir.resolve(dir);
             LOG.log(Level.DEBUG, "Trying to create directories for remote path {0}", remoteDir);
             SftpATTRS attrs = ftpClient.lstat(remoteNodeDir);
             if (attrs == null) {
@@ -274,7 +275,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
 
         @Override
         void writeToFile(final Path remotePath, final File localFile) throws IOException {
-            ftpClient.put(localFile, remotePath);
+            ftpClient.put(localFile, SFTPPath.of(remotePath));
         }
 
         @Override
@@ -293,7 +294,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
          */
         @Override
         void setLastModified(final Path path, final long when) throws IOException {
-            ftpClient.setTimeModified(path, when);
+            ftpClient.setTimeModified(SFTPPath.of(path), when);
         }
     }
 

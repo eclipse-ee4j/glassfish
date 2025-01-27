@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
@@ -130,13 +131,14 @@ public class SSHSession implements AutoCloseable {
      * @param remoteDir
      * @throws SSHException
      */
-    public void unzip(Path remoteZipFile, Path remoteDir) throws SSHException {
+    public void unzip(SFTPPath remoteZipFile, Path remoteDir) throws SSHException {
         final String unzipCommand;
         if (capabilities.getOperatingSystem() == OperatingSystem.WINDOWS) {
               unzipCommand = "PowerShell.exe -Command \"Expand-Archive -LiteralPath '" + remoteZipFile
                   + "' -DestinationPath '" + remoteDir + "'\"";
         } else {
-            unzipCommand = "cd \"" + remoteDir + "\"; jar -xvf \"" + remoteZipFile + "\"";
+            unzipCommand = "set -x; cd \"" + remoteDir
+                + "\"; unpack=\"$(command -v unzip)\" || unpack=\"jar -xvf\"; ${unpack} \"" + remoteZipFile + "\"";
         }
 
         final StringBuilder output = new StringBuilder();

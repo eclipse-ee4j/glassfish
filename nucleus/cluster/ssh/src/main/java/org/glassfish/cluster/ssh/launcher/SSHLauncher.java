@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.internal.api.RelativePathResolver;
 
@@ -367,7 +368,7 @@ public class SSHLauncher {
      * @return true if the path exists in the SFTP server.
      * @throws SSHException
      */
-    public boolean exists(Path path) throws SSHException {
+    public boolean exists(SFTPPath path) throws SSHException {
         try (SSHSession session = openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
             return sftpClient.exists(path);
         }

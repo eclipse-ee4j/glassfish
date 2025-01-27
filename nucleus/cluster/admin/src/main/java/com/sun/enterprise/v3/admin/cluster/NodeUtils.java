@@ -45,6 +45,7 @@ import org.glassfish.api.admin.SSHCommandExecutionException;
 import org.glassfish.cluster.ssh.connect.NodeRunner;
 import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.RelativePathResolver;
@@ -325,13 +326,13 @@ public class NodeUtils {
 
         // sshpassword and sshkeypassphrase may be password alias.
         // Those aliases are handled by sshLauncher
-        Path resolvedInstallDir = new File(resolver.resolve(installdir)).toPath();
+        SFTPPath resolvedInstallDir = SFTPPath.of(resolver.resolve(installdir));
         String keyFile = resolver.resolve(sshkeyfile);
         String host = resolver.resolve(nodehost);
         SSHLauncher sshLauncher = new SSHLauncher(resolver.resolve(sshuser), resolver.resolve(nodehost), port,
             sshpassword, keyFile == null ? null : new File(keyFile), sshkeypassphrase);
         try {
-            Path pathToCheck = resolvedInstallDir.resolve(LANDMARK_FILE);
+            SFTPPath pathToCheck = resolvedInstallDir.resolve(LANDMARK_FILE);
             if (!installFlag && !sshLauncher.exists(pathToCheck)) {
                 throw new CommandValidationException(
                     "Invalid install directory: could not find " + pathToCheck + " on " + host);

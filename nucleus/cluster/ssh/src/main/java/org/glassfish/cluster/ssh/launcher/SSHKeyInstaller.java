@@ -26,11 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
@@ -117,7 +117,7 @@ public class SSHKeyInstaller {
                 throw new IOException("Public key file " + pubKey + " does not exist.");
             }
 
-            final Path remoteSshDir;
+            final SFTPPath remoteSshDir;
             try {
                 remoteSshDir = sftp.getHome().resolve(SSH_DIR_NAME);
             } catch (InvalidPathException e) {
@@ -133,14 +133,14 @@ public class SSHKeyInstaller {
             }
 
             // copy over the public key to remote host
-            final Path remoteKeyTmp = remoteSshDir.resolve("key.tmp");
+            final SFTPPath remoteKeyTmp = remoteSshDir.resolve("key.tmp");
             sftp.put(pubKey, remoteKeyTmp);
             if (capabilities.isChmodSupported()) {
                 sftp.chmod(remoteKeyTmp, 0600);
             }
 
             // append the public key file contents to authorized_keys file on remote host
-            final Path authKeyFile = remoteSshDir.resolve(AUTH_KEY_FILE);
+            final SFTPPath authKeyFile = remoteSshDir.resolve(AUTH_KEY_FILE);
             String mergeCommand = "cat " + remoteKeyTmp + " >> " + authKeyFile;
             LOG.log(DEBUG, () -> "mergeCommand = " + mergeCommand);
             if (session.exec(mergeCommand) != 0) {

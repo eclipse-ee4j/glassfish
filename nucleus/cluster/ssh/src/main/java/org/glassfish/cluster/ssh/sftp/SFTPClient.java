@@ -87,9 +87,9 @@ public class SFTPClient implements AutoCloseable {
      * @return Configured SSH server home directory. Usually user's home directory.
      * @throws SSHException Command failed.
      */
-    public Path getHome() throws SSHException {
+    public SFTPPath getHome() throws SSHException {
         try {
-            return Path.of(sftpChannel.getHome());
+            return SFTPPath.of(sftpChannel.getHome());
         } catch (SftpException e) {
             throw new SSHException("Could not resolve SFTP Home path.", e);
         }
@@ -101,12 +101,12 @@ public class SFTPClient implements AutoCloseable {
      * @param path the remote path
      * @throws SSHException Command failed.
      */
-    public void mkdirs(Path path) throws SSHException {
+    public void mkdirs(SFTPPath path) throws SSHException {
         if (existsDirectory(path)) {
             return;
         }
-        Path current = Path.of("/");
-        for (Path part : path.normalize()) {
+        SFTPPath current = SFTPPath.ofAbsolutePath();
+        for (Path part : path) {
             current = current.resolve(part);
             if (existsDirectory(current)) {
                 continue;
@@ -125,7 +125,7 @@ public class SFTPClient implements AutoCloseable {
      * @return true if the path exists and is a directory
      * @throws SSHException Command failed.
      */
-    public boolean existsDirectory(Path path) throws SSHException {
+    public boolean existsDirectory(SFTPPath path) throws SSHException {
         SftpATTRS attrs = stat(path);
         return attrs != null && attrs.isDir();
     }
@@ -136,7 +136,7 @@ public class SFTPClient implements AutoCloseable {
      * @return true if the path exists, is a directory and is empty.
      * @throws SSHException Command failed.
      */
-    public boolean isEmptyDirectory(Path path) throws SSHException {
+    public boolean isEmptyDirectory(SFTPPath path) throws SSHException {
         SftpATTRS attrs = stat(path);
         return attrs != null && attrs.isDir() && ls(path, e -> true).isEmpty();
     }
@@ -150,7 +150,7 @@ public class SFTPClient implements AutoCloseable {
      * @param exclude
      * @throws SSHException Command failed. Usually some file is not removable or is open.
      */
-    public void rmDir(Path path, boolean onlyContent, Path... exclude) throws SSHException {
+    public void rmDir(SFTPPath path, boolean onlyContent, SFTPPath... exclude) throws SSHException {
         if (!exists(path)) {
             return;
         }
@@ -159,7 +159,7 @@ public class SFTPClient implements AutoCloseable {
         List<LsEntry> content = lsDetails(path, p -> true);
         for (LsEntry entry : content) {
             final String filename = entry.getFilename();
-            final Path entryPath = path.resolve(filename);
+            final SFTPPath entryPath = path.resolve(filename);
             if (isExcludedFromDeletion(filename, exclude)) {
                 LOG.log(TRACE, "Skipping excluded {0}", entryPath);
                 continue;
@@ -183,7 +183,7 @@ public class SFTPClient implements AutoCloseable {
     }
 
 
-    private static boolean isExcludedFromDeletion(String firstName, Path... exclusions) {
+    private static boolean isExcludedFromDeletion(String firstName, SFTPPath... exclusions) {
         if (exclusions == null) {
             return false;
         }
@@ -192,12 +192,12 @@ public class SFTPClient implements AutoCloseable {
     }
 
 
-    private static Path[] getSubDirectoryExclusions(String firstName, Path... exclusions) {
+    private static SFTPPath[] getSubDirectoryExclusions(String firstName, SFTPPath... exclusions) {
         if (exclusions == null) {
-            return new Path[0];
+            return new SFTPPath[0];
         }
         return Arrays.stream(exclusions).filter(p -> p.getNameCount() > 1).filter(p -> p.startsWith(firstName))
-            .map(p -> p.subpath(1, p.getNameCount())).toArray(Path[]::new);
+            .map(p -> p.subpath(1, p.getNameCount())).toArray(SFTPPath[]::new);
     }
 
 
@@ -208,7 +208,7 @@ public class SFTPClient implements AutoCloseable {
      * @param remoteFile
      * @throws SSHException Command failed.
      */
-    public void put(File localFile, Path remoteFile) throws SSHException {
+    public void put(File localFile, SFTPPath remoteFile) throws SSHException {
         try {
             sftpChannel.cd(remoteFile.getParent().toString());
             sftpChannel.put(localFile.getAbsolutePath(), remoteFile.toString());
@@ -226,7 +226,7 @@ public class SFTPClient implements AutoCloseable {
      * @param localFile
      * @throws SSHException Command failed.
      */
-    public void download(Path remoteFile, Path localFile) throws SSHException {
+    public void download(SFTPPath remoteFile, Path localFile) throws SSHException {
         try (InputStream inputStream = sftpChannel.get(remoteFile.toString())) {
             Files.copy(inputStream, localFile);
         } catch (SftpException | IOException e) {
@@ -242,7 +242,7 @@ public class SFTPClient implements AutoCloseable {
      * @param path
      * @throws SSHException
      */
-    public void rm(Path path) throws SSHException {
+    public void rm(SFTPPath path) throws SSHException {
         try {
             sftpChannel.cd(path.getParent().toString());
             sftpChannel.rm(path.toString());
@@ -257,7 +257,7 @@ public class SFTPClient implements AutoCloseable {
      * @return true if the remote path exists.
      * @throws SSHException Command failed.
      */
-    public boolean exists(Path path) throws SSHException {
+    public boolean exists(SFTPPath path) throws SSHException {
         return stat(path) != null;
     }
 
@@ -269,7 +269,7 @@ public class SFTPClient implements AutoCloseable {
      * @return {@link SftpATTRS} or null if the path doesn't exist.
      * @throws SSHException Command failed.
      */
-    public SftpATTRS stat(Path path) throws SSHException {
+    public SftpATTRS stat(SFTPPath path) throws SSHException {
         try {
             return sftpChannel.stat(path.toString());
         } catch (SftpException e) {
@@ -288,7 +288,7 @@ public class SFTPClient implements AutoCloseable {
      * @return {@link SftpATTRS} or null if the path doesn't exist.
      * @throws SSHException Command failed.
      */
-    public SftpATTRS lstat(Path path) throws SSHException {
+    public SftpATTRS lstat(SFTPPath path) throws SSHException {
         try {
             return sftpChannel.lstat(path.toString());
         } catch (SftpException e) {
@@ -307,7 +307,7 @@ public class SFTPClient implements AutoCloseable {
      * @param millisSinceUnixEpoch
      * @throws SSHException Command failed.
      */
-    public void setTimeModified(Path path, long millisSinceUnixEpoch) throws SSHException {
+    public void setTimeModified(SFTPPath path, long millisSinceUnixEpoch) throws SSHException {
         try {
             sftpChannel.setMtime(path.toString(), (int) (millisSinceUnixEpoch / 1000));
         } catch (SftpException e) {
@@ -324,7 +324,7 @@ public class SFTPClient implements AutoCloseable {
      * @throws SSHException Command failed.
      * @see RemoteSystemCapabilities#isChmodSupported()
      */
-    public void chmod(Path path, int permissions) throws SSHException {
+    public void chmod(SFTPPath path, int permissions) throws SSHException {
         try {
             sftpChannel.chmod(permissions, path.toString());
         } catch (SftpException e) {
@@ -340,7 +340,7 @@ public class SFTPClient implements AutoCloseable {
      * @param path
      * @throws SSHException Command failed.
      */
-    public void cd(Path path) throws SSHException {
+    public void cd(SFTPPath path) throws SSHException {
         try {
             sftpChannel.cd(path.toString());
         } catch (SftpException e) {
@@ -358,7 +358,7 @@ public class SFTPClient implements AutoCloseable {
      * @return list of file names in the given directory
      * @throws SSHException Command failed.
      */
-    public List<String> ls(Path path, Predicate<LsEntry> filter) throws SSHException {
+    public List<String> ls(SFTPPath path, Predicate<LsEntry> filter) throws SSHException {
         try {
             return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS))
                 .map(LsEntry::getFilename).collect(Collectors.toList());
@@ -377,7 +377,7 @@ public class SFTPClient implements AutoCloseable {
      * @return list of file names in the given directory
      * @throws SSHException Command failed.
      */
-    public List<LsEntry> lsDetails(Path path, Predicate<LsEntry> filter) throws SSHException {
+    public List<LsEntry> lsDetails(SFTPPath path, Predicate<LsEntry> filter) throws SSHException {
         try {
             return sftpChannel.ls(path.toString()).stream().filter(filter.and(PREDICATE_NO_DOTS))
                 .collect(Collectors.toList());

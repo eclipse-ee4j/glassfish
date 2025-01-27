@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -225,21 +225,24 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     private Subject authenticate(final Request req, final String alternateHostname) throws IOException, LoginException {
         final AdminCallbackHandler cbh = new AdminCallbackHandler(habitat, req, alternateHostname, getDefaultAdminUser(), localPassword);
-        Subject s;
         try {
-            s = authService.login(cbh, null);
             /*
              * Enforce remote access restrictions, if any.
              */
             rejectRemoteAdminIfDisabled(cbh);
-            consumeTokenIfPresent(req);
+
+            Subject subject = consumeTokenIfPresent(req);
+            if (subject == null) {
+                subject = authService.login(cbh, null);
+            }
+
             if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
                 ADMSEC_LOGGER.log(Level.FINE, "*** Login worked\n  user={0}\n  dn={1}\n  tkn={2}\n  admInd={3}\n  host={4}\n",
                         new Object[] { cbh.pw().getUserName(), cbh.clientPrincipal() == null ? "null" : cbh.clientPrincipal().getName(),
                                 cbh.tkn(), cbh.adminIndicator(), cbh.remoteHost() });
             }
 
-            return s;
+            return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
              * Rethrow RemoteAdminAccessException explicitly to avoid it being

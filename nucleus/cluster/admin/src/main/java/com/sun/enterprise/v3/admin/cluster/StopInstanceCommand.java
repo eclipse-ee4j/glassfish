@@ -318,7 +318,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
                 }
                 // Fairly long interval between tries because checking over
                 // SSH is expensive.
-                Thread.sleep(1000L);
+                Thread.sleep(5000L);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

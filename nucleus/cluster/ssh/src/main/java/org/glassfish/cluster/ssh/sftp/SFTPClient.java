@@ -253,6 +253,24 @@ public class SFTPClient implements AutoCloseable {
 
 
     /**
+     * Rename/Move the remote file or directory to the new path.
+     *
+     * @param remoteSource
+     * @param remoteTarget
+     * @throws SSHException Command failed.
+     */
+    public void mv(SFTPPath remoteSource, SFTPPath remoteTarget) throws SSHException {
+        try {
+            sftpChannel.cd(remoteTarget.getParent().toString());
+            sftpChannel.rename(remoteSource.toString(), remoteTarget.toString());
+        } catch (SftpException e) {
+            throw new SSHException(
+                "Failed to upload the local file " + remoteSource + " to remote file " + remoteTarget + '.', e);
+        }
+    }
+
+
+    /**
      * @param path
      * @return true if the remote path exists.
      * @throws SSHException Command failed.
@@ -354,7 +372,7 @@ public class SFTPClient implements AutoCloseable {
      * directory links (dot, double dot)
      *
      * @param path
-     * @param filter additional filter, ie. to filter by file extension.
+     * @param filter additional filter, ie. to filter by file extension. Must not be null.
      * @return list of file names in the given directory
      * @throws SSHException Command failed.
      */

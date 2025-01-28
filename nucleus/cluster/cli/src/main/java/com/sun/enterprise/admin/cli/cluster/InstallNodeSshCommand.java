@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -47,6 +48,11 @@ import static java.util.logging.Level.SEVERE;
 @Service(name = "install-node-ssh")
 @PerLookup
 public class InstallNodeSshCommand extends InstallNodeBaseCommand {
+    private static final String GF_DIR_NAME = "glassfish";
+    private static final SFTPPath PATH_REL_DOMAINS = SFTPPath.ofRelativePath(GF_DIR_NAME, "domains");
+    private static final SFTPPath PATH_REL_NODES = SFTPPath.ofRelativePath(GF_DIR_NAME, "nodes");
+
+
     @Param(name = "sshuser", optional = true, defaultValue = "${user.name}")
     private String user;
     @Param(optional = true, defaultValue = "22", name = "sshport")
@@ -138,20 +144,23 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 prompt = false;
             }
 
-            SFTPPath sshInstallDir = SFTPPath.of(getInstallDir());
-            try (SSHSession session = sshLauncher.openSession(); SFTPClient sftpClient = session.createSFTPClient()) {
-                sftpClient.rmDir(sshInstallDir, true);
-                if (!sftpClient.exists(sshInstallDir)) {
-                    sftpClient.mkdirs(sshInstallDir);
-                    if (sshLauncher.getCapabilities().isChmodSupported()) {
-                        sftpClient.chmod(sshInstallDir, 0755);
-                    }
+            final SFTPPath sshInstallDir = SFTPPath.of(new File(getInstallDir()));
+            try (SSHSession session = sshLauncher.openSession(); SFTPClient sftp = session.createSFTPClient()) {
+                final SFTPPath backupDir;
+                if (sftp.exists(sshInstallDir)) {
+                    backupDir = createBackup(sftp, sshInstallDir);
+                    sftp.rmDir(sshInstallDir, true);
+                } else {
+                    backupDir = null;
                 }
-
+                sftp.mkdirs(sshInstallDir);
+                if (sshLauncher.getCapabilities().isChmodSupported()) {
+                    sftp.chmod(sshInstallDir, 0755);
+                }
                 final SFTPPath remoteZipFile = sshInstallDir.resolve(zipFile.getName());
                 logger.info(() -> "Copying " + zipFile + " (" + zipFile.length() + " bytes)" + " to " + host + ":"
                     + remoteZipFile);
-                sftpClient.put(zipFile, remoteZipFile);
+                sftp.put(zipFile, remoteZipFile);
                 logger.finer(() -> "Copied " + zipFile + " to " + host + ":" + remoteZipFile);
 
                 logger.info(() -> "Unpacking " + remoteZipFile + " on " + host + " to " + sshInstallDir);
@@ -159,7 +168,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 logger.finer(() -> "Unpacked " + getArchiveName() + " into " + host + ":" + sshInstallDir);
 
                 logger.info(() -> "Removing " + host + ":" + remoteZipFile);
-                sftpClient.rm(remoteZipFile);
+                sftp.rm(remoteZipFile);
                 logger.finer(() -> "Removed " + host + ":" + remoteZipFile);
 
                 // zip doesn't retain file permissions, hence executables need
@@ -168,17 +177,52 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                     logger.info(() -> "Fixing file permissions of all bin files under " + host + ":" + sshInstallDir);
                     if (binDirFiles.isEmpty()) {
                         // binDirFiles can be empty if the archive isn't a fresh one
-                        searchAndFixBinDirectoryFiles(sshInstallDir, sftpClient);
+                        searchAndFixBinDirectoryFiles(sshInstallDir, sftp);
                     } else {
                         for (SFTPPath binDirFile : binDirFiles) {
-                            sftpClient.chmod(sshInstallDir.resolve(binDirFile), 0755);
+                            sftp.chmod(sshInstallDir.resolve(binDirFile), 0755);
                         }
                     }
                     logger.finer(() -> "Fixed file permissions of all bin files under " + host + ":" + sshInstallDir);
                 }
+
+                if (backupDir != null) {
+                    List<String> dirs = sftp.ls(backupDir, e -> e.getAttrs().isDir());
+                    for (String dirName : dirs) {
+                        SFTPPath target = sshInstallDir.resolve(SFTPPath.ofRelativePath(GF_DIR_NAME, dirName));
+                        sftp.mv(backupDir.resolve(dirName), target);
+                    }
+                    sftp.rmDir(backupDir, false);
+                    logger.log(Level.INFO, "Successfuly restored domains and nodes from previous installation.");
+                }
             }
         }
     }
+
+    private SFTPPath createBackup(SFTPClient sftp, SFTPPath sshInstallDir) throws SSHException {
+        SFTPPath origDomainsPath = sshInstallDir.resolve(PATH_REL_DOMAINS);
+        SFTPPath origNodesPath = sshInstallDir.resolve(PATH_REL_NODES);
+        boolean origDomainsExist = sftp.existsDirectory(origDomainsPath);
+        boolean origNodesExist = sftp.existsDirectory(origNodesPath);
+        if (!origDomainsExist && !origNodesExist) {
+            return null;
+        }
+        SFTPPath backupDir = sshInstallDir.getParent().resolve("tmp-upgrade-backup");
+        logger.log(Level.INFO, "Creating backup, domains: {0}, nodes: {1} into {2}",
+            new Object[] {origDomainsExist, origNodesExist, backupDir});
+        if (sftp.existsDirectory(backupDir)) {
+            throw new SSHException("The backup directory already exists, probably some failed previous upgrade?");
+        }
+        sftp.mkdirs(backupDir);
+        if (origDomainsExist) {
+            sftp.mv(origDomainsPath, backupDir.resolve("domains"));
+        }
+        if (origNodesExist) {
+            sftp.mv(origNodesPath, backupDir.resolve("nodes"));
+        }
+        return backupDir;
+    }
+
 
     /**
      * Recursively list install dir and identify "bin" directory. Change permissions

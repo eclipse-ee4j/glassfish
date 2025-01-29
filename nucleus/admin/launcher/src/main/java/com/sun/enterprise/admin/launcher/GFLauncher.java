@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import com.sun.enterprise.admin.launcher.CommandLine.CommandFormat;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
@@ -50,7 +51,6 @@ import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.FLASHLIGHT_AGENT_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBMON_NAME;
-import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NEWLINE;
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.COMMAND_LINE;
 import static com.sun.enterprise.universal.collections.CollectionUtils.propertiesToStringMap;
 import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
@@ -139,8 +139,8 @@ public abstract class GFLauncher {
      */
     private Map<String, String> domainXMLSystemProperty;
 
-    private String javaExe;
-    private String classpath;
+    private File javaExe;
+    private File[] classpath;
     private String adminFileRealmKeyFile;
     private boolean secureAdminEnabled;
 
@@ -168,7 +168,7 @@ public abstract class GFLauncher {
     /**
      * The full commandline string used to start GlassFish in process <code<>glassFishProcess</code>
      */
-    private final List<String> commandLine = new ArrayList<>();
+    private CommandLine commandLine;
 
     /**
      * Time when GlassFish was launched
@@ -285,7 +285,7 @@ public abstract class GFLauncher {
 
         setJavaExecutable();
         setClasspath();
-        setCommandLine();
+        initCommandLine();
         setJvmOptions();
         logCommandLine();
 
@@ -426,34 +426,26 @@ public abstract class GFLauncher {
 
         // Use launchctl bsexec on MacOS versions before 10.10
         // otherwise use regular startup.
-        // (No longer using StartupItemContext).
-        // See GLASSFISH-21343
         if (isDarwin() && useLaunchCtl(System.getProperty("os.version")) && !getInfo().isVerboseOrWatchdog()) {
-
-            // On MacOS we need to start long running glassFishProcess with
-            // StartupItemContext. See IT 12942
             cmds = new ArrayList<>();
-
-            // cmds.add("/usr/libexec/StartupItemContext");
-            // In MacOS 10.10 they removed StartupItemContext
-            // so call launchctl directly doing what StartupItemContext did
-            // See GLASSFISH-21113
             cmds.add("launchctl");
             cmds.add("bsexec");
             cmds.add("/");
-            cmds.addAll(getCommandLine());
-        } else if (isWindows()) {
-            boolean preloadStdin = !getInfo().isVerbose() && isSSHSession();
-            cmds = prepareWindowsEnvironment(getCommandLine(), getInfo().getConfigDir().toPath(), preloadStdin);
+            cmds.addAll(commandLine.toList());
+        } else if (commandLine.getFormat() == CommandFormat.BatFile) {
+            cmds = prepareWindowsEnvironment(commandLine, getInfo().getConfigDir().toPath(), isSSHSession());
         } else if (getInfo().isVerboseOrWatchdog()) {
-            cmds = getCommandLine();
-        } else {
-            // Usual usage on Linux based systems
             cmds = new ArrayList<>();
-            cmds.add("nohup");
-            cmds.addAll(getCommandLine());
+            cmds.addAll(commandLine.toList());
+        } else {
+            cmds = new ArrayList<>();
+            if (!isWindows()) {
+                cmds.add("nohup");
+            }
+            cmds.addAll(commandLine.toList());
         }
 
+        // When calling cluster nodes, this will be visible in the server.log too.
         System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
         System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
@@ -500,8 +492,13 @@ public abstract class GFLauncher {
         return mode == fake;
     }
 
-    public final List<String> getCommandLine() {
+    public final CommandLine getCommandLine() {
         return commandLine;
+    }
+
+
+    protected final void setCommandLine(CommandLine commandLine) {
+        this.commandLine = commandLine;
     }
 
     // unit tests will want 'fake' so that the glassFishProcess is not really started.
@@ -728,7 +725,7 @@ public abstract class GFLauncher {
         }
 
         if (javaFile.exists()) {
-            javaExe = sanitize(javaFile).getPath();
+            javaExe = sanitize(javaFile);
             return true;
         }
 
@@ -751,33 +748,32 @@ public abstract class GFLauncher {
         all.addAll(sysCP);
         all.addAll(envCP);
         all.addAll(suffixCP);
-        setClasspath(GFLauncherUtils.fileListToPathString(all));
+        setClasspath(all.toArray(File[]::new));
     }
 
-    void setCommandLine() throws GFLauncherException {
-        List<String> cmdLine = getCommandLine();
-        cmdLine.clear();
-        addIgnoreNull(cmdLine, javaExe);
-        addIgnoreNull(cmdLine, "-cp");
-        addIgnoreNull(cmdLine, getClasspath());
+    void initCommandLine() throws GFLauncherException {
+        boolean batRequired = isWindows() && !getInfo().isVerboseOrWatchdog();
+        CommandLine cmdLine = new CommandLine(batRequired ? CommandFormat.BatFile : CommandFormat.ProcessBuilder);
+        cmdLine.append(javaExe.toPath());
+        cmdLine.appendClassPath(getClasspath());
         addIgnoreNull(cmdLine, domainXMLjavaConfigDebugOptions);
 
         String CLIStartTime = System.getProperty("WALL_CLOCK_START");
-        if (CLIStartTime != null && CLIStartTime.length() > 0) {
-            cmdLine.add("-DWALL_CLOCK_START=" + CLIStartTime);
+        if (CLIStartTime != null) {
+            cmdLine.append("-DWALL_CLOCK_START=" + CLIStartTime);
         }
 
         if (debugPort >= 0) {
-            cmdLine.add("-D" + DEBUG_MODE_PROPERTY + "=" + TRUE);
+            cmdLine.appendSystemOption(DEBUG_MODE_PROPERTY, TRUE.toString());
         }
 
         if (domainXMLjvmOptions != null) {
-            addIgnoreNull(cmdLine, domainXMLjvmOptions.toList());
+            domainXMLjvmOptions.toList().forEach(cmdLine::appendJavaOption);
         }
 
-        GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig, domainXMLjvmOptions,
-                domainXMLJavaConfigProfiler);
-        addIgnoreNull(cmdLine, nativeHelper.getCommands());
+        GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig,
+            domainXMLjvmOptions, domainXMLJavaConfigProfiler);
+        cmdLine.appendNativeLibraryPath(nativeHelper.getNativePath());
         addIgnoreNull(cmdLine, getMainClass());
 
         try {
@@ -785,30 +781,22 @@ public abstract class GFLauncher {
         } catch (GFLauncherException gfle) {
             throw gfle;
         } catch (Exception e) {
-            // harmless
+            throw new GFLauncherException(e);
         }
+
+        setCommandLine(cmdLine);
     }
 
     void setJvmOptions() {
         domainXMLJvmOptionsAsList.clear();
-
         if (domainXMLjvmOptions != null) {
-            addIgnoreNull(domainXMLJvmOptionsAsList, domainXMLjvmOptions.toList());
+            domainXMLjvmOptions.toList().forEach(domainXMLJvmOptionsAsList::add);
         }
-
     }
 
     void logCommandLine() {
-        StringBuilder sb = new StringBuilder();
-
         if (!isFakeLaunch()) {
-            Iterable<String> cmdLine = getCommandLine();
-
-            for (String s : cmdLine) {
-                sb.append(NEWLINE);
-                sb.append(s);
-            }
-            GFLauncherLogger.info(COMMAND_LINE, sb.toString());
+            GFLauncherLogger.info(COMMAND_LINE, commandLine.toString("\n"));
         }
     }
 
@@ -816,15 +804,15 @@ public abstract class GFLauncher {
         return domainXMLJvmOptionsAsList;
     }
 
-    private void addIgnoreNull(List<String> list, String s) {
+    private void addIgnoreNull(CommandLine command, String s) {
         if (ok(s)) {
-            list.add(s);
+            command.append(s);
         }
     }
 
-    private void addIgnoreNull(List<String> list, Collection<String> ss) {
+    private void addIgnoreNull(CommandLine command, Collection<String> ss) {
         if (ss != null && !ss.isEmpty()) {
-            list.addAll(ss);
+            ss.forEach(command::append);
         }
     }
 
@@ -952,7 +940,7 @@ public abstract class GFLauncher {
         }
     }
 
-    private void setupMonitoring(MiniXmlParser parser) throws GFLauncherException {
+    private void setupMonitoring(MiniXmlParser parser) {
         // As usual we have to be very careful.
 
         // If it is NOT enabled -- we are out of here!!!
@@ -1006,12 +994,12 @@ public abstract class GFLauncher {
         return propsToJvmOptions(props);
     }
 
-    String getClasspath() {
+    final File[] getClasspath() {
         return classpath;
     }
 
-    void setClasspath(String s) {
-        classpath = s;
+    final void setClasspath(File... classpath) {
+        this.classpath = classpath;
     }
 
     private List<String> propsToJvmOptions(Map<String, String> map) {
@@ -1053,7 +1041,7 @@ public abstract class GFLauncher {
     }
 
 
-    private static List<String> prepareWindowsEnvironment(final List<String> command, final Path configDir,
+    private static List<String> prepareWindowsEnvironment(final CommandLine command, final Path configDir,
         final boolean stdinPreloaded) throws GFLauncherException {
         Path psFile;
         Path batFile;
@@ -1068,15 +1056,7 @@ public abstract class GFLauncher {
                 if (!itemsOfCommand.hasPrevious()) {
                     batContent.append("  ");
                 }
-                // Java System options wrap just values and it should have been already done.
-                boolean wrap = line.contains(" ") && !line.startsWith("-D");
-                if (wrap) {
-                    batContent.append('"');
-                }
                 batContent.append(line);
-                if (wrap) {
-                    batContent.append('"');
-                }
                 if (itemsOfCommand.hasNext()) {
                     batContent.append(" ^");
                 }

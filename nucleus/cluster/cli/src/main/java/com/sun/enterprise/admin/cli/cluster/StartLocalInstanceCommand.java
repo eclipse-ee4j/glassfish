@@ -74,11 +74,6 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
     private StartServerHelper helper;
 
     @Override
-    public List<String> getLauncherArgs() {
-        return getLauncher().getCommandLine();
-    }
-
-    @Override
     public RuntimeType getType() {
          return RuntimeType.INSTANCE;
     }
@@ -137,13 +132,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(Strings.get("dry_run_msg"));
                 }
-                List<String> cmd = getLauncher().getCommandLine();
-                StringBuilder sb = new StringBuilder();
-                for (String s : cmd) {
-                    sb.append(s);
-                    sb.append('\n');
-                }
-                logger.info(sb.toString());
+                logger.info(getLauncher().getCommandLine().toString("\n"));
                 return SUCCESS;
             }
 

@@ -17,6 +17,7 @@
 package org.glassfish.cluster.ssh.launcher;
 
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 import java.io.IOException;
 
@@ -48,6 +49,14 @@ public class SSHException extends IOException {
     private static String toCauseMessage(Exception e) {
         if (e instanceof SSHException || e instanceof JSchException) {
             return e.getMessage();
+        }
+        if (e instanceof SftpException) {
+            SftpException cause = (SftpException) e;
+            // Permission denied is not much useful, so provide a bit better hint.
+            if (cause.id == 3) {
+                return "SFTP: " + e.getMessage() + " - the file or directory is probably open by some process.";
+            }
+            return "SFTP: " + e.getMessage();
         }
         // note: SftpException contains also an error id.
         return e.toString();

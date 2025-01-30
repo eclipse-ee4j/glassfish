@@ -80,7 +80,7 @@ public final class CommandLine implements Iterable<String> {
     public void appendNativeLibraryPath(File... paths) {
         String value = Stream.of(paths).map(File::toPath).map(CommandLine::toJavaPath)
             .collect(Collectors.joining(File.pathSeparator));
-        command.add("-D" + GFLauncherConstants.JAVA_NATIVE_SYSPROP_NAME + '=' + toQuoted(value));
+        command.add("-D" + GFLauncherConstants.JAVA_NATIVE_SYSPROP_NAME + '=' + toQuotedIfNeeded(value));
     }
 
 
@@ -111,7 +111,7 @@ public final class CommandLine implements Iterable<String> {
      * @param path
      */
     public void appendJavaOption(String itemKey, Path path) {
-        command.add(itemKey + '=' + toQuoted(toJavaPath(path)));
+        command.add(itemKey + '=' + toQuotedIfNeeded(toJavaPath(path)));
     }
 
 
@@ -122,7 +122,7 @@ public final class CommandLine implements Iterable<String> {
      * @param itemValue
      */
     public void appendSystemOption(String itemKey, String itemValue) {
-        command.add("-D" + itemKey + '=' + toQuoted(itemValue));
+        command.add("-D" + itemKey + '=' + toQuotedIfNeeded(itemValue));
     }
 
 

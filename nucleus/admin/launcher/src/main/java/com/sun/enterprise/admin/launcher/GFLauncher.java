@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.ProcessBuilder.Redirect;
 import java.lang.System.Logger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -449,6 +450,10 @@ public abstract class GFLauncher {
         System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
         System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
+        if (getInfo().isVerboseOrWatchdog()) {
+            processBuilder.redirectOutput(Redirect.INHERIT);
+            processBuilder.redirectError(Redirect.INHERIT);
+        }
 
         // Change the directory if there is one specified, o/w stick with the default.
         try {
@@ -476,7 +481,6 @@ public abstract class GFLauncher {
             } else {
                 processStreamDrainer = save(name, glassFishProcess);
             }
-
             writeSecurityTokens(glassFishProcess);
         } catch (Exception e) {
             throw new GFLauncherException("jvmfailure", e, e);

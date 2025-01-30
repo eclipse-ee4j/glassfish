@@ -264,8 +264,7 @@ public class SFTPClient implements AutoCloseable {
             sftpChannel.cd(remoteTarget.getParent().toString());
             sftpChannel.rename(remoteSource.toString(), remoteTarget.toString());
         } catch (SftpException e) {
-            throw new SSHException(
-                "Failed to upload the local file " + remoteSource + " to remote file " + remoteTarget + '.', e);
+            throw new SSHException("Failed to move the directory " + remoteSource + " to " + remoteTarget + '.', e);
         }
     }
 

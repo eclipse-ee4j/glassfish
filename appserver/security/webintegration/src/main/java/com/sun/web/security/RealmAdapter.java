@@ -440,14 +440,15 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         LoginConfig config = context.getLoginConfig();
 
         if (isJakartaAuthenticationEnabled()) {
+            final SecurityContext securityContext = SecurityContext.getCurrent();
             // Jakarta Authentication is enabled for this application
             try {
                 context.fireContainerEvent(BEFORE_AUTHENTICATION, null);
                 RequestFacade requestFacade = (RequestFacade) request.getRequest();
-                SecurityContext.getCurrent().setSessionPrincipal(requestFacade.getRequestPrincipal());
+                securityContext.setSessionPrincipal(requestFacade.getRequestPrincipal());
                 return validate(request, response, config, authenticator, calledFromAuthenticate);
             } finally {
-                SecurityContext.getCurrent().setSessionPrincipal(null);
+                securityContext.setSessionPrincipal(null);
                 context.fireContainerEvent(AFTER_AUTHENTICATION, null);
             }
         }

@@ -72,10 +72,11 @@ public class SecurityContext extends AbstractSecurityContext {
 
     private static AuthPermission doAsPrivilegedPerm = new AuthPermission("doAsPrivileged");
 
+    // this is static because it's a thread local, which isn't serializable
+    private static ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
+
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;
-
-    private final ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     /*
      * This creates a new SecurityContext object. Note: that the docs for Subject state that the internal sets (eg. the

@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>basic-db</artifactId>
-    <version>7.0.22-SNAPSHOT</version>
+    <version>7.0.22</version>
     <name>Basic PaaS sample</name>
     <packaging>war</packaging>
     <build>

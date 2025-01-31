@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>jakartaee-pom</artifactId>
-        <version>7.0.22-SNAPSHOT</version>
+        <version>7.0.22</version>
     </parent>
 
     <artifactId>jakartaee-frag</artifactId>

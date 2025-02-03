@@ -25,7 +25,5 @@ jobs:
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
-      run: ./apache-maven-3.9.9/bin/mvn -B -e clean install -Pstaging -Pqa '-Dcheckstyle.skip=true'
-      env:
-        DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
+      run: ./apache-maven-3.9.9/bin/mvn -B --no-transfer-progress -e clean install -Pstaging -Pqa '-Dcheckstyle.skip=true'
 

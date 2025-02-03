@@ -63,7 +63,7 @@ Jakarta EE Information : https://jakarta.ee/
 6. Follow us
 ============
 
-Eclipse GlassFish is deeloped at the Eclipse Foundation see https://projects.eclipse.org/projects/ee4j.glassfish for project details
+Eclipse GlassFish is developed at the Eclipse Foundation see https://projects.eclipse.org/projects/ee4j.glassfish for project details
 
 Eclipse GlassFish is developed on GitHub to view the source code or raise bugs see https://github.com/eclipse-ee4j/glassfish
 

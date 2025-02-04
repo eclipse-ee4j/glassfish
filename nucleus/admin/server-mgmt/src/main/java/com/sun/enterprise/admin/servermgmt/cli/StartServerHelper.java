@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +44,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
@@ -150,6 +151,12 @@ public class StartServerHelper {
         final String serverName = info.isDomain()
             ? "domain " + info.getDomainName()
             : "instance " + info.getInstanceName();
+        if (exitCode == 0) {
+            LOG.log(INFO,
+                "Server {0} started successfuly. The startup command produced following output before it finished: \n{1}",
+                serverName, output);
+            return;
+        }
         if (ok(output)) {
             throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
         }
@@ -186,7 +193,7 @@ public class StartServerHelper {
         } else {
             adminPort = addresses.get(0).getPort();
         }
-        LOG.log(Level.INFO, "ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance",
+        LOG.log(INFO, "ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance",
             serverDirs.getServerName(), serverDirs.getServerDir(), logfile, adminPort);
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -144,7 +145,7 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
     // these are added to all configs
     private static final String[] ADD_LIST = new String[] { "-XX:+UnlockDiagnosticVMOptions", "-XX:+LogVMOutput",
             "-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log", "-Djava.awt.headless=true", "-DANTLR_USE_DIRECT_CLASS_LOADING=true",
-            "-Dosgi.shell.telnet.maxconn=1", "-Dosgi.shell.telnet.ip=127.0.0.1", "-Dgosh.args=--noshutdown -c noop=true",
+            "-Dosgi.shell.telnet.maxconn=1", "-Dosgi.shell.telnet.ip=127.0.0.1", "-Dgosh.args=--nointeractive",
             "-Dfelix.fileinstall.dir=${com.sun.aas.installRoot}/modules/autostart/", "-Dfelix.fileinstall.poll=5000",
             "-Dfelix.fileinstall.debug=3", "-Dfelix.fileinstall.bundles.new.start=true", "-Dfelix.fileinstall.bundles.startTransient=true",
             "-Dfelix.fileinstall.disableConfigSave=false", "-Dfelix.fileinstall.log.level=2",

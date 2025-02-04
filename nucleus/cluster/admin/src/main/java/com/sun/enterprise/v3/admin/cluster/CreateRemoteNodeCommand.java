@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Nodes;
@@ -53,7 +53,7 @@ public abstract class CreateRemoteNodeCommand implements AdminCommand {
     @Inject
     private CommandRunner cr;
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator locator;
     @Inject
     Nodes nodes;
     @Param(name = "name", primary = true)
@@ -112,7 +112,7 @@ public abstract class CreateRemoteNodeCommand implements AdminCommand {
         }
 
         try {
-            nodeUtils = new NodeUtils(habitat, logger);
+            nodeUtils = new NodeUtils(locator);
             nodeUtils.validate(map);
             if (install) {
                 boolean s = installNode(context);
@@ -261,18 +261,20 @@ public abstract class CreateRemoteNodeCommand implements AdminCommand {
         fullcommand.addAll(cmdLine);
 
         ProcessManager pm = new ProcessManager(fullcommand);
-        if (!pass.isEmpty())
+        if (!pass.isEmpty()) {
             pm.setStdinLines(pass);
+        }
 
         if (logger.isLoggable(Level.INFO)) {
             logger.info("Running command on DAS: " + commandListToString(fullcommand));
         }
         pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
 
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             pm.setEcho(true);
-        else
+        } else {
             pm.setEcho(false);
+        }
 
         try {
             exit = pm.execute();

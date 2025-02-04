@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,6 +31,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Predicate;
 
 public final class NetUtils {
 
@@ -475,6 +476,24 @@ public final class NetUtils {
             return defaultHostname;
         }
 
+        // If the DNS is inconsistent between domain hosts, it is sometimes better to use
+        // any reachable public IP address. This check is not perfect - however usually if
+        // the host name doesn't contain any dots, it is already a bad name for wider networks.
+        if (!hostname.contains(".")) {
+            ThrowingPredicate<NetworkInterface> isLoopback = NetworkInterface::isLoopback;
+            try {
+                String host = NetworkInterface.networkInterfaces().filter(Predicate.not(isLoopback))
+                    .flatMap(NetworkInterface::inetAddresses)
+                    .map(InetAddress::getHostAddress)
+                    .filter(name -> name.indexOf('.') > 0)
+                    .findFirst().orElse(hostname);
+                return host;
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         return hostname;
     }
 
@@ -494,5 +513,23 @@ public final class NetUtils {
 
     public enum PortAvailability {
         illegalNumber, noPermission, inUse, unknown, OK
+    }
+
+
+    @FunctionalInterface
+    private static interface ThrowingPredicate<T> extends Predicate<T> {
+
+        boolean throwing(T object) throws Exception;
+
+        @Override
+        public default boolean test(T object) {
+            try {
+                return throwing(object);
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
     }
 }

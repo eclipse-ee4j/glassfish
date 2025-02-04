@@ -56,6 +56,8 @@ class StartServerShutdownHook extends Thread {
 
     private static final Logger LOG = System.getLogger(StartServerShutdownHook.class.getName());
     private static final boolean LOG_RESTART = Boolean.parseBoolean(System.getenv("AS_RESTART_LOGFILES"));
+    private static final Path CFGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "config").toPath()
+        .toAbsolutePath();
     private static final Path LOGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "logs").toPath()
         .toAbsolutePath();
     private static final Predicate<Thread> FILTER_OTHER_HOOKS = t -> t.getName().startsWith("GlassFish")

@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import com.sun.enterprise.admin.launcher.CommandLine.CommandFormat;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
@@ -24,6 +25,7 @@ import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,8 @@ class GFEmbeddedLauncher extends GFLauncher {
     private File installDir;
     private File javaExe;
     private File domainDir;
-    private String javaDbClassPath, logFilename;
+    private List<File> javaDbClassPath;
+    private String logFilename;
     private static final String GFE_RUNSERVER_JAR = "GFE_RUNSERVER_JAR";
     private static final String GFE_RUNSERVER_CLASS = "GFE_RUNSERVER_CLASS";
     private static final String GFE_JAR = "GFE_JAR";
@@ -90,17 +93,15 @@ class GFEmbeddedLauncher extends GFLauncher {
 
         if (setup) {
             return;
-        } else {
-            setup = true;
         }
-
+        setup = true;
         try {
             setupFromEnv();
         } catch (GFLauncherException gfle) {
-            throw new GFLauncherException(GENERAL_MESSAGE + gfle.getMessage());
+            throw new GFLauncherException(GENERAL_MESSAGE + gfle.getMessage(), gfle);
         }
 
-        setCommandLine();
+        initCommandLine();
 
         /*
          * it is NOT an error for there to be no domain.xml (yet). so eat exceptions. Also just set the default to 4848 if we
@@ -159,33 +160,34 @@ class GFEmbeddedLauncher extends GFLauncher {
 
     @Override
     void setClasspath() {
-        String classPath = gfeJar.getPath() + File.pathSeparator + javaDbClassPath;
+        List<File> cp = new ArrayList<>();
+        cp.add(gfeJar);
+        cp.addAll(javaDbClassPath);
         if (runServerJar != null) {
-            classPath = classPath + File.pathSeparator + runServerJar.getPath();
+            cp.add(runServerJar);
         }
-        setClasspath(classPath);
+        setClasspath(cp.toArray(File[]::new));
     }
 
     @Override
-    void setCommandLine() throws GFLauncherException {
-        List<String> cmdLine = getCommandLine();
-        cmdLine.clear();
-        cmdLine.add(javaExe.getPath());
+    void initCommandLine() throws GFLauncherException {
+        CommandLine cmdLine = new CommandLine(CommandFormat.ProcessBuilder);
+        cmdLine.append(javaExe.toPath());
         addThreadDump(cmdLine);
-        cmdLine.add("-cp");
-        cmdLine.add(getClasspath());
+        cmdLine.appendClassPath(getClasspath());
         addDebug(cmdLine);
-        cmdLine.add(getMainClass());
-        cmdLine.add("--installdir");
-        cmdLine.add(installDir.getPath());
-        cmdLine.add("--instancedir");
-        cmdLine.add(domainDir.getPath());
-        cmdLine.add("--autodelete");
-        cmdLine.add("false");
-        cmdLine.add("--autodeploy");
+        cmdLine.append(getMainClass());
+        cmdLine.append("--installdir");
+        cmdLine.append(installDir.toPath());
+        cmdLine.append("--instancedir");
+        cmdLine.append(domainDir.toPath());
+        cmdLine.append("--autodelete");
+        cmdLine.append("false");
+        cmdLine.append("--autodeploy");
+        setCommandLine(cmdLine);
     }
 
-    private void addDebug(List<String> cmdLine) {
+    private void addDebug(CommandLine cmdLine) {
         String suspend;
         String debugPort = System.getenv("GFE_DEBUG_PORT");
 
@@ -196,21 +198,16 @@ class GFEmbeddedLauncher extends GFLauncher {
             suspend = "n";
         }
 
-        cmdLine.add("-Xdebug");
-        cmdLine.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=" + suspend + ",address=" + debugPort);
+        cmdLine.append("-Xdebug");
+        cmdLine.append("-Xrunjdwp:transport=dt_socket,server=y,suspend=" + suspend + ",address=" + debugPort);
     }
 
-    private void addThreadDump(List<String> cmdLine) {
-        File logDir = new File(domainDir, "logs");
-        File jvmLogFile = new File(logDir, "jvm.log");
-
-        // bnevins :
-        // warning these are the only order-dependent JVM options that I know about
+    private void addThreadDump(CommandLine cmdLine) {
+        Path jvmLog = domainDir.toPath().resolve(Path.of("logs", "jvm.log"));
         // Unlock... *must* come before the other two.
-
-        cmdLine.add("-XX:+UnlockDiagnosticVMOptions");
-        cmdLine.add("-XX:+LogVMOutput");
-        cmdLine.add("-XX:LogFile=" + jvmLogFile.getPath());
+        cmdLine.appendJavaOption("-XX:+UnlockDiagnosticVMOptions");
+        cmdLine.appendJavaOption("-XX:+LogVMOutput");
+        cmdLine.appendJavaOption("-XX:LogFile", jvmLog);
     }
 
     private void setupFromEnv() throws GFLauncherException {
@@ -236,7 +233,8 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     private void setupJDK() throws GFLauncherException {
-        String err = "You must set the environmental variable JAVA_HOME to point " + "at a valid JDK.  <jdk>/bin/javac[.exe] must exist.";
+        String err = "You must set the environmental variable JAVA_HOME to point"
+            + " at a valid JDK. <jdk>/bin/javac[.exe] must exist.";
 
         String jdkDirName = System.getenv(JAVA_HOME);
         if (!ok(jdkDirName)) {
@@ -333,16 +331,12 @@ class GFEmbeddedLauncher extends GFLauncher {
         }
 
         // we have a valid directory. Let's verify the right jars are there!
-
-        javaDbClassPath = "";
+        javaDbClassPath = new ArrayList<>();
         for (String fname : DERBY_FILES) {
-            File f = new File(derbyLib, fname);
-
-            javaDbClassPath += File.pathSeparator;
-            javaDbClassPath += f.getPath();
-
-            if (!f.exists()) {
-                throw new GFLauncherException("Could not find the JavaDB jar: " + f);
+            File file = new File(derbyLib, fname);
+            javaDbClassPath.add(file);
+            if (!file.exists()) {
+                throw new GFLauncherException("Could not find the JavaDB jar: " + file);
             }
         }
     }

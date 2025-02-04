@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,18 +31,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINER;
 
 /**
  * @author Rajiv Mordani
@@ -65,7 +69,7 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
     private String archiveName;
     private boolean delete = true;
 
-    abstract void copyToHosts(File zipFile, ArrayList<String> binDirFiles) throws CommandException;
+    abstract void copyToHosts(File zipFile, List<SFTPPath> binDirFiles) throws CommandException;
     abstract void precopy() throws CommandException;
 
     @Override
@@ -83,24 +87,21 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
     @Override
     protected int executeCommand() throws CommandException {
         File zipFile = null;
-
         try {
-            ArrayList<String> binDirFiles = new ArrayList<String>();
+            ArrayList<SFTPPath> binDirFiles = new ArrayList<>();
             precopy();
             zipFile = createZipFileIfNeeded(binDirFiles);
             copyToHosts(zipFile, binDirFiles);
-        }
-        catch (CommandException e) {
+        } catch (CommandException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new CommandException(e);
-        }
-        finally {
+        } finally {
             if (!save && delete) {
                 if (zipFile != null) {
-                    if (!zipFile.delete())
+                    if (!zipFile.delete()) {
                         zipFile.deleteOnExit();
+                    }
                 }
             }
         }
@@ -121,80 +122,58 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
     }
 
 
-    private File createZipFileIfNeeded(ArrayList<String> binDirFiles) throws IOException, ZipFileException {
-        String baseRootValue = getSystemProperty(SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
-        File installRoot = new File(baseRootValue);
-
-        File zipFileLocation = null;
-        File glassFishZipFile = null;
-
-        if (archive != null) {
-            archive = archive.replace('\\', '/');
-            archiveName = archive.substring(archive.lastIndexOf("/") + 1, archive.length());
-            zipFileLocation = new File(archive.substring(0, archive.lastIndexOf("/")));
-            glassFishZipFile = new File(archive);
-            if (glassFishZipFile.exists() && !create) {
-                if (logger.isLoggable(Level.FINER))
-                    logger.finer("Found " + archive);
+    private File createZipFileIfNeeded(List<SFTPPath> binDirFiles) throws IOException, ZipFileException {
+        final String baseRootValue = getSystemProperty(SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+        final File installRoot = new File(baseRootValue);
+        final File zipFileDir;
+        final File zipFile;
+        if (archive == null) {
+            zipFile = File.createTempFile("glassfish", ".zip");
+        } else {
+            zipFile = new File(archive);
+            zipFileDir = new File(archive.substring(0, archive.lastIndexOf("/")));
+            if (zipFile.exists() && !create) {
+                logger.log(FINER, "Found {0}", archive);
                 delete = false;
-                return glassFishZipFile;
-            }
-            else if (!zipFileLocation.canWrite()) {
+                return zipFile;
+            } else if (!zipFileDir.canWrite()) {
                 throw new IOException("Cannot write to " + archive);
             }
         }
-        else {
-            zipFileLocation = new File(".");
-            if (!zipFileLocation.canWrite()) {
-                zipFileLocation = new File(System.getProperty("java.io.tmpdir"));
-            }
-            glassFishZipFile = File.createTempFile("glassfish", ".zip", zipFileLocation);
-            String filePath = glassFishZipFile.getCanonicalPath();
-            filePath = filePath.replaceAll("\\\\", "/");
-            archiveName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
-        }
+        archiveName = zipFile.getName();
 
         FileListerRelative lister = new FileListerRelative(installRoot);
         lister.keepEmptyDirectories();
         String[] files = lister.getFiles();
-
-        List<String> resultFiles1 = Arrays.asList(files);
-        ArrayList<String> resultFiles = new ArrayList<String>(resultFiles1);
-
-        if (logger.isLoggable(Level.FINER))
-            logger.finer("Number of files to be zipped = " +
-                                                            resultFiles.size());
+        ArrayList<String> resultFiles = new ArrayList<>(Arrays.asList(files));
+        logger.finer(() -> "Number of files to be zipped = " + resultFiles.size());
 
         Iterator<String> iter = resultFiles.iterator();
         while (iter.hasNext()) {
-            String fileName = iter.next();
-            String fPath = fileName.substring(fileName.lastIndexOf("/") + 1);
-            if (fPath.equals(glassFishZipFile.getName())) {
-                if (logger.isLoggable(Level.FINER))
-                    logger.finer("Removing file = " + fileName);
+            final File file = new File(iter.next());
+            final SFTPPath path = SFTPPath.of(file);
+            if (archiveName.equals(file.getName())) {
+                logger.log(FINER, "Removing file = {0}", path);
                 iter.remove();
                 continue;
             }
-            if (fileName.contains("domains") || fileName.contains("nodes")) {
+            if (path.contains("domains") || path.contains("nodes")) {
                 iter.remove();
-            }
-            else if (isFileWithinBinDirectory(fileName)) {
-                binDirFiles.add(fileName);
+            } else if (isFileWithinBinDirectory(path) || "nadmin".equals(file.getName())) {
+                binDirFiles.add(path);
             }
         }
 
-        if (logger.isLoggable(Level.FINER))
-            logger.finer("Final number of files to be zipped = " +
-                                                            resultFiles.size());
+        logger.finer(() -> "Final number of files to be zipped = " + resultFiles.size());
 
         String[] filesToZip = new String[resultFiles.size()];
         filesToZip = resultFiles.toArray(filesToZip);
 
-        ZipWriter writer = new ZipWriter(FileUtils.safeGetCanonicalPath(glassFishZipFile), installRoot.toString(), filesToZip);
+        ZipWriter writer = new ZipWriter(FileUtils.safeGetCanonicalPath(zipFile), installRoot.toString(), filesToZip);
         writer.safeWrite();
-        logger.info("Created installation zip " + FileUtils.safeGetCanonicalPath(glassFishZipFile));
+        logger.info("Created installation zip " + FileUtils.safeGetCanonicalPath(zipFile));
 
-        return glassFishZipFile;
+        return zipFile;
     }
 
     /**
@@ -202,14 +181,12 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
      * @param file path to the file
      * @return true if file is under "bin" dir, false otherwise
      */
-    private static boolean isFileWithinBinDirectory(String file) {
-        String parent = null;
-        //for top-level files, parent would be null
-        String pFile = new File(file).getParent();
-        if (pFile != null) {
-            parent = new File(pFile).getName();
+    private static boolean isFileWithinBinDirectory(Path path) {
+        Path parent = path.getParent();
+        if (parent == null || parent.getFileName() == null) {
+            return false;
         }
-        return parent != null && parent.equals("bin");
+        return parent.getFileName().toString().equals("bin");
     }
 
     public static String toString(InputStream ins) throws IOException {
@@ -218,8 +195,9 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
 
         char[] buffer = new char[4096];
         int n;
-        while ((n = reader.read(buffer)) >= 0)
+        while ((n = reader.read(buffer)) >= 0) {
             sw.write(buffer, 0, n);
+        }
 
         return sw.toString();
     }

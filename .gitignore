@@ -63,4 +63,3 @@ appserver/tests/appserv-tests/temppwd
 
 opendj-*.zip
 /opendj/
-.mvn/.develocity/develocity-workspace-id

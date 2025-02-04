@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,12 +31,7 @@ public class DeploymentTestsUI
     {
         System.setProperty(Env.USE_TLS_SYSTEM_PROPERTY, "true");
 
-        File f = getPersistenceFile();
-
-        if(f != null)
-            persist = new SimplePersistence(f, true);
-        else
-            persist = new SimplePersistence(this);
+        persist = new SimplePersistence(this);
         getArgs();
         setPort();
         getSamplesDir();
@@ -280,15 +276,6 @@ public class DeploymentTestsUI
 
             return name.endsWith(".ear") || name.endsWith(".jar") || name.endsWith(".rar") || name.endsWith(".war");
         }
-    }
-    private File getPersistenceFile()
-    {
-        String s = System.getProperty("user.name");
-
-        if(s != null && s.equals("bnevins"))
-            return new File("C:/tmp/DeploymentTestsUI.persist.properties");
-
-        return null;
     }
 }
 

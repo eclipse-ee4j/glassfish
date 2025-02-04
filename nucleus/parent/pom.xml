@@ -139,7 +139,7 @@
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.7.1</asm.version>
-        <jsch.version>0.2.21</jsch.version>
+        <jsch.version>0.2.23</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
@@ -554,7 +554,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.27.1</version>
+                <version>3.28.0</version>
             </dependency>
 
             <!--3rd party dependencies -->

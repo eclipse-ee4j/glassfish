@@ -104,7 +104,7 @@
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
-        <openmq.version>6.5.0</openmq.version>
+        <openmq.version>6.5.1</openmq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>

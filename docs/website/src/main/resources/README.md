@@ -9,6 +9,12 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## February 3, 2025 -- Eclipse GlassFish 7.0.22 Available
+
+The first release of 2025 is here; GlassFish 7.0.22!
+
+A smaller release while the OmniFish team is working on perfecting SSH in a separate feature branch. Still, a few important dependencies have been updated; notably Concurrō (Concurrency), EclipseLink (Persistence) and Jersey (REST). Furthermore, GlassFish has received a few security improvements: the admin flow login was improved by Alexander Pinčuk, and the OmniFish team improved the command logger, which now hides passwords in logged messages.
+
 ## January 3, 2024 -- Eclipse GlassFish 7.0.21 Available
 
 We're over the moon to present you our first release of 2025: GlassFish 7.0.21!

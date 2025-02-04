@@ -121,12 +121,14 @@
 
         <!-- GlassFish Components -->
 
-        <glassfish-corba.version>4.2.5</glassfish-corba.version>
         <grizzly.version>4.0.2</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-        <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <pfl.version>4.1.2</pfl.version>
-        <gmbal.version>4.0.3</gmbal.version>
+
+        <glassfish-corba.version>5.0.0</glassfish-corba.version>
+        <glassfish-management-api.version>3.3.0</glassfish-management-api.version>
+        <gmbal.version>4.1.0</gmbal.version>
+        <pfl.version>5.1.0</pfl.version>
+
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
@@ -446,6 +448,11 @@
             <dependency>
                 <groupId>org.glassfish.gmbal</groupId>
                 <artifactId>gmbal</artifactId>
+                <version>${gmbal.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.gmbal</groupId>
+                <artifactId>gmbal-api-only</artifactId>
                 <version>${gmbal.version}</version>
             </dependency>
             <dependency>

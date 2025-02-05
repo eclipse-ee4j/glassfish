@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,8 @@ package org.glassfish.main.jul;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -71,6 +73,7 @@ public class GlassFishLogManagerLifeCycleTest {
     private static GlassFishLogManagerConfiguration originalCfg;
     private static boolean originalLevelResolution;
     private static CompletableFuture<Void> process;
+    private ExecutorService sequentialExecutor = Executors.newSingleThreadExecutor();
 
     @BeforeAll
     public static void backupConfiguration() {
@@ -133,6 +136,7 @@ public class GlassFishLogManagerLifeCycleTest {
             () -> assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus()),
             () -> assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started"));
         doLog(Level.INFO, "Log after reconfiguration started", 0);
+        Thread.sleep(10L);
         assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started even if we log again");
     }
 
@@ -269,7 +273,7 @@ public class GlassFishLogManagerLifeCycleTest {
      * @throws Exception
      */
     private void doLog(final Level level, final String message, final int sleepMillis) throws Exception {
-        new Thread(() -> LOG.log(level, message)).start();
+        sequentialExecutor.submit(() -> LOG.log(level, message));
         if (sleepMillis > 0) {
             Thread.sleep(sleepMillis);
         }

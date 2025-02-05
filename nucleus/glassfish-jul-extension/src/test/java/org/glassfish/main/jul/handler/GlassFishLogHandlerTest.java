@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.main.jul.handler;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -134,12 +135,14 @@ public class GlassFishLogHandlerTest {
     public void roll() throws Exception {
         assertTrue(handler.isReady(), "handler.ready");
         handler.publish(new GlassFishLogRecord(Level.SEVERE, "File one, record one", false));
+        final File logFile = handler.getConfiguration().getLogFile();
         // pump is now to play
         Thread.sleep(MILLIS_FOR_PUMP);
+        final List<String> fileLines1 = Files.readAllLines(logFile.toPath());
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
-            () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file one exists"),
-            () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
+            () -> assertTrue(logFile.exists(), "file one exists"),
+            () -> assertThat("file content, filename=" + logFile + ", content=" + fileLines1 , fileLines1,
                 contains(
                     stringContainsInOrder("INFO", "main", "Tommy, can you hear me?"),
                     stringContainsInOrder("INFO", "main", "Some info message"),
@@ -152,10 +155,11 @@ public class GlassFishLogHandlerTest {
         handler.roll();
         // There will be an asynchronous thread.
         Thread.sleep(10L);
+        final List<String> fileLines2 = Files.readAllLines(logFile.toPath());
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
-            () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
-            () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
+            () -> assertTrue(logFile.exists(), "file exists"),
+            () -> assertThat("file content, filename=" + logFile + ", content=" + fileLines2 , fileLines2,
                 contains(
                     stringContainsInOrder("INFO", "Rolling the file ", ".log", "output was originally enabled: true"),
                     stringContainsInOrder("INFO", "Archiving file ", ".log", " to ", ".log_")
@@ -164,10 +168,11 @@ public class GlassFishLogHandlerTest {
         );
         handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two", false));
         Thread.sleep(MILLIS_FOR_PUMP);
+        final List<String> fileLines3 = Files.readAllLines(logFile.toPath());
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
-            () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
-            () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
+            () -> assertTrue(logFile.exists(), "file exists"),
+            () -> assertThat("file content, filename=" + logFile + ", content=" + fileLines3 , fileLines3,
                 contains(
                     stringContainsInOrder("INFO", "Rolling the file ", ".log", "output was originally enabled: true"),
                     stringContainsInOrder("INFO", "Archiving file ", ".log", " to ", ".log_"),
@@ -176,7 +181,6 @@ public class GlassFishLogHandlerTest {
             )
         );
     }
-
 
     @Test
     @Order(50)

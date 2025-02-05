@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.main.jul.rotation;
 
 import java.io.BufferedOutputStream;
@@ -26,6 +25,10 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
@@ -34,7 +37,6 @@ import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
-
 
 /**
  * Manages the logging file, it's rotations, packing of rolled log file, etc.
@@ -49,6 +51,7 @@ import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
  * @author David Matejcek
  */
 public class LogFileManager {
+
     private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
 
     private static final DateTimeFormatter SUFFIX_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
@@ -61,6 +64,13 @@ public class LogFileManager {
 
     private MeteredFileWriter writer;
 
+    private final ExecutorService sequentialExecutor = createSequentialExecutor();
+
+    private static ExecutorService createSequentialExecutor() {
+        final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 100, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        executor.allowCoreThreadTimeOut(true);
+        return executor;
+    }
 
     /**
      * Creates the manager and initializes it with given parameters. It only creates the manager but
@@ -76,14 +86,13 @@ public class LogFileManager {
      *            crosses this value, old files will be permanently deleted.
      */
     public LogFileManager(final File logFile, Charset fileEncoding, //
-        final long maxFileSize, final boolean compressOldLogFiles, final int maxCountOfOldLogFiles //
+            final long maxFileSize, final boolean compressOldLogFiles, final int maxCountOfOldLogFiles //
     ) {
         this.logFile = logFile;
         this.fileEncoding = fileEncoding;
         this.maxFileSize = maxFileSize;
         this.archiver = new LogFileArchiver(logFile, compressOldLogFiles, maxCountOfOldLogFiles);
     }
-
 
     /**
      * Writes the text to the log file.
@@ -107,7 +116,6 @@ public class LogFileManager {
         }
     }
 
-
     /**
      * Flushed the file writer and if the file is too large, rolls the file.
      */
@@ -127,7 +135,6 @@ public class LogFileManager {
         }
     }
 
-
     /**
      * @return the size of the logFile in bytes. The value is obtained from the outputstream, only
      *         if the output stream is closed, this method will check the file system.
@@ -140,7 +147,6 @@ public class LogFileManager {
             lock.unlock();
         }
     }
-
 
     /**
      * Calls {@link #roll()} if the file is bigger than limit given in constructor.
@@ -156,7 +162,6 @@ public class LogFileManager {
         }
     }
 
-
     /**
      * Calls {@link #roll()} if the file is not empty.
      */
@@ -170,7 +175,6 @@ public class LogFileManager {
             lock.unlock();
         }
     }
-
 
     /**
      * Rolls the file regardless of it's size and if it is currently used for output.
@@ -211,7 +215,6 @@ public class LogFileManager {
         }
     }
 
-
     /**
      * @return true if the handler owning this instance can write to the outputstream.
      */
@@ -223,7 +226,6 @@ public class LogFileManager {
             lock.unlock();
         }
     }
-
 
     /**
      * Creates the file, initializes the MeteredStream and calls the stream setter given in
@@ -258,7 +260,6 @@ public class LogFileManager {
         }
     }
 
-
     /**
      * Calls the close method given in constructor, then closes the output stream.
      * <p>
@@ -283,7 +284,6 @@ public class LogFileManager {
         }
     }
 
-
     private boolean isRollFileSizeLimitReached() {
         if (this.maxFileSize <= 0) {
             return false;
@@ -291,7 +291,6 @@ public class LogFileManager {
         final long fileSize = getFileSize();
         return fileSize >= this.maxFileSize;
     }
-
 
     private File prepareAchivedLogFileTarget() {
         final String archivedFileNameBase = logFile.getName() + "_" + SUFFIX_FORMATTER.format(LocalDateTime.now());
@@ -309,7 +308,6 @@ public class LogFileManager {
         }
     }
 
-
     /**
      * Make sure that server.log contents are flushed out to start from a clean file again after
      * the rename...
@@ -321,7 +319,6 @@ public class LogFileManager {
         new FileOutputStream(file).close();
     }
 
-
     private void moveFile(final File logFileToArchive, final File target) throws IOException {
         logInfoAsync(() -> "Archiving file " + logFileToArchive + " to " + target);
         try {
@@ -332,12 +329,11 @@ public class LogFileManager {
             // copy bytes explicitly to a renamed file.
             // Can happen on some windows file systems - then we try non-atomic version at least.
             logErrorAsync(String.format(
-                "File %s could not be renamed to %s atomically, now trying to move it without this request.",
-                logFileToArchive, target), e);
+                    "File %s could not be renamed to %s atomically, now trying to move it without this request.",
+                    logFileToArchive, target), e);
             Files.move(logFileToArchive.toPath(), target.toPath());
         }
     }
-
 
     /**
      * This logs in a separate thread to avoid deadlocks. The separate thread can be blocked when
@@ -348,9 +344,8 @@ public class LogFileManager {
      */
     private void logInfoAsync(final Supplier<String> message) {
         trace(getClass(), message);
-        new Thread(() -> LOG.log(INFO, message), "LogFileManager-Async-Info-Logger").start();
+        sequentialExecutor.submit(()-> LOG.log(INFO, message), "LogFileManager-Async-Info-Logger");
     }
-
 
     /**
      * This logs in a separate thread to avoid deadlocks. The separate thread can be blocked when
@@ -364,6 +359,6 @@ public class LogFileManager {
      */
     private void logErrorAsync(final String message, final Exception exception) {
         GlassFishLoggingTracer.error(getClass(), message, exception);
-        new Thread(() -> LOG.log(ERROR, message, exception), "LogFileManager-Async-Error-Logger").start();
+        sequentialExecutor.submit(() -> LOG.log(ERROR, message, exception), "LogFileManager-Async-Error-Logger");
     }
 }

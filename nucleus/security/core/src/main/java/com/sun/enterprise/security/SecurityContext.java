@@ -66,14 +66,14 @@ public class SecurityContext extends AbstractSecurityContext {
 
     private static final long serialVersionUID = 1L;
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
+    // sessionPrincipal is static because it's a thread local, which isn't serializable,
+    // and we need at most one instance per thread
+    private static final ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     private static InheritableThreadLocal<SecurityContext> currentSecurityContext = new InheritableThreadLocal<>();
     private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
 
     private static AuthPermission doAsPrivilegedPerm = new AuthPermission("doAsPrivileged");
-
-    // this is static because it's a thread local, which isn't serializable
-    private static ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;

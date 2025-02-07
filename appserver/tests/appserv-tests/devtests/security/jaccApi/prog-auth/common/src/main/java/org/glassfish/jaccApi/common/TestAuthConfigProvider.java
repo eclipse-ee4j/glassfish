@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,6 @@
 
 package org.glassfish.jaccApi.common;
 
-import java.util.Map;
-
-import javax.security.auth.callback.CallbackHandler;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigProvider;
@@ -26,6 +24,10 @@ import jakarta.security.auth.message.config.ClientAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.security.auth.message.module.ServerAuthModule;
+
+import java.util.Map;
+
+import javax.security.auth.callback.CallbackHandler;
 
 /**
  * This class functions as a kind of factory-factory for {@link ServerAuthConfig} instances, which are by themselves factories

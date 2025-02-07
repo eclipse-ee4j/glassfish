@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,7 @@
 
 package com.sun.ts.tests.common.vehicle.ejbliteshare;
 
+import com.sun.javatest.Status;
 import com.sun.ts.lib.porting.TSURL;
 import com.sun.ts.lib.util.BASE64Encoder;
 import com.sun.ts.lib.util.TestUtil;

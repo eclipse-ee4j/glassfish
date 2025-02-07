@@ -16,11 +16,8 @@
 
 package org.glassfish.jaccApi.common;
 
-import static java.lang.Boolean.getBoolean;
-import static java.util.logging.Level.SEVERE;
-import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
-import static org.jsoup.Jsoup.parse;
-import static org.jsoup.parser.Parser.xmlParser;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,17 +26,20 @@ import java.util.logging.Logger;
 
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.WebClient;
+import static java.lang.Boolean.getBoolean;
+import static java.util.logging.Level.SEVERE;
+import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
+import static org.jsoup.Jsoup.parse;
+import static org.jsoup.parser.Parser.xmlParser;
 
 public class ArquillianBase {
 

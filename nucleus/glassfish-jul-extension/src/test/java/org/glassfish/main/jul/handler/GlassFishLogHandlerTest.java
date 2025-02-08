@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -157,9 +157,10 @@ public class GlassFishLogHandlerTest {
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
             () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
                 contains(
-                    stringContainsInOrder("INFO", "Rolling the file ", ".log", "output was originally enabled: true"),
-                    stringContainsInOrder("INFO", "Archiving file ", ".log", " to ", ".log_")
-                )
+                    stringContainsInOrder("INFO", "org.glassfish.main.jul.rotation.LogFileManager.roll",
+                        "Rolling the file ", ".log", "output was originally enabled: true"),
+                    stringContainsInOrder("INFO", "org.glassfish.main.jul.rotation.LogFileManager.moveFile",
+                        "Archiving file ", ".log", " to ", ".log_")                )
             )
         );
         handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two", false));

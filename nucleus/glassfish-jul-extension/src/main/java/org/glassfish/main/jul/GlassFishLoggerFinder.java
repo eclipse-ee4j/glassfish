@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.main.jul;
 import java.lang.System.Logger;
 import java.lang.System.LoggerFinder;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
@@ -65,6 +66,18 @@ public class GlassFishLoggerFinder extends LoggerFinder {
         @Override
         public void log(Level level, ResourceBundle bundle, String format, Object... params) {
             logger.logrb(toJUL(level), bundle, format, params);
+        }
+
+
+        @Override
+        public void log(Level level, Supplier<String> msg, Throwable thrown) {
+            logger.log(toJUL(level), thrown, msg);
+        }
+
+
+        @Override
+        public void log(Level level, Supplier<String> msg) {
+            logger.log(toJUL(level), msg);
         }
 
 

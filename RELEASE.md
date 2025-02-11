@@ -5,17 +5,17 @@ In this example we assume 7.0.19.
 1. Check beforehand that this version does NOT exist in [staging](https://jakarta.oss.sonatype.org/content/repositories/staging/org/glassfish/main/distributions/glassfish/) else bump the version
 2. Go to [GlassFish CI](https://ci.eclipse.org/glassfish/)
 3. [Log in](https://ci.eclipse.org/glassfish/login?from=%2Fglassfish%2F)
-4. Open [glassfish_1-build-and-stage](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_1-build-and-stage/)
-5. Click [Build with parameters](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_1-build-and-stage//build) in menu 
+4. Open [1_glassfish-build-and-stage](https://ci.eclipse.org/glassfish/view/GlassFish/job/1_glassfish-build-and-stage/)
+5. Click [Build with parameters](https://ci.eclipse.org/glassfish/view/GlassFish/job/1_glassfish-build-and-stage/build) in menu 
     - `RELEASE_VERSION` = `7.0.19`
     - `USE_STAGING_REPO` = `false` (uncheck)
     - click [Build] button
 6. Wait for it to finish successfully
-7. Drill down into this build e.g. [build 79](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_1-build-and-stage/79/)
-8. Click [Console Output](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_1-build-and-stage/79/console) in menu
+7. Drill down into this build e.g. [build 79](https://ci.eclipse.org/glassfish/view/GlassFish/job/1_glassfish-build-and-stage/79/)
+8. Click [Console Output](https://ci.eclipse.org/glassfish/view/GlassFish/job/1_glassfish-build-and-stage/79/console) in menu
 9. Ctrl+F 'orgglassfish', to find release ID, e.g. `Created staging repository with ID "orgglassfish-1230"`, remember this for `STAGING_RELEASE_ID` in a later step
    In case the release ID is not in the log (sometimes it just isn't, we don't know why), use
-   go to [jsftemplating_1_build-and-stage]()https://ci.eclipse.org/glassfish/view/JSFTemplating/job/jsftemplating_1_build-and-stage/build
+   go to [1_jsftemplating-build-and-stage]()https://ci.eclipse.org/glassfish/view/JSFTemplating/job/1_jsftemplating-build-and-stage/build
     - `LIST_FIRST` = `true` (check)
     - click [Build] button
    In the output, look for a line like the following:

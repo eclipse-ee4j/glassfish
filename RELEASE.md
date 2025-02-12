@@ -15,7 +15,7 @@ In this example we assume 7.0.19.
 8. Click [Console Output](https://ci.eclipse.org/glassfish/view/GlassFish/job/1_glassfish-build-and-stage/79/console) in menu
 9. Ctrl+F 'orgglassfish', to find release ID, e.g. `Created staging repository with ID "orgglassfish-1230"`, remember this for `STAGING_RELEASE_ID` in a later step
    In case the release ID is not in the log (sometimes it just isn't, we don't know why), use
-   go to [1_jsftemplating-build-and-stage]()https://ci.eclipse.org/glassfish/view/JSFTemplating/job/1_jsftemplating-build-and-stage/build
+   go to [1_jsftemplating-build-and-stage](https://ci.eclipse.org/glassfish/view/JSFTemplating/job/1_jsftemplating-build-and-stage/build)
     - `LIST_FIRST` = `true` (check)
     - click [Build] button
    In the output, look for a line like the following:

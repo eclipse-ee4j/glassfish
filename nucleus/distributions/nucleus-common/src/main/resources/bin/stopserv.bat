@@ -17,4 +17,4 @@ REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
 
-java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%~dp0..\modules\admin-cli.jar" stop-domain %*
+java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%~dp0..\admin-cli.jar" stop-domain %*

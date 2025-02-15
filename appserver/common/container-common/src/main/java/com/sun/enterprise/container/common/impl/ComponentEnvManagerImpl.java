@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
@@ -424,7 +424,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                     + " got " + descriptor);
             }
         }
-        SimpleJndiName jndiName = new SimpleJndiName(ConcurrencyManagedCDIBeans.JDNI_NAME);
+        SimpleJndiName jndiName = new SimpleJndiName(ConcurrencyManagedCDIBeans.JNDI_NAME);
         jndiBindings.add(new ApplicationScopedResourceBinding(jndiName, setup));
     }
 

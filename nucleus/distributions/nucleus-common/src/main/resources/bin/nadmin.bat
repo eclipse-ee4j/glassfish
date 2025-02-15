@@ -23,7 +23,8 @@ echo "Unable to enable extensions"
 exit /B 1
 
 :ok
-call "%~dp0..\config\asenv.bat"
+set AS_INSTALL="%~dp0.."
+call "%AS_INSTALL%\config\asenv.bat"
 if "%AS_JAVA%x" == "x" goto UsePath
 set JAVA="%AS_JAVA%\bin\java"
 goto run
@@ -32,5 +33,4 @@ goto run
 set JAVA=java
 
 :run
-set ASADMIN_CLASSPATH="%AS_INSTALL%/admin-cli.jar:%AS_INSTALL%/modules/*"
-%JAVA% "%ASADMIN_JVM_OPTIONS%" --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" com.sun.enterprise.admin.cli.AdminMain %*
+%JAVA% %ASADMIN_JVM_OPTIONS% --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" com.sun.enterprise.admin.cli.AdminMain %*

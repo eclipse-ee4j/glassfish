@@ -20,7 +20,6 @@ package com.sun.enterprise.v3.admin;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.universal.process.JavaClassRunner;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;

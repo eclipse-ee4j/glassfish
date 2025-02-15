@@ -1,0 +1,3 @@
+org.glassfish.main.boot.osgi.OSGiGlassFishRuntimeBuilder
+org.glassfish.main.boot.osgi.EmbeddedOSGiGlassFishRuntimeBuilder
+org.glassfish.main.boot.embedded.EmbeddedGlassFishRuntimeBuilder

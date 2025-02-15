@@ -23,7 +23,6 @@ import com.sun.enterprise.admin.launcher.GFLauncherFactory;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
@@ -39,6 +38,7 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
 

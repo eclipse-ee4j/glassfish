@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.security.store;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -35,6 +34,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.logging.Logger;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PASSWORD_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PROPERTY;

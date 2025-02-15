@@ -22,7 +22,6 @@ import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
@@ -42,6 +41,7 @@ import java.util.logging.Level;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;

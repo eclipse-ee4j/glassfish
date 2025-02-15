@@ -31,6 +31,8 @@ import static java.util.logging.Level.FINE;
 /**
  * The asenv.conf file content.
  */
+// FIXME: duplicates AsenvPropertyReader, but cannot resolve bash defaults.
+@Deprecated
 public class AsenvConf {
 
     private static final Pattern LINE = Pattern.compile("(?i)(set +)?([^=]*)=\"?([^\"]*)\"?");

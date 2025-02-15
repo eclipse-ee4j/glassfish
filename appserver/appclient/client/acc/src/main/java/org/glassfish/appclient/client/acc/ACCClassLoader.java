@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 
 import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.security.AccessController.doPrivileged;
 

@@ -26,7 +26,8 @@ public class EmbeddedAdapter implements OsgiPlatformAdapter {
      * Noop.
      */
     @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) {
+    public ClassPathBuilder addFrameworkJars(ClassPathBuilder builder) {
         // nothing to do
+        return builder;
     }
 }

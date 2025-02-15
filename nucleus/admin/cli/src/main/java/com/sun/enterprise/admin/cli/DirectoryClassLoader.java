@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.cli;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +29,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * A class loader that loads classes from all jar files in a specified directory.

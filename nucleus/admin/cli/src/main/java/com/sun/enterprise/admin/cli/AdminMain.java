@@ -97,6 +97,7 @@ public class AdminMain {
     }
 
     private final Path installRoot;
+    private String modulePath;
     private String classPath;
     private String className;
     private String command;
@@ -206,10 +207,12 @@ public class AdminMain {
         cliContainer = new CLIContainer(ecl, extensions, logger);
 
         classPath = SmartFile.sanitizePaths(System.getProperty("java.class.path"));
+        modulePath = SmartFile.sanitize(System.getProperty("jdk.module.path"));
         className = AdminMain.class.getName();
 
         if (logger.isLoggable(FINER)) {
-            logger.log(FINER, "Classpath: {0}\nArguments: {1}", new Object[] {classPath, Arrays.toString(args)});
+            logger.log(FINER, "ModulePath: {0}\nClasspath: {1}\nArguments: {2}",
+                new Object[] {modulePath, classPath, Arrays.toString(args)});
         }
 
         if (args.length == 0) {
@@ -278,6 +281,7 @@ public class AdminMain {
                 po = new ProgramOptions(env);
             }
             po.toEnvironment(env);
+            po.setModulePath(modulePath);
             po.setClassPath(classPath);
             po.setClassName(className);
             po.setCommandName(getCommandName());

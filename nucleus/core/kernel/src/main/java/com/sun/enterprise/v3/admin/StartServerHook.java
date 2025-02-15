@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -67,7 +67,7 @@ class StartServerShutdownHook extends Thread {
     private final ProcessBuilder builder;
     private final Instant startTime;
 
-    StartServerShutdownHook(String classpath, String[] sysProps, String classname, String[] args) {
+    StartServerShutdownHook(String modulepath, String classpath, String[] sysProps, String classname, String[] args) {
         super("GlassFish Restart Shutdown Hook");
         setDaemon(false);
         if (classname == null || classname.isBlank()) {
@@ -75,7 +75,7 @@ class StartServerShutdownHook extends Thread {
         }
         this.startTime = Instant.now();
         this.logFile = getLogFileOld(startTime);
-        this.builder = prepareStartup(startTime, classpath, sysProps, classname, args);
+        this.builder = prepareStartup(startTime, modulepath, classname, sysProps, classname, args);
     }
 
 
@@ -190,14 +190,17 @@ class StartServerShutdownHook extends Thread {
     }
 
 
-    private static ProcessBuilder prepareStartup(Instant startTime, String classpath, String[] sysprops, String classname,
-        String[] args) {
-        final Path javaExecutable = detectJavaExecutable();
+    private static ProcessBuilder prepareStartup(Instant startTime, String modulePath, String classpath,
+        String[] sysprops, String classname, String[] args) {
+        final File javaExecutable = detectJavaExecutable().toFile();
+        if (!javaExecutable.canExecute()) {
+            throw new Error(javaExecutable + " is not an existing executable file.");
+        }
         final List<String> cmdline = new ArrayList<>();
         if (!OS.isWindows()) {
             cmdline.add("nohup");
         }
-        cmdline.add(javaExecutable.toFile().getAbsolutePath());
+        cmdline.add(javaExecutable.getAbsolutePath());
         cmdline.add("-cp");
         cmdline.add(classpath);
         if (sysprops != null) {

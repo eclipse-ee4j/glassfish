@@ -17,6 +17,5 @@
 #
 
 AS_INSTALL=`dirname "$0"`/../glassfish
-AS_INSTALL_LIB="$AS_INSTALL/modules"
 
-exec java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$AS_INSTALL_LIB/admin-cli.jar" stop-domain "$@"
+exec java "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$AS_INSTALL/admin-cli.jar" stop-domain "$@"

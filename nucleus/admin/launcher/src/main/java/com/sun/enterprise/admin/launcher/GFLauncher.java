@@ -825,10 +825,10 @@ public abstract class GFLauncher {
         boolean batRequired = isWindows() && !getInfo().isVerboseOrWatchdog();
         CommandLine cmdLine = new CommandLine(batRequired ? CommandFormat.BatFile : CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe);
-        if (getModulepath() != null) {
+        if (modulepath.length > 0) {
             cmdLine.appendModulePath(getModulepath());
         }
-        if (getClasspath() != null) {
+        if (classpath.length > 0) {
             cmdLine.appendClassPath(getClasspath());
         }
         addIgnoreNull(cmdLine, domainXMLjavaConfigDebugOptions);

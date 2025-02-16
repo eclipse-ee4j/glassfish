@@ -56,8 +56,6 @@ class StartServerShutdownHook extends Thread {
 
     private static final Logger LOG = System.getLogger(StartServerShutdownHook.class.getName());
     private static final boolean LOG_RESTART = Boolean.parseBoolean(System.getenv("AS_RESTART_LOGFILES"));
-    private static final Path CFGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "config").toPath()
-        .toAbsolutePath();
     private static final Path LOGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "logs").toPath()
         .toAbsolutePath();
     private static final Predicate<Thread> FILTER_OTHER_HOOKS = t -> t.getName().startsWith("GlassFish")
@@ -75,7 +73,7 @@ class StartServerShutdownHook extends Thread {
         }
         this.startTime = Instant.now();
         this.logFile = getLogFileOld(startTime);
-        this.builder = prepareStartup(startTime, modulepath, classname, sysProps, classname, args);
+        this.builder = prepareStartup(startTime, modulepath, classpath, sysProps, classname, args);
     }
 
 
@@ -190,7 +188,7 @@ class StartServerShutdownHook extends Thread {
     }
 
 
-    private static ProcessBuilder prepareStartup(Instant startTime, String modulePath, String classpath,
+    private static ProcessBuilder prepareStartup(Instant startTime, String modulepath, String classpath,
         String[] sysprops, String classname, String[] args) {
         final File javaExecutable = detectJavaExecutable().toFile();
         if (!javaExecutable.canExecute()) {
@@ -201,8 +199,16 @@ class StartServerShutdownHook extends Thread {
             cmdline.add("nohup");
         }
         cmdline.add(javaExecutable.getAbsolutePath());
-        cmdline.add("-cp");
-        cmdline.add(classpath);
+        if (modulepath != null && !modulepath.isEmpty()) {
+            cmdline.add("--module-path");
+            cmdline.add(modulepath);
+            cmdline.add("--add-modules");
+            cmdline.add("ALL-MODULE-PATH");
+        }
+        if (classpath != null && !classpath.isEmpty()) {
+            cmdline.add("-cp");
+            cmdline.add(classpath);
+        }
         if (sysprops != null) {
             for (String sysprop : sysprops) {
                 cmdline.add(sysprop);

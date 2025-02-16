@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -300,21 +300,28 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     /**
-     * Asks remote server for the PID
+     * Asks remote server for the PID and compares it with the pid file.
+     * If the remote server doesn't respond, returns pid from the file.
      *
-     * @return PID or -1 if unreachable
+     * @return PID or null if unreachable
      */
-    protected final int getServerPid() {
+    protected final Long getServerPid() {
+        Long pidFromFile = ProcessUtils.loadPid(getServerDirs().getPidFile());
         try {
             RemoteCLICommand command = new RemoteCLICommand("__locations", programOpts, env);
             ActionReport report = command.executeAndReturnActionReport("__locations");
             if (report.getActionExitCode() == ExitCode.SUCCESS) {
-                return Integer.parseInt(report.findProperty("Pid"));
+                long pidFromAdmin = Long.parseLong(report.findProperty("Pid"));
+                if (pidFromFile == null || !pidFromFile.equals(pidFromAdmin)) {
+                    logger.log(Level.SEVERE,
+                        "PID should be the same: PID from file = " + pidFromFile + ", pidFromAdmin = " + pidFromAdmin);
+                }
+                return pidFromAdmin;
             }
-            return -1;
+            return null;
         } catch (Exception e) {
-            logger.log(Level.FINEST, "The server PID could not be resolved.", e);
-            return -1;
+            logger.log(Level.SEVERE, "The server PID could not be resolved, sending PID from file: " + pidFromFile, e);
+            return pidFromFile;
         }
     }
 
@@ -327,48 +334,38 @@ public abstract class LocalServerCommand extends CLICommand {
      * @param newAdminAddress new admin endpoint - usually same as old, but it could change with restart.
      * @throws CommandException if we time out.
      */
-    protected final void waitForRestart(final int oldPid, final HostAndPort oldAdminAddress,
+    protected final void waitForRestart(final Long oldPid, final HostAndPort oldAdminAddress,
         final HostAndPort newAdminAddress) throws CommandException {
         logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2})",
             new Object[] {oldPid, oldAdminAddress, newAdminAddress});
 
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final boolean printDots = !programOpts.isTerse();
-        final boolean stopped;
-        if (isLocal()) {
-            stopped = ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
-        } else {
-            stopped = ProcessUtils.waitWhileListening(oldAdminAddress, timeout, printDots);
-        }
+        final boolean stopped = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
         if (!stopped) {
             throw new CommandException(I18N.get("restartDomain.noGFStart"));
         }
         logger.log(CONFIG, "Server instance is stopped, now we wait for the start on {0}", newAdminAddress);
-        if (isLocal()) {
-            // Could change
-            programOpts.setHostAndPort(newAdminAddress);
-        }
+        // Could change
+        programOpts.setHostAndPort(newAdminAddress);
         final Supplier<Boolean> signStart = () -> {
             if (!ProcessUtils.isListening(newAdminAddress)) {
                 // nobody is listening
                 return false;
             }
-            if (isLocal()) {
-                try {
-                    resetServerDirs();
-                    setLocalPassword();
-                } catch (Exception e) {
-                    logger.log(Level.FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
-                    return false;
-                }
-            }
-            int newPid = getServerPid();
-            if (newPid < 0) {
-                // is listening, but not responding
+            try {
+                resetServerDirs();
+                setLocalPassword();
+            } catch (Exception e) {
+                logger.log(Level.FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
                 return false;
             }
-            logger.log(Level.FINEST, "The server started and responded - it's pid is {0}", newPid);
-            return true;
+            Long newPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
+            if (newPid == null) {
+                return false;
+            }
+            logger.log(Level.FINEST, "The server pid is {0}", newPid);
+            return ProcessUtils.isAlive(newPid);
         };
         if (!ProcessUtils.waitFor(signStart, Duration.ofMillis(CLIConstants.WAIT_FOR_DAS_TIME_MS), printDots)) {
             throw new CommandException(I18N.get("restartDomain.noGFStart"));

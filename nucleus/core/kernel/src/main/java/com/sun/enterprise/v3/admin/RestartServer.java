@@ -167,12 +167,12 @@ public class RestartServer {
         // 1) true
         // 2) false
         // 3) RDCException
-        if (classpath == null && classname == null && argsString == null) {
+        if (classpath == null && modulepath == null && classname == null && argsString == null) {
             return false;
         }
 
         // now that at least one is set -- demand that ALL OF THEM be set...
-        if (!ok(classpath) || !ok(classname) || argsString == null) {
+        if (!ok(classpath) || !ok(modulepath) || !ok(classname) || argsString == null) {
             throw new RDCException(strings.get(errorStringKey));
         }
 

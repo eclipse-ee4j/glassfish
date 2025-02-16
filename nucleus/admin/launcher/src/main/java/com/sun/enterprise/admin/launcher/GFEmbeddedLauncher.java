@@ -179,10 +179,10 @@ class GFEmbeddedLauncher extends GFLauncher {
         CommandLine cmdLine = new CommandLine(CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe.toPath());
         addThreadDump(cmdLine);
-        if (getModulepath() != null) {
+        if (getModulepath().length > 0) {
             cmdLine.appendModulePath(getModulepath());
         }
-        if (getClasspath() != null) {
+        if (getClasspath().length > 0) {
             cmdLine.appendClassPath(getClasspath());
         }
         addDebug(cmdLine);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,10 +61,12 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.kernel.event.EventsImpl;
 import org.glassfish.main.core.apiexporter.APIExporterImpl;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.util.Collections.singletonList;
@@ -91,6 +93,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Tom Beerbower
  */
+@ExtendWith(KernelJUnitExtension.class)
 public class AppServerStartupTest {
 
     /**

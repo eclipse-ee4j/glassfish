@@ -66,12 +66,10 @@ rem issue the error so we don't have to do i18n of our own message from the scri
 goto :EOF
 
 :main
-set AS_INSTALL="%~dp0.."
+set ARGS=%*
+set AS_INSTALL=%~dp0..
 call "%AS_INSTALL%\config\asenv.bat"
 call :chooseJava
 
-set ACC_MODULEPATH="%AS_INSTALL%\lib\bootstrap"
-set ACC_INSTALL_LIB="%AS_INSTALL%\lib\install\applications";
-set ACC_CLASSPATH="%AS_INSTALL%\lib\gf-client.jar:%AS_INSTALL%\lib\appclient\weld-se-shaded.jar:%AS_INSTALL%\admin-cli.jar:%AS_DERBY_INSTALL%\lib\*:%ACC_INSTALL_LIB%\__ds_jdbc_ra\jdbc-ra-ds.jar:%ACC_INSTALL_LIB%\__cp_jdbc_ra\jdbc-ra-cp.jar:%ACC_INSTALL_LIB%\__xa_jdbc_ra\jdbc-ra-xa.jar:%ACC_INSTALL_LIB%\__dm_jdbc_ra\jdbc-ra-dm.jar:%ACC_INSTALL_LIB%\jmsra\imqjmsra.jar:%AS_IMQ_LIB%\imq.jar:%AS_IMQ_LIB%\imqadmin.jar:%AS_IMQ_LIB%\imqutil.jar:%AS_IMQ_LIB%\fscontext.jar:%AS_INSTALL%\modules\*"
-
-%JAVA% %ASADMIN_JVM_OPTIONS% --module-path "%ACC_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ACC_CLASSPATH%" org.glassfish.appclient.client.CLIBootstrap %*
+FOR /F "delims=" %i IN (%JAVA% --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.acc.agent.CLIBootstrap %*) DO set CMD=%i
+%CMD% %ARGS%

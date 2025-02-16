@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,8 +33,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipException;
-
-import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.util.jar.Attributes.Name.CLASS_PATH;
 
@@ -117,8 +116,6 @@ public class PackageAppClient {
     /* default output file */
     private final static String DEFAULT_OUTPUT_PATH = GLASSFISH_LIB + "/appclient.jar";
 
-    private final static LocalStringsImpl strings = new LocalStringsImpl(PackageAppClient.class);
-
     private boolean isVerbose;
 
     /**
@@ -180,19 +177,21 @@ public class PackageAppClient {
     private void placeFile(final File tempFile, final File outputFile) {
         if (outputFile.exists()) {
             if (!outputFile.delete()) {
-                throw new RuntimeException(strings.get("errDel", outputFile.getAbsolutePath()));
+                throw new RuntimeException("Stopping; could not delete the existing output file " + outputFile.getAbsolutePath());
             }
-            System.out.println(strings.get("replacingFile", outputFile.getAbsolutePath()));
+            System.out.println("Replacing " + outputFile.getAbsolutePath());
         } else {
-            System.out.println(strings.get("creatingFile", outputFile.getAbsolutePath()));
+            System.out.println("Creating" + outputFile.getAbsolutePath());
         }
 
         if (isVerbose) {
-            System.out.println(strings.get("moving", tempFile.getAbsolutePath(), outputFile.getAbsolutePath()));
+            System.out
+                .println("Moving temp file " + tempFile.getAbsolutePath() + " to " + outputFile.getAbsolutePath());
         }
 
         if (!tempFile.renameTo(outputFile)) {
-            throw new RuntimeException(strings.get("errRenaming", tempFile.getAbsolutePath(), outputFile.getAbsolutePath()));
+            throw new RuntimeException(
+                "Error renaming temp file " + tempFile.getAbsolutePath() + " to " + outputFile.getAbsolutePath());
         }
     }
 
@@ -222,7 +221,7 @@ public class PackageAppClient {
     private void addFile(JarOutputStream os, URI installDirURI, URI absoluteURIToAdd, File outputFile, String indent) throws IOException {
         try {
             if (isVerbose) {
-                System.err.println(indent + strings.get("addingFile", absoluteURIToAdd));
+                System.err.println(indent + "Adding directory " + absoluteURIToAdd);
             }
 
             File fileToCopy = new File(absoluteURIToAdd);
@@ -240,7 +239,8 @@ public class PackageAppClient {
                  */
                 if (!new File(absoluteURIToAdd).exists()) {
                     if (isVerbose) {
-                        System.err.println(indent + strings.get("noFile", new File(absoluteURIToAdd).getAbsolutePath()));
+                        System.err.println(indent + "Error locating file "
+                            + new File(absoluteURIToAdd).getAbsolutePath() + "; continuing");
                     }
                     return;
                 }
@@ -255,7 +255,8 @@ public class PackageAppClient {
                  * Probably duplicate entry. Keep going after logging the error.
                  */
                 if (isVerbose) {
-                    System.err.println(indent + strings.get("zipExc", e.getLocalizedMessage()));
+                    System.err.println(
+                        indent + "Continuing after ZipException when adding a file: " + e.getLocalizedMessage());
                 }
             } catch (FileNotFoundException ignore) {
             }
@@ -302,7 +303,7 @@ public class PackageAppClient {
         }
 
         if (isVerbose) {
-            System.err.println(indent + strings.get("addingDir", dirFile.getAbsolutePath()));
+            System.err.println(indent + "Adding dir " + dirFile.getAbsolutePath());
         }
 
         for (File fileToAdd : matchingFiles) {
@@ -385,7 +386,8 @@ public class PackageAppClient {
             File userSpecifiedFile = new File(xmlArg);
             files = new File[] { userSpecifiedFile };
             if (!userSpecifiedFile.exists()) {
-                System.err.println(strings.get("xmlNotFound", userSpecifiedFile.getAbsolutePath()));
+                System.err.println("The XML configuration file " + userSpecifiedFile.getAbsolutePath()
+                    + " does not exist; continuing but output is incomplete");
             }
 
         }
@@ -393,7 +395,7 @@ public class PackageAppClient {
 
     }
 
-    private File findInstallDir(File currentJarFile) throws URISyntaxException {
+    private File findInstallDir(File currentJarFile) {
         return currentJarFile.getParentFile().getParentFile().getParentFile();
     }
 

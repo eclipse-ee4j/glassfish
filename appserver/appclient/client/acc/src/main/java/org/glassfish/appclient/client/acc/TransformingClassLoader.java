@@ -21,11 +21,14 @@ import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.PrivilegedAction;
@@ -34,10 +37,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
+import org.glassfish.embeddable.client.ApplicationClientClassLoader;
 import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.security.AccessController.doPrivileged;
@@ -47,83 +52,64 @@ import static java.security.AccessController.doPrivileged;
  *
  * @author tjquinn
  */
-public class ACCClassLoader extends GlassfishUrlClassLoader {
+public class TransformingClassLoader extends GlassfishUrlClassLoader {
 
     static {
         registerAsParallelCapable();
     }
 
-    private static final String AGENT_LOADER_CLASS_NAME = "org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
-    private static ACCClassLoader instance;
+    private static final Function<Path, URL> PATH_TO_URL = p -> {
+        try {
+            return p.toUri().toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException("Could not convert path to url: " + p, e);
+        }
+    };
 
-    private ACCClassLoader shadow;
-    private boolean shouldTransform;
+    private static TransformingClassLoader instance;
 
-    private final List<ClassFileTransformer> transformers = Collections.synchronizedList(new ArrayList<ClassFileTransformer>());
+    private TransformingClassLoader shadow;
+    private final boolean shouldTransform;
+    private final List<ClassFileTransformer> transformers = Collections.synchronizedList(new ArrayList<>());
 
     private ClientClassLoaderDelegate clientCLDelegate;
 
-    public static synchronized ACCClassLoader newInstance(ClassLoader parent, boolean shouldTransform) {
+    /**
+     * @param parent
+     * @param shouldTransform
+     * @return new class loader
+     * @throws IllegalStateException
+     * @throws IllegalArgumentException
+     */
+    public static synchronized TransformingClassLoader newInstance(ClassLoader parent, boolean shouldTransform) {
         if (instance != null) {
-            throw new IllegalStateException("already set");
+            throw new IllegalStateException("Already set");
         }
-
-        ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
-        boolean currentCLWasAgentCL = currentClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME);
-        ClassLoader parentForACCCL = currentCLWasAgentCL ? currentClassLoader.getParent() : currentClassLoader;
-
-        PrivilegedAction<ACCClassLoader> action = () -> {
-            URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
-            return new ACCClassLoader(classpath, parentForACCCL, shouldTransform);
+        PrivilegedAction<TransformingClassLoader> action = () -> {
+            return parent instanceof ApplicationClientClassLoader
+                // Parent already comes with user dependencies
+                ? new TransformingClassLoader(new URL[0], parent, shouldTransform)
+                // Otherwise adopt system class path, environment options, whatever.
+                : new TransformingClassLoader(createClassPath(), parent, shouldTransform);
         };
         instance = doPrivileged(action);
-
-        if (currentCLWasAgentCL) {
-            try {
-                adjustACCAgentClassLoaderParent(instance);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
         return instance;
     }
 
-    public static ACCClassLoader instance() {
+    public static TransformingClassLoader instance() {
         return instance;
     }
 
-    private static void adjustACCAgentClassLoaderParent(ACCClassLoader instance) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-
-        if (systemClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME)) {
-            if (systemClassLoader instanceof Consumer<?>) {
-
-                @SuppressWarnings("unchecked")
-                Consumer<ClassLoader> consumerOfClassLoader = (Consumer<ClassLoader>) systemClassLoader;
-
-                consumerOfClassLoader.accept(instance);
-
-                System.setProperty("org.glassfish.appclient.acc.agentLoaderDone", "true");
-            }
-        }
-    }
-
-
-    public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
-        super("ApplicationClient", new URL[0], parent);
+    private TransformingClassLoader(URL[] classpath, ClassLoader parent, boolean shouldTransform) {
+        super("Transformer", classpath, parent);
         this.shouldTransform = shouldTransform;
-        clientCLDelegate = new ClientClassLoaderDelegate(this);
+        this.clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
-    public ACCClassLoader(URL[] urls, ClassLoader parent) {
-        super("ApplicationClient", urls, parent);
-        clientCLDelegate = new ClientClassLoaderDelegate(this);
-    }
-
-    private ACCClassLoader(URL[] urls, ClassLoader parent, boolean shouldTransform) {
-        this(urls, parent);
-        this.shouldTransform = shouldTransform;
+    public TransformingClassLoader(URL[] urls, ClassLoader parent) {
+        super("Transformer", urls, parent);
+        this.shouldTransform = false;
+        this.clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public synchronized void appendURL(final URL url) {
@@ -137,21 +123,11 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         transformers.add(xf);
     }
 
-    public void setShouldTransform(final boolean shouldTransform) {
-        this.shouldTransform = shouldTransform;
-    }
-
-    synchronized ACCClassLoader shadow() {
+    synchronized TransformingClassLoader shadow() {
         if (shadow == null) {
-            shadow = doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-                @Override
-                public ACCClassLoader run() {
-                    return new ACCClassLoader(getURLs(), getParent());
-                }
-
-            });
+            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(getURLs(), getParent());
+            shadow = doPrivileged(action);
         }
-
         return shadow;
     }
 
@@ -218,15 +194,27 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
+        final ResourceLocator locator = new ResourceLocator(this, getParent(), true);
         return locator.getResources(name);
     }
 
-    private ClassLoader getParentClassLoader() {
-        final ClassLoader parent = getParent();
-        if (parent == null) {
-            return getSystemClassLoader();
-        }
-        return parent;
+    private static URL[] createClassPath() {
+        final Stream<Path> cpPaths = convertClassPathToPaths(System.getProperty("java.class.path"));
+        final Stream<Path> envPaths = convertClassPathToPaths(System.getenv("APPCPATH"));
+        final Predicate<Path> filterOutGfClient = f -> !f.endsWith(Path.of("gf-client.jar"));
+        return Stream.concat(cpPaths, envPaths).map(Path::toAbsolutePath).map(Path::normalize).distinct()
+            .filter(filterOutGfClient).map(PATH_TO_URL).toArray(URL[]::new);
     }
+
+    private static Stream<Path> convertClassPathToPaths(final String classPath) {
+        if (classPath == null || classPath.isBlank()) {
+            return Stream.empty();
+        }
+        try {
+            return Stream.of(classPath.split(File.pathSeparator)).map(File::new).map(File::toPath);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not parse the classpath: " + classPath, e);
+        }
+    }
+
 }

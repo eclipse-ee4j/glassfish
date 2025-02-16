@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +38,7 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.xml.sax.SAXException;
@@ -77,8 +78,7 @@ public class UndeployedLaunchable implements Launchable {
          */
         Archivist<?> archivist = af.getArchivist("car", classLoader);
         if (archivist == null) {
-            throw new UserError(localStrings.get("appclient.invalidArchive",
-                    ra.getURI().toASCIIString()));
+            throw new UserError(localStrings.get("appclient.invalidArchive", ra.getURI().toASCIIString()));
         }
 
         final ArchiveType moduleType = archivist.getModuleType();
@@ -227,14 +227,8 @@ public class UndeployedLaunchable implements Launchable {
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         this.classLoader = loader;
         if (acDesc == null) {
-            final AppClientArchivist _archivist = getArchivist(
-                    AccessController.doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-
-                        @Override
-                        public ACCClassLoader run() {
-                            return new ACCClassLoader(loader.getURLs(), loader.getParent());
-                        }
-                    }));
+            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
+            final AppClientArchivist _archivist = getArchivist(AccessController.doPrivileged(action));
 
             _archivist.setAnnotationProcessingRequested(true);
             acDesc = _archivist.open(clientRA);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,7 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
@@ -56,7 +57,7 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         }
 
         // Save old values before executing restart
-        final int oldPid = getServerPid();
+        final Long oldPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
         final HostAndPort adminAddress = getAdminAddress(getServerDirs().getServerName());
         // run the remote restart-instance command and throw away the output
         RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -158,7 +158,7 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             if (printDots) {
                 System.out.print(Strings.get("StopInstance.waitForDeath") + " ");
             }
-            final boolean dead = ProcessUtils.waitWhileIsAlive(pid, timeout, printDots);
+            final boolean dead = pid == null || ProcessUtils.waitWhileIsAlive(pid, timeout, printDots);
             if (!dead) {
                 throw new CommandException(Strings.get("StopInstance.instanceNotDead", DEATH_TIMEOUT_MS / 1000));
             }

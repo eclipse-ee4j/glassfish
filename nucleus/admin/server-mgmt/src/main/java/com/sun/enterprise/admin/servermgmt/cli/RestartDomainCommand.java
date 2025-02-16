@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,7 @@ package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
@@ -70,7 +71,7 @@ public class RestartDomainCommand extends StopDomainCommand {
         }
 
         // Save old values before executing restart
-        final int oldPid = getServerPid();
+        final Long oldPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
         final HostAndPort oldAdminAddress = getAdminAddress();
         final HostAndPort newAdminEndpoint = getAdminAddress("server");
         RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
@@ -122,6 +123,6 @@ public class RestartDomainCommand extends StopDomainCommand {
             opts.add(getDomainName());
         }
 
-        return cmd.execute(opts.toArray(new String[opts.size()]));
+        return cmd.execute(opts.toArray(String[]::new));
     }
 }

@@ -110,11 +110,11 @@
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
-        <openmq.version>6.5.0</openmq.version>
+        <openmq.version>6.5.1</openmq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
-        <eclipselink.version>5.0.0-B05</eclipselink.version>
+        <eclipselink.version>5.0.0-B06</eclipselink.version>
         <eclipselink.asm.version>9.7.1</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
@@ -495,7 +495,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.17.1</version>
+                <version>1.18.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

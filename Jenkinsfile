@@ -45,7 +45,11 @@ def antjobs = [
   "connector_group_2",
   "connector_group_3",
   "connector_group_4",
-  "jdbc_all",
+  "jdbc_group1",
+  "jdbc_group2",
+  "jdbc_group3",
+  "jdbc_group4",
+  "jdbc_group5",
   "persistence_all",
   "naming_all",
   "deployment_all",
@@ -204,41 +208,47 @@ spec:
         stash includes: 'bundles/*', name: 'build-bundles'
       }
     }
-    stage('mvn-tests') {
-      steps {
-        checkout scm
-        container('maven') {
-          dumpSysInfo()
-          timeout(time: 1, unit: 'HOURS') {
-            sh '''
-                mvn -B -e clean install -Pstaging,qa
-            '''
-          }
+    
+    stage('Test') {
+        parallel {
+            stage('mvn-tests') {
+              steps {
+                checkout scm
+                container('maven') {
+                  dumpSysInfo()
+                  timeout(time: 1, unit: 'HOURS') {
+                    sh '''
+                        mvn -B -e clean install -Pstaging,qa
+                    '''
+                  }
+                }
+              }
+              post {
+                always {
+                  archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false
+                  junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+                }
+              }
+            }
+            stage('ant-tests') {
+              agent {
+                kubernetes {
+                  inheritFrom 'basic'
+                }
+              }
+              tools {
+                jdk 'temurin-jdk21-latest'
+                maven 'apache-maven-3.9.5'
+              }
+              steps {
+                script {
+                  parallel parallelStagesMap
+                }
+              }
+            }
         }
-      }
-      post {
-        always {
-          archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false
-          junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-        }
-      }
     }
-    stage('ant-tests') {
-      agent {
-        kubernetes {
-          inheritFrom 'basic'
-        }
-      }
-      tools {
-        jdk 'temurin-jdk21-latest'
-        maven 'apache-maven-3.9.5'
-      }
-      steps {
-        script {
-          parallel parallelStagesMap
-        }
-      }
-    }
+    
     stage('docs') {
       steps {
         checkout scm

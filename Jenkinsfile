@@ -246,18 +246,17 @@ spec:
                 }
               }
             }
-        }
-    }
-    
-    stage('docs') {
-      steps {
-        checkout scm
-        container('maven') {
-          dumpSysInfo()
-          timeout(time: 1, unit: 'HOURS') {
-            sh '''
-                mvn -B -e clean install -Pstaging -f docs -amd
-            '''
+            stage('docs') {
+              steps {
+                checkout scm
+                container('maven') {
+                  dumpSysInfo()
+                  timeout(time: 1, unit: 'HOURS') {
+                    sh '''
+                        mvn -B -e clean install -Pstaging -f docs -amd
+                    '''
+              }
+            }
           }
         }
       }

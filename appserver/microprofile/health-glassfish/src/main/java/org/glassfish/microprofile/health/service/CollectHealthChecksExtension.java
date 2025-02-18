@@ -25,6 +25,7 @@ import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessBean;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,14 +38,18 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.microprofile.health.HealthCheckInfo;
 import org.glassfish.microprofile.health.HealthReporter;
 
 
 public class CollectHealthChecksExtension implements Extension {
 
     private final HealthReporter service;
-    private final Set<Bean<HealthCheck>> healthChecks = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private final Set<HealthCheckBeanAndKind> healthChecks = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final InvocationManager invocationManager;
+
+    record HealthCheckBeanAndKind(Bean<HealthCheck> bean, Set<HealthCheckInfo.Kind> kind) {
+    }
 
     public CollectHealthChecksExtension() {
         ServiceLocator defaultBaseServiceLocator = Globals.getDefaultBaseServiceLocator();
@@ -58,19 +63,33 @@ public class CollectHealthChecksExtension implements Extension {
     }
     public <T> void processBeans(@Observes ProcessBean<T> beans) {
         Annotated annotated = beans.getAnnotated();
-        if (annotated.isAnnotationPresent(Liveness.class) ||
-                annotated.isAnnotationPresent(Readiness.class) ||
-                annotated.isAnnotationPresent(Startup.class)) {
-            if (beans.getBean().getTypes().contains(HealthCheck.class)) {
-                healthChecks.add((Bean<HealthCheck>) beans.getBean());
+        boolean livenessPresent = annotated.isAnnotationPresent(Liveness.class);
+        boolean readinessPresent = annotated.isAnnotationPresent(Readiness.class);
+        boolean startupPresent = annotated.isAnnotationPresent(Startup.class);
+        if (livenessPresent || readinessPresent || startupPresent) {
+            Bean<T> bean = beans.getBean();
+            if (bean.getTypes().contains(HealthCheck.class)) {
+                Set<HealthCheckInfo.Kind> kinds = new HashSet<>();
+                if (livenessPresent) {
+                    kinds.add(HealthCheckInfo.Kind.LIVE);
+                }
+                if (readinessPresent) {
+                    kinds.add(HealthCheckInfo.Kind.READY);
+                }
+                if (startupPresent) {
+                    kinds.add(HealthCheckInfo.Kind.STARTUP);
+                }
+
+                healthChecks.add(new HealthCheckBeanAndKind((Bean<HealthCheck>) bean, kinds));
             }
         }
     }
 
     public void afterDeploymentValidation(@Observes AfterDeploymentValidation adv, BeanManager beanManager) {
         healthChecks.forEach(bean -> {
-            CreationalContext<HealthCheck> creationalContext = beanManager.createCreationalContext(bean);
-            service.addHealthCheck(invocationManager.getCurrentInvocation().getAppName(), bean.create(creationalContext));
+            CreationalContext<HealthCheck> creationalContext = beanManager.createCreationalContext(bean.bean());
+            service.addHealthCheck(invocationManager.getCurrentInvocation().getAppName(),
+                    new HealthCheckInfo(bean.bean().create(creationalContext), bean.kind()));
         });
     }
 }

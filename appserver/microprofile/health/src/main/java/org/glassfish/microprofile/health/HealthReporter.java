@@ -15,8 +15,6 @@
  */
 package org.glassfish.microprofile.health;
 
-import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -27,14 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Liveness;
-import org.eclipse.microprofile.health.Readiness;
-import org.eclipse.microprofile.health.Startup;
 
 @Singleton
 public class HealthReporter {
@@ -43,7 +37,7 @@ public class HealthReporter {
     private static final String MP_DEFAULT_READINESS_EMPTY_RESPONSE = "mp.health.default.readiness.empty.response";
     private static final Logger LOGGER = Logger.getLogger(HealthReporter.class.getName());
 
-    private final Map<String, List<HealthCheck>> applicationHealthChecks = new ConcurrentHashMap<>();
+    private final Map<String, List<HealthCheckInfo>> applicationHealthChecks = new ConcurrentHashMap<>();
 
     private static HealthCheckResponse callHealthCheck(HealthCheck healthCheck) {
         try {
@@ -68,20 +62,6 @@ public class HealthReporter {
         STARTED,
         ALL;
 
-        private Stream<HealthCheck> healthChecks() {
-            Instance<HealthCheck> select = CDI.current().select(HealthCheck.class);
-            return switch (this) {
-                case LIVE -> select.select(Liveness.Literal.INSTANCE).stream();
-                case READY -> select.select(Readiness.Literal.INSTANCE).stream();
-                case STARTED -> select.select(Startup.Literal.INSTANCE).stream();
-                case ALL -> Stream.of(
-                        select.select(Liveness.Literal.INSTANCE).stream(),
-                        select.select(Readiness.Literal.INSTANCE).stream(),
-                        select.select(Startup.Literal.INSTANCE).stream()
-                ).flatMap(s -> s);
-            };
-        }
-
         private HealthCheckResponse.Status getEmptyResponse() {
             return switch (this) {
                 case LIVE -> getValue(MP_DEFAULT_STARTUP_EMPTY_RESPONSE)
@@ -91,16 +71,25 @@ public class HealthReporter {
                 case STARTED, ALL -> HealthCheckResponse.Status.UP;
             };
         }
+
+        public boolean filter(HealthCheckInfo healthCheck) {
+            return switch (this) {
+                case LIVE -> healthCheck.kind().contains(HealthCheckInfo.Kind.LIVE);
+                case READY -> healthCheck.kind().contains(HealthCheckInfo.Kind.READY);
+                case STARTED -> healthCheck.kind().contains(HealthCheckInfo.Kind.STARTUP);
+                case ALL -> true;
+            };
+        }
     }
 
     public HealthReport getReport(ReportKind reportKind) {
-        HealthCheckResponse.Status emptyResponse = HealthCheckResponse.Status.UP;
+        HealthCheckResponse.Status emptyResponse = reportKind.getEmptyResponse();
 
-        Stream<HealthCheck> healthChecks = applicationHealthChecks.values()
+        List<HealthCheckResponse> healthCheckResults = applicationHealthChecks.values()
                 .stream()
-                .flatMap(Collection::stream);
-
-        List<HealthCheckResponse> healthCheckResults = healthChecks
+                .flatMap(Collection::stream)
+                .filter(reportKind::filter)
+                .map(HealthCheckInfo::healthCheck)
                 .map(HealthReporter::callHealthCheck)
                 .toList();
 
@@ -115,17 +104,11 @@ public class HealthReporter {
                     .orElse(HealthCheckResponse.Status.UP);
         }
         return new HealthReport(overallStatus, healthCheckResults);
-
     }
 
-
-    public void addHealthCheck(String contextName, HealthCheck healthCheck) {
+    public void addHealthCheck(String contextName, HealthCheckInfo healthCheck) {
         applicationHealthChecks.computeIfAbsent(contextName, k -> new CopyOnWriteArrayList<>())
                 .add(healthCheck);
-    }
-
-    public void removeHealthCheck(String contextName, HealthCheck healthCheck) {
-        applicationHealthChecks.get(contextName).remove(healthCheck);
     }
 
     public void removeAllHealthChecksFrom(String contextName) {

@@ -1,6 +1,7 @@
-package org.glassfish.microprofile.impl;
+package org.glassfish.microprofile.health.service;
 
 
+import jakarta.inject.Inject;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;

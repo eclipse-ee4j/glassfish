@@ -232,7 +232,7 @@ spec:
                          
                          timeout(time: 1, unit: 'HOURS') {
                             sh '''
-                            mvn -B -e clean install -Pstaging -f docs -amd
+                            mvn -B -e clean install -Pstaging -f docs -amd -T4C
                             '''
                          }
                       }

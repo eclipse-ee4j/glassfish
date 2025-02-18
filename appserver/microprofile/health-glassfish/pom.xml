@@ -52,10 +52,6 @@
                         <supportedProjectType>glassfish-jar</supportedProjectType>
                     </supportedProjectTypes>
                     <instructions>
-                        <!-- A list of packages that are exposed to classes outside the bundle -->
-                        <Export-Package>
-                            org.glassfish.microprofile.impl;
-                        </Export-Package>
                         <Include-Resource>
                             {maven-resources},
                             META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/,

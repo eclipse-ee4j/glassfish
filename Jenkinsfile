@@ -214,30 +214,66 @@ spec:
       
       stage('Test') {
          parallel {
+            stage('mvn-tests') {
+               steps {
+                  checkout scm
+                  container('maven') {
+                     dumpSysInfo()
+                     timeout(time: 1, unit: 'HOURS') {
+                        sh '''
+                        mvn -B -e clean install -Pstaging,qa
+                        '''
+                     }
+                  }
+               }
+               post {
+                  always {
+                     archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false
+                     junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+                  }
+               }
+            }
+            
+            stage('ant-tests') {
+               agent {
+                  kubernetes {
+                     inheritFrom 'basic'
+                  }
+               }
+               tools {
+                  jdk 'temurin-jdk21-latest'
+                  maven 'apache-maven-3.9.5'
+               }
+               steps {
+                  script {
+                     parallel parallelStagesMap
+                  }
+               }
+            }
+            
             stage('docs') {
                steps {
+                   dumpSysInfo()
+                   sh '''
+                   pwd
+                   ls -altrh
+                   
+                   mkdir foo
+                   
+                   '''
+                   
+                   dir ('foo') {
+                       checkout scm
+                       container('maven') {
                        dumpSysInfo()
-                       sh '''
-                       pwd
-                       ls -altrh
-                       
-                       mkdir foo
-                       
-                       '''
-                       
-                       dir ('foo') {
-                      checkout scm
-                      container('maven') {
-                         dumpSysInfo()
-                         
-                         timeout(time: 1, unit: 'HOURS') {
-                            sh '''
-                            mvn -B -e clean install -Pstaging -f docs -amd -T4C
-                            '''
-                         }
-                      }
+                     
+                       timeout(time: 1, unit: 'HOURS') {
+                           sh '''
+                           mvn -B -e clean install -Pstaging -f docs -amd -T4C
+                           '''
+                       }
+                    }
                   }
-                  
                }
             }
          }

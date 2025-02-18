@@ -168,8 +168,7 @@ public class StopDomainCommand extends LocalDomainCommand {
     protected void doCommand() throws CommandException {
         // run the remote stop-domain command and throw away the output
         final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
-        final File watchedPid = isLocal() ? getServerDirs().getPidFile() : null;
-        final Long oldPid = ProcessUtils.loadPid(watchedPid);
+        final Long oldPid = getServerPid();
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final boolean printDots = !programOpts.isTerse();
         try {

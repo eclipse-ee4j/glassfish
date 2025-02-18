@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
@@ -57,7 +56,7 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         }
 
         // Save old values before executing restart
-        final Long oldPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        final Long oldPid = getServerPid();
         final HostAndPort adminAddress = getAdminAddress(getServerDirs().getServerName());
         // run the remote restart-instance command and throw away the output
         RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);

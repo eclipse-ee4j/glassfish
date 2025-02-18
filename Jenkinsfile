@@ -225,14 +225,17 @@ spec:
                   maven 'apache-maven-3.9.5'
                }
                steps {
-                  script {
-                      def exists = fileExists 'foo'
-                      if (!exists){
-                          new File('foo').mkdir()
-                      }
-                  }
-                  
-                  dir ('foo') {
+                  container('maven') {
+                       dumpSysInfo()
+                       sh '''
+                       pwd
+                       ls -altrh
+                       
+                       mkdir foo
+                       
+                       '''
+                       
+                       dir ('foo') {
                       checkout scm
                       container('maven') {
                          dumpSysInfo()
@@ -244,6 +247,9 @@ spec:
                          }
                       }
                   }
+                    }
+                  
+                  
                }
             }
          }

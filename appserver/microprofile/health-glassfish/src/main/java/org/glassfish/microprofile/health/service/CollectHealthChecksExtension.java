@@ -23,15 +23,18 @@ import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessBean;
+import jakarta.inject.Inject;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.Liveness;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.health.Startup;
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.api.Globals;
@@ -42,6 +45,9 @@ public class CollectHealthChecksExtension implements Extension {
 
     private final HealthReporter service;
     private final Set<Bean<HealthCheck>> healthChecks = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
+    @Inject
+    InvocationManager invocationManager;
 
     public CollectHealthChecksExtension() {
         ServiceLocator defaultBaseServiceLocator = Globals.getDefaultBaseServiceLocator();
@@ -66,10 +72,7 @@ public class CollectHealthChecksExtension implements Extension {
     public void afterDeploymentValidation(@Observes AfterDeploymentValidation adv, BeanManager beanManager) {
         healthChecks.forEach(bean -> {
             CreationalContext<HealthCheck> creationalContext = beanManager.createCreationalContext(bean);
-            service.addHealthCheck("", bean.create(creationalContext));
+            service.addHealthCheck(invocationManager.getCurrentInvocation().getAppName(), bean.create(creationalContext));
         });
     }
-
-
-
 }

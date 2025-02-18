@@ -215,15 +215,6 @@ spec:
       stage('Test') {
          parallel {
             stage('docs') {
-               agent {
-                  kubernetes {
-                     inheritFrom 'basic'
-                  }
-               }
-               tools {
-                  jdk 'temurin-jdk21-latest'
-                  maven 'apache-maven-3.9.5'
-               }
                steps {
                        dumpSysInfo()
                        sh '''

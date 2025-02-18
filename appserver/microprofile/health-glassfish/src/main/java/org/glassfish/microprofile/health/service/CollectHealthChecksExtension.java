@@ -23,7 +23,6 @@ import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessBean;
-import jakarta.inject.Inject;
 
 import java.util.Collections;
 import java.util.Set;
@@ -45,12 +44,11 @@ public class CollectHealthChecksExtension implements Extension {
 
     private final HealthReporter service;
     private final Set<Bean<HealthCheck>> healthChecks = Collections.newSetFromMap(new ConcurrentHashMap<>());
-
-    @Inject
-    InvocationManager invocationManager;
+    private final InvocationManager invocationManager;
 
     public CollectHealthChecksExtension() {
         ServiceLocator defaultBaseServiceLocator = Globals.getDefaultBaseServiceLocator();
+        invocationManager = Globals.get(InvocationManager.class);
         HealthReporter healthReporterService = defaultBaseServiceLocator.getService(HealthReporter.class);
         if (healthReporterService == null) {
             ServiceLocatorUtilities.addClasses(defaultBaseServiceLocator, true, HealthReporter.class);

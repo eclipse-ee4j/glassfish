@@ -33,9 +33,5 @@ public class HealthService implements EventListener, PostConstruct {
         if (event.is(Deployment.APPLICATION_UNLOADED) && event.hook() instanceof ApplicationInfo appInfo) {
             service.removeAllHealthChecksFrom(appInfo.getName());
         }
-
-        if (event.is(Deployment.APPLICATION_STARTED) && event.hook() instanceof ApplicationInfo appInfo) {
-
-        }
     }
 }

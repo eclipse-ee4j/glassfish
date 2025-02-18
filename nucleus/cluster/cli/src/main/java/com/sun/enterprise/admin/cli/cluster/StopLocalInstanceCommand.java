@@ -149,7 +149,7 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
          */
         programOpts.setInteractive(false);
 
-        final Long pid = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        final Long pid = getServerPid();
         final boolean printDots = !programOpts.isTerse();
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final RemoteCLICommand cmd = new RemoteCLICommand("_stop-instance", programOpts, env);

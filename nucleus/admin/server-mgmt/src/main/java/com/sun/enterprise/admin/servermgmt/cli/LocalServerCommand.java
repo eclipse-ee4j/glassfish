@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
@@ -295,6 +296,32 @@ public abstract class LocalServerCommand extends CLICommand {
             return false;
         } catch (Exception ex) {
             return false;
+        }
+    }
+
+    /**
+     * Asks remote server for the PID and compares it with the pid file.
+     * If the remote server doesn't respond, returns pid from the file.
+     *
+     * @return PID or null if unreachable
+     */
+    protected final Long getServerPid() {
+        Long pidFromFile = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        try {
+            RemoteCLICommand command = new RemoteCLICommand("__locations", programOpts, env);
+            ActionReport report = command.executeAndReturnActionReport("__locations");
+            if (report.getActionExitCode() == ExitCode.SUCCESS) {
+                long pidFromAdmin = Long.parseLong(report.findProperty("Pid"));
+                if (pidFromFile == null || !pidFromFile.equals(pidFromAdmin)) {
+                    logger.log(Level.SEVERE,
+                        "PID should be the same: PID from file = " + pidFromFile + ", pidFromAdmin = " + pidFromAdmin);
+                }
+                return pidFromAdmin;
+            }
+            return null;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "The server PID could not be resolved, sending PID from file: " + pidFromFile, e);
+            return pidFromFile;
         }
     }
 

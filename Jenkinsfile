@@ -32,29 +32,29 @@ def dumpSysInfo() {
 }
 
 def antjobs = [
-"cdi_all",
-"ql_gf_full_profile_all",
-"ql_gf_web_profile_all",
-"web_jsp",
-"ejb_group_1",
-"ejb_group_2",
-"ejb_group_3",
-"ejb_group_embedded",
-"batch_all",
-"connector_group_1",
-"connector_group_2",
-"connector_group_3",
-"connector_group_4",
-"jdbc_group1",
-"jdbc_group2",
-"jdbc_group3",
-"jdbc_group4",
-"jdbc_group5",
-"persistence_all",
-"naming_all",
-"deployment_all",
-"security_all",
-"webservice_all"
+    "cdi_all",
+    "ql_gf_full_profile_all",
+    "ql_gf_web_profile_all",
+    "web_jsp",
+    "ejb_group_1",
+    "ejb_group_2",
+    "ejb_group_3",
+    "ejb_group_embedded",
+    "batch_all",
+    "connector_group_1",
+    "connector_group_2",
+    "connector_group_3",
+    "connector_group_4",
+    "jdbc_group1",
+    "jdbc_group2",
+    "jdbc_group3",
+    "jdbc_group4",
+    "jdbc_group5",
+    "persistence_all",
+    "naming_all",
+    "deployment_all",
+    "security_all",
+    "webservice_all"
 ]
 
 def parallelStagesMap = antjobs.collectEntries {
@@ -93,67 +93,65 @@ pipeline {
    agent {
       kubernetes {
          inheritFrom "basic"
-         yaml """
-         apiVersion: v1
-         kind: Pod
-         spec:
-         containers:
-         - name: maven
-         image: maven:3.9.6-eclipse-temurin-21
-         command:
-         - cat
-         tty: true
-         env:
-         - name: "HOME"
-         value: "/home/jenkins"
-         - name: "MAVEN_OPTS"
-         value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
-         volumeMounts:
-         - name: "jenkins-home"
-         mountPath: "/home/jenkins"
-         readOnly: false
-         - name: maven-repo-shared-storage
-         mountPath: /home/jenkins/.m2/repository
-         - name: settings-xml
-         mountPath: /home/jenkins/.m2/settings.xml
-         subPath: settings.xml
-         readOnly: true
-         - name: settings-security-xml
-         mountPath: /home/jenkins/.m2/settings-security.xml
-         subPath: settings-security.xml
-         readOnly: true
-         - name: maven-repo-local-storage
-         mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
-         resources:
-         limits:
-         memory: "8Gi"
-         cpu: "6000m"
-         requests:
-         memory: "8Gi"
-         cpu: "6000m"
-         volumes:
-         - name: "jenkins-home"
-         emptyDir: {
-         }
-         - name: maven-repo-shared-storage
-         persistentVolumeClaim:
-         claimName: glassfish-maven-repo-storage
-         - name: settings-xml
-         secret:
-         secretName: m2-secret-dir
-         items:
-         - key: settings.xml
-         path: settings.xml
-         - name: settings-security-xml
-         secret:
-         secretName: m2-secret-dir
-         items:
-         - key: settings-security.xml
-         path: settings-security.xml
-         - name: maven-repo-local-storage
-         emptyDir: {
-         }
-         """
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: maven
+    image: maven:3.9.6-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+    env:
+    - name: "HOME"
+      value: "/home/jenkins"
+    - name: "MAVEN_OPTS"
+      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
+    volumeMounts:
+    - name: "jenkins-home"
+      mountPath: "/home/jenkins"
+      readOnly: false
+    - name: maven-repo-shared-storage
+      mountPath: /home/jenkins/.m2/repository
+    - name: settings-xml
+      mountPath: /home/jenkins/.m2/settings.xml
+      subPath: settings.xml
+      readOnly: true
+    - name: settings-security-xml
+      mountPath: /home/jenkins/.m2/settings-security.xml
+      subPath: settings-security.xml
+      readOnly: true
+    - name: maven-repo-local-storage
+      mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
+    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "6000m"
+      requests:
+        memory: "8Gi"
+        cpu: "6000m"
+  volumes:
+  - name: "jenkins-home"
+    emptyDir: {}
+  - name: maven-repo-shared-storage
+    persistentVolumeClaim:
+      claimName: glassfish-maven-repo-storage
+  - name: settings-xml
+    secret:
+      secretName: m2-secret-dir
+      items:
+      - key: settings.xml
+        path: settings.xml
+  - name: settings-security-xml
+    secret:
+      secretName: m2-secret-dir
+      items:
+      - key: settings-security.xml
+        path: settings-security.xml
+  - name: maven-repo-local-storage
+    emptyDir: {}
+"""
       }
    }
    
@@ -196,10 +194,12 @@ pipeline {
                sh '''
                # Validate the structure in all submodules (especially version ids)
                mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+               
                # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
                mvn -B -e install -Pfastest,staging -T4C
                ./gfbuild.sh archive_bundles
                ./gfbuild.sh archive_embedded
+               
                mvn -B -e clean -Pstaging
                tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
                ls -la ${WORKSPACE}/bundles

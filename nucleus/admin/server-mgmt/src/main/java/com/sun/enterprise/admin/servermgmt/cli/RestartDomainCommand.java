@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
@@ -71,7 +70,7 @@ public class RestartDomainCommand extends StopDomainCommand {
         }
 
         // Save old values before executing restart
-        final Long oldPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        final Long oldPid = getServerPid();
         final HostAndPort oldAdminAddress = getAdminAddress();
         final HostAndPort newAdminEndpoint = getAdminAddress("server");
         RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);

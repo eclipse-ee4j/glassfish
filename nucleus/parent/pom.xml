@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>7.0.21-SNAPSHOT</version>
+    <version>7.0.23-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -101,7 +101,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.9</jersey.version>
+        <jersey.version>3.1.10</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.3</jakarta.mail-api.version>
@@ -140,7 +140,7 @@
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.7.1</asm.version>
-        <jsch.version>0.2.21</jsch.version>
+        <jsch.version>0.2.23</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
@@ -153,7 +153,7 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.5.0</easymock.version>
-        <junit.version>5.11.3</junit.version>
+        <junit.version>5.11.4</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -165,7 +165,7 @@
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2024-12-02T23:33:32Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-01-31T18:47:48Z</project.build.outputTimestamp>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>
@@ -514,7 +514,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.8</version>
+                <version>5.0.10</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -577,7 +577,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.27.1</version>
+                <version>3.28.0</version>
             </dependency>
 
             <!--3rd party dependencies -->

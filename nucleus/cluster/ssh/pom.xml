@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.cluster</groupId>
         <artifactId>cluster</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>cluster-ssh</artifactId>
@@ -61,6 +61,11 @@
             <groupId>org.glassfish.main.cluster</groupId>
             <artifactId>cluster-common</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
     </dependencies>
 

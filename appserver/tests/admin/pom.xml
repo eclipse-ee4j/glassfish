@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>admin-tests-parent</artifactId>
@@ -34,5 +34,6 @@
     <modules>
         <module>admin-extension</module>
         <module>tests</module>
+        <module>ssh-cluster</module>
     </modules>
 </project>

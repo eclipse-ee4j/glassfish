@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,8 +13,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package com.sun.ts.run;
 
+import com.sun.javatest.Status;
 import com.sun.ts.lib.harness.ExecTSTestCmd;
 
 import java.io.IOException;

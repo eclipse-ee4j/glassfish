@@ -24,14 +24,14 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>nucleus-core</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>kernel</artifactId>
     <packaging>glassfish-jar</packaging>
 
     <name>Kernel Classes</name>
-    
+
     <properties>
         <commonClassLoader.tests.skip>false</commonClassLoader.tests.skip>
     </properties>
@@ -167,6 +167,11 @@
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>osgi-resource-locator</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -321,7 +326,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>fastest</id>

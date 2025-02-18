@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +28,8 @@ import java.lang.ProcessHandle.Info;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.file.Files;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -37,8 +38,10 @@ import java.util.function.Supplier;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
@@ -58,6 +61,198 @@ public final class ProcessUtils {
 
     private ProcessUtils() {
         // all static class -- no instances allowed!!
+    }
+
+
+    /**
+     * Blocks until the pid's handle exits or timeout comes first.
+     *
+     * @param pid process identifier
+     * @param timeout
+     * @param printDots true to print dots to STDOUT while waiting. One dot per second.
+     * @return true if the handle was not found or exited before timeout. False otherwise.
+     */
+    public static boolean waitWhileIsAlive(final long pid, Duration timeout, boolean printDots) {
+        return waitFor(() -> !isAlive(pid), timeout, printDots);
+    }
+
+
+    /**
+     * @param pidFile
+     * @return true if the pid file exists and the process with the pid inside is alive.
+     */
+    public static boolean isAlive(final File pidFile) {
+        final Long pid = loadPid(pidFile);
+        if (pid == null) {
+            return false;
+        }
+        return isAlive(pid);
+    }
+
+
+    /**
+     * @param pid
+     * @return true if the process with is alive.
+     */
+    public static boolean isAlive(final long pid) {
+        Optional<ProcessHandle> handle = ProcessHandle.of(pid);
+        return handle.isPresent() ? isAlive(handle.get()) : false;
+    }
+
+
+    /**
+     * The {@link Process#isAlive()} returns true even for zombies so we implemented
+     * this method which considers zombies as dead.
+     *
+     * @param process
+     * @return true if the process with is alive.
+     */
+    public static boolean isAlive(final ProcessHandle process) {
+        if (!process.isAlive()) {
+            return false;
+        }
+        // This is a trick to avoid zombies on some systems (ie containers on Jenkins)
+        // Operating system there does the cleanup much later, so we can still access
+        // zombies to process their output despite for us would be better we would
+        // not see them any more.
+        // The ProcessHandle.onExit blocks forever for zombies in docker containers
+        // without proper process reaper.
+        final Info info = process.info();
+        if (info.commandLine().isEmpty() && !(OS.isWindowsForSure() && info.command().isPresent())) {
+            LOG.log(TRACE, "Could not retrieve command line for the pid {0},"
+                + " therefore we assume that the process stopped.", process.pid());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Blocks until the endpoint closes the connection or timeout comes first.
+     *
+     * @param endpoint endpoint host and port to use.
+     * @param timeout
+     * @param printDots true to print dots to STDOUT while waiting. One dot per second.
+     * @return true if the connection was closed before timeout. False otherwise.
+     */
+    public static boolean waitWhileListening(HostAndPort endpoint, Duration timeout, boolean printDots) {
+        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
+        try (Socket server = new Socket()) {
+            server.setSoTimeout((int) timeout.toMillis());
+            // Max 5 seconds to connect. It is an extreme value for local endpoint.
+            try {
+                server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
+            } catch (IOException e) {
+                LOG.log(TRACE, "Unable to connect - server is probably down.!", e);
+                return true;
+            }
+            try {
+                int result = server.getInputStream().read();
+                if (result == -1) {
+                    LOG.log(TRACE, "Input stream closed - server probably stopped!");
+                    return true;
+                }
+                LOG.log(ERROR, "We were able to read something: {0}. Returning false.", result);
+                return false;
+            } catch (SocketTimeoutException e) {
+                LOG.log(TRACE, "Timeout while reading. Returning false.", e);
+                return false;
+            } catch (SocketException e) {
+                LOG.log(TRACE, "Socket read failed. Returning true.", e);
+                return true;
+            }
+        } catch (Exception ex) {
+            LOG.log(WARNING, "An attempt to open a socket to " + endpoint
+                + " resulted in exception. Therefore we assume the server has stopped.", ex);
+            return true;
+        } finally {
+            DotPrinter.stopWaiting(dotPrinter);
+        }
+    }
+
+
+    /**
+     * @param endpoint endpoint host and port to use.
+     * @return true if the endpoint is listening on socket
+     */
+    public static boolean isListening(HostAndPort endpoint) {
+        try (Socket server = new Socket()) {
+            // Max 5 seconds to connect. It is an extreme value for local endpoint.
+            server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
+            return true;
+        } catch (Exception ex) {
+            LOG.log(TRACE, "An attempt to open a socket to " + endpoint
+                + " resulted in exception. Therefore we assume the server has stopped.", ex);
+            return false;
+        }
+    }
+
+
+    /**
+     * Kill the process with the given Process ID and wait until it's gone - that means
+     * that the watchedPidFile is deleted OR the process is not resolved as alive by
+     * the {@link ProcessHandle#isAlive()} OR we cannot retrieve the command line of
+     * the process via {@link Info#commandLine()}.
+     *
+     * @param pidFile - used to load pid
+     * @param timeout - timeout to wait until to meet conditions meaning that the process stopped
+     * @param printDots - print one dot per second when waiting.
+     * @throws KillNotPossibleException It wasn't possible to send the kill signal to the process.
+     * @throws KillTimeoutException Signal was sent, but process is still alive after the timeout.
+     */
+    public static void kill(File pidFile, Duration timeout, boolean printDots)
+        throws KillNotPossibleException, KillTimeoutException {
+        LOG.log(DEBUG, "kill(pidFile={0}, timeout={1}, printDots={2})", pidFile, timeout, printDots);
+        final Long pid = loadPid(pidFile);
+        if (pid == null) {
+            return;
+        }
+        if (!isAlive(pid)) {
+            LOG.log(INFO, "Process with pid {0} has already stopped.", pid);
+            return;
+        }
+        final Optional<ProcessHandle> handleOptional = ProcessHandle.of(pid);
+        final Optional<String> commandLine = handleOptional.get().info().commandLine();
+        LOG.log(INFO, "Killing process with pid {0} and command line {1}", pid, commandLine);
+        if (!handleOptional.get().destroyForcibly()) {
+            // Maybe the process died in between?
+            if (isAlive(pid)) {
+                // ... no, it did not.
+                throw new KillNotPossibleException(
+                    "It wasn't possible to destroy the process with pid=" + pid + ". Check your system permissions.");
+            }
+            return;
+        }
+        // This is because File.exists() can cache file attributes
+        if (!waitWhileIsAlive(pid, timeout, printDots)) {
+            throw new KillTimeoutException(MessageFormat.format(
+                "The process {0} was killed, but it is still alive after timeout {1} s.", pid, timeout.getSeconds()));
+        }
+    }
+
+
+    /**
+     * @param sign logic defining what we are waiting for.
+     * @param timeout
+     * @param printDots print dot each second and new line in the end.
+     * @return true if the sign returned true before timeout.
+     */
+    public static boolean waitFor(Supplier<Boolean> sign, Duration timeout, boolean printDots) {
+        LOG.log(DEBUG, "waitFor(sign={0}, timeout={1}, printDots={2})", sign, timeout, printDots);
+        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
+        final Instant start = Instant.now();
+        try {
+            final Instant deadline = start.plus(timeout);
+            while (Instant.now().isBefore(deadline)) {
+                if (sign.get()) {
+                    return true;
+                }
+                Thread.onSpinWait();
+            }
+            return false;
+        } finally {
+            DotPrinter.stopWaiting(dotPrinter);
+            LOG.log(INFO, "Waiting finished after {0} ms.", Duration.between(start, Instant.now()).toMillis());
+        }
     }
 
 
@@ -92,152 +287,18 @@ public final class ProcessUtils {
 
 
     /**
-     * @param pidFile
-     * @return true if the pid file exists and the process with the pid inside is alive.
+     * @param pidFile file containing pid.
+     * @return pid from the file or null if the file does not exist or is null
+     * @throws IllegalArgumentException for unparseable file
      */
-    public static boolean isAlive(final File pidFile) {
-        if (!pidFile.exists()) {
-            return false;
+    public static Long loadPid(final File pidFile) throws IllegalArgumentException {
+        if (pidFile == null || !pidFile.exists()) {
+            return null;
         }
-        final long pid;
         try {
-            pid = loadPid(pidFile);
-        } catch (Exception e) {
-            LOG.log(TRACE, "Could not load the pid file " + pidFile
-                + ", therefore we assume that the process stopped.", e);
-            return false;
-        }
-        return isAlive(pid);
-    }
-
-
-    public static boolean isAlive(final long pid) {
-        Optional<ProcessHandle> handle = ProcessHandle.of(pid);
-        if (handle.isEmpty()) {
-            return false;
-        }
-        if (!handle.get().isAlive()) {
-            return false;
-        }
-        Info info = handle.get().info();
-        if (info.commandLine().isEmpty() && !(OS.isWindowsForSure() && info.command().isPresent())) {
-            LOG.log(TRACE, "Could not retrieve command line for the pid {0},"
-                + " therefore we assume that the process stopped.");
-            return false;
-        }
-        return true;
-    }
-
-
-    /**
-     * @param pidFile existing file containing pid.
-     * @return pid from the file
-     * @throws IllegalArgumentException non-existing, empty or unparseable file
-     */
-    public static long loadPid(final File pidFile) throws IllegalArgumentException {
-        try {
-            return Long.parseLong(FileUtils.readSmallFile(pidFile, ISO_8859_1).trim());
+            return Long.valueOf(FileUtils.readSmallFile(pidFile, ISO_8859_1).trim());
         } catch (NumberFormatException | IOException e) {
             throw new IllegalArgumentException("Could not parse the PID file: " + pidFile, e);
-        }
-    }
-
-
-    /**
-     * @param endpoint endpoint host and port to use.
-     * @return true if the endpoint is listening on socket
-     */
-    public static boolean isListening(HostAndPort endpoint) {
-        try (Socket server = new Socket()) {
-            // Max 5 seconds to connect. It is an extreme value for local endpoint.
-            server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
-            return true;
-        } catch (Exception ex) {
-            LOG.log(TRACE, "An attempt to open a socket to " + endpoint
-                + " resulted in exception. Therefore we assume the server has stopped.", ex);
-            return false;
-        }
-    }
-
-
-    /**
-     * Kill the process with the given Process ID and wait until it's gone - that means
-     * that the watchedPidFile is deleted OR the process is not resolved as alive by
-     * the {@link ProcessHandle#isAlive()} OR we cannot retrieve the command line of
-     * the process via {@link Info#commandLine()}.
-     *
-     * @param pidFile - used to load pid
-     * @param watchedPidFile - if this file vanish, we expect that the process stopped.
-     * @param timeout - timeout to wait until to meet conditions meaning that the process stopped
-     * @param printDots - print one dot per second when waiting.
-     * @throws KillNotPossibleException It wasn't possible to send the kill signal to the process.
-     * @throws KillTimeoutException Signal was sent, but process is still alive after the timeout.
-     */
-    public static void kill(File pidFile,
-        File watchedPidFile, Duration timeout, boolean printDots) throws KillNotPossibleException, KillTimeoutException {
-        LOG.log(DEBUG, "kill(pidFile={0}, watchedPidFile={1}, timeout={2}, printDots={3})",
-            pidFile, watchedPidFile, timeout, printDots);
-        if (!pidFile.exists()) {
-            return;
-        }
-        final long pid = loadPid(pidFile);
-        if (!isAlive(pid)) {
-            LOG.log(INFO, "Process with pid {0} has already stopped.", pid);
-            return;
-        }
-        final Optional<ProcessHandle> handleOptional = ProcessHandle.of(pid);
-        final Optional<String> commandLine = handleOptional.get().info().commandLine();
-        LOG.log(INFO, "Killing process with pid {0} and command line {1}", pid, commandLine);
-        if (!handleOptional.get().destroyForcibly()) {
-            // Maybe the process died in between?
-            if (isAlive(pid)) {
-                // ... no, it did not.
-                throw new KillNotPossibleException(
-                    "It wasn't possible to destroy the process with pid=" + pid + ". Check your system permissions.");
-            }
-            return;
-        }
-        // This is because File.exists() can cache file attributes
-        Supplier<Boolean> deathSign = () -> !isAlive(pid) || !Files.exists(watchedPidFile.toPath());
-        if (!waitFor(deathSign, timeout, printDots)) {
-            throw new KillTimeoutException(MessageFormat.format(
-                "The process {0} was killed, but it is still alive after timeout {1} s.", pid, timeout.getSeconds()));
-        }
-    }
-
-
-    /**
-     * @param sign logic defining what we are waiting for.
-     * @param timeout
-     * @param printDots print dot each second and new line in the end.
-     * @return true if the sign returned true before timeout.
-     */
-    public static boolean waitFor(Supplier<Boolean> sign, Duration timeout, boolean printDots) {
-        LOG.log(DEBUG, "waitFor(sign={0}, timeout={1}, printDots={2})", sign, timeout, printDots);
-        final Instant start = Instant.now();
-        try {
-            final Instant deadline = start.plus(timeout);
-            Instant nextDot = start;
-            while (Instant.now().isBefore(deadline)) {
-                if (sign.get()) {
-                    return true;
-                }
-                if (printDots) {
-                    Instant now = Instant.now();
-                    if (now.isAfter(nextDot)) {
-                        nextDot = now.plusSeconds(1L);
-                        System.out.print(".");
-                        System.out.flush();
-                    }
-                }
-                Thread.yield();
-            }
-            return false;
-        } finally {
-            if (printDots) {
-                System.out.println();
-            }
-            LOG.log(INFO, "Waiting finished after {0} ms.", Duration.between(start, Instant.now()).toMillis());
         }
     }
 
@@ -257,5 +318,46 @@ public final class ProcessUtils {
             return tempPaths.split(File.pathSeparator);
         }
         return new String[0];
+    }
+
+
+    private static class DotPrinter extends Thread {
+
+        public DotPrinter() {
+            super("DotPrinter");
+            setDaemon(true);
+        }
+
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    Thread.sleep(1000L);
+                    System.out.print(".");
+                    System.out.flush();
+                }
+            } catch (InterruptedException e) {
+                System.out.println();
+                Thread.currentThread().interrupt();
+            }
+        }
+
+
+        public static DotPrinter startWaiting(boolean printDots) {
+            if (printDots) {
+                DotPrinter dotPrinter = new DotPrinter();
+                dotPrinter.start();
+                return dotPrinter;
+            }
+            return null;
+        }
+
+
+        public static void stopWaiting(DotPrinter dotPrinter) {
+            if (dotPrinter != null) {
+                dotPrinter.interrupt();
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import com.sun.enterprise.admin.launcher.CommandLine.CommandFormat;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
@@ -24,7 +25,6 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
-import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedWriter;
@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.ProcessBuilder.Redirect;
 import java.lang.System.Logger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -40,17 +41,17 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.FLASHLIGHT_AGENT_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBMON_NAME;
-import static com.sun.enterprise.admin.launcher.GFLauncherConstants.NEWLINE;
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.COMMAND_LINE;
 import static com.sun.enterprise.universal.collections.CollectionUtils.propertiesToStringMap;
 import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
@@ -66,6 +67,9 @@ import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROP
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -136,8 +140,8 @@ public abstract class GFLauncher {
      */
     private Map<String, String> domainXMLSystemProperty;
 
-    private String javaExe;
-    private String classpath;
+    private File javaExe;
+    private File[] classpath;
     private String adminFileRealmKeyFile;
     private boolean secureAdminEnabled;
 
@@ -165,7 +169,7 @@ public abstract class GFLauncher {
     /**
      * The full commandline string used to start GlassFish in process <code<>glassFishProcess</code>
      */
-    private final List<String> commandLine = new ArrayList<>();
+    private CommandLine commandLine;
 
     /**
      * Time when GlassFish was launched
@@ -176,7 +180,6 @@ public abstract class GFLauncher {
      * The process which is running GlassFish
      */
     private Process glassFishProcess;
-    private ProcessWhacker processWhacker;
     private ProcessStreamDrainer processStreamDrainer;
 
     /**
@@ -192,11 +195,11 @@ public abstract class GFLauncher {
     ////// PUBLIC api area starts here ////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+
     /**
-     * Launches the server. Any fatal error results in a GFLauncherException No unchecked Throwables of any kind will be
-     * thrown.
+     * Launches the server.
      *
-     * @throws com.sun.enterprise.admin.launcher.GFLauncherException
+     * @throws GFLauncherException if launch failed.
      */
     public final void launch() throws GFLauncherException {
         if (isDebugSuspend()) {
@@ -210,12 +213,10 @@ public abstract class GFLauncher {
             if (!setupCalledByClients) {
                 setup();
             }
-            // Typically invokes launchInstance()
             internalLaunch();
         } catch (GFLauncherException gfe) {
             throw gfe;
-        } catch (Throwable t) {
-            // hk2 might throw a java.lang.Error
+        } catch (Exception t) {
             throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
         } finally {
             GFLauncherLogger.removeLogFileHandler();
@@ -232,28 +233,6 @@ public abstract class GFLauncher {
         launch();
     }
 
-    public final void launchJVM(List<String> cmdsIn) throws GFLauncherException {
-        try {
-            setup(); // we only use one thing -- the java executable
-            List<String> commands = new LinkedList<>();
-            commands.add(javaExe);
-
-            for (String cmd : cmdsIn) {
-                commands.add(cmd);
-            }
-
-            ProcessBuilder processBuilder = new ProcessBuilder(commands);
-            Process process = processBuilder.start();
-            ProcessStreamDrainer.drain("launchJVM", process); // just to be safe
-        } catch (GFLauncherException gfe) {
-            throw gfe;
-        } catch (Throwable t) {
-            // hk2 might throw a java.lang.Error
-            throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
-        } finally {
-            GFLauncherLogger.removeLogFileHandler();
-        }
-    }
 
     public void setup() throws GFLauncherException, MiniXmlParserException {
         asenvProps = getAsEnvConfReader().getProps();
@@ -307,7 +286,7 @@ public abstract class GFLauncher {
 
         setJavaExecutable();
         setClasspath();
-        setCommandLine();
+        initCommandLine();
         setJvmOptions();
         logCommandLine();
 
@@ -444,43 +423,47 @@ public abstract class GFLauncher {
             return;
         }
 
-        List<String> cmds = null;
+        final List<String> cmds;
 
         // Use launchctl bsexec on MacOS versions before 10.10
         // otherwise use regular startup.
-        // (No longer using StartupItemContext).
-        // See GLASSFISH-21343
         if (isDarwin() && useLaunchCtl(System.getProperty("os.version")) && !getInfo().isVerboseOrWatchdog()) {
-
-            // On MacOS we need to start long running glassFishProcess with
-            // StartupItemContext. See IT 12942
             cmds = new ArrayList<>();
-
-            // cmds.add("/usr/libexec/StartupItemContext");
-            // In MacOS 10.10 they removed StartupItemContext
-            // so call launchctl directly doing what StartupItemContext did
-            // See GLASSFISH-21113
             cmds.add("launchctl");
             cmds.add("bsexec");
             cmds.add("/");
-            cmds.addAll(getCommandLine());
+            cmds.addAll(commandLine.toList());
+        } else if (commandLine.getFormat() == CommandFormat.BatFile) {
+            cmds = prepareWindowsEnvironment(commandLine, getInfo().getConfigDir().toPath(), isSSHSession());
+        } else if (getInfo().isVerboseOrWatchdog()) {
+            cmds = new ArrayList<>();
+            cmds.addAll(commandLine.toList());
         } else {
-            cmds = getCommandLine();
+            cmds = new ArrayList<>();
+            if (!isWindows()) {
+                cmds.add("nohup");
+            }
+            cmds.addAll(commandLine.toList());
         }
 
+        // When calling cluster nodes, this will be visible in the server.log too.
+        System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
+        System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
+        if (getInfo().isVerboseOrWatchdog()) {
+            processBuilder.redirectOutput(Redirect.INHERIT);
+            processBuilder.redirectError(Redirect.INHERIT);
+        }
 
-        // Change the directory if there is one specified, o/w stick with the
-        // default.
+        // Change the directory if there is one specified, o/w stick with the default.
         try {
             processBuilder.directory(getInfo().getConfigDir());
         } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
 
         // Run the glassFishProcess and attach Stream Drainers
         try {
-            closeStandardStreamsMaybe();
-
             // We have to abandon server.log file to avoid file locking issues on Windows.
             // From now on the server.log file is owned by the server, not by launcher.
             GFLauncherLogger.removeLogFileHandler();
@@ -498,7 +481,6 @@ public abstract class GFLauncher {
             } else {
                 processStreamDrainer = save(name, glassFishProcess);
             }
-
             writeSecurityTokens(glassFishProcess);
         } catch (Exception e) {
             throw new GFLauncherException("jvmfailure", e, e);
@@ -514,8 +496,13 @@ public abstract class GFLauncher {
         return mode == fake;
     }
 
-    public final List<String> getCommandLine() {
+    public final CommandLine getCommandLine() {
         return commandLine;
+    }
+
+
+    protected final void setCommandLine(CommandLine commandLine) {
+        this.commandLine = commandLine;
     }
 
     // unit tests will want 'fake' so that the glassFishProcess is not really started.
@@ -634,7 +621,7 @@ public abstract class GFLauncher {
         }
     }
 
-    private void setLogFilename(MiniXmlParser domainXML) throws GFLauncherException {
+    private void setLogFilename(MiniXmlParser domainXML) {
         logFilename = domainXML.getLogFilename();
 
         if (logFilename == null) {
@@ -742,7 +729,7 @@ public abstract class GFLauncher {
         }
 
         if (javaFile.exists()) {
-            javaExe = sanitize(javaFile).getPath();
+            javaExe = sanitize(javaFile);
             return true;
         }
 
@@ -765,33 +752,32 @@ public abstract class GFLauncher {
         all.addAll(sysCP);
         all.addAll(envCP);
         all.addAll(suffixCP);
-        setClasspath(GFLauncherUtils.fileListToPathString(all));
+        setClasspath(all.toArray(File[]::new));
     }
 
-    void setCommandLine() throws GFLauncherException {
-        List<String> cmdLine = getCommandLine();
-        cmdLine.clear();
-        addIgnoreNull(cmdLine, javaExe);
-        addIgnoreNull(cmdLine, "-cp");
-        addIgnoreNull(cmdLine, getClasspath());
+    void initCommandLine() throws GFLauncherException {
+        boolean batRequired = isWindows() && !getInfo().isVerboseOrWatchdog();
+        CommandLine cmdLine = new CommandLine(batRequired ? CommandFormat.BatFile : CommandFormat.ProcessBuilder);
+        cmdLine.append(javaExe.toPath());
+        cmdLine.appendClassPath(getClasspath());
         addIgnoreNull(cmdLine, domainXMLjavaConfigDebugOptions);
 
         String CLIStartTime = System.getProperty("WALL_CLOCK_START");
-        if (CLIStartTime != null && CLIStartTime.length() > 0) {
-            cmdLine.add("-DWALL_CLOCK_START=" + CLIStartTime);
+        if (CLIStartTime != null) {
+            cmdLine.append("-DWALL_CLOCK_START=" + CLIStartTime);
         }
 
         if (debugPort >= 0) {
-            cmdLine.add("-D" + DEBUG_MODE_PROPERTY + "=" + TRUE);
+            cmdLine.appendSystemOption(DEBUG_MODE_PROPERTY, TRUE.toString());
         }
 
         if (domainXMLjvmOptions != null) {
-            addIgnoreNull(cmdLine, domainXMLjvmOptions.toList());
+            domainXMLjvmOptions.toList().forEach(cmdLine::appendJavaOption);
         }
 
-        GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig, domainXMLjvmOptions,
-                domainXMLJavaConfigProfiler);
-        addIgnoreNull(cmdLine, nativeHelper.getCommands());
+        GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig,
+            domainXMLjvmOptions, domainXMLJavaConfigProfiler);
+        cmdLine.appendNativeLibraryPath(nativeHelper.getNativePath());
         addIgnoreNull(cmdLine, getMainClass());
 
         try {
@@ -799,30 +785,22 @@ public abstract class GFLauncher {
         } catch (GFLauncherException gfle) {
             throw gfle;
         } catch (Exception e) {
-            // harmless
+            throw new GFLauncherException(e);
         }
+
+        setCommandLine(cmdLine);
     }
 
-    void setJvmOptions() throws GFLauncherException {
+    void setJvmOptions() {
         domainXMLJvmOptionsAsList.clear();
-
         if (domainXMLjvmOptions != null) {
-            addIgnoreNull(domainXMLJvmOptionsAsList, domainXMLjvmOptions.toList());
+            domainXMLjvmOptions.toList().forEach(domainXMLJvmOptionsAsList::add);
         }
-
     }
 
     void logCommandLine() {
-        StringBuilder sb = new StringBuilder();
-
         if (!isFakeLaunch()) {
-            Iterable<String> cmdLine = getCommandLine();
-
-            for (String s : cmdLine) {
-                sb.append(NEWLINE);
-                sb.append(s);
-            }
-            GFLauncherLogger.info(COMMAND_LINE, sb.toString());
+            GFLauncherLogger.info(COMMAND_LINE, commandLine.toString("\n"));
         }
     }
 
@@ -830,49 +808,24 @@ public abstract class GFLauncher {
         return domainXMLJvmOptionsAsList;
     }
 
-    private void addIgnoreNull(List<String> list, String s) {
+    private void addIgnoreNull(CommandLine command, String s) {
         if (ok(s)) {
-            list.add(s);
+            command.append(s);
         }
     }
 
-    private void addIgnoreNull(List<String> list, Collection<String> ss) {
+    private void addIgnoreNull(CommandLine command, Collection<String> ss) {
         if (ss != null && !ss.isEmpty()) {
-            list.addAll(ss);
+            ss.forEach(command::append);
         }
     }
 
     private void wait(final Process p) throws GFLauncherException {
         try {
-            setShutdownHook(p);
             p.waitFor();
             exitValue = p.exitValue();
         } catch (InterruptedException ex) {
             throw new GFLauncherException("verboseInterruption", ex, ex);
-        }
-    }
-
-    private void setShutdownHook(final Process p) {
-        // ON UNIX a ^C on the console will also kill DAS
-        // On Windows a ^C on the console will not kill DAS
-        // We want UNIX behavior on Windows
-        // note that the hook thread will run in both cases:
-        // 1. the server died on its own, e.g. with a stop-domain
-        // 2. a ^C (or equivalent signal) was received by the console
-        // note that exitValue is still set to -1
-
-        // if we are restarting we may get many many processes.
-        // Each time this method is called we reset the Process reference inside
-        // the processWhacker
-
-        if (processWhacker == null) {
-            Runtime runtime = Runtime.getRuntime();
-            final String msg = strings.get("serverStopped", callerParameters.getType());
-            processWhacker = new ProcessWhacker(p, msg);
-
-            runtime.addShutdownHook(new Thread(processWhacker));
-        } else {
-            processWhacker.setProcess(p);
         }
     }
 
@@ -936,18 +889,18 @@ public abstract class GFLauncher {
         }
     }
 
-    private String getDeadProcessTrace(Process sp) throws GFLauncherException {
-        // returns null in case the glassFishProcess is NOT dead
-        try {
-            int ev = sp.exitValue();
-            ProcessStreamDrainer psd1 = getProcessStreamDrainer();
-            String output = psd1.getOutErrString();
-            String trace = strings.get("server_process_died", ev, output);
-            return trace;
-        } catch (IllegalThreadStateException e) {
-            // the glassFishProcess is still running and we are ok
+    /** @returns null in case the process is NOT dead or succeeded */
+    private String getDeadProcessTrace(Process process) throws GFLauncherException {
+        if (process.isAlive()) {
             return null;
         }
+        int ev = process.exitValue();
+        if (ev == 0) {
+            return null;
+        }
+        ProcessStreamDrainer psd1 = getProcessStreamDrainer();
+        String output = psd1.getOutErrString();
+        return strings.get("server_process_died", ev, output);
     }
 
     private void setupUpgradeSecurity() throws GFLauncherException {
@@ -991,7 +944,7 @@ public abstract class GFLauncher {
         }
     }
 
-    private void setupMonitoring(MiniXmlParser parser) throws GFLauncherException {
+    private void setupMonitoring(MiniXmlParser parser) {
         // As usual we have to be very careful.
 
         // If it is NOT enabled -- we are out of here!!!
@@ -1027,11 +980,10 @@ public abstract class GFLauncher {
 
         if (flashlightJarFile.isFile()) {
             return "javaagent:" + getCleanPath(flashlightJarFile);
-        } else {
-            String msg = strings.get("no_flashlight_agent", flashlightJarFile);
-            GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
-            throw new GFLauncherException(msg);
         }
+        String msg = strings.get("no_flashlight_agent", flashlightJarFile);
+        GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
+        throw new GFLauncherException(msg);
     }
 
     private static String getCleanPath(File f) {
@@ -1046,12 +998,12 @@ public abstract class GFLauncher {
         return propsToJvmOptions(props);
     }
 
-    String getClasspath() {
+    final File[] getClasspath() {
         return classpath;
     }
 
-    void setClasspath(String s) {
-        classpath = s;
+    final void setClasspath(File... classpath) {
+        this.classpath = classpath;
     }
 
     private List<String> propsToJvmOptions(Map<String, String> map) {
@@ -1081,69 +1033,104 @@ public abstract class GFLauncher {
         }
     }
 
-    private void closeStandardStreamsMaybe() {
-        // see issue 12832
-        // Windows bug/feature -->
-        // Say glassFishProcess A (ssh) creates Process B (asadmin start-instance )
-        // which then fires up Process C (the instance).
-        // Process B exits but Process A does NOT. Process A is waiting for
-        // Process C to exit.
-        // The solution is to close down the standard streams BEFORE creating
-        // Process C. Then Process A becomes convinced that the glassFishProcess it created
-        // has finished.
-        // If there is a console that means the user is sitting at the terminal
-        // directly and we don't have to worry about it.
-        // Note that the issue is inside SSH -- not inside GF code per se. I.e.
-        // Process B absolutely positively does exit whether or not this code runs...
-        // don't run this unless we have to because our "..." messages disappear.
 
-        if (System.console() == null && OS.isWindows() && !callerParameters.isVerboseOrWatchdog()) {
-            String sname;
-
-            if (callerParameters.isDomain()) {
-                sname = callerParameters.getDomainName();
-            } else {
-                sname = callerParameters.getInstanceName();
-            }
-
-            System.out.println(strings.get("ssh", sname));
-            try {
-                System.in.close();
-            } catch (Exception e) { // ignore
-            }
-            try {
-                System.err.close();
-            } catch (Exception e) { // ignore
-            }
-            try {
-                System.out.close();
-            } catch (Exception e) { // ignore
-            }
-        }
+    private static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    private static class ProcessWhacker implements Runnable {
 
-        private final String message;
-        private Process process;
+    private static boolean isSSHSession() {
+        return System.getenv("SSH_CLIENT") != null || System.getenv("SSH_CONNECTION") != null
+            || System.getenv("SSH_TTY") != null;
+    }
 
-        ProcessWhacker(Process p, String msg) {
-            message = msg;
-            process = p;
+
+    private static List<String> prepareWindowsEnvironment(final CommandLine command, final Path configDir,
+        final boolean stdinPreloaded) throws GFLauncherException {
+        Path psFile;
+        Path batFile;
+        try {
+            batFile = configDir.resolve("gfstart.bat");
+            psFile = configDir.resolve("gfstart.ps1");
+            StringBuilder batContent = new StringBuilder(8192);
+            batContent.append("@echo off\n");
+            ListIterator<String> itemsOfCommand = command.listIterator();
+            while (itemsOfCommand.hasNext()) {
+                String line = itemsOfCommand.next();
+                if (!itemsOfCommand.hasPrevious()) {
+                    batContent.append("  ");
+                }
+                batContent.append(line);
+                if (itemsOfCommand.hasNext()) {
+                    batContent.append(" ^");
+                }
+                batContent.append('\n');
+            }
+            if (stdinPreloaded) {
+                batContent.append("< %1\n");
+            }
+            Files.writeString(batFile, batContent, UTF_8, TRUNCATE_EXISTING, CREATE);
+
+            StringBuilder psContent = new StringBuilder(8192);
+            psContent.append("param(\n");
+            psContent.append("    [Parameter(Mandatory=$true)]\n");
+            psContent.append("    [string]$BatchFilePath\n");
+            psContent.append(")\n");
+
+            psContent.append("$pidFile = \"").append(new File(configDir.toFile(), "pid").getAbsolutePath()).append("\"\n");
+            psContent.append("if (Test-Path $pidFile) {\n");
+            psContent.append("    Remove-Item $pidFile -Force\n");
+            psContent.append("}\n");
+            if (stdinPreloaded) {
+                psContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
+                psContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
+                psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
+            }
+            if (!isSSHSession()) {
+                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow -PassThru");
+                if (stdinPreloaded) {
+                    psContent.append(" < $tempFile");
+                }
+                psContent.append('\n');
+            } else {
+                psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath");
+                if (stdinPreloaded) {
+                    psContent.append(" < $tempFile");
+                }
+                psContent.append("\"\n");
+                psContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
+                psContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
+                psContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
+                psContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
+                psContent.append("Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings\n");
+
+                psContent.append("Start-ScheduledTask -TaskName $taskName\n");
+                psContent.append("Start-Sleep -Seconds 5\n");
+                psContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
+            }
+            psContent.append("$start = Get-Date\n");
+            psContent.append("$timeout = 60\n");
+            psContent.append("while (-not (Test-Path $pidFile)) {\n");
+            psContent.append("    if ((New-TimeSpan -Start $start -End (Get-Date)).TotalSeconds -gt $timeout) {\n");
+            psContent.append("        Write-Error \"Timeout waiting for GlassFish to start (pid file not created within $timeout seconds)\"\n");
+            psContent.append("        exit 1\n");
+            psContent.append("    }\n");
+            psContent.append("    Start-Sleep -Seconds 1\n");
+            psContent.append("}\n");
+
+            Files.writeString(psFile, psContent, UTF_8, TRUNCATE_EXISTING, CREATE);
+        } catch (IOException e) {
+            throw new GFLauncherException(e);
         }
-
-        void setProcess(Process p) {
-            process = p;
+        final List<String> cmds = new ArrayList<>();
+        cmds.add("powershell.exe");
+        if (stdinPreloaded) {
+            cmds.add("-noninteractive");
         }
-
-        @Override
-        public void run() {
-            // we are in a shutdown hook -- most of the JVM is gone.
-            // logger won't work anymore...
-            System.out.println(message);
-            process.destroy();
-        }
-
+        cmds.add("-File");
+        cmds.add("\"" + psFile.toFile().getAbsolutePath() + "\"");
+        cmds.add("-BatchFilePath");
+        cmds.add("\"" + batFile.toFile().getAbsolutePath() + "\"");
+        return cmds;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.util.net.NetUtils;
@@ -70,10 +70,11 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
     protected void validate()
             throws CommandException {
 
-        if(ok(instanceName0))
+        if (ok(instanceName0)) {
             instanceName = instanceName0;
-        else
+        } else {
             throw new CommandException(Strings.get("Instance.badInstanceName"));
+        }
 
         isCreateInstanceFilesystem = true;
 
@@ -108,8 +109,6 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
 
     }
 
-    /**
-     */
     @Override
     protected int executeCommand()
             throws CommandException {
@@ -188,17 +187,15 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
             InetAddress.getByName(DASHost);
         } catch (UnknownHostException e) {
             String thisHost = NetUtils.getHostName();
-            String msg = Strings.get("Instance.DasHostUnknown",
-                    DASHost, thisHost);
+            String msg = Strings.get("Instance.DasHostUnknown", DASHost, thisHost);
             throw new CommandException(msg, e);
         }
 
         // See if DAS is reachable
-        if (! NetUtils.isRunning(DASHost, DASPort)) {
+        if (!NetUtils.isRunning(DASHost, DASPort)) {
             // DAS provided host and port
             String thisHost = NetUtils.getHostName();
-            String msg = Strings.get("Instance.DasHostUnreachable",
-                    DASHost, Integer.toString(DASPort), thisHost);
+            String msg = Strings.get("Instance.DasHostUnreachable", DASHost, Integer.toString(DASPort), thisHost);
             throw new CommandException(msg);
         }
     }

@@ -96,7 +96,7 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
 
     private GlassFishLogHandlerConfiguration configuration;
 
-    private final Timer rotationTimer = new Timer("log-rotation-timer-for-" + getClass().getSimpleName());
+    private final Timer rotationTimer = new Timer("log-rotation-timer-for-" + getClass().getSimpleName(), true);
 
     private volatile GlassFishLogHandlerStatus status;
     private LoggingPump pump;

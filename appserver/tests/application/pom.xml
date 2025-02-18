@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>application-tests</artifactId>
@@ -109,6 +109,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
             <scope>provided</scope>
@@ -156,6 +161,12 @@
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>common-util</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>security</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

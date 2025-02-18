@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -1381,6 +1381,8 @@
                             <Bundle-SymbolicName>org.glassfish.embedded.static-shell</Bundle-SymbolicName>
                             <Class-Path>${classpath.derby} ${classpath.bootstrap}</Class-Path>
                             <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
+                            <Add-Opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</Add-Opens>
+                            <Add-Exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation</Add-Exports>
                         </manifestEntries>
                     </archive>
                 </configuration>

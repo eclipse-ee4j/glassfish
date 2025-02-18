@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -90,7 +90,7 @@
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.4</jakarta.concurrent-api.version>
-        <concurrent.version>3.0.0</concurrent.version>
+        <concurrent.version>3.0.1</concurrent.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
@@ -104,11 +104,11 @@
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
-        <openmq.version>6.5.0</openmq.version>
+        <openmq.version>6.5.1</openmq.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
-        <eclipselink.version>4.0.3</eclipselink.version>
+        <eclipselink.version>4.0.5</eclipselink.version>
         <eclipselink.asm.version>9.7.1</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
@@ -691,14 +691,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <!-- Cannot be in nucleus-parent, because it is built under it -->
-        <dependency>
-            <groupId>org.glassfish.main</groupId>
-            <artifactId>glassfish-jul-extension</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>

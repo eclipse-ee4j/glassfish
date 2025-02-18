@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>maven-plugin</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.tests.embedded.maven-plugin</groupId>
     <artifactId>index</artifactId>
@@ -81,6 +81,10 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
 </project>

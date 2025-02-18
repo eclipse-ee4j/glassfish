@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,7 @@ import com.sun.enterprise.util.net.NetUtils;
 import jakarta.inject.Inject;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,15 +88,12 @@ public class CreateNodeConfigCommand implements AdminCommand {
                 TokenResolver resolver = null;
 
                 // Create a resolver that can replace system properties in strings
-                Map<String, String> systemPropsMap =
-                        new HashMap<String, String>((Map)(System.getProperties()));
+                Map<String, String> systemPropsMap = new HashMap<String, String>((Map) (System.getProperties()));
                 resolver = new TokenResolver(systemPropsMap);
-                String resolvedInstallDir = resolver.resolve(installdir);
-                File actualInstallDir = new File( resolvedInstallDir+"/" + NodeUtils.LANDMARK_FILE);
-
-
-                if (!actualInstallDir.exists()){
-                    report.setMessage(Strings.get("invalid.installdir",installdir));
+                Path resolvedInstallDir = new File(resolver.resolve(installdir)).toPath();
+                Path actualInstallDir = resolvedInstallDir.resolve(NodeUtils.LANDMARK_FILE);
+                if (!actualInstallDir.toFile().exists()) {
+                    report.setMessage(Strings.get("invalid.installdir", installdir));
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     return;
                 }
@@ -103,12 +102,15 @@ public class CreateNodeConfigCommand implements AdminCommand {
         CommandInvocation ci = cr.getCommandInvocation("_create-node", report, context.getSubject());
         ParameterMap map = new ParameterMap();
         map.add("DEFAULT", name);
-        if (StringUtils.ok(nodedir))
+        if (StringUtils.ok(nodedir)) {
             map.add(NodeUtils.PARAM_NODEDIR, nodedir);
-        if (StringUtils.ok(installdir))
+        }
+        if (StringUtils.ok(installdir)) {
             map.add(NodeUtils.PARAM_INSTALLDIR, installdir);
-        if (StringUtils.ok(nodehost))
+        }
+        if (StringUtils.ok(nodehost)) {
             map.add(NodeUtils.PARAM_NODEHOST, nodehost);
+        }
         map.add(NodeUtils.PARAM_TYPE,"CONFIG");
         ci.parameters(map);
         ci.execute();

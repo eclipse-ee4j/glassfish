@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -287,12 +288,7 @@ public abstract class AdminBaseDevTest extends BaseDevTest implements Runnable {
     protected final static boolean isHudson = Boolean.parseBoolean(System.getenv("HUDSON"));
 
     static {
-        String name = System.getProperty("user.name");
-
-        if (name != null && name.equals("bnevins")) {
-            DEBUG = true;
-        }
-        else if (isHudson) {
+        if (isHudson) {
             DEBUG = true;
         }
         else if (Boolean.parseBoolean(System.getenv("AS_DEBUG"))) {

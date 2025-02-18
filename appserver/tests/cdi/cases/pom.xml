@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.glassfish.tests</groupId>
         <artifactId>cdi</artifactId>
-        <version>7.0.21-SNAPSHOT</version>
+        <version>7.0.23-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.cdi</groupId>
     <artifactId>cases</artifactId>
     <packaging>pom</packaging>
-    <version>7.0.21-SNAPSHOT</version>
+    <version>7.0.23-SNAPSHOT</version>
 
     <name>GlassFish CDI Test Cases</name>
     <modules>

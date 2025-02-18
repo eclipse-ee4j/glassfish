@@ -15,6 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+def secrets = [
+  [path: 'cbi/ee4j.glassfish/develocity.eclipse.org', secretValues: [
+    [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
+    ]
+  ]
+]
 
 def dumpSysInfo() {
   sh """
@@ -54,10 +60,10 @@ def antjobs = [
 ]
 
 def parallelStagesMap = antjobs.collectEntries {
-  ["${it}": generateAntPodTemplate(it)]
+  ["${it}": generateAntPodTemplate(it, secrets)]
 }
 
-def generateAntPodTemplate(job) {
+def generateAntPodTemplate(job, secrets) {
   return {
     node {
       stage("${job}") {
@@ -66,12 +72,15 @@ def generateAntPodTemplate(job) {
           timeout(time: 1, unit: 'HOURS') {
             withAnt(installation: 'apache-ant-latest') {
               dumpSysInfo()
-              sh """
-                mkdir -p ${WORKSPACE}/appserver/tests
-                tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-                export CLASSPATH=${WORKSPACE}/glassfish7/javadb
-                ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-              """
+              withVault([vaultSecrets: secrets]) {
+                  sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
+                  sh """
+                    mkdir -p ${WORKSPACE}/appserver/tests
+                    tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+                    export CLASSPATH=${WORKSPACE}/glassfish7/javadb
+                    ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+                  """
+              }
             }
           }
         } finally {
@@ -119,6 +128,9 @@ spec:
       readOnly: true
     - name: maven-repo-local-storage
       mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
+    - name: develocity-storage
+      mountPath: "/home/jenkins/.m2/.develocity"
+      readOnly: false
     resources:
       limits:
         memory: "8Gi"
@@ -146,6 +158,9 @@ spec:
         path: settings-security.xml
   - name: maven-repo-local-storage
     emptyDir: {}
+  - name: develocity-storage
+    emptyDir:
+       medium: ""
 """
     }
   }
@@ -186,18 +201,21 @@ spec:
         checkout scm
         container('maven') {
           dumpSysInfo()
-          sh '''
-            # Validate the structure in all submodules (especially version ids)
-            mvn -B -e -fae clean validate -Ptck,set-version-id,staging
-            # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-            mvn -B -e install -Pfastest,staging -T4C
-            ./gfbuild.sh archive_bundles
-            ./gfbuild.sh archive_embedded
-            mvn -B -e clean -Pstaging
-            tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-            ls -la ${WORKSPACE}/bundles
-            ls -la ${WORKSPACE}/embedded
-          '''
+          withVault([vaultSecrets: secrets]) {
+              sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
+              sh '''
+                # Validate the structure in all submodules (especially version ids)
+                mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+                # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+                mvn -B -e install -Pfastest,staging -T4C
+                ./gfbuild.sh archive_bundles
+                ./gfbuild.sh archive_embedded
+                mvn -B -e clean -Pstaging
+                tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+                ls -la ${WORKSPACE}/bundles
+                ls -la ${WORKSPACE}/embedded
+              '''
+          }
         }
         archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
         archiveArtifacts artifacts: 'embedded/*', onlyIfSuccessful: true
@@ -210,9 +228,12 @@ spec:
         container('maven') {
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
-            sh '''
-                mvn -B -e clean install -Pstaging,qa
-            '''
+            withVault([vaultSecrets: secrets]) {
+                sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
+                sh '''
+                    mvn -B -e clean install -Pstaging,qa
+                '''
+            }
           }
         }
       }
@@ -245,9 +266,12 @@ spec:
         container('maven') {
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
-            sh '''
-                mvn -B -e clean install -Pstaging -f docs -amd
-            '''
+            withVault([vaultSecrets: secrets]) {
+                sh 'cp .mvn/develocity-extensions.xml .mvn/extensions.xml || true'
+                sh '''
+                    mvn -B -e clean install -Pstaging -f docs -amd
+                '''
+            }
           }
         }
       }

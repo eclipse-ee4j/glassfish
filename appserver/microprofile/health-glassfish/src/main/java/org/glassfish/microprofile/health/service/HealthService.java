@@ -31,6 +31,10 @@ public class HealthService implements EventListener, PostConstruct {
 
         HealthReporter service = Globals.getDefaultHabitat().getService(HealthReporter.class);
 
+        if (service == null) {
+            return;
+        }
+
         if (event.is(Deployment.APPLICATION_UNLOADED) && event.hook() instanceof ApplicationInfo appInfo) {
             service.removeAllHealthChecksFrom(appInfo.getName());
         }

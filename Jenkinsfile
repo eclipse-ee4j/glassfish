@@ -225,7 +225,6 @@ spec:
                   maven 'apache-maven-3.9.5'
                }
                steps {
-                  container('maven') {
                        dumpSysInfo()
                        sh '''
                        pwd
@@ -247,8 +246,6 @@ spec:
                          }
                       }
                   }
-                    }
-                  
                   
                }
             }

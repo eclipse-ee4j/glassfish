@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,10 +17,13 @@
 package org.glassfish.main.jul.handler;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.glassfish.main.jul.env.LoggingSystemEnvironment;
 import org.glassfish.main.jul.formatter.OneLineFormatter;
@@ -44,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author David Matejcek
@@ -51,8 +55,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(OrderAnnotation.class)
 public class GlassFishLogHandlerTest {
 
-    private static final long MILLIS_FOR_PUMP = 20L;
     private static GlassFishLogHandler handler;
+    private static File logFile;
 
     @BeforeAll
     public static void initEnv() throws Exception {
@@ -60,7 +64,7 @@ public class GlassFishLogHandlerTest {
         LogManager.getLogManager().reset();
         LoggingSystemEnvironment.initialize();
         final GlassFishLogHandlerConfiguration cfg = new GlassFishLogHandlerConfiguration();
-        final File logFile = File.createTempFile(GlassFishLogHandlerTest.class.getCanonicalName(), ".log");
+        logFile = File.createTempFile(GlassFishLogHandlerTest.class.getCanonicalName(), ".log");
         logFile.delete();
         logFile.deleteOnExit();
         cfg.setLogFile(logFile);
@@ -107,11 +111,12 @@ public class GlassFishLogHandlerTest {
 
         System.out.println("Tommy, can you hear me?");
         // output stream is pumped in parallel to the error stream, order is not guaranteed between streams
-        Thread.sleep(MILLIS_FOR_PUMP);
+        waitForSize(logFile, 1);
         Logger.getLogger("some.usual.logger").info("Some info message");
+        waitForSize(logFile, 2);
         System.err.println("Can you feel me near you?");
         System.err.println("Příliš žluťoučký kůň úpěl ďábelské ódy");
-        Thread.sleep(MILLIS_FOR_PUMP);
+        waitForSize(logFile, 4);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(cfg.getLogFile().exists(), "file exists"),
@@ -135,7 +140,7 @@ public class GlassFishLogHandlerTest {
         assertTrue(handler.isReady(), "handler.ready");
         handler.publish(new GlassFishLogRecord(Level.SEVERE, "File one, record one", false));
         // pump is now to play
-        Thread.sleep(MILLIS_FOR_PUMP);
+        waitForSize(logFile, 5);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file one exists"),
@@ -150,20 +155,22 @@ public class GlassFishLogHandlerTest {
             )
         );
         handler.roll();
-        // There will be an asynchronous thread.
-        Thread.sleep(10L);
+        // There will be an asynchronous thread archiving the file.
+        waitForSize(logFile, 2);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
             () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
                 contains(
-                    stringContainsInOrder("INFO", "Rolling the file ", ".log", "output was originally enabled: true"),
-                    stringContainsInOrder("INFO", "Archiving file ", ".log", " to ", ".log_")
-                )
+                    stringContainsInOrder("INFO", "org.glassfish.main.jul.rotation.LogFileManager.roll",
+                        "Rolling the file ", ".log", "output was originally enabled: true"),
+                    stringContainsInOrder("INFO", "org.glassfish.main.jul.rotation.LogFileManager.moveFile",
+                        "Archiving file ", ".log", " to ", ".log_")
+                    )
             )
         );
         handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two", false));
-        Thread.sleep(MILLIS_FOR_PUMP);
+        waitForSize(logFile, 3);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
@@ -199,5 +206,22 @@ public class GlassFishLogHandlerTest {
         final GlassFishLogHandlerConfiguration cfg = GlassFishLogHandler
             .createGlassFishLogHandlerConfiguration(GlassFishLogHandler.class);
         assertNotNull(cfg, "cfg");
+    }
+
+
+    private static void waitForSize(File file, long minLineCount) throws IOException {
+        long start = System.currentTimeMillis();
+        do {
+            Thread.onSpinWait();
+            final long lineCount;
+            try (Stream<String> stream = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
+                lineCount = stream.count();
+            }
+            if (lineCount >= minLineCount) {
+                return;
+            }
+        } while (System.currentTimeMillis() - start < 2000L);
+        fail("Timeout waiting until the file " + file + " grows to " + minLineCount + " lines. File content: \n"
+            + Files.readString(file.toPath(), handler.getConfiguration().getEncoding()));
     }
 }

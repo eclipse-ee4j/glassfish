@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,13 +14,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
-
-import java.util.List;
 
 import org.glassfish.api.admin.RuntimeType;
 
@@ -38,5 +36,4 @@ public interface StartServerCommand {
      */
     void createLauncher() throws GFLauncherException, MiniXmlParserException;
 
-    List<String> getLauncherArgs();
 }

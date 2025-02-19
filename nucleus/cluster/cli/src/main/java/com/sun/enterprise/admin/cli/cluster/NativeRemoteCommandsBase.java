@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
@@ -28,8 +26,8 @@ import com.sun.enterprise.util.io.DomainDirs;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +36,6 @@ import java.util.logging.Level;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
-import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.internal.api.RelativePathResolver;
 
 /**
@@ -119,7 +116,7 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
     /**
      * Get SSH key passphrase from password file or user.
      */
-    String getSSHPassphrase(boolean verifyConn) throws CommandException {
+    String getSSHPassphrase(boolean verifyConn) {
         String passphrase = getFromPasswordFile("AS_ADMIN_SSHKEYPASSPHRASE");
 
         if (passphrase != null) {
@@ -147,7 +144,7 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
     /**
      * Get domain master password from password file or user.
      */
-    String getMasterPassword(String domain) throws CommandException {
+    String getMasterPassword(String domain) {
         String masterPass = getFromPasswordFile("AS_ADMIN_MASTERPASSWORD");
 
         //get password from user if not found in password file
@@ -173,96 +170,6 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                 || val.equalsIgnoreCase("y") || val.equalsIgnoreCase("n");
     }
 
-    /**
-     * Method to delete files and directories on remote host
-     * 'nodes' directory is not considered for deletion since it would contain
-     * configuration information.
-     * @param sftpClient sftp client instance
-     * @param dasFiles file layout on DAS
-     * @param dir directory to be removed
-     * @param force true means delete all files, false means leave non-GlassFish files
-     *              untouched
-     * @throws SftpException in case of error
-     * @throws IOException in case of error
-     */
-    // byron XXXX
-    void deleteRemoteFiles(SFTPClient sftpClient, List<String> dasFiles, String dir, boolean force)
-            throws SftpException, IOException {
-
-        for (ChannelSftp.LsEntry directoryEntry : (List<ChannelSftp.LsEntry>) sftpClient.getSftpChannel().ls(dir)) {
-            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals("..")
-                    || directoryEntry.getFilename().equals("nodes")) {
-                continue;
-            }
-            else if (directoryEntry.getAttrs().isDir()) {
-                String f1 = dir + "/" + directoryEntry.getFilename();
-                deleteRemoteFiles(sftpClient, dasFiles, f1, force);
-                //only if file is present in DAS, it is targeted for removal on remote host
-                //using force deletes all files on remote host
-                if (force) {
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.fine("Force removing directory " + f1);
-                    }
-                    if (isRemoteDirectoryEmpty(sftpClient, f1)) {
-                        sftpClient.getSftpChannel().rmdir(f1);
-                    }
-                }
-                else {
-                    if (dasFiles.contains(f1)) {
-                        if (isRemoteDirectoryEmpty(sftpClient, f1)) {
-                            sftpClient.getSftpChannel().rmdir(f1);
-                        }
-                    }
-                }
-            }
-            else {
-                String f2 = dir + "/" + directoryEntry.getFilename();
-                if (force) {
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.fine("Force removing file " + f2);
-                    }
-                    sftpClient.getSftpChannel().rm(f2);
-                }
-                else {
-                    if (dasFiles.contains(f2)) {
-                        sftpClient.getSftpChannel().rm(f2);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Method to check if specified remote directory contains files
-     *
-     * @param sftp SFTP client handle
-     * @param file path to remote directory
-     * @return true if empty, false otherwise
-     * @throws SftpException
-     */
-    boolean isRemoteDirectoryEmpty(SFTPClient sftp, String file) throws SftpException {
-        List<ChannelSftp.LsEntry> l = sftp.getSftpChannel().ls(file);
-        if (l.size() > 2) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Remove trailing slash from a path string
-     * @param s
-     * @return
-     */
-    String removeTrailingSlash(String s) {
-        if (!StringUtils.ok(s)) {
-            return s;
-        }
-
-        if (s.endsWith("/")) {
-            s = s.substring(0, s.length() - 1);
-        }
-        return s;
-    }
 
     /**
      * Obtains the real password from the domain specific keystore given an alias
@@ -277,14 +184,8 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
         try {
             File domainsDirFile = DomainDirs.getDefaultDomainsDir();
 
-            //get the list of domains
-            File[] files = domainsDirFile.listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File f) {
-                    return f.isDirectory();
-                }
-            });
-
+            // get the list of domains
+            File[] files = domainsDirFile.listFiles(File::isDirectory);
             for (File f : files) {
                 //the following property is required for initializing the password helper
                 System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, f.getAbsolutePath());
@@ -305,20 +206,19 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                 }
 
                 if (expandedPassword != null) {
-                    SSHLauncher sshL = new SSHLauncher();
+                    SSHLauncher sshL;
                     if (host != null) {
                         sshpassword = expandedPassword;
-                        sshL.init(getRemoteUser(), host, getRemotePort(), sshpassword, null, null, logger);
+                        sshL = new SSHLauncher(getRemoteUser(), host, getRemotePort(), sshpassword, null, null);
                         connStatus = sshL.checkPasswordAuth();
                         if (!connStatus) {
                             logger.warning(Strings.get("PasswordAuthFailure", f.getName()));
                         }
-                    }
-                    else {
+                    } else {
                         sshkeypassphrase = expandedPassword;
                         if (verifyConn) {
                             File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
-                            sshL.init(getRemoteUser(), hosts[0], getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
+                            sshL = new SSHLauncher(getRemoteUser(), hosts[0], getRemotePort(), sshpassword, keyFile, sshkeypassphrase);
                             connStatus = sshL.checkConnection();
                             if (!connStatus) {
                                 logger.warning(Strings.get("PasswordAuthFailure", f.getName()));
@@ -331,10 +231,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                     }
                 }
             }
-        }
-        catch (IOException ioe) {
+        } catch (IOException e) {
             if (logger.isLoggable(Level.FINER)) {
-                logger.finer(ioe.getMessage());
+                logger.log(Level.FINER, e.getMessage(), e);
             }
         }
         return expandedPassword;
@@ -348,20 +247,13 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
      * @return List of files and directories
      * @throws IOException
      */
-    List<String> getListOfInstallFiles(String installDir) throws IOException {
+    List<Path> getListOfInstallFiles(Path installDir) throws IOException {
         String ins = resolver.resolve("${com.sun.aas.productRoot}");
-        Set files = FileUtils.getAllFilesAndDirectoriesUnder(new File(ins));
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Total number of files under " + ins + " = " +
-                                                                files.size());
-        }
-        String remoteDir = installDir;
-        if (!installDir.endsWith("/")) {
-            remoteDir = remoteDir + "/";
-        }
-        List<String> modList = new ArrayList<>();
-        for (Object f : files) {
-            modList.add(remoteDir + FileUtils.makeForwardSlashes(((File) f).getPath()));
+        Set<File> files = FileUtils.getAllFilesAndDirectoriesUnder(new File(ins));
+        logger.finer(() -> "Total number of files under " + ins + " = " + files.size());
+        List<Path> modList = new ArrayList<>();
+        for (File f : files) {
+            modList.add(installDir.resolve(f.toPath()));
         }
         return modList;
     }

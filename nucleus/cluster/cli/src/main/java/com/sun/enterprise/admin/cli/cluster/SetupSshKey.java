@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,6 @@ import jakarta.inject.Inject;
 
 import java.io.Console;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -29,6 +28,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.cluster.ssh.launcher.SSHKeyInstaller;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
@@ -82,7 +82,8 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
             }
         } else {
             final File keyFile = new File(sshkeyfile);
-            promptPass = SSHUtil.validateKeyFile(keyFile);
+            SSHUtil.validateKeyFile(keyFile);
+            promptPass = true;
             if (SSHUtil.isEncryptedKey(keyFile)) {
                 sshkeypassphrase = getSSHPassphrase(false);
             }
@@ -96,15 +97,14 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
 
     @Override
     protected int executeCommand() throws CommandException {
-        SSHLauncher sshL = habitat.getService(SSHLauncher.class);
-
         String previousPassword = null;
         boolean status = false;
         for (String node : hosts) {
             final File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
-            sshL.init(getRemoteUser(), node, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
+            final SSHLauncher sshL = new SSHLauncher(getRemoteUser(), node, getRemotePort(), sshpassword, keyFile,
+                sshkeypassphrase);
             if (generatekey || promptPass) {
-                //prompt for password iff required
+                // prompt for password iff required
                 if (keyFile != null || SSHUtil.getExistingKeyFile() != null) {
                     if (sshL.checkConnection()) {
                         logger.info(Strings.get("SSHAlreadySetup", getRemoteUser(), node));
@@ -121,12 +121,12 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
             }
 
             try {
-                sshL.setupKey(node, sshpublickeyfile, generatekey, sshpassword);
-            } catch (IOException ce) {
-                // logger.fine("SSH key setup failed: " + ce.getMessage());
-                throw new CommandException(Strings.get("KeySetupFailed", ce.getMessage()));
+                SSHKeyInstaller installer = new SSHKeyInstaller(sshL);
+                File pubKeyFile = sshpublickeyfile == null ? null : new File(sshpublickeyfile);
+                installer.setupKey(node, pubKeyFile, generatekey, sshpassword);
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Keystore error for node: " + node, e);
+                logger.log(Level.SEVERE, "SSH key setup failed: ", e);
+                throw new CommandException(Strings.get("KeySetupFailed", e.getMessage()), e);
             }
 
             if (!sshL.checkConnection()) {
@@ -160,8 +160,7 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
                         logger.finer("Generate key!");
                     }
                     return true;
-                }
-                else if (val != null && (val.equalsIgnoreCase("no") || val.equalsIgnoreCase("n"))) {
+                } else if (val != null && (val.equalsIgnoreCase("no") || val.equalsIgnoreCase("n"))) {
                     break;
                 }
             }

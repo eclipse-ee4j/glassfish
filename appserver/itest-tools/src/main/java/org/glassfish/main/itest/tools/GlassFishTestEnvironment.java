@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates.
+ * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -368,7 +368,7 @@ public class GlassFishTestEnvironment {
 
     private static void changePassword() {
         final Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
-        final AsadminResult result = asadmin.exec(5_000, "change-admin-password");
+        final AsadminResult result = asadmin.exec(20_000, "change-admin-password");
         if (result.isError()) {
             // probably changed by previous execution without maven clean
             System.out.println("Admin password NOT changed.");

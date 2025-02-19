@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package com.sun.s1asdev.jdbc.connsharing.nonxa.ejb;
 
-import jakarta.ejb.*;
-import java.rmi.*;
+import jakarta.ejb.EJBObject;
+import java.rmi.RemoteException;
 
 public interface SimpleSession2 extends EJBObject {
-    public boolean test1() throws RemoteException;
-    public boolean test2() throws RemoteException;
-    public boolean test3() throws RemoteException;
+    public boolean test1UpdateWhereId100() throws RemoteException;
+    public boolean test2UpdateWhereId200() throws RemoteException;
+    public boolean test3GetConnection() throws RemoteException;
 }

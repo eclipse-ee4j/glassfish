@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -131,10 +131,11 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
     protected void initInstance() throws CommandException {
         /* node dir - parent directory of all node(s) */
         String nodeDirRootPath = null;
-        if (ok(nodeDir))
+        if (ok(nodeDir)) {
             nodeDirRootPath = nodeDir;
-        else // node dir = <install-root>/nodes
+        } else {
             nodeDirRootPath = getNodeDirRootDefault();
+        }
 
         nodeDirRoot = new File(nodeDirRootPath);
         mkdirs(nodeDirRoot);
@@ -351,8 +352,9 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
 
         if (files == null || files.length <= 0) {
             // empty dir
-            if (files != null)
+            if (files != null) {
                 FileUtils.whack(whackee);
+            }
 
             throw new CommandException(Strings.get("DeleteInstance.noWhack",
                     whackee));
@@ -368,22 +370,21 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             }
             FileUtils.renameFile(whackee, tmpwhackee);
             FileUtils.whack(tmpwhackee);
-        }
-        catch (IOException ioe) {
-            throw new CommandException(Strings.get("DeleteInstance.badWhackWithException",
-                    whackee, ioe, StringUtils.getStackTrace(ioe)));
+        } catch (IOException ioe) {
+            throw new CommandException(
+                Strings.get("DeleteInstance.badWhackWithException", whackee, ioe, StringUtils.getStackTrace(ioe)));
         }
         if (whackee.isDirectory()) {
             StringBuilder sb = new StringBuilder();
             sb.append("whackee=").append(whackee.toString());
             sb.append(", files in parent:");
             files = parent.listFiles();
-            for (File f : files)
+            for (File f : files) {
                 sb.append(f.toString()).append(", ");
+            }
             File f1 = new File(whackee.toString());
             sb.append(", new wackee.exists=").append(f1.exists());
-            throw new CommandException(Strings.get("DeleteInstance.badWhack",
-                    whackee) + ", " + sb.toString());
+            throw new CommandException(Strings.get("DeleteInstance.badWhack", whackee) + ", " + sb);
         }
 
         // now see if the parent dir is empty.  If so wipe it out.
@@ -406,13 +407,15 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
     }
 
     private boolean noInstancesRemain(File[] files) {
-        if (files == null || files.length <= 0)
+        if (files == null || files.length <= 0) {
             return true;
+        }
 
         if (files.length == 1
                 && files[0].isDirectory()
-                && files[0].getName().equals("agent"))
+                && files[0].getName().equals("agent")) {
             return true;
+        }
 
         return false;
     }
@@ -428,12 +431,14 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
         String installRootPath = getSystemProperty(
                 SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
-        if (!StringUtils.ok(installRootPath))
+        if (!StringUtils.ok(installRootPath)) {
             installRootPath = System.getProperty(
                     SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        }
 
-        if (!StringUtils.ok(installRootPath))
+        if (!StringUtils.ok(installRootPath)) {
             throw new CommandException("noInstallDirPath");
+        }
         return installRootPath;
     }
 
@@ -451,9 +456,10 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
         String productRootPath = getSystemProperty(
                 SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
 
-        if (!StringUtils.ok(productRootPath))
+        if (!StringUtils.ok(productRootPath)) {
             productRootPath = System.getProperty(
                     SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+        }
 
         if (!StringUtils.ok(productRootPath)) {
             // Product install root is parent of glassfish install root
@@ -504,8 +510,9 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             while (line != null && line.length() > 0) {
                 try {
                     port = Integer.parseInt(line);
-                    if (port > 0 && port <= 65535)
+                    if (port > 0 && port <= 65535) {
                         break;
+                    }
                 }
                 catch (NumberFormatException nfex) {
                 }
@@ -567,8 +574,9 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
         }
 
         // the usual case -- one node dir child
-        if (files != null && files.length == 1)
+        if (files != null && files.length == 1) {
             return files[0];
+        }
 
         /*
          * If there is no existing node dir child -- create one!
@@ -623,8 +631,9 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
         }
 
         for (File f : files) {
-            if (!f.getName().equals("agent"))
+            if (!f.getName().equals("agent")) {
                 return f;
+            }
         }
         throw new CommandException(
                 Strings.get("Instance.noInstanceDirs", parent));
@@ -643,8 +652,9 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
         String nodeDirDefault = getSystemProperty(
                 SystemPropertyConstants.AGENT_ROOT_PROPERTY);
 
-        if (StringUtils.ok(nodeDirDefault))
+        if (StringUtils.ok(nodeDirDefault)) {
             return nodeDirDefault;
+        }
 
         String installRootPath = getInstallRootPath();
         return installRootPath + "/" + "nodes";
@@ -653,12 +663,14 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
     @Override
     protected File getMasterPasswordFile() {
 
-        if (nodeDirChild == null)
+        if (nodeDirChild == null) {
             return null;
+        }
 
         File mp = new File(new File(nodeDirChild,"agent"), "master-password");
-        if (!mp.canRead())
+        if (!mp.canRead()) {
             return null;
+        }
 
         return mp;
     }

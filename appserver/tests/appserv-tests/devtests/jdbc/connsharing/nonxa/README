@@ -1,4 +1,4 @@
-Scenario I:
+Scenario 1:
 tx {
     Bean1 -> getConnection -> insert data into table -> call bean2 -> close connection
     Bean2 -> getConnection -> update above data -> close connection
@@ -9,7 +9,7 @@ tx {
 }
 ---
 
-Scenario II:
+Scenario 2:
 tx {
     Bean1 -> getConnection -> insert data into table -> close connection -> call bean2
     Bean2 -> getConnection -> update above data --> close connection
@@ -20,7 +20,7 @@ tx {
 }
 ---
 
-Scenario III:
+Scenario 3:
 tx {
     Bean1 -> getConnection:c1  -> insert data into table -> getConnection:c2
     -> insert some more data -> call bean2 -> close c1, c2
@@ -32,7 +32,7 @@ tx {
 }
 ---
 
-Scenario IV:
+Scenario 4:
 tx {
     Bean1 -> getConnection:c1  -> insert data into table -> getConnection:c2
     -> insert some more data -> close c1,c2 -> call bean2
@@ -43,11 +43,55 @@ tx {
     Bean1 -> new transaction query that data indeed got updated
 }
 
+---
+
+Scenario 5:
+
+This test opens 4 connections, and closes the connections in another
+order than the connections are opened (which you would not do anymore 
+when using try with resources).
+
+It is expected that all 4 connections are using the same 1 physical 
+connection to the database. This test depends on the equals method of 
+the Connection interface implementation.
+
+---
+
+Scenario 6:
+
+This test is about using 2 datasources and about the connection pool size. 
+A 100 bean calls are made in the same transaction, default connection pool 
+size is 32.
+
+Expecting that the implementation reuses connections,
+while code runs in the same transaction.
+
+Expecting that getting a resource from a second datasource is possible,
+while code runs in the same transaction.
+
+The pool size in datasource: "jdbc-connsharing-pool" is not
+initialized with a certain max pool size. Thus default "max-pool-size" in
+public class ConnectionPool is set to 32 connections.
+
+Calling the second bean, while first conn1 connection is still open
+should be possible, and should not lead to pool problems. 
+The connection pool maximum should not be reached in this test.
+
+---
+
+Scenario 7:
+
 Adding a test-case (test7 in EJB) for GlassFish-Issue : 15443
 Two resource-refs (in this case @Resource injections) for same resource
 and doing a physical lookup of same resource (initialContext.lookup), which was failing.
 Fix for 15443 should make this test pass.
 
+---
+
+Scenario 8:
+
 Adding a test-case (test8 in EJB) for GlassFish-Issue : 15577 or 15586
 Two resources from two different pools (each one with different database, assoc-with-thread=true)
-to make sure that connections from approrpiate pool is retrieved from the thread-local.
+to make sure that connections from appropriate pool is retrieved from the thread-local.
+
+---

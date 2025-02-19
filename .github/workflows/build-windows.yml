@@ -1,5 +1,5 @@
 
-name: Build on Windows 2022
+name: Build on Windows
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
         java-version: '21'
@@ -20,7 +20,7 @@ jobs:
         cache: maven
     - name: Install Maven
       run: |
-        curl.exe -o ./apache-maven-3.9.9-bin.zip https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.zip
+        curl.exe -s -S -o ./apache-maven-3.9.9-bin.zip https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.zip
         tar -xf ./apache-maven-3.9.9-bin.zip
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI

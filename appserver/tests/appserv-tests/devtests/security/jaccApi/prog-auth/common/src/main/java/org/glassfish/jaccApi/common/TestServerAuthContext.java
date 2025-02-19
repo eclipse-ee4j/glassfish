@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,17 @@
 
 package org.glassfish.jaccApi.common;
 
-import java.util.Collections;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.ServerAuth;
 import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.security.auth.message.module.ServerAuthModule;
+
+import java.util.Collections;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
 
 /**
  * The Server Authentication Context is an extra (required) indirection between the Application Server and the actual Server

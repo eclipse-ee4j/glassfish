@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.launcher;
 
 import java.io.File;
-import java.util.List;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.junit.jupiter.api.BeforeAll;
@@ -89,7 +88,7 @@ public class GFLauncherTest {
     public void domain1WithDiagOptions() throws Exception {
         info.setDomainName("domain1");
         launcher.launch();
-        List<String> cmdline = launcher.getCommandLine();
+        CommandLine cmdline = launcher.getCommandLine();
         // 0 --> java, 1 --> "-cp" 2 --> the classpath, 3 -->first arg
         assertThat(cmdline,
             hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
@@ -102,7 +101,7 @@ public class GFLauncherTest {
     public void domain2WithoutDiagOptions() throws Exception {
         info.setDomainName("domain2");
         launcher.launch();
-        List<String> cmdline = launcher.getCommandLine();
+        CommandLine cmdline = launcher.getCommandLine();
         assertThat(cmdline,
             hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
     }

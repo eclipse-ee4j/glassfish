@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,7 +54,16 @@ public class GlassFishLogRecord extends LogRecord {
      * @param autodetectSource autodetect source class and method
      */
     public GlassFishLogRecord(final Level level, final String message, final boolean autodetectSource) {
-        this(new LogRecord(level, message), autodetectSource);
+        super(level, null);
+        this.threadName = Thread.currentThread().getName();
+        this.record = new LogRecord(level, message);
+        if (autodetectSource) {
+            SourceDetector.detectClassAndMethod(record);
+        } else {
+            // Prevents autodetection done passively by JUL
+            record.setSourceClassName(null);
+            record.setSourceMethodName(null);
+        }
     }
 
 
@@ -62,15 +71,11 @@ public class GlassFishLogRecord extends LogRecord {
      * Wraps the log record.
      *
      * @param record the log record
-     * @param autodetectSource autodetect source class and method
      */
-    public GlassFishLogRecord(final LogRecord record, final boolean autodetectSource) {
+    public GlassFishLogRecord(final LogRecord record) {
         super(record.getLevel(), null);
         this.threadName = Thread.currentThread().getName();
         this.record = record;
-        if (autodetectSource) {
-            SourceDetector.detectClassAndMethod(record);
-        }
     }
 
 
@@ -294,6 +299,7 @@ public class GlassFishLogRecord extends LogRecord {
         private static final Set<String> LOGGING_CLASSES = Set.of(
             "org.glassfish.main.jul.GlassFishLogger",
             "org.glassfish.main.jul.GlassFishLoggerWrapper",
+            "org.glassfish.main.jul.rotation.LogFileManager$AsyncLogger",
             // see LogDomains in GlassFish sources
             "com.sun.logging.LogDomainsLogger",
             // remaining classes are in the JDK

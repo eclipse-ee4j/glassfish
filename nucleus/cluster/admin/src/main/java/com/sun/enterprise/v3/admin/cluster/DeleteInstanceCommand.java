@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Node;
@@ -71,7 +71,7 @@ public class DeleteInstanceCommand implements AdminCommand {
     private CommandRunner cr;
 
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator locator;
 
     @Inject
     private Servers servers;
@@ -187,7 +187,7 @@ public class DeleteInstanceCommand implements AdminCommand {
 
     private void deleteInstanceFilesystem(AdminCommandContext ctx) {
 
-        NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+        NodeUtils nodeUtils = new NodeUtils(locator);
         ArrayList<String> command = new ArrayList<String>();
         String humanCommand = null;
 

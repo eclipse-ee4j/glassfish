@@ -15,6 +15,7 @@
  */
 package org.glassfish.microprofile.health;
 
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -112,6 +113,8 @@ public class HealthReporter {
     }
 
     public void removeAllHealthChecksFrom(String contextName) {
+        List<HealthCheckInfo> healthCheckInfos = applicationHealthChecks.get(contextName);
+        healthCheckInfos.forEach(healthCheck -> CDI.current().destroy(healthCheck));
         applicationHealthChecks.remove(contextName);
     }
 

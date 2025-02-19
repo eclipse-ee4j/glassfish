@@ -24,6 +24,7 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessBean;
 
+import java.lang.ref.Cleaner;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +44,8 @@ import org.glassfish.microprofile.health.HealthReporter;
 
 
 public class CollectHealthChecksExtension implements Extension {
+
+    private static final Cleaner CLEANER = Cleaner.create();
 
     private final HealthReporter service;
     private final Set<HealthCheckBeanAndKind> healthChecks = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -86,10 +89,13 @@ public class CollectHealthChecksExtension implements Extension {
     }
 
     public void afterDeploymentValidation(@Observes AfterDeploymentValidation adv, BeanManager beanManager) {
-        healthChecks.forEach(bean -> {
-            CreationalContext<HealthCheck> creationalContext = beanManager.createCreationalContext(bean.bean());
+        healthChecks.forEach(healthCheckBeanAndKind -> {
+            Bean<HealthCheck> bean = healthCheckBeanAndKind.bean();
+            CreationalContext<HealthCheck> creationalContext = beanManager.createCreationalContext(bean);
+            HealthCheck healthCheck = bean.create(creationalContext);
+
             service.addHealthCheck(invocationManager.getCurrentInvocation().getAppName(),
-                    new HealthCheckInfo(bean.bean().create(creationalContext), bean.kind()));
+                    new HealthCheckInfo(healthCheck, healthCheckBeanAndKind.kind()));
         });
     }
 }

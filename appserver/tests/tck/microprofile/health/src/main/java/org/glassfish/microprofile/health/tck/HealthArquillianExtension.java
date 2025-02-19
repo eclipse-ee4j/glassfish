@@ -15,7 +15,6 @@
  */
 package org.glassfish.microprofile.health.tck;
 
-import java.net.URI;
 import java.util.logging.Logger;
 
 import org.glassfish.microprofile.health.tck.client.BeansXmlTransformer;

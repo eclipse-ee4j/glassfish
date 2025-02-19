@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,27 +18,19 @@
 package org.glassfish.appclient.client.acc;
 
 /**
- *
  * @author tjquinn
  */
 public class TestMain {
     private static final String JAR_CLIENT_NAME = "there/myClient.jar";
-    private static final String DIR_CLIENT_NAME = "here/myClient";
     private static final String USER_VALUE = "joe-the-user";
-    private static final String PASSWORDFILE_NAME = "topSecret.stuff";
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            final AgentArguments agentArgs = AgentArguments.newInstance(
-                    "mode=acscript" + ",client=jar=" + JAR_CLIENT_NAME + ",arg=-textauth" + ",arg=-user,arg=" + USER_VALUE);
-            CommandLaunchInfo.newInstance(agentArgs);
-        } catch (UserError ex) {
-            System.err.println(ex.getLocalizedMessage());
-
-        }
+        final AgentArguments agentArgs = AgentArguments.newInstance(
+            "mode=acscript" + ",client=jar=" + JAR_CLIENT_NAME + ",arg=-textauth" + ",arg=-user,arg=" + USER_VALUE);
+        CommandLaunchInfo.newInstance(agentArgs);
     }
 
 }

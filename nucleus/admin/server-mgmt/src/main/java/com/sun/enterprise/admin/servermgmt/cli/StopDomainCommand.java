@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -168,8 +168,7 @@ public class StopDomainCommand extends LocalDomainCommand {
     protected void doCommand() throws CommandException {
         // run the remote stop-domain command and throw away the output
         final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
-        final File watchedPid = isLocal() ? getServerDirs().getPidFile() : null;
-        final Long oldPid = ProcessUtils.loadPid(watchedPid);
+        final Long oldPid = getServerPid();
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final boolean printDots = !programOpts.isTerse();
         try {
@@ -180,7 +179,7 @@ public class StopDomainCommand extends LocalDomainCommand {
             }
             final boolean dead;
             if (isLocal()) {
-                dead = ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
+                dead = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
             } else {
                 dead = ProcessUtils.waitWhileListening(addr, timeout, printDots);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
@@ -63,6 +64,8 @@ import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.TargetServer;
+import org.glassfish.embeddable.client.ApplicationClientContainer;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -79,7 +82,7 @@ import org.xml.sax.SAXException;
  * <li>create a new builder for an ACC (see {@link #newBuilder} and {@link AppClientContainerBuilder}),
  * <li>optionally modify the configuration by invoking various builder methods,
  * <li>create an embedded instance of the ACC from the builder using {@link AppClientContainerBuilder#newContainer() },
- * <li>startClient the client using {@link #startClient(String[])}, and
+ * <li>startClient the client using {@link #launch(String[])}, and
  * <li>stop the container using {@link #stop()}.
  * </ul>
  *
@@ -166,7 +169,7 @@ import org.xml.sax.SAXException;
  */
 @Service
 @PerLookup
-public class AppClientContainer {
+public class AppClientContainer implements ApplicationClientContainer {
 
     // XXX move this
     /** Prop name for keeping temporary files */
@@ -194,19 +197,15 @@ public class AppClientContainer {
     @Inject
     private ServiceLocator habitat;
 
-    private Builder builder;
-
     private Cleanup cleanup;
 
-    private State state = State.INSTANTIATED; // HK2 will create the instance
+    private volatile State state;
 
     private ClientMainClassSetting clientMainClassSetting;
 
-    private URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+    private TransformingClassLoader classLoader;
 
     private Launchable client;
-
-    private CallbackHandler callerSuppliedCallbackHandler;
 
     /** returned from binding the app client to naming; used in preparing component invocation */
     private String componentId;
@@ -221,54 +220,32 @@ public class AppClientContainer {
         return new AppClientContainerBuilder(targetServers);
     }
 
-    /*
-     * ********************* ABOUT INITIALIZATION ********************
-     *
-     * Note that, internally, the AppClientContainerBuilder's newContainer methods use HK2 to instantiate the
-     * AppClientContainer object (so we can inject references to various other services).
-     *
-     * The newContainer method then invokes one of the ACC's <code>prepare</code> methods to initialize the ACC fully. All
-     * that is left at that point is for the client's main method to be invoked.
-     *
-     */
 
-    public void startClient(String[] args) throws Exception, UserError {
-        prepare(null);
-        launch(args);
+    private AppClientContainer() {
+        this.classLoader = (TransformingClassLoader) Thread.currentThread().getContextClassLoader();
+        this.state = State.INSTANTIATED;
     }
 
     void prepareSecurity(final TargetServer[] targetServers, final List<MessageSecurityConfig> msgSecConfigs,
             final Properties containerProperties, final ClientCredential clientCredential,
-            final CallbackHandler callerSuppliedCallbackHandler, final URLClassLoader classLoader, final boolean isTextAuth)
+            final CallbackHandler callerSuppliedCallbackHandler, final boolean isTextAuth)
             throws ReflectiveOperationException, InjectionException, IOException, SAXException {
-        appClientContainerSecurityHelper.init(targetServers, msgSecConfigs, containerProperties, clientCredential, callerSuppliedCallbackHandler, classLoader,
-                client.getDescriptor(classLoader), isTextAuth);
+        appClientContainerSecurityHelper.init(targetServers, msgSecConfigs, containerProperties, clientCredential,
+            callerSuppliedCallbackHandler, classLoader, client.getDescriptor(classLoader), isTextAuth);
     }
 
-    void setCallbackHandler(final CallbackHandler callerSuppliedCallbackHandler) {
-        this.callerSuppliedCallbackHandler = callerSuppliedCallbackHandler;
-    }
-
-    void setBuilder(final Builder builder) {
-        this.builder = builder;
-    }
-
-    public void prepare(final Instrumentation inst) throws NamingException, IOException, InstantiationException, IllegalAccessException,
-            InjectionException, ClassNotFoundException, SAXException, NoSuchMethodException, UserError {
+    public void prepare(final Instrumentation inst) throws Exception, UserError {
         completePreparation(inst);
     }
 
     void setClient(final Launchable client) throws ClassNotFoundException {
         this.client = client;
         clientMainClassSetting = ClientMainClassSetting.set(client.getMainClass());
-
     }
 
     void processPermissions() throws IOException {
         // need to process the permissions files
-        if (classLoader instanceof ACCClassLoader) {
-            ((ACCClassLoader) classLoader).processDeclaredPermissions();
-        }
+        classLoader.processDeclaredPermissions();
     }
 
     protected Class<?> loadClass(final String className) throws ClassNotFoundException {
@@ -281,44 +258,37 @@ public class AppClientContainer {
 
     /**
      * Gets the ACC ready so the main class can run. This can be followed, immediately or after some time, by either an
-     * invocation of {@link #launch(java.lang.String[]) or by the JVM invoking the client's main method (as would happen
+     * invocation of {@link #launch(java.lang.String[])}
+     * @throws Exception  or by the JVM invoking the client's main method (as would happen
      * during a <code>java -jar theClient.jar</code> launch.
-     *
-     * @throws java.lang.Exception
+     * @throws UserError
      */
-    private void completePreparation(final Instrumentation inst) throws NamingException, IOException, InstantiationException,
-            IllegalAccessException, InjectionException, ClassNotFoundException, SAXException, NoSuchMethodException, UserError {
+    private void completePreparation(final Instrumentation inst) throws Exception, UserError {
         if (state != State.INSTANTIATED) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(
+                "Expected state was " + State.INSTANTIATED + ", but current state was " + state);
         }
 
-        /*
-         * Attach any names defined in the app client. Validate the descriptor first, then use it to bind names in the app
-         * client. This order is important - for example, to set up message destination refs correctly.
-         */
+        // Attach any names defined in the app client. Validate the descriptor first, then use it to
+        // bind names in the app client. This order is important - for example, to set up message
+        // destination refs correctly.
         client.validateDescriptor();
         final ApplicationClientDescriptor desc = client.getDescriptor(classLoader);
         componentId = componentEnvManager.bindToComponentNamespace(desc);
 
-        /*
-         * Arrange for cleanup now instead of during launch() because in some use cases the JVM will invoke the client's main
-         * method itself and launch will be skipped.
-         */
+        // Arrange for cleanup now instead of during launch() because in some use cases the JVM will
+        // invoke the client's main method itself and launch will be skipped.
         cleanup = Cleanup.arrangeForShutdownCleanup(logger, habitat, desc);
 
-        /*
-         * Allow pre-destroy handling to work on the main class during clean-up.
-         */
+        // Allow pre-destroy handling to work on the main class during clean-up.
         cleanup.setInjectionManager(injectionManager, ClientMainClassSetting.clientMainClass);
 
-        /*
-         * If this app client contains persistence unit refs, then initialize the PU handling.
-         */
+        // If this app client contains persistence unit refs, then initialize the PU handling.
         Collection<? extends PersistenceUnitDescriptor> referencedPUs = desc.findReferencedPUs();
         if (referencedPUs != null && !referencedPUs.isEmpty()) {
 
-            ProviderContainerContractInfoImpl pcci = new ProviderContainerContractInfoImpl((ACCClassLoader) getClassLoader(), inst,
-                    client.getAnchorDir(), connectorRuntime);
+            ProviderContainerContractInfoImpl pcci = new ProviderContainerContractInfoImpl(
+                (TransformingClassLoader) getClassLoader(), inst, client.getAnchorDir(), connectorRuntime);
             for (PersistenceUnitDescriptor puDesc : referencedPUs) {
                 PersistenceUnitLoader pul = new PersistenceUnitLoader(puDesc, pcci);
                 desc.addEntityManagerFactory(puDesc.getName(), pul.getEMF());
@@ -340,47 +310,45 @@ public class AppClientContainer {
         managedBeanManager.loadManagedBeans(desc.getApplication());
         cleanup.setManagedBeanManager(managedBeanManager);
 
-        /**
-         * We don't really need the main method here but we do need the side-effects.
-         */
+        // We don't really need the main method here but we do need the side-effects.
         getMainMethod();
 
         state = State.PREPARED;
     }
 
-    public void launch(String[] args) throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException, IOException, SAXException, InjectionException, UserError {
+    public void launch(String[] args) throws UserError {
 
         if (state != State.PREPARED) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Unexpected state. Expected " + State.PREPARED + ", actual is " + state);
         }
-        Method mainMethod = getMainMethod();
-        // build args to the main and call it
-        Object params[] = new Object[1];
-        params[0] = args;
-
-        if (logger.isLoggable(Level.FINE)) {
-            dumpLoaderURLs();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        try {
+            Method mainMethod = getMainMethod();
+            // build args to the main and call it
+            if (logger.isLoggable(Level.FINE)) {
+                logger.log(Level.FINE,
+                    "Current thread's classloader: " + Thread.currentThread().getContextClassLoader());
+            }
+            mainMethod.invoke(null, new Object[] {args});
+            state = State.STARTED;
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof UserError) {
+                throw (UserError) e.getCause();
+            }
+            throw new IllegalStateException("Launch failed.", e.getCause());
+        } catch (Exception e) {
+            throw new IllegalStateException("Launch failed.", e);
+        } finally {
+            // We need to clean up when the EDT ends or, if there is no EDT, right away.
+            // In particular, JMS/MQ-related non-daemon threads might still be running due to open
+            // queueing connections.
+            cleanupWhenSafe();
         }
-        mainMethod.invoke(null, params);
-        state = State.STARTED;
-
-        /*
-         * We need to clean up when the EDT ends or, if there is no EDT, right away. In particular, JMS/MQ-related non-daemon
-         * threads might still be running due to open queueing connections.
-         */
-        cleanupWhenSafe();
     }
 
     private boolean isEDTRunning() {
-        Map<Thread, StackTraceElement[]> threads = java.security.AccessController
-                .doPrivileged(new java.security.PrivilegedAction<Map<Thread, StackTraceElement[]>>() {
-
-                    @Override
-                    public Map<Thread, StackTraceElement[]> run() {
-                        return Thread.getAllStackTraces();
-                    }
-                });
+        Map<Thread, StackTraceElement[]> threads = AccessController
+            .doPrivileged((PrivilegedAction<Map<Thread, StackTraceElement[]>>) Thread::getAllStackTraces);
 
         logger.fine("Checking for EDT thread...");
         for (Map.Entry<Thread, StackTraceElement[]> entry : threads.entrySet()) {
@@ -402,38 +370,18 @@ public class AppClientContainer {
         if (isEDTRunning()) {
             final AtomicReference<Thread> edt = new AtomicReference<>();
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        edt.set(Thread.currentThread());
-                    }
-                });
+                SwingUtilities.invokeAndWait(() -> edt.set(Thread.currentThread()));
                 edt.get().join();
             } catch (Exception e) {
-
+                logger.log(Level.WARNING, "Waiting for Swing thread failed.", e);
             }
         }
         stop();
     }
 
-    private void dumpLoaderURLs() {
-        final String sep = System.lineSeparator();
-        final ClassLoader ldr = Thread.currentThread().getContextClassLoader();
-        if (ldr instanceof ACCClassLoader) {
-            final ACCClassLoader loader = (ACCClassLoader) ldr;
-            final URL[] urls = loader.getURLs();
-
-            final StringBuilder sb = new StringBuilder("Class loader URLs:");
-            for (URL url : urls) {
-                sb.append("  ").append(url.toExternalForm()).append(sep);
-            }
-            sb.append(sep);
-            logger.fine(sb.toString());
-        }
-    }
 
     private Method getMainMethod()
-            throws NoSuchMethodException, ClassNotFoundException, IOException, SAXException, InjectionException, UserError {
+        throws UserError, ReflectiveOperationException, InjectionException, IOException, SAXException {
         // determine the main method using reflection
         // verify that it is public static void and takes
         // String[] as the only argument
@@ -459,27 +407,24 @@ public class AppClientContainer {
         return result;
     }
 
+
     /**
      * Stops the app client container.
      * <p>
-     * Note that the calling program should not stop the ACC if there might be other threads running, such as the Swing
-     * event dispatcher thread. Stopping the ACC can shut down various services that those continuing threads might try to
-     * use.
+     * Note that the calling program should not stop the ACC if there might be other threads
+     * running, such as the Swing event dispatcher thread. Stopping the ACC can shut down various
+     * services that those continuing threads might try to use.
      * <p>
-     * Also note that stopping the ACC will have no effect on any thread that the app client itself might have created. If
-     * the calling program needs to control such threads it and the client code running in the threads should agree on how
-     * they will communicate with each other. The ACC cannot help with this.
+     * Also note that stopping the ACC will have no effect on any thread that the app client itself
+     * might have created. If the calling program needs to control such threads it and the client
+     * code running in the threads should agree on how they will communicate with each other.
+     * The ACC cannot help with this.
      */
     public void stop() {
-        /*
-         * Because stop can be invoked automatically at the end of launch, allow the developer's driver program to invoke stop
-         * again without penalty.
-         */
+        // Because stop can be invoked automatically at the end of launch, allow the developer's
+        // driver program to invoke stop again without penalty.
         if (state == State.STOPPED) {
             return;
-        }
-        if (state != State.STARTED) {
-            throw new IllegalStateException();
         }
         cleanup.start();
         state = State.STOPPED;
@@ -493,7 +438,7 @@ public class AppClientContainer {
 
         static String clientMainClassName;
         static volatile Class clientMainClass;
-        static boolean isInjected = false;
+        static boolean isInjected;
 
         static ClientMainClassSetting set(final String name) {
             clientMainClassName = name;
@@ -515,12 +460,11 @@ public class AppClientContainer {
                     throw new IllegalStateException("neither client main class nor its class name has been set");
                 }
                 clientMainClass = Class.forName(clientMainClassName, true, loader);
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "Loaded client main class {0}", clientMainClassName);
-                }
+                logger.log(Level.FINE, "Loaded client main class {0}", clientMainClassName);
             }
-            ComponentInvocation ci = new ComponentInvocation(componentId, ComponentInvocation.ComponentInvocationType.APP_CLIENT_INVOCATION,
-                    container, acDesc.getApplication().getAppName(), acDesc.getModuleName());
+            ComponentInvocation ci = new ComponentInvocation(componentId,
+                ComponentInvocation.ComponentInvocationType.APP_CLIENT_INVOCATION, container,
+                acDesc.getApplication().getAppName(), acDesc.getModuleName());
 
             invocationManager.preInvoke(ci);
             InjectionException injExc = null;
@@ -603,7 +547,7 @@ public class AppClientContainer {
      * EAR that contains multiple app clients as submodules within it; the ACC needs the calling program to specify which of
      * the possibly several app client modules is the one to execute.
      *
-     * @param mainClassName
+     * @param clientMainClassName
      * @return
      */
     public void setClientMainClassName(final String clientMainClassName) throws ClassNotFoundException {
@@ -621,22 +565,17 @@ public class AppClientContainer {
      */
     private static void prepareURLStreamHandling() {
         // Set the HTTPS URL stream handler.
-        java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-            @Override
-            public Object run() {
-                URL.setURLStreamHandlerFactory(new DirContextURLStreamHandlerFactory());
-                return null;
-            }
-        });
+        PrivilegedAction<Void> action = () -> {
+            URL.setURLStreamHandlerFactory(new DirContextURLStreamHandlerFactory());
+            return null;
+        };
+        AccessController.doPrivileged(action);
     }
 
-    void setClassLoader(ACCClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
 
     /**
-     * Prescribes the exposed behavior of ACC configuration that can be set up further, and can be used to newContainer an
-     * ACC.
+     * Prescribes the exposed behavior of ACC configuration that can be set up further, and can be
+     * used to newContainer an ACC.
      */
     public interface Builder {
 

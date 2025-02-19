@@ -33,7 +33,7 @@ public class EquinoxAdapter implements OsgiPlatformAdapter {
     }
 
     @Override
-    public void addFrameworkJars(ClassPathBuilder builder) throws IOException {
-        builder.addJarFolder(equinoxHome);
+    public ClassPathBuilder addFrameworkJars(ClassPathBuilder builder) throws IOException {
+        return builder.addJarFolder(equinoxHome);
     }
 }

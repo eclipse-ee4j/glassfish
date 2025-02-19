@@ -114,7 +114,6 @@ public class HealthReporter {
 
     public void removeAllHealthChecksFrom(String contextName) {
         List<HealthCheckInfo> healthCheckInfos = applicationHealthChecks.get(contextName);
-        healthCheckInfos.forEach(healthCheck -> CDI.current().destroy(healthCheck));
         applicationHealthChecks.remove(contextName);
     }
 

@@ -55,9 +55,6 @@ xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`] subcommand.
 To create more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon (:), use the
 backslash (\) to offset the colon delimiter.
-+
-Information about properties for the subcommand is included in this help
-page.
 3. To apply your changes, restart {productName}. See
 xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
@@ -78,7 +75,7 @@ Command create-jvm-options executed successfully.
 
 See Also
 
-You can also view the full syntax and options of the subcommand by
+You can also view the full syntax and options of the subcommand in the xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`] reference manual, or by
 typing `asadmin help create-jvm-options` at the command line.
 
 [[to-list-jvm-options]]

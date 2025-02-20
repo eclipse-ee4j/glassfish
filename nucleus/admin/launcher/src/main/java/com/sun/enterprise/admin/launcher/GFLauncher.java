@@ -65,6 +65,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_C
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -635,17 +636,17 @@ public abstract class GFLauncher {
         // 2. <system-property>'s from domain.xml
         // 3. system properties -- essential there is, e.g. "${path.separator}" in domain.xml
         // 4. asenvProps
-        // 5. env variables
+        // 5. env variables (if the above contain a switch to prefer env variables, then they go first, before 1.
         // i.e. add in reverse order to get the precedence right
 
         Map<String, String> all = new HashMap<>();
 
-        all.putAll(System.getenv());
         all.putAll(asenvProps);
         all.putAll(propertiesToStringMap(System.getProperties()));
         all.putAll(domainXMLSystemProperty);
         all.putAll(domainXMLjvmOptions.getCombinedMap());
         all.putAll(domainXMLJavaConfigProfiler.getConfig());
+        addEnvVariables(all);
 
         TokenResolver resolver = new TokenResolver(all);
         resolver.resolve(domainXMLjvmOptions.xProps);
@@ -658,6 +659,15 @@ public abstract class GFLauncher {
 
         logFilename = resolver.resolve(logFilename);
         adminFileRealmKeyFile = resolver.resolve(adminFileRealmKeyFile);
+    }
+
+    private void addEnvVariables(Map<String, String> all) {
+        final String preferEnvOverProperties = all.get(PREFER_ENV_VARS_OVER_PROPERTIES);
+        if (preferEnvOverProperties != null && Boolean.valueOf(preferEnvOverProperties)) {
+            all.putAll(System.getenv());
+        } else {
+            System.getenv().forEach((name, value) -> all.putIfAbsent(name, value));
+        }
     }
 
     private void fixLogFilename() throws GFLauncherException {

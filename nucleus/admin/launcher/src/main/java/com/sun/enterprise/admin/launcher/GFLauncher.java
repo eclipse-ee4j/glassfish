@@ -14,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.admin.launcher;
 
 import com.sun.enterprise.admin.launcher.CommandLine.CommandFormat;
@@ -45,7 +44,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
@@ -66,6 +67,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPE
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -78,7 +80,8 @@ import static java.util.stream.Collectors.toList;
  * This is the main Launcher class designed for external and internal usage.
  *
  * <p>
- * Each of the 3 kinds of server, domain, node-agent and instance, need to subclass this class.
+ * Each of the 3 kinds of server, domain, node-agent and instance, need to
+ * subclass this class.
  *
  * @author bnevins
  */
@@ -89,14 +92,15 @@ public abstract class GFLauncher {
     private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncher.class);
 
     /**
-     * Parameters provided by the caller of a launcher, either programmatically (for GF embedded) or as commandline
-     * parameters (GF DAS or Instance).
+     * Parameters provided by the caller of a launcher, either programmatically
+     * (for GF embedded) or as commandline parameters (GF DAS or Instance).
      *
      */
     private final GFLauncherInfo callerParameters;
 
     /**
-     * Properties from asenv.conf, such as <code>AS_DEF_DOMAINS_PATH="../domains"</code>
+     * Properties from asenv.conf, such as
+     * <code>AS_DEF_DOMAINS_PATH="../domains"</code>
      */
     private Map<String, String> asenvProps;
 
@@ -106,23 +110,26 @@ public abstract class GFLauncher {
     private JavaConfig domainXMLjavaConfig;
 
     /**
-     * the <code>debug-options</code> attribute from <code>java-config</code> in domain.xml
+     * the <code>debug-options</code> attribute from <code>java-config</code> in
+     * domain.xml
      */
     private List<String> domainXMLjavaConfigDebugOptions;
 
     /**
-     * The debug port (<code>address</code>) primarily extracted from <code>domainXMLjavaConfigDebugOptions</code>
+     * The debug port (<code>address</code>) primarily extracted from
+     * <code>domainXMLjavaConfigDebugOptions</code>
      */
     private int debugPort = -1;
 
     /**
-     * The debug suspend (<code>suspend</code>) primarily extracted from <code>domainXMLjavaConfigDebugOptions</code>
+     * The debug suspend (<code>suspend</code>) primarily extracted from
+     * <code>domainXMLjavaConfigDebugOptions</code>
      */
     private boolean debugSuspend;
 
     /**
-     * The combined <code>jvm-options</code> from <code>java-config</code>, <code>profiler</code> in domain.xml and extra
-     * ones added by this launcher
+     * The combined <code>jvm-options</code> from <code>java-config</code>,
+     * <code>profiler</code> in domain.xml and extra ones added by this launcher
      */
     private JvmOptions domainXMLjvmOptions;
 
@@ -147,7 +154,8 @@ public abstract class GFLauncher {
     private boolean secureAdminEnabled;
 
     /**
-     * The file name to log to using a <code>java.util.logging.FileHandler.FileHandler</code>
+     * The file name to log to using a
+     * <code>java.util.logging.FileHandler.FileHandler</code>
      */
     private String logFilename; // defaults to "logs/server.log"
 
@@ -168,7 +176,8 @@ public abstract class GFLauncher {
     private LaunchType mode = LaunchType.normal;
 
     /**
-     * The full commandline string used to start GlassFish in process <code<>glassFishProcess</code>
+     * The full commandline string used to start GlassFish in process
+     * <code<>glassFishProcess</code>
      */
     private CommandLine commandLine;
 
@@ -234,7 +243,6 @@ public abstract class GFLauncher {
         launch();
     }
 
-
     public void setup() throws GFLauncherException, MiniXmlParserException {
         asenvProps = getAsEnvConfReader().getProps();
         callerParameters.setup();
@@ -299,15 +307,17 @@ public abstract class GFLauncher {
 
     /**
      *
-     * @return The callerParameters object that contains startup callerParameters
+     * @return The callerParameters object that contains startup
+     * callerParameters
      */
     public final GFLauncherInfo getInfo() {
         return callerParameters;
     }
 
     /**
-     * Returns the admin realm key file for the server, if the admin realm is a FileRealm. Otherwise return null. This value
-     * can be used to create a FileRealm for the server.
+     * Returns the admin realm key file for the server, if the admin realm is a
+     * FileRealm. Otherwise return null. This value can be used to create a
+     * FileRealm for the server.
      */
     public String getAdminRealmKeyFile() {
         return adminFileRealmKeyFile;
@@ -321,21 +331,26 @@ public abstract class GFLauncher {
     }
 
     /**
-     * Returns the exit value of the glassFishProcess. This only makes sense when we ran in verbose mode and waited for the
-     * glassFishProcess to exit in the wait() method. Caveat Emptor!
+     * Returns the exit value of the glassFishProcess. This only makes sense
+     * when we ran in verbose mode and waited for the glassFishProcess to exit
+     * in the wait() method. Caveat Emptor!
      *
-     * @return the glassFishProcess' exit value if it completed and we waited. Otherwise it returns -1
+     * @return the glassFishProcess' exit value if it completed and we waited.
+     * Otherwise it returns -1
      */
     public final int getExitValue() {
         return exitValue;
     }
 
     /**
-     * You don't want to call this before calling launch because it would not make sense.
+     * You don't want to call this before calling launch because it would not
+     * make sense.
      *
-     * @return The Process object of the launched Server glassFishProcess. you will either get a valid Process object or an
-     * Exceptio will be thrown. You are guaranteed not to get a null.
-     * @throws GFLauncherException if the Process has not been created yet - call launch() before calling this method.
+     * @return The Process object of the launched Server glassFishProcess. you
+     * will either get a valid Process object or an Exceptio will be thrown. You
+     * are guaranteed not to get a null.
+     * @throws GFLauncherException if the Process has not been created yet -
+     * call launch() before calling this method.
      */
     public final Process getProcess() throws GFLauncherException {
         if (glassFishProcess == null) {
@@ -346,10 +361,11 @@ public abstract class GFLauncher {
     }
 
     /**
-     * A ProcessStreamDrainer is always attached to every Process created here. It is handy for getting the stdin and stdout
-     * as a nice String.
+     * A ProcessStreamDrainer is always attached to every Process created here.
+     * It is handy for getting the stdin and stdout as a nice String.
      *
-     * @return A valid ProcessStreamDrainer. You are guaranteed to never get a null.
+     * @return A valid ProcessStreamDrainer. You are guaranteed to never get a
+     * null.
      * @throws GFLauncherException if the glassFishProcess has not launched yet
      * @see com.sun.enterprise.universal.process.ProcessStreamDrainer
      */
@@ -376,7 +392,8 @@ public abstract class GFLauncher {
     }
 
     /**
-     * Return the port number of the debug port, or -1 if debugging is not enabled.
+     * Return the port number of the debug port, or -1 if debugging is not
+     * enabled.
      *
      * @return the debug port, or -1 if not debugging
      */
@@ -387,14 +404,16 @@ public abstract class GFLauncher {
     /**
      * Return true if suspend=y AND debugging is on. otherwise return false.
      *
-     * @return true if suspending, or false if either not suspending or not debugging
+     * @return true if suspending, or false if either not suspending or not
+     * debugging
      */
     public final boolean isDebugSuspend() {
         return debugPort >= 0 && debugSuspend;
     }
 
     /**
-     * Does this domain need to be automatically upgraded before it can be started?
+     * Does this domain need to be automatically upgraded before it can be
+     * started?
      *
      * @return true if the domain needs to be upgraded first
      */
@@ -501,7 +520,6 @@ public abstract class GFLauncher {
         return commandLine;
     }
 
-
     protected final void setCommandLine(CommandLine commandLine) {
         this.commandLine = commandLine;
     }
@@ -511,7 +529,9 @@ public abstract class GFLauncher {
         normal,
         debug,
         trace,
-        /** Useful just for unit tests so the server will not be started. */
+        /**
+         * Useful just for unit tests so the server will not be started.
+         */
         fake
     }
 
@@ -536,7 +556,8 @@ public abstract class GFLauncher {
     }
 
     /**
-     * Checks whether to use launchctl for start up by checking if mac os version < 10.10
+     * Checks whether to use launchctl for start up by checking if mac os
+     * version < 10.10
      *
      * @return True if osversion < 10.10
      */
@@ -590,8 +611,9 @@ public abstract class GFLauncher {
 
     /**
      *
-     * look for an option of this form: <code>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009</code> and
-     * extract the suspend and port values.
+     * look for an option of this form:
+     * <code>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009</code>
+     * and extract the suspend and port values.
      *
      */
     private void parseJavaConfigDebugOptions() {
@@ -646,12 +668,23 @@ public abstract class GFLauncher {
         all.putAll(domainXMLSystemProperty);
         all.putAll(domainXMLjvmOptions.getCombinedMap());
         all.putAll(domainXMLJavaConfigProfiler.getConfig());
-        addEnvVariables(all);
+
+        if (isPreferEnvOverProperties(all)) {
+            all.putAll(System.getenv());
+            replacePropertiesWithEnvVars(domainXMLjvmOptions.xProps);
+            replacePropertiesWithEnvVars(domainXMLjvmOptions.xxProps);
+            replacePropertiesWithEnvVars(domainXMLjvmOptions.plainProps);
+            replacePropertiesWithEnvVars(domainXMLjvmOptions.longProps);
+            replacePropertiesWithEnvVars(domainXMLjvmOptions.sysProps);
+        } else {
+            System.getenv().forEach((name, value) -> all.putIfAbsent(name, value));
+        }
 
         TokenResolver resolver = new TokenResolver(all);
         resolver.resolve(domainXMLjvmOptions.xProps);
         resolver.resolve(domainXMLjvmOptions.xxProps);
         resolver.resolve(domainXMLjvmOptions.plainProps);
+        resolver.resolve(domainXMLjvmOptions.longProps);
         resolver.resolve(domainXMLjvmOptions.sysProps);
         resolver.resolve(domainXMLjavaConfig.getMap());
         resolver.resolve(domainXMLJavaConfigProfiler.getConfig());
@@ -661,13 +694,34 @@ public abstract class GFLauncher {
         adminFileRealmKeyFile = resolver.resolve(adminFileRealmKeyFile);
     }
 
-    private void addEnvVariables(Map<String, String> all) {
-        final String preferEnvOverProperties = all.get(PREFER_ENV_VARS_OVER_PROPERTIES);
-        if (preferEnvOverProperties != null && Boolean.valueOf(preferEnvOverProperties)) {
-            all.putAll(System.getenv());
-        } else {
-            System.getenv().forEach((name, value) -> all.putIfAbsent(name, value));
+    private void replacePropertiesWithEnvVars(Map<String, String> properties) {
+        Pattern invalidEnvVarCharsPattern = Pattern.compile("[^_0-9a-zA-Z]");
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            String envValue = System.getenv(entry.getKey());
+            if (envValue != null) {
+                entry.setValue(envValue);
+            } else {
+                final String sanitizedKey = invalidEnvVarCharsPattern
+                        .matcher(entry.getKey())
+                        .replaceAll("_");
+                envValue = System.getenv(sanitizedKey);
+                if (envValue != null) {
+                    entry.setValue(envValue);
+                } else {
+                    envValue = System.getenv(sanitizedKey.toUpperCase());
+                    if (envValue != null) {
+                        entry.setValue(envValue);
+                    }
+                }
+            }
+
         }
+    }
+
+    private static Boolean isPreferEnvOverProperties(Map<String, String> properties) {
+        return Optional.ofNullable(properties.get(PREFER_ENV_VARS_OVER_PROPERTIES))
+                .map(Boolean::valueOf)
+                .orElse(FALSE);
     }
 
     private void fixLogFilename() throws GFLauncherException {
@@ -688,7 +742,6 @@ public abstract class GFLauncher {
         // if the file doesn't exist -- make sure the parent dir exists
         // this is common in unit tests AND the first time the instance is
         // started....
-
         if (!logFile.exists()) {
             File parent = logFile.getParentFile();
             if (!parent.isDirectory()) {
@@ -786,7 +839,7 @@ public abstract class GFLauncher {
         }
 
         GFLauncherNativeHelper nativeHelper = new GFLauncherNativeHelper(callerParameters, domainXMLjavaConfig,
-            domainXMLjvmOptions, domainXMLJavaConfigProfiler);
+                domainXMLjvmOptions, domainXMLJavaConfigProfiler);
         cmdLine.appendNativeLibraryPath(nativeHelper.getNativePath());
         addIgnoreNull(cmdLine, getMainClass());
 
@@ -899,7 +952,9 @@ public abstract class GFLauncher {
         }
     }
 
-    /** @returns null in case the process is NOT dead or succeeded */
+    /**
+     * @returns null in case the process is NOT dead or succeeded
+     */
     private String getDeadProcessTrace(Process process) throws GFLauncherException {
         if (process.isAlive()) {
             return null;
@@ -934,9 +989,11 @@ public abstract class GFLauncher {
     }
 
     /**
-     * Because of some issues in GlassFish OSGi launcher, a server updated from version 3.0.x to 3.1 won't start if a OSGi
-     * cache directory populated with 3.0.x modules is used. So, as a work around, we rename the cache directory when
-     * upgrade path is used. See GLASSFISH-15772 for more details.
+     * Because of some issues in GlassFish OSGi launcher, a server updated from
+     * version 3.0.x to 3.1 won't start if a OSGi cache directory populated with
+     * 3.0.x modules is used. So, as a work around, we rename the cache
+     * directory when upgrade path is used. See GLASSFISH-15772 for more
+     * details.
      *
      * @throws GFLauncherException if it fails to rename the cache directory
      */
@@ -1043,20 +1100,17 @@ public abstract class GFLauncher {
         }
     }
 
-
     private static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
     }
 
-
     private static boolean isSSHSession() {
         return System.getenv("SSH_CLIENT") != null || System.getenv("SSH_CONNECTION") != null
-            || System.getenv("SSH_TTY") != null;
+                || System.getenv("SSH_TTY") != null;
     }
 
-
     private static List<String> prepareWindowsEnvironment(final CommandLine command, final Path configDir,
-        final boolean stdinPreloaded) throws GFLauncherException {
+            final boolean stdinPreloaded) throws GFLauncherException {
         Path psFile;
         Path batFile;
         try {

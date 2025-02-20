@@ -60,7 +60,12 @@ DESCRIPTION
        If a property `org.glassfish.envPreferredToProperties` is defined as
        `true` (in any source except environment variables), then environment
        variables take precedence over other sources, instead of being the last
-       resolved source.
+       resolved source. It's also possible to override options and system
+       properties defined in JVM options with an environment variable that
+       either has the same name, or same name if case is ignored 
+       and non-alphanumeric characters are replaced with the `_` character.
+       For example, a property `-Dmy.name` can be defined by redefined by 
+       environment variables `my.name`, `my_name`, or `MY_NAME`.
 
            Caution
            +------------------------------------------------+

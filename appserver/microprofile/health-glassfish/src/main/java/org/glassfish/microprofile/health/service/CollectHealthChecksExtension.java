@@ -25,7 +25,7 @@ import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessBean;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -68,7 +68,7 @@ public class CollectHealthChecksExtension implements Extension {
         if (livenessPresent || readinessPresent || startupPresent) {
             Bean<T> bean = beans.getBean();
             if (bean.getTypes().contains(HealthCheck.class)) {
-                Set<HealthCheckInfo.Kind> kinds = new HashSet<>();
+                Set<HealthCheckInfo.Kind> kinds = EnumSet.noneOf(HealthCheckInfo.Kind.class);
                 if (livenessPresent) {
                     kinds.add(HealthCheckInfo.Kind.LIVE);
                 }

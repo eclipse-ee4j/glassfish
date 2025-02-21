@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -106,7 +106,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
      * Other state fields like 'enlistmentSuspended', 'shareCount', 'usageCount', 'lastValidated' and others are directly
      * part of this class as a field.
      */
-    private ResourceState state = new ResourceState();
+    private final ResourceState state = new ResourceState();
 
     /**
      * Used by LocalTxConnectorAllocator to save a listener for the resource handle.
@@ -171,7 +171,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     /**
      * The connectionErrorOccurred field is set to true when a connection was aborted, or a connection error occurred, or
-     * when a connection being closes is bad.<br>
+     * when a connection being closed is bad.<br>
      * Could also be seen as part of ResourceState.
      */
     private boolean connectionErrorOccurred;

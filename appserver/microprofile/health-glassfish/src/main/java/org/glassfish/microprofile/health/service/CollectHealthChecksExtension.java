@@ -60,6 +60,8 @@ public class CollectHealthChecksExtension implements Extension {
         }
         service = healthReporterService;
     }
+
+    @SuppressWarnings("unchecked")
     public <T> void processBeans(@Observes ProcessBean<T> beans) {
         Annotated annotated = beans.getAnnotated();
         boolean livenessPresent = annotated.isAnnotationPresent(Liveness.class);

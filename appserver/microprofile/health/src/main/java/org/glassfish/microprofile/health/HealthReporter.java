@@ -15,7 +15,6 @@
  */
 package org.glassfish.microprofile.health;
 
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -62,9 +61,21 @@ public class HealthReporter {
     }
 
     public enum ReportKind {
+        /**
+         * Return only health checks of kind {@link org.eclipse.microprofile.health.Liveness}
+         */
         LIVE,
+        /**
+         * Return only health checks of kind {@link org.eclipse.microprofile.health.Readiness}
+         */
         READY,
+        /**
+         * Return only health checks of kind {@link org.eclipse.microprofile.health.Startup}
+         */
         STARTED,
+        /**
+         * Return all health checks
+         */
         ALL;
 
         private HealthCheckResponse.Status getEmptyResponse() {
@@ -117,7 +128,6 @@ public class HealthReporter {
     }
 
     public void removeAllHealthChecksFrom(String contextName) {
-        List<HealthCheckInfo> healthCheckInfos = applicationHealthChecks.get(contextName);
         applicationHealthChecks.remove(contextName);
     }
 

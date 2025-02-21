@@ -41,11 +41,15 @@ public class HealthReporter {
     private final Map<String, List<HealthCheckInfo>> applicationHealthChecks = new ConcurrentHashMap<>();
 
     private static HealthCheckResponse callHealthCheck(HealthCheck healthCheck) {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
+            Thread.currentThread().setContextClassLoader(healthCheck.getClass().getClassLoader());
             return healthCheck.call();
         } catch (RuntimeException e) {
             LOGGER.log(Level.SEVERE, "Health check failed", e);
             return buildHealthCheckResponse(healthCheck.getClass().getName(), e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
     }
 

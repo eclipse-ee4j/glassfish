@@ -88,10 +88,10 @@ public class CollectHealthChecksExtension implements Extension {
         healthChecks.forEach(healthCheckBeanAndKind -> {
             Bean<HealthCheck> bean = healthCheckBeanAndKind.bean();
             CreationalContext<HealthCheck> creationalContext = beanManager.createCreationalContext(bean);
-            HealthCheck healthCheck = bean.create(creationalContext);
-
-            service.addHealthCheck(invocationManager.getCurrentInvocation().getAppName(),
-                    new HealthCheckInfo(healthCheck, healthCheckBeanAndKind.kind()));
+            if (beanManager.getReference(bean, HealthCheck.class, creationalContext) instanceof HealthCheck healthCheck) {
+                service.addHealthCheck(invocationManager.getCurrentInvocation().getAppName(),
+                        new HealthCheckInfo(healthCheck, healthCheckBeanAndKind.kind()));
+            }
         });
     }
 }

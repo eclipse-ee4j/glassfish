@@ -29,7 +29,7 @@ public class HealthServletInitializer implements ServletContainerInitializer {
 
     @Override
     public void onStartup(Set<Class<?>> set, ServletContext servletContext) {
-         if (!servletContext.getContextPath().isEmpty()) {
+        if (!servletContext.getContextPath().isEmpty()) {
             return;
         }
 

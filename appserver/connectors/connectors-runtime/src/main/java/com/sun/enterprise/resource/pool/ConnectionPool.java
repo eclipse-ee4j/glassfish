@@ -725,7 +725,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * to see if the connection to the database is still working.
      * <p>
      * If validation is required the resourceHandle last validated time is updated.
-     * 
+     *
      * @param resourceHandle Resource to be validated
      * @param resourceAllocator Allocator to validate the resource
      * @return boolean representing validation result

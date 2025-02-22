@@ -18,16 +18,24 @@
 package com.sun.s1asdev.jdbc.connsharing.nonxa.ejb;
 
 import jakarta.ejb.CreateException;
+import jakarta.ejb.EJB;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.util.Set;
+import java.util.HashSet;
 
 public class SimpleSession2Bean implements SessionBean {
+
+    @EJB
+    DbUtilsBean dbUtilsBean;
 
     private InitialContext ic_;
 
@@ -89,6 +97,30 @@ public class SimpleSession2Bean implements SessionBean {
         return passed;
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public boolean test9Issue24085() throws Exception {
+        logStartTest("test9Issue24085");
+        // Do not use @Resource on purpose, but ask a connection from another central bean, in this case: "dbUtilsBean".
+        // Why? Because it could provide additional logic like statistics or checks from a central place, plus
+        // there is no need to define @Resource in a large number of beans in a large application.
+        // 
+        // So not using:
+        // @Resource(mappedName="jdbc/connsharing")
+        // private DataSource myworkDatabase;
+        // from this bean itself in this example.
+        // If we would call @Resource in this bean the problem would not occur. 
+        try (Connection connection = dbUtilsBean.getConnection()) {
+            Set<Connection> physicalConnections = new HashSet<>();
+            
+            // Perform another query while this connection is still open
+            // Make a few getConnection calls.
+            for (int i = 0; i < 5; i++) {
+                try (Connection connectionB = dbUtilsBean.getConnection()) {};
+            }
+        }
+        return true;
+    }
+
     /**
      * Returns the physical connection and logs it. This is useful to see what
      * happens if the server implementation is changed and these tests start to
@@ -106,7 +138,7 @@ public class SimpleSession2Bean implements SessionBean {
         }
         throw new IllegalStateException("Expecting com.sun.appserv.jdbc.DataSource");
     }
-    
+
     private void logStartTest(String testName) {
         System.out.println(this.getClass().getName() + " - Start " + testName);
     }

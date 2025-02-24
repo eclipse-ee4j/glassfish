@@ -111,15 +111,6 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 
-                                <if>
-                                    <bool>
-                                        <isgreaterthan arg1="${ant.java.version}" arg2="16"/>
-                                    </bool>
-                                    <then>
-                                        <property name="java17orGreater" value="true"/>
-                                    </then>
-                                </if>
-                                
                                 <macrodef name="jarupdate">
                                     <attribute name="basedir"/>
                                     <attribute name="includes"/>
@@ -139,12 +130,12 @@
                                     </sequential>
                                 </macrodef>
                                 
-                                <jarupdate if:set="java17orGreater"
+                                <jarupdate
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
                                 />
                                 <!-- To support Annnotations 4 -->
-                                <jarupdate if:set="java17orGreater"
+                                <jarupdate
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />

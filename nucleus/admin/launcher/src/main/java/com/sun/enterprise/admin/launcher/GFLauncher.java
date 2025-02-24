@@ -719,9 +719,7 @@ public abstract class GFLauncher {
     }
 
     private static Boolean isPreferEnvOverProperties(Map<String, String> properties) {
-        return Optional.ofNullable(properties.get(PREFER_ENV_VARS_OVER_PROPERTIES))
-                .map(Boolean::valueOf)
-                .orElse(FALSE);
+        return Boolean.parseBoolean(properties.get(PREFER_ENV_VARS_OVER_PROPERTIES));
     }
 
     private void fixLogFilename() throws GFLauncherException {

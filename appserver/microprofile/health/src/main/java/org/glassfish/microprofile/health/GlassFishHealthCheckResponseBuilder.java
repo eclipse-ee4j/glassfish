@@ -70,6 +70,6 @@ public class GlassFishHealthCheckResponseBuilder extends HealthCheckResponseBuil
 
     @Override
     public HealthCheckResponse build() {
-        return new HealthCheckResponse(name, status, data.isEmpty() ? null : Optional.of(data));
+        return new GlassFishHealthCheckResponse(name, status, data.isEmpty() ? Optional.empty() : Optional.of(data));
     }
 }

@@ -17,7 +17,6 @@ package org.glassfish.microprofile.health;
 
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +34,8 @@ public class HealthReporter {
 
     private static final String MP_DEFAULT_STARTUP_EMPTY_RESPONSE = "mp.health.default.startup.empty.response";
     private static final String MP_DEFAULT_READINESS_EMPTY_RESPONSE = "mp.health.default.readiness.empty.response";
+    private static final String CONTEXT_KEY = "context";
+
     private static final Logger LOGGER = Logger.getLogger(HealthReporter.class.getName());
 
     private final Map<String, List<HealthCheckInfo>> applicationHealthChecks = new ConcurrentHashMap<>();
@@ -52,6 +53,13 @@ public class HealthReporter {
         }
     }
 
+    private static HealthCheckResponse addContextToResponse(HealthCheckResponse response, String contextName) {
+        if (response instanceof GlassFishHealthCheckResponse gfResponse) {
+            return gfResponse.addData(CONTEXT_KEY, contextName);
+        } else {
+            return response;
+        }
+    }
     private static HealthCheckResponse buildHealthCheckResponse(String name, Exception e) {
         return HealthCheckResponse.builder()
                 .down()
@@ -62,15 +70,18 @@ public class HealthReporter {
 
     public enum ReportKind {
         /**
-         * Return only health checks of kind {@link org.eclipse.microprofile.health.Liveness}
+         * Return only health checks of kind
+         * {@link org.eclipse.microprofile.health.Liveness}
          */
         LIVE,
         /**
-         * Return only health checks of kind {@link org.eclipse.microprofile.health.Readiness}
+         * Return only health checks of kind
+         * {@link org.eclipse.microprofile.health.Readiness}
          */
         READY,
         /**
-         * Return only health checks of kind {@link org.eclipse.microprofile.health.Startup}
+         * Return only health checks of kind
+         * {@link org.eclipse.microprofile.health.Startup}
          */
         STARTED,
         /**
@@ -80,20 +91,27 @@ public class HealthReporter {
 
         private HealthCheckResponse.Status getEmptyResponse() {
             return switch (this) {
-                case LIVE -> getValue(MP_DEFAULT_STARTUP_EMPTY_RESPONSE)
-                        .orElse(HealthCheckResponse.Status.UP);
-                case READY -> getValue(MP_DEFAULT_READINESS_EMPTY_RESPONSE)
-                        .orElse(HealthCheckResponse.Status.UP);
-                case STARTED, ALL -> HealthCheckResponse.Status.UP;
+                case LIVE ->
+                    getValue(MP_DEFAULT_STARTUP_EMPTY_RESPONSE)
+                    .orElse(HealthCheckResponse.Status.UP);
+                case READY ->
+                    getValue(MP_DEFAULT_READINESS_EMPTY_RESPONSE)
+                    .orElse(HealthCheckResponse.Status.UP);
+                case STARTED, ALL ->
+                    HealthCheckResponse.Status.UP;
             };
         }
 
         public boolean filter(HealthCheckInfo healthCheck) {
             return switch (this) {
-                case LIVE -> healthCheck.kind().contains(HealthCheckInfo.Kind.LIVE);
-                case READY -> healthCheck.kind().contains(HealthCheckInfo.Kind.READY);
-                case STARTED -> healthCheck.kind().contains(HealthCheckInfo.Kind.STARTUP);
-                case ALL -> true;
+                case LIVE ->
+                    healthCheck.kind().contains(HealthCheckInfo.Kind.LIVE);
+                case READY ->
+                    healthCheck.kind().contains(HealthCheckInfo.Kind.READY);
+                case STARTED ->
+                    healthCheck.kind().contains(HealthCheckInfo.Kind.STARTUP);
+                case ALL ->
+                    true;
             };
         }
     }
@@ -101,13 +119,17 @@ public class HealthReporter {
     public HealthReport getReport(ReportKind reportKind) {
         HealthCheckResponse.Status emptyResponse = reportKind.getEmptyResponse();
 
-        List<HealthCheckResponse> healthCheckResults = applicationHealthChecks.values()
+        List<HealthCheckResponse> healthCheckResults = applicationHealthChecks.entrySet()
                 .stream()
-                .flatMap(Collection::stream)
-                .filter(reportKind::filter)
-                .map(HealthCheckInfo::healthCheck)
-                .map(HealthReporter::callHealthCheck)
-                .toList();
+                .flatMap(entry -> {
+                    String contextName = entry.getKey();
+                    return entry.getValue()
+                            .stream()
+                            .filter(reportKind::filter)
+                            .map(HealthCheckInfo::healthCheck)
+                            .map(HealthReporter::callHealthCheck)
+                            .map(response -> addContextToResponse(response, entry.getKey()));
+                }).toList();
 
         HealthCheckResponse.Status overallStatus;
         if (healthCheckResults.isEmpty()) {

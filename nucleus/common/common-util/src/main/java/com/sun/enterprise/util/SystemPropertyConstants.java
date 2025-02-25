@@ -204,6 +204,8 @@ public class SystemPropertyConstants {
     public static final String DEFAULT_ADMIN_TIMEOUT_PROPERTY = "org.glassfish.admin.timeout";
     private static final int DEFAULT_ADMIN_TIMEOUT_VALUE = 5000;
 
+    public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.envPreferredToProperties";
+
     private static final StringManager sm = StringManager.getManager(SystemPropertyConstants.class);
 
     public static final String OPEN = "${";

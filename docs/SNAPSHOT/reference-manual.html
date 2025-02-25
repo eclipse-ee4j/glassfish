@@ -14556,11 +14556,39 @@ are preceded by the dash character (<code>-</code>). For example:</p>
 <p>If the subcommand specifies an option that already exists, the command
 does not re-create the option.</p>
 </div>
-<div class="admonitionblock note">
+<div class="paragraph">
+<p>Variable references, e.g. <code>${variable}</code>, can be used anywhere in JVM options. In that case, they are resolved as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Profiler properties in Java Config</p>
+</li>
+<li>
+<p>System properties in JVM options in Java Config</p>
+</li>
+<li>
+<p>System properties in instance, cluster, or config that match the instance being started</p>
+</li>
+<li>
+<p>System properties in the JVM of the server launcher (note that they may be different from properties in the JVM of the server if it starts with a different JVM)</p>
+</li>
+<li>
+<p><code>asenv</code> properties</p>
+</li>
+<li>
+<p>Environment variables</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If a property <code>org.glassfish.envPreferredToProperties</code> is defined as <code>true</code> (in any source except environment variables), then environment variables take precedence over other sources, instead of being the last resolved source. It&#8217;s also possible to override options and system properties defined in JVM options with an environment variable that either has the same name, or same name if case is ignored and non-alphanumeric characters are replaced with the <code>_</code> character. For example, a property <code>-Dmy.name</code> can be defined by redefined by environment variables <code>my.name</code>, <code>my_name</code>, or <code>MY_NAME</code>.</p>
+</div>
+<div class="admonitionblock caution">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -57676,7 +57704,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-23 12:39:18 UTC
+Last updated 2025-02-25 13:33:59 UTC
 </div>
 </div>
 </body>

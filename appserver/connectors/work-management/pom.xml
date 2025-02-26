@@ -86,7 +86,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.gmbal</groupId>
-            <artifactId>gmbal</artifactId>
+            <artifactId>gmbal-api-only</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>
@@ -97,7 +97,7 @@
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.epicyro</groupId>
             <artifactId>epicyro</artifactId>

@@ -56,7 +56,7 @@
     </target>
 
     <target name="run.overridetest" depends="init">
-<echo>${inst}</echo>
+        <echo>${inst}</echo>
         <javaWithResult
             fork="true"
             failonerror="false"
@@ -73,7 +73,11 @@
             <jvmarg value="-Dcom.sun.aas.installRoot=${inst}"/>
             <jvmarg value="-Dwriteout.xml=true"/>
             <jvmarg value="-Djakarta.enterprise.system.tools.deployment.org.glassfish.deployment.common=FINE"/>
-
+            <jvmarg value="--add-modules" />
+            <jvmarg value="ALL-MODULE-PATH" />
+            <modulepath>
+                <pathelement path="${env.S1AS_HOME}/lib/bootstrap" />
+            </modulepath>
             <classpath>
                 <path refid="gfv3.classpath"/>
                 <path location="${build}"/>

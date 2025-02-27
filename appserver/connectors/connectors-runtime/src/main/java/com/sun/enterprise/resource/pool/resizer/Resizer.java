@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -156,20 +156,19 @@ public class Resizer extends TimerTask {
         int poolSizeBeforeRemoval = dataStructure.getResourcesSize();
         int noOfResourcesRemoved;
         // Find all Connections that are free/not-in-use
-        ResourceState state;
         int size = dataStructure.getFreeListSize();
         // let's cache the current time since precision is not required here.
         long currentTime = System.currentTimeMillis();
         int validConnectionsCounter = 0;
         int idleConnKeptInSteadyCounter = 0;
 
-        // iterate through all thre active resources to find idle-time lapsed ones.
+        // iterate through all the active resources to find idle-time lapsed ones.
         ResourceHandle h;
         Set<ResourceHandle> activeResources = new HashSet<>();
         Set<String> resourcesToValidate = new HashSet<>();
         try {
             while ((h = dataStructure.getResource()) != null) {
-                state = h.getResourceState();
+                ResourceState state = h.getResourceState();
                 if (currentTime - state.getTimestamp() < pool.getIdleTimeout()) {
                     // Should be added for validation.
                     validConnectionsCounter++;

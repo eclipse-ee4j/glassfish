@@ -38,6 +38,10 @@
     -->
     &reporting;
 
+    <target name="all">
+        <antcall target="jdbc-all"/>
+    </target>
+
     <target name="jdbc-all">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
@@ -49,12 +53,113 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
+
         <antcall target="run-tests"/>
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
         <record name="jdbc.output" action="stop"/>
+    </target>
 
+    <target name="jdbc-group1">
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="jdbc.output" action="start"/>
+
+        <antcall target="run-tests1"/>
+
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
+        </antcall>
+        <record name="jdbc.output" action="stop"/>
+    </target>
+
+    <target name="jdbc-group2">
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="jdbc.output" action="start"/>
+
+        <antcall target="run-tests2"/>
+
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
+        </antcall>
+        <record name="jdbc.output" action="stop"/>
+    </target>
+
+    <target name="jdbc-group3">
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="jdbc.output" action="start"/>
+
+        <antcall target="run-tests3"/>
+
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
+        </antcall>
+        <record name="jdbc.output" action="stop"/>
+    </target>
+
+    <target name="jdbc-group4">
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="jdbc.output" action="start"/>
+
+        <antcall target="run-tests4"/>
+
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
+        </antcall>
+        <record name="jdbc.output" action="stop"/>
+    </target>
+
+    <target name="jdbc-group5">
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="test_results*"/>
+        </delete>
+        <delete>
+            <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="*.output"/>
+        </delete>
+        <record name="jdbc.output" action="start"/>
+
+        <antcall target="run-tests5"/>
+
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
+        </antcall>
+        <record name="jdbc.output" action="stop"/>
     </target>
 
     <target name="jdbc-all-security">
@@ -68,7 +173,9 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.secman.output" action="start"/>
+
         <antcall target="run-tests"/>
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/JDBCSecuritytest_results.html"/>
         </antcall>
@@ -76,6 +183,14 @@
     </target>
 
     <target name="run-tests">
+        <antcall target="run-tests1" />
+        <antcall target="run-tests2" />
+        <antcall target="run-tests3" />
+        <antcall target="run-tests4" />
+        <antcall target="run-tests5" />
+    </target>
+
+    <target name="run-tests1">
         <ant dir="appauth" target="all"/>
         <ant dir="appauthtx" target="all"/>
         <ant dir="contauth" target="all"/>
@@ -83,15 +198,21 @@
         <ant dir="contauth1" target="all"/>
         <ant dir="contauth1tx" target="all"/>
         <ant dir="reconfig" target="all"/>
-        <ant dir="autocommit" target="all"/>
-        <ant dir="jdbcjmsauth" target="all"/>
-        <ant dir="nopasswdfordb" target="all"/>
-        <ant dir="txpassthrough" target="all"/>
-        <ant dir="txafternontx" target="all"/>
-        <ant dir="txafternontxjndi" target="all"/>
-        <ant dir="notxops" target="all"/>
-        <ant dir="nonacc" target="all"/>
-        <ant dir="lazyassoc" target="all"/>
+    </target>
+
+    <target name="run-tests2">
+       <ant dir="autocommit" target="all"/>
+       <ant dir="jdbcjmsauth" target="all"/>
+       <ant dir="nopasswdfordb" target="all"/>
+       <ant dir="txpassthrough" target="all"/>
+       <ant dir="txafternontx" target="all"/>
+       <ant dir="txafternontxjndi" target="all"/>
+       <ant dir="notxops" target="all"/>
+       <ant dir="nonacc" target="all"/>
+       <ant dir="lazyassoc" target="all"/>
+   </target>
+
+    <target name="run-tests3">
         <ant dir="markconnectionasbad.local" target="all"/>
         <ant dir="markconnectionasbad.xa" target="all"/>
         <ant dir="statementwrapper" target="all"/>
@@ -104,6 +225,9 @@
         <ant dir="conval" target="all-assoc-with-thread"/>
         <ant dir="connleaktracing" target="all"/>
         <ant dir="conncreationretry" target="all"/>
+    </target>
+
+    <target name="run-tests4">
         <ant dir="validateatmostonceperiod" target="all"/>
         <ant dir="connsharing" target="nonxa"/>
         <ant dir="connsharing/nonxa" target="all-assoc-with-thread"/>
@@ -114,6 +238,9 @@
         <ant dir="dmmcf" target="all"/>
         <ant dir="dmmcf.markconnectionasbad.xa" target="all"/>
         <ant dir="dmmcf.appclient" target="all"/>
+    </target>
+
+    <target name="run-tests5">
         <ant dir="tracingsql" target="all"/>
         <ant dir="datasource40" target="all"/>
         <ant dir="custom-validation" target="all"/>
@@ -121,16 +248,9 @@
         <ant dir="flushconnectionpool" target="all"/>
         <ant dir="connleakreclaimnotify" target="all"/>
         <ant dir="stmtCaching_hit_miss.monitoring" target="all"/>
-        <!--ant dir="transparent-pool-reconfig" target="all"/-->
-        <!--ant dir="transparent-pool-reconfig-resources-xml" target="all"/-->
-        <!--ant dir="sqltracemonitoring" target="all"/-->
-        <!--ant dir="statementleakdetection" target="all"/-->
-        <!--ant dir="appbasedMonitoring" target="all"/-->
         <ant dir="jpa-dsd" target="all" />
         <ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
         <ant dir="stmtCaching_hit_miss.fixed" target="all"/>
-
-        <!--<antcall target="all-oracle"/>-->
     </target>
 
     <target name="ee-all">
@@ -178,10 +298,6 @@
         <ant dir="jpa-dsd" target="all" />
         <ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
         <record name="jdbc.output" action="stop"/>
-    </target>
-
-    <target name="all">
-        <antcall target="jdbc-all"/>
     </target>
 
     <target name="all-oracle">
@@ -249,6 +365,7 @@
         <ant dir="simple" target="all"/>
         <record name="simple.output" action="stop"/>
     </target>
+
     <target name="reconfig-test">
         <record name="reconfig.output" action="start"/>
         <ant dir="reconfig" target="all"/>

@@ -322,8 +322,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 try {
                     ApplicationInfo appInfo = appRegistry.get(appName);
                     if (appInfo != null) {
-                        // send the event to close necessary resources
-                        events.send(new Event<>(Deployment.APPLICATION_DISABLED, appInfo));
+                        // unload the remaining app resources and trigger all remaining events
+                        unload(appInfo, context);
                     }
                 } catch (Exception e) {
                     // ignore

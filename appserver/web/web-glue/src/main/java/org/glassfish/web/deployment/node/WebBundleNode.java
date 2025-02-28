@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +22,7 @@ import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.node.SaxParserHandler;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.xml.ConcurrencyTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.ArrayList;
@@ -107,9 +108,9 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
 
     @Override
     public Collection<String> elementsAllowingEmptyValue() {
-        final Set<String> result = new HashSet<>();
-        result.add(WebTagNames.LOAD_ON_STARTUP);
-        return result;
+        return Set.of(
+            WebTagNames.LOAD_ON_STARTUP,
+            ConcurrencyTagNames.QUALIFIER);
     }
 
     @Override

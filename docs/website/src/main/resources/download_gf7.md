@@ -12,8 +12,8 @@ Download:
 
 * [Eclipse GlassFish 7.0.22, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.22.zip)
 * [Eclipse GlassFish 7.0.22, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.22.zip)
-* [Eclipse GlassFish Embedded 7.0.22, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.22/jar)
-* [Eclipse GlassFish Embedded 7.0.22, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.22/jar)
+* [Eclipse GlassFish Embedded 7.0.22, Jakarta EE Platform, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.22)
+* [Eclipse GlassFish Embedded 7.0.22, Jakarta EE Web Profile, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.22)
 
 More details:
 

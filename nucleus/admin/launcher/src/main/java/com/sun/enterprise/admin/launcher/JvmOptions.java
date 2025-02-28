@@ -136,6 +136,7 @@ class JvmOptions {
     Map<String, String> getCombinedMap() {
         // used for resolving tokens
         Map<String, String> all = new HashMap<>(plainProps);
+        all.putAll(longProps);
         all.putAll(xProps);
         all.putAll(xxProps);
         all.putAll(sysProps);

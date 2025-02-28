@@ -121,8 +121,7 @@ The following topics are addressed here:
 
 ==== Required JDK Versions
 
-{productName} Release 7 requires Oracle JDK 8
-Update 144 or later.
+{productName} Release 7 requires Java 11 minimum and runs on JDK 11 to JDK 23.
 
 Also be sure to see xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the
 JDK Software] for important JDK configuration instructions.

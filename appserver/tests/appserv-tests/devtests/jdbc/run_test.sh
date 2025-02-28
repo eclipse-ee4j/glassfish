@@ -23,9 +23,9 @@ test_run(){
   ${S1AS_HOME}/bin/asadmin start-domain domain1
   ${S1AS_HOME}/bin/asadmin start-database
   cd ${APS_HOME}/devtests/jdbc
-  
+
   ant ${TARGET} | tee ${TEST_RUN_LOG}
-  
+
   ${S1AS_HOME}/bin/asadmin stop-domain domain1
   ${S1AS_HOME}/bin/asadmin stop-database
 }
@@ -35,9 +35,9 @@ run_test_id(){
   cd `dirname ${0}`
   test_init
   get_test_target ${1}
-  
+
   test_run
-  
+
   check_successful_run
   generate_junit_report ${1}
   change_junit_report_class_names

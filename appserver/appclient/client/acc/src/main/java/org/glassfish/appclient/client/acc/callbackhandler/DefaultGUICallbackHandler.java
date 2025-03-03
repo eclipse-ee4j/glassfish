@@ -17,7 +17,6 @@
 package org.glassfish.appclient.client.acc.callbackhandler;
 
 import com.sun.enterprise.security.GUILoginDialog;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.IOException;
 
@@ -25,6 +24,7 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.glassfish.appclient.client.acc.callbackhandler.CallbackGUIBindings.MessageType;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Example callback handler for displaying and gathering information from the

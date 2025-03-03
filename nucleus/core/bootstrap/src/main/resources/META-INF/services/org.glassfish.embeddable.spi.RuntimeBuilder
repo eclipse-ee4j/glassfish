@@ -1,3 +1,0 @@
-com.sun.enterprise.glassfish.bootstrap.osgi.OSGiGlassFishRuntimeBuilder
-com.sun.enterprise.glassfish.bootstrap.embedded.EmbeddedGlassFishRuntimeBuilder
-com.sun.enterprise.glassfish.bootstrap.osgi.EmbeddedOSGiGlassFishRuntimeBuilder

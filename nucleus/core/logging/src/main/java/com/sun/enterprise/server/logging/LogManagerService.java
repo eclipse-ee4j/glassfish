@@ -64,7 +64,6 @@ import org.glassfish.main.jul.env.LoggingSystemEnvironment;
 import org.glassfish.main.jul.handler.GlassFishLogHandler;
 import org.glassfish.main.jul.handler.GlassFishLogHandlerConfiguration;
 import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
-import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
@@ -323,7 +322,6 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
 
 
     private void reconfigure(final File configFile) {
-        GlassFishLoggingTracer.trace(getClass(), () -> "reconfigure(" + configFile + ")");
         LOG.info(() -> "Using property file: " + configFile);
         if (!GlassFishLogManager.isGlassFishLogManager()) {
             try (FileInputStream configuration = new FileInputStream(configFile)) {
@@ -337,7 +335,6 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
         try {
             final GlassFishLogManagerConfiguration cfg = getRuntimeConfiguration();
             if (cfg == null) {
-                GlassFishLoggingTracer.error(getClass(), "Logging configuration is not available!");
                 return;
             }
             final ReconfigurationAction reconfig = new ReconfigurationAction(cfg);

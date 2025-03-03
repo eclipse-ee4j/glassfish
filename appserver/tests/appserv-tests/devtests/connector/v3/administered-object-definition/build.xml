@@ -44,10 +44,12 @@
     <target name="compile-ut" depends="init-common">
       <mkdir dir="${build.classes.dir}"/>
       <javac srcdir="ut" destdir="${build.classes.dir}"
-                  classpath="${mvn.lib.dir}/junit.jar:${s1astest.classpath}"
-                  debug="on"
-            includeantruntime="false"
-                  failonerror="true"/>
+          modulepath="${env.S1AS_HOME}/lib/bootstrap"
+          classpath="${mvn.lib.dir}/junit.jar:${s1astest.classpath}"
+          debug="on" includeantruntime="false" failonerror="true">
+        <compilerarg value="--add-modules"/>
+        <compilerarg value="ALL-MODULE-PATH"/>
+      </javac>
     </target>
     <target name="build-ut" depends="init-common">
       <!-- build a special ear which only includes deployment descriptors-->
@@ -79,6 +81,11 @@
         <!--<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9099"/>-->
         <jvmarg value="-DworkDir=${basedir}"/>
         <jvmarg value="-DArchiveDir=${assemble.dir}/temp"/>
+        <jvmarg value="--add-modules" />
+        <jvmarg value="ALL-MODULE-PATH" />
+        <modulepath>
+          <pathelement path="${env.S1AS_HOME}/lib/bootstrap" />
+        </modulepath>
         <classpath>
           <pathelement path="${mvn.lib.dir}/junit.jar:${s1astest.classpath}"/>
         </classpath>

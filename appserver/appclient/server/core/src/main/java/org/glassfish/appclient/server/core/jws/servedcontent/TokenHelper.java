@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.appclient.server.core.jws.servedcontent;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.net.URI;
 import java.util.Properties;
@@ -29,6 +29,7 @@ import org.glassfish.appclient.server.core.jws.JWSAdapterManager;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo.VendorInfo;
 import org.glassfish.appclient.server.core.jws.NamingConventions;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  *

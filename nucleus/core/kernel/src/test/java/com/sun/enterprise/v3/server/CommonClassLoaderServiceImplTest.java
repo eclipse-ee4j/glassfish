@@ -15,52 +15,35 @@
  */
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.module.bootstrap.StartupContext;
+import jakarta.inject.Inject;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 
-import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 
+@ExtendWith(KernelJUnitExtension.class)
 public class CommonClassLoaderServiceImplTest {
 
-    private int loadClassCalls;
-    private int getResourceCalls;
+    @Inject
+    private CommonClassLoaderServiceImpl commonCLService;
 
-    CommonClassLoaderServiceImpl commonCLService;
-    MockServerEnvironment serverEnv;
-
-    @BeforeEach
-    public void setUp() {
-        commonCLService = new CommonClassLoaderServiceImpl();
-        commonCLService.acls = new APIClassLoaderServiceImpl() {
-            @Override
-            public ClassLoader getAPIClassLoader() {
-                return new URLClassLoader(new URL[0], null);
-            }
-
-        };
-        serverEnv = new MockServerEnvironment();
-        commonCLService.env = serverEnv;
-    }
+    @Inject
+    private ServerEnvironment env;
 
     @Test
-    public void testAddingUrlWithNoInitialUrls() throws MalformedURLException, ClassNotFoundException {
-        commonCLService.postConstruct();
-
+    public void testAddingUrlWithNoInitialUrls() throws Exception {
         final String classesPath = "target/test-additional-classes/";
         commonCLService.addToClassPath(new File(classesPath).toURI().toURL());
 
-// we need to retrieve the classloader after adding URLs, otherwise we
+        // we need to retrieve the classloader after adding URLs, otherwise we
         // would get its parent because of an optimization in the service
         final ClassLoader commonClassLoader = commonCLService.getCommonClassLoader();
         commonClassLoader.loadClass(CommonClassLoaderServiceImplTestAdditionalClass.class.getName());
@@ -68,10 +51,7 @@ public class CommonClassLoaderServiceImplTest {
     }
 
     @Test
-    public void testAddingUrlWithInitialUrl() throws MalformedURLException, ClassNotFoundException {
-        final String domainDir = "target/test-domain";
-        serverEnv.setInstanceRoot(new File(domainDir));
-        commonCLService.postConstruct();
+    public void testAddingUrlWithInitialUrl() throws Exception {
         // the classloader should already be the one we want, initialized with classes in domain/lib/classes
         final ClassLoader commonClassLoader = commonCLService.getCommonClassLoader();
 
@@ -80,112 +60,9 @@ public class CommonClassLoaderServiceImplTest {
 
         commonClassLoader.loadClass(CommonClassLoaderServiceImplTestAdditionalClass.class.getName());
         commonClassLoader.loadClass(CommonClassLoaderServiceImplTestDomainClass.class.getName());
-        assertThat(commonCLService.getCommonClassPath(), containsString(new File(classesPath).getAbsolutePath()));
-        assertThat(commonCLService.getCommonClassPath(), containsString(Path.of(domainDir,"lib","classes").toAbsolutePath().toString()));
-    }
-
-    static class MockServerEnvironment implements ServerEnvironment {
-
-        File instanceRoot;
-
-        @Override
-        public File getInstanceRoot() {
-            return instanceRoot;
-        }
-
-        public void setInstanceRoot(File instanceRoot) {
-            this.instanceRoot = instanceRoot;
-        }
-
-        @Override
-        public StartupContext getStartupContext() {
-            return null;
-        }
-
-        @Override
-        public File getConfigDirPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getLibPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationRepositoryPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationStubPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationCompileJspPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationGeneratedXMLPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationEJBStubPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationPolicyFilePath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getApplicationAltDDPath() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getMasterPasswordFile() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getJKS() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public File getTrustStore() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public Status getStatus() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public RuntimeType getRuntimeType() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public String getInstanceName() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public boolean isInstance() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public boolean isDas() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
+        assertThat(commonCLService.getCommonClassPath(),
+            stringContainsInOrder(
+                env.getInstanceRoot().toPath().resolve(Path.of("lib", "classes")).toString(),
+                new File(classesPath).getAbsolutePath()));
     }
 }

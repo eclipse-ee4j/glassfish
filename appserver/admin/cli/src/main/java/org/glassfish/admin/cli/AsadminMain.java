@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,13 +30,17 @@ public class AsadminMain extends AdminMain {
 //        Metrix.event("START");
         Environment.setPrefix("AS_ADMIN_");
         Environment.setShortPrefix("AS_");
-        int code = new AsadminMain().doMain(args);
+
+        AsadminMain main = new AsadminMain();
+        int code = main.doMain(args);
 //        Metrix.event("DONE");
 //        System.out.println("METRIX:");
 //        System.out.println(Metrix.getInstance().toString());
         System.exit(code);
     }
 
+
+    @Override
     protected String getCommandName() {
         return "asadmin";
     }

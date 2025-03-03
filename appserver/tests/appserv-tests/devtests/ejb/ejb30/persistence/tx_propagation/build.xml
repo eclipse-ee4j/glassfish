@@ -120,13 +120,10 @@
     </target>
 
     <target name="runclient-standalone" depends="clean-db">
-       <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
-              classname="${simple.client}">
-              <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
-              <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-        </java>
+        <antcall target="runclient-own">
+            <param name="mainClass" value="${simple.client}" />
+            <param name="args" value="" />
+        </antcall>
     </target>
 
     <target name="clean-db" depends="init-common">

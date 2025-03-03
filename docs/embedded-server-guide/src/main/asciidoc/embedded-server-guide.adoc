@@ -381,7 +381,7 @@ Any argument that doesn't start with a hyphen (-), is treated as follows:
 {productName} provides an application programming
 interface (API) for developing applications in which {productName} is
 embedded. For details, see the `org.glassfish.embeddable` packages at
-`http://embedded-glassfish.java.net/nonav/apidocs/`.
+`https://www.javadoc.io/doc/org.glassfish.main.common/simple-glassfish-api/latest/index.html`.
 
 The following topics are addressed here:
 
@@ -1373,19 +1373,6 @@ Add `execution` elements to your POM file:
 goal::
   The goal to use. See xref:#maven-goals-for-embedded-glassfish-server[Maven Goals for Embedded {productName}].
 
-5. Configure the repository.
-Add the following `repository` element to your POM file:
-+
-[source,xml]
-----
-<pluginRepositories>
-    <pluginRepository>
-        <id>jakarta-oss-staging</id>
-        <name>Jakarta OSS Staging Repository for Maven</name>
-        <url>https://jakarta.oss.sonatype.org/content/repositories/staging</url>
-    </pluginRepository>
-</pluginRepositories>
-----
 
 [[gjkod]]
 Example 1-13 POM File for Configuring Maven to Use Embedded {productName}
@@ -1431,13 +1418,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
      </plugin>
     </plugins>
   </build>
-  <pluginRepositories>
-      <pluginRepository>
-        <id>jakarta-oss-staging</id>
-        <name>Jakarta OSS Staging Repository for Maven</name>
-        <url>https://jakarta.oss.sonatype.org/content/repositories/staging</url>
-      </pluginRepository>
-  </pluginRepositories>
 </project>
 ----
 
@@ -1974,18 +1954,14 @@ Line breaks in the following element are for readability purposes only
 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.example</groupId>
-    <artifactId>my-ejb-app-tester</artifactId>
+    <artifactId>my-ejb-app-example</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>EJB Embeddable API Example</name>
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
-            <artifactId>glassfish-embedded-static-shell</artifactId>
+            <artifactId>glassfish-embedded-all</artifactId>
             <version>${project.version}</version>
-            <scope>system</scope>
-            <systemPath>
-                ${env.GLASSFISH_HOME}/lib/embedded/glassfish-embedded-static-shell.jar
-            </systemPath>
         </dependency>
         <!--
             The jakarta.jakartaee-api is stripped of any code and is just used to compile your
@@ -2002,22 +1978,13 @@ http://maven.apache.org/maven-v4_0_0.xsd">
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jakarta-oss-staging</id>
-            <name>Jakarta OSS Staging Repository for Maven</name>
-            <url>https://jakarta.oss.sonatype.org/content/repositories/staging</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
 ----
 
-If you are using `glassfish-embedded-static-shell.jar`, you can omit the
-`dependency` element with the `javaee-api` `artifactId` and the
-`pluginRepositories` element.
+If you are using `glassfish-embedded-all.jar`, you can omit the
+`dependency` element with the `jakarta.jakartaee-api` `artifactId`.
 
-Set the `GLASSFISH_HOME` environment variable to the installation root
-directory before running the `mvn clean verify` command.
+Then run `mvn clean verify` command.
 
 [[changing-log-levels-in-embedded-glassfish-server]]
 
@@ -2073,7 +2040,7 @@ This example shows the contents of a custom logging configuration file,
 
 [source]
 ----
-handlers= java.util.logging.ConsoleHandler
+handlers = java.util.logging.ConsoleHandler
 java.util.logging.ConsoleHandler.level = FINEST
 jakarta.enterprise.system.tools.deployment.level = FINEST
 jakarta.enterprise.system.level = FINEST
@@ -2113,15 +2080,15 @@ supports only these features of nonembedded {productName}:
 
 * The following web technologies of the Jakarta EE platform:
 
-** Java Servlet API
+** Jakarta Servlet API
 
-** Java Server Pages (JSP) technology
+** Jakarta Pages
 
-** Java Server Faces technology
-* JDBC-technology connection pooling
-* Java Persistence API
-* Java Transaction API
-* Java Transaction Service
+** Jakarta Faces 
+* JDBC connection pooling
+* Jakarta Persistence API
+* Jakarta Transaction API
+* Jakarta Transaction Service
 
 The `glassfish-embedded-all.jar` and
 `glassfish-embedded-static-shell.jar` files support all features of

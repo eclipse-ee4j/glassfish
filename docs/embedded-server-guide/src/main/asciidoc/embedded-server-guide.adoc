@@ -2082,7 +2082,7 @@ supports only these features of nonembedded {productName}:
 
 ** Jakarta Servlet API
 
-** Jakarta Pages (JSP) technology
+** Jakarta Pages technology
 
 ** Jakarta Faces technology
 * JDBC-technology connection pooling

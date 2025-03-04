@@ -1984,8 +1984,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 If you are using `glassfish-embedded-all.jar`, you can omit the
 `dependency` element with the `jakarta.jakartaee-api` `artifactId`.
 
-Set the `GLASSFISH_HOME` environment variable to the installation root
-directory before running the `mvn clean verify` command.
+Then run `mvn clean verify` command.
 
 [[changing-log-levels-in-embedded-glassfish-server]]
 
@@ -2064,8 +2063,8 @@ The `jdbc/__default` Java DB database is preconfigured with Embedded
 {productName} that uses Java Persistence but doesn't specify a data
 source. Embedded {productName} uses the embedded Java DB database
 created in a temporary domain that is destroyed when Embedded {productName} is stopped. You can use a Java DB database configured with
-nonembedded {productName} if you explicitly specify the instance root
-directory or the configuration file.
+nonembedded {productName} if you specify the instance root
+directory or configuration file explicitly.
 
 By default, weaving is enabled when the {productName} Embedded Server
 API is used. To disable weaving, set the

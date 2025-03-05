@@ -99,6 +99,7 @@ export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export GLASSFISH_HOME="${WORKSPACE}/glassfish8"
 export CLASSPATH="${GLASSFISH_HOME}/javadb"
 export S1AS_HOME="${GLASSFISH_HOME}/glassfish"
+export ANT_OPTS="${ANT_OPTS} -Djdk.xml.totalEntitySizeLimit=50000000"
 
 # These values can be preset by the caller
 export PORT_ADMIN="${PORT_ADMIN=4848}"

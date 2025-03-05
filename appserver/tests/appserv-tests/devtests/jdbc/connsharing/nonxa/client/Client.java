@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,11 @@
 
 package com.sun.s1asdev.jdbc.connsharing.nonxa.client;
 
-import javax.naming.*;
-import java.rmi.*;
-import java.util.*;
-
 import com.sun.s1asdev.jdbc.connsharing.nonxa.ejb.SimpleSessionHome;
 import com.sun.s1asdev.jdbc.connsharing.nonxa.ejb.SimpleSession;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
+
+import javax.naming.InitialContext;
 
 public class Client {
 

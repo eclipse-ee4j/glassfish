@@ -25,8 +25,8 @@ import test.beans.artifacts.TestDatabase;
 
 @Singleton
 public class JPAResourceProducer {
-    @Produces @PersistenceUnit(unitName="pu1")
+    @Produces
+    @PersistenceUnit(unitName = "pu1")
     @TestDatabase
     EntityManagerFactory customerDatabasePersistenceUnit;
-
 }

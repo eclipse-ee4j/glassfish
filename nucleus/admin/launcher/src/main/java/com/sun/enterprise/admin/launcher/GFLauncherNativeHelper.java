@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +20,6 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.AMD64;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.JAVA_NATIVE_SYSPROP_NAME;
@@ -60,9 +58,7 @@ class GFLauncherNativeHelper {
         libDir = new File(installDir, LIBDIR);
     }
 
-    List<String> getCommands() {
-        List<String> list = new ArrayList<>();
-
+    File[] getNativePath() {
         String stockNativePathsString = getStockNativePathString();
         String prefixFileString = getPrefixString();
         String suffixFileString = getSuffixString();
@@ -84,11 +80,7 @@ class GFLauncherNativeHelper {
         // this looks dumb but there is a lot of potential cleaning going on here
         // * all duplicate directories are removed
         // * junk is removed, e.g. ":xxx::yy::::::" goes to "xxx:yy"
-
-        String finalPathString = GFLauncherUtils.fileListToPathString(GFLauncherUtils.stringToFiles(sb.toString()));
-        String nativeCommand = "-D" + JAVA_NATIVE_SYSPROP_NAME + "=" + finalPathString;
-        list.add(nativeCommand);
-        return list;
+        return GFLauncherUtils.stringToFiles(sb.toString()).toArray(File[]::new);
     }
 
     private String getStockNativePathString() {
@@ -116,8 +108,7 @@ class GFLauncherNativeHelper {
             return "";
         }
 
-        List<File> ff = profiler.getNativePath();
-        return GFLauncherUtils.fileListToPathString(ff);
+        return GFLauncherUtils.fileListToPathString(profiler.getNativePath());
     }
 
     private String getLib64String() {

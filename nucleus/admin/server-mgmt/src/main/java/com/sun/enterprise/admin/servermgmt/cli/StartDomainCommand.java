@@ -106,11 +106,6 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     private final String newpwName = Environment.getPrefix() + "NEWPASSWORD";
 
     @Override
-    public List<String> getLauncherArgs() {
-        return glassFishLauncher.getCommandLine();
-    }
-
-    @Override
     public RuntimeType getType() {
         return DAS;
     }
@@ -143,7 +138,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
 
             if (dry_run) {
                 logger.fine(Strings.get("dry_run_msg"));
-                List<String> cmd = glassFishLauncher.getCommandLine();
+                List<String> cmd = glassFishLauncher.getCommandLine().toList();
                 int indexOfReadStdin = cmd.indexOf("-read-stdin");
                 String cmdToLog = IntStream.range(0, cmd.size())
                         // Don't print -read-stdin option as it's not needed to run the server

@@ -144,6 +144,18 @@
                                     basedir="${patches}/glassfish-corba-orb" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/glassfish-corba-orb.jar"
                                 />
+                                
+                                <!-- Path for OSGI locator osgiresourcelocator -->
+                                <jarupdate
+                                    basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jersey-common.jar"
+                                />
+                                
+                                <!-- Patch for JDK 17-->
+                                <jarupdate
+                                    basedir="${patches}/concurro" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/concurro.jar"
+                                />
                             </target>
                         </configuration>
                     </execution>

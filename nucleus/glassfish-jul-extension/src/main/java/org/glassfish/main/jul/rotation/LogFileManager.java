@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,19 +20,22 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.System.Logger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.glassfish.main.jul.record.GlassFishLogRecord;
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
 
 
@@ -49,7 +52,6 @@ import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
  * @author David Matejcek
  */
 public class LogFileManager {
-    private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
 
     private static final DateTimeFormatter SUFFIX_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
 
@@ -181,10 +183,9 @@ public class LogFileManager {
      */
     public void roll() {
         lock.lock();
-        try {
+        try (AsyncLogger logger = new AsyncLogger()) {
             final boolean wasOutputEnabled = isOutputEnabled();
-            logInfoAsync(
-                () -> "Rolling the file " + this.logFile + "; output was originally enabled: " + wasOutputEnabled);
+            logger.logInfo("Rolling the file " + this.logFile + "; output was originally enabled: " + wasOutputEnabled);
             disableOutput();
             File archivedFile = null;
             try {
@@ -193,11 +194,11 @@ public class LogFileManager {
                 }
                 archivedFile = prepareAchivedLogFileTarget();
                 trace(LogFileManager.class, "Archived file: " + archivedFile);
-                moveFile(logFile, archivedFile);
+                moveFile(logFile, archivedFile, logger);
                 forceOSFilesync(logFile);
                 return;
             } catch (Exception e) {
-                logErrorAsync("Error, could not rotate log file " + logFile, e);
+                logger.logError("Error, could not rotate log file " + logFile, e);
             } finally {
                 if (wasOutputEnabled) {
                     enableOutput();
@@ -322,8 +323,8 @@ public class LogFileManager {
     }
 
 
-    private void moveFile(final File logFileToArchive, final File target) throws IOException {
-        logInfoAsync(() -> "Archiving file " + logFileToArchive + " to " + target);
+    private void moveFile(final File logFileToArchive, final File target, final AsyncLogger logger) throws IOException {
+        logger.logInfo("Archiving file " + logFileToArchive + " to " + target);
         try {
             Files.move(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
         } catch (UnsupportedOperationException | IOException e) {
@@ -331,7 +332,7 @@ public class LogFileManager {
             // Windows because of multiple file handles opened. We go through Plan B to
             // copy bytes explicitly to a renamed file.
             // Can happen on some windows file systems - then we try non-atomic version at least.
-            logErrorAsync(String.format(
+            logger.logError(String.format(
                 "File %s could not be renamed to %s atomically, now trying to move it without this request.",
                 logFileToArchive, target), e);
             Files.move(logFileToArchive.toPath(), target.toPath());
@@ -345,25 +346,68 @@ public class LogFileManager {
      * any records until it finishes rolling the file.
      * <p>
      * The count of messages is limited, so we can do this.
-     */
-    private void logInfoAsync(final Supplier<String> message) {
-        trace(getClass(), message);
-        new Thread(() -> LOG.log(INFO, message), "LogFileManager-Async-Info-Logger").start();
-    }
-
-
-    /**
-     * This logs in a separate thread to avoid deadlocks. The separate thread can be blocked when
-     * the LogRecordBuffer is full while the LogFileManager is still locked and doesn't process
-     * any records until it finishes rolling the file.
-     * <p>
-     * The count of messages is limited, so we can do this.
      * <p>
      * However it is not suitable for all errors - if we cannot write to the file, this would just create
      * another record which could not be written.
      */
-    private void logErrorAsync(final String message, final Exception exception) {
-        GlassFishLoggingTracer.error(getClass(), message, exception);
-        new Thread(() -> LOG.log(ERROR, message, exception), "LogFileManager-Async-Error-Logger").start();
+    private static class AsyncLogger extends Thread implements AutoCloseable {
+
+        private final AtomicBoolean stop;
+        private final ConcurrentLinkedQueue<AsyncLogRecord> queue;
+        private final Logger logger;
+
+        private AsyncLogger() {
+            super("LogFileManagerAsyncLogger");
+            setDaemon(true);
+            this.queue = new ConcurrentLinkedQueue<>();
+            this.stop = new AtomicBoolean();
+            this.logger = Logger.getLogger(LogFileManager.class.getName(), null);
+            start();
+        }
+
+        void logInfo(final String message) {
+            trace(getClass(), message);
+            queue.add(new AsyncLogRecord(INFO, message, null));
+        }
+
+        void logError(final String message, final Exception exception) {
+            GlassFishLoggingTracer.error(getClass(), message, exception);
+            queue.add(new AsyncLogRecord(SEVERE, message, exception));
+        }
+
+        @Override
+        public void close() {
+            this.stop.set(true);
+        }
+
+        @Override
+        public void run() {
+            while(!stop.get()) {
+                drainQueue();
+                Thread.onSpinWait();
+            }
+            drainQueue();
+        }
+
+        private void drainQueue() {
+            while (true) {
+                AsyncLogRecord record = queue.poll();
+                if (record == null) {
+                    break;
+                }
+                logger.log(record);
+            }
+        }
+    }
+
+
+    private static class AsyncLogRecord extends GlassFishLogRecord {
+
+        private static final long serialVersionUID = -8159574547676058852L;
+
+        AsyncLogRecord(Level level, String message, Throwable error) {
+            super(level, message, true);
+            setThrown(error);
+        }
     }
 }

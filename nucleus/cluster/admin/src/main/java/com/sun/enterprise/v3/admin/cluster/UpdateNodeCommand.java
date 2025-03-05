@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +30,7 @@ import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -99,20 +101,20 @@ public class UpdateNodeCommand implements AdminCommand {
     @Param(name="sshnodehost", optional=true)
     String sshnodehost;
 
-    @Param(name="sshkeyfile", optional=true)
+    @Param(name = "sshkeyfile", optional = true)
     String sshkeyfile;
 
-    @Param(name = "sshpassword", optional = true, password=true)
-     String sshpassword;
+    @Param(name = "sshpassword", optional = true, password = true)
+    String sshpassword;
 
-    @Param(name = "sshkeypassphrase", optional = true, password=true)
-     String sshkeypassphrase;
+    @Param(name = "sshkeypassphrase", optional = true, password = true)
+    String sshkeypassphrase;
 
     @Param(name = "windowsdomain", optional = true)
-     String windowsdomain;
+    String windowsdomain;
 
-    @Param(name = "type", optional=true)
-     String type;
+    @Param(name = "type", optional = true)
+    String type;
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -134,15 +136,12 @@ public class UpdateNodeCommand implements AdminCommand {
                 TokenResolver resolver = null;
 
                 // Create a resolver that can replace system properties in strings
-                Map<String, String> systemPropsMap =
-                        new HashMap<String, String>((Map)(System.getProperties()));
+                Map<String, String> systemPropsMap = new HashMap<String, String>((Map) (System.getProperties()));
                 resolver = new TokenResolver(systemPropsMap);
-                String resolvedInstallDir = resolver.resolve(installdir);
-                File actualInstallDir = new File( resolvedInstallDir+"/" + NodeUtils.LANDMARK_FILE);
-
-
-                if (!actualInstallDir.exists()){
-                    report.setMessage(Strings.get("invalid.installdir",installdir));
+                Path resolvedInstallDir = new File(resolver.resolve(installdir)).toPath();
+                Path actualInstallDir = resolvedInstallDir.resolve(NodeUtils.LANDMARK_FILE);
+                if (!actualInstallDir.toFile().exists()) {
+                    report.setMessage(Strings.get("invalid.installdir", installdir));
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     return;
                 }
@@ -195,43 +194,56 @@ public class UpdateNodeCommand implements AdminCommand {
                    Nodes nodes = ((Domain)param).getNodes();
                     Node node = nodes.getNode(nodeName);
                     Node writeableNode = t.enroll(node);
-                    if (windowsdomain != null)
+                    if (windowsdomain != null) {
                         writeableNode.setWindowsDomain(windowsdomain);
-                    if (nodedir != null)
+                    }
+                    if (nodedir != null) {
                         writeableNode.setNodeDir(nodedir);
-                    if (nodehost != null)
+                    }
+                    if (nodehost != null) {
                         writeableNode.setNodeHost(nodehost);
-                    if (installdir != null)
+                    }
+                    if (installdir != null) {
                         writeableNode.setInstallDir(installdir);
-                    if (type != null)
+                    }
+                    if (type != null) {
                         writeableNode.setType(type);
+                    }
                     if (sshport != null || sshnodehost != null ||sshuser != null || sshkeyfile != null){
                         SshConnector sshC = writeableNode.getSshConnector();
                         if (sshC == null)  {
                             sshC =writeableNode.createChild(SshConnector.class);
-                        }else
+                        } else {
                             sshC = t.enroll(sshC);
+                        }
 
-                        if (sshport != null)
+                        if (sshport != null) {
                             sshC.setSshPort(sshport);
-                        if(sshnodehost != null)
+                        }
+                        if(sshnodehost != null) {
                             sshC.setSshHost(sshnodehost);
+                        }
 
                         if (sshuser != null || sshkeyfile != null || sshpassword != null || sshkeypassphrase != null ) {
                             SshAuth sshA = sshC.getSshAuth();
                             if (sshA == null) {
                                sshA = sshC.createChild(SshAuth.class);
-                            } else
+                            } else {
                                 sshA = t.enroll(sshA);
+                            }
 
-                            if (sshuser != null)
+                            if (sshuser != null) {
                                 sshA.setUserName(sshuser);
-                            if (sshkeyfile != null)
+                            }
+                            if (sshkeyfile != null) {
                                 sshA.setKeyfile(sshkeyfile);
-                            if(sshpassword != null)
+                            }
+                            if(sshpassword != null) {
                                 sshA.setPassword(sshpassword);
-                            if(sshkeypassphrase != null)
+                            }
+                            if(sshkeypassphrase != null) {
                                 sshA.setKeyPassphrase(sshkeypassphrase);
+                            }
                             sshC.setSshAuth(sshA);
                         }
                         writeableNode.setSshConnector(sshC);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
@@ -145,11 +146,10 @@ public class CreateNodeSshCommand extends CreateRemoteNodeCommand {
     @Override
     protected List<String> getPasswords() {
         List<String> list = new ArrayList<>();
-        NodeUtils nUtils = new NodeUtils(habitat, logger);
-        list.add("AS_ADMIN_SSHPASSWORD=" + nUtils.sshL.expandPasswordAlias(remotePassword));
+        list.add("AS_ADMIN_SSHPASSWORD=" + SSHLauncher.expandPasswordAlias(remotePassword));
 
         if (sshkeypassphrase != null) {
-            list.add("AS_ADMIN_SSHKEYPASSPHRASE=" + nUtils.sshL.expandPasswordAlias(sshkeypassphrase));
+            list.add("AS_ADMIN_SSHKEYPASSPHRASE=" + SSHLauncher.expandPasswordAlias(sshkeypassphrase));
         }
         return list;
     }

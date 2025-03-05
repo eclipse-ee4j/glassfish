@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,15 +28,14 @@ import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -44,9 +43,15 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.SSHCommandExecutionException;
 import org.glassfish.cluster.ssh.connect.NodeRunner;
+import org.glassfish.cluster.ssh.launcher.SSHException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.cluster.ssh.sftp.SFTPPath;
+import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.RelativePathResolver;
+
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Utility methods for operating on Nodes
@@ -55,6 +60,8 @@ import org.glassfish.internal.api.RelativePathResolver;
  * @author Byron Nevins
  */
 public class NodeUtils {
+    private static final Logger LOG = System.getLogger(NodeUtils.class.getName());
+
     public static final String NODE_DEFAULT_SSH_PORT = "22";
     public static final String NODE_DEFAULT_REMOTE_USER = "${user.name}";
     static final String NODE_DEFAULT_INSTALLDIR = "${com.sun.aas.productRoot}";
@@ -71,22 +78,18 @@ public class NodeUtils {
     static final String PARAM_TYPE = "type";
     static final String PARAM_INSTALL = "install";
     public static final String PARAM_WINDOWS_DOMAIN = "windowsdomain";
-    static final String LANDMARK_FILE = "glassfish/modules/admin-cli.jar";
+    static final Path LANDMARK_FILE = Path.of("glassfish", "modules", "admin-cli.jar");
     private static final String NL = System.lineSeparator();
     private TokenResolver resolver = null;
-    private Logger logger = null;
-    private ServiceLocator habitat = null;
-    SSHLauncher sshL = null;
+    private ServiceLocator locator = null;
 
-    NodeUtils(ServiceLocator habitat, Logger logger) {
-        this.logger = logger;
-        this.habitat = habitat;
+    NodeUtils(ServiceLocator locator) {
+        this.locator = locator;
 
         // Create a resolver that can replace system properties in strings
         Map<String, String> systemPropsMap =
                 new HashMap<String, String>((Map) (System.getProperties()));
         resolver = new TokenResolver(systemPropsMap);
-        sshL = habitat.getService(SSHLauncher.class);
     }
 
     static boolean isSSHNode(Node node) {
@@ -110,7 +113,7 @@ public class NodeUtils {
         command.add("version");
         command.add("--local");
         command.add("--terse");
-        NodeRunner nr = new NodeRunner(habitat, logger);
+        NodeRunner nr = new NodeRunner(locator.getService(AuthTokenManager.class));
 
         StringBuilder output = new StringBuilder();
         try {
@@ -118,11 +121,9 @@ public class NodeUtils {
             if (commandStatus != 0) {
                 return "unknown version: " + output.toString();
             }
-        }
-        catch (Exception e) {
-            throw new CommandValidationException(
-                    Strings.get("failed.to.run", command.toString(),
-                    node.getNodeHost()), e);
+        } catch (Exception e) {
+            throw new CommandValidationException(Strings.get("failed.to.run", command.toString(), node.getNodeHost()),
+                e);
         }
         return output.toString().trim();
     }
@@ -181,11 +182,6 @@ public class NodeUtils {
         // i.e. check to see if the hostname is this machine?
         // todo
         if (nodehost.equals("localhost")) {
-            return;
-        }
-
-        // BN says: Shouldn't this be a fatal error?!?  TODO
-        if (sshL == null) {
             return;
         }
 
@@ -249,20 +245,14 @@ public class NodeUtils {
         if (StringUtils.ok(p)) {
             try {
                 expandedPassword = RelativePathResolver.getRealPasswordFromAlias(p);
-            }
-            catch (IllegalArgumentException e) {
-                throw new CommandValidationException(
-                        Strings.get("no.such.password.alias", p));
-            }
-            catch (Exception e) {
-                throw new CommandValidationException(
-                        Strings.get("no.such.password.alias", p),
-                        e);
+            } catch (IllegalArgumentException e) {
+                throw new CommandValidationException(Strings.get("no.such.password.alias", p));
+            } catch (Exception e) {
+                throw new CommandValidationException(Strings.get("no.such.password.alias", p), e);
             }
 
             if (expandedPassword == null) {
-                throw new CommandValidationException(
-                        Strings.get("no.such.password.alias", p));
+                throw new CommandValidationException(Strings.get("no.such.password.alias", p));
             }
         }
     }
@@ -292,24 +282,14 @@ public class NodeUtils {
      * @param node  Node to connect to
      * @throws CommandValidationException
      */
-    private void pingSSHConnection(Node node) throws
-            CommandValidationException {
+    private void pingSSHConnection(Node node) throws CommandValidationException {
+        SSHLauncher sshL = new SSHLauncher(node);
         try {
-            sshL.init(node, logger);
             sshL.pingConnection();
-        }
-        catch (Exception e) {
-            String m1 = e.getMessage();
-            String m2 = "";
-            Throwable e2 = e.getCause();
-            if (e2 != null) {
-                m2 = e2.getMessage();
-            }
-            String msg = Strings.get("ssh.bad.connect", node.getNodeHost(), "SSH");
-            logger.warning(StringUtils.cat(": ", msg, m1, m2,
-                    sshL.toString()));
-            throw new CommandValidationException(StringUtils.cat(NL,
-                    msg, m1, m2));
+        } catch (SSHException e) {
+            String msg = Strings.get("ssh.bad.connect", node.getNodeHost(), "SSH", e.getMessage());
+            LOG.log(WARNING, msg, e);
+            throw new CommandValidationException(msg, e);
         }
     }
 
@@ -344,44 +324,23 @@ public class NodeUtils {
 
         int port = Integer.parseInt(resolver.resolve(sshport));
 
+        // sshpassword and sshkeypassphrase may be password alias.
+        // Those aliases are handled by sshLauncher
+        SFTPPath resolvedInstallDir = SFTPPath.of(resolver.resolve(installdir));
+        String keyFile = resolver.resolve(sshkeyfile);
+        String host = resolver.resolve(nodehost);
+        SSHLauncher sshLauncher = new SSHLauncher(resolver.resolve(sshuser), resolver.resolve(nodehost), port,
+            sshpassword, keyFile == null ? null : new File(keyFile), sshkeypassphrase);
         try {
-            // sshpassword and sshkeypassphrase may be password alias.
-            // Those aliases are handled by sshLauncher
-            String resolvedInstallDir = resolver.resolve(installdir);
-
-            String keyFile = resolver.resolve(sshkeyfile);
-            sshL.validate(resolver.resolve(nodehost),
-                    port,
-                    resolver.resolve(sshuser),
-                    sshpassword,
-                    keyFile == null ? null : new File(keyFile),
-                    sshkeypassphrase,
-                    resolvedInstallDir,
-                    // Landmark file to ensure valid GF install
-                    LANDMARK_FILE,
-                    logger);
-        }
-        catch (IOException e) {
-            String m1 = e.getMessage();
-            String m2 = "";
-            Throwable e2 = e.getCause();
-            if (e2 != null) {
-                m2 = e2.getMessage();
+            SFTPPath pathToCheck = resolvedInstallDir.resolve(LANDMARK_FILE);
+            if (!installFlag && !sshLauncher.exists(pathToCheck)) {
+                throw new CommandValidationException(
+                    "Invalid install directory: could not find " + pathToCheck + " on " + host);
             }
-            if (e instanceof FileNotFoundException) {
-                if (!installFlag) {
-                    logger.warning(StringUtils.cat(": ", m1, m2, sshL.toString()));
-                    throw new CommandValidationException(StringUtils.cat(NL,
-                            m1, m2));
-                }
-            }
-            else {
-                String msg = Strings.get("ssh.bad.connect", nodehost, "SSH");
-                logger.warning(StringUtils.cat(": ", msg, m1, m2,
-                        sshL.toString()));
-                throw new CommandValidationException(StringUtils.cat(NL,
-                        msg, m1, m2));
-            }
+        } catch (SSHException e) {
+            String msg = Strings.get("ssh.bad.connect", nodehost, "SSH", e.getMessage());
+            LOG.log(WARNING, msg, e);
+            throw new CommandValidationException(msg, e);
         }
     }
 
@@ -444,63 +403,48 @@ public class NodeUtils {
         }
 
         if (StringUtils.ok(humanCommand)) {
-            msg3 = Strings.get("node.remote.tocomplete",
-                    nodeHost, installDir, humanCommand);
+            msg3 = Strings.get("node.remote.tocomplete", nodeHost, installDir, humanCommand);
         }
 
-        NodeRunner nr = new NodeRunner(habitat, logger);
+        NodeRunner nr = new NodeRunner(locator.getService(AuthTokenManager.class));
         try {
             int status = nr.runAdminCommandOnNode(node, output, command, context);
-            if (status != 0) {
-                // Command ran, but didn't succeed. Log full information
-                msg2 = Strings.get("node.command.failed", nodeName,
-                        nodeHost, output.toString().trim(), nr.getLastCommandRun());
-                logger.warning(StringUtils.cat(": ", msg1, msg2, msg3));
-                // Don't expose command name to user in case it is a hidden command
-                msg2 = Strings.get("node.command.failed.short", nodeName,
-                        nodeHost, output.toString().trim());
-            }
-            else {
+            if (status == 0) {
                 failure = false;
-                logger.info(output.toString().trim());
+                LOG.log(INFO, output.toString().trim());
+            } else {
+                // Command ran, but didn't succeed. Log full information
+                msg2 = Strings.get("node.command.failed", nodeName, nodeHost, output.toString().trim(),
+                    nr.getLastCommandRun());
+                LOG.log(WARNING, StringUtils.cat(": ", msg1, msg2, msg3));
+                // Don't expose command name to user in case it is a hidden command
+                msg2 = Strings.get("node.command.failed.short", nodeName, nodeHost, output.toString().trim());
             }
-        }
-        catch (SSHCommandExecutionException ec) {
-            msg2 = Strings.get("node.ssh.bad.connect",
-                    nodeName, nodeHost, ec.getMessage());
+        } catch (SSHCommandExecutionException e) {
+            msg2 = Strings.get("node.ssh.bad.connect", nodeName, nodeHost, e.getMessage());
             // Log some extra info
-            String msg = Strings.get("node.command.failed.ssh.details",
-                    nodeName, nodeHost, ec.getCommandRun(), ec.getMessage(),
-                    ec.getSSHSettings());
-            logger.warning(StringUtils.cat(": ", msg1, msg, msg3));
-        }
-        catch (ProcessManagerException ex) {
-            msg2 = Strings.get("node.command.failed.local.details",
-                    ex.getMessage(), nr.getLastCommandRun());
-            logger.warning(StringUtils.cat(": ", msg1, msg2, msg3));
+            String msg = Strings.get("node.command.failed.ssh.details", nodeName, nodeHost, e.getCommandRun(),
+                e.getMessage(), e.getSSHSettings());
+            LOG.log(WARNING, StringUtils.cat(": ", msg1, msg, msg3), e);
+        } catch (ProcessManagerException e) {
+            msg2 = Strings.get("node.command.failed.local.details", e.getMessage(), nr.getLastCommandRun());
+            LOG.log(WARNING, StringUtils.cat(": ", msg1, msg2, msg3), e);
             // User message doesn't have command that was run
-            msg2 = Strings.get("node.command.failed.local.exception",
-                    ex.getMessage());
-        }
-        catch (UnsupportedOperationException e) {
+            msg2 = Strings.get("node.command.failed.local.exception", e.getMessage());
+        } catch (UnsupportedOperationException e) {
             msg2 = Strings.get("node.not.ssh", nodeName, nodeHost);
-            logger.warning(StringUtils.cat(": ", msg1, msg2, msg3));
-        }
-        catch (IllegalArgumentException e) {
+            LOG.log(WARNING, StringUtils.cat(": ", msg1, msg2, msg3), e);
+        } catch (IllegalArgumentException e) {
             msg2 = e.getMessage();
-            logger.warning(StringUtils.cat(": ", msg1, msg2, msg3));
+            LOG.log(WARNING, StringUtils.cat(": ", msg1, msg2, msg3), e);
         }
 
         if (failure) {
             report.setMessage(StringUtils.cat(NL + NL, msg1, msg2, msg3));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-        }
-        else {
+        } else {
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         }
-
-
-        return;
     }
 
     private RemoteType parseType(ParameterMap map) throws CommandValidationException {

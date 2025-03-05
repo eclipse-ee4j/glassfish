@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Node;
@@ -153,19 +153,19 @@ public abstract class UpdateNodeRemoteCommand implements AdminCommand  {
 
         // Validate the settings
         try {
-            NodeUtils nodeUtils = new NodeUtils(habitat, logger);
+            NodeUtils nodeUtils = new NodeUtils(habitat);
             nodeUtils.validate(validateMap);
         } catch (CommandValidationException e) {
             String m1 = Strings.get("node.ssh.invalid.params");
-            if (!force) {
+            if (force) {
+                String m2 = Strings.get("update.node.ssh.continue.force");
+                msg.append(StringUtils.cat(NL, m1, e.getMessage(), m2));
+            } else {
                 String m2 = Strings.get("update.node.ssh.not.updated");
                 msg.append(StringUtils.cat(NL, m1, m2, e.getMessage()));
                 report.setMessage(msg.toString());
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
-            } else {
-                String m2 = Strings.get("update.node.ssh.continue.force");
-                msg.append(StringUtils.cat(NL, m1, e.getMessage(), m2));
             }
         }
         // Settings are valid. Now use the generic update-node command to

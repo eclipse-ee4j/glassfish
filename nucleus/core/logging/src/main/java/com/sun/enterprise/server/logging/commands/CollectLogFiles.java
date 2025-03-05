@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -111,9 +112,7 @@ public class CollectLogFiles implements AdminCommand {
         if (targetServer != null && targetServer.isDas()) {
 
             // This loop if target instance is DAS
-            String logFileDetails = "";
-            String zipFile = "";
-
+            final String logFileDetails;
             try {
                 // getting log file values from logging.propertie file.
                 logFileDetails = loggingConfig.getLoggingFileDetails();
@@ -129,12 +128,11 @@ public class CollectLogFiles implements AdminCommand {
             File targetDir = makingDirectoryOnDas(targetServer.getName(), report);
 
             try {
-
-                String sourceDir = "";
+                final Path sourceDir;
                 if (logFileDetails.contains("${com.sun.aas.instanceRoot}/logs")) {
-                    sourceDir = env.getInstanceRoot() + File.separator + "logs";
+                    sourceDir = env.getInstanceRoot().toPath().resolve("logs");
                 } else {
-                    sourceDir = logFileDetails.substring(0, logFileDetails.lastIndexOf(File.separator));
+                    sourceDir = new File(logFileDetails).toPath().getParent();
                 }
 
                 copyLogFilesForLocalhost(sourceDir, targetDir.getAbsolutePath(), report, targetServer.getName());
@@ -148,6 +146,7 @@ public class CollectLogFiles implements AdminCommand {
             }
 
 
+            String zipFile = null;
             try {
                 String zipFilePath = getZipFilePath().getAbsolutePath();
                 zipFile = loggingConfig.createZipFile(zipFilePath);
@@ -188,7 +187,7 @@ public class CollectLogFiles implements AdminCommand {
             String zipFile = "";
             File targetDir = null;
 
-            String logFileDetails = "";
+            String logFileDetails;
             try {
                 // getting log file values from logging.propertie file.
                 logFileDetails = getInstanceLogFileDirectory(targetServer);
@@ -205,16 +204,15 @@ public class CollectLogFiles implements AdminCommand {
 
             try {
                 if (node.isLocal()) {
-                    String sourceDir = getLogDirForLocalNode(logFileDetails, node, serverNode, instanceName);
+                    Path sourceDir = getLogDirForLocalNode(logFileDetails, node, serverNode, instanceName);
                     copyLogFilesForLocalhost(sourceDir, targetDir.getAbsolutePath(), report, instanceName);
                 } else {
                     new LogFilterForInstance().downloadAllInstanceLogFiles(habitat, targetServer,
-                            domain, LOGGER, instanceName, targetDir.getAbsolutePath(), logFileDetails);
+                            domain, LOGGER, instanceName, targetDir.toPath(), logFileDetails);
                 }
-            }
-            catch (Exception ex) {
-                final String errorMsg = localStrings.getLocalString(
-                        "collectlogfiles.errInstanceDownloading", "Error while downloading log files from {0}.", instanceName);
+            } catch (Exception ex) {
+                final String errorMsg = localStrings.getLocalString("collectlogfiles.errInstanceDownloading",
+                    "Error while downloading log files from {0}.", instanceName);
                 report.setMessage(errorMsg);
                 report.setFailureCause(ex);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -233,10 +231,9 @@ public class CollectLogFiles implements AdminCommand {
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     return;
                 }
-            }
-            catch (Exception ex) {
-                final String errorMsg = localStrings.getLocalString(
-                        "collectlogfiles.creatingZip", "Error while creating zip file {0}.", zipFile);
+            } catch (Exception ex) {
+                final String errorMsg = localStrings.getLocalString("collectlogfiles.creatingZip",
+                    "Error while creating zip file {0}.", zipFile);
                 report.setMessage(errorMsg);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
@@ -260,7 +257,7 @@ public class CollectLogFiles implements AdminCommand {
 
 
             // code to download server.log file for DAS. Bug fix 16088
-            String logFileDetails = "";
+            final String logFileDetails;
             try {
                 // getting log file values from logging.propertie file.
                 logFileDetails = loggingConfig.getLoggingFileDetails();
@@ -276,15 +273,15 @@ public class CollectLogFiles implements AdminCommand {
             targetDir = makingDirectoryOnDas(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME, report);
 
             try {
-                String sourceDir = "";
+                Path sourceDir;
                 if (logFileDetails.contains("${com.sun.aas.instanceRoot}/logs")) {
-                    sourceDir = env.getInstanceRoot() + File.separator + "logs";
+                    sourceDir = env.getInstanceRoot().toPath().resolve("logs");
                 } else {
-                    sourceDir = logFileDetails.substring(0, logFileDetails.lastIndexOf(File.separator));
+                    sourceDir = new File(logFileDetails).toPath().getParent();
                 }
 
                 copyLogFilesForLocalhost(sourceDir, targetDir.getAbsolutePath(), report,
-                        SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME);
+                    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME);
             } catch (Exception ex) {
                 final String errorMsg = localStrings.getLocalString(
                         "collectlogfiles.errInstanceDownloading", "Error while downloading log files from {0}.", target);
@@ -309,11 +306,10 @@ public class CollectLogFiles implements AdminCommand {
                 Node node = domain.getNodes().getNode(serverNode);
                 boolean errorOccur = false;
                 instanceCount++;
-
-                logFileDetails = "";
+                final String logFile;
                 try {
                     // getting log file values from logging.propertie file.
-                    logFileDetails = getInstanceLogFileDirectory(domain.getServerNamed(instanceName));
+                    logFile = getInstanceLogFileDirectory(domain.getServerNamed(instanceName));
                 } catch (Exception ex) {
                     final String errorMsg = localStrings.getLocalString(
                             "collectlogfiles.errGettingLogFiles", "Error while getting log file attribute for {0}.", target);
@@ -327,11 +323,11 @@ public class CollectLogFiles implements AdminCommand {
                     targetDir = makingDirectoryOnDas(instanceName, report);
 
                     if (node.isLocal()) {
-                        String sourceDir = getLogDirForLocalNode(logFileDetails, node, serverNode, instanceName);
+                        Path sourceDir = getLogDirForLocalNode(logFile, node, serverNode, instanceName);
                         copyLogFilesForLocalhost(sourceDir, targetDir.getAbsolutePath(), report, instanceName);
                     } else {
                         new LogFilterForInstance().downloadAllInstanceLogFiles(habitat, instance,
-                                domain, LOGGER, instanceName, targetDir.getAbsolutePath(), logFileDetails);
+                                domain, LOGGER, instanceName, targetDir.toPath(), logFile);
                     }
                 }
                 catch (Exception ex) {
@@ -354,7 +350,7 @@ public class CollectLogFiles implements AdminCommand {
                     String zipFilePath = getZipFilePath().getAbsolutePath();
                     // Creating zip file and returning zip file absolute path.
                     zipFile = loggingConfig.createZipFile(zipFilePath);
-                    if (zipFile == null || new File(zipFile) == null) {
+                    if (zipFile == null) {
                         // Failure during zip
                         final String errorMsg = localStrings.getLocalString(
                                 "collectlogfiles.creatingZip", "Error while creating zip file {0}.", zipFilePath);
@@ -362,8 +358,7 @@ public class CollectLogFiles implements AdminCommand {
                         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                         return;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     final String errorMsg = localStrings.getLocalString(
                             "collectlogfiles.creatingZip", "Error while creating zip file {0}.", zipFile);
                     report.setMessage(errorMsg);
@@ -395,9 +390,9 @@ public class CollectLogFiles implements AdminCommand {
         deleteDir(new File(env.getInstanceRoot() + File.separator + "collected-logs" + File.separator + "logs"));
     }
 
-    private void copyLogFilesForLocalhost(String sourceDir, String targetDir, ActionReport report, String instanceName) throws IOException {
+    private void copyLogFilesForLocalhost(Path sourceDir, String targetDir, ActionReport report, String instanceName) throws IOException {
         // Getting all Log Files
-        File logsDir = new File(sourceDir);
+        File logsDir = sourceDir.toFile();
         File allLogFileNames[] = logsDir.listFiles();
         if (allLogFileNames == null) {
             throw new IOException("");
@@ -418,8 +413,7 @@ public class CollectLogFiles implements AdminCommand {
                     byte[] buffer = new byte[4096];
                     int bytesRead;
 
-                    while ((bytesRead = from.read(buffer)) != -1)
-                     {
+                    while ((bytesRead = from.read(buffer)) != -1) {
                         to.write(buffer, 0, bytesRead); // write
                     }
                 }
@@ -578,22 +572,20 @@ public class CollectLogFiles implements AdminCommand {
         }
     }
 
-    private String getLogDirForLocalNode(String instanceLogFileName, Node node, String serverNode, String instanceName) {
-        String loggingDir;
-        loggingDir = new LogFilterForInstance().getLoggingDirectoryForNode(instanceLogFileName, node, serverNode, instanceName);
-
-        File logsDir = new File(loggingDir);
-        File allLogFileNames[] = logsDir.listFiles();
-
+    private Path getLogDirForLocalNode(String instanceLogFileDirectory, Node node, String serverNode, String instanceName) {
+        Path loggingDir = new LogFilterForInstance().getLoggingDirectoryForNode(instanceLogFileDirectory, node,
+            serverNode, instanceName);
+        File allLogFileNames[] = loggingDir.toFile().listFiles();
 
         boolean noFileFound = true;
 
-        if (allLogFileNames != null) { // This check for,  if directory doesn't present or missing on machine. It happens due to bug 16451
+        if (allLogFileNames != null) { // This check for, if directory doesn't present or missing on
+                                       // machine. It happens due to bug 16451
             for (File file : allLogFileNames) {
                 String fileName = file.getName();
                 // code to remove . and .. file which is return
                 if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
-                        && !fileName.contains(".log.")) {
+                    && !fileName.contains(".log.")) {
                     noFileFound = false;
                     break;
                 }
@@ -602,7 +594,8 @@ public class CollectLogFiles implements AdminCommand {
 
         if (noFileFound) {
             // this loop is used when user has changed value for server.log but not restarted the server.
-            loggingDir = new LogFilterForInstance().getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileName, node, serverNode, instanceName);
+            loggingDir = new LogFilterForInstance().getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileDirectory,
+                node, serverNode, instanceName);
 
         }
 

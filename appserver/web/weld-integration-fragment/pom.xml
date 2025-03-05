@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.web</groupId>
         <artifactId>web</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M10</version>
     </parent>
 
     <artifactId>weld-integration-fragment</artifactId>

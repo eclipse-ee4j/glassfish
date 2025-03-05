@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,13 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
@@ -212,8 +210,7 @@ public class FileArchiveTest {
 
 
     private void getListOfFiles(final FileArchive instance, final Set<String> expectedEntryNames, final Logger logger) {
-        final List<String> foundEntryNames = new ArrayList<>();
-        instance.getListOfFiles(archiveDir, foundEntryNames, null, logger);
+        final List<String> foundEntryNames = instance.getListOfFiles(archiveDir, logger);
         assertEquals(expectedEntryNames, new HashSet<>(foundEntryNames), "Missing or unexpected entry names reported");
     }
 
@@ -424,10 +421,9 @@ public class FileArchiveTest {
         assertTrue(lower.setReadable(false, false));
 
         // Try to list the files.  This should fail with our logger getting one record.
-        final Vector<String> fileList = new Vector<>();
         handler.reset();
         assertThat(deplLogger.getHandlers(), arrayContainingInAnyOrder(handler));
-        archive.getListOfFiles(lower, fileList, null /* embeddedArchives */, deplLogger);
+        archive.getListOfFiles(lower, deplLogger);
 
         List<GlassFishLogRecord> logRecords = handler.getAll();
         assertThat("FileArchive logged no message about being unable to list files; expected " + EXPECTED_LOG_KEY,
@@ -440,7 +436,7 @@ public class FileArchiveTest {
         lower.setReadable(true, false);
         handler.reset();
 
-        archive.getListOfFiles(lower, fileList, null, deplLogger);
+        archive.getListOfFiles(lower, deplLogger);
         assertNull(handler.pop(), "FileArchive was incorrectly unable to list files; error key in log record");
     }
 }

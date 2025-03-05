@@ -44,9 +44,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -118,6 +120,14 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * the staleFileManager field has been set.
      */
     private boolean isOpenedOrCreated;
+
+    /**
+     * File to File entries cache. Cache exists to avoid expensive duplicate calls to {@link getListOfFiles} which results
+     * in disk IO. Use a static variable because for example during deployment many FileArchive instances are created.
+     * Ideally this cache would be part of DeployCommand deploymentContext, so it would not be shared with all FileArchive
+     * usages and would only be used during deployment.
+     */
+    private static final Map<File, List<String>> fileToEntriesCache = new HashMap<>();
 
     public FileArchive() {
     }
@@ -213,6 +223,14 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
     }
 
+    /**
+     * Empty the cache of file entries. Call this method after deployment code completed to clean up memory and enable fresh
+     * new deployments.
+     */
+    public static void clearCache() {
+        fileToEntriesCache.clear();
+    }
+
     @Override
     public boolean isDirectory(String name) {
         final File candidate = new File(this.archive, name);
@@ -258,9 +276,13 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         prefix = prefix.replace('/', File.separatorChar);
         File file = new File(archive, prefix);
 
-        // Here we could cache "File -> found entries"
-        List<String> namesList = getListOfFiles(file, deplLogger);
-        return Collections.enumeration(namesList);
+        if (fileToEntriesCache.containsKey(file)) {
+            return Collections.enumeration(fileToEntriesCache.get(file));
+        } else {
+            List<String> namesList = getListOfFiles(file, deplLogger);
+            fileToEntriesCache.put(file, namesList);
+            return Collections.enumeration(namesList);
+        }
     }
 
     /**

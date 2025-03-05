@@ -583,6 +583,10 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             if (deploymentContext != null) {
                 deploymentContext.postDeployClean(true);
             }
+
+            // Clear FileArchive cache that has been filled during deployment. Clear it exactly one time after deployment.
+            // Cannot use postDeployClean implementation, it is called multiple times (even with value true) during deployment.
+            com.sun.enterprise.deploy.shared.FileArchive.clearCache();
         }
     }
 

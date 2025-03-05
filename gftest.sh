@@ -24,6 +24,7 @@ export LANG="en_US.UTF-8"
 export MVN_REPOSITORY="${MVN_REPOSITORY:=${HOME}/.m2/repository}"
 export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
 export GF_VERSION="$(mvn help:evaluate -f "${WORKSPACE}/pom.xml" -Dexpression=project.version -q -DforceStdout)"
+export ANT_OPTS="${ANT_OPTS} -Djdk.xml.totalEntitySizeLimit=50000000"
 
 echo WORKSPACE =  $WORKSPACE
 echo S1AS_HOME =  $S1AS_HOME

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,6 +65,7 @@ public final class InstanceDirs {
     /**
      * This constructor handles 0, 1, 2 or 3 null args.
      * It is smart enough to figure out many defaults.
+     *
      * @param nodeDirParentPath E.g. install-dir/nodes
      * @param nodeDirName E.g. install-dir/nodes/localhost
      * @param instanceName E.g. i1
@@ -74,67 +75,46 @@ public final class InstanceDirs {
             nodeDirParentPath = getNodeDirRootDefault();
         }
 
-        File nodeDirParent = new File(nodeDirParentPath);
-
+        final File nodeDirParent = new File(nodeDirParentPath);
         if (!nodeDirParent.isDirectory()) {
             dirs = null;
-            throw new IOException(Strings.get("InstanceDirs.noNodeParent"));
+            throw new IOException(Strings.get("InstanceDirs.noNodeParent", nodeDirParent));
         }
 
-        File nodeDir;
-
+        final File nodeDir;
         if (StringUtils.ok(nodeDirName)) {
             nodeDir = new File(nodeDirParent, nodeDirName);
         } else {
             nodeDir = getTheOneAndOnlyNode(nodeDirParent);
         }
-
         if (!nodeDir.isDirectory()) {
             dirs = null;
             throw new IOException(Strings.get("InstanceDirs.badNodeDir", nodeDir));
         }
 
-        File instanceDir;
-
+        final File instanceDir;
         if (StringUtils.ok(instanceName)) {
             instanceDir = new File(nodeDir, instanceName);
         } else {
             instanceDir = getTheOneAndOnlyInstance(nodeDir);
         }
-
         if (!instanceDir.isDirectory()) {
             dirs = null;
             throw new IOException(Strings.get("InstanceDirs.badInstanceDir", instanceDir));
         }
-
-        // whew!!!
-
         dirs = new ServerDirs(instanceDir);
     }
 
+
+    /** Look for subdirs in the parent dir -- there must be one and only one */
     private File getTheOneAndOnlyNode(File parent) throws IOException {
-        // look for subdirs in the parent dir -- there must be one and only one
-
-        File[] files = parent.listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File f) {
-                return f != null && f.isDirectory();
-            }
-        });
-
-        // ERROR:  No node dirs
+        File[] files = parent.listFiles(f -> f != null && f.isDirectory());
         if (files == null || files.length < 1) {
-            throw new IOException(
-                    Strings.get("InstanceDirs.noNodes", parent));
+            throw new IOException(Strings.get("InstanceDirs.noNodes", parent));
         }
-        // ERROR:  more than one node dir child
         if (files.length > 1) {
-            throw new IOException(
-                    Strings.get("InstanceDirs.tooManyNodes", parent, files.length));
+            throw new IOException(Strings.get("InstanceDirs.tooManyNodes", parent, files.length));
         }
-
-        // the usual case -- one node dir child
         return files[0];
     }
 

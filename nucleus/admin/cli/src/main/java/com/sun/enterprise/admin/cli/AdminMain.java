@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -321,7 +321,7 @@ public class AdminMain {
             cmd = CLICommand.getCommand(cliContainer, command);
             return cmd.execute(argv);
         } catch (CommandValidationException cve) {
-            logger.severe(cve.getMessage());
+            logger.log(SEVERE, cve.getMessage(), cve);
             if (cmd == null) // error parsing program options
             {
                 printUsage();
@@ -331,7 +331,7 @@ public class AdminMain {
             return ERROR;
         } catch (InvalidCommandException ice) {
             // find closest match with local or remote commands
-            logger.severe(ice.getMessage());
+            logger.log(SEVERE, ice.getMessage(), ice);
             try {
                 po.setEcho(false);
                 CLIUtil.displayClosestMatch(command,
@@ -344,7 +344,7 @@ public class AdminMain {
         } catch (CommandException ce) {
             if (ce.getCause() instanceof ConnectException) {
                 // find closest match with local commands
-                logger.severe(ce.getMessage());
+                logger.log(SEVERE, ce.getMessage(), ce);
                 try {
                     CLIUtil.displayClosestMatch(command,
                         CLIUtil.getLocalCommands(cliContainer),
@@ -353,7 +353,7 @@ public class AdminMain {
                     logger.info(strings.get("InvalidRemoteCommand", command));
                 }
             } else {
-                logger.severe(ce.getMessage());
+                logger.log(SEVERE, ce.getMessage(), ce);
             }
             return ERROR;
         }

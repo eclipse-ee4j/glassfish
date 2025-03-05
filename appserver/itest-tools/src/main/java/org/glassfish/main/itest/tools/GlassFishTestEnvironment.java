@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates.
+ * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,22 +27,35 @@ import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 
+import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -72,6 +85,8 @@ public class GlassFishTestEnvironment {
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
     private static final int ASADMIN_START_DOMAIN_TIMEOUT = 30_000;
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 300_000;
+    private static HttpClient client = null;
 
     static {
         LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
@@ -87,9 +102,11 @@ public class GlassFishTestEnvironment {
             // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
         }
+        final int timeout = isStartDomainSuspendEnabled()
+                ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
         // This is the absolutely first start - if it fails, all other starts will fail too.
         // Note: --suspend implicitly enables --debug
-        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain",
+        assertThat(asadmin.exec(timeout,"start-domain",
                 isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
     }
 
@@ -229,6 +246,26 @@ public class GlassFishTestEnvironment {
         return connection;
     }
 
+    /**
+     * Creates a {@link HttpURLConnection} for the given port and context.
+     *
+     * @param secured true for https, false for http
+     * @param port
+     * @param context - part of the url behind the <code>http://localhost:[port]</code>
+     * @return a new disconnected {@link HttpURLConnection}.
+     * @throws IOException
+     */
+    public static HttpResponse<String> getHttpResource(final boolean secured, final int port, final String context)
+        throws Exception {
+        final String protocol = secured ? "https" : "http";
+        URI uri = URI.create(protocol + "://localhost:" + port + context);
+        final HttpRequest request = HttpRequest.newBuilder(uri)
+                .timeout(Duration.ofSeconds(15))
+                .header("X-Requested-By", "JUnit5Test")
+                .build();
+        return newInsecureHttpClient().send(request, ofString(StandardCharsets.UTF_8));
+    }
+
     public static URI webSocketUri(final int port, final String context) throws URISyntaxException {
         return webSocketUri(false, port, context);
     }
@@ -262,7 +299,6 @@ public class GlassFishTestEnvironment {
             doIO(() -> Files.delete(passwordFile));
         }
     }
-
 
     /**
      * This will delete the jobs.xml file
@@ -366,7 +402,7 @@ public class GlassFishTestEnvironment {
 
     private static void changePassword() {
         final Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
-        final AsadminResult result = asadmin.exec(5_000, "change-admin-password");
+        final AsadminResult result = asadmin.exec(20_000, "change-admin-password");
         if (result.isError()) {
             // probably changed by previous execution without maven clean
             System.out.println("Admin password NOT changed.");
@@ -418,4 +454,37 @@ public class GlassFishTestEnvironment {
 
         void execute() throws IOException;
     }
+
+    private static HttpClient newInsecureHttpClient() throws KeyManagementException, NoSuchAlgorithmException {
+        if (client == null) {
+            // Java 17 doesn't allow to close http client, so we reuse a global one.
+            // Once we start using Java 21, client should be created for every call and returned instance should be closed
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+            client = HttpClient.newBuilder()
+                    .sslContext(sslContext)
+                    .connectTimeout(Duration.ofMillis(100))
+                    .build();
+        }
+        return client;
+    }
+
+    private static final TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }
+    };
 }

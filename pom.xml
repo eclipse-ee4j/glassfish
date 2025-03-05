@@ -75,7 +75,7 @@
                 <plugin>
                     <groupId>org.cyclonedx</groupId>
                     <artifactId>cyclonedx-maven-plugin</artifactId>
-                    <version>2.9.0</version>
+                    <version>2.9.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -135,7 +135,7 @@
         </profile>
 
         <!--
-        Build glassfixh.zip as soon as possible.
+        Build glassfish.zip as soon as possible.
         Profile of the same id is also in parent, together they exclude unimportant modules and plugin executions.
          -->
         <profile>
@@ -148,7 +148,7 @@
         </profile>
 
         <!--
-        Build glassfixh.zip as soon as possible and runs also unit tests.
+        Build glassfish.zip as soon as possible and runs also unit tests.
         Profile of the same id is also in parent, together they exclude unimportant modules and plugin executions.
          -->
         <profile>

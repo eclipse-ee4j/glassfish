@@ -16,14 +16,16 @@
 #
 
 list_test_ids(){
-  echo jdbc_all
+  echo jdbc_all jdbc_group1 jdbc_group2 jdbc_group3 jdbc_group4 jdbc_group5
 }
 
 test_run(){
   ${S1AS_HOME}/bin/asadmin start-domain domain1
   ${S1AS_HOME}/bin/asadmin start-database
   cd ${APS_HOME}/devtests/jdbc
+
   ant ${TARGET} | tee ${TEST_RUN_LOG}
+
   ${S1AS_HOME}/bin/asadmin stop-domain domain1
   ${S1AS_HOME}/bin/asadmin stop-database
 }
@@ -33,18 +35,35 @@ run_test_id(){
   cd `dirname ${0}`
   test_init
   get_test_target ${1}
+
   test_run
+
   check_successful_run
   generate_junit_report ${1}
   change_junit_report_class_names
 }
 
 get_test_target(){
-        case ${1} in
-                jdbc_all )
-                        TARGET=all
-                        export TARGET;;
-        esac
+    case ${1} in
+        jdbc_all )
+            TARGET=all
+            export TARGET;;
+        jdbc_group1 )
+            TARGET=jdbc-group1
+            export TARGET;;
+        jdbc_group2 )
+            TARGET=jdbc-group2
+            export TARGET;;
+        jdbc_group3 )
+            TARGET=jdbc-group3
+            export TARGET;;
+        jdbc_group4 )
+            TARGET=jdbc-group4
+            export TARGET;;
+        jdbc_group5 )
+            TARGET=jdbc-group5
+            export TARGET;;
+    esac
 }
 
 OPT=${1}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -439,14 +439,15 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         LoginConfig config = context.getLoginConfig();
 
         if (isJakartaAuthenticationEnabled()) {
+            final SecurityContext securityContext = SecurityContext.getCurrent();
             // Jakarta Authentication is enabled for this application
             try {
                 context.fireContainerEvent(BEFORE_AUTHENTICATION, null);
                 RequestFacade requestFacade = (RequestFacade) request.getRequest();
-                SecurityContext.getCurrent().setSessionPrincipal(requestFacade.getRequestPrincipal());
+                securityContext.setSessionPrincipal(requestFacade.getRequestPrincipal());
                 return validate(request, response, config, authenticator, calledFromAuthenticate);
             } finally {
-                SecurityContext.getCurrent().setSessionPrincipal(null);
+                securityContext.setSessionPrincipal(null);
                 context.fireContainerEvent(AFTER_AUTHENTICATION, null);
             }
         }

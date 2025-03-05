@@ -1,42 +1,44 @@
 Manifest-Version: 1.0
+Created-By: 17.0.10 (Eclipse Adoptium)
+Build-Jdk-Spec: 17
+Bnd-LastModified: 1722519108645
 Bundle-Description: Typesafe Rest Client APIs for MicroProfile :: API
-Bundle-License: Apache License, Version 2.0
-Bundle-SymbolicName: org.eclipse.microprofile.rest.client
-Bnd-LastModified: 1637273185758
-Bundle-ManifestVersion: 2
 Bundle-DocURL: http://microprofile.io/microprofile-rest-client-api
-Bundle-Vendor: Eclipse Foundation
-Import-Package: jakarta.enterprise.context;version="[3,5)";resolution:
- =optional,jakarta.enterprise.inject;version="[3,5)";resolution:=optio
- nal,jakarta.enterprise.util;version="[3,5)";resolution:=optional,jaka
- rta.inject;resolution:=optional;version="[2.0,3)",org.eclipse.micropr
- ofile.config;version="[3,4)";resolution:=optional,jakarta.annotation;
- version="[2.0,3)",jakarta.ws.rs.core;version="[3.0,4)",javax.net.ssl,
- org.eclipse.microprofile.rest.client;version="[2.0,2.1)",org.eclipse.
- microprofile.rest.client.ext;version="[2.0,2.1)",org.eclipse.micropro
- file.rest.client.spi;version="[1.1,2)"
-Require-Capability: osgi.extender;filter:="(osgi.extender=osgi.service
- loader.processor)";resolution:=optional,osgi.serviceloader;filter:="(
- osgi.serviceloader=org.eclipse.microprofile.rest.client.spi.RestClien
- tBuilderResolver)";resolution:=optional,osgi.ee;filter:="(&(osgi.ee=J
- avaSE)(version=1.8))"
-Tool: Bnd-5.2.0.202010142003
-Export-Package: org.eclipse.microprofile.rest.client;version="2.0";use
- s:="jakarta.ws.rs.core,javax.net.ssl,org.eclipse.microprofile.rest.cl
- ient.ext",org.eclipse.microprofile.rest.client.annotation;version="1.
- 1.1";uses:="org.eclipse.microprofile.rest.client.ext",org.eclipse.mic
- roprofile.rest.client.ext;version="2.0";uses:="jakarta.ws.rs.core",or
- g.eclipse.microprofile.rest.client.inject;version="2.0";uses:="jakart
- a.enterprise.context,jakarta.enterprise.inject,jakarta.enterprise.uti
- l,jakarta.inject",org.eclipse.microprofile.rest.client.spi;version="1
- .1.1";uses:="org.eclipse.microprofile.rest.client"
+Bundle-License: Apache License, Version 2.0
+Bundle-ManifestVersion: 2
 Bundle-Name: MicroProfile Rest Client Bundle
-Bundle-Version: 3.0.0
-Bundle-SCM: url="https://github.com/eclipse/microprofile-rest-client/m
- icroprofile-rest-client-api",connection="scm:git:https://github.com/e
- clipse/microprofile-rest-client.git/microprofile-rest-client-api",dev
- eloper-connection="scm:git:git@github.com:eclipse/microprofile-rest-c
- lient.git/microprofile-rest-client-api",tag="3.0"
-Build-Jdk-Spec: 1.8
-Created-By: 1.8.0_292 (AdoptOpenJDK)
+Bundle-SCM: url="https://github.com/eclipse/microprofile-rest-client/mic
+ roprofile-rest-client-api",connection="scm:git:https://github.com/eclip
+ se/microprofile-rest-client.git/microprofile-rest-client-api",developer
+ -connection="scm:git:git@github.com:eclipse/microprofile-rest-client.gi
+ t/microprofile-rest-client-api",tag="4.0"
+Bundle-SymbolicName: org.eclipse.microprofile.rest.client
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 4.0.0
+Export-Package: org.eclipse.microprofile.rest.client;version="2.1";uses:
+ ="jakarta.ws.rs.core,javax.net.ssl,org.eclipse.microprofile.rest.client
+ .ext",org.eclipse.microprofile.rest.client.annotation;version="1.1.1";u
+ ses:="org.eclipse.microprofile.rest.client.ext",org.eclipse.microprofil
+ e.rest.client.ext;version="2.0";uses:="jakarta.ws.rs.core",org.eclipse.
+ microprofile.rest.client.inject;version="2.0";uses:="jakarta.enterprise
+ .context,jakarta.enterprise.inject,jakarta.enterprise.util,jakarta.inje
+ ct",org.eclipse.microprofile.rest.client.spi;version="1.1.1";uses:="org
+ .eclipse.microprofile.rest.client"
+Import-Package: jakarta.enterprise.context;version="[3,5)";resolution:=o
+ ptional,jakarta.enterprise.inject;version="[3,5)";resolution:=optional,
+ jakarta.enterprise.util;version="[3,5)";resolution:=optional,jakarta.in
+ ject;resolution:=optional;version="[2.0,3)",org.eclipse.microprofile.co
+ nfig;version="[3,4)";resolution:=optional,jakarta.annotation;version="[
+ 2.1,4)",jakarta.ws.rs.core;version="[3.1,5)",java.lang,java.lang.annota
+ tion,java.lang.invoke,java.net,java.security,java.util,java.util.concur
+ rent,java.util.function,java.util.logging,java.util.stream,javax.net.ss
+ l,org.eclipse.microprofile.rest.client;version="[2.1,2.2)",org.eclipse.
+ microprofile.rest.client.ext;version="[2.0,2.1)",org.eclipse.microprofi
+ le.rest.client.spi;version="[1.1,2)"
+Require-Capability: osgi.extender;filter:="(osgi.extender=osgi.servicelo
+ ader.processor)";resolution:=optional,osgi.serviceloader;filter:="(osgi
+ .serviceloader=org.eclipse.microprofile.rest.client.spi.RestClientBuild
+ erResolver)";resolution:=optional,osgi.ee;filter:="(&(osgi.ee=JavaSE)(v
+ ersion=11))"
+Tool: Bnd-7.0.0.202310060912
 

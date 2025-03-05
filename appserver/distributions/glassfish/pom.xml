@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -111,15 +111,6 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 
-                                <if>
-                                    <bool>
-                                        <isgreaterthan arg1="${ant.java.version}" arg2="16"/>
-                                    </bool>
-                                    <then>
-                                        <property name="java17orGreater" value="true"/>
-                                    </then>
-                                </if>
-                                
                                 <macrodef name="jarupdate">
                                     <attribute name="basedir"/>
                                     <attribute name="includes"/>
@@ -139,11 +130,12 @@
                                     </sequential>
                                 </macrodef>
                                 
-                                <jarupdate if:set="java17orGreater"
+                                <jarupdate
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
                                 />
-                                <jarupdate if:set="java17orGreater"
+                                <!-- To support Annnotations 4 -->
+                                <jarupdate
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
@@ -158,10 +150,6 @@
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
-                                />
-                                 <jarupdate
-                                    basedir="${patches}/weld-osgi-bundle" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/weld-osgi-bundle.jar"
                                 />
                                 
                                 <!-- To support glassfish.pfl 5.0.0 -->
@@ -181,6 +169,18 @@
                                 <jarupdate
                                     basedir="${patches}/glassfish-corba-orb" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/glassfish-corba-orb.jar"
+                                />
+                                
+                                <!-- Path for OSGI locator osgiresourcelocator -->
+                                <jarupdate
+                                    basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jersey-common.jar"
+                                />
+                                
+                                <!-- Patch for JDK 17-->
+                                <jarupdate
+                                    basedir="${patches}/concurro" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/concurro.jar"
                                 />
                             </target>
                         </configuration>

@@ -84,7 +84,7 @@ public class GFLauncherLogger {
 
     public static final String copy_server_policy = "NCLS-GFLAUNCHER-00004";
 
-    @LogMessageInfo(message = "JVM invocation command line:{0}", comment = "Routine Information", cause = "NA", action = "NA", level = "INFO")
+    @LogMessageInfo(message = "JVM invocation command line:\n{0}", comment = "Routine Information", cause = "NA", action = "NA", level = "INFO")
     public static final String COMMAND_LINE = "NCLS-GFLAUNCHER-00005";
 
     private GFLauncherLogger() {

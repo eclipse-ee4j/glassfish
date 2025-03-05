@@ -1,0 +1,41 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 6.0.0
+Build-Jdk-Spec: 21
+Multi-Release: true
+Bundle-Description: Eclipse compatible implementation of Jakarta Concurr
+ ency.
+Bundle-DocURL: http://www.oracle.com/
+Bundle-License: http://www.eclipse.org/legal/epl-2.0, https://www.gnu.or
+ g/software/classpath/license.html
+Bundle-ManifestVersion: 2
+Bundle-Name: Concurro
+Bundle-SymbolicName: org.glassfish.concurro
+Bundle-Vendor: Oracle Corporation
+Bundle-Version: 3.1.0.SNAPSHOT
+Export-Package: org.glassfish.concurro;version="3.1";uses:="jakarta.ente
+ rprise.concurrent,org.glassfish.concurro.internal,org.glassfish.concurr
+ o.spi",org.glassfish.concurro.cdi;version="3.1";uses:="jakarta.enterpri
+ se.concurrent,jakarta.enterprise.event,jakarta.enterprise.inject.spi,ja
+ karta.enterprise.util,jakarta.interceptor",org.glassfish.concurro.inter
+ nal;version="3.1";uses:="jakarta.enterprise.concurrent,jakarta.intercep
+ tor,org.glassfish.concurro,org.glassfish.concurro.spi",org.glassfish.co
+ ncurro.spi;version="3.1";uses:="jakarta.enterprise.concurrent",org.glas
+ sfish.concurro.virtualthreads;version="3.1";uses:="jakarta.enterprise.c
+ oncurrent,org.glassfish.concurro,org.glassfish.concurro.internal,org.gl
+ assfish.concurro.spi"
+Import-Package: jakarta.annotation;version="[3.0,4)",jakarta.enterprise.
+ concurrent;version="[3.1,4)",jakarta.enterprise.context;version="[4.1,5
+ )",jakarta.enterprise.event;version="[4.1,5)",jakarta.enterprise.inject
+ ;version="[4.1,5)",jakarta.enterprise.inject.spi;version="[4.1,5)",jaka
+ rta.enterprise.inject.spi.configurator;version="[4.1,5)",jakarta.enterp
+ rise.util;version="[4.1,5)",jakarta.interceptor;version="[2.2,3)",jakar
+ ta.transaction;version="[2.0,3)",java.io,java.lang,java.lang.annotation
+ ,java.lang.invoke,java.lang.reflect,java.lang.runtime,java.time,java.ti
+ me.chrono,java.time.temporal,java.util,java.util.concurrent,java.util.c
+ oncurrent.atomic,java.util.concurrent.locks,java.util.function,java.uti
+ l.logging,java.util.stream,javax.naming,org.glassfish.concurro;version=
+ "[3.1,4)",org.glassfish.concurro.internal;version="[3.1,4)",org.glassfi
+ sh.concurro.spi;version="[3.1,4)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
+Tool: Bnd-7.0.0.202310060912
+

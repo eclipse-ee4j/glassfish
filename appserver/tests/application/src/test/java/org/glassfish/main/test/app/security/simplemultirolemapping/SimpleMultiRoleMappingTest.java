@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023,2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,7 +64,6 @@ public class SimpleMultiRoleMappingTest {
     private static File tempDir;
     private static File earFile;
 
-
     @BeforeAll
     public static void prepareDeployment() throws Exception {
         createFileUser(FILE_REALM_NAME, USER_WEBUSER_NAME, USER_WEBUSER_PASSWORD, "webusers");
@@ -91,7 +90,6 @@ public class SimpleMultiRoleMappingTest {
         assertThat(ASADMIN.exec("deploy", "--target", "server", earFile.getAbsolutePath()), asadminOK());
     }
 
-
     @AfterAll
     public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
@@ -100,20 +98,17 @@ public class SimpleMultiRoleMappingTest {
         TestUtilities.delete(earFile);
     }
 
-
     @Test
     void ejb() throws Exception {
         String bobby = getContent("ejb", USER_BOBBY_NAME, USER_BOBBY_PASSWORD);
         assertThat(bobby, stringContainsInOrder("Servlet EjbTest", "Hello from ejb"));
     }
 
-
     @Test
     void web() throws Exception {
         String webtest = getContent("web", USER_WEBUSER_NAME, USER_WEBUSER_PASSWORD);
         assertThat(webtest, stringContainsInOrder("Servlet WebTest", "<h2>Ok</h2>"));
     }
-
 
     private String getContent(String relativePath, String user, String password) throws IOException {
         HttpURLConnection connection = prepareConnection(relativePath, user, password);
@@ -124,7 +119,6 @@ public class SimpleMultiRoleMappingTest {
             connection.disconnect();
         }
     }
-
 
     private HttpURLConnection prepareConnection(String relativePath, String user, String password) throws IOException {
         HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/" + relativePath);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +22,8 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.i18n.StringManagerBase;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.PasswordAliasStore;
 
@@ -47,8 +43,6 @@ import org.glassfish.api.admin.PasswordAliasStore;
  * installation directories).
  */
 public class RelativePathResolver {
-
-    private static Logger _logger = null;
 
     private static RelativePathResolver _instance = null;
 
@@ -99,8 +93,8 @@ public class RelativePathResolver {
             //assumption is that the File class can convert this to an OS
             //dependent path separator (e.g. \\ on windows).
             path = path.replace(File.separatorChar, '/');
-            for (int i = 0; i < propNames.length; i++) {
-                propVal = getPropertyValue(propNames[i], true);
+            for (String propName : propNames) {
+                propVal = getPropertyValue(propName, true);
                 if (propVal != null) {
                     //All paths returned will contain / as the separator. This will allow
                     //all comparison to be done using / as the separator
@@ -108,13 +102,13 @@ public class RelativePathResolver {
                     startIdx = path.indexOf(propVal);
                     if (startIdx >= 0) {
                         path = path.substring(0, startIdx) +
-                            "${" + propNames[i] + "}" +
+                            "${" + propName + "}" +
                             path.substring(startIdx + propVal.length());
                     }
                 } else {
                     InternalLoggerInfo.getLogger().log(Level.SEVERE,
                         InternalLoggerInfo.unknownProperty,
-                        new Object[] {propNames[i], path});
+                        new Object[] {propName, path});
                 }
             }
         }
@@ -162,8 +156,9 @@ public class RelativePathResolver {
            int lastIdx = propName.length() - 1;
            if (lastIdx > 1) {
               propName = propName.substring(0,lastIdx);
-              if (propName!=null)
-                 aliasName = propName.trim();
+              if (propName!=null) {
+                aliasName = propName.trim();
+            }
            }
        }
        return aliasName;
@@ -180,8 +175,9 @@ public class RelativePathResolver {
      */
     protected String getPropertyValue(String propName, boolean bIncludingEnvironmentVariables)
     {
-        if(!bIncludingEnvironmentVariables)
-          return null;
+        if(!bIncludingEnvironmentVariables) {
+            return null;
+        }
 
         // Try finding the property as a system property
         String result = System.getProperty(propName);
@@ -308,8 +304,8 @@ public class RelativePathResolver {
                 System.out.println(args[i] + " " + result + " " + resolvePath(result));
             }
         } else {
-            for (int i = 0; i < args.length; i++) {
-                System.out.println(args[i] + " " + resolvePath(args[i]));
+            for (String arg : args) {
+                System.out.println(arg + " " + resolvePath(arg));
             }
         }
     }
@@ -333,9 +329,7 @@ public class RelativePathResolver {
      *         UnrecoverableKeyException if there is an error is opening or
      *         processing the password store
      */
-    public static String getRealPasswordFromAlias(final String at) throws
-            KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException,
-            UnrecoverableKeyException {
+    public static String getRealPasswordFromAlias(final String at) throws KeyStoreException {
         try {
             if (at == null || RelativePathResolver.getAlias(at) == null) {
                 return ( at );

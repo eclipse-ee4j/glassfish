@@ -19,21 +19,28 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+     
     <parent>
-        <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>tck</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.9</version>
+        <relativePath />
     </parent>
 
+    <groupId>org.glassfish.main.tests.tck</groupId>
     <artifactId>glassfish-external-tck-microprofile</artifactId>
+    <version>8.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <name>TCK: MicroProfile</name>
 
     <properties>
-        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
+        <glassfish.root>${project.build.directory}</glassfish.root>
+        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
     </properties>
@@ -41,6 +48,7 @@
     <modules>
         <module>config</module>
         <module>rest-client</module>
+        <module>jwt</module>
     </modules>
 
     <dependencyManagement>
@@ -48,7 +56,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.7.1.Final</version>
+                <version>1.9.3.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -73,13 +81,13 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
+            <version>1.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>glassfish-client-ee10</artifactId>
-            <version>1.4</version>
+            <artifactId>glassfish-client-ee11</artifactId>
+            <version>1.7.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -97,6 +105,7 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
@@ -105,6 +114,7 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <version>3.2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -118,7 +128,7 @@
                     <executions>
                         <execution>
                             <id>unpack-glassfish</id>
-                            <phase>pre-integration-test</phase>
+                            <phase>process-test-classes</phase>
                             <goals>
                                 <goal>unpack-dependencies</goal>
                             </goals>
@@ -129,9 +139,10 @@
                         </execution>
                     </executions>
                 </plugin>
-
+                
                 <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.2</version>
                     <configuration>
                         <systemPropertyVariables>
                             <glassfish.home>${glassfish.home}</glassfish.home>
@@ -140,10 +151,35 @@
                             <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
                             <arquillian.launch>arquillian-glassfish</arquillian.launch>
                         </systemPropertyVariables>
-                        <environmentVariables>
-                            <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
-                        </environmentVariables>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.5.2</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <glassfish.home>${glassfish.home}</glassfish.home>
+
+                            <!-- Use the Arquillian XML from the parent in each child module -->
+                            <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
+                            <arquillian.launch>arquillian-glassfish</arquillian.launch>
+                        </systemPropertyVariables>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

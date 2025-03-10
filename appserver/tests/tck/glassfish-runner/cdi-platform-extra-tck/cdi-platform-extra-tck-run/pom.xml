@@ -270,6 +270,11 @@
             <version>1.7</version>
             <scope>test</scope>
         </dependency>
+         <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-devtools-v133</artifactId>
+            <version>4.29.0</version>
+        </dependency>
     </dependencies>
 
     <build>

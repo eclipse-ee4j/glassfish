@@ -55,7 +55,6 @@
         <module>microprofile</module>
         <module>concurrency</module>
         <module>validation</module>
-        <module>jwt</module>
         <module>websocket</module>
         <module>jsonp</module>
         <module>jsonp_pluggability</module>

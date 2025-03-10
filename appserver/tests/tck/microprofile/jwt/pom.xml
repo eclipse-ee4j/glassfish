@@ -16,7 +16,6 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,78 +25,77 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-microprofile-config</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>glassfish-external-tck-microprofile-jwt</artifactId>
 
-    <name>TCK: MicroProfile Config</name>
+    <name>TCK: MicroProfile JWT</name>
+    <description>Aggregates dependencies and runs the MicroProfile JWT TCK</description>
 
     <dependencies>
-
         <!-- 
-            This is the actual MP config test classes archive 
+            This is the MP-JWT TCK base extension and utility classes 
+            archive.
         -->
         <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-tck</artifactId>
-            <version>3.0.1</version>
-            <scope>test</scope>
+            <groupId>org.eclipse.microprofile.jwt</groupId>
+            <artifactId>microprofile-jwt-auth-tck</artifactId>
+            <version>2.1</version>
+        </dependency>
+        
+        <!-- 
+            This is the actual MP-JWT TCK test classes archive 
+        -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.jwt</groupId>
+            <artifactId>microprofile-jwt-auth-tck</artifactId>
+            <version>2.1</version>
+            <type>test-jar</type>
         </dependency>
         
         <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-            <version>3.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Required dependencies for Arquillian deployments -->
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-impl</artifactId>
-            <version>6.0.1.Final</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>3.0</version>
-            <scope>test</scope>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Unpack the GF install -->
                     <execution>
                         <id>unpack-glassfish</id>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- 
+                Run the TCK tests aginst the tck-base-suite.xml file.
+                
+                Single tests can be run using the regular -Dtest paramater, e.g.
+                
+                -Dtest=ClaimValueInjectionTest#verifyInjectedAudience
+            -->
             <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
+                    <dependenciesToScan>org.eclipse.microprofile.jwt:microprofile-jwt-auth-tck</dependenciesToScan>
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
-
-                    <!-- Required for org.eclipse.microprofile.config.tck.CDIPropertyNameMatchingTest -->
-                    <environmentVariables>
-                        <MP_TCK_ENV_DUMMY>dummy</MP_TCK_ENV_DUMMY>
-                        <my_int_property>45</my_int_property>
-                        <MY_BOOLEAN_PROPERTY>true</MY_BOOLEAN_PROPERTY>
-                        <my_string_property>haha</my_string_property>
-                        <MY_STRING_PROPERTY>woohoo</MY_STRING_PROPERTY>
-                        <config_ordinal>45</config_ordinal>
-                        <customer_name>Bob</customer_name>
-                    </environmentVariables>
-
+                    
+                    <!-- System Properties -->
                     <systemPropertyVariables>
-                        <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
-                        <customer.hobby>Tennis</customer.hobby>
-                        <config_ordinal>120</config_ordinal>
+                        <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

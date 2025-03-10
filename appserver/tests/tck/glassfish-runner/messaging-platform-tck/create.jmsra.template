@@ -1,0 +1,147 @@
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.ConnectionFactory cfpool
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.QueueConnectionFactory qcfpool
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory tcfpool
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts tcfpoolcts
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts1 tcfpoolcts1
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts2 tcfpoolcts2
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts3 tcfpoolcts3
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts4 tcfpoolcts4
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts5 tcfpoolcts5
+create-connector-connection-pool --raname jmsra --connectiondefinition jakarta.jms.TopicConnectionFactory --property ClientId=cts6 tcfpoolcts6
+create-connector-resource --poolname cfpool jms/ConnectionFactory
+create-connector-resource --poolname qcfpool jms/QueueConnectionFactory 
+create-connector-resource --poolname tcfpool jms/TopicConnectionFactory
+create-connector-resource --poolname tcfpoolcts jms/DURABLE_SUB_CONNECTION_FACTORY
+create-connector-resource --poolname tcfpoolcts1 jms/MDBTACCESSTEST_FACTORY
+create-connector-resource --poolname tcfpoolcts2 jms/DURABLE_BMT_CONNECTION_FACTORY
+create-connector-resource --poolname tcfpoolcts3 jms/DURABLE_CMT_CONNECTION_FACTORY
+create-connector-resource --poolname tcfpoolcts4 jms/DURABLE_BMT_XCONNECTION_FACTORY
+create-connector-resource --poolname tcfpoolcts5 jms/DURABLE_CMT_XCONNECTION_FACTORY
+create-connector-resource --poolname tcfpoolcts6 jms/DURABLE_CMT_TXNS_XCONNECTION_FACTORY
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=MDB_QUEUE MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=MDB_QUEUE_REPLY MDB_QUEUE_REPLY
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=MY_QUEUE MY_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=MY_QUEUE2 MY_QUEUE2
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=Q2 Q2
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=QUEUE_BMT QUEUE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=fooQ fooQ
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptQ_MDB_QUEUETXNS_CMT jms_ee_mdb_mdb_exceptQ_MDB_QUEUETXNS_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptQ_MDB_QUEUE_BMT jms_ee_mdb_mdb_exceptQ_MDB_QUEUE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptQ_MDB_QUEUE_CMT jms_ee_mdb_mdb_exceptQ_MDB_QUEUE_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptT_MDB_QUEUETXNS_CMT jms_ee_mdb_mdb_exceptT_MDB_QUEUETXNS_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptT_MDB_QUEUE_BMT jms_ee_mdb_mdb_exceptT_MDB_QUEUE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptT_MDB_QUEUE_CMT jms_ee_mdb_mdb_exceptT_MDB_QUEUE_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgHdrQ_MDB_QUEUE jms_ee_mdb_mdb_msgHdrQ_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgPropsQ_MDB_QUEUE jms_ee_mdb_mdb_msgPropsQ_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgTypesQ1_MDB_QUEUE jms_ee_mdb_mdb_msgTypesQ1_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgTypesQ2_MDB_QUEUE jms_ee_mdb_mdb_msgTypesQ2_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgTypesQ3_MDB_QUEUE jms_ee_mdb_mdb_msgTypesQ3_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_rec_MDB_QUEUE jms_ee_mdb_mdb_rec_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_sndToQueue_MDB_QUEUE jms_ee_mdb_mdb_sndToQueue_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_sndQ_MDB_QUEUE jms_ee_mdb_mdb_sndQ_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_synchrec_MDB_QUEUE jms_ee_mdb_mdb_synchrec_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_xa_MDB_QUEUE_BMT jms_ee_mdb_xa_MDB_QUEUE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_xa_MDB_QUEUE_CMT jms_ee_mdb_xa_MDB_QUEUE_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=testQ0 testQ0
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=testQ1 testQ1
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=testQ2 testQ2
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=testQueue2 testQueue2
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=testT0 testT0
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=testT1 testT1
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=testT2 testT2
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=MY_TOPIC MY_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=MY_TOPIC2 MY_TOPIC2
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=TOPIC_BMT TOPIC_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptT_MDB_DURABLETXNS_CMT jms_ee_mdb_mdb_exceptT_MDB_DURABLETXNS_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptT_MDB_DURABLE_BMT jms_ee_mdb_mdb_exceptT_MDB_DURABLE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_exceptT_MDB_DURABLE_CMT jms_ee_mdb_mdb_exceptT_MDB_DURABLE_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgHdrT_MDB_TOPIC jms_ee_mdb_mdb_msgHdrT_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgPropsT_MDB_TOPIC jms_ee_mdb_mdb_msgPropsT_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgTypesT1_MDB_TOPIC jms_ee_mdb_mdb_msgTypesT1_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgTypesT2_MDB_TOPIC jms_ee_mdb_mdb_msgTypesT2_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_msgTypesT3_MDB_TOPIC jms_ee_mdb_mdb_msgTypesT3_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_rec_MDB_TOPIC jms_ee_mdb_mdb_rec_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_sndToTopic_MDB_TOPIC jms_ee_mdb_mdb_sndToTopic_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_mdb_sndToTopic_MDB_TOPIC_REPLY jms_ee_mdb_mdb_sndToTopic_MDB_TOPIC_REPLY
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_xa_MDB_DURABLE_BMT jms_ee_mdb_xa_MDB_DURABLE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=jms_ee_mdb_xa_MDB_DURABLE_CMT jms_ee_mdb_xa_MDB_DURABLE_CMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_bb_localaccess_mdbqaccesstest_MDB_QUEUE ejb_ee_bb_localaccess_mdbqaccesstest_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_casesensT_ReplyQueue ejb_ee_deploy_mdb_ejblink_casesensT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_casesens_ReplyQueue ejb_ee_deploy_mdb_ejblink_casesens_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_casesens_TestBean ejb_ee_deploy_mdb_ejblink_casesens_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_scopeT_ReplyQueue ejb_ee_deploy_mdb_ejblink_scopeT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_scope_ReplyQueue ejb_ee_deploy_mdb_ejblink_scope_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_scope_TestBean ejb_ee_deploy_mdb_ejblink_scope_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_singleT_ReplyQueue ejb_ee_deploy_mdb_ejblink_singleT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_single_ReplyQueue ejb_ee_deploy_mdb_ejblink_single_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_single_TestBean ejb_ee_deploy_mdb_ejblink_single_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_single_TestBeanBMT ejb_ee_deploy_mdb_ejblink_single_TestBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_casesensT_ReplyQueue ejb_ee_deploy_mdb_ejbref_casesensT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_casesens_ReplyQueue ejb_ee_deploy_mdb_ejbref_casesens_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_casesens_TestBean ejb_ee_deploy_mdb_ejbref_casesens_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scopeT_ReplyQueue ejb_ee_deploy_mdb_ejbref_scopeT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scope_Cyrano ejb_ee_deploy_mdb_ejbref_scope_Cyrano
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scope_ReplyQueue ejb_ee_deploy_mdb_ejbref_scope_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scope_Romeo ejb_ee_deploy_mdb_ejbref_scope_Romeo
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scope_Tristan ejb_ee_deploy_mdb_ejbref_scope_Tristan
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_singleT_ReplyQueue ejb_ee_deploy_mdb_ejbref_singleT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_single_ReplyQueue ejb_ee_deploy_mdb_ejbref_single_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_single_TestBean ejb_ee_deploy_mdb_ejbref_single_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_single_TestBeanBMT ejb_ee_deploy_mdb_ejbref_single_TestBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_casesensT_ReplyQueue ejb_ee_deploy_mdb_enventry_casesensT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_casesens_CaseBean ejb_ee_deploy_mdb_enventry_casesens_CaseBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_casesens_CaseBeanBMT ejb_ee_deploy_mdb_enventry_casesens_CaseBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_casesens_ReplyQueue ejb_ee_deploy_mdb_enventry_casesens_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scopeT_ReplyQueue ejb_ee_deploy_mdb_enventry_scopeT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scope_Bean1_MultiJar ejb_ee_deploy_mdb_enventry_scope_Bean1_MultiJar
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scope_Bean1_SameJar ejb_ee_deploy_mdb_enventry_scope_Bean1_SameJar
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scope_Bean2_MultiJar ejb_ee_deploy_mdb_enventry_scope_Bean2_MultiJar
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scope_Bean2_SameJar ejb_ee_deploy_mdb_enventry_scope_Bean2_SameJar
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scope_ReplyQueue ejb_ee_deploy_mdb_enventry_scope_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_ReplyQueue ejb_ee_deploy_mdb_enventry_singleT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_AllBean ejb_ee_deploy_mdb_enventry_single_AllBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_AllBeanBMT ejb_ee_deploy_mdb_enventry_single_AllBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_BooleanBean ejb_ee_deploy_mdb_enventry_single_BooleanBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_ByteBean ejb_ee_deploy_mdb_enventry_single_ByteBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_DoubleBean ejb_ee_deploy_mdb_enventry_single_DoubleBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_FloatBean ejb_ee_deploy_mdb_enventry_single_FloatBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_IntegerBean ejb_ee_deploy_mdb_enventry_single_IntegerBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_LongBean ejb_ee_deploy_mdb_enventry_single_LongBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_ReplyQueue ejb_ee_deploy_mdb_enventry_single_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_ShortBean ejb_ee_deploy_mdb_enventry_single_ShortBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_single_StringBean ejb_ee_deploy_mdb_enventry_single_StringBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_resref_singleT_ReplyQueue ejb_ee_deploy_mdb_resref_singleT_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_resref_single_ReplyQueue ejb_ee_deploy_mdb_resref_single_ReplyQueue
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_resref_single_TestBean ejb_ee_deploy_mdb_resref_single_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_sec_stateful_mdb_MDB_QUEUE ejb_ee_sec_stateful_mdb_MDB_QUEUE
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_ee_timer_mdb_MsgBean ejb_ee_timer_mdb_MsgBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_bb_localaccess_mdbtaccesstest_MDB_TOPIC ejb_ee_bb_localaccess_mdbtaccesstest_MDB_TOPIC
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_casesensT_TestBean ejb_ee_deploy_mdb_ejblink_casesensT_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_scopeT_TestBean ejb_ee_deploy_mdb_ejblink_scopeT_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_singleT_TestBean ejb_ee_deploy_mdb_ejblink_singleT_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejblink_singleT_TestBeanBMT ejb_ee_deploy_mdb_ejblink_singleT_TestBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_casesensT_TestBean ejb_ee_deploy_mdb_ejbref_casesensT_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scopeT_Cyrano ejb_ee_deploy_mdb_ejbref_scopeT_Cyrano
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scopeT_Romeo ejb_ee_deploy_mdb_ejbref_scopeT_Romeo
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_scopeT_Tristan ejb_ee_deploy_mdb_ejbref_scopeT_Tristan
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_singleT_TestBean ejb_ee_deploy_mdb_ejbref_singleT_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_ejbref_singleT_TestBeanBMT ejb_ee_deploy_mdb_ejbref_singleT_TestBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_casesensT_CaseBean ejb_ee_deploy_mdb_enventry_casesensT_CaseBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_casesensT_CaseBeanBMT ejb_ee_deploy_mdb_enventry_casesensT_CaseBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scopeT_Bean1_MultiJar ejb_ee_deploy_mdb_enventry_scopeT_Bean1_MultiJar
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scopeT_Bean1_SameJar ejb_ee_deploy_mdb_enventry_scopeT_Bean1_SameJar
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scopeT_Bean2_MultiJar ejb_ee_deploy_mdb_enventry_scopeT_Bean2_MultiJar
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_scopeT_Bean2_SameJar ejb_ee_deploy_mdb_enventry_scopeT_Bean2_SameJar
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_AllBean ejb_ee_deploy_mdb_enventry_singleT_AllBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_AllBeanBMT ejb_ee_deploy_mdb_enventry_singleT_AllBeanBMT
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_BooleanBean ejb_ee_deploy_mdb_enventry_singleT_BooleanBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_ByteBean ejb_ee_deploy_mdb_enventry_singleT_ByteBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_DoubleBean ejb_ee_deploy_mdb_enventry_singleT_DoubleBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_FloatBean ejb_ee_deploy_mdb_enventry_singleT_FloatBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_IntegerBean ejb_ee_deploy_mdb_enventry_singleT_IntegerBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_LongBean ejb_ee_deploy_mdb_enventry_singleT_LongBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_ShortBean ejb_ee_deploy_mdb_enventry_singleT_ShortBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_enventry_singleT_StringBean ejb_ee_deploy_mdb_enventry_singleT_StringBean
+create-admin-object --raname jmsra --restype jakarta.jms.Topic --property DestinationProperties=imqDestinationName\\=ejb_ee_deploy_mdb_resref_singleT_TestBean ejb_ee_deploy_mdb_resref_singleT_TestBean
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_sec_mdb_MDB_QUEUE_BMT ejb_sec_mdb_MDB_QUEUE_BMT
+create-admin-object --raname jmsra --restype jakarta.jms.Queue --property DestinationProperties=imqDestinationName\\=ejb_sec_mdb_MDB_QUEUE_CMT ejb_sec_mdb_MDB_QUEUE_CMT

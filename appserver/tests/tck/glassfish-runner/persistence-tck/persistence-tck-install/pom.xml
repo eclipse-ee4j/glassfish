@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.9</version>
+        <relativePath />
+    </parent>
+
+    <artifactId>persistence-tck-install</artifactId>
+    <packaging>pom</packaging>
+
+    <name>TCK: Install Jakarta persistence TCK</name>
+
+    <properties>
+        <tck.test.persistence.file>jakarta-persistence-tck-${tck.test.persistence.version}.zip</tck.test.persistence.file>
+        <tck.test.persistence.main.version>3.2</tck.test.persistence.main.version>
+        <tck.test.persistence.url>https://download.eclipse.org/jakartaee/persistence/${tck.test.persistence.main.version}/${tck.test.persistence.file}</tck.test.persistence.url>
+        <tck.test.persistence.version>3.2.0</tck.test.persistence.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.13.0</version>
+                <configuration>
+                    <url>${tck.test.persistence.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-persistence-tck</id>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+
+                    <!--Persistence TCK DB procedures -->
+
+                    <execution>
+                        <id>install-dbprocedures</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/persistence-tck/artifacts/dbprocedures-${tck.test.persistence.version}.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>dbprocedures</artifactId>
+                            <version>${tck.test.persistence.version}</version>
+                            <sources>${project.build.directory}/persistence-tck/artifacts/dbprocedures-${tck.test.persistence.version}-sources.jar</sources>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+
+                    <!-- Persistence TCK Common -->
+
+                    <execution>
+                        <id>install-persistence-tck-common-jar</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/persistence-tck/artifacts/persistence-tck-common-${tck.test.persistence.version}.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>persistence-tck-common</artifactId>
+                            <version>${tck.test.persistence.version}</version>
+                            <sources>${project.build.directory}/persistence-tck/artifacts/persistence-tck-common-${tck.test.persistence.version}-sources.jar</sources>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-persistence-tck-common-pom</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/persistence-tck/artifacts/persistence-tck-common-${tck.test.persistence.version}.pom</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>persistence-tck-common</artifactId>
+                            <version>${tck.test.persistence.version}</version>
+                            <packaging>pom</packaging>
+                        </configuration>
+                    </execution>
+
+                    <!-- Persistence TCK Parent pom -->
+
+                    <execution>
+                        <id>install-persistence-tck-pom</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/persistence-tck/artifacts/persistence-tck-${tck.test.persistence.version}.pom</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>persistence-tck</artifactId>
+                            <version>${tck.test.persistence.version}</version>
+                            <packaging>pom</packaging>
+                        </configuration>
+                    </execution>
+
+                    <!-- Persistence TCK Spec tests -->
+
+                    <execution>
+                        <id>install-persistence-tck-spec-tests-jar</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/persistence-tck/artifacts/persistence-tck-spec-tests-${tck.test.persistence.version}.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>persistence-tck-spec-tests</artifactId>
+                            <version>${tck.test.persistence.version}</version>
+                            <sources>${project.build.directory}/persistence-tck/artifacts/persistence-tck-spec-tests-${tck.test.persistence.version}-sources.jar</sources>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-persistence-tck-spec-tests-pom</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/persistence-tck/artifacts/persistence-tck-spec-tests-${tck.test.persistence.version}.pom</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>persistence-tck-spec-tests</artifactId>
+                            <version>${tck.test.persistence.version}</version>
+                            <packaging>pom</packaging>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

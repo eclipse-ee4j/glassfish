@@ -1,0 +1,11 @@
+//
+delimiters "#", "#"
+tckOverrides() ::= <<
+    @Override
+    @Delete
+    public void deleteAllBy();
+>>
+
+tckImports() ::= <<
+import jakarta.data.Delete;
+>>

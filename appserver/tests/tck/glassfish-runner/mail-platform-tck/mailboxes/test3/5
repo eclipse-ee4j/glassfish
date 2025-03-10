@@ -1,0 +1,73 @@
+From jmk@cochin Thu Feb 12 14:06:31 1998 -0800
+Return-Path: <owner-jserv-interest@JAVASOFT.COM>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id JAA13873; Thu, 10 Jul 1997 09:52:30 -0700
+Received: from saturn.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id JAA10706; Thu, 10 Jul 1997 09:52:44 -0700
+Received: from java1.javasoft.com (java0.javasoft.com [204.160.241.100]) by saturn.Sun.COM (SMI-8.6/mail.byaddr) with ESMTP id JAA17964; Thu, 10 Jul 1997 09:53:48 -0700
+Received: from java1 (java1.javasoft.com [204.160.241.101])
+          by java1.javasoft.com (8.8.4/8.8.4) with SMTP
+	  id JAA02538; Thu, 10 Jul 1997 09:31:09 -0700 (PDT)
+Received: from JAVASOFT.COM by JAVASOFT.COM (LISTSERV-TCP/IP release 1.8b) with
+          spool id 480054 for JSERV-INTEREST@JAVASOFT.COM; Thu, 10 Jul 1997
+          09:30:41 -0700
+Received: from mercury.Sun.COM (mercury.Sun.COM [192.9.25.1]) by
+          java1.javasoft.com (8.8.4/8.8.4) with SMTP id JAA02014 for
+          <JSERV-INTEREST@javasoft.com>; Thu, 10 Jul 1997 09:19:37 -0700 (PDT)
+Received: from Eng.Sun.COM ([129.146.1.25]) by mercury.Sun.COM
+          (SMI-8.6/mail.byaddr) with SMTP id JAA26642 for
+          <JSERV-INTEREST@javasoft.com>; Thu, 10 Jul 1997 09:54:19 -0700
+Received: from shorter.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3) id
+          JAA20608; Thu, 10 Jul 1997 09:27:28 -0700
+Received: from intrados.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+          id JAA12451; Thu, 10 Jul 1997 09:26:54 -0700
+Received: from intrados by intrados.eng.sun.com (SMI-8.6/SMI-SVR4) id JAA09529;
+          Thu, 10 Jul 1997 09:27:19 -0700
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: iOpKSMZs5CwkE8YxQ1v/aw==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1 SunOS 5.5.1 sun4u sparc
+Message-ID:  <libSDtMail.199707100927.1817.duncan@shorter>
+Date:         Thu, 10 Jul 1997 09:27:19 -0700
+Reply-To: James Davidson <James.Davidson@Eng>
+Sender: Java Web Server interest mailing list
+              <JSERV-INTEREST@javasoft.com>
+From: James Davidson <James.Davidson@Eng>
+Subject:      Re: [Fwd: Broken pipe]
+To: Multiple recipients of list JSERV-INTEREST
+              <JSERV-INTEREST@JAVASOFT.COM>
+Content-Length: 1072
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 4
+
+> > indeed both are harmless and they shouldn't affect normal
+> > performance.
+> > it is disturbing, however that the broken pipe error is going all
+> > the
+> > way back to the browser. this shouldn't be. infact in my experience,
+> > the broken pipe occurs in a short servlet as well.
+> > here is a stack trace from snoopservlet. i got this from my browser,
+> > not from the logs:
+> >
+> > 500 Internal Server Error
+> >
+> > The servlet named "java.io.IOException", at the requested URL
+> >
+> >      http://courses.testing.digitalthink.com/servlet/SnoopServlet
+
+I think that the broken pipe I observed, and this particular broken pipe are 2
+distinct phenomenon. I just tried to hit the above URL and couldn't from here.
+Are you behind a firewall or down?
+
+James Duncan Davidson
+JavaSoft Server Group
+james.davidson@eng.sun.com
+
+===========================================================================
+For general help, send email to listserv@javasoft.com and include in the
+body of the message "help".  To unsubscribe, send in the message body
+"signoff JSERV-INTEREST".
+
+

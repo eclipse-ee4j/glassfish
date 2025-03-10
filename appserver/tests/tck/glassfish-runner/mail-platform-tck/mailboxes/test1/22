@@ -1,0 +1,65 @@
+From mspivak Fri Dec 13 16:53:12 1996
+Return-Path: <mspivak@localhost>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id QAA17067; Fri, 13 Dec 1996 16:53:11 -0800
+Date: Fri, 13 Dec 1996 16:53:11 -0800
+From: mspivak@localhost (Max Spivak)
+Message-Id: <199612140053.QAA17067@apilon.Eng.Sun.COM>
+To: maxs@apilon
+Cc: mspivak@localhost
+Subject: Test Msg w/Several Attachments
+X-Mailer: HotJava Views MailView V1.0
+Content-Type: multipart/mixed; boundary=7011410532681019932495132495458535058535432808384324957570
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Length: 1050
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 141
+
+--7011410532681019932495132495458535058535432808384324957570
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+
+------------- Begin Forwarded Message -------------
+
+Date: Thu Nov 21 16:39:48 PST 1996
+From: mspivak@apilon
+To: maxs@apilon 
+Subject: Test Msg w/Several Attachments
+
+Line1
+Line2
+Line3
+------------- End Forwarded Message -------------
+
+
+--7011410532681019932495132495458535058535432808384324957570
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Hello, I'm an attachment.
+AttachLn2
+AttachLn3
+--7011410532681019932495132495458535058535432808384324957570
+Content-Type: application/x-sun-ae-file; name=CalendarAppointment
+Content-Transfer-Encoding: 7bit
+
+
+
+	** Calendar Appointment **
+	Date: 11/21/1996
+	Start: 4:39pm
+	Repeat: One Time
+	What: Max's Text Appt
+
+
+--7011410532681019932495132495458535058535432808384324957570
+Content-Type: text/html
+Content-Transfer-Encoding: 7bit
+
+<html><body><h1>Test Data</h1></body></html>
+--7011410532681019932495132495458535058535432808384324957570--
+

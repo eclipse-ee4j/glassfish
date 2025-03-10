@@ -1,0 +1,164 @@
+From demo@labyrinth.Eng.Sun.COM Mon Oct 14 16:59:36 1996
+Return-Path: <demo@labyrinth.Eng.Sun.COM>
+Received: from makai.Eng.Sun.COM by homey.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id QAA02099; Mon, 14 Oct 1996 16:59:34 -0700
+Received: from makai (localhost) by makai.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA07482; Mon, 14 Oct 1996 16:58:34 -0700
+Sender: tester@labyrinth.Eng.Sun.COM
+Message-Id: <3262D3AA.7CCD@labyrinth.eng.sun.com>
+Date: Mon, 14 Oct 1996 16:58:34 -0700
+From: Demo Account <demo@labyrinth.Eng.Sun.COM>
+Organization: Sun Microsystems
+X-Mailer: Mozilla 3.0b6Gold (X11; I; SunOS 5.4 sun4m)
+Mime-Version: 1.0
+To: tester@homey
+Subject: Integrating Native Methods into Java Programs
+Content-Type: multipart/mixed; boundary="------------689259C75BFE"
+X-Lines: 143
+Content-Length: 5269
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 135
+
+--------------689259C75BFE
+Content-Type: text/plain; charset="us-ascii"
+X-Sun-Content-Length: 317
+
+This is the information on native methods in Java I was telling
+you about.  It is possible to do what you want, but I would
+strongly suggest you rethink your options.  Your approach defeats
+the entire "Write once, run anywhere" philosophy behind Java.
+
+http://www.javasoft.com/books/Series/Tutorial/native/index.html
+
+--------------689259C75BFE
+Content-Type: text/html; charset="us-ascii"; name="index.html"
+Content-Disposition: inline; filename="index.html"
+Content-Base: "http://www.javasoft.com/books/Series/T
+	utorial/native/index.html"
+X-Sun-Content-Length: 4571
+
+<XXXX XXXX="xxxx://xxx.xxxxxxxx.xxx/xxxxx/Xxxxxx/Xxxxxxxx/xxxxxx/xxxxx.xxxx">
+
+<!--XxxXxxx-->
+<xxxx>
+<xxxx>
+<xxxxx>Xxxxxxxxxxx Xxxxxx Xxxxxxx xxxx Xxxx Xxxxxxxx</xxxxx>
+</xxxx>
+<xxxx>
+<xxxxx xxxxx=100%>
+<xx>
+<xx xxxxx=xxxx>
+<xxx xxx=../xxxxxx/xxx.XxxxxxxxXxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxxxxx xxxxxx=0 xxx="Xxxxxxxx | "><x
+xxxx="xxxxxxxxxx/xxxxx.xxxx"><xxx xxx=../xxxxxx/XxxxXxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxxxxx xxxxxx=0 xxx="Xxxx | "></x><x
+xxxx="../xxxxx.xxxx"><xxx xxx=../xxxxxx/XxxXxXxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxxxxx xxxxxx=0 xxx="Xxxxx Xxx | "></x><xxx
+xxx=../xxxxxx/xxx.xxxxxxXxxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxxxxx xxxxxx=0 xxx="Xxxxxxxxxxx Xxxxxx Xxxxxxx xxxx Xxxx Xxxxxxxx | ">
+</xx>
+<xx xxxxx=xxxxx>
+<x xxxx="XXX.xxxx"><xxxxxx><xx>Xxxxx xx Xxxxxxxx</xx></xxxxxx></x>
+</xx>
+</xx>
+</xxxxx>
+<x>
+<xx xxxx=4>
+
+<x1>
+Xxxxxxxxxxx Xxxxxx Xxxxxxx xxxx Xxxx Xxxxxxxx <xxx xxx=../xxxxxx/xxxxxxXxxxx.xxx xxxxxx=40 xxxxx=40 xxxxx=xxx>
+</x1>
+<x>
+<xxxxxxxxxx>
+
+X <xx>xxxxxx xxxxxx</xx> xx x Xxxx xxxxxx (xxxxxx xx xxxxxxxx
+xxxxxx xx x xxxxx xxxxxx) xxxxx xxxxxxxxxxxxxx xx xxxxxxx xx
+xxxxxxx xxxxxxxxxxx xxxxxxxx xxxx xx X. Xxx xxxxxxx xx xxxx
+xxxxx xxxx xxx xxx xx xxxxxxxxx xxxxxx xxxxxxx xxxx xxxx Xxxx
+xxxx.
+<x>
+<xxxxxx>Xxxx xxxxxxxxxxx xxxxxxxxxxx xxxxxx xxxxxxx xx xxx
+xxxxxx xxxxxxx!</xxxxxx>
+<x>
+<xxxxxx>Xxxx xx X++ xxxxxxxxxxx:</xxxxxx> Xxxx xxxx xxxxxxxxx
+xxx Xxxx xxxxxxxxxxx xxxxxxxxx X xxxxxx xxx xxxxxx xxxxx, xxxxx
+xxxxxxx xxx xxxx xxx xxxxxxxxxxx X xxxx xxxx Xxxx xxxxxxxx.
+Xxx xxx xxxxxxxxx X++ xxxx xxxx xxxx Xxxx xxxxxxxx xxxxx xxxxx
+X xxxxxx xxx xxxxxx xxxxx. Xxx
+<x xxxx="xxxxxxxxxxxx/xxxxxxxxxxxxxx.xxxx">Xxxxx X++ xx Xxxxxx Xxxxxx Xxxxxxxxxxxxxxx</x>
+xxx xxxxxxxxxxx (xxxx xxxx xxxx xxxx xxxxx xxxxx xxx'xx xxxx
+xxxx xxxxxxx xx xxxx xxxxx).
+
+<x>
+<xx xxxx=4>
+<xxxxxx>XXXXXXX!</xxxxxx> Xxx xxxxxxxxxxx xxxxxxxxx xxx xxxxxxxxxxxx
+xxxxxx xxxxxxx xx Xxxx xx xxxxx xxxxxxxxxxxx. Xxx xxxxx xxxxxxxxxx
+xx xxxx xxx xxxx xxx xx xxxx xxxxxxxxx xxxx xxxx xxxx xxxxxx xx xxxxxx
+xxxxxxxx xx Xxxx. Xxx xxxxxxxx xxx xxxxxxxxxxx xxxxxxxxx xxxx xxxxxxx
+xxx XXX 1.0 xxxxxxx.
+<xx xxxx=4>
+<x>
+
+<!--    XXXX XX XXXX    -->
+<x>
+<x xxxx="xxxxxxxxxx/xxxxx.xxxx">
+<xxx xxx="../xxxxxx/xxxxxxXxxx.xxx" xxxxx=xxxx xxxxx=20 xxxxxx=20 xxxxxx=0>
+Xxxx Xx Xxxx
+</x>
+xxxxx xxx xxxx xx xxxx xxxxxxx x xxxxxx xxxxxxx (xxx "Xxxxx Xxxxx!" xx
+xxxxxx xxxxxxx) xx xxxxxxxxxx xxx xx xxxxx, xxxxxxx, xxx xxx x Xxxx xxxxxxx
+xxxx xxxxxx xxxxxxx.
+
+<!--    XXXXXXXXXXXX XXX XXXXXX XXXXXX    -->
+<x>
+<x xxxx="xxxxxxxxxxxx/xxxxx.xxxx">
+<xxx xxx="../xxxxxx/xxxxxxXxxx.xxx" xxxxx=xxxx xxxxx=20 xxxxxx=20 xxxxxx=0>
+Xxxxxxxxxxxx Xxxxxx Xxxxxxx
+</x>
+xxxxx xxx xxx xx xxxxxxxxx xxxx xxx Xxxx xxxx xxx xxx xxxxxx xxxxxxxx
+xxxx xx x xxxxxx xxxxxx. Xxxx xxxxxx xxxxxxxx xxxxxxxxxxx xxxxx xxxxxxx
+xxxxxxxxx xx xxxxxxx xxxx xxxxx xxxx x xxxxxx xxxxxx xxx xxxxxxxxx xxxxxx
+xx xxxxxxx xxxx xxxxx xxxx x xxxxxx xxxxxx. Xxxx xxxxxx xxxx xxxxxxxxx
+xxxx xxxxxx xxxxxxxxx xxxx xxxx xxxxxx xxxxxxxx xxxx xxx xxx xx xxxxxx
+Xxxx xxxxxxx xxx xxxxx xxxxxxx, xxxxxx Xxxx xxxxxxx, xxxxx xxxxxxxxxx,
+xxx xxxx.
+
+<x>
+<xx>
+<xxxxxx>Xxxxxxxx xxxxxxxxxxxxx:</xxxxxx>
+Xxxx xxxx xxx xxxxxxx xx xxxx xxxxxxx xxxxxxxxx xx xxxxxxx xx
+xxxxxxxx xx xxx xxxxxxx xxxxxxxx xxxxxxx. Xxxx xxxxxxx xxxx xxxxxx
+xxxxxxx, xxx xxxx xxxx xxxxxxx xxxxxxxxx. Xx xxxxxxx xxx xxx xx
+xxxx xx xxx xxxxxx xxxxxxx xxxxxxxxx xx
+xxx xxxxxxx xx xxxxxx xxxx xxx xxxxxxx xx. Xxx
+<x xxxx="../xxxxxx/xxxxxxxx/xxxxx.xxxx">Xxxxxxxxxxxxx Xxxxxx Xxxxxxxxxxxx xxx Xxxxxxxxxxxx</x><x xxxx="../xxxxxx/xxxxxxxx/xxxxx.xxxx"><xxx xxx="../xxxxxx/xxxxxxXxxx.xxx" xxxxx=20 xxxxxx=20 xxxxxx=0 xxx="(xx xxx Xxxxxxx Xxxxxxx xxxxx)"></x>xxx xxxxxxxxxxx xxxxx xxx xxxxxxxx xxxxxxxxxxxx xxxxxx xx xxxxxxx.
+<xx> 
+
+<x>
+<xx>
+<xxxxxx>Xxxx xx XxxXX xxxxxxxxxxx:</xxxxxx>
+Xxx xxx'x xxxxxx xxx Xxxx xxxxxxx xx x 68X Xxxxxxxxx.
+Xxxx xxx xxx'x xxxx xxxxxx xxxxxxxxx xxx xxx xxx'x xxx
+xxxxxx xxxxxxx.
+<xx>
+
+</xxxxxxxxxx>
+<x>
+<xx xxxx=4>
+<x>
+<xxxxx xxxxx=100%>
+<xx>
+<xx xxxxx=xxxx>
+<xxx xxx=../xxxxxx/xxx.XxxxxxxxXxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxx xxxxxx=0 xxx="Xxxxxxxx | "><x
+xxxx="xxxxxxxxxx/xxxxx.xxxx"><xxx xxx=../xxxxxx/XxxxXxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxx xxxxxx=0 xxx="Xxxx | "></x><x
+xxxx="../xxxxx.xxxx"><xxx xxx=../xxxxxx/XxxXxXxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxx xxxxxx=0 xxx="Xxxxx Xxx | "></x><xxx
+xxx=../xxxxxx/xxx.xxxxxxXxxxxx.xxx xxxxx=26 xxxxxx=26 xxxxx=xxx xxxxxx=0 xxx="Xxxxxxxxxxx Xxxxxx Xxxxxxx xxxx Xxxx Xxxxxxxx | ">
+</xx>
+<xx xxxxx=xxxxx>
+<x xxxx="XXX.xxxx"><xxxxxx><xx>Xxxxx xx Xxxxxxxx</xx></xxxxxx></x>
+</xx>
+</xx>
+</xxxxx>
+</xxxx>
+</xxxx>
+
+--------------689259C75BFE--
+

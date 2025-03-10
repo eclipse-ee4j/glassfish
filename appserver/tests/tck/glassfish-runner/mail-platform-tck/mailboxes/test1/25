@@ -1,0 +1,60 @@
+From max.spivak@Sun.COM Wed Jan 15 18:21:06 1997
+Return-Path: <max.spivak@Sun.COM>
+Received: from apilon by apilon.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id SAA00775; Wed, 15 Jan 1997 18:21:04 -0800
+Sender: mspivak@Sun.COM
+Message-ID: <32DD908F.4557@Sun.COM>
+Date: Wed, 15 Jan 1997 18:21:03 -0800
+From: MAXIM SPIVAK <max.spivak@Sun.COM>
+Organization: Sun Microsystems
+X-Mailer: Mozilla 3.0 (X11; I; SunOS 5.5.1 sun4m)
+MIME-Version: 1.0
+To: maxs@apilon
+Subject: Network Debug Applet
+Content-Type: multipart/mixed; boundary="------------55FD5B3753D0"
+Content-Length: 1011
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 145
+
+This is a multi-part message in MIME format.
+
+--------------55FD5B3753D0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+xxxx:///xxxx/xxxxxxx/XxxxXxxx/XxxxxXxx/XxxxxXxx.xxxx
+
+--------------55FD5B3753D0
+Content-Type: text/html; charset=us-ascii; name="DebugNet.html"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline; filename="DebugNet.html"
+Content-Base: "file:///home/mspivak/JavaMail/DebugNet
+	/DebugNet.html"
+
+<XXXX XXXX="xxxx:///xxxx/xxxxxxx/XxxxXxxx/XxxxxXxx/XxxxxXxx.xxxx">
+
+<!XXXXXXX XXXX XXXXXX "-//XXXX//XXX XXXX//XX">
+<xxxx>
+  <xxxx>
+    <xxxxx>Xxxxxxx Xxxxx Xxxxxx</xxxxx>
+  </xxxx>
+
+  <xxxx>
+    <x1>Xxxxxxx Xxxxx Xxxxxx</x1>
+
+    <xxxxxx xxxx=XxxxxXxx.xxxxx xxxxx=600 xxxxxx=250>
+    </xxxxxx>
+
+
+      <xx>
+      <xxxxxxx><x xxxx="xxxxxx:xxxxxxx@xxxxxx">Xxx Xxxxxx</x></xxxxxxx>
+<!-- Xxxxxxx: Xxx Xxx  2 11:28:34 XXX 1996 -->
+<!-- xxxxx xxxxx -->
+Xxxx xxxxxxxx: Xxx Xxx  4 16:11:54 XXX 1996
+<!-- xxxxx xxx -->
+  </xxxx>
+</xxxx>
+
+--------------55FD5B3753D0--

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ Copyright 2023 Red Hat, Inc.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~   http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <defaultProtocol type="appclient">
+        <property name="runClient">true</property>
+        <!-- This is similar to what one would provide for the modifications found in the command.testExecuteAppClient
+        of the ts.jte file in the EE10 TCK. The appclient protocol parses this into a String[] by using ';' as
+        the command line argument value separator. -->
+        <property name="clientCmdLineString">${jboss.home}/bin/appclient.sh;target/appclient/ejb3_bb_stateless_basic.ear#ejb3_bb_stateless_basic_client.jar;-p;${tck.jte.path}</property>
+        <!-- Provide any environment variable settings needed by the appclient runner.
+        The appclient protocol parses this into a String[] by using ';' as
+        the environment variable value pair separator. The pattern is env1=value1;env2=value2;... -->
+        <property name="clientEnvString">JAVA_OPTS=-Djboss.modules.system.pkgs=com.sun.ts.lib,com.sun.javatest;CLASSPATH=${project.build.directory}/appclient/javatest.jar:${project.build.directory}/appclient/libutil.jar:${project.build.directory}/appclient/libcommon.jar</property>
+        <!-- This should be set to the test project basedir since the appclient protocol writes out the ear from
+         the test class @Deployment method with the protocol dependencies added to the test ear under
+         its lib directory to the ${project.basedir}/target/appclient directory. The clientCmdLineString references
+         this location above as the wildfly appclient runner expects the client ear to be passed into
+         it as the first argument with the appclient jar name appended. -->
+        <property name="clientDir">${project.basedir}</property>
+    </defaultProtocol>
+
+    <engine>
+        <!--property name="deploymentExportPath">target/deployments</property-->
+    </engine>
+
+    <container qualifier="jboss-client-ee11-tck" default="true">
+        <configuration>
+            <property name="jbossHome">${jboss.home}</property>
+            <property name="jbossArguments">-P=src/test/resources/testfile.properties</property>
+            <property name="javaVmArguments">${debug.vm.args} ${jvm.args}</property>
+            <property name="serverConfig">${wildfly.standalone.config}</property>
+            <property name="allowConnectingToRunningServer">false</property>
+        </configuration>
+        <protocol type="appclient">
+            <property name="runClient">true</property>
+            <property name="clientCmdLineString">${jboss.home}/bin/appclient.sh;target/appclient/ejb3_bb_stateless_basic.ear#ejb3_bb_stateless_basic_client.jar</property>
+            <property name="clientEnvString">MY_EN=my-env-stting;JAVA_OPTS=-Djboss.modules.system.pkgs=com.sun.ts.lib,com.sun.javatest;CLASSPATH=${project.build.directory}/appclient/javatest.jar:${project.build.directory}/appclient/libutil.jar:${project.build.directory}/appclient/libcommon.jar</property>
+            <property name="clientDir">${project.basedir}</property>
+            <property name="workDir">${ts.home}/tmp</property>
+            <property name="tsJteFile">${ts.home}/bin/ts.jte</property>
+            <property name="trace">true</property>
+        </protocol>
+    </container>
+
+</arquillian>

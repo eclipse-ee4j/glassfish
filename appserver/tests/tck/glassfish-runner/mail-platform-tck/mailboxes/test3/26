@@ -1,0 +1,42 @@
+From jmk@cochin Thu Feb 12 14:06:35 1998 -0800
+Return-Path: <ptn@jumanji>
+Received: from rita.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA10322; Fri, 8 Aug 1997 17:23:07 -0700
+Received: from jumanji.eng.sun.com by rita.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA06403; Fri, 8 Aug 1997 17:23:03 -0700
+Received: by jumanji.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA22671; Fri, 8 Aug 1997 17:23:05 -0700
+Date: Fri, 8 Aug 1997 17:23:05 -0700
+From: ptn@jumanji (Phuong T. Nguyen)
+Message-Id: <199708090023.RAA22671@jumanji.eng.sun.com>
+To: javamail@rita
+Subject: Code Manager notification
+Precedence: bulk
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Length: 682
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 25
+
+Event:            putback-to
+Parent workspace: /net/icdev/export1/ic/krakatoa/ws/jdt1.1-master
+                  (icdev:/export1/ic/krakatoa/ws/jdt1.1-master)
+Child workspace:  /export0/ws/jdt1.1-ptn
+                  (jumanji:/export0/ws/jdt1.1-ptn)
+User:             ptn
+
+Comment:
+- Fixed bug 4064017
+  HJV I18N: do not use System.getProperty("jdt.locale") to get Help
+  locale dir
+
+Files:
+update: src/share/lib/textmessages.properties
+update: src/share/lib/props/default/jdt.props
+update: src/share/sunw/sunw/hotjava/sw/applets/HomePageApplet.java
+update: src/share/sunw/sunw/hotjava/sw/misc/swBrowserProperties.java
+update: src/share/sunw/sunw/hotjava/sw/ui/SwEditorFrame.java
+
+

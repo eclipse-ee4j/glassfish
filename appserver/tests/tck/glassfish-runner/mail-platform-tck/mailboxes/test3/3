@@ -1,0 +1,92 @@
+From jmk@cochin Thu Feb 12 14:06:30 1998 -0800
+Return-Path: <owner-beans-users@JAVASOFT.COM>
+Received: from cochin.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id LAA07604; Tue, 24 Jun 1997 11:09:36 -0700
+Received: from Eng.Sun.COM by cochin.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id LAA24183; Tue, 24 Jun 1997 11:09:31 -0700
+Received: from saturn.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id LAA10178; Tue, 24 Jun 1997 11:09:28 -0700
+Received: from java1.javasoft.com (java0.javasoft.com [204.160.241.100]) by saturn.Sun.COM (SMI-8.6/mail.byaddr) with ESMTP id LAA23930; Tue, 24 Jun 1997 11:09:36 -0700
+Received: from java1 (java1.javasoft.com [204.160.241.101])
+          by java1.javasoft.com (8.8.4/8.8.4) with SMTP
+	  id KAA05708; Tue, 24 Jun 1997 10:55:45 -0700 (PDT)
+Received: from JAVASOFT.COM by JAVASOFT.COM (LISTSERV-TCP/IP release 1.8b) with
+          spool id 434740 for BEANS-USERS@JAVASOFT.COM; Tue, 24 Jun 1997
+          10:55:13 -0700
+Received: from mailserver.aimtech.com (mailserver.aimtech.com [208.193.42.6])
+          by java1.javasoft.com (8.8.4/8.8.4) with SMTP id KAA04677 for
+          <BEANS-USERS@javasoft.com>; Tue, 24 Jun 1997 10:11:56 -0700 (PDT)
+Received: by mailserver.aimtech.com with SMTP (Microsoft Exchange Server
+          Internet Mail Connector Version 4.0.993.5) id
+          <01BC80A0.FD5CEEA0@mailserver.aimtech.com>; Tue, 24 Jun 1997 13:17:39
+          -0400
+X-Mailer:  Microsoft Exchange Server Internet Mail Connector Version 4.0.993.5
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Message-ID:  <c=US%a=_%p=Aimtech_Corporat%l=MAILSERVER-970624171738Z-12464@mailserver.aimtech.com>
+Date:         Tue, 24 Jun 1997 13:17:38 -0400
+Reply-To: A public mailing list for the discussion of JavaBeans
+              <BEANS-USERS@javasoft.com>
+Sender: A public mailing list for the discussion of JavaBeans
+              <BEANS-USERS@javasoft.com>
+From: Mark Florence <markf@AIMTECH.COM>
+Subject:      Re: setting properties in a stand alone application
+To: Multiple recipients of list BEANS-USERS <BEANS-USERS@JAVASOFT.COM>
+Content-Length: 1589
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 2
+
+A more sophisticated idea might be: write a GUI that
+presents a property sheet editor for your bean. You write
+this only once, such that it would work for all the beans
+you develop. Have the GUI serialize your bean's state,
+as modified by the user. Use java.util.zip classes to
+write the serialized state back into your original JAR
+file. Voila. No config file, no messy parsing, no comp-
+licated instructions for your users to get wrong.
+
+-- Mark Florence
+Aimtech Corporation
+
+>----------
+>From:  Mark L. Watson[SMTP:markw@MARKWATSON.COM]
+>Sent:  Tuesday, June 24, 1997 5:13 AM
+>To:    Multiple recipients of list BEANS-USERS
+>Subject:       Q: setting properties in a stand alone application
+>
+>Good morning,
+>
+>I am packaging my first commercial JavaBean
+>component to also function as a stand alone
+>Java application.  This is cool since JAR
+>files are also a great way to package all of
+>the class files, data files, etc. for Java
+>applications.
+>
+>My problem is this: my component needs to be
+>customized (via properties) to set required
+>environmental parameters.  I came up with
+>a solution for setting properties when the
+>component is used as an application:
+>
+>Give directions for placing a text file
+>named 'config' in the JAR file to set properties
+>if the component is to be used as a stand alone
+>application.
+>
+>I wrote this up at www.markwatson.com/javacombo.htm
+>if you are interested.
+>
+>This seems a little klugy to me (but it works
+>great!).  Does anyone have a better idea?
+>
+>Thanks,
+>Mark
+>
+>Mark Watson, author and computer scientist
+>http://www.markwatson.com/
+>
+

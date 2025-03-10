@@ -1,0 +1,208 @@
+From demo@labyrinth.Eng.Sun.COM Mon Oct 14 18:06:56 1996
+Return-Path: <demo@labyrinth.Eng.Sun.COM>
+Received: from makai.Eng.Sun.COM by homey.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id SAA02180; Mon, 14 Oct 1996 18:06:55 -0700
+Received: from makai (localhost) by makai.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA07585; Mon, 14 Oct 1996 18:05:55 -0700
+Sender: tester@labyrinth.Eng.Sun.COM
+Message-Id: <3262E372.6E2B@labyrinth.eng.sun.com>
+Date: Mon, 14 Oct 1996 18:05:54 -0700
+From: Demo Account <demo@labyrinth.Eng.Sun.COM>
+Organization: Sun Microsystems
+X-Mailer: Mozilla 3.0b6Gold (X11; I; SunOS 5.4 sun4m)
+Mime-Version: 1.0
+To: tester@homey
+Subject: include file
+Content-Type: multipart/mixed; boundary="------------77E8368B79BC"
+X-Lines: 187
+Content-Length: 3407
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 137
+
+--------------77E8368B79BC
+Content-Type: text/plain; charset="us-ascii"
+X-Sun-Content-Length: 123
+
+Check out this include file and modify it with your
+source changes.
+
+Be sure to check it back in before you leave tonight!
+
+--------------77E8368B79BC
+Content-Type: text/plain; charset="us-ascii"; name="generic.h"
+Content-Disposition: inline; filename="generic.h"
+X-Sun-Content-Length: 2986
+
+/*
+**      @(#)xxxxxxx.x	1.1 91/02/25
+*/
+
+/*
+** Xxxxxxxxx (x) 1991 xx Xxx Xxxxxxxxxxxx, Xxx.
+*/
+
+/*
+** xxxxxxx.x:
+**	Xxxx xxxx xxxxxxxx xxx #xxxxxxx xx xx xxxxx xxx xxxxxxxx xx x
+**	xxxxx "xxxxx" xxxxxxxxxxxxx.
+**
+** Xxxx xxxx xxxxxx xx xxxxxxxx xx xxx xxx xx xxxxx xxxxxx xxxxx xxxx xxx'x
+** xxxxxx xx x xxxxxxxxxx xxxxx xx xxxx, x.x., xxxx xxx'x xxxxxx
+** xx xxx "xxxxxx" xxxxx xx xxxx.  Xxxx xx xxx xxx xx xxxxx xxx xxxxxxxxxxxxx
+** xx xxxx "xxxxxxx" xxxxx xx xxxx xx xxxxxxxx.
+**
+**
+**	Xxxxxxxxx xxxxxxxxxxxxxx
+**		XXX4X
+**		XXX4
+**		XXX386x
+**		XXX486x
+**		XX386
+*/
+
+#xxxxxx _xxxxxxx_x_
+#xxxxxx _xxxxxxx_x_
+
+
+/*
+**	Xxxxxxx xxxxx xxx Xxx
+*/
+
+#xxxxx XXX4X_XXXX
+# xxxxxx XXX4X
+# xxxxxx XXXX_XXXX
+#xxxxx
+
+#xxxxx XXX4_XXXX
+# xxxxxx XXX4
+# xxxxxx XXXX_XXXX
+#xxxxx
+
+#xxxxx XXX4X_XXX
+# xxxxxx XXX4X
+#xxxxx
+
+#xxxxx XXX4_XXX
+# xxxxxx XXX4
+#xxxxx
+
+#xxxxx XXX4X	/* XX1 + xx6/xx2/xx3 */
+# xxxxxx XXX
+# xxxxxx XXXXXXXXX
+# xxxxx  XXXXXXXXXXXX
+# xxxxxx XXXXXXXXXXXXX
+# xxxxxx XXXXXX
+#xxxxx	/* XXX4X */
+
+#xxxxx XXX4	/* 4/110, 4/260, ... */
+# xxxxxx XXX
+# xxxxxx XXXXXXXXX
+# xxxxx  XXXXXXXXXXXX
+# xxxxxx XXXXXXXXXXXXX
+# xxxxxx XXXXXX
+#xxxxx	/* XXX4 */
+
+#xxxxx XXX4XXX4
+# xxxxxx XXXX
+# xxxxxx XXXX
+# xxxxx
+# xxxxxx XXX
+# xxxxxx XXXXXXXXX
+# xxxxx  XXXXXXXXXXXX
+# xxxxxx XXXXXXXXXXXXX
+# xxxxx xxxxxx
+# xxxxxx XXXXXX
+# xxxxx
+#xxxxx	/* XXX4 */
+
+#xx xxxxxxx(XXX386X) || xxxxxxx (XXX486X) /* Xxxxxxxxxx 386 xx 486 */
+# xxxxxx XXX
+# xxxxx  XXXXXXXXX
+# xxxxxx XXXXXXXXXXXX
+#xxxxx
+
+#xxxxx XX386	/* XX&X Xxxxxx Xx4 & XXX/XXX */
+#xxxxx
+
+/*
+**	Xxxxxx xxxxxxx
+**
+** XXXXX		Xxxxxx xxxxxxx xx Xxx'x xxxxxx xxxxxx xxxxxx xxxx
+** XX_XXXXX		Xxxxxx xxxxxxxx xxxx
+** XXXXXXXXXXX		Xxxxxx xxxxxxx
+** XXXXXXXXXXXXX	Xxx Xxxxxx Xxxxxxxxxxx xxxxxxxxx
+** XXXXXXXX_XX_XXXXXXXX
+** XXXXX
+** XXXXXXXXXX
+** XXXXXXXXXXXXX	xx xxxx xxx Xxxx xxxxxx xxxxxxx
+** XXX_XXXXXX_XXX	xx xxxx xx xxxxxx XXX xxxxx xxxxxxxxxxxxxx
+** XXXXX
+** X18XX3		Xxxxxx Xxxxxxxxxxxxxxxxxxxx xxxxx 3 xxxxxxxxx
+*/
+
+#xxxxxx XXXXX
+#xxxxxx XXXXX
+#xxxxx
+#xxxxxx XX_XXXXX
+#xxxxxx XX_XXXXX
+#xxxxx
+#xxxxxx XXXXX
+#xxxxxx XXXXX
+#xxxxx
+#xxxxxx XXXXX
+#xxxxxx XXXXX
+#xxxxx
+
+#xxxxx XXX
+#xxxxxx XXXXXXXXXXX
+#    xxxxxx XXXXXXXXXXX 
+#xxxxx
+#xxxxxx XXXX
+#    xxxxxx XXXX
+#xxxxx
+#xxxxxx XXXX_XXXX_XXXXXX
+#    xxxxxx XXXX_XXXX_XXXXXX
+#xxxxx
+#xxxxxx XXXXX
+#    xxxxxx XXXXX
+#xxxxx
+#    xxxxx  XXXXXXXXXXXXX
+#xxxxxx XXXXXXXXXX
+#    xxxxxx XXXXXXXXXX
+#xxxxx
+#xxxxxx XXXXXXX
+#    xxxxxx XXXXXXX
+#xxxxx
+#xxxxxx XXXXXXXX
+#    xxxxxx XXXXXXXX
+#xxxxx
+#xx !xxxxxxx(XXXX) && !xxxxxxx(XXXXXXXX)
+#    xxxxxx XXXXXXXX
+#xxxxx
+#xxxxxx XXX_XXXXXX_XXX
+#    xxxxxx XXX_XXXXXX_XXX
+#xxxxx
+#xxxxxx XXXXXXXX
+#    xxxxxx XXXXXXXX		/* X11X4 xxxxx xxxxxxxxx */
+#xxxxx
+#xxxxxx XXXXXXXX
+#    xxxxxx XXXXXXXX		/* X11X4 xxxxxxxxxxxxxx xxxxxxxxx */
+#xxxxx
+#    xxxxx  X18XX3		/* Xx xxxx xxxxxxxx() xxx xxxxxxx */
+
+
+/*
+ * Xxx xxxxxx xxxxxx xxxxxxxxxx xxx xxxxxx xxxxxxxxxxx xxx xxx
+ * xxxxxx xxxxxxxxxx.
+ */
+#    xxxxxx XXXXXX_XXXXXX "X11/XxXX - Xxx Xxxxxxxxxxxx Xxx."
+
+#xxxxx /* XXX */
+
+#xxxxx	/*_xxxxxxx_x_*/
+
+
+--------------77E8368B79BC--
+

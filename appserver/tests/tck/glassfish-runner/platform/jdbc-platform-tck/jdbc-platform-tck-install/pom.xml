@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.9</version>
+        <relativePath />
+    </parent>
+
+    <artifactId>jdbc-platform-tck-install</artifactId>
+    <packaging>pom</packaging>
+
+    <name>TCK: Install Jakarta JDBC Platform Tests</name>
+
+    <properties>
+        <tck.test.jdbc.file>jakartaeetck-${tck.test.jdbc.version}-dist.zip</tck.test.jdbc.file>
+        <tck.test.jdbc.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee11/staged/eftl/${tck.test.jdbc.file}</tck.test.jdbc.url>
+        <tck.test.jdbc.version>11.0.0-M11</tck.test.jdbc.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <url>${tck.test.jdbc.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-jdbc-tck</id>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+
+                    <!-- JDBC Platform TCK -->
+
+                    <execution>
+                        <id>install-jdbc-platform-tck-jar</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <file>${project.build.directory}/jakartaeetck/artifacts/jdbc-platform-tck-${tck.test.jdbc.version}.jar</file>
+                            <groupId>jakarta.tck</groupId>
+                            <artifactId>jdbc-platform-tck</artifactId>
+                            <version>${tck.test.jdbc.version}</version>
+                            <sources>${project.build.directory}/jakartaeetck/artifacts/jdbc-platform-tck-${tck.test.jdbc.version}-sources.jar</sources>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,37 @@
+//
+delimiters "#", "#"
+
+/* The base template for creating a repository subinterface
+@repo is a ee.jakarta.tck.data.tools.annp.RepositoryInfo object
+*/
+genRepo(repo) ::= <<
+package #repo.pkg#;
+import jakarta.annotation.Generated;
+import jakarta.data.repository.OrderBy;
+import jakarta.data.repository.Query;
+import jakarta.data.repository.Repository;
+import #repo.fqn#;
+#tckImports()#
+
+@Repository(dataStore = "#repo.dataStore#")
+@Generated("ee.jakarta.tck.data.tools.annp.RespositoryProcessor")
+interface #repo.name#$ extends #repo.name# {
+    #repo.methods :{m |
+        @Override
+        @Query("#m.query#")
+        #m.orderBy :{o | @OrderBy(value="#o.property#", descending = #o.descending#)}#
+        public #m.returnType# #m.name# (#m.parameters: {p | #p#}; separator=", "#);
+
+        }
+    #
+
+    #tckOverrides()#
+}
+>>
+
+/* This is an extension point for adding TCK overrides. Create a subtemplate
+    group and include the tckOverrides that generates the overrides.
+*/
+tckOverrides() ::= "// TODO; Implement TCK overrides"
+
+tckImports() ::= ""

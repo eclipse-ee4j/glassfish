@@ -1,0 +1,247 @@
+From jmk@cochin Thu Feb 12 14:06:35 1998 -0800
+Return-Path: <bugmail@ssattachments.Ebay.Sun.COM>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id PAA08847; Thu, 7 Aug 1997 15:16:08 -0700
+Received: from Ebay.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id PAA21831; Thu, 7 Aug 1997 15:16:03 -0700
+Received: from ssattachments.EBay.Sun.COM by Ebay.Sun.COM (SMI-8.6/SMI-5.3)
+	id PAA27541; Thu, 7 Aug 1997 15:15:59 -0700
+Received: by ssattachments.EBay.Sun.COM (SMI-8.6/SMI-SVR4)
+	id PAA29996; Thu, 7 Aug 1997 15:16:00 -0700
+Date: Thu, 7 Aug 1997 15:16:00 -0700
+Message-Id: <199708072216.PAA29996@ssattachments.EBay.Sun.COM>
+From: monica.gaines@Eng
+To: java-bugs@javasoft.japan, john.mani@Eng, john.russo@Eng,
+        masaki.katakai@Japan, monica.gaines@Eng
+Precedence: junk
+Reply-To: monica.gaines@Eng
+Subject: BugId 4068737 : (P3/S3) monique, Now Responsible Engineer
+Content-Length: 6183
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 22
+
+Due to a change requested by monique, monique is  now the 
+responsible engineer for:
+
+Synopsis: HJV I18N: MailView messages need to be extracted to ResourceBundle
+
+Bug Id:  4068737 changed on Aug  7 1997  by monique
+--------------------------------------------------------------------------------
+
+      Field                   New Value                     Old Value
+-------------------- ----------------------------- -----------------------------
+Commit Date          Aug  7 1997  3:08PM           
+Commit to fix        1.1_beta                      
+Commited By          monique                       
+Evaluate Date        Aug  7 1997  3:08PM           
+Evaluated By         monique                       
+Resp. Engineer       monique                       jmr
+State                evaluated                     accepted
+State                committed                     evaluated
+-------------------- ----------------------------- -----------------------------
+ Bug Id: 4068737
+ Product: hotjava_views
+ Category: hotjava_views
+ Subcategory: mailview
+ Release summary: 1.1_alpha
+ Bug/Rfe/EOU: bug
+ State: committed
+ Development Status: NYI
+ Synopsis: HJV I18N: MailView messages need to be extracted to ResourceBundle
+ Keywords: I18N, hjv-ja
+ Severity: 3
+ Severity Impact: Significant
+ Severity Functionality: Secondary
+ Priority: 3
+ Responsible Manager: knutson
+ Responsible Engineer: monique
+ Description:
+[katakai 7/31/97 JST]
+MailView has hardcoded messages. Please use ResoureBundle and
+extract the messages into ResourceBundle file for L10N.
+
+8) "Commands" is hardcoded. "mailview.attachment.popup.title" is extracted
+   but is not used.
+
+src/share/sunw/sunw/jdt/mail/ui
+
+AttachmentIcon.java:
+
+FileChooserDialog.java:
+
+    popup = new PopupMenu("Commands");
+
+7) "Save Attachment" is hardocded
+
+src/share/sunw/sunw/jdt/mail/comp/attachmentchooser:
+
+FileChooserDialog.java:
+
+    public FileChooserDialog(Frame f) {
+        super(f, "Save Attachment", false, (java.awt.Image)null,
+
+FileChooser.java:
+
+
+    public FileChooser(int mode) {
+	this("Save Attachment", 
+
+
+6) "No Messages" and "Message ..." are hardcoded
+
+src/share/sunw/sunw/jdt/mail/comp/msgchsr/display/awt:
+
+AWTMessageCountDisplay.java:
+
+    private void update() {
+        if (total < 0) {
+            setText("No Messages");
+        } else {
+            setText("Message "+current+" of "+displayed+", "+newcount+" new");
+        }
+    }
+
+
+5) "Find" is hardcoded.
+
+src/share/sunw/sunw/jdt/mail/ui
+
+	FindDialog.java:
+
+        // The Find previous button
+        findPrev = new ImageTextButton(
+                        MailResource.getImage("mailview.button.prev.image"),
+                        "Find");
+
+        // The Find Next button
+        findNext = new ImageTextButton(
+                        MailResource.getImage("mailview.button.next.image"),
+                        "Find");
+
+
+4) frame title is hardcoded
+
+src/share/sunw/sunw/jdt/mail/comp/attachmentchooser/
+	
+	AttachmentChooserDialog.java:
+
+	super(f, "Choose Attachment", false, (Image)null, 
+	
+	
+3) frame title and buttons are hardcoded
+
+src/share/sunw/sunw/jdt/mail/applet/display/
+	
+	FolderManagementDialog.java:
+
+	super(MailResource.frame, "Save Dialog", false, (Image)null,
+	      (Component)null, null, "Close");
+
+	buttonPanel.add(newButton = new Button("New Folder"));
+
+	buttonPanel.add(saveButton = new Button("Save Message"));
+
+
+2) many messages are hardcoded on "attachment chooser".
+
+comp/attachmentchooser/:
+
+FileChooser.java
+
+        upBtn = new Button("Up");
+        newDirBtn = new Button("New Folder");
+        fileLabel = new Label("File: ");
+        dotfiles = new Checkbox("  Show All Files");
+
+URLChooser.java
+        choice.add("URL (reference)");
+        choice.add("Actual  Content");
+
+1) "OK" and "Cancel" are hardcoded. For example, the messages are
+  still english on "Address List" window.
+
+src/share/sunw/sunw/jdt/mail/ui:
+
+AliasDialog.java:            else if (name.equals("Cancel")) {
+AliasDialog.java:                "mailview.button.cancel.image"), "Cancel");
+Login.java:             "Cancel"
+PropertiesDialog.java:        (Image)null, null, "OK", "Cancel", 6, 6); // we replace the names later
+PropertiesDialog.java:        (Image)null, null, "OK", "Cancel", 6, 6); // we replace the names later
+QuestionNotice.java:    this(frame, question, "OK", "Cancel");
+
+
+ Justification:
+[katakai 7/31/97 JST]
+All messages need to be translated.
+
+ Work around:
+
+ Suggested fix:
+
+ State triggers:
+	Accepted: yes
+	Evaluation complete: yes
+	Evaluation: 
+I fixed the problems in FileChooser and AttachmentChooser areas.  I think it would be easier if the remaining strings were fixed by their respective owners.
+max.spivak@Eng 1997-08-05
+	Commit to fix in releases: 1.1_beta
+	Fixed in releases: 
+	Integrated in releases: 
+	Verified in releases: 
+	Closed because: 
+	Incomplete because: 
+ Duplicate of: 
+ Introduced in Release: 
+ Root cause: 
+ Program management: 
+ Fix affects documentation: no
+ Exempt from dev rel: no
+ Fix affects L10N: 
+ Interest list: java-bugs@javasoft.japan, john.mani@Eng, john.russo@Eng
+ Patch id: 
+ Comments:
+
+john.russo@Eng 1997-08-01
+Everyone, please be careful when introducing new strings into the code
+(that includes myself!) Thanks.
+ See also: 
+ Hooks:
+	Hook 1(hook1): 
+	Hook 2(hook2): 
+	Hook 3(hook3): 
+	Hook 4(hook4): 
+	Hook 5(hook5): 
+	Hook 6(hook6): 
+ History:
+	Submitter:            katakai	Date: Jul 31 1997  3:33AM
+	Dispatch Operator:    bugtraq	Date: Jul 31 1997  3:33AM
+	Acceptor:             mspivak	Date: Aug  5 1997 10:17AM
+	Evaluator:            monique	Date: Aug  7 1997  3:08PM
+	Commit operator:      monique	Date: Aug  7 1997  3:08PM
+	Fix operator:         	Date: 
+	Integrating operator: 	Date: 
+	Verify operator:      	Date: 
+	Closeout operator:    	Date: 
+ Called in by:
+    Customer:
+	Company: SunSoft
+	Employee: katakai
+	User Role: D
+	User Type: I
+	Release: 1.1_alpha
+	Hardware version: sun4u
+	O/S version (unbundled products): s297_fcs
+	SO Number: 
+	Sun Contact: katakai
+	Contact Name: Masaki Katakai
+	Contact Mailaddr: masaki.katakai@Japan
+ Escalation(s):
+ Public Summary:
+
+ Old Name: 
+ Bug End:
+--------------------------------------------------------------------------------
+
+

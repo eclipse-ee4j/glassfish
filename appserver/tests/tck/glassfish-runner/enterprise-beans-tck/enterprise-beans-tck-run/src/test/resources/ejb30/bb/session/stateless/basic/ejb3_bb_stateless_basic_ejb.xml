@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<ejb-jar xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metadata-complete="false" version="4.0" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd">
+    <enterprise-beans>
+        <!-- a bean fully annotated in bean class.  No need to declare it here
+        <session>
+            <ejb-name>RemoteCalculatorBean</ejb-name>
+        </session>
+        -->
+        
+        <!-- a bean defined solely by descriptor, including a descriptor-defined
+            post-construct method -->
+        <session>
+            <ejb-name>RemoteCalculatorBean2</ejb-name>
+            <business-remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</business-remote>
+            <ejb-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.RemoteCalculatorBean2</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <post-construct>
+                <!-- lifecycle-callback-class defaults to the component class RemoteCalculatorBean2
+                <lifecycle-callback-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.RemoteCalculatorBean2</lifecycle-callback-class>
+                -->
+                <lifecycle-callback-method>postConstruct</lifecycle-callback-method>
+            </post-construct>
+            <security-identity>
+                <use-caller-identity/>
+            </security-identity>
+        </session>
+        
+        <!-- a bean defined by descriptor-defined, with a PostConstruct method
+            annotated in the superclass of the bean class.  The bean itself 
+            contains no annotation -->
+        <session>
+            <ejb-name>RemoteCalculatorBean3</ejb-name>
+            <business-remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</business-remote>
+            <ejb-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.RemoteCalculatorBean3</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <!-- post-construct element not needed since it's already annotated in bean superclass -->
+            <!--
+            <post-construct>
+                <lifecycle-callback-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.RemoteCalculatorBean3Super</lifecycle-callback-class>
+                <lifecycle-callback-method>postConstruct</lifecycle-callback-method>
+            </post-construct>
+            -->
+            <security-identity>
+                <use-caller-identity/>
+            </security-identity>
+        </session>
+        
+        <!-- a bean defined by descriptor, with a field injection
+            annotated in the superclass of the bean class.  The bean itself 
+            contains no annotation -->
+        <session>
+            <ejb-name>RemoteCalculatorBean4</ejb-name>
+            <business-remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</business-remote>
+            <ejb-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.RemoteCalculatorBean4</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <security-identity>
+                <use-caller-identity/>
+            </security-identity>
+        </session>
+        
+        <!-- a bean defined by descriptor.  The bean class has no component-defining
+        annotations, but has @Resource and @PostConstruct annotations.  They must 
+        be processed even though the bean has no component-defining annotations -->
+        <session>
+            <ejb-name>RemoteCalculatorBean5</ejb-name>
+            <business-remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</business-remote>
+            <ejb-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.RemoteCalculatorBean5</ejb-class>
+            <session-type>Stateless</session-type>
+        </session>
+
+    </enterprise-beans>
+</ejb-jar>

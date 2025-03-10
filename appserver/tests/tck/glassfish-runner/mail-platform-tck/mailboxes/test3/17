@@ -1,0 +1,193 @@
+From jmk@cochin Thu Feb 12 14:06:33 1998 -0800
+Return-Path: <owner-jstech@java-aces>
+Received: from icdev.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA23645; Wed, 6 Aug 1997 10:18:56 -0700
+Received: from shorter.eng.sun.com by icdev.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA02238; Wed, 6 Aug 1997 10:18:49 -0700
+Received: from scylla.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA23638; Wed, 6 Aug 1997 10:18:53 -0700
+Received: from java-aces.eng.sun.com by scylla.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA01643; Wed, 6 Aug 1997 10:18:52 -0700
+Received: by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20053; Wed, 6 Aug 1997 12:12:01 -0500
+Received: from Eng.Sun.COM by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20048; Wed, 6 Aug 1997 12:11:55 -0500
+Received: from East.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA02626; Wed, 6 Aug 1997 10:17:55 -0700
+Received: from suneast.East.Sun.COM by East.Sun.COM (SMI-8.6/SMI-5.3)
+	id NAA20892; Wed, 6 Aug 1997 13:17:54 -0400
+Received: from atlantic.East.Sun.COM by suneast.East.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA07901; Wed, 6 Aug 1997 13:17:55 -0400
+Received: from merrimac-1 by atlantic.East.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA16808; Wed, 6 Aug 1997 13:19:31 -0400
+Date: Wed, 6 Aug 1997 13:16:30 -0400 (EDT)
+From: Mike Carney <Michael.Carney@East>
+Reply-To: Mike Carney <Michael.Carney@East>
+Subject: Re: JSTech: Sharing NT and Solaris DHCP server IP address ranges?
+To: Mike Pellegrino <mikep@sunjax.East.Sun.COM>
+cc: Geordie.Klueber@East, jstech@java-aces.eng.sun.com
+In-Reply-To: "Your message with ID" <libSDtMail.9708060928.1268.mikep@sunjax.East>
+Message-ID: <Roam.SIMC.2.0.Beta.870887790.17961.mwc@atlantic.east>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: owner-jstech@java-aces.eng.sun.com
+Precedence: bulk
+Content-Length: 6924
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 16
+
+++ + + + + + + + + + + + + + + + + + + + + + + + + ++
+
+> Geordie,
+> I'm being told by my client that NT supports multiple DHCP servers that can
+> manage  overlapping dynamic IP address ranges, i.e. each server has common
+> ip address  ranges between each other.  In fact, they are using this scheme
+> to provide some  redundancy in their DHCP server setup.
+
+You get this for free among Solaris DHCP servers if NIS+ is selected as the
+datastore for dhcp data. 
+
+> Is this capable of
+> being done for the  javastation boot DHCP servers as a redundant
+> architecture scheme?  If yes, then is  co-existence between an NT DHCP
+> server and Solaris DHCP server with overlapping  dynamic address ranges
+> doable? 
+
+Yes and No...
+
+Yes:
+For the current version of the JavaStation (mr coffee), mac addresses are
+"bolted" to the IP addresses for each JavaSTation (this is because
+rarp/bootparams are used by the PROM  and the standalone boot program to
+locate and download the JavaOS, and DHCP has been hardwired to return the
+same address as in.rarpd). So, you can make the same MAC address to IP
+address mappings in the NT server's database and the Solaris Server's dhcp
+network tables. In the Solaris server's dhcp network tables, the "server
+ip" field has the affect that if the Solaris server's ip address is listed,
+it'll respond immediately. If the NT server's address is there, the Solaris
+server will consider the address "owned" by the NT server, and will let the
+NT server get first crack at serving the client. If the client is still
+requesting an address after 10 seconds, the Solaris server will respond.
+The key is to configure both servers to return the same address for a
+given mac address, and to return the same "payload" of configuration
+parameters.
+
+No:
+For the next instance of the JavaStation (Krups) and standard DHCP clients like
+Solaris, NT, Windows95, etc, one IP address good as another. Thus, You don't
+want to "bolt" a mac address to an IP address - you'd like to let the DHCP
+server and client to "work it out" as to which IP address a specific client
+gets. In this case, it's best to divide the IP address ranges between servers.
+This is to prevent the situation where both servers have allocated an IP
+address to the same client (not the same IP address) due to one or the other
+servers being unavailable during the time a client's lease expires.
+
+
+> I'm trying to understand DHCP config, in general,  so if you can
+> also point me to any docs on the topic, it would be appreciated.
+
+There's answerbook docs in 2.6, as well as the manual pages: dhcp, in.dhcpd,
+dhcptab, dhcp_network.
+
+
+I responded to Charles' mail as follows:
+
+> From mwc@merrimac-1 Thu Jul 17 14:28:41 1997
+> Date: Thu, 17 Jul 1997 14:28:39 -0400 (EDT)
+> From: Mike Carney <mwc@atlantic.east>
+> Reply-To: Mike Carney <mwc@atlantic.east>
+> Subject: Re: JSTech: Compatibility Problem with JavaStations/Server and NT works
+> tations
+> To: Charles Ditzel - TE Sun Seattle 206-889-1328 <charles.ditzel@West>
+> cc: jstech@java-aces.Eng.Sun.COM
+> In-Reply-To: "Your message with ID" <Roam.SIMC.2.0.869159475.19043.charles@sunup
+> .west>
+> Message-ID: <Roam.SIMC.2.0.Beta.869164119.21819.mwc@atlantic.east>
+> Content-Type: text
+> X-Sun-Text-Type: ascii
+> Content-Length: 851
+> 
+> 
+> > A customer (Boeing) is having some nasty compatibility problems between
+> > a Sun server/JavaStation configuration and their NT workstations.
+> >
+> > I seem to remember originally a problem in Beta with Sun servers
+> > responding to DHCP requests from NT servers (feel free to correct my
+> > memory :-)
+> 
+> This makes no sense. servers don't talk to one another.
+> 
+> >
+> > Anyway Boeing which is evaluating JavaStations has the following problem
+> > (quote) :
+> >
+> >       "the server answers all DHCP requests which screws up 200 NT
+> >        wkstns (your bug)"
+> 
+> A DHCP server is going to respond to DHCP requests, regardless.  The solaris
+> DHCP server is serving MS NT clients at many sites. Do you have any useful
+> information? (The above quote doesn't tell us anything).
+
+His reply and my subsequent response:
+
+> From mwc@merrimac-1 Thu Jul 17 15:42:26 1997
+> Date: Thu, 17 Jul 1997 15:42:24 -0400 (EDT)
+> From: Mike Carney <mwc@atlantic.east>
+> Reply-To: Mike Carney <mwc@atlantic.east>
+> Subject: Re: JSTech: Compatibility Problem with JavaStations/Server and NT works
+> tations
+> To: Charles Ditzel - TE Sun Seattle 206-889-1328 <charles.ditzel@West>
+> cc: Mike Carney <Michael.Carney@East>, js-tech@java-aces.eng.sun.com
+> In-Reply-To: "Your message with ID" <Roam.SIMC.2.0.869168039.23232.charles@sunup
+> .west>
+> Message-ID: <Roam.SIMC.2.0.Beta.869168544.27276.mwc@atlantic.east>
+> Content-Type: text
+> X-Sun-Text-Type: ascii
+> Content-Length: 880
+> 
+> > I was trying to illicit more information regarding a DHCP or Bootparam
+> > problem with NT and our JavaStations and servers - that was acknowledged to
+> > exist in a previous release awhile back. I have done a little more research
+> > since the email went out and DID discover that a problem  DID IN FACT exist
+> > (and may still exist - that is what I was trying to ascertain) in the
+> > interaction  between :
+> >
+> >       o a JavaStation that is booting and the NT 3.51 systems which
+> >         respond to it (prior to a Netra J boot server responding).
+> 
+> So the problem you are seeing is that an NT DHCP server is responding to the
+> JavaStation before the Solaris DHCP server does? Or is it that the portmapper
+> on the NT boxes is responding to the BOOTPARAMS whoami request before the
+> solaris box?
+> 
+> Mike Carney
+> SNT Internet Engineering
+> Sun Microsystems, Inc.
+> 2 Elizabeth Drive
+> Chelmsford, MA 01824
+
+
+Before you start hacking up your DHCP configuration, you really should find
+out what the "real" problem is. As I said above, that quote doesn't give
+any information. From this mail, there isn't a DHCP bug at all: it's just that
+some vendor's portmapper implementation running on the NT boxes is responding
+inappropriately.
+
+
+
+Mike Carney
+SNT Internet Engineering
+Sun Microsystems, Inc.
+2 Elizabeth Drive
+Chelmsford, MA 01824
+
+++ + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + ++
+++ This alias tends to generate a tremendous volume of mail. If you wish,    ++
+++ you can resubscribe to the digest version of the list, which is sent out  ++
+++ just once a day. If you don't already know how to do this, please send    ++
+++ mail to majordomo@java-aces.eng.sun.com with the word "help" in the       ++
+++ message body (the subject line is ignored).                               ++
+++ + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + ++
+

@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2024  Contributors to the Eclipse Foundation.
+  ~ Copyright 2010, Red Hat, Inc., and individual contributors
+  
+  
+  Running all tests (except timeout)
+  
+  mvn clean install
+  
+  Running separate clusters of tests
+  
+  ejb30 lite env tests:
+  
+  mvn clean install -Dglassfish.version=8.0.0-SNAPSHOT -Dmaven.build.cache.enabled=false -Pejb30,exclude-timeout,ejb30_lite_env
+  
+  ejb30 assembly, misc and tx tests:
+  
+  mvn clean install -Dglassfish.version=8.0.0-SNAPSHOT -Dmaven.build.cache.enabled=false -Pejb30,exclude-timeout,ejb30_assembly_misc_tx
+  
+  etc
+  
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.9</version>
+        <relativePath />
+    </parent>
+
+    <artifactId>enterprise-beans-tck-run</artifactId>
+    <packaging>jar</packaging>
+
+    <name>enterprise-beans-tck</name>
+    <description>Aggregates dependencies and runs the Enterprise Beans TCK on GlassFish</description>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+
+        <!-- Release properties -->
+        <derby.lib>${glassfish.home}/javadb/lib</derby.lib>
+        <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
+        <glassfish.root>${project.build.directory}</glassfish.root>
+        <glassfish.version>8.0.0-M9</glassfish.version>
+        <glassfish.version.main>8</glassfish.version.main>
+        <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+
+        <!-- Require at least Java 17 to compile -->
+        <maven.compiler.release>17</maven.compiler.release>
+        <tck.jte.path>${ts.home}/bin/ts.jte</tck.jte.path>
+
+        <!-- TCK Paths -->
+        <ts.home>${basedir}/src/test/resources/jakartaeetck</ts.home>
+
+        <version.jakarta.ejb>4.0.1</version.jakarta.ejb>
+        <version.jakarta.enterprise>4.0.1</version.jakarta.enterprise>
+        <version.jakarta.inject>2.0.1</version.jakarta.inject>
+        <version.jakarta.servlet>5.0.0</version.jakarta.servlet>
+        <version.jakarta.tck>11.0.0-10</version.jakarta.tck>
+        <version.ejb.tck>4.0.0-M1</version.ejb.tck>
+        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+
+    </properties>
+
+    <!-- The Junit5 test frameworks -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>1.9.3.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Jakarta EE APIs -->
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>11.0.0-RC1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>${version.jakarta.ejb}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>${version.jakarta.enterprise}</version>
+            <scope>test</scope>
+            <!-- CDI references wrong version of annotations -->
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>${version.jakarta.inject}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${version.jakarta.servlet}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The actual TCK containing the tests -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>ejb30</artifactId>
+            <version>${version.ejb.tck}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>ejb32</artifactId>
+            <version>${version.ejb.tck}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-appclient</artifactId>
+            <version>${jakarta.tck.arquillian.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-javatest</artifactId>
+            <version>${jakarta.tck.arquillian.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>tck-porting-lib</artifactId>
+            <version>${jakarta.tck.arquillian.version}</version>
+        </dependency>
+
+        <!-- Junit5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-reporting</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-spi</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+            <artifactId>shrinkwrap-descriptors-impl-base</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!--
+            The Arquillian connector that starts GlassFish and deploys archives to it.
+        -->
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <version>1.7</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 
+           For a couple of tests like:
+           com.sun.ts.tests.ejb30.tx.session.stateful.web.ClientTest
+           com.sun.ts.tests.ejb30.tx.session.stateless.cm.generics.ClientTest
+           com.sun.ts.tests.ejb30.tx.session.stateless.cm.inheritance.annotated.ClientTest
+           ... 
+        -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Filter test resources -->
+        <testResources>
+            <testResource>
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <excludes>
+                    <exclude>**/cts_cert</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>cer</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>keystore</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>cts_cert</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.7.1</version>
+                <executions>
+                    <execution>
+                        <id>unpack-glassfish</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>${glassfish-artifact-id}</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${glassfish.root}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*TestCase.java</include>
+                        <include>**/*TestSuite.java</include>
+                    </includes>
+
+                    <systemPropertyVariables>
+                        <glassfish.home>${glassfish.home}</glassfish.home>
+                        <glassfish.httpPort>8080</glassfish.httpPort>
+                        <arquillian.xml>javatest-arquillian.xml</arquillian.xml>
+                        <ts.home>${ts.home}</ts.home>
+
+                        <glassfish.enableDerby>true</glassfish.enableDerby>
+                        <glassfish.derbyDatabaseName>${glassfish.home}/glassfish/domains/domain1/config/derbyDB;create=true</glassfish.derbyDatabaseName>
+                        <glassfish.derbySQLFile>${project.build.directory}/test-classes/derby.ddl.sql</glassfish.derbySQLFile>
+                        <glassfish.derbyUser>cts1</glassfish.derbyUser>
+                        <glassfish.derbyPasswordFile>${project.build.directory}/test-classes/password.txt</glassfish.derbyPasswordFile>
+
+                        <glassfish.postBootCommands>set server-config.network-config.protocols.protocol.http-listener-1.http.trace-enabled=true
+                            create-jdbc-connection-pool --restype javax.sql.XADataSource --datasourceclassname org.apache.derby.jdbc.ClientDataSource --property databaseName=${glassfish.home}/glassfish/domains/domain1/config/derbyDB:serverName=localhost:portNumber=1527:user=cts1:password=cts1 cts-derby-XA-pool
+                            create-jdbc-connection-pool --restype javax.sql.DataSource --datasourceclassname org.apache.derby.jdbc.ClientDataSource --property databaseName=${glassfish.home}/glassfish/domains/domain1/config/derbyDB:serverName=localhost:portNumber=1527:user=cts1:password=cts1 cts-derby-pool
+                            create-jdbc-resource --connectionpoolid cts-derby-XA-pool jdbc/DBTimer
+                            create-jdbc-resource --connectionpoolid cts-derby-pool jdbc/DB1
+                            create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/QueueConnectionFactory
+                            create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=MDB_QUEUE MDB_QUEUE
+                            create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=MDB_QUEUE_REPLY MDB_QUEUE_REPLY
+                            list-jdbc-resources</glassfish.postBootCommands>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <outputName>jakartaee-report</outputName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>ejb30</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>001-ejb-30-javatest</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <phase>test</phase>
+                                <configuration>
+                                    <dependenciesToScan>jakarta.tck:ejb30</dependenciesToScan>
+                                    <groups>${groups}</groups>
+                                    <excludes>
+                                        <!-- These tests for various reasons fail -->
+                                        <exclude>com.sun.ts.tests.ejb30.assembly.initorder.warejb.ClientTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.lite.singleton.concurrency.container.annotated.ClientEjblitejspTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.lite.singleton.concurrency.container.annotated.ClientEjbliteservlet2Test</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.lite.singleton.concurrency.container.annotated.ClientEjbliteservletTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.misc.datasource.twowars.ClientTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.misc.moduleName.twowars.ClientTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.misc.moduleName.conflict.ClientTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.tx.session.stateless.cm.covariant.ClientTest</exclude>
+
+                                        <!-- These take about 1 hour each: look at reducing timeout settings -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.annotated.ClientEjblitejspTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.descriptor.ClientEjblitejspTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.lite.stateful.timeout.annotated.ClientEjblitejspTest</exclude>
+                                        <exclude>com.sun.ts.tests.ejb30.lite.stateful.timeout.descriptor.ClientEjblitejspTest</exclude>
+
+                                        <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 93.35 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjblitejspTest</exclude>
+
+                                        <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 91.29 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservlet2Test</exclude>
+
+                                        <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 91.20 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservletTest</exclude>
+
+                                        <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 91.23 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.JsfClientEjblitejsfTest</exclude>
+
+                                        <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.3 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjblitejspTest</exclude>
+
+                                        <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.2 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservlet2Test</exclude>
+
+                                        <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.2 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservletTest</exclude>
+
+                                        <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.3 s -->
+                                        <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.JsfClientEjblitejsfTest</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>ejb32</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>001-ejb-30-javatest</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <phase>test</phase>
+                                <configuration>
+                                    <dependenciesToScan>jakarta.tck:ejb32</dependenciesToScan>
+                                    <groups>${groups}</groups>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>exclude-timeout</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <excludes>
+                                <!-- These take about 1 hour each: look at reducing timeout settings -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.annotated.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.descriptor.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.lite.stateful.timeout.annotated.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.lite.stateful.timeout.descriptor.ClientEjblitejspTest</exclude>
+
+                                <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 93.35 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjblitejspTest</exclude>
+
+                                <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 91.29 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservlet2Test</exclude>
+
+                                <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 91.20 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservletTest</exclude>
+
+                                <!-- [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 91.23 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.JsfClientEjblitejsfTest</exclude>
+
+                                <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.3 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjblitejspTest</exclude>
+
+                                <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.2 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservlet2Test</exclude>
+
+                                <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.2 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservletTest</exclude>
+
+                                <!-- [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 141.3 s -->
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.JsfClientEjblitejsfTest</exclude>
+                            </excludes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Enterprise Beans 3.0 tests -->
+
+        <profile>
+            <id>ejb30_assembly_misc_tx</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.assembly.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.misc.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.tx.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 315, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  05:29 min
+        -->
+        <profile>
+            <id>ejb30_bb</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.annotated.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.descriptor.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservlet2Test</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservletTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.JsfClientEjblitejsfTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjblitejspTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservlet2Test</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservletTest</exclude>
+                                <exclude>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.JsfClientEjblitejsfTest</exclude>
+                            </excludes>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.bb.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 176, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  51:40 min 
+        -->
+        <profile>
+            <id>ejb30_timer</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.timer.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 166, Failures: 0, Errors: 0, Skipped: 0  
+             [INFO] Total time:  10:53 min
+        -->
+        <profile>
+            <id>ejb30_lite_singleton</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.lite.singleton.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 292, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  12:06 min
+        -->
+        <profile>
+            <id>ejb30_lite_appexception</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.lite.appexception.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  44.032 s
+         -->
+        <profile>
+            <id>ejb30_lite_rest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.lite.ejbcontext.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.basic.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.naming.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.lookup.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.async.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.interceptor.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.packaging.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.nointerface.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.view.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.xmloverride.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb30.lite.tx.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 
+            [INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
+            [INFO] Total time:  52.573 s
+            
+            Containts unstable tests:
+            
+            com.sun.ts.tests.ejb30.lite.enventry.singleton.ClientEjbliteservlet2Test.clientPostConstructRecords
+            com.sun.ts.tests.ejb30.lite.enventry.stateful.ClientEjbliteservlet2Test.clientPostConstructRecords
+            com.sun.ts.tests.ejb30.lite.enventry.stateless.ClientEjbliteservlet2Test.clientPostConstructRecords
+            
+            Failure occurance on local macOS laptop ~1/3 of runs
+        -->
+        <profile>
+            <id>ejb30_lite_env</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.lite.enventry.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 61, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  23:19 min
+        -->
+        <profile>
+            <id>ejb30_lite_stateful_concurrency</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.lite.stateful.concurrency.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Enterprise Beans 3.2 tests -->
+
+        <!-- 
+            [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+            [INFO] Total time:  29.532 s
+        -->
+        <profile>
+            <id>ejb32_nonlite</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.mdb.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb32.relaxedclientview.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb32.timer.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  21:36 min 
+        -->
+        <profile>
+            <id>ejb32_lite_timer_basic</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.basic.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 
+            [INFO] Tests run: 60, Failures: 0, Errors: 0, Skipped: 0
+            [INFO] Total time:  08:03 min
+        -->
+        <profile>
+            <id>ejb32_lite_timer_interceptor</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.interceptor.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 
+            [INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0
+            [INFO] Total time:  16:18 min
+        -->
+        <profile>
+            <id>ejb32_lite_timer_schedule_auto</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.auto.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  12:19 min
+             
+             [INFO] Tests run: 168, Failures: 0, Errors: 0, Skipped: 0 
+             [INFO] Total time:  08:59 min
+             
+             [INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  08:49 min
+        -->
+        <profile>
+            <id>ejb32_lite_timer_schedule_descriptor_expression_lifecycle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.descriptor.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.expression.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.lifecycle.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 160, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  40:42 min 
+        -->
+        <profile>
+            <id>ejb32_lite_timer_schedule_expire</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.expire.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--  [INFO] Tests run: 52, Failures: 0, Errors: 0, Skipped: 0
+              [INFO] Total time:  33:39 min
+        -->
+        <profile>
+            <id>ejb32_lite_timer_schedule_tx</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.tx.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 52, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  33:40 min 
+        -->
+        <profile>
+            <id>ejb32_lite_timer_schedule_txnonpersistent</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.txnonpersistent.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  04:40 min
+             
+             [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  45.973 s
+             
+             [INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  01:53 min
+             
+             - - - - -
+             
+             [INFO] Tests run: 64, Failures: 0, Errors: 0, Skipped: 0
+             [INFO] Total time:  06:29 min
+         -->
+        <profile>
+            <id>ejb32_lite_timer_schedule_tz_service_timerconfig</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.schedule.tz.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.service.**.*Test</include>
+                                <include>com.sun.ts.tests.ejb32.lite.timer.timerconfig.**.*Test</include>
+                            </includes>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>timeout1</id>
+
+            <properties>
+                <glassfish.root>${project.build.directory}/timeout1</glassfish.root>
+                <tck.jte.path>${ts.home}/bin/ts9081.jte</tck.jte.path>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <test>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.annotated.ClientEjblitejspTest</test>
+                            <systemPropertyVariables>
+                                <glassfish.httpPort>9081</glassfish.httpPort>
+                            </systemPropertyVariables>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>timeout2</id>
+
+            <properties>
+                <glassfish.root>${project.build.directory}/timeout2</glassfish.root>
+                <tck.jte.path>${ts.home}/bin/ts9082.jte</tck.jte.path>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <test>com.sun.ts.tests.ejb30.bb.session.stateful.timeout.descriptor.ClientEjblitejspTest</test>
+                            <systemPropertyVariables>
+                                <glassfish.httpPort>9082</glassfish.httpPort>
+                                <glassfish.enableDerby>false</glassfish.enableDerby>
+                            </systemPropertyVariables>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>timeout3</id>
+
+            <properties>
+                <glassfish.root>${project.build.directory}/timeout3</glassfish.root>
+                <tck.jte.path>${ts.home}/bin/ts9083.jte</tck.jte.path>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <test>com.sun.ts.tests.ejb30.lite.stateful.timeout.annotated.ClientEjblitejspTest</test>
+                            <systemPropertyVariables>
+                                <glassfish.httpPort>9083</glassfish.httpPort>
+                            </systemPropertyVariables>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>timeout4</id>
+
+            <properties>
+                <glassfish.root>${project.build.directory}/timeout4</glassfish.root>
+                <tck.jte.path>${ts.home}/bin/ts9084.jte</tck.jte.path>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <test>com.sun.ts.tests.ejb30.lite.stateful.timeout.descriptor.ClientEjblitejspTest</test>
+                            <systemPropertyVariables>
+                                <glassfish.httpPort>9084</glassfish.httpPort>
+                            </systemPropertyVariables>
+                            <groups>${groups}</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>timeout5</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <groups>${groups}</groups>
+                            <test>com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservlet2Test,
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjbliteservletTest
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.JsfClientEjblitejsfTest,
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.accesstimeout.annotated.ClientEjblitejspTest,
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjblitejspTest,
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservlet2Test,
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.ClientEjbliteservletTest,
+                                  com.sun.ts.tests.ejb30.bb.session.stateful.concurrency.metadata.annotated.JsfClientEjblitejsfTest</test>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>failures</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <groups>${groups}</groups>
+                            <test>com.sun.ts.tests.ejb30.assembly.initorder.warejb.ClientTest,
+                                com.sun.ts.tests.ejb30.lite.singleton.concurrency.container.annotated.ClientEjblitejspTest,
+                                com.sun.ts.tests.ejb30.lite.singleton.concurrency.container.annotated.ClientEjbliteservlet2Test,
+                                com.sun.ts.tests.ejb30.lite.singleton.concurrency.container.annotated.ClientEjbliteservletTest,
+                                com.sun.ts.tests.ejb30.misc.datasource.twowars.ClientTest,
+                                com.sun.ts.tests.ejb30.misc.moduleName.twowars.ClientTest,
+                                com.sun.ts.tests.ejb30.misc.moduleName.conflict.ClientTest,
+                                com.sun.ts.tests.ejb30.tx.session.stateless.cm.covariant.ClientTest</test>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>datasource</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <groups>${groups}</groups>
+                            <includes>
+                                <include>com.sun.ts.tests.ejb30.lite.packaging.war.datasource.**.*Test</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <groups>platform</groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+                <groups>web</groups>
+            </properties>
+        </profile>
+
+    </profiles>
+
+</project>

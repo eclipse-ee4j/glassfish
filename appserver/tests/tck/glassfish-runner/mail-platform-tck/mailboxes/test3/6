@@ -1,0 +1,79 @@
+From jmk@cochin Thu Feb 12 14:06:31 1998 -0800
+Return-Path: <esthert@tanzanite>
+Received: from krakatoa.Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA14622; Thu, 10 Jul 1997 10:04:15 -0700
+Received: from tanzanite.Eng.Sun.COM by krakatoa.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id KAA16011; Thu, 10 Jul 1997 10:04:40 -0700
+Received: from tanzanite by tanzanite.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id KAA03380; Thu, 10 Jul 1997 10:04:43 -0700
+Message-Id: <199707101704.KAA03380@tanzanite.Eng.Sun.COM>
+Date: Thu, 10 Jul 1997 10:04:43 -0700 (PDT)
+From: Esther Tong <esthert@tanzanite>
+Reply-To: Esther Tong <esthert@tanzanite>
+Subject: Re: dtmail starting from session is still broken...
+To: gregl@tofu
+Cc: mail-eng@krakatoa
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: /mLnWTHsPlSClkPcvWeCFw==
+X-Mailer: dtmail 1.2.0 CDE Version 1.2 SunOS 5.6 sun4m sparc 
+Content-Length: 1520
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 5
+
+In that case, this is not the same problem I was talking about. 
+Sounds like a new bug.
+
+Esther
+
+> Date: Thu, 10 Jul 1997 10:02:36 -0700 (PDT)
+> From: Gregory Layer <gregl@tofu>
+> Subject: Re: dtmail starting from session is still broken...
+> To: perry@tofu, esthert@tanzanite
+> Cc: mail-eng@krakatoa
+> MIME-Version: 1.0
+> Content-MD5: wnC7JDTbKKwDeCSVccoYbA==
+> 
+> They both open my INBOX on tofu.  I'll file a bug on it.
+> 
+> -greg
+> 
+> > Date: Thu, 10 Jul 1997 09:57:46 -0700 (PDT)
+> > From: Esther Tong <esthert@tanzanite>
+> > Subject: Re: dtmail starting from session is still broken...
+> > To: perry@tofu, gregl@tofu
+> > Cc: mail-eng@krakatoa
+> > 
+> > Greg,
+> > 
+> > Do you get a local version and a remote version of the same mailbox?
+> > I ran into this problem a while back and I thought it got fixed with changes 
+> > that was checked in for another bug.  Pop was looking into this problem.  
+> There 
+> > is no formal bug number for this problem.
+> > 
+> > Esther
+> > 
+> > > Date: Thu, 10 Jul 1997 09:46:44 -0700 (PDT)
+> > > From: Gregory Layer <gregl@tofu>
+> > > Subject: dtmail starting from session is still broken...
+> > > To: perry@tofu
+> > > Cc: mail-eng@krakatoa
+> > > MIME-Version: 1.0
+> > > Content-MD5: tyyXaSv7/fe+1eBjQL/Jpg==
+> > > 
+> > > I still get two mailbox windows when I login to CDE.  I am using IMAP.
+> > > Is this a known problem?  I am using 1.2_fcs_g 
+> > > ("CDEVersion1.2":sparc:08Jul97-19:21:25).  I will file a bug if needed.
+> > > 
+> > > -greg
+> > > 
+> > 
+> 
+
+Esther Tong
+SunSoft
+
+

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ ~
+ ~ This program and the accompanying materials are made available under the
+ ~ terms of the Eclipse Public License v. 2.0, which is available at
+ ~ http://www.eclipse.org/legal/epl-2.0.
+ ~
+ ~ This Source Code may also be made available under the following Secondary
+ ~ Licenses when the conditions for such availability set forth in the
+ ~ Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ ~ version 2 with the GNU Classpath Exception, which is available at
+ ~ https://www.gnu.org/software/classpath/license.html.
+ ~
+ ~ SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>jakarta.data</groupId>
+    <artifactId>data-tck-ee-runner</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>Jakarta Data TCK Runner for Glassfish</name>
+    <properties>
+        <!-- General properties -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.testRelease>17</maven.compiler.testRelease>
+        <!-- Dependency and Plugin Versions -->
+        <jakarta.data.version>1.0.0</jakarta.data.version>
+        <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
+        <jakarta.enterprise.cdi.version>4.1.0</jakarta.enterprise.cdi.version>
+        <arquillian.version>1.9.1.Final</arquillian.version>
+        <arquillian.jakarta.version>10.0.0.Final</arquillian.jakarta.version>
+        <junit.version>5.12.0</junit.version>
+        <sigtest.version>2.3</sigtest.version>
+        <shrinkwrap.version>1.2.6</shrinkwrap.version>
+        <shrinkwrap.resolver.version>3.3.1</shrinkwrap.resolver.version>
+        <maven.dep.plugin.version>3.3.0</maven.dep.plugin.version>
+        <maven.comp.plugin.version>3.13.0</maven.comp.plugin.version>
+        <maven.surefire.plugin.version>3.5.0</maven.surefire.plugin.version>
+        <!-- Location to copy runtime dependencies to application server -->
+        <application.server.lib>${project.build.directory}/glassfish8/glassfish/lib</application.server.lib>
+        <!-- Pointer to logging.properties file that has the java.util.logging 
+   configuration -->
+        <logging.config>${project.basedir}/logging.properties</logging.config>
+        <!-- jimage output directory -->
+        <jimage.dir>${project.build.directory}/jimage/</jimage.dir>
+        <!-- Default execution groups - user should override -->
+        <!-- glassfish properties -->
+        <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
+        <glassfish.version>8.0.0-JDK17-M9</glassfish.version>
+    </properties>
+    <repositories>
+        <!-- TODO add private repo if your implementation is not public -->
+        <!-- TODO add staging repo if you want to use SNAPSHOT versions of the 
+   API and TCK -->
+    </repositories>
+    <!-- tag::testClientDep[] -->
+    <!-- The Arquillian and Junit5 test frameworks -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.jakarta</groupId>
+                <artifactId>arquillian-jakarta-bom</artifactId>
+                <version>${arquillian.jakarta.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap</groupId>
+                <artifactId>shrinkwrap-bom</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-bom</artifactId>
+                <version>${shrinkwrap.resolver.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!-- Client Dependencies -->
+    <dependencies>
+        <!-- The TCK -->
+        <dependency>
+            <groupId>jakarta.data</groupId>
+            <artifactId>jakarta.data-tck</artifactId>
+            <version>${jakarta.data.version}</version>
+        </dependency>
+        <!-- The API -->
+        <dependency>
+            <groupId>jakarta.data</groupId>
+            <artifactId>jakarta.data-api</artifactId>
+            <version>${jakarta.data.version}</version>
+        </dependency>
+        <!-- Arquillian Implementation for JUnit5 -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+        </dependency>
+        <!-- TODO add Arquillian SPI impl for your Jakarta EE Platform Server -->
+        <!-- Junit5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <!-- Signature Test Plugin -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${sigtest.version}</version>
+        </dependency>
+        <!-- APIs provided by your Jakarta EE Platform server -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>${jakarta.enterprise.cdi.version}</version>
+        </dependency>
+        <!-- The Arquillian connector that starts GlassFish and deploys archives to it. -->
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <version>1.6</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Client libs for doing HTTP requests, specifically done via the REST Client -->
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>glassfish-client-ee11</artifactId>
+            <version>1.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <!-- end::testClientDep[] -->
+    <build>
+        <directory>target</directory>
+        <defaultGoal>clean test</defaultGoal>
+        <plugins>
+            <!-- Compile plugin for any supplemental class files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.comp.plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>download-gf</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>${glassfish-artifact-id}</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- TODO: you can include a plugin to start your application server here -->
+            <!-- tag::configJunit5[] -->
+            <!-- failsafe plugin - Entrypoint for Junit5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <id>gf-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <dependenciesToScan>
+                                <dependency>jakarta.data:jakarta.data-tck</dependency>
+                            </dependenciesToScan>
+                            <includes>
+                                <include>**/*.*</include>
+                                <include>**/*Entity*.*</include>
+                            </includes>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/jakarta.transaction-api.jar</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <!-- tag::systemProperties[] -->
+                            <systemPropertyVariables>
+                                <glassfish.home>${project.build.directory}/${glassfish.toplevel.dir}</glassfish.home>
+                                <!-- tag::arquillian[] -->
+                                <tck_server>localhost</tck_server>
+                                <tck_hostname>localhost</tck_hostname>
+                                <tck_username>j2ee</tck_username>
+                                <tck_password>j2ee</tck_password>
+                                <tck_port>8080</tck_port>
+                                <tck_port_secure>8081</tck_port_secure>
+                                <!-- end::arquillian[] -->
+                                <!-- tag::signature[] -->
+                                <jimage.dir>${jimage.dir}</jimage.dir>
+                                <signature.sigTestClasspath>${project.build.directory}/glassfish8/glassfish/modules/jakarta.data-api.jar:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming</signature.sigTestClasspath>
+                                <!-- end::signature[] -->
+                                <!-- tag::logging[] -->
+                                <java.util.logging.config.file>${logging.config}</java.util.logging.config.file>
+                                <!-- end::logging[] -->
+                                <!-- tag::profile[] -->
+                                <!-- Optional, Arquillian will deploy artifacts by default -->
+                                <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
+                                <!-- end::profile[] -->
+                            </systemPropertyVariables>
+                            <!-- end::systemProperties[] -->
+                            <!-- Supported tags 
+                                    Profiles:[core|web|platform] 
+                                    Entities:[nosql|persistence] 
+                                    Other:   [signature] -->
+                            <groups>${includedTests}</groups>
+                              <!-- Ensure surfire plugin looks under src/main/java 
+                                instead of src/test/java -->
+                        <testSourceDirectory>${basedir}/src/main/java/</testSourceDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- end::configJunit5[] -->
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <testGroups>platform</testGroups>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+                <testGroups>web</testGroups>
+            </properties>
+        </profile>
+    </profiles>
+</project>

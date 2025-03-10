@@ -1,0 +1,84 @@
+From jenny@eureka Fri Feb 17 14:42 PST 1995
+Return-Path: <jenny@eureka>
+Received: from Eng.Sun.COM (engmail2) by basilisk.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA17277; Fri, 17 Feb 1995 14:42:32 -0800
+Received: from beerbust.Eng.Sun.COM by Eng.Sun.COM (5.x/SMI-5.3)
+	id AA27319; Fri, 17 Feb 1995 14:42:25 -0800
+Received: from Eng.Sun.COM (engmail2) by beerbust.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA04675; Fri, 17 Feb 1995 14:42:23 -0800
+Received: from eureka.Eng.Sun.COM by Eng.Sun.COM (5.x/SMI-5.3)
+	id AA27300; Fri, 17 Feb 1995 14:42:20 -0800
+Received: by eureka.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA06769; Fri, 17 Feb 1995 14:42:17 -0800
+Date: Fri, 17 Feb 1995 14:42:17 -0800
+From: jenny@eureka (Jennifer Chang)
+Message-Id: <9502172242.AA06769@eureka.Eng.Sun.COM>
+Subject: 1193078: Please evaluate
+To: mail-eng@beerbust.Eng.Sun.COM
+Precedence: junk
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Length: 1005
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 5
+
+
+ Bug Id: 1193078
+ Category: cde
+ Subcategory: mail
+ Bug/Rfe: bug
+ Synopsis: Help not fully implemented in the secondary window
+ Keywords: 
+ Severity: 5
+ Priority: 3
+ Responsible Engineer: 
+ Description: 
+In Secondary window Help menu: Tasks, Reference and Using Help are still
+not implemented.
+
+ Work around: 
+
+ Suggested fix: 
+
+ Justification: 
+Justification by: jenny                   Date: 2/17/95  Create with Priority 3:
+
+All Help items should be implemented by now.
+
+ State triggers: 
+	Accepted: no
+	Evaluation: 
+
+	Commit to fix in releases: 
+	Fixed in releases: 
+	Integrated in releases: 
+	Verified in releases: 
+ Comments: 
+
+Introduced in release: 
+ Root cause: 
+ Development Status: 
+ Fix affects documentation: 
+ Interest list: 
+ Patch id: 
+ See also: 
+
+ Called in by: 
+    Customer:
+	Company: SunSoft
+	Employee: jennifer chang
+	Release: 1.0_beta_1
+	Hardware version: i486
+	O/S version: s494_fcs
+	User Type: F
+	SO Number: 
+	Sun Contact: jenny
+ Public Summary: 
+
+ Hook 1: 
+ Hook 2: 
+ Bug End:
+
+

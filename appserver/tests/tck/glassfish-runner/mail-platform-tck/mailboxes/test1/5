@@ -1,0 +1,83 @@
+From mspivak@apilon Mon Nov 25 17:00:24 1996
+Return-Path: <mspivak@apilon>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id RAA12187; Mon, 25 Nov 1996 17:00:23 -0800
+Date: Mon, 25 Nov 1996 17:00:23 -0800 (PST)
+From: Max Spivak <mspivak@apilon>
+Reply-To: Max Spivak <mspivak@apilon>
+Subject: embedded rfc822 msg
+To: mspivak@apilon
+Cc: maxs@apilon
+Message-ID: <libSDtMail.9611251700.17321.mspivak@apilon/apilon>
+MIME-Version: 1.0
+Content-Type: MULTIPART/mixed; BOUNDARY=Team_of_Horses_858_000
+X-Mailer: dtmail 1.1.0 CDE Version 1.1_47 SunOS 5.5.1 sun4m sparc 
+Content-Length: 2308
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 58
+
+--Team_of_Horses_858_000
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: QrmpmH+ZebQEWHSsVT34Xw==
+
+Embedded rfc822 message inside...
+
+--Team_of_Horses_858_000
+Content-Type: MESSAGE/rfc822; name=Mailbox
+Content-Description: Mailbox
+
+From Edmund.Sutcliffe@UK  Mon Nov 25 04:01:52 1996
+Return-Path: <Edmund.Sutcliffe@UK>
+Received: from shadows.eng.sun.com by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id EAA10518; Mon, 25 Nov 1996 04:01:52 -0800
+Received: from Eng.Sun.COM by shadows.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id DAA07151; Mon, 25 Nov 1996 03:42:31 -0800
+Received: from sunmail1.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id DAA23897; Mon, 25 Nov 1996 03:41:13 -0800
+Received: from mercury.Sun.COM by sunmail1.Sun.COM (SMI-8.6/SMI-4.1)
+	id DAA01497; Mon, 25 Nov 1996 03:41:12 -0800
+Received: from UK.Sun.COM ([129.156.85.58]) by mercury.Sun.COM (SMI-8.6/mail.byaddr) with SMTP id DAA29561 for <java-internal@Sun.COM>; Mon, 25 Nov 1996 03:41:12 -0800
+Received: from cby-mail (cby-mail.UK.Sun.COM) by UK.Sun.COM (5.x/SMI-SVR4-sd.fkk205)
+	id AA09042; Mon, 25 Nov 1996 11:41:19 GMT
+Received: from prodigal.uk.sun.com by cby-mail (5.x/SMI-SVR4-se.fkk202)
+	id AA06198; Mon, 25 Nov 1996 11:41:14 GMT
+Received: by prodigal.uk.sun.com (SMI-8.6/SMI-SVR4)
+	id LAA02726; Mon, 25 Nov 1996 11:40:57 GMT
+Date: Mon, 25 Nov 1996 11:40:57 GMT
+From: Edmund.Sutcliffe@UK (Edmund J. Sutcliffe - European Support Services - SunSoft)
+Message-Id: <199611251140.LAA02726@prodigal.uk.sun.com>
+To: mkurowski@Central
+Subject: MFC for Java
+Cc: java-internal@Sun.COM
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Md5: hl4fteOU7/hHNbew2sftJA==
+Content-Length: 571
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 118
+
+Xx,
+	xxx xxxxxx xxxxx xxxx xxx Xxxxxxx Xxxxxxx
+	<xxxx://xxx.xxxxxxx.xxx>
+xxxxx xx xxxxxxxx xx xxxxx xxx xx xxxx XxxxxXxxx Xxxxxxxxxx Xxxxx xxxx =
+xxx=20
+xxxxxxx Xxxx XXX xxxxxxxxxx. Xx xx xxx xxxx xx xx. Xxx xxxxxx xxxxx x =
+xxxx xxxx=20
+xxxx, xxx xxxxxxx Xxxxxxx Xxxx.
+	Xxxxxx
+ =
+-------------------------------------------------------------------------=
+---
+   Xxxxxx X. Xxxxxxxxx                  =
+xxxxx:<Xxxxxx.Xxxxxxxxx@xx.xxx.xxx>  =20
+   XxxXxxx Xxxxxxxx Xxxxxxx             Xxx: +44 (0)1276 416120
+                                        Xxx: +44 (0)1276 677121
+
+
+--Team_of_Horses_858_000--
+

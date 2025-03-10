@@ -1,0 +1,39 @@
+From mspivak Tue Dec 10 10:54:12 1996
+Return-Path: <mspivak@localhost>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id KAA10637; Tue, 10 Dec 1996 10:54:11 -0800
+Date: Tue, 10 Dec 1996 10:54:11 -0800
+From: mspivak@localhost (Max Spivak)
+Message-Id: <199612101854.KAA10637@apilon.Eng.Sun.COM>
+To: maxs@apilon
+Subject: Mala's Staff
+X-Mailer: HotJava Views MailView V1.0
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary=8411710132681019932494832494858535258484932808384324957570
+Content-Length: 450
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 120
+
+--8411710132681019932494832494858535258484932808384324957570
+Content-Type: text/plain; charset=us-ascii
+
+test message
+--8411710132681019932494832494858535258484932808384324957570
+Content-Type: application/x-sun-ae-file; name=CalendarAppointment
+
+
+
+	** Calendar Appointment **
+	Date: 12/10/1996
+	Start: 10:00am
+	End: 11:00am
+	Repeat: Weekly
+	For: 51
+	What: Mala's Staff
+	Aladdin's Lamp
+
+
+--8411710132681019932494832494858535258484932808384324957570--
+

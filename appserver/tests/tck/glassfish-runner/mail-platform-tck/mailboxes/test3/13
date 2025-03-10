@@ -1,0 +1,54 @@
+From jmk@cochin Thu Feb 12 14:06:32 1998 -0800
+Return-Path: <owner-beans-users@JAVASOFT.COM>
+Received: from cochin.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA24749; Wed, 6 Aug 1997 10:32:48 -0700
+Received: from Eng.Sun.COM by cochin.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA21069; Wed, 6 Aug 1997 10:32:45 -0700
+Received: from saturn.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA06621; Wed, 6 Aug 1997 10:32:44 -0700
+Received: from java1.javasoft.com (java0.javasoft.com [204.160.241.100]) by saturn.Sun.COM (SMI-8.6/mail.byaddr) with ESMTP id KAA22620; Wed, 6 Aug 1997 10:32:43 -0700
+Received: from java1 (java1.javasoft.com [204.160.241.101])
+          by java1.javasoft.com (8.8.4/8.8.4) with SMTP
+	  id KAA13940; Wed, 6 Aug 1997 10:14:18 -0700 (PDT)
+Received: from JAVASOFT.COM by JAVASOFT.COM (LISTSERV-TCP/IP release 1.8b) with
+          spool id 516245 for BEANS-USERS@JAVASOFT.COM; Wed, 6 Aug 1997
+          10:14:14 -0700
+Received: from gemstone.com (root@slcgate.gemstone.com [207.79.207.46]) by
+          java1.javasoft.com (8.8.4/8.8.4) with SMTP id JAA01852 for
+          <BEANS-USERS@javasoft.com>; Wed, 6 Aug 1997 09:47:35 -0700 (PDT)
+Received: by gemstone.com (Smail-3.2.0.91 1997-Jan-14 #1) id
+          <m0ww9OO-001D3NC@gemstone.com>; Wed, 6 Aug 1997 09:57:00 -0700 (PDT)
+Received: from gharlane.gemstone.com by servio.slc.com with smtp (Smail3.1.28.1
+          #1) id m0ww9Ld-001H7LC; Wed, 6 Aug 97 09:54 PDT
+Received: by gharlane.gemstone.com (Smail3.1.29.1 #4) id m0ww9Lc-000DM5C; Wed,
+          6 Aug 97 09:54 PDT
+Message-ID:  <m0ww9Lc-000DM5C@gharlane.gemstone.com>
+Date:         Wed, 6 Aug 1997 09:54:08 -0700
+Reply-To: cohenb@gemstone.com
+Sender: A public mailing list for the discussion of JavaBeans
+              <BEANS-USERS@javasoft.com>
+From: Bruce Cohen <cohenb@gemstone.com>
+Subject:      Re: Distributed Object
+To: Multiple recipients of list BEANS-USERS <BEANS-USERS@JAVASOFT.COM>
+In-Reply-To:  Your message of Tue, 05 Aug 1997 19:28:24 -0700. 
+              <c=US%a=_%p=METROKC%l=ADMINXSERV3-970806022824Z-10798@utilexch.metrokc.gov>
+Content-Length: 841
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 12
+
+"Frentress, James" <James.Frentress@METROKC.GOV> asks:
+>> Any guys out there doing distributed object using beans?
+>> Any one know whats the progress for distributed object with java?
+
+My company, GemStone Systems, Inc. has introduced a Java distributed
+application object server called GemStone/J in which the client API is
+expressed as a set of beans, and which provides tools that allow you to build
+remote bean adaptors easily.  See http://www.gemstone.com/Products/java.htm
+-----------------------------------------------------------------------------
+Bruce Cohen,                               |  email: cohenb@gemstone.com
+GemStone Systems, Inc.                     |  phone: (503)533-3602
+20575 NW Von Neumann Drive                 |  fax:   (503)629-8556
+Beaverton, OR USA 97006                    |  web:   http://www.gemstone.com
+

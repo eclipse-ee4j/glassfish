@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>mq-test</artifactId>
-    <version>7.0.23-SNAPSHOT</version>
+    <version>7.0.23</version>
     <name>MQ Shared Service Test</name>
     <packaging>jar</packaging>
     <properties>

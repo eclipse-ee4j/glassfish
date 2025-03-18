@@ -211,8 +211,14 @@ public class GlassFishLogHandlerTest {
 
     private static void waitForSize(File file, long minLineCount) throws IOException {
         long start = System.currentTimeMillis();
+        long lastLength = 0;
         do {
             Thread.onSpinWait();
+            long newLength = file.length();
+            if (newLength == lastLength) {
+                continue;
+            }
+            lastLength = newLength;
             final long lineCount;
             try (Stream<String> stream = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
                 lineCount = stream.count();
@@ -220,7 +226,7 @@ public class GlassFishLogHandlerTest {
             if (lineCount >= minLineCount) {
                 return;
             }
-        } while (System.currentTimeMillis() - start < 5000L);
+        } while (System.currentTimeMillis() - start < 2000L);
         fail("Timeout waiting until the file " + file + " grows to " + minLineCount + " lines. File content: \n"
             + Files.readString(file.toPath(), handler.getConfiguration().getEncoding()));
     }

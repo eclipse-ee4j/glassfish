@@ -11,7 +11,9 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
 - [X] Organization Name ("Organization") and, if applicable, URL:
   [Eclipse Foundation](https://eclipse.org) <br/><br/>
 - [X] Product Name, Version and download URL (if applicable):
-   Eclipse GlassFish Web Profile [web-8.0.0-M10.zip](https://repo1.maven.org/maven2/org/glassfish/main/distributions/web/8.0.0-M10/web-8.0.0-M10.zip) <br/><br/>
+   Eclipse GlassFish Web Profile 
+     - JDK 21 [web-8.0.0-M10.zip](https://download.eclipse.org/ee4j/glassfish/web-8.0.0-M10.zip) 
+     - JDK 17 [web-8.0.0-JDK17-M10.zip](https://download.eclipse.org/ee4j/glassfish/web-8.0.0-JDK17-M10.zip) <br/><br/>
 - [X] Specification Name, Version and download URL:
   [Jakarta EE Platform Web Profile 11](https://jakarta.ee/specifications/webprofile/11) <br/><br/>
 - [X] TCK Version, digital SHA-256 fingerprint and download URL:

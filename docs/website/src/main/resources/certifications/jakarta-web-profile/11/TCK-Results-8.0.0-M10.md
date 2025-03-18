@@ -23,22 +23,22 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
   [Eclipse GlassFish Web Profile 8.0 M10 TCK Results](./TCK-Results-8.0.0-M10) <br/><br/>
 - [X] Any Additional Specification Certification Requirements:
 
- - [Jakarta Authentication 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/authentication/3.1/jakarta-authentication-tck-3.1.1.zip)
-  - [Jakarta Contexts and Dependency Injection 4.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/cdi/4.1/cdi-tck-4.1.0-dist.zip)
+     - [Jakarta Authentication 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/authentication/3.1/jakarta-authentication-tck-3.1.1.zip)
+     - [Jakarta Contexts and Dependency Injection 4.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/cdi/4.1/cdi-tck-4.1.0-dist.zip)
 
-  - [Jakarta Concurrency 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/concurrency/3.1/concurrency-tck-3.1.1.zip)
-  - [Jakarta Data 1.0 TCK](https://download.eclipse.org/jakartaee/data/1.0/data-tck-1.0.1.zip)
-  - [Jakarta Debugging Support for Other Languages 2.0 TCK](https://download.eclipse.org/jakartaee/debugging/2.0/jakarta-debugging-tck-2.0.0.zip)
-  - [Jakarta Dependency Injection 2.0 TCK](https://download.eclipse.org/jakartaee/dependency-injection/2.0/jakarta.inject-tck-2.0.2-bin.zip)
-  - [Jakarta Faces 4.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/faces/4.1/jakarta-faces-tck-4.1.1.zip)
-  - [Jakarta JSON Processing 2.1 TCK](https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.1.zip)
-  - [Jakarta JSON Binding 3.0 TCK](https://download.eclipse.org/jakartaee/jsonb/3.0/jakarta-jsonb-tck-3.0.0.zip)
-  - [Jakarta Pages 4.0 TCK](https://download.eclipse.org/jakartaee/pages/4.0/jakarta-pages-tck-4.0.0.zip)
-  - [Jakarta REST 4.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip)
-  - [Jakarta Security 4.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/security/4.0/jakarta-security-tck-4.0.0.zip)
-  - [Jakarta Servlet 6.1 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip)
-  - [Jakarta Validation 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip)
-  - [Jakarta WebSocket 2.2 TCK](https://download.eclipse.org/jakartaee/websocket/2.2/jakarta-websocket-tck-2.2.0.zip)
+     - [Jakarta Concurrency 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/concurrency/3.1/concurrency-tck-3.1.1.zip)
+     - [Jakarta Data 1.0 TCK](https://download.eclipse.org/jakartaee/data/1.0/data-tck-1.0.1.zip)
+     - [Jakarta Debugging Support for Other Languages 2.0 TCK](https://download.eclipse.org/jakartaee/debugging/2.0/jakarta-debugging-tck-2.0.0.zip)
+     - [Jakarta Dependency Injection 2.0 TCK](https://download.eclipse.org/jakartaee/dependency-injection/2.0/jakarta.inject-tck-2.0.2-bin.zip)
+     - [Jakarta Faces 4.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/faces/4.1/jakarta-faces-tck-4.1.1.zip)
+     - [Jakarta JSON Processing 2.1 TCK](https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.1.zip)
+     - [Jakarta JSON Binding 3.0 TCK](https://download.eclipse.org/jakartaee/jsonb/3.0/jakarta-jsonb-tck-3.0.0.zip)
+     - [Jakarta Pages 4.0 TCK](https://download.eclipse.org/jakartaee/pages/4.0/jakarta-pages-tck-4.0.0.zip)
+     - [Jakarta REST 4.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip)
+     - [Jakarta Security 4.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/security/4.0/jakarta-security-tck-4.0.0.zip)
+     - [Jakarta Servlet 6.1 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip)
+     - [Jakarta Validation 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip)
+     - [Jakarta WebSocket 2.2 TCK](https://download.eclipse.org/jakartaee/websocket/2.2/jakarta-websocket-tck-2.2.0.zip)
 
 <br/>
 
@@ -312,6 +312,7 @@ Jakarta JSON Processing 2.1 TCK
 
   - [Jakarta JSON Processing 2.1.1 TCK](https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.1.zip), 
   SHA-256: `949f203de84deffa8c7892b555918e42f1dd220ccb7b6800741ea58af62737c1`<br/>
+  
 ```
 Regular
 Tests run: 179, Failures: 0, Errors: 0, Skipped: 0
@@ -321,6 +322,7 @@ Tests run: 18, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 Job name: jakarta-pages-extra-tck-glassfish
+
 ```
 ********************************************************************************
 Completed running 18 tests.
@@ -342,6 +344,7 @@ Number of Tests with Errors = 0
 ```
 
 Job name: jakarta-persistence-platform-tck-glassfish
+
 ```
 ********************************************************************************
 Completed running 3820 tests.
@@ -363,6 +366,7 @@ Number of Tests with Errors = 0
 Jakarta REST 4.0 TCK
   - [Jakarta REST 4.0.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip), 
   SHA-256: `b6290c1b5b3d2fdd9cc700a999243492a7e27b94a9b6af1974ff4dc5bfbf98f2` <br/>
+  
 ```
 ********************************************************************************
 Completed running 2796 tests.
@@ -375,6 +379,7 @@ Number of Tests with Skipped = 128
 Jakarta Security 4.0
   - [Jakarta Security 4.0.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/security/4.0/jakarta-security-tck-4.0.0.zip), 
   SHA-256: `e21a3d8251bf954c99a3f9a5f71911696509a1ed40c23673760785a3b88e4172`<br/>
+  
 ```
 New
 Tests   Errors  Failures    
@@ -393,16 +398,19 @@ Jakarta Servlet 6.1
 
   - [Jakarta Servlet 6.1.1 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip),
   SHA-256: `ed876365cda298efa7f9005dff4e2e47a25db6db4734b17d74d404041a5da6da` <br/>
+  
 ```
 Tests run: 1716, Failures: 0, Errors: 0, Skipped: 7
 ```
 
 Job name: jakarta-signature-tck-glassfish
+
 ```
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 Job name: jakarta-tags-tck-glassfish
+
 ```
 ********************************************************************************
 Completed running 541 tests.
@@ -412,6 +420,7 @@ Number of Tests with Errors = 0
 ```
 
 Job name: jakarta-transactions-tck-glassfish
+
 ```
 ********************************************************************************
 Completed running 154 tests.
@@ -424,6 +433,7 @@ Jakarta Validation 3.1
 
   - [Jakarta Validation 3.1.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip), 
   SHA-256: `bda9de47960845a7c73aa9a1616e4bbed3e346de3516f768819cf5af77bf969f` <br/>
+  
 ```
 ********************************************************************************
 Completed running 1049 tests.
@@ -433,6 +443,7 @@ Number of Tests Failed = 0
 ```
 
 Job name: jakarta-websocket-extra-tck-glassfish
+
 ```
 ********************************************************************************
 Completed running 12 tests.
@@ -445,6 +456,7 @@ Jakarta WebSocket 2.2
 
   - [Jakarta WebSocket 2.2.0 TCK](https://download.eclipse.org/jakartaee/websocket/2.2/jakarta-websocket-tck-2.2.0.zip),
   SHA-256: `ff50825305bd1318a4e6bdfab21b829cfd8cf89fab8a970f007b52636d3f2629` <br/>
+  
 ```
 ********************************************************************************
 Completed running 737 tests.

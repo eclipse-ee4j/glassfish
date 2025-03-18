@@ -26,7 +26,7 @@
     <parent>
         <artifactId>org.glassfish.quicklook</artifactId>
         <groupId>quicklook</groupId>
-        <version>7.0.23</version>
+        <version>7.0.24-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Runs the tests on admin/asadmin code</description>

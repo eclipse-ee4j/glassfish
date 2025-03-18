@@ -33,7 +33,6 @@ import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.HttpConnectorAddress;
 import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
@@ -79,6 +78,7 @@ import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
@@ -1110,30 +1110,30 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 continue;
 
             } catch (ConnectException ce) {
-                logger.log(FINER, "doHttpCommand: connect exception {0}", ce);
+                logger.log(FINER, "doHttpCommand: connect exception", ce);
                 // this really means nobody was listening on the remote server
                 // note: ConnectException extends IOException and tells us more!
                 String msg = strings.get("ConnectException", host, port + "");
                 throw new CommandException(msg, ce);
             } catch (UnknownHostException he) {
-                logger.log(FINER, "doHttpCommand: host exception {0}", he);
+                logger.log(FINER, "doHttpCommand: host exception", he);
                 // bad host name
                 String msg = strings.get("UnknownHostException", host);
                 throw new CommandException(msg, he);
             } catch (SocketException se) {
-                logger.log(FINER, "doHttpCommand: socket exception {0}", se);
+                logger.log(FINER, "doHttpCommand: socket exception", se);
                 throw new CommandException(se);
             } catch (SSLException se) {
-                logger.log(FINER, "doHttpCommand: SSL exception {0}", se);
+                logger.log(FINER, "doHttpCommand: SSL exception", se);
                 if (secure) {
                     logger.log(SEVERE, AdminLoggerInfo.mServerIsNotSecure, new Object[] { host, port });
                 }
                 throw new CommandException(se);
             } catch (SocketTimeoutException e) {
-                logger.log(FINER, "doHttpCommand: read timeout {0}", e);
+                logger.log(FINER, "doHttpCommand: read timeout", e);
                 throw new CommandException(strings.get("ReadTimeout", (float) readTimeout / 1000), e);
             } catch (IOException e) {
-                logger.log(FINER, "doHttpCommand: IO exception {0}", e);
+                logger.log(FINER, "doHttpCommand: IO exception", e);
                 throw new CommandException(strings.get("IOError", e.getMessage()), e);
             } catch (CommandException e) {
                 throw e;

@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.admin.cli;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.util.NoSuchElementException;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 public class ArgumentTokenizer {
     protected int currentPosition;

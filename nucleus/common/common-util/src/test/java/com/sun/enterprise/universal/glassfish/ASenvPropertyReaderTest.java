@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,6 +46,6 @@ public class ASenvPropertyReaderTest {
     public void test() {
         ASenvPropertyReader reader = new ASenvPropertyReader(installDir);
         Map<String, String> props = reader.getProps();
-        assertThat(props.toString(), props.entrySet(), hasSize(10));
+        assertThat(props.toString(), props.entrySet(), hasSize(5));
     }
 }

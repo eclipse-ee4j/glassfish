@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -149,7 +149,7 @@ public class GrizzlyProxyTest {
 
     private static void validateLogContents(String[] messages) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(TEST_LOG))) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 buf.append(line);

@@ -34,22 +34,22 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
   - [Jakarta JSON Processing 2.1 TCK](https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.1.zip)
   - [Jakarta JSON Binding 3.0 TCK](https://download.eclipse.org/jakartaee/jsonb/3.0/jakarta-jsonb-tck-3.0.0.zip)
   - [Jakarta Pages 4.0 TCK](https://download.eclipse.org/jakartaee/pages/4.0/jakarta-pages-tck-4.0.0.zip)
-  - [Jakarta REST 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip)
+  - [Jakarta REST 4.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip)
   - [Jakarta Security 4.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/security/4.0/jakarta-security-tck-4.0.0.zip)
-  - [Jakarta Servlet 6.0 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip)
-  - [Jakarta Validation 3.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip)
+  - [Jakarta Servlet 6.1 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip)
+  - [Jakarta Validation 3.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip)
   - [Jakarta WebSocket 2.2 TCK](https://download.eclipse.org/jakartaee/websocket/2.2/jakarta-websocket-tck-2.2.0.zip)
 
 <br/>
 
 - [X] Java runtime used to run the implementation:<br/>
-  - Java 1 runtime used to run the implementation: <br/>
+  - Java runtime 1 used to run the implementation: <br/>
    ```
    openjdk version "17.0.2" 2022-01-18 
    OpenJDK Runtime Environment (build 17.0.2+8-86) 
    OpenJDK 64-Bit Server VM (build 17.0.2+8-86, mixed mode, sharing)
    ```
-  - Java 2 runtime used to run the implementation: <br/>
+  - Java runtime 2 used to run the implementation: <br/>
    ```
    openjdk version "21.0.2" 2024-01-16 
    OpenJDK Runtime Environment (build 21.0.2+13-58) 
@@ -360,8 +360,8 @@ Number of Tests with Errors = 0
 ********************************************************************************
 ```
 
-Jakarta REST 3.1 TCK
-  - [Jakarta REST 3.1.0 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip), 
+Jakarta REST 4.0 TCK
+  - [Jakarta REST 4.0.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-4.0.1.zip), 
   SHA-256: `b6290c1b5b3d2fdd9cc700a999243492a7e27b94a9b6af1974ff4dc5bfbf98f2` <br/>
 ```
 ********************************************************************************
@@ -389,9 +389,9 @@ Old
 [INFO]      [exec] [javatest.batch] ********************************************************************************
 ```
 
-Jakarta Servlet 6.0
+Jakarta Servlet 6.1
 
-  - [Jakarta Servlet 6.0.1 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip),
+  - [Jakarta Servlet 6.1.1 TCK](https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-6.1.1.zip),
   SHA-256: `ed876365cda298efa7f9005dff4e2e47a25db6db4734b17d74d404041a5da6da` <br/>
 ```
 Tests run: 1716, Failures: 0, Errors: 0, Skipped: 7
@@ -420,9 +420,9 @@ Number of Tests with Errors = 0
 ********************************************************************************
 ```
 
-Jakarta Validation 3.0
+Jakarta Validation 3.1
 
-  - [Jakarta Validation 3.0.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip), 
+  - [Jakarta Validation 3.1.1 TCK](https://www.eclipse.org/downloads/download.php?file=/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip), 
   SHA-256: `bda9de47960845a7c73aa9a1616e4bbed3e346de3516f768819cf5af77bf969f` <br/>
 ```
 ********************************************************************************

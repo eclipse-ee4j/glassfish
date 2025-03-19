@@ -59,6 +59,8 @@
         <module>websocket</module>
         <module>jsonp</module>
         <module>jsonp_pluggability</module>
+
+        <module>glassfish-runner</module>
     </modules>
 
     <build>

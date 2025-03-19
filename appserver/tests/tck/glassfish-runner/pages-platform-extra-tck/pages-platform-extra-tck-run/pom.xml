@@ -25,7 +25,7 @@
 
     <groupId>jakarta</groupId>
     <artifactId>glassfish.jsp-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -34,7 +34,7 @@
         <jakarta.platform.version>11.0.0-RC1</jakarta.platform.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
         <tck.artifactId>pages-platform-tck</tck.artifactId>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
     </properties>
 
     <!-- The Junit5 test frameworks -->
@@ -63,7 +63,7 @@
     </dependencyManagement>
 
     <dependencies>
-         <!-- Jakarta EE APIs -->
+        <!-- Jakarta EE APIs -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>

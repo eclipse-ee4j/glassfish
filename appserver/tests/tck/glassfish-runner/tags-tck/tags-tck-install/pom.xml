@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>tags-tck-install</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>pom</packaging>
     <name>TCK: Install Jakarta tags TCK</name>
 

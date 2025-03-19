@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>websocket-platform-extra-tck-run</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <name>TCK: Run Jakarta websocket Extra TCK</name>
 
     <properties>
@@ -40,7 +40,7 @@
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.version>8.0.0-M9</glassfish.version>
 
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
         <jakarta.tck.websocket.version>2.2.0</jakarta.tck.websocket.version>
         <tck.test.websocket.extra.version>${tck.version}</tck.test.websocket.extra.version>
         
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>common</artifactId>
-            <version>11.0.0-RC2</version>
+            <version>11.0.0</version>
         </dependency>
 
         <!-- The Arquillian connector that starts GlassFish and deploys archives to it. -->

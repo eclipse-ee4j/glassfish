@@ -26,7 +26,7 @@
     </parent>
 
     <artifactId>transactions-tck-run</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,15 +36,15 @@
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
         <glassfish.lib.dir>${glassfish.home}/glassfish/lib</glassfish.lib.dir>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.version>8.0.0-M9</glassfish.version>
+        <glassfish.version>8.0.0-M10</glassfish.version>
         <glassfish.version.main>8</glassfish.version.main>
 
-        <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
+        <jakarta.platform.version>11.0.0-RC1</jakarta.platform.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <ts.home>${basedir}/jakartaeetck</ts.home>
         
-        <jakarta.tck.common.version>11.0.0-RC5</jakarta.tck.common.version>
-        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+        <jakarta.tck.common.version>11.0.0</jakarta.tck.common.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
         <tck.version>${project.version}</tck.version>
         <jakarta.tck.transactions.version>${tck.version}</jakarta.tck.transactions.version>
     </properties>

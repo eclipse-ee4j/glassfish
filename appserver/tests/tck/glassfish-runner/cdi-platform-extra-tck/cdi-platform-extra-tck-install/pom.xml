@@ -35,7 +35,7 @@
         <tck.test.cdi-extra.file>jakartaeetck-${tck.test.cdi-extra.version}-dist.zip</tck.test.cdi-extra.file>
         <tck.test.cdi-extra.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee11/staged/eftl/${tck.test.cdi-extra.file}</tck.test.cdi-extra.url>
 
-        <tck.test.cdi-extra.version>11.0.0-M11</tck.test.cdi-extra.version>
+        <tck.test.cdi-extra.version>11.0.0</tck.test.cdi-extra.version>
     </properties>
 
     <build>

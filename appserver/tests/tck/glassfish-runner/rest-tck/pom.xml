@@ -68,7 +68,7 @@ mvn clean install -Dgroups=security
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <tck.version>4.0.0</tck.version>
+        <tck.version>4.0.1</tck.version>
     </properties>
 
     <dependencyManagement>

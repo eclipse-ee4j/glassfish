@@ -27,7 +27,7 @@
 
     <groupId>jakarta</groupId>
     <artifactId>glassfish.jpa-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
 
     <properties>
         <!-- Require at least Java 17 to compile -->
@@ -39,13 +39,13 @@
         <!-- <glassfish.version>8.0.0-M9</glassfish.version> -->
         <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
         <!-- Use JDK17 to run with GF 8.0.0-JDK17-M5 -->
-        <glassfish.version>8.0.0-JDK17-M9</glassfish.version>
-        <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
+        <glassfish.version>8.0.0-JDK17-M10</glassfish.version>
+        <jakarta.platform.version>11.0.0-RC1</jakarta.platform.version>
 
-        <tck.version>11.0.0-M11</tck.version>
-        <jakarta.tck.arquillian.version>11.0.0-RC3</jakarta.tck.arquillian.version>
-        <jakarta.tck.common.version>11.0.0-RC5</jakarta.tck.common.version>
-        <version.persistence.tck>11.0.0-M11</version.persistence.tck>
+        <tck.version>11.0.0</tck.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
+        <jakarta.tck.common.version>11.0.0</jakarta.tck.common.version>
+        <version.persistence.tck>11.0.0</version.persistence.tck>
         
         <ts.home>./jakartaeetck</ts.home>
     </properties>
@@ -207,12 +207,12 @@
         <dependency>
             <groupId>jakarta.tck.arquillian</groupId>
             <artifactId>arquillian-protocol-javatest</artifactId>
-            <version>11.0.0-RC1</version>
+            <version>11.0.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.tck.arquillian</groupId>
             <artifactId>arquillian-protocol-common</artifactId>
-            <version>11.0.0-M1</version>
+            <version>11.0.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.tck.arquillian</groupId>
@@ -411,7 +411,7 @@
                 <dependency>
                     <groupId>jakarta.tck.arquillian</groupId>
                     <artifactId>arquillian-protocol-appclient</artifactId>
-                    <version>11.0.0-RC1</version>
+                    <version>11.0.0</version>
                 </dependency>
             </dependencies>
 

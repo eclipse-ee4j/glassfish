@@ -33,7 +33,7 @@
 
    <groupId>jakarta.tck</groupId>
    <artifactId>glassfish.connector-platform-tck</artifactId>
-   <version>11.0.0-M11</version>
+   <version>11.0.0</version>
    <packaging>jar</packaging>
 
    <properties>
@@ -68,9 +68,9 @@
         <rapassword1>rapassword1</rapassword1>
         <rauser1>rauser1</rauser1>
         <sql.directory>./sql</sql.directory>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
 
-       <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+       <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
 
         <!-- XA properties -->
         <xa.datasource.class>org.apache.derby.jdbc.ClientXADataSource</xa.datasource.class>

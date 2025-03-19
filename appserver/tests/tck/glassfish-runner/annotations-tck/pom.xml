@@ -30,7 +30,7 @@
     
     <groupId>jakarta.tck</groupId>
     <artifactId>glassfish.annotations-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>

@@ -28,7 +28,7 @@
 
     <groupId>org.glassfish</groupId>
     <artifactId>glassfish-runner</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -40,6 +40,7 @@
         <module>cdi-platform-extra-tck</module>
         <module>cdi-tck</module>
         <module>concurrency-tck</module>
+        <module>di-tck</module>
         <!-- 
         <module>connector-platform-tck</module>
         -->
@@ -53,6 +54,7 @@
         <module>mail-platform-tck</module>
         <module>messaging-platform-tck</module>
         <module>messaging-tck</module>
+        <module>pages-debugging-other</module>
         <module>pages-platform-extra-tck</module>
         <module>pages-tck</module>
         <module>persistence-platform-tck</module>

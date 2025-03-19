@@ -25,7 +25,7 @@
     </parent>
     
     <artifactId>glassfish.tags-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
 
     <properties>
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>

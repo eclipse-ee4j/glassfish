@@ -40,7 +40,7 @@
         <tck.test.websocket.extra.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee11/staged/eftl/${tck.test.websocket.extra.file}</tck.test.websocket.extra.url>
         
         <tck.test.websocket.version>2.2.0</tck.test.websocket.version>
-        <tck.test.websocket.extra.version>11.0.0-M11</tck.test.websocket.extra.version>
+        <tck.test.websocket.extra.version>11.0.0</tck.test.websocket.extra.version>
     </properties>
 
     <build>

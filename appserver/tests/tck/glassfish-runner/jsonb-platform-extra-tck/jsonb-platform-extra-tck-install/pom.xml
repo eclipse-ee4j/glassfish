@@ -28,7 +28,7 @@
 
     <groupId>jakarta.tck</groupId>
     <artifactId>jsonb-tck-install</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>pom</packaging>
     <name>TCK: Install Jakarta JSON-B Extra TCK</name>
 

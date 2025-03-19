@@ -19,12 +19,12 @@
     <parent>
         <groupId>org.glassfish</groupId>
         <artifactId>standalone-tck</artifactId>
-        <version>11.0.0-M11</version>
+        <version>11.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>jakarta</groupId>
     <artifactId>glassfish.assembly-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,12 +35,12 @@
         <!-- <glassfish.version>8.0.0-M5</glassfish.version> -->
         <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
         <!-- Use JDK17 to run with GF 8.0.0-JDK17-M5 -->
-        <glassfish.version>8.0.0-JDK17-M7</glassfish.version>
-        <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
-        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+        <glassfish.version>8.0.0-JDK17-M10</glassfish.version>
+        <jakarta.platform.version>11.0.0-RC1</jakarta.platform.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <tck.artifactId>assembly-tck</tck.artifactId>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
         <ts.home>./jakartaeetck</ts.home>
     </properties>
 

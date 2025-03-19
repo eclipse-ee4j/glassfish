@@ -19,12 +19,12 @@
     <parent>
         <groupId>org.glassfish</groupId>
         <artifactId>standalone-tck</artifactId>
-        <version>11.0.0-M11</version>
+        <version>11.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>jakarta</groupId>
     <artifactId>glassfish.integration-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -60,8 +60,8 @@
         <!-- Use JDK21 to run with GF 8.0.0-M5 -->
         <!-- <glassfish.version>8.0.0-M5</glassfish.version> -->
         <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
-        <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
-        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+        <jakarta.platform.version>11.0.0-RC1</jakarta.platform.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
         <javadb.lib>${glassfish.home}/javadb/lib</javadb.lib>
         <jdbc.classpath>${project.build.directory}/${glassfish.toplevel.dir}/javadb/lib/derbyclient.jar:${project.build.directory}/${glassfish.toplevel.dir}/javadb/lib/derbyshared.jar:${project.build.directory}/${glassfish.toplevel.dir}/javadb/lib/derbytools.jar</jdbc.classpath>
         <jdbc.db>derby</jdbc.db>
@@ -83,11 +83,11 @@
         <restype>javax.sql.DataSource</restype>
         <sql.directory>./sql</sql.directory>
         <tck.artifactId>integration</tck.artifactId>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
         <ts.home>./jakartaeetck/</ts.home>
         <user1>cts1</user1>
         <user2>cts1</user2>
-        <version.jakarta.tck>11.0.0-M11</version.jakarta.tck>
+        <version.jakarta.tck>11.0.0</version.jakarta.tck>
     </properties>
 
     <dependencyManagement>

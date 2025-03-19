@@ -26,7 +26,7 @@
 
     <groupId>jakarta</groupId>
     <artifactId>signature-tck-runner</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <name>WildFly: Jakarta EE Signature TCK Runner</name>
 
     <properties>
@@ -47,8 +47,9 @@
         <!-- Note that currently, this must have src as the first directory as it is hard-coded in the test -->
         <signature.file.dir>${base.tck.dir}/src</signature.file.dir>
         
-        <version.jakarta.ee.platform.tck.signaturevalidation>11.0.0-M14</version.jakarta.ee.platform.tck.signaturevalidation>
-        <version.jakarta.tck.arquillian>11.0.0-RC2</version.jakarta.tck.arquillian>
+        <version.jakarta.ee.platform.tck.signaturevalidation>11.0.0</version.jakarta.ee.platform.tck.signaturevalidation>
+        <version.jakarta.tck.arquillian>11.0.0</version.jakarta.tck.arquillian>
+
         <version.jakarta.ee.platform.tck.common>11.0.0-RC6</version.jakarta.ee.platform.tck.common>
         <version.jakarta.ee.platform.tck.signaturetest>11.0.0-RC8</version.jakarta.ee.platform.tck.signaturetest>
         <version.jakarta.tck.sigtest-maven-plugin>2.6</version.jakarta.tck.sigtest-maven-plugin>

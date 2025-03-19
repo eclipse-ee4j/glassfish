@@ -21,12 +21,12 @@
     <parent>
         <groupId>org.glassfish</groupId>
         <artifactId>standalone-tck</artifactId>
-        <version>11.0.0-M11</version>
+        <version>11.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>jakarta</groupId>
     <artifactId>glassfish.appclient-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
     <properties>
         <admin.pass>admin</admin.pass>
@@ -46,7 +46,7 @@
         <glassfish.module.dir>${glassfish.home}/glassfish/modules</glassfish.module.dir>
         <glassfish.toplevel.dir>glassfish7</glassfish.toplevel.dir>
 
-        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
         <!-- mail connection properties -->
         <javamail.password>1234</javamail.password>
         <javamail.protocol>imap</javamail.protocol>
@@ -62,7 +62,7 @@
         <ri.home>${project.build.directory}/${glassfish.toplevel.dir}/mq</ri.home>
 
         <tck.artifactId>jakarta.jms-tck</tck.artifactId>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
         <tck.version>3.1.0</tck.version>
     </properties>
     <dependencyManagement>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>appclient</artifactId>
-            <version>11.0.0-M11</version>
+            <version>11.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>

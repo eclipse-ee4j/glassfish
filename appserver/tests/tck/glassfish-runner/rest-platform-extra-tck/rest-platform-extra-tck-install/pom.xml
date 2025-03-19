@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>rest-extra-tck-install</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>pom</packaging>
     <name>TCK: Install Jakarta REST Platform Extra TCK</name>
 

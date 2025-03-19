@@ -33,7 +33,7 @@
     <properties>
         <tck.test.enterprise-beans.file>jakartaeetck-${tck.test.enterprise-beans.version}-dist.zip</tck.test.enterprise-beans.file>
         <tck.test.enterprise-beans.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee11/staged/eftl/${tck.test.enterprise-beans.file}</tck.test.enterprise-beans.url>
-        <tck.test.enterprise-beans.version>11.0.0-M12</tck.test.enterprise-beans.version>
+        <tck.test.enterprise-beans.version>11.0.0</tck.test.enterprise-beans.version>
     </properties>
 
     <build>

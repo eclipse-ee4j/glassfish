@@ -25,17 +25,17 @@
     
     <groupId>jakarta</groupId>
     <artifactId>glassfish.el-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
-        <arquillian.junit>1.9.1.Final</arquillian.junit>
+        <arquillian.junit>1.9.3.Final</arquillian.junit>
         <glassfish.home>${project.build.directory}/${glassfish.toplevel.dir}</glassfish.home>
         <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
-        <glassfish.version>8.0.0-M9</glassfish.version>
+        <glassfish.version>8.0.0-M10</glassfish.version>
         
-        <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
-        <tck.version>11.0.0-M11</tck.version>
+        <jakarta.platform.version>11.0.0-RC1</jakarta.platform.version>
+        <tck.version>11.0.0</tck.version>
         <ts.home>./jakartaeetck</ts.home>
     </properties>
 
@@ -59,17 +59,38 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- Jakarta EE APIs -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
             <version>6.0.1</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+        
+        <!-- The actual TCK containing the tests -->
+        <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>el-platform-tck</artifactId>
             <version>${tck.version}</version>
         </dependency>
+        
+        <!-- Jakarta TCK tools dependencies -->
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-javatest</artifactId>
+            <version>11.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-appclient</artifactId>
+            <version>11.0.0</version>
+        </dependency>
     
+         <!-- Junit5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -79,7 +100,18 @@
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
         </dependency>
-       
+        
+        
+        <!--
+            The Arquillian connector that starts GlassFish and deploys archives to it.
+        -->
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <version>1.7</version>
+            <scope>test</scope>
+        </dependency>
+        
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-container-test-spi</artifactId>
@@ -96,18 +128,6 @@
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.tck.arquillian</groupId>
-            <artifactId>arquillian-protocol-appclient</artifactId>
-            <version>11.0.0-RC1</version>
-        </dependency>
-
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-api</artifactId>
@@ -127,12 +147,6 @@
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-spi-maven</artifactId>
             <version>3.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.tck.arquillian</groupId>
-            <artifactId>arquillian-protocol-javatest</artifactId>
-            <version>11.0.0-RC1</version>
         </dependency>
     </dependencies>
 

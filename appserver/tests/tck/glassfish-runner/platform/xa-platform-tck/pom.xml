@@ -21,12 +21,12 @@
     <parent>
         <groupId>org.glassfish</groupId>
         <artifactId>standalone-tck</artifactId>
-        <version>11.0.0-M11</version>
+        <version>11.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>jakarta</groupId>
     <artifactId>glassfish.xa-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
     <properties>
         <arquillian.core.version>1.9.1.Final</arquillian.core.version>
@@ -45,7 +45,7 @@
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
         <glassfish.lib.dir>${glassfish.home}/glassfish/lib</glassfish.lib.dir>
         <javadb.lib>${glassfish.home}/javadb/lib</javadb.lib>
-        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
 
         <!-- JDBC properties -->
         <jdbc.db>derby</jdbc.db>
@@ -62,7 +62,7 @@
         <rauser1>cts1</rauser1>
         <sql.directory>./sql</sql.directory>
         <tck.artifactId>jakarta.tck.jdbc</tck.artifactId>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
 
         <!-- XA properties -->
         <xa.datasource.class>org.apache.derby.jdbc.ClientXADataSource</xa.datasource.class>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>xa</artifactId>
-            <version>11.0.0-M11</version>
+            <version>11.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>

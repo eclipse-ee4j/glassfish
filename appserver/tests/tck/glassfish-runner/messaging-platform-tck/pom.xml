@@ -25,7 +25,7 @@
     
     <groupId>jakarta.tck</groupId>
     <artifactId>messaging-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -75,7 +75,7 @@
         <glassfish.version>8.0.0-JDK17-M7</glassfish.version>
         <imqbin.loc>${s1as.imqbin.loc}</imqbin.loc>
         <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
-        <jakarta.tck.arquillian.version>11.0.0-RC2</jakarta.tck.arquillian.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
         <javadb.lib>${glassfish.home}/javadb/lib</javadb.lib>
         <javaee.home>${project.build.directory}/${glassfish.toplevel.dir}/glassfish</javaee.home>
         <jdbc.classpath>${project.build.directory}/${glassfish.toplevel.dir}/javadb/lib/derbyclient.jar:${project.build.directory}/${glassfish.toplevel.dir}/javadb/lib/derbyshared.jar:${project.build.directory}/${glassfish.toplevel.dir}/javadb/lib/derbytools.jar</jdbc.classpath>
@@ -110,7 +110,7 @@
         <ts.home>./jakartaeetck</ts.home>
         <user1>cts1</user1>
         <user2>cts1</user2>
-        <version.jakarta.tck>11.0.0-M11</version.jakarta.tck>
+        <version.jakarta.tck>11.0.0</version.jakarta.tck>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -307,7 +307,7 @@
 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>002-asadmin-permission</id>
@@ -567,7 +567,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>01-initdb</id>
@@ -589,7 +589,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>04-init</id>

@@ -19,11 +19,11 @@
     <parent>
         <groupId>org.glassfish</groupId>
         <artifactId>standalone-tck</artifactId>
-        <version>11.0.0-M11</version>
+        <version>11.0.0</version>
     </parent>
     <groupId>jakarta</groupId>
     <artifactId>glassfish.javaee-module-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,7 +35,7 @@
         <jakarta.platform.version>11.0.0-M2</jakarta.platform.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
         <tck.artifactId>javaee-tck</tck.artifactId>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
     </properties>
 
     <dependencies>

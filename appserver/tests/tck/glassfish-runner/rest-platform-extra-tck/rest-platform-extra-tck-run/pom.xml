@@ -29,7 +29,7 @@
 
     <groupId>jakarta</groupId>
     <artifactId>glassfish-restful-tests</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
 
     <name>TCK: Run Jakarta REST Platform Extra TCK</name>
     <description>
@@ -43,7 +43,7 @@
         <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
         <!-- Use JDK17 to run with GF-8.0.0-JDK17-M7 -->
         <glassfish.version>8.0.0-JDK17-M9</glassfish.version>
-        <tck.version>11.0.0-M11</tck.version>
+        <tck.version>11.0.0</tck.version>
     </properties>
 
     <!-- The Junit5 test frameworks -->

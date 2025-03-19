@@ -32,7 +32,7 @@
 
     <groupId>jakarta</groupId>
     <artifactId>glassfish.mail-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
@@ -47,7 +47,7 @@
         <glassfish.version>8.0.0-M9</glassfish.version>
         
         <imap.port>1143</imap.port>
-        <jakarta.tck.arquillian.version>11.0.0-RC3</jakarta.tck.arquillian.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
         <javamail.mailbox>test1</javamail.mailbox>
         <!-- mail connection properties -->
         <javamail.password>1234</javamail.password>
@@ -63,7 +63,7 @@
         <mail.user>user01</mail.user>
         <mailboxFolder1>${project.build.directory}/../mailboxes</mailboxFolder1>
         <smtp.port>1025</smtp.port>
-        <tck.version>11.0.0-M14</tck.version>
+        <tck.version>11.0.0</tck.version>
     </properties>
 
     <dependencyManagement>

@@ -11,7 +11,7 @@
     
     <groupId>org.jboss.weld</groupId>
     <artifactId>lang-model-tck-runner</artifactId>
-    <version>4.0.5-SNAPSHOT</version>
+    <version>4.1.0-SNAPSHOT</version>
 
     <name>CDI Lite Language Model TCK Runner</name>
 
@@ -19,9 +19,8 @@
         <cdi.tck-4-0.version>4.1.0</cdi.tck-4-0.version>
         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.version>8.0.0-M9</glassfish.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <glassfish.version>8.0.0-M10</glassfish.version>
+        <maven.compiler.release>17</maven.compiler.release>
         <weld.version>6.0.1.Final</weld.version>
 
     </properties>
@@ -127,7 +126,7 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.2</version>
+            <version>1.7</version>
         </dependency>
 
     </dependencies>
@@ -198,7 +197,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.5.2</version>
                 <configuration>
                     <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
                     <outputName>test-report</outputName>
@@ -217,7 +216,7 @@
     </build>
     <profiles>
         <profile>
-            <id>javaee-full</id>
+            <id>full</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -226,7 +225,7 @@
             </properties>
         </profile>
         <profile>
-            <id>webprofile</id>
+            <id>web</id>
             <properties>
                 <glassfish-artifact-id>web</glassfish-artifact-id>
             </properties>

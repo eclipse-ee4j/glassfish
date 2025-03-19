@@ -27,7 +27,7 @@
     
     <groupId>jakarta</groupId>
     <artifactId>glassfish.jsonp-platform-tck</artifactId>
-    <version>11.0.0-M11</version>
+    <version>11.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -39,10 +39,10 @@
         <glassfish.lib.dir>${glassfish.home}/glassfish/lib</glassfish.lib.dir>
         <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
         <!-- Use JDK17 to run with GF 8.0.0-JDK17-M5 -->
-        <glassfish.version>8.0.0-JDK17-M9</glassfish.version>
+        <glassfish.version>8.0.0-JDK17-M10</glassfish.version>
         
-        <jakarta.tck.arquillian.version>11.0.0-RC1</jakarta.tck.arquillian.version>
-        <jakarta.tck.common.version>11.0.0-RC5</jakarta.tck.common.version>
+        <jakarta.tck.arquillian.version>11.0.0</jakarta.tck.arquillian.version>
+        <jakarta.tck.common.version>11.0.0</jakarta.tck.common.version>
         <tck.version>${project.version}</tck.version>
         <ts.home>/jakartaeetck</ts.home>
     </properties>
@@ -79,6 +79,11 @@
             <artifactId>jakarta.json.bind-api</artifactId>
             <version>3.0.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0</version>
         </dependency>
 
         <!-- The actual TCK containing the tests -->

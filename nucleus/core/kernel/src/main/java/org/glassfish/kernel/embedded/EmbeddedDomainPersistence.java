@@ -45,6 +45,13 @@ public class EmbeddedDomainPersistence extends DomainXmlPersistence {
     final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DomainXmlPersistence.class);
 
+    @Override
+    public void touch() throws IOException {
+        if (isConfigFileWritable()) {
+            super.touch();
+        }
+    }
+
     /**
      * Returns the destination file for saving the embedded configuration file,
      * when set.
@@ -54,10 +61,7 @@ public class EmbeddedDomainPersistence extends DomainXmlPersistence {
      */
     @Override
     protected File getDestination() throws IOException {
-        String configFileReadOnly = startupContext.getArguments().getProperty(
-                "org.glassfish.embeddable.configFileReadOnly");
-        if (configFileReadOnly != null &&
-                !Boolean.valueOf(configFileReadOnly).booleanValue()) {
+        if (isConfigFileWritable()) {
             try {
                 URI uri = EmbeddedDomainXml.getDomainXml(startupContext).toURI();
                 if ("file".equalsIgnoreCase(uri.getScheme())) {
@@ -69,6 +73,14 @@ public class EmbeddedDomainPersistence extends DomainXmlPersistence {
             }
         }
         return null; // Don't persist domain.xml anywhere.
+    }
+
+    private boolean isConfigFileWritable() {
+        String configFileReadOnly = startupContext.getArguments().getProperty(
+                "org.glassfish.embeddable.configFileReadOnly");
+        boolean writable = configFileReadOnly != null &&
+                !Boolean.valueOf(configFileReadOnly).booleanValue();
+        return writable;
     }
 
     @Override

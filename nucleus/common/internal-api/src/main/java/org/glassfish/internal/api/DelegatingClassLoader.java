@@ -55,7 +55,7 @@ public class DelegatingClassLoader extends ClassLoader {
     public interface ClassFinder {
 
         /**
-         * Returns the paren class loader.
+         * Returns the parent class loader.
          * <p>
          * The parent class loader used to check delegation hierarchy.
          *

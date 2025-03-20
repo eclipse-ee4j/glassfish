@@ -13,8 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.server;
+
+import com.sun.enterprise.v3.common.DecoratingExecutors;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -26,7 +27,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.DomDocument;
 
 /**
- * Subclass of domain.xml loader service to ensure that hk2 threads have access to the common class loader classes.
+ * Subclass of domain.xml loader service to ensure that hk2 threads have access
+ * to the common class loader classes.
  *
  * @author Jerome Dochez
  */
@@ -34,22 +36,29 @@ import org.jvnet.hk2.config.DomDocument;
 public class GFDomainXml extends DomainXml {
 
     /**
-     * Returns the DomDocument implementation used to create config beans and persist the DOM tree.
+     * Returns the DomDocument implementation used to create config beans and
+     * persist the DOM tree.
      *
      * @return an instance of a DomDocument (or subclass)
      */
     @Override
     protected DomDocument getDomDocument() {
-        return new GlassFishDocument(habitat, Executors.newCachedThreadPool(new ThreadFactory() {
+        ThreadFactory threadFactory = new ThreadFactory() {
 
             @Override
             public Thread newThread(Runnable r) {
                 Thread t = Executors.defaultThreadFactory().newThread(r);
                 t.setDaemon(true);
-                t.setContextClassLoader(habitat.getService(ServerContext.class).getCommonClassLoader());
                 return t;
             }
 
-        }));
+        };
+        return new GlassFishDocument(habitat, DecoratingExecutors.newCachedThreadPool(threadFactory, this::initThreadBeforeTask));
+    }
+
+    private void initThreadBeforeTask(Thread thread, Runnable task) {
+        // Because the common CL is lazily initialized,
+        // we need to refresh the context CL before each task
+        thread.setContextClassLoader(habitat.getService(ServerContext.class).getCommonClassLoader());
     }
 }

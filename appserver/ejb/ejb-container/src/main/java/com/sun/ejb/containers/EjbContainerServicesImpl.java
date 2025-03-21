@@ -45,13 +45,12 @@ import static com.sun.ejb.codegen.AsmSerializableBeanGenerator.getGeneratedSeria
 @Service
 public class EjbContainerServicesImpl implements EjbContainerServices {
 
-
-
-    public <S> S  getBusinessObject(Object ejbRef, java.lang.Class<S> businessInterface) {
+    @Override
+    public <S> S getBusinessObject(Object ejbRef, java.lang.Class<S> businessInterface) {
 
         EJBLocalObjectImpl localObjectImpl = getEJBLocalObject(ejbRef);
 
-        if( localObjectImpl == null ) {
+        if (localObjectImpl == null) {
             throw new IllegalStateException("Invalid ejb ref");
         }
 
@@ -67,33 +66,32 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
                 // Get proxy corresponding to this business interface.
                 businessObject = (S) localObjectImpl.getClientObject(intfName);
 
-            } else if( ejbDesc.isLocalBean()) {
-                //If this is a no-interface view session bean, the bean
-                //can be accessed through interfaces in its superclass as well
-                boolean isValidBusinessInterface =
-                    ejbDesc.getNoInterfaceLocalBeanClasses().contains(intfName);
-                if ((intfName.equals(ejbDesc.getEjbClassName()))
-                        || isValidBusinessInterface) {
+            } else if (ejbDesc.isLocalBean()) {
+                // If this is a no-interface view session bean, the bean
+                // can be accessed through interfaces in its superclass as well
+                boolean isValidBusinessInterface = ejbDesc.getNoInterfaceLocalBeanClasses().contains(intfName);
+                if ((intfName.equals(ejbDesc.getEjbClassName())) || isValidBusinessInterface) {
                     businessObject = (S) localObjectImpl.getClientObject(ejbDesc.getEjbClassName());
                 }
 
             }
         }
 
-        if( businessObject == null ) {
-            throw new IllegalStateException("Unable to convert ejbRef for ejb " +
-            ejbDesc.getName() + " to a business object of type " + businessInterface);
+        if (businessObject == null) {
+            throw new IllegalStateException(
+                    "Unable to convert ejbRef for ejb " + ejbDesc.getName() + " to a business object of type " + businessInterface);
         }
 
         return businessObject;
 
     }
 
+    @Override
     public void remove(Object ejbRef) {
 
         EJBLocalObjectImpl localObjectImpl = getEJBLocalObject(ejbRef);
 
-        if( localObjectImpl == null ) {
+        if (localObjectImpl == null) {
             throw new UnsupportedOperationException("Invalid ejb ref");
         }
 
@@ -101,41 +99,39 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         EjbDescriptor ejbDesc = container.getEjbDescriptor();
         boolean isStatefulBean = false;
 
-        if( ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) ) {
+        if (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE)) {
 
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbDesc;
             isStatefulBean = sessionDesc.isStateful();
 
         }
 
-        if( !isStatefulBean ) {
+        if (!isStatefulBean) {
 
-             // TODO CDI impl may incorrectly call this for stateless/singleton
-            // beans.  Until it's fixed just treat it as a no-op. Otherwise, any app acquiring
+            // TODO CDI impl may incorrectly call this for stateless/singleton
+            // beans. Until it's fixed just treat it as a no-op. Otherwise, any app acquiring
             // stateless/singleton references via CDI could fail until bug is fixed.
             return;
 
             // TODO reenable this after bug is fixed
-            //throw new UnsupportedOperationException("ejbRef for ejb " +
-             //       ejbDesc.getName() + " is not a stateful bean ");
+            // throw new UnsupportedOperationException("ejbRef for ejb " +
+            // ejbDesc.getName() + " is not a stateful bean ");
         }
 
         try {
             localObjectImpl.remove();
-        } catch(EJBException e) {
+        } catch (EJBException e) {
             LogFacade.getLogger().log(Level.FINE, "EJBException during remove. ", e);
-        } catch(jakarta.ejb.RemoveException re) {
+        } catch (jakarta.ejb.RemoveException re) {
             throw new NoSuchEJBException(re.getMessage(), re);
         }
-
     }
 
-
+    @Override
     public boolean isRemoved(Object ejbRef) {
-
         EJBLocalObjectImpl localObjectImpl = getEJBLocalObject(ejbRef);
 
-        if( localObjectImpl == null ) {
+        if (localObjectImpl == null) {
             throw new UnsupportedOperationException("Invalid ejb ref");
         }
 
@@ -143,30 +139,30 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         EjbDescriptor ejbDesc = container.getEjbDescriptor();
         boolean isStatefulBean = false;
 
-        if( ejbDesc.getType().equals(EjbSessionDescriptor.TYPE) ) {
+        if (ejbDesc.getType().equals(EjbSessionDescriptor.TYPE)) {
 
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbDesc;
             isStatefulBean = sessionDesc.isStateful();
 
         }
 
-        if( !isStatefulBean ) {
+        if (!isStatefulBean) {
 
             // TODO CDI impl is incorrectly calling isRemoved for stateless/singleton
-            // beans.  Until it's fixed just return false. Otherwise, any app acquiring
+            // beans. Until it's fixed just return false. Otherwise, any app acquiring
             // stateless/singleton references via CDI will fail until bug is fixed.
             return false;
 
             // TODO reenable this per SessionObjectReference.isRemoved SPI
-            //throw new UnsupportedOperationException("ejbRef for ejb " +
-             //   ejbDesc.getName() + " is not a stateful bean ");
+            // throw new UnsupportedOperationException("ejbRef for ejb " +
+            // ejbDesc.getName() + " is not a stateful bean ");
         }
 
         boolean removed = false;
 
         try {
-            ((BaseContainer)container).checkExists(localObjectImpl);
-        } catch(Exception e) {
+            ((BaseContainer) container).checkExists(localObjectImpl);
+        } catch (Exception e) {
             removed = true;
         }
 
@@ -183,51 +179,40 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
 
         // First try to convert it as a local or remote business interface object
         try {
-
             localObj = (EJBLocalObjectInvocationHandlerDelegate) Proxy.getInvocationHandler(ejbRef);
-
-        } catch(IllegalArgumentException iae) {
-
+        } catch (IllegalArgumentException iae) {
             Proxy proxy;
 
-            if( ejbRef instanceof OptionalLocalInterfaceProvider ) {
+            if (ejbRef instanceof OptionalLocalInterfaceProvider) {
 
                 try {
 
-                     Field proxyField = ejbRef.getClass().getDeclaredField("__ejb31_delegate");
+                    Field proxyField = ejbRef.getClass().getDeclaredField("__ejb31_delegate");
+                    if (!proxyField.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + proxyField);
+                    }
 
-                     final Field finalF = proxyField;
-                        java.security.AccessController.doPrivileged(
-                        new java.security.PrivilegedExceptionAction() {
-                            public java.lang.Object run() throws Exception {
-                                if (!finalF.trySetAccessible()) {
-                                    throw new InaccessibleObjectException("Unable to make accessible: " + finalF);
-                                }
-                                return null;
-                            }
-                        });
+                    proxy = (Proxy) proxyField.get(ejbRef);
 
-                      proxy = (Proxy) proxyField.get(ejbRef);
-
-                } catch(Exception e) {
+                } catch (Exception e) {
 
                     throw new IllegalArgumentException("Invalid ejb ref", e);
                 }
 
-
                 try {
 
-                    localObj = (EJBLocalObjectInvocationHandlerDelegate)
-                            Proxy.getInvocationHandler(proxy);
+                    localObj = (EJBLocalObjectInvocationHandlerDelegate) Proxy.getInvocationHandler(proxy);
 
-                } catch(IllegalArgumentException i) {}
+                } catch (IllegalArgumentException i) {
+                }
 
             }
         }
 
-        return (localObj != null) ?  localObj.getDelegate() : null;
+        return (localObj != null) ? localObj.getDelegate() : null;
     }
 
+    @Override
     public boolean isEjbManagedObject(Object desc, Class c) {
 
         String className = c.getName();
@@ -237,21 +222,20 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         Set<String> ejbManagedObjectClassNames = new HashSet<String>();
         ejbManagedObjectClassNames.add(ejbDesc.getEjbClassName());
 
-        for(EjbInterceptor next : ejbDesc.getInterceptorClasses()) {
-            if( !next.isCDIInterceptor() ) {
+        for (EjbInterceptor next : ejbDesc.getInterceptorClasses()) {
+            if (!next.isCDIInterceptor()) {
                 ejbManagedObjectClassNames.add(next.getInterceptorClassName());
             }
         }
 
         Set<String> serializableClassNames = new HashSet<String>();
 
-        for(String next : ejbManagedObjectClassNames) {
+        for (String next : ejbManagedObjectClassNames) {
             // Add the serializable sub-class version of each name as well
             serializableClassNames.add(getGeneratedSerializableClassName(next));
         }
 
-        boolean isEjbManagedObject = ejbManagedObjectClassNames.contains(className) ||
-                serializableClassNames.contains(className);
+        boolean isEjbManagedObject = ejbManagedObjectClassNames.contains(className) || serializableClassNames.contains(className);
 
         return isEjbManagedObject;
 

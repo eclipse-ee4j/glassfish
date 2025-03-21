@@ -30,12 +30,10 @@ import jakarta.interceptor.InvocationContext;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.PrivilegedExceptionAction;
 
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
-import static java.security.AccessController.doPrivileged;
 
 /**
  *
@@ -173,16 +171,10 @@ public class SystemInterceptorProxy {
 
     }
 
-    private void prepareMethod(final Method m) throws Exception {
-        doPrivileged(new PrivilegedExceptionAction<Object>() {
-            @Override
-            public Object run() throws Exception {
-                if (!m.trySetAccessible()) {
-                    throw new InaccessibleObjectException("Unable to make accessible: " + m);
-                }
-                return null;
-            }
-        });
+    private void prepareMethod(final Method method) throws Exception {
+        if (!method.trySetAccessible()) {
+            throw new InaccessibleObjectException("Unable to make accessible: " + method);
+        }
     }
 
 }

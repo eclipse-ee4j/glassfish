@@ -20,6 +20,7 @@ import com.sun.enterprise.config.serverbeans.Domain;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -55,9 +56,15 @@ public class ConfigTest {
 
     @ParameterizedTest
     @ArgumentsSource(ConfigFileArgumentsProvider.class)
-    void testConfigFile(String configFile) throws Exception {
+    void testConfigFile(Object configFile) throws Exception {
         GlassFishProperties gfp = new GlassFishProperties();
-        gfp.setConfigFileURI(configFile);
+        if (configFile instanceof String) {
+            gfp.setConfigFile(new File((String)configFile));
+        } else if (configFile instanceof File) {
+            gfp.setConfigFile((File)configFile);
+        } else {
+            gfp.setConfigFile((URI)configFile);
+        }
 
         GlassFish instance1 = runtime.newGlassFish(gfp);
         LOG.info(() -> "Instance1 created" + instance1);
@@ -80,12 +87,12 @@ public class ConfigTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext ec) throws Exception {
             return Stream.of(Arguments.of(fileInClassPath()),
                     Arguments.of("domain.xml"),
-                    Arguments.of(new File("domain.xml").getAbsolutePath())
+                    Arguments.of(new File("domain.xml"))
             );
         }
 
-        private String fileInClassPath() throws URISyntaxException, IOException {
-            return this.getClass().getClassLoader().getResources("domain.xml").nextElement().toURI().toString();
+        private URI fileInClassPath() throws URISyntaxException, IOException {
+            return this.getClass().getClassLoader().getResources("domain.xml").nextElement().toURI();
         }
 
     }

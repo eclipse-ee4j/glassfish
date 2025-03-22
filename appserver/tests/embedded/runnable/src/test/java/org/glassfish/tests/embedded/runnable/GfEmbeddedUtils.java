@@ -35,7 +35,7 @@ public class GfEmbeddedUtils {
     public static Process runGlassFishEmbedded(String glassfishEmbeddedJarName, String... additionalArguments) throws IOException {
         List<String> arguments = new ArrayList<>();
         arguments.addAll(List.of(ProcessHandle.current().info().command().get(),
-//                "-Xrunjdwp:transport=dt_socket,server=y,suspend=y", // enable debugging on random port
+                //                "-Xrunjdwp:transport=dt_socket,server=y,suspend=y", // enable debugging on random port
                 "-jar", glassfishEmbeddedJarName,
                 "--stop"));
         for (String argument : additionalArguments) {
@@ -52,7 +52,9 @@ public class GfEmbeddedUtils {
         InputStream gfEmbeddedOutput = gfEmbeddedProcess.getErrorStream();
         return new BufferedReader(
                 new InputStreamReader(gfEmbeddedOutput, StandardCharsets.UTF_8)
-        ).lines();
+        )
+                .lines()
+                .peek(err::println);
     }
 
 }

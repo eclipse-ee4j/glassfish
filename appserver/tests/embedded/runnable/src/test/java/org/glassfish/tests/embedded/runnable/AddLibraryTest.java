@@ -60,7 +60,6 @@ public class AddLibraryTest {
                     warFile.getAbsolutePath()
             );
             assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                    .peek(err::println)
                     .filter(line -> line.contains("App initialized"))
                     .findAny().isPresent(),
                     "A log from deployed application is present");

@@ -34,7 +34,9 @@ import org.glassfish.hk2.extras.ExtrasUtilities;
  */
 public class GlassFishImpl implements GlassFish {
 
-    private static final String CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
+    private static final String GENERAL_CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
+    private static final String SERVER_CONFIG_PROP_PREFIX = "server.";
+    private static final String RESOURCES_CONFIG_PROP_PREFIX = "resources.";
 
     private ModuleStartup gfKernel;
     private ServiceLocator serviceLocator;
@@ -53,15 +55,18 @@ public class GlassFishImpl implements GlassFish {
         // If there are custom configurations like http.port, https.port, jmx.port then configure them.
         CommandRunner commandRunner = null;
         for (String key : gfProps.stringPropertyNames()) {
-            if (!key.startsWith(CONFIG_PROP_PREFIX)) {
+            String propertyName = key;
+            if (key.startsWith(GENERAL_CONFIG_PROP_PREFIX)) {
+                propertyName = key.substring(GENERAL_CONFIG_PROP_PREFIX.length());
+            } else if (!key.startsWith(SERVER_CONFIG_PROP_PREFIX) && !key.startsWith(RESOURCES_CONFIG_PROP_PREFIX)) {
                 continue;
             }
+            String propertyValue = gfProps.getProperty(key);
             if (commandRunner == null) {
                 // only create the CommandRunner if needed
                 commandRunner = serviceLocator.getService(CommandRunner.class);
             }
-            CommandResult result = commandRunner.run("set",
-                key.substring(CONFIG_PROP_PREFIX.length()) + "=" + gfProps.getProperty(key));
+            CommandResult result = commandRunner.run("set", propertyName + "=" + propertyValue);
             if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
                 throw new GlassFishException(result.getOutput(), result.getFailureCause());
             }

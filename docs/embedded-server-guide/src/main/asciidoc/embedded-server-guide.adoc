@@ -566,10 +566,9 @@ import org.glassfish.embeddable.*;
 [[supported-properties]]
 ==== Configuration properties supported by Embedded {productName}
 
-In `GlassFishProperties` and in a properties file, Embedded {productName} supports the same configuration properties as the `set` and `get` administration commands of the {productName} Server, with the following rules:
+In `GlassFishProperties` and in a properties file, Embedded {productName} supports the same configuration properties as the `set` and `get` administration commands of the {productName} Server.
 
-* If a property starts with `server.`, then it can be used directly
-* All other properties need to be prefixed with `embedded-glassfish-config.` (e.g., `resources.jdbc-connection-pool...` needs to be defined as `embedded-glassfish-config.resources.jdbc-connection-pool...`). This is because these properties are internally merged with some other properties and it's necessary to distinguish them 
+In addition, it also accepts properties with the `embedded-glassfish-config.` prefix. This prefix is removed before applying the property (e.g., `resources.jdbc-connection-pool...` can be defined as `embedded-glassfish-config.resources.jdbc-connection-pool...`). This prefix is no longer necessary and its usage is deprecated, but it's supported for backwards compatibility.
 
 [[running-an-embedded-glassfish-server]]
 ==== Running Embedded {productName} from a Java application
@@ -1334,7 +1333,7 @@ Add the following `configuration` element to your POM file:
                     </bootstrapProperties>
                     <bootstrapPropertiesFile>bootstrap.properties</bootstrapPropertiesFile>
                     <glassfishProperties>
-<property>embedded-glassfish-config.server.jms-service.jms-host.default_JMS_host.port=17676</property>
+<property>server.jms-service.jms-host.default_JMS_host.port=17676</property>
                     </glassfishProperties>
                     <glassfishPropertiesFile>glassfish.properties</glassfishPropertiesFile>
                     <systemProperties>

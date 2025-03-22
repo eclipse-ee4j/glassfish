@@ -61,13 +61,9 @@ DEFAULT CONFIGURATION
 
 SUPPORTED PROPERTIES
 
-Embedded GlassFish supports the same configuration properties as the set and get administration commands of the GlassFish Server, with the following rules:
+Embedded GlassFish supports the same configuration properties as the set and get administration commands of the GlassFish Server.
 
-- If a property starts with "server.", then it can be used directly
-- All other properties need to be prefixed with "embedded-glassfish-config."
-(e.g., "resources.jdbc-connection-pool..." needs to be defined as 
-"embedded-glassfish-config.resources.jdbc-connection-pool..."). 
-This is because these properties are internally merged with some other properties and it's necessary to distinguish them 
+In addition, it also accepts properties with the "embedded-glassfish-config." prefix. This prefix is removed before applying the property (e.g., "resources.jdbc-connection-pool..." can be defined as "embedded-glassfish-config.resources.jdbc-connection-pool..."). This prefix is no longer necessary and its usage is deprecated, but it's supported for backwards compatibility.
 
 EXAMPLES
     Example 1: Run an application from command line

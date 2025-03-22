@@ -333,7 +333,7 @@ port 8080.
 
 Files and directories in this directory will be deployed as 
 applications (in random order), as if they were specified on the command 
-line.
+line. The default directory name is 'autodeploy'.
 
 `--logLevel=LEVEL`
 
@@ -356,6 +356,10 @@ application cleanly. Also useful for Class Data Sharing and similar
 startup optimizations - to start the server, get it to a ready state 
 (applications deployed, etc.), and then shut down cleanly, so that the 
 JVM can store the cached data.
+
+`--prompt`
+
+Run interactive prompt that allows running admin commands. This is useful in development to manipulate a running GlassFish instance. After exiting the prompt, the server shuts down.
 
 `--help`
 

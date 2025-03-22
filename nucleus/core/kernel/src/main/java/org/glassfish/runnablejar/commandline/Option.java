@@ -85,7 +85,7 @@ public enum Option {
             "Set the location of domain configuration file (i.e., domain.xml) using which GlassFish should run.") {
         @Override
         public void handle(String value, Arguments arguments) {
-            arguments.glassFishProperties.setConfigFileURI(new File(value).toURI().toString());
+            arguments.glassFishProperties.setConfigFile(new File(value).toURI());
         }
     },
     DOMAIN_DIR("domainDir", Set.of("instanceRoot"), "--domainDir=DIRECTORY, --instanceRoot=DIRECTORY",
@@ -104,7 +104,7 @@ public enum Option {
     },
     AUTO_DEPLOY_DIR("autoDeployDir", "--autoDeployDir=DIRECTORY",
             "Files and directories in this directory will be deployed as applications (in random order), as if they"
-            + " were specified on the command line.") {
+            + " were specified on the command line. The default directory name is 'autodeploy'.") {
         @Override
         public void handle(String value, Arguments arguments) {
             loadApplicationsFromDirectory(value, arguments);
@@ -148,6 +148,14 @@ public enum Option {
         @Override
         public void handle(String value, Arguments arguments) {
             arguments.shutdown = true;
+        }
+    },
+    PROMPT("prompt", "--prompt",
+    "Run interactive prompt that allows running admin commands. This is useful in development"
+    + " to manipulate a running GlassFish instance. After exiting the prompt, the server shuts down.") {
+        @Override
+        public void handle(String value, Arguments arguments) {
+            arguments.prompt = true;
         }
     },
     HELP("help", "--help", "Print this help") {

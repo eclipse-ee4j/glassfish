@@ -60,6 +60,7 @@ public class Arguments {
     public boolean askedForHelp = false;
     public boolean noInfo = false;
     public boolean shutdown = false;
+    public boolean prompt = false;
 
     public void setDefaults() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);

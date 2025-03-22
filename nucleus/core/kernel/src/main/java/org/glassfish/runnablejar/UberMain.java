@@ -133,7 +133,7 @@ public class UberMain {
                     printInfoAfterStartup();
                 }
 
-                if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
+                if (arguments.prompt) {
                     runCommandPromptLoop();
                     exit(0);
                 }

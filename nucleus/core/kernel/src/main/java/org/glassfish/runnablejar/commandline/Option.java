@@ -42,7 +42,7 @@ public enum Option {
     PROPERTIES("properties", "--properties=FILE",
             "Load GlassFish properties from a file. This option can be repeated to load properties from multiple files."
             + " The propertes in the file can be any of the following:\n"
-            + " - Any properties supported by GlassFish Embedded.\n"
+            + " - Any properties supported by Embedded GlassFish. See SUPPORTED PROPERTIES\n"
             + " - Any command line options with the name of the option as the key,"
             + " without the initial hyphens, and the value of the option as the value.\n"
             + " - Keys that start with the \"" + Arguments.COMMAND_KEY_PREFIX

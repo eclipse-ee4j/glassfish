@@ -42,12 +42,13 @@
         <module>basic</module>
         <module>cdi_basic</module>
         <module>cdi_ejb_jpa</module>
-        <module>glassfish_resources_xml</module>
         <module>ejb</module>
-        <module>scatteredarchive</module>
+        <module>glassfish_resources_xml</module>
         <module>maven-plugin</module>
-        <module>web</module>
+        <module>runnable</module>
+        <module>scatteredarchive</module>
         <module>utils</module>
+        <module>web</module>
     </modules>
 
     <dependencyManagement>

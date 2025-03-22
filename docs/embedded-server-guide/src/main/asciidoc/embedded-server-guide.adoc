@@ -1256,7 +1256,7 @@ Add the following `plugin` element to your POM file:
             ...
             <plugin>
                 <groupId>org.glassfish.embedded</groupId>
-                <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                <artifactId>embedded-glassfish-maven-plugin</artifactId>
                 <version>version</version>
             </plugin>
             ...
@@ -1265,7 +1265,7 @@ Add the following `plugin` element to your POM file:
 ----
 version::
   The version to use. The version of the final promoted build for this
-  release is `5.1`. The Maven plug-in is not bound to a specific version
+  release is `7.0`. The Maven plug-in is not bound to a specific version
   of {productName}. You can specify the version you want to use. If
   no version is specified, a default version is used.
 
@@ -1399,8 +1399,8 @@ http://maven.apache.org/maven-v4_0_0.xsd">
     <plugins>
       <plugin>
         <groupId>org.glassfish.embedded</groupId>
-        <artifactId>maven-embedded-glassfish-plugin</artifactId>
-        <version>5.1</version>
+        <artifactId>embedded-glassfish-maven-plugin</artifactId>
+        <version>7.0</version>
         <configuration>
           <app>target/test.war</app>
           <port>8080</port>

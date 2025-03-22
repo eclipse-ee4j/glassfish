@@ -671,7 +671,7 @@ ability to program in the Java language is assumed.</p>
 <p>Embedded Eclipse GlassFish enables you to use
 Eclipse GlassFish as a library or run applications from command line. Embedded Eclipse GlassFish also enables
 you to run Eclipse GlassFish inside any Virtual Machine for the Java
-platform (Java Virtual Machine or JVMmachine).</p>
+platform (Java Virtual Machine or JVM).</p>
 </div>
 <div class="paragraph">
 <p>No installation or configuration of embedded Eclipse GlassFish is
@@ -1167,7 +1167,7 @@ command line tool or by the "CommandRunner" Java class in the Eclipse GlassFish 
 <p>Eclipse GlassFish provides an application programming
 interface (API) for developing applications in which Eclipse GlassFish is
 embedded. For details, see the <code>org.glassfish.embeddable</code> packages at
-<code><a href="http://embedded-glassfish.java.net/nonav/apidocs/" class="bare">http://embedded-glassfish.java.net/nonav/apidocs/</a></code>.</p>
+<code><a href="https://www.javadoc.io/doc/org.glassfish.main.common/simple-glassfish-api/latest/index.html" class="bare">https://www.javadoc.io/doc/org.glassfish.main.common/simple-glassfish-api/latest/index.html</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -2315,8 +2315,8 @@ Maven goal.</p>
         <span class="tag">&lt;plugins&gt;</span>
             ...
             <span class="tag">&lt;plugin&gt;</span>
-                <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
-                <span class="tag">&lt;artifactId&gt;</span>maven-embedded-glassfish-plugin<span class="tag">&lt;/artifactId&gt;</span>
+                <span class="tag">&lt;groupId&gt;</span>org.glassfish.embedded<span class="tag">&lt;/groupId&gt;</span>
+                <span class="tag">&lt;artifactId&gt;</span>embedded-glassfish-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
                 <span class="tag">&lt;version&gt;</span>version<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;/plugin&gt;</span>
             ...
@@ -2329,7 +2329,7 @@ Maven goal.</p>
 <dt class="hdlist1">version</dt>
 <dd>
 <p>The version to use. The version of the final promoted build for this
-release is <code>3.1.1</code>. The Maven plug-in is not bound to a specific version
+release is <code>7.0</code>. The Maven plug-in is not bound to a specific version
 of Eclipse GlassFish. You can specify the version you want to use. If
 no version is specified, a default version is used.</p>
 </dd>
@@ -2436,7 +2436,7 @@ Add <code>execution</code> elements to your POM file:</p>
                     <span class="tag">&lt;execution&gt;</span>
                         <span class="tag">&lt;phase&gt;</span>install<span class="tag">&lt;/phase&gt;</span>
                         <span class="tag">&lt;goals&gt;</span>
-                                <span class="tag">&lt;goal&gt;</span>goal<span class="tag">&lt;/goal&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>goal<span class="tag">&lt;/goal&gt;</span>
                         <span class="tag">&lt;/goals&gt;</span>
                     <span class="tag">&lt;/execution&gt;</span>
                 <span class="tag">&lt;/executions&gt;</span>
@@ -2454,21 +2454,6 @@ Add <code>execution</code> elements to your POM file:</p>
 <p>The goal to use. See <a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>.</p>
 </dd>
 </dl>
-</div>
-</li>
-<li>
-<p>Configure the repository.
-Add the following <code>repository</code> element to your POM file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;pluginRepositories&gt;</span>
-    <span class="tag">&lt;pluginRepository&gt;</span>
-        <span class="tag">&lt;id&gt;</span>maven2-repository.dev.java.net<span class="tag">&lt;/id&gt;</span>
-        <span class="tag">&lt;name&gt;</span>Java.net Repository for Maven<span class="tag">&lt;/name&gt;</span>
-        <span class="tag">&lt;url&gt;</span>http://download.java.net/maven/glassfish/<span class="tag">&lt;/url&gt;</span>
-    <span class="tag">&lt;/pluginRepository&gt;</span>
-<span class="tag">&lt;/pluginRepositories&gt;</span></code></pre>
-</div>
 </div>
 </li>
 </ol>
@@ -2491,16 +2476,16 @@ Line breaks in the following element are for readability purposes only
 <span class="content">http://maven.apache.org/maven-v4_0_0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
 
   <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
-  <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>org.example<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>maven-glassfish-plugin-tester<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>3.1<span class="tag">&lt;/version&gt;</span>
-  <span class="tag">&lt;name&gt;</span>Maven test<span class="tag">&lt;/name&gt;</span>
+  <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;name&gt;</span>Maven Embedded Glassfish Plugin Example<span class="tag">&lt;/name&gt;</span>
   <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
       <span class="tag">&lt;plugin&gt;</span>
-        <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>maven-embedded-glassfish-plugin<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>3.1<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.glassfish.embedded<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>embedded-glassfish-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>7.0<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;configuration&gt;</span>
           <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
           <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
@@ -2518,13 +2503,6 @@ Line breaks in the following element are for readability purposes only
      <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
   <span class="tag">&lt;/build&gt;</span>
-  <span class="tag">&lt;pluginRepositories&gt;</span>
-      <span class="tag">&lt;pluginRepository&gt;</span>
-          <span class="tag">&lt;id&gt;</span>maven2-repository.dev.java.net<span class="tag">&lt;/id&gt;</span>
-          <span class="tag">&lt;name&gt;</span>Java.net Repository for Maven<span class="tag">&lt;/name&gt;</span>
-          <span class="tag">&lt;url&gt;</span>http://download.java.net/maven/glassfish/<span class="tag">&lt;/url&gt;</span>
-      <span class="tag">&lt;/pluginRepository&gt;</span>
-  <span class="tag">&lt;/pluginRepositories&gt;</span>
 <span class="tag">&lt;/project&gt;</span></code></pre>
 </div>
 </div>
@@ -3149,7 +3127,7 @@ command.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A map of the command parameters. See the
 <code>org.glassfish.embeddable.admin.CommandParameters</code> class at
-<code><a href="http://glassfish.java.net/nonav/docs/v3/api/" class="bare">http://glassfish.java.net/nonav/docs/v3/api/</a></code>.</p></td>
+<code><a href="https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html" class="bare">https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html</a></code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">commandLine</p></td>
@@ -3425,53 +3403,40 @@ Line breaks in the following element are for readability purposes only
 <span class="tag">&lt;project</span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span>
 <span class="content">http://maven.apache.org/maven-v4_0_0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
-    <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
-    <span class="tag">&lt;artifactId&gt;</span>my-ejb-app-tester<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>3.1<span class="tag">&lt;/version&gt;</span>
-    <span class="tag">&lt;name&gt;</span>Maven test<span class="tag">&lt;/name&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.example<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>my-ejb-app-example<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;name&gt;</span>EJB Embeddable API Example<span class="tag">&lt;/name&gt;</span>
     <span class="tag">&lt;dependencies&gt;</span>
         <span class="tag">&lt;dependency&gt;</span>
-            <span class="tag">&lt;groupId&gt;</span>org.glassfish.extras<span class="tag">&lt;/groupId&gt;</span>
-            <span class="tag">&lt;artifactId&gt;</span>glassfish-embedded-static-shell<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.glassfish.main.extras<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>glassfish-embedded-all<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>${project.version}<span class="tag">&lt;/version&gt;</span>
-            <span class="tag">&lt;scope&gt;</span>system<span class="tag">&lt;/scope&gt;</span>
-            <span class="tag">&lt;systemPath&gt;</span>
-                ${env.S1AS_HOME}/lib/embedded/glassfish-embedded-static-shell.jar
-            <span class="tag">&lt;/systemPath&gt;</span>
         <span class="tag">&lt;/dependency&gt;</span>
-<span class="comment">&lt;!--
-        The javaee-api is stripped of any code and is just used to compile your
-        application. The scope provided in Maven means that it is used for compiling,
-        but is also available when testing. For this reason, the javaee-api needs to
-        be below the embedded Glassfish dependency. The javaee-api can actually be
-        omitted when the embedded Glassfish dependency is included, but to keep your
-        project Java-EE 6 rather than GlassFish 3, specification is important.
---&gt;</span>
+        <span class="comment">&lt;!--
+            The jakarta.jakartaee-api is stripped of any code and is just used to compile your
+            application. The scope provided in Maven means that it is used for compiling,
+            but is also available when testing. For this reason, the jakartaee-api needs to
+            be below the embedded GlassFish dependency. The jakartaee-api can actually be
+            omitted when the embedded GlassFish dependency is included, but to keep your
+            project Jakarta EE 10 rather than GlassFish specific, specification is important.
+        --&gt;</span>
         <span class="tag">&lt;dependency&gt;</span>
-            <span class="tag">&lt;groupId&gt;</span>javax<span class="tag">&lt;/groupId&gt;</span>
-            <span class="tag">&lt;artifactId&gt;</span>javaee-api<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
         <span class="tag">&lt;/dependency&gt;</span>
     <span class="tag">&lt;/dependencies&gt;</span>
-    <span class="tag">&lt;pluginRepositories&gt;</span>
-        <span class="tag">&lt;pluginRepository&gt;</span>
-            <span class="tag">&lt;id&gt;</span>maven2-repository.dev.java.net<span class="tag">&lt;/id&gt;</span>
-            <span class="tag">&lt;name&gt;</span>Java.net Repository for Maven<span class="tag">&lt;/name&gt;</span>
-            <span class="tag">&lt;url&gt;</span>http://download.java.net/maven/glassfish/<span class="tag">&lt;/url&gt;</span>
-        <span class="tag">&lt;/pluginRepository&gt;</span>
-    <span class="tag">&lt;/pluginRepositories&gt;</span>
 <span class="tag">&lt;/project&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you are using <code>glassfish-embedded-static-shell.jar</code>, you can omit the
-<code>dependency</code> element with the <code>javaee-api</code> <code>artifactId</code> and the
-<code>pluginRepositories</code> element.</p>
+<p>If you are using <code>glassfish-embedded-all.jar</code>, you can omit the
+<code>dependency</code> element with the <code>jakarta.jakartaee-api</code> <code>artifactId</code>.</p>
 </div>
 <div class="paragraph">
-<p>Set the <code>S1AS_HOME</code> environment variable to the installation root
-directory before running the <code>mvn clean verify</code> command.</p>
+<p>Then run <code>mvn clean verify</code> command.</p>
 </div>
 </div>
 </div>
@@ -3541,7 +3506,7 @@ glassfish.dispose();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>handlers= java.util.logging.ConsoleHandler
+<pre class="CodeRay highlight"><code>handlers = java.util.logging.ConsoleHandler
 java.util.logging.ConsoleHandler.level = FINEST
 jakarta.enterprise.system.tools.deployment.level = FINEST
 jakarta.enterprise.system.level = FINEST</code></pre>
@@ -3592,28 +3557,28 @@ supports only these features of nonembedded Eclipse GlassFish:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Java Servlet API</p>
+<p>Jakarta Servlet API</p>
 </li>
 <li>
-<p>Java Server Pages (JSP) technology</p>
+<p>Jakarta Pages</p>
 </li>
 <li>
-<p>Java Server Faces technology</p>
+<p>Jakarta Faces</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>JDBC-technology connection pooling</p>
+<p>JDBC connection pooling</p>
 </li>
 <li>
-<p>Java Persistence API</p>
+<p>Jakarta Persistence API</p>
 </li>
 <li>
-<p>Java Transaction API</p>
+<p>Jakarta Transaction API</p>
 </li>
 <li>
-<p>Java Transaction Service</p>
+<p>Jakarta Transaction Service</p>
 </li>
 </ul>
 </div>
@@ -3695,7 +3660,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-22 21:16:12 UTC
+Last updated 2025-03-22 23:27:46 UTC
 </div>
 </div>
 </body>

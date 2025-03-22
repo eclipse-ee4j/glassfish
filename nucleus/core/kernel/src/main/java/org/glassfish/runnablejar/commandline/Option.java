@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -230,11 +229,11 @@ public enum Option {
 
     protected void loadPropertiesFromFile(String fileName, Arguments arguments) {
         try {
-            final Properties properties = new Properties();
+            final OrderedProperties properties = new OrderedProperties();
             properties.load(Files.newBufferedReader(Paths.get(fileName)));
-            properties.forEach((k, v) -> {
+            properties.forEachOrdered((key, value) -> {
                 try {
-                    arguments.setOption((String) k, (String) v);
+                    arguments.setOption(key, value);
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Invalid property '" + e.getKey() + "' in file " + fileName);
                 }

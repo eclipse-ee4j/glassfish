@@ -32,6 +32,29 @@
 
     <modules>
         <module>cdi-tck-install</module>
-        <module>cdi-tck-run</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                    <module>cdi-tck-run</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>web</id>
+            <modules>
+                    <module>cdi-tck-run</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>embedded-core</id>
+            <modules>
+                    <module>cdi-tck-run-embedded</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

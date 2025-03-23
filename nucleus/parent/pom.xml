@@ -155,7 +155,7 @@
         <easymock.version>5.5.0</easymock.version>
         <junit.version>5.11.4</junit.version>
         <jmh.version>1.37</jmh.version>
-        <osgi-resource-locator.version>3.0.0</osgi-resource-locator.version>
+        <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

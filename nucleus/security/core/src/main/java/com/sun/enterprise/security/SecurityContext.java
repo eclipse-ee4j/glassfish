@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,6 +66,9 @@ public class SecurityContext extends AbstractSecurityContext {
 
     private static final long serialVersionUID = 1L;
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
+    // sessionPrincipal is static because it's a thread local, which isn't serializable,
+    // and we need at most one instance per thread
+    private static final ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     private static InheritableThreadLocal<SecurityContext> currentSecurityContext = new InheritableThreadLocal<>();
     private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
@@ -74,8 +77,6 @@ public class SecurityContext extends AbstractSecurityContext {
 
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;
-
-    private final ThreadLocal<Principal> sessionPrincipal = new ThreadLocal<>();
 
     /*
      * This creates a new SecurityContext object. Note: that the docs for Subject state that the internal sets (eg. the

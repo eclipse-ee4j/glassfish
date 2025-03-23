@@ -30,7 +30,7 @@ The following topics are addressed here:
 Embedded {productName} enables you to use
 {productName} as a library or run applications from command line. Embedded {productName} also enables
 you to run {productName} inside any Virtual Machine for the Java
-platform (Java Virtual Machine or JVMmachine).
+platform (Java Virtual Machine or JVM).
 
 No installation or configuration of embedded {productName} is
 required. The ability to run {productName}
@@ -381,7 +381,7 @@ Any argument that doesn't start with a hyphen (-), is treated as follows:
 {productName} provides an application programming
 interface (API) for developing applications in which {productName} is
 embedded. For details, see the `org.glassfish.embeddable` packages at
-`http://embedded-glassfish.java.net/nonav/apidocs/`.
+`https://www.javadoc.io/doc/org.glassfish.main.common/simple-glassfish-api/latest/index.html`.
 
 The following topics are addressed here:
 
@@ -1255,8 +1255,8 @@ Add the following `plugin` element to your POM file:
         <plugins>
             ...
             <plugin>
-                <groupId>org.glassfish</groupId>
-                <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                <groupId>org.glassfish.embedded</groupId>
+                <artifactId>embedded-glassfish-maven-plugin</artifactId>
                 <version>version</version>
             </plugin>
             ...
@@ -1265,7 +1265,7 @@ Add the following `plugin` element to your POM file:
 ----
 version::
   The version to use. The version of the final promoted build for this
-  release is `3.1.1`. The Maven plug-in is not bound to a specific version
+  release is `7.0`. The Maven plug-in is not bound to a specific version
   of {productName}. You can specify the version you want to use. If
   no version is specified, a default version is used.
 
@@ -1360,7 +1360,7 @@ Add `execution` elements to your POM file:
                     <execution>
                         <phase>install</phase>
                         <goals>
-                                <goal>goal</goal>
+                            <goal>goal</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -1373,19 +1373,6 @@ Add `execution` elements to your POM file:
 goal::
   The goal to use. See xref:#maven-goals-for-embedded-glassfish-server[Maven Goals for Embedded {productName}].
 
-5. Configure the repository.
-Add the following `repository` element to your POM file:
-+
-[source,xml]
-----
-<pluginRepositories>
-    <pluginRepository>
-        <id>maven2-repository.dev.java.net</id>
-        <name>Java.net Repository for Maven</name>
-        <url>http://download.java.net/maven/glassfish/</url>
-    </pluginRepository>
-</pluginRepositories>
-----
 
 [[gjkod]]
 Example 1-13 POM File for Configuring Maven to Use Embedded {productName}
@@ -1404,16 +1391,16 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.glassfish</groupId>
+  <groupId>org.example</groupId>
   <artifactId>maven-glassfish-plugin-tester</artifactId>
-  <version>3.1</version>
-  <name>Maven test</name>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Maven Embedded Glassfish Plugin Example</name>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.glassfish</groupId>
-        <artifactId>maven-embedded-glassfish-plugin</artifactId>
-        <version>3.1</version>
+        <groupId>org.glassfish.embedded</groupId>
+        <artifactId>embedded-glassfish-maven-plugin</artifactId>
+        <version>7.0</version>
         <configuration>
           <app>target/test.war</app>
           <port>8080</port>
@@ -1431,13 +1418,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
      </plugin>
     </plugins>
   </build>
-  <pluginRepositories>
-      <pluginRepository>
-          <id>maven2-repository.dev.java.net</id>
-          <name>Java.net Repository for Maven</name>
-          <url>http://download.java.net/maven/glassfish/</url>
-      </pluginRepository>
-  </pluginRepositories>
 </project>
 ----
 
@@ -1796,7 +1776,7 @@ command.
 
 |commandParameters |None |A map of the command parameters. See the
 `org.glassfish.embeddable.admin.CommandParameters` class at
-`http://glassfish.java.net/nonav/docs/v3/api/`.
+`https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html`.
 
 |commandLine |None |The full `asadmin` syntax of the command.
 |===
@@ -1973,51 +1953,38 @@ Line breaks in the following element are for readability purposes only
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.glassfish</groupId>
-    <artifactId>my-ejb-app-tester</artifactId>
-    <version>3.1</version>
-    <name>Maven test</name>
+    <groupId>org.example</groupId>
+    <artifactId>my-ejb-app-example</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>EJB Embeddable API Example</name>
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.extras</groupId>
-            <artifactId>glassfish-embedded-static-shell</artifactId>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-all</artifactId>
             <version>${project.version}</version>
-            <scope>system</scope>
-            <systemPath>
-                ${env.S1AS_HOME}/lib/embedded/glassfish-embedded-static-shell.jar
-            </systemPath>
         </dependency>
-<!--
-        The javaee-api is stripped of any code and is just used to compile your
-        application. The scope provided in Maven means that it is used for compiling,
-        but is also available when testing. For this reason, the javaee-api needs to
-        be below the embedded Glassfish dependency. The javaee-api can actually be
-        omitted when the embedded Glassfish dependency is included, but to keep your
-        project Java-EE 6 rather than GlassFish 3, specification is important.
--->
+        <!--
+            The jakarta.jakartaee-api is stripped of any code and is just used to compile your
+            application. The scope provided in Maven means that it is used for compiling,
+            but is also available when testing. For this reason, the jakartaee-api needs to
+            be below the embedded GlassFish dependency. The jakartaee-api can actually be
+            omitted when the embedded GlassFish dependency is included, but to keep your
+            project Jakarta EE 10 rather than GlassFish specific, specification is important.
+        -->
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>6.0</version>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/glassfish/</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
 ----
 
-If you are using `glassfish-embedded-static-shell.jar`, you can omit the
-`dependency` element with the `javaee-api` `artifactId` and the
-`pluginRepositories` element.
+If you are using `glassfish-embedded-all.jar`, you can omit the
+`dependency` element with the `jakarta.jakartaee-api` `artifactId`.
 
-Set the `S1AS_HOME` environment variable to the installation root
-directory before running the `mvn clean verify` command.
+Then run `mvn clean verify` command.
 
 [[changing-log-levels-in-embedded-glassfish-server]]
 
@@ -2073,7 +2040,7 @@ This example shows the contents of a custom logging configuration file,
 
 [source]
 ----
-handlers= java.util.logging.ConsoleHandler
+handlers = java.util.logging.ConsoleHandler
 java.util.logging.ConsoleHandler.level = FINEST
 jakarta.enterprise.system.tools.deployment.level = FINEST
 jakarta.enterprise.system.level = FINEST
@@ -2113,15 +2080,15 @@ supports only these features of nonembedded {productName}:
 
 * The following web technologies of the Jakarta EE platform:
 
-** Java Servlet API
+** Jakarta Servlet API
 
-** Java Server Pages (JSP) technology
+** Jakarta Pages
 
-** Java Server Faces technology
-* JDBC-technology connection pooling
-* Java Persistence API
-* Java Transaction API
-* Java Transaction Service
+** Jakarta Faces 
+* JDBC connection pooling
+* Jakarta Persistence API
+* Jakarta Transaction API
+* Jakarta Transaction Service
 
 The `glassfish-embedded-all.jar` and
 `glassfish-embedded-static-shell.jar` files support all features of

@@ -17,10 +17,13 @@
 package org.jboss.weld.tck.glassfish;
 
 import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;
+import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
 /**
- * Registers the exception transformer to properly identify deployment failures.
+ * Registers the exception transformer to properly identify deployment failures
+ * and the application archive processor to add a glassfish-web.xml file to the
+ * deployment to disable classloader delegation.
  *
  * @author J J Snyder (j.j.snyder@oracle.com)
  */
@@ -28,6 +31,7 @@ public class GlassFishExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder builder) {
         builder.service(DeploymentExceptionTransformer.class, GlassFishDeploymentExceptionTransformer.class);
+        builder.service(ApplicationArchiveProcessor.class, GlassfishWebAdderExtension.class);
     }
 
 }

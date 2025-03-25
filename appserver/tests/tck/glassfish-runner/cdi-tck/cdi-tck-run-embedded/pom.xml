@@ -38,8 +38,7 @@
         <cdi.tck-4-1.version>4.1.0</cdi.tck-4-1.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
 
-        <!-- Note M6 still has some failures, future M7 passes all -->
-        <glassfish.version>8.0.0-M9</glassfish.version>
+        <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
 
         <!-- This matches the htmlunit version in TCK -->
         <htmlunit.version>2.50.0</htmlunit.version>
@@ -210,31 +209,17 @@
             and the ArchiveBuilder, as well as a large amount of tests.
          -->
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${cdi.tck-4-1.version}</version>
+            <groupId>jakarta.tck.coreprofile</groupId>
+            <artifactId>cdi-lite-tck-suite</artifactId>
+            <version>11.0.0</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${cdi.tck-4-1.version}</version>
-            <classifier>suite</classifier>
+            <groupId>jakarta.tck.coreprofile</groupId>
+            <artifactId>cdi-lite-tck-suite</artifactId>
+            <version>11.0.0</version>
             <type>xml</type>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -291,7 +276,7 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-embedded</artifactId>
-            <version>1.7</version>
+            <version>1.7-SNAPSHOT</version>
             <scope>test</scope>
             <exclusions>
             <exclusion>
@@ -348,19 +333,18 @@
                         <configuration>
                             <artifactItems>
                                 <!--
-                                    Contains what becomes the tck-core-suite.xml; the TestNG suite file that dictates
+                                    Contains what becomes the tck-lite-suite.xml; the TestNG suite file that dictates
                                     which tests from the TCK Web implementation are executed and which are excluded.
                                     Note that this file is essentially a superset of the suite file from the TCK Core,
                                     so we don't need that one separately here.
                                 -->
                                 <artifactItem>
-                                    <groupId>jakarta.enterprise</groupId>
-                                    <artifactId>cdi-tck-core-impl</artifactId>
-                                    <version>${cdi.tck-4-1.version}</version>
+                                    <groupId>jakarta.tck.coreprofile</groupId>
+                                    <artifactId>cdi-lite-tck-suite</artifactId>
                                     <type>xml</type>
-                                    <classifier>suite</classifier>
+                                    <version>11.0.0</version>
                                     <overWrite>false</overWrite>
-                                    <destFileName>tck-core-suite.xml</destFileName>
+                                    <destFileName>tck-lite-suite.xml</destFileName>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>target/suites</outputDirectory>
@@ -370,7 +354,7 @@
                     </execution>
 
                     <!-- Install a jar with a few amount of test classes, for which some of the tests are looking -->
-                    <!-- <execution>
+                    <execution>
                         <id>install-cdi-tck-ext-lib</id>
                         <goals>
                             <goal>copy</goal>
@@ -384,12 +368,12 @@
                                     <version>${cdi.tck-4-1.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}/glassfish8/glassfish/domains/domain1/lib/applibs</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
                                     <destFileName>cdi-tck-ext-lib.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution> -->
+                    </execution>
                 </executions>
             </plugin>
 
@@ -397,13 +381,13 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <argLine>-Xmx2G --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED</argLine>
+                    <argLine>-Xmx1g -XX:+UseParallelGC --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</argLine>
                     <!-- Surefire / TestNG Properties -->
                     <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>target/suites/tck-core-suite.xml</suiteXmlFile>
+                        <suiteXmlFile>target/suites/tck-lite-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <excludedGroups>${excluded.groups}</excludedGroups>
+                    <excludedGroups>cdi-full,se</excludedGroups>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
                     </dependenciesToScan>
@@ -417,12 +401,7 @@
                     <reuseForks>true</reuseForks>
                     <!-- System Properties -->
                     <systemPropertyVariables>
-                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
-                        <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-                        <glassfish.enableAssertions>:org.jboss.cdi.tck...</glassfish.enableAssertions>
-                        <glassfish.systemProperties>cdiTckExcludeDummy=true
-                            glassfish.servlet.loadAllOnStartup=true</glassfish.systemProperties>
                         <glassfish.postBootCommands>create-jms-resource --restype jakarta.jms.Queue --property Name=queue_test queue_test
                             create-jms-resource --restype jakarta.jms.Topic --property Name=topic_test topic_test
                             set configs.config.server-config.cdi-service.enable-implicit-cdi=true
@@ -432,6 +411,8 @@
                         <libPath>${project.build.outputDirectory}</libPath>
                         <org.jboss.cdi.tck.libraryDirectory>${project.build.directory}/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
                         <debugMode>true</debugMode>
+                        <org.jboss.cdi.tck.cdiLiteMode>true</org.jboss.cdi.tck.cdiLiteMode>
+                        <cdiTckExcludeDummy>true</cdiTckExcludeDummy>
                     </systemPropertyVariables>
                 </configuration>
                 <dependencies>
@@ -473,17 +454,5 @@
 
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>embedded-web</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-              <excluded.groups>javaee-full,se</excluded.groups>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

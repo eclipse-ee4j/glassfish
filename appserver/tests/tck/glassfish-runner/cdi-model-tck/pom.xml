@@ -19,7 +19,7 @@
         <cdi.tck-4-0.version>4.1.0</cdi.tck-4-0.version>
         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.version>8.0.0-M10</glassfish.version>
+        <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
         <maven.compiler.release>17</maven.compiler.release>
         <weld.version>6.0.1.Final</weld.version>
 
@@ -125,10 +125,9 @@
     -->
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.7</version>
+            <artifactId>${arquillian.connector}</artifactId>
+            <version>1.7-SNAPSHOT</version>
         </dependency>
-
     </dependencies>
 
     <repositories>
@@ -168,31 +167,10 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.8.0</version>
-                <executions>
-                    <execution>
-                        <id>unpack-glassfish</id>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.main.distributions</groupId>
-                                    <artifactId>${glassfish-artifact-id}</artifactId>
-                                    <version>${glassfish.version}</version>
-                                    <type>zip</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                  <argLine>-Xmx1g -XX:+UseParallelGC --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</argLine>  
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -222,13 +200,90 @@
             </activation>
             <properties>
                 <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <arquillian.connector>arquillian-glassfish-server-managed</arquillian.connector>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <executions>
+                            <execution>
+                                <id>unpack-glassfish</id>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <phase>test-compile</phase>
+                                <configuration>
+                                    <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.main.distributions</groupId>
+                                            <artifactId>${glassfish-artifact-id}</artifactId>
+                                            <version>${glassfish.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${glassfish.root}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>web</id>
             <properties>
                 <glassfish-artifact-id>web</glassfish-artifact-id>
+                <arquillian.connector>arquillian-glassfish-server-managed</arquillian.connector>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <executions>
+                            <execution>
+                                <id>unpack-glassfish</id>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <phase>test-compile</phase>
+                                <configuration>
+                                    <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.main.distributions</groupId>
+                                            <artifactId>${glassfish-artifact-id}</artifactId>
+                                            <version>${glassfish.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${glassfish.root}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>embedded-core</id>
+            <properties>
+                <arquillian.connector>arquillian-glassfish-server-embedded</arquillian.connector>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.main.extras</groupId>
+                    <artifactId>glassfish-embedded-web</artifactId>
+                    <version>${glassfish.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 

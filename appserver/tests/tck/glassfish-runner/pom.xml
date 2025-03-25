@@ -70,4 +70,14 @@
         
         <module>signature</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>embedded-core</id>
+            <modules>
+                <module>core-tck</module>
+            </modules>
+        </profile>
+    </profiles>
+
 </project>

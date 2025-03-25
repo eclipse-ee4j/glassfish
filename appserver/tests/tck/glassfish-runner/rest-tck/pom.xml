@@ -344,6 +344,12 @@ mvn clean install -Dgroups=security
 
             <dependencies>
                 <dependency>
+                    <groupId>jakarta.tck.coreprofile</groupId>
+                    <artifactId>rest-tck-suite</artifactId>
+                    <version>11.0.0</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
                     <groupId>org.omnifaces.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-embedded</artifactId>
                     <version>1.7-SNAPSHOT</version>
@@ -410,7 +416,7 @@ mvn clean install -Dgroups=security
 
                                     <test>${run.test}</test>
 
-                                    <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
+                                    <dependenciesToScan>jakarta.tck.coreprofile:rest-tck-suite,jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
 
                                     <systemPropertyVariables>
                                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>

@@ -116,6 +116,10 @@ public class DeployerImpl implements Deployer {
                 extractPayload(outboundPayload, actionReport, retrieve);
             }
 
+            if (actionReport.hasFailures()) {
+                throw new GlassFishException("Deploy failed: " + actionReport.getMessage(), actionReport.getFailureCause());
+            }
+
             return actionReport.getResultType(String.class);
         } catch (CommandException e) {
             throw new GlassFishException(e);

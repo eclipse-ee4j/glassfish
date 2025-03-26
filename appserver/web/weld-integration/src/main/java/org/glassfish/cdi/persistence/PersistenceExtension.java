@@ -47,9 +47,17 @@ import static com.sun.enterprise.util.AnnotationUtil.createAnnotationInstance;
 public class PersistenceExtension implements Extension  {
 
     public void afterBean(final @Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        var container = Globals.get(InvocationManager.class)
-                                  .getCurrentInvocation()
-                                  .getContainer();
+        if (Globals.getDefaultHabitat() == null) {
+            return;
+        }
+
+        var currentInvocation = Globals.get(InvocationManager.class).getCurrentInvocation();
+
+        if (currentInvocation == null) {
+            return;
+        }
+
+        var container = currentInvocation.getContainer();
 
         if (container instanceof ApplicationInfo applicationInfo) {
 

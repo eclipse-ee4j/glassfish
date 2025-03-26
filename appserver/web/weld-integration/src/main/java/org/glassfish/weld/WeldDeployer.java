@@ -121,8 +121,7 @@ import static org.jboss.weld.bootstrap.spi.EEModuleDescriptor.ModuleType.WEB;
 import static org.jboss.weld.manager.BeanManagerLookupService.lookupBeanManager;
 
 @Service
-public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer>
-    implements PostConstruct, EventListener {
+public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer> implements PostConstruct, EventListener {
 
     private static final Logger LOG = CDILoggerInfo.getLogger();
 
@@ -365,21 +364,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 || event.is(APPLICATION_DISABLED)) {
             disable((ApplicationInfo) event.hook());
         }
-    }
-
-    @Override
-    protected void generateArtifacts(DeploymentContext dc) throws DeploymentException {
-
-    }
-
-    @Override
-    protected void cleanArtifacts(DeploymentContext dc) throws DeploymentException {
-
-    }
-
-    @Override
-    public <V> V loadMetaData(Class<V> type, DeploymentContext context) {
-        return null;
     }
 
     public BeanDeploymentArchive getBeanDeploymentArchiveForBundle(BundleDescriptor bundle) {

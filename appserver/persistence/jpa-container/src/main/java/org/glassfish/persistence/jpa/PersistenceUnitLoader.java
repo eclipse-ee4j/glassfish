@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,6 +39,8 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessorFactory;
 
+import static jakarta.persistence.ValidationMode.AUTO;
+import static jakarta.persistence.ValidationMode.CALLBACK;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
@@ -123,7 +125,7 @@ public class PersistenceUnitLoader {
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(providerContainerContractInfo.getClassLoader());
         try {
-            entityManagerFactory = loadPU(persistenceUnitToInstantiate);
+            entityManagerFactory = loadPersistenceUnit(persistenceUnitToInstantiate);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
@@ -153,7 +155,7 @@ public class PersistenceUnitLoader {
      *
      * @param persistenceUnitDescriptor PersistenceUnitDescriptor to be loaded.
      */
-    private EntityManagerFactory loadPU(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+    private EntityManagerFactory loadPersistenceUnit(PersistenceUnitDescriptor persistenceUnitDescriptor) {
         checkForUpgradeFromTopLinkEssentials(persistenceUnitDescriptor);
         checkForDataSourceOverride(persistenceUnitDescriptor);
         calculateDefaultDataSource(persistenceUnitDescriptor);
@@ -211,7 +213,7 @@ public class PersistenceUnitLoader {
 
         // Check if the persistence unit requires Bean Validation
         ValidationMode validationMode = getValidationMode(persistenceUnitDescriptor);
-        if (validationMode == ValidationMode.AUTO || validationMode == ValidationMode.CALLBACK) {
+        if (validationMode == AUTO || validationMode == CALLBACK) {
             overRides.put(VALIDATOR_FACTORY, providerContainerContractInfo.getValidatorFactory());
         }
 
@@ -223,10 +225,11 @@ public class PersistenceUnitLoader {
 
         logger.logp(FINE, "PersistenceUnitLoader", "loadPU", "emf = {0}", entityManagerFactory);
 
-        PersistenceUnitsDescriptor parent = persistenceUnitDescriptor.getParent();
-        RootDeploymentDescriptor containingBundle = parent.getParent();
         providerContainerContractInfo.registerEMF(
-            persistenceUnitInfo.getPersistenceUnitName(), persistenceUnitDescriptor.getPuRoot(), containingBundle, entityManagerFactory);
+            persistenceUnitInfo.getPersistenceUnitName(),
+            persistenceUnitDescriptor.getPuRoot(),
+            persistenceUnitDescriptor.getParent().getParent(),
+            entityManagerFactory);
 
         if (fineMsgLoggable) {
             logger.fine("Finished loading persistence unit for application: " +

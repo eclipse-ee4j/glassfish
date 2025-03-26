@@ -1,7 +1,7 @@
 
 # Eclipse GlassFish Documentation and User Guides
 
-## <a name="current">Current Release - 7.0.22</a>
+## <a name="current">Current Release - 7.0.23</a>
 
 * [Add On Component Development Guide](latest/add-on-component-development-guide.html)
   ([pdf](latest/add-on-component-development-guide.pdf))

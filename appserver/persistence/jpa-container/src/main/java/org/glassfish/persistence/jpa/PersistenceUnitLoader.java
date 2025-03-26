@@ -18,7 +18,6 @@
 package org.glassfish.persistence.jpa;
 
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
@@ -35,7 +34,6 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessorFactory;
 
@@ -132,9 +130,9 @@ public class PersistenceUnitLoader {
     }
 
     /**
-     * @return The emf loaded.
+     * @return The EntityManagerFactory loaded.
      */
-    public EntityManagerFactory getEMF() {
+    public EntityManagerFactory getEntityManagerFactory() {
         return entityManagerFactory;
     }
 

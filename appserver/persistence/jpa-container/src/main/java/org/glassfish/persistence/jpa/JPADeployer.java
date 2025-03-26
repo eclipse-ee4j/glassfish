@@ -449,7 +449,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
             // also. We should perform java2db only on first deploy
             if (deployCommandParameters.origin.isDeploy()) {
 
-                EntityManagerFactory entityManagerFactory = persistenceUnitLoader.getEMF();
+                EntityManagerFactory entityManagerFactory = persistenceUnitLoader.getEntityManagerFactory();
 
                 // Create EntityManager to trigger validation on persistence unit which is lazily performed by the
                 // provider.
@@ -486,7 +486,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         if (saveEntityManagerFactory) {
             saveEntityManagerFactory(
                 applicationRegistry.get(deployCommandParameters.name),
-                persistenceUnitLoader.getEMF());
+                persistenceUnitLoader.getEntityManagerFactory());
         }
     }
 

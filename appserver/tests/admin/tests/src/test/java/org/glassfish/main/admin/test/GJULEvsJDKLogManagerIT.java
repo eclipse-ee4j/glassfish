@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,8 +31,9 @@ public class GJULEvsJDKLogManagerIT {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
     private static final Path LOGDIR = GlassFishTestEnvironment.getDomain1Directory().resolve("logs").toAbsolutePath();
-    private static final String SYSOPT_ERR_LOG = "'-XX:ErrorFile=" + LOGDIR + "/java_error%p.log'";
-    private static final String SYSOPT_GC_LOG = "'-Xlog:gc*:file=" + LOGDIR + "/gc-%t.log:time:filecount=10'";
+    private static final String SYSOPT_ERR_LOG = "'-XX:ErrorFile=" + LOGDIR.resolve("java_error%p.log") + "'";
+    private static final String SYSOPT_GC_LOG = "'-Xlog:gc*:file=" + LOGDIR.resolve("gc-%t.log")
+        + ":time:filecount=10'";
 
     @BeforeAll
     static void setAndBackup() {

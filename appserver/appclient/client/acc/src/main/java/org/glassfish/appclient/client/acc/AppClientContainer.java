@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -314,7 +314,7 @@ public class AppClientContainer {
                     client.getAnchorDir(), connectorRuntime);
             for (PersistenceUnitDescriptor puDesc : referencedPUs) {
                 PersistenceUnitLoader pul = new PersistenceUnitLoader(puDesc, pcci);
-                desc.addEntityManagerFactory(puDesc.getName(), pul.getEMF());
+                desc.addEntityManagerFactory(puDesc.getName(), pul.getEntityManagerFactory());
             }
 
             cleanup.setEMFs(pcci.emfs());

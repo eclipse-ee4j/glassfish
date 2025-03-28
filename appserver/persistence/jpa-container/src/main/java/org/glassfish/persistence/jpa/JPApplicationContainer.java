@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2005, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,9 @@ import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 
 /**
- * Represents Application Container for JPA One instance of this object is
- * created per deployed bundle.
+ * Represents Application Container for Jakarta Persistence.
+ * <p>
+ * One instance of this object is created per deployed bundle.
  *
  * @author Mitesh Meswani
  */

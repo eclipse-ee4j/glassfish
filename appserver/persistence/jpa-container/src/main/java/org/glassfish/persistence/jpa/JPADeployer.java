@@ -33,7 +33,9 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -328,7 +330,29 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
 
     private boolean hasScopedResource(Application application) {
         for (var bundleDescriptor : application.getBundleDescriptors()) {
-            for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(bundleDescriptor)) {
+
+            Set<PersistenceUnitDescriptor> allPersistenceUnitDescriptors = new HashSet<>();
+
+            // Add persistenceUnitDescriptors from the current bundle
+            allPersistenceUnitDescriptors.addAll(getPersistenceUnitDescriptors(bundleDescriptor));
+
+            // Find (obscure) persistence units referenced by @PersistenceContext annotations that reside
+            // in places like ear/lib.
+            //
+            // E.g.
+            // @PersistenceContext(
+            //     unitName="lib/ejb-ejb30-persistence-tx_propagation-par1.jar#em",
+            //     type=EXTENDED);
+            // EntityManager extendedEM;
+            //
+            // The above calls to getPersistenceUnitDescriptors() won't find these.
+            //
+            // Alternatively we can use:
+            //
+            // application.getExtensionsDescriptors(PersistenceUnitsDescriptor.class)
+            allPersistenceUnitDescriptors.addAll(bundleDescriptor.findReferencedPUs());
+
+            for (var persistenceUnitDescriptor : allPersistenceUnitDescriptors) {
                 if (hasScopedResource(persistenceUnitDescriptor)) {
                     return true;
                 }

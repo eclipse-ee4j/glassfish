@@ -93,6 +93,9 @@ else
    unset GLASSFISH_SUSPEND
 fi
 
+echo GF_VERSION=$GF_VERSION
+echo GLASSFISH_SUSPEND=$GLASSFISH_SUSPEND
+
 export JACOCO_ENABLED="true"
 export WORKSPACE="$(pwd)/target"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"

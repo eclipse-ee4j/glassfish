@@ -223,6 +223,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
             moduleDescriptor.setModuleType(getModuleType());
             moduleDescriptor.setDescriptor(this);
         }
+
         return (ModuleDescriptor<T>) moduleDescriptor;
     }
 

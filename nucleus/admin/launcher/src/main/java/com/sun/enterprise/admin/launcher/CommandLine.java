@@ -54,12 +54,12 @@ public final class CommandLine implements Iterable<String> {
      * @param item
      */
     public void append(String item) {
-        command.add(item);
+        command.add(escapeSpecialCharactersIfNeeded(item));
     }
 
 
     /**
-     * Appends classpath argument (whole <code>-cp [paths]</code>)
+     * Appends paths argument (whole <code>-cp [paths]</code>)
      *
      * @param paths
      */
@@ -68,6 +68,22 @@ public final class CommandLine implements Iterable<String> {
             .collect(Collectors.joining(File.pathSeparator));
         command.add("-cp");
         command.add(toQuotedIfNeeded(value));
+    }
+
+
+    /**
+     * Appends paths argument (whole
+     * <code>--module-path [paths] --add-modules ALL-MODULE-PATH</code>)
+     *
+     * @param paths
+     */
+    public void appendModulePath(File... paths) {
+        command.add("--module-path");
+        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toJavaPath)
+            .collect(Collectors.joining(File.pathSeparator));
+        command.add(toQuotedIfNeeded(value));
+        command.add("--add-modules");
+        command.add("ALL-MODULE-PATH");
     }
 
 
@@ -100,7 +116,7 @@ public final class CommandLine implements Iterable<String> {
      * @param item
      */
     public void appendJavaOption(String item) {
-        command.add(item);
+        command.add(toQuotedIfNeeded(item));
     }
 
 
@@ -173,8 +189,11 @@ public final class CommandLine implements Iterable<String> {
     private String toQuotedIfNeeded(String value) {
         // BAT files have issues when then string doesn't contain a space
         // and we would use quotation marks.
-        if (format == CommandFormat.BatFile && value.indexOf(' ') >= 0) {
-            return toQuoted(value);
+        if (format == CommandFormat.BatFile) {
+            if (value.indexOf(' ') >= 0) {
+                return escapeSpecialCharactersIfNeeded(toQuoted(value));
+            }
+            return escapeSpecialCharactersIfNeeded(value);
         }
         // ProcessBuilder resolves it on its own.
         return value;
@@ -183,6 +202,16 @@ public final class CommandLine implements Iterable<String> {
 
     private static String toQuoted(String value) {
         return "\"" + value  + "\"";
+    }
+
+
+    private String escapeSpecialCharactersIfNeeded(String value) {
+        // BAT files try to interpret % as a variable,
+        // ie %t means current date and time
+        if (format == CommandFormat.BatFile) {
+            return value.replaceAll("%", "%%");
+        }
+        return value;
     }
 
 

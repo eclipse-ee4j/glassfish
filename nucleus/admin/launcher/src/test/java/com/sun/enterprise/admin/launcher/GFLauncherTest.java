@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -90,8 +90,8 @@ public class GFLauncherTest {
         launcher.launch();
         CommandLine cmdline = launcher.getCommandLine();
         // 0 --> java, 1 --> "-cp" 2 --> the classpath, 3 -->first arg
-        assertThat(cmdline,
-            hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
+        assertThat(cmdline, hasItems(matchesPattern(".*java(.exe)?(\")?"), is("-cp"),
+            is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
     }
 
     /**
@@ -102,8 +102,8 @@ public class GFLauncherTest {
         info.setDomainName("domain2");
         launcher.launch();
         CommandLine cmdline = launcher.getCommandLine();
-        assertThat(cmdline,
-            hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
+        assertThat(cmdline, hasItems(matchesPattern(".*java(.exe)?(\")?"), is("-cp"),
+            not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
     }
 
 

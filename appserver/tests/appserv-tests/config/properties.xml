@@ -105,6 +105,25 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <property name="ssl.mutualauth.port.two" value="33921" />
     <property name="jmx.system.connector.port.two" value="38687" />
     <property name="cert.nickname" value="s1as" />
+
+    <condition property="appclient.standalone.debug"
+        value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009"
+        else="-DignoreThisProperty">
+        <isset property="env.GLASSFISH_SUSPEND" />
+    </condition>
+    <property name="appclient.standalone.jvmargs.ext" value="" />
+    <property name="appclient.standalone.classpath.ext" value="" />
+    <path id="appclient_standalone_classpath">
+        <fileset dir="${env.S1AS_HOME}/modules">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${env.S1AS_HOME}/lib/install/applications">
+            <include name="*ra/*.jar" />
+        </fileset>
+        <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar" />
+        <pathelement path="${db.classpath}"/>
+    </path>
+    <pathconvert pathsep=":" property="appclient.standalone.classpath" refid="appclient_standalone_classpath" />
 </target>
 
 <target name="setS1ASclassPath" unless="s1as.classpath">
@@ -136,7 +155,8 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
         We use the test script (not appclient) if the user wants to launch app clients
         using Java Web Start.
     -->
-    <condition property="APPCLIENT" value="${env.APS_HOME}/config/jws-appclient.bat"
+    <condition property="APPCLIENT"
+        value="${env.APS_HOME}/config/jws-appclient.bat"
         else="${env.S1AS_HOME}/bin/appclient.bat">
         <isset property="use.javaws" />
     </condition>
@@ -162,7 +182,8 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
 </target>
 
 <target name="setToolUnix" if="isUnix">
-    <condition property="APPCLIENT" value="${env.APS_HOME}/config/jws-appclient"
+    <condition property="APPCLIENT"
+        value="${env.APS_HOME}/config/jws-appclient"
         else="${env.S1AS_HOME}/bin/appclient">
         <isset property="use.javaws" />
     </condition>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,28 +25,31 @@ import java.util.Map;
  */
 class RespawnInfo {
 
-    private String classname;
-    private String classpath;
-    private String[] args;
+    private final String classname;
+    private final String classpath;
+    private final String modulepath;
+    private final String[] args;
 
     private static final String PREFIX = "-asadmin-";
     private static final String SEPARATOR = ",,,";
 
-    RespawnInfo(String cn, String cp, String[] a) {
-        classname = cn;
-        classpath = cp;
+    RespawnInfo(String cn, String modulepath, String cp, String[] args) {
+        this.classname = cn;
+        this.classpath = cp;
+        this.modulepath = modulepath;
 
-        if (a == null) {
-            a = new String[0];
+        if (args == null) {
+            args = new String[0];
         }
 
-        args = a;
+        this.args = args;
     }
 
     void put(Map<String, String> map) throws GFLauncherException {
         validate();
         map.put(PREFIX + "classname", classname);
         map.put(PREFIX + "classpath", classpath);
+        map.put(PREFIX + "modulepath", modulepath);
         putArgs(map);
     }
 

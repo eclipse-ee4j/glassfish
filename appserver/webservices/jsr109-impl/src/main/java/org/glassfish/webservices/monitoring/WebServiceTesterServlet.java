@@ -56,13 +56,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.jaxb.runtime.api.JAXBRIContext;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.WebServiceContractImpl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.common.util.HttpParser.getCharsetFromHeader;
+
 /**
  * This servlet is responsible for testing web-services.
  *
@@ -525,7 +526,8 @@ public class WebServiceTesterServlet extends HttpServlet {
         // classes clashes.
         // the immediate classloader is the WebApp classloader, its parent is the
         // application classloader, we want the parent of that one
-        try (GlassfishUrlClassLoader testerCL = new GlassfishUrlClassLoader(urls, currentLoader.getParent())) {
+        try (GlassfishUrlClassLoader testerCL = new GlassfishUrlClassLoader("SoapWsTester(" + serviceName + ")", urls,
+            currentLoader.getParent())) {
             Thread.currentThread().setContextClassLoader(testerCL);
             String serviceClassName = getServiceClass(
                     JAXBRIContext.mangleNameToClassName(serviceName.getLocalPart()),

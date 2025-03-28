@@ -59,6 +59,18 @@ DEFAULT CONFIGURATION
      - HTTP listener enabled on port 8080
      - HTTPS listener disabled
 
+SUPPORTED PROPERTIES
+
+    Embedded GlassFish supports the same configuration properties as the set 
+    and get administration commands of the GlassFish Server.
+
+    In addition, it also accepts properties with the
+    "embedded-glassfish-config." prefix. This prefix is removed before applying
+    the property (e.g., "resources.jdbc-connection-pool..." can be defined as
+    "embedded-glassfish-config.resources.jdbc-connection-pool..."). This prefix
+    is no longer necessary and its usage is deprecated, but it's supported for
+    backwards compatibility.
+
 EXAMPLES
     Example 1: Run an application from command line
         On port 8080 and root context by default

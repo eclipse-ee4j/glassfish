@@ -19,8 +19,8 @@ import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
+import org.glassfish.tests.embedded.runnable.TestArgumentProviders.GfEmbeddedJarNameProvider;
 import org.glassfish.tests.embedded.runnable.app.App;
 import org.glassfish.tests.embedded.runnable.library.MockExecutorService;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -30,10 +30,7 @@ import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import static java.lang.System.err;
@@ -63,7 +60,6 @@ public class AddLibraryTest {
                     warFile.getAbsolutePath()
             );
             assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                    .peek(err::println)
                     .filter(line -> line.contains("App initialized"))
                     .findAny().isPresent(),
                     "A log from deployed application is present");
@@ -98,18 +94,6 @@ public class AddLibraryTest {
             Optional.ofNullable(jarFile).ifPresent(File::delete);
             Optional.ofNullable(warFile).ifPresent(File::delete);
         }
-    }
-
-    private static class GfEmbeddedJarNameProvider implements ArgumentsProvider {
-
-        @Override
-        public Stream<? extends Arguments> provideArguments(ExtensionContext ec) throws Exception {
-            return Stream.of(
-                    Arguments.of("glassfish-embedded-all.jar"),
-                    Arguments.of("glassfish-embedded-web.jar")
-            );
-        }
-
     }
 
     private File testLibraryJavaArchive(File jarFile) throws FileExistsException, ArchiveExportException, UnknownExtensionTypeException, IllegalArgumentException {

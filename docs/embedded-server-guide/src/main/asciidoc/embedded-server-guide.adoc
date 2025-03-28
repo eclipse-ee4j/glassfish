@@ -283,7 +283,8 @@ java -jar glassfish-embedded-all.jar [--properties=FILE]
 Load properties from a file. This option can be repeated to 
 load properties from multiple files. The propertes in the file can be 
 any of the following:
-    - Any properties supported by Embedded ${productName}.
+
+    - Any properties supported by Embedded ${productName}. See xref:#supported-properties[Configuration properties supported by Embedded {productName}].
     - Any command line options with the name of the option as the key, 
 without the initial hyphens, and the value of the option as the value.
     - Keys that start with the "command." prefix, followed by any text. 
@@ -333,7 +334,7 @@ port 8080.
 
 Files and directories in this directory will be deployed as 
 applications (in random order), as if they were specified on the command 
-line.
+line. The default directory name is 'autodeploy'.
 
 `--logLevel=LEVEL`
 
@@ -356,6 +357,10 @@ application cleanly. Also useful for Class Data Sharing and similar
 startup optimizations - to start the server, get it to a ready state 
 (applications deployed, etc.), and then shut down cleanly, so that the 
 JVM can store the cached data.
+
+`--prompt`
+
+Run interactive prompt that allows running admin commands. This is useful in development to manipulate a running GlassFish instance. After exiting the prompt, the server shuts down.
 
 `--help`
 
@@ -558,11 +563,17 @@ import org.glassfish.embeddable.*;
     // ...
 ----
 
+[[supported-properties]]
+==== Configuration properties supported by Embedded {productName}
+
+In `GlassFishProperties` and in a properties file, Embedded {productName} supports the same configuration properties as the `set` and `get` administration commands of the {productName} Server.
+
+In addition, it also accepts properties with the `embedded-glassfish-config.` prefix. This prefix is removed before applying the property (e.g., `resources.jdbc-connection-pool...` can be defined as `embedded-glassfish-config.resources.jdbc-connection-pool...`). This prefix is no longer necessary and its usage is deprecated, but it's supported for backwards compatibility.
+
 [[running-an-embedded-glassfish-server]]
+==== Running Embedded {productName} from a Java application
 
-==== Running an Embedded {productName}
-
-After you create an embedded {productName} as described in
+After you create an embedded {productName} server as described in
 xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}], you
 can perform operations such as:
 
@@ -1322,7 +1333,7 @@ Add the following `configuration` element to your POM file:
                     </bootstrapProperties>
                     <bootstrapPropertiesFile>bootstrap.properties</bootstrapPropertiesFile>
                     <glassfishProperties>
-<property>embedded-glassfish-config.server.jms-service.jms-host.default_JMS_host.port=17676</property>
+<property>server.jms-service.jms-host.default_JMS_host.port=17676</property>
                     </glassfishProperties>
                     <glassfishPropertiesFile>glassfish.properties</glassfishPropertiesFile>
                     <systemProperties>

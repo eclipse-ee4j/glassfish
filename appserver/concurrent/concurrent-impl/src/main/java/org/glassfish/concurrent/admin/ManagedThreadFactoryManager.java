@@ -50,6 +50,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
@@ -71,6 +72,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
     private String jndiName = null;
     private String description = null;
     private String threadPriority = ""+Thread.NORM_PRIORITY;
+    private String virtual = Boolean.FALSE.toString();
     private String contextInfoEnabled = Boolean.TRUE.toString();
     private String contextInfo = CONTEXT_INFO_DEFAULT_VALUE;
     private String enabled = Boolean.TRUE.toString();
@@ -137,6 +139,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         contextInfoEnabled = (String) attributes.get(CONTEXT_INFO_ENABLED);
         contextInfo = (String) attributes.get(CONTEXT_INFO);
         threadPriority = (String) attributes.get(THREAD_PRIORITY);
+        virtual = (String) attributes.get(VIRTUAL);
         if(target != null){
             enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
         }else{
@@ -162,6 +165,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         managedThreadFactory.setContextInfoEnabled(contextInfoEnabled);
         managedThreadFactory.setContextInfo(contextInfo);
         managedThreadFactory.setThreadPriority(threadPriority);
+        managedThreadFactory.setVirtual(virtual);
         managedThreadFactory.setEnabled(enabled);
         if (properties != null) {
             for (Map.Entry e : properties.entrySet()) {

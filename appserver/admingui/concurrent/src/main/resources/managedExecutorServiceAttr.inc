@@ -56,7 +56,11 @@
        <sun:property id="threadPriorityProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncon.threadPriorityLabel}"  helpText="$resource{i18ncon.threadPriorityLabelHelp}">
             <sun:textField id="threadPriorityProp" styleClass="integer" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.common.description']}" text="#{pageSession.valueMap['threadPriority']}" />
        </sun:property>
-       
+
+       <sun:property id="usevirtualthreads"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncon.usevirtualthreads}">
+            <sun:checkbox  selected="#{pageSession.valueMap['virtual']}" selectedValue="true"  />
+       </sun:property>
+
        <sun:property id="longrunningtasks"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncon.longRunningTasks}">
             <sun:checkbox  selected="#{pageSession.valueMap['longRunningTasks']}" selectedValue="true"  />
        </sun:property>

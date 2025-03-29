@@ -55,6 +55,21 @@ public interface ManagedExecutorServiceBase
     void setThreadPriority(String value) throws PropertyVetoException;
 
     /**
+     * Gets the value of the useVirtualThreads property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getVirtual();
+
+    /**
+     * Sets the value of the useVirtualThreads property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setVirtual(String value) throws PropertyVetoException;
+
+    /**
      * Gets the value of the longRunningTasks property.
      *
      * @return possible object is

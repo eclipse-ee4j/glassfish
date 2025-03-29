@@ -38,6 +38,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.KEEP_ALIVE_S
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.LONG_RUNNING_TASKS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_LIFETIME_SECONDS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 
@@ -66,7 +67,10 @@ public class CreateManagedExecutorServiceBase {
     @Param(name="threadpriority", alias="threadPriority", defaultValue=""+Thread.NORM_PRIORITY, optional=true)
     protected Integer threadpriority;
 
-    @Param(name="longrunningtasks", alias="longRunningTasks", defaultValue="false", optional=true)
+    @Param(name = "virtual", alias = "virtual", defaultValue = "false", optional = true)
+    protected Boolean virtual;
+
+    @Param(name = "longrunningtasks", alias = "longRunningTasks", defaultValue = "false", optional = true)
     protected Boolean longrunningtasks;
 
     @Param(name="hungafterseconds", alias="hungAfterSeconds", defaultValue="0", optional=true)
@@ -104,6 +108,7 @@ public class CreateManagedExecutorServiceBase {
         attrList.put(CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.put(CONTEXT_INFO, contextinfo);
         attrList.put(THREAD_PRIORITY, threadpriority.toString());
+        attrList.put(VIRTUAL, virtual.toString());
         attrList.put(LONG_RUNNING_TASKS, longrunningtasks.toString());
         attrList.put(HUNG_AFTER_SECONDS, hungafterseconds.toString());
         attrList.put(HUNG_LOGGER_PRINT_ONCE, hungloggerprintonce.toString());

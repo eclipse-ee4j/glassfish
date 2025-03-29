@@ -222,4 +222,14 @@ public class ConcurrencyManagedThreadFactoryConfig implements ManagedThreadFacto
     public String getIdentity() {
         return null;
     }
+
+    @Override
+    public String getVirtual() {
+        return String.valueOf(descriptor.isVirtual());
+    }
+
+    @Override
+    public void setVirtual(String value) throws PropertyVetoException {
+        descriptor.setVirtual(Boolean.parseBoolean(value));
+    }
 }

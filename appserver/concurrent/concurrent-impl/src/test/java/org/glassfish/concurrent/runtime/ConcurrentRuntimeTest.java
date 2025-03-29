@@ -26,7 +26,6 @@ import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
 import org.glassfish.concurro.ContextServiceImpl;
-import org.glassfish.concurro.ManagedExecutorServiceImpl;
 import org.glassfish.concurro.ManagedThreadFactoryImpl;
 import org.glassfish.concurro.internal.ManagedThreadPoolExecutor;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +39,7 @@ import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import org.glassfish.concurro.AbstractManagedExecutorService;
 import static org.glassfish.tests.utils.ReflectionUtils.getField;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,7 +131,7 @@ public class ConcurrentRuntimeTest {
         replay(config);
 
         ManagedExecutorServiceCfg managedExecutorServiceCfg = new ManagedExecutorServiceCfg(config);
-        ManagedExecutorServiceImpl mes = runtime.getManagedExecutorService(managedExecutorServiceCfg);
+        AbstractManagedExecutorService mes = runtime.getManagedExecutorService(managedExecutorServiceCfg);
         ManagedThreadFactoryImpl managedThreadFactory = mes.getManagedThreadFactory();
 
         assertEquals(100_000L, managedThreadFactory.getHungTaskThreshold());

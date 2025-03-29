@@ -72,6 +72,21 @@ public interface ManagedThreadFactory extends ConfigBeanProxy, Resource, Bindabl
     void setThreadPriority(String threadPriority) throws PropertyVetoException;
 
     /**
+     * Gets the value of the useVirtualThreads property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getVirtual();
+
+    /**
+     * Sets the value of the useVirtualThreads property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setVirtual(String value) throws PropertyVetoException;
+
+    /**
      * Gets the value of the {@code context} property.
      *
      * @return possible object is {@link String}

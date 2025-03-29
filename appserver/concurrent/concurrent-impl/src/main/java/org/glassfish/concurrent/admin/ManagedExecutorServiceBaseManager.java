@@ -61,6 +61,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.KEEP_ALIVE_S
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.LONG_RUNNING_TASKS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_LIFETIME_SECONDS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
@@ -79,6 +80,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
     protected String threadPriority = Integer.toString(Thread.NORM_PRIORITY);
     protected String contextInfoEnabled = Boolean.TRUE.toString();
     protected String contextInfo = CONTEXT_INFO_DEFAULT_VALUE;
+    protected String virtual = Boolean.FALSE.toString();
     protected String longRunningTasks = Boolean.FALSE.toString();
     protected String hungAfterSeconds = "0";
     protected String hungLoggerPrintOnce = Boolean.FALSE.toString();
@@ -164,6 +166,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         contextInfo = attributes.get(CONTEXT_INFO);
         contextInfoEnabled = attributes.get(CONTEXT_INFO_ENABLED);
         threadPriority = attributes.get(THREAD_PRIORITY);
+        virtual = attributes.get(VIRTUAL);
         longRunningTasks = attributes.get(LONG_RUNNING_TASKS);
         hungAfterSeconds = attributes.get(HUNG_AFTER_SECONDS);
         hungLoggerPrintOnce = attributes.get(HUNG_LOGGER_PRINT_ONCE);
@@ -210,6 +213,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setThreadLifetimeSeconds(threadLifetimeSeconds);
         managedExecutorService.setEnabled(enabled);
         managedExecutorService.setLongRunningTasks(longRunningTasks);
+        managedExecutorService.setVirtual(virtual);
         if (properties != null) {
             for (Entry<Object, Object> e : properties.entrySet()) {
                 Property prop = managedExecutorService.createChild(Property.class);

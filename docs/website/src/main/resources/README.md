@@ -7,6 +7,12 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## March 14, 2025 -- Eclipse GlassFish 7.0.23 Available
+
+The key feature for this release is making SSH nodes work on the Windows operating system, and while at it improve the way they work on Linux. The team mainly focussed on this work, and a lot of effort went into it. We're really happy to have achieved the goal to have it fully working. Next to that some important fixes were done for logging and specifically a regression for the security principal was fixed.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## February 3, 2025 -- Eclipse GlassFish 7.0.22 Available
 
 The first release of 2025 is here; GlassFish 7.0.22!

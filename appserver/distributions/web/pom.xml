@@ -125,26 +125,6 @@
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
                                 
-                                
-                                <!-- To support glassfish.pfl 5.0.0 -->
-                                
-                                <!-- Patch for gmbal 4.0.3 -->
-                                
-                                <jarupdate 
-                                    basedir="${patches}/gmbal" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/gmbal.jar"
-                                />
-                                
-                                <!-- Patch for glassfish-corba 4.2.5 -->
-                                <jarupdate
-                                    basedir="${patches}/glassfish-corba-internal-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/glassfish-corba-internal-api.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/glassfish-corba-orb" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/glassfish-corba-orb.jar"
-                                />
-                                
                                 <!-- Path for OSGI locator osgiresourcelocator -->
                                 <jarupdate
                                     basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"

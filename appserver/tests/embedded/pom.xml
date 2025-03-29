@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -42,12 +42,13 @@
         <module>basic</module>
         <module>cdi_basic</module>
         <module>cdi_ejb_jpa</module>
-        <module>glassfish_resources_xml</module>
         <module>ejb</module>
-        <module>scatteredarchive</module>
+        <module>glassfish_resources_xml</module>
         <module>maven-plugin</module>
-        <module>web</module>
+        <module>runnable</module>
+        <module>scatteredarchive</module>
         <module>utils</module>
+        <module>web</module>
     </modules>
 
     <dependencyManagement>

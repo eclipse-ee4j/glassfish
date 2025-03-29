@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -141,7 +141,7 @@ public enum Option {
     SHUTDOWN("shutdown", Set.of("shut-down", "stop"), "--shut-down, --shutdown, --stop",
     "Shut down GlassFish and the whole JVM process after server is started and initialized."
             + " This is useful to start the server, perform some action during startup"
-            + " (e.g. during application dpeloyment), and shot down the application cleanly."
+            + " (e.g. during application deployment), and shut down the application cleanly."
             + " Also useful for Class Data Sharing and similar startup optimizations"
             + " - to start the server, get it to a ready state (applications deployed, etc.),"
             + " and then shut down cleanly, so that the JVM can store the cached data.") {

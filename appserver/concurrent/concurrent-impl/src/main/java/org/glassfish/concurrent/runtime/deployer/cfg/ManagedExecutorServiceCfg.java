@@ -41,6 +41,7 @@ public class ManagedExecutorServiceCfg implements Serializable {
     private final long hungLoggerInitialDelaySeconds;
     private final long hungLoggerIntervalSeconds;
     private final boolean longRunningTasks;
+    private final boolean useVirtualThreads;
     private final int threadPriority;
     private final int corePoolSize;
     private final long keepAliveSeconds;
@@ -52,10 +53,11 @@ public class ManagedExecutorServiceCfg implements Serializable {
         Set<ConcurrencyContextType> propagated = parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
         serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
         hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
-        hungLoggerPrintOnce = Boolean.valueOf(config.getHungLoggerPrintOnce());
+        hungLoggerPrintOnce = Boolean.parseBoolean(config.getHungLoggerPrintOnce());
         hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60L);
         hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60L);
-        longRunningTasks = Boolean.valueOf(config.getLongRunningTasks());
+        longRunningTasks = Boolean.parseBoolean(config.getLongRunningTasks());
+        useVirtualThreads = Boolean.parseBoolean(config.getUseVirtualThreads());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
         corePoolSize = parseInt(config.getCorePoolSize(), 0);
         keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60L);
@@ -93,6 +95,9 @@ public class ManagedExecutorServiceCfg implements Serializable {
         return longRunningTasks;
     }
 
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
+    }
 
     public int getThreadPriority() {
         return threadPriority;

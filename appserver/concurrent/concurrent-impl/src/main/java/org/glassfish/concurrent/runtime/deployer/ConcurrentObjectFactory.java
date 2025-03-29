@@ -18,6 +18,7 @@
 package org.glassfish.concurrent.runtime.deployer;
 
 import com.sun.logging.LogDomains;
+import jakarta.enterprise.concurrent.ManagedExecutorService;
 
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -33,8 +34,6 @@ import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
 import org.glassfish.concurro.ContextServiceImpl;
-import org.glassfish.concurro.ManagedExecutorServiceAdapter;
-import org.glassfish.concurro.ManagedScheduledExecutorServiceAdapter;
 import org.glassfish.concurro.ManagedThreadFactoryImpl;
 
 import static org.glassfish.concurrent.runtime.ConcurrentRuntime.getRuntime;
@@ -69,11 +68,11 @@ public class ConcurrentObjectFactory implements ObjectFactory {
         return getRuntime().getManagedThreadFactory(config);
     }
 
-    private ManagedExecutorServiceAdapter getManagedExecutorService(ManagedExecutorServiceCfg config) {
+    private ManagedExecutorService getManagedExecutorService(ManagedExecutorServiceCfg config) {
         return getRuntime().getManagedExecutorService(config).getAdapter();
     }
 
-    private ManagedScheduledExecutorServiceAdapter getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
+    private ManagedExecutorService getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
         return getRuntime().getManagedScheduledExecutorService(config).getAdapter();
     }
 }

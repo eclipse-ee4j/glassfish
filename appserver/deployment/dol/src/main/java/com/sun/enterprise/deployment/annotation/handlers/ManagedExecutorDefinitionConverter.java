@@ -75,7 +75,7 @@ class ManagedExecutorDefinitionConverter
         for (Class<?> clazz : annotation.qualifiers()) {
             data.addQualifier(clazz.getCanonicalName());
         }
-        data.setVirtual(annotation.virtual());
+        data.setUseVirtualThreads(annotation.virtual());
 
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungAfterSeconds(0);
@@ -101,8 +101,8 @@ class ManagedExecutorDefinitionConverter
 
         mergeQualifiers(annotation, descriptor);
 
-        if (!descriptor.isVirtual()) {
-            descriptor.setVirtual(annotation.isVirtual());
+        if (!descriptor.getUseVirtualThreads()) {
+            descriptor.setUseVirtualThreads(annotation.getUseVirtualThreads());
         }
         if (descriptor.getHungAfterSeconds() <= 0 && annotation.getHungAfterSeconds() != 0) {
             descriptor.setHungAfterSeconds(annotation.getHungAfterSeconds());

@@ -31,7 +31,7 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
     private String context;
     private int maximumPoolSize = Integer.MAX_VALUE;
     private long hungAfterSeconds;
-    private boolean virtual;
+    private boolean useVirtualThreads;
     private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
@@ -78,14 +78,14 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
 
     @Override
-    public boolean isVirtual() {
-        return virtual;
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
     }
 
 
     @Override
-    public void setVirtual(boolean virtual) {
-        this.virtual = virtual;
+    public void setUseVirtualThreads(boolean useVirtualThreads) {
+        this.useVirtualThreads = useVirtualThreads;
     }
 
 
@@ -131,8 +131,8 @@ public class ManagedExecutorDefinitionData implements ContextualResourceDefiniti
 
     @Override
     public String toString() {
-        return super.toString() + "[name=" + getName() + ", context=" + context + ", virtual=" + virtual
-            + ", maximumPoolSize=" + maximumPoolSize + ", hungAfterSeconds=" + hungAfterSeconds
+        return super.toString() + "[name=" + getName() + ", context=" + context + ", useVirtualThreads=" + useVirtualThreads
+                + ", maximumPoolSize=" + maximumPoolSize + ", hungAfterSeconds=" + hungAfterSeconds
             + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
 }

@@ -151,7 +151,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.gmbal</groupId>
-            <artifactId>gmbal</artifactId>
+            <artifactId>gmbal-api-only</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.interceptor</groupId>

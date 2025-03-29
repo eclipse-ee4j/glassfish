@@ -75,7 +75,7 @@ class ManagedScheduledExecutorDefinitionConverter extends
             data.addQualifier(clazz.getCanonicalName());
         }
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
-        data.setVirtual(annotation.virtual());
+        data.setUseVirtualThreads(annotation.virtual());
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungTaskThreshold(0);
         } else {
@@ -100,8 +100,8 @@ class ManagedScheduledExecutorDefinitionConverter extends
 
         mergeQualifiers(annotation, descriptor);
 
-        if (!descriptor.isVirtual()) {
-            descriptor.setVirtual(annotation.isVirtual());
+        if (!descriptor.getUseVirtualThreads()) {
+            descriptor.setUseVirtualThreads(annotation.getUseVirtualThreads());
         }
         if (descriptor.getHungTaskThreshold() <= 0 && annotation.getHungTaskThreshold() != 0) {
             descriptor.setHungTaskThreshold(annotation.getHungTaskThreshold());

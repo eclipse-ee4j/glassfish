@@ -166,7 +166,7 @@ public class ConcurrentRuntime {
                 null,
                 config.getThreadPriority());
         AbstractManagedExecutorService mes = null;
-        if (config.isVirtual()) {
+        if (config.getUseVirtualThreads()) {
             try {
                 mes = new VirtualThreadsManagedExecutorService(jndiName.toString(),
                         null,
@@ -223,7 +223,7 @@ public class ConcurrentRuntime {
                 null,
                 config.getThreadPriority());
         AbstractManagedExecutorService mes = null;
-        if (config.isVirtual()) {
+        if (config.getUseVirtualThreads()) {
             try {
                 mes = new VirtualThreadsManagedScheduledExecutorService(jndiName.toString(),
                         null,
@@ -266,7 +266,7 @@ public class ConcurrentRuntime {
 
     public ManagedThreadFactoryImpl createManagedThreadFactory(ManagedThreadFactoryCfg config, ContextServiceImpl contextService) {
         SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
-        if (config.isVirtual()) {
+        if (config.getUseVirtualThreads()) {
             ManagedThreadFactoryImpl virtFactory = new VirtualThreadsManagedThreadFactory(jndiName.toString(), contextService);
             return virtFactory;
         } else {

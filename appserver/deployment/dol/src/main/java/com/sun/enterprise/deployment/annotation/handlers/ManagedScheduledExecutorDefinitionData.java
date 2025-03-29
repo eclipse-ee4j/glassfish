@@ -28,7 +28,7 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
     private static final long serialVersionUID = -5569777558325563130L;
     private String name;
     private String context;
-    private boolean virtual;
+    private boolean useVirtualThreads;
     private long hungTaskThreshold;
     private int maxAsync = Integer.MAX_VALUE;
     private final List<String> qualifiers = new ArrayList<>();
@@ -77,14 +77,14 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
 
 
     @Override
-    public boolean isVirtual() {
-        return virtual;
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
     }
 
 
     @Override
-    public void setVirtual(boolean virtual) {
-        this.virtual = virtual;
+    public void setUseVirtualThreads(boolean useVirtualThreads) {
+        this.useVirtualThreads = useVirtualThreads;
     }
 
 
@@ -120,8 +120,8 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
 
     @Override
     public String toString() {
-        return super.toString() + "[name=" + getName() + ", context=" + context + ", virtual=" + virtual
-            + ", hungTaskThreshold=" + hungTaskThreshold + ", maxAsync=" + maxAsync
-            + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
+        return super.toString() + "[name=" + getName() + ", context=" + context + ", useVirtualThreads=" + useVirtualThreads
+                + ", hungTaskThreshold=" + hungTaskThreshold + ", maxAsync=" + maxAsync
+                + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
 }

@@ -61,7 +61,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.KEEP_ALIVE_S
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.LONG_RUNNING_TASKS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_LIFETIME_SECONDS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
-import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.USE_VIRTUAL_THREADS;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
@@ -166,7 +166,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         contextInfo = attributes.get(CONTEXT_INFO);
         contextInfoEnabled = attributes.get(CONTEXT_INFO_ENABLED);
         threadPriority = attributes.get(THREAD_PRIORITY);
-        virtual = attributes.get(VIRTUAL);
+        virtual = attributes.get(USE_VIRTUAL_THREADS);
         longRunningTasks = attributes.get(LONG_RUNNING_TASKS);
         hungAfterSeconds = attributes.get(HUNG_AFTER_SECONDS);
         hungLoggerPrintOnce = attributes.get(HUNG_LOGGER_PRINT_ONCE);
@@ -213,7 +213,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setThreadLifetimeSeconds(threadLifetimeSeconds);
         managedExecutorService.setEnabled(enabled);
         managedExecutorService.setLongRunningTasks(longRunningTasks);
-        managedExecutorService.setVirtual(virtual);
+        managedExecutorService.setUseVirtualThreads(virtual);
         if (properties != null) {
             for (Entry<Object, Object> e : properties.entrySet()) {
                 Property prop = managedExecutorService.createChild(Property.class);

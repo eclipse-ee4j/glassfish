@@ -90,14 +90,14 @@ public class ManagedExecutorDefinitionDescriptor extends ResourceDescriptor impl
 
 
     @Override
-    public boolean isVirtual() {
-        return data.isVirtual();
+    public boolean getUseVirtualThreads() {
+        return data.getUseVirtualThreads();
     }
 
 
     @Override
-    public void setVirtual(boolean virtual) {
-        data.setVirtual(virtual);
+    public void setUseVirtualThreads(boolean useVirtualThreads) {
+        data.setUseVirtualThreads(useVirtualThreads);
     }
 
 

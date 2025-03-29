@@ -50,7 +50,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
-import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.USE_VIRTUAL_THREADS;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
@@ -139,7 +139,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         contextInfoEnabled = (String) attributes.get(CONTEXT_INFO_ENABLED);
         contextInfo = (String) attributes.get(CONTEXT_INFO);
         threadPriority = (String) attributes.get(THREAD_PRIORITY);
-        virtual = (String) attributes.get(VIRTUAL);
+        virtual = (String) attributes.get(USE_VIRTUAL_THREADS);
         if(target != null){
             enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
         }else{
@@ -165,7 +165,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         managedThreadFactory.setContextInfoEnabled(contextInfoEnabled);
         managedThreadFactory.setContextInfo(contextInfo);
         managedThreadFactory.setThreadPriority(threadPriority);
-        managedThreadFactory.setVirtual(virtual);
+        managedThreadFactory.setUseVirtualThreads(virtual);
         managedThreadFactory.setEnabled(enabled);
         if (properties != null) {
             for (Map.Entry e : properties.entrySet()) {

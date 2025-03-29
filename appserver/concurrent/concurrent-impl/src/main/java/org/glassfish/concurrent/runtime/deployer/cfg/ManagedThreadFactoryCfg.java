@@ -34,13 +34,13 @@ public class ManagedThreadFactoryCfg implements Serializable {
     private static final long serialVersionUID = -7772066566768020144L;
 
     private final ConcurrentServiceCfg serviceConfig;
-    private final boolean virtual;
+    private final boolean useVirtualThreads;
     private final int threadPriority;
 
     public ManagedThreadFactoryCfg(ManagedThreadFactory config) {
         Set<ConcurrencyContextType> propagated = parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
         serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
-        virtual = Boolean.parseBoolean(config.getVirtual());
+        useVirtualThreads = Boolean.parseBoolean(config.getUseVirtualThreads());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
     }
 
@@ -48,8 +48,8 @@ public class ManagedThreadFactoryCfg implements Serializable {
         return this.serviceConfig;
     }
 
-    public boolean isVirtual() {
-        return virtual;
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
     }
 
     public int getThreadPriority() {

@@ -31,7 +31,7 @@
         setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/concurrent/managedScheduledExecutorServices.jsf");
         setPageSessionAttribute(key="childType" value="managed-scheduled-executor-service");
         setPageSessionAttribute(key="isConcurrent" value="true");
-        setPageSessionAttribute(key="convertToFalseList" value={"enabled", "contextInfoEnabled", "virtual", "longRunningTasks", "hungLoggerPrintOnce" });
+        setPageSessionAttribute(key="convertToFalseList" value={"enabled", "contextInfoEnabled", "useVirtualThreads", "longRunningTasks", "hungLoggerPrintOnce" });
         setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
         gf.getDefaultValues(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", valueMap="#{pageSession.valueMap}");
         setPageSessionAttribute(key="edit" value="#{false}" );

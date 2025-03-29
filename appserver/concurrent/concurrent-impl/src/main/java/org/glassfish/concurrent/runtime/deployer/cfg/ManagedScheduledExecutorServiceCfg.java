@@ -41,7 +41,7 @@ public class ManagedScheduledExecutorServiceCfg implements Serializable {
     private final long hungLoggerInitialDelaySeconds;
     private final long hungLoggerIntervalSeconds;
     private final boolean longRunningTasks;
-    private final boolean virtual;
+    private final boolean useVirtualThreads;
     private final int threadPriority;
     private final int corePoolSize;
     private final long keepAliveSeconds;
@@ -55,7 +55,7 @@ public class ManagedScheduledExecutorServiceCfg implements Serializable {
         hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60L);
         hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60L);
         longRunningTasks = Boolean.parseBoolean(config.getLongRunningTasks());
-        virtual = Boolean.parseBoolean(config.getVirtual());
+        useVirtualThreads = Boolean.parseBoolean(config.getUseVirtualThreads());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
         corePoolSize = parseInt(config.getCorePoolSize(), 0);
         keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60L);
@@ -91,8 +91,8 @@ public class ManagedScheduledExecutorServiceCfg implements Serializable {
         return longRunningTasks;
     }
 
-    public boolean isVirtual() {
-        return virtual;
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
     }
 
     public int getThreadPriority() {

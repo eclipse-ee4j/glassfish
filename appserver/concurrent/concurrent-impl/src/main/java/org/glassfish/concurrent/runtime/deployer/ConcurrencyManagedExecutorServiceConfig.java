@@ -335,13 +335,13 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
     }
 
     @Override
-    public String getVirtual() {
-        return String.valueOf(descriptor.isVirtual());
+    public String getUseVirtualThreads() {
+        return String.valueOf(descriptor.getUseVirtualThreads());
     }
 
     @Override
-    public void setVirtual(String value) throws PropertyVetoException {
-        descriptor.setVirtual(Boolean.parseBoolean(value));
+    public void setUseVirtualThreads(String value) throws PropertyVetoException {
+        descriptor.setUseVirtualThreads(Boolean.parseBoolean(value));
     }
 
 }

@@ -25,8 +25,8 @@ public interface ContextualResourceDefinition extends ConcurrencyResourceDefinit
 
     void setContext(String context);
 
-    boolean isVirtual();
+    boolean getUseVirtualThreads();
 
-    void setVirtual(boolean virtual);
+    void setUseVirtualThreads(boolean useVirtualThreads);
 
 }

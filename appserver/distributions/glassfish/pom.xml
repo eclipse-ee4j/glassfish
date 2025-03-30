@@ -140,16 +140,10 @@
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
                                 
-                                
-                                <!-- To support Expression Language 6 and Expressly 6-->
+                                <!-- Fixes missing osgi import-->
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
-                                />
-                                
-                                <jarupdate
-                                    basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
                                 
                                 <!-- Path for OSGI locator osgiresourcelocator -->

@@ -29,7 +29,7 @@
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jakartaee>11.0.0-M4</jakartaee>
+        <jakartaee>11.0.0-RC1</jakartaee>
     </properties>
 
     <dependencies>

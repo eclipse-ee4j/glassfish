@@ -138,7 +138,7 @@
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
-        <asm.version>9.7.1</asm.version>
+        <asm.version>9.8</asm.version>
         <jsch.version>0.2.24</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>

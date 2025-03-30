@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +34,11 @@ import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.net.URI;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -118,11 +122,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     public FileArchive() {
     }
 
-
     public FileArchive(URI uri) throws IOException {
         open(uri);
     }
-
 
     /**
      * Open an abstract archive
@@ -222,9 +224,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public Enumeration<String> entries() {
-        final List<String> namesList = new ArrayList<>();
-        getListOfFiles(archive, namesList, null);
-        return Collections.enumeration(namesList);
+        return entries("");
     }
 
     /**
@@ -247,21 +247,6 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     }
 
     /**
-     * @return an @see java.util.Enumeration of entries in this abstract archive, providing the list of embedded archive to
-     * not count their entries as part of this archive
-     */
-    public Enumeration entries(Enumeration embeddedArchives) {
-        List<String> nameList = new ArrayList<>();
-        List massagedNames = new ArrayList();
-        while (embeddedArchives.hasMoreElements()) {
-            String subArchiveName = (String) embeddedArchives.nextElement();
-            massagedNames.add(FileUtils.makeFriendlyFilenameExtension(subArchiveName));
-        }
-        getListOfFiles(archive, nameList, massagedNames);
-        return Collections.enumeration(nameList);
-    }
-
-    /**
      * Returns an enumeration of the module file entries with the specified prefix. All elements in the enumeration are of
      * type String. Each String represents a file name relative to the root of the module.
      *
@@ -272,8 +257,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     public Enumeration<String> entries(String prefix) {
         prefix = prefix.replace('/', File.separatorChar);
         File file = new File(archive, prefix);
-        List<String> namesList = new ArrayList<>();
-        getListOfFiles(file, namesList, null);
+
+        // Here we could cache "File -> found entries"
+        List<String> namesList = getListOfFiles(file, deplLogger);
         return Collections.enumeration(namesList);
     }
 
@@ -643,49 +629,57 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     }
 
     /**
-     * utility method for getting contents of directory and sub directories
-     */
-
-    private void getListOfFiles(File directory, List<String> files, List<String> embeddedArchives) {
-        getListOfFiles(directory, files, embeddedArchives, deplLogger);
-    }
-
-    /**
      * Adds the files in the specified directory to the collection of files already assembled. Excludes the contents of
      * embedded archives in the current archive which appear in the file tree anchored at the given directory.
      *
      * @param directory the directory to scan for files
-     * @param files collection of files already assembled to which this directory's files are to be added
-     * @param embeddedArchives collection of embedded archives in the current archive
      * @param logger logger to which to report inability to get the list of files from the directory
      */
-    void getListOfFiles(File directory, List<String> files, List<String> embeddedArchives, final Logger logger) {
+    List<String> getListOfFiles(File directory, final Logger logger) {
         if (archive == null || directory == null || !directory.isDirectory()) {
-            return;
+            return Collections.emptyList();
         }
-        final File[] fileList = directory.listFiles();
-        if (fileList == null) {
-            deplLogger.log(Level.WARNING, FILE_LIST_FAILURE, directory.getAbsolutePath());
-            return;
-        }
-        for (File aList : fileList) {
-            String fileName = aList.getAbsolutePath().substring(archive.getAbsolutePath().length() + 1);
-            fileName = fileName.replace(File.separatorChar, '/');
-            if (!aList.isDirectory()) {
-                if (!fileName.equals(JarFile.MANIFEST_NAME) && isEntryValid(fileName, logger)) {
-                    files.add(fileName);
-                }
-            } else if (isEntryValid(fileName, logger)) {
-                files.add(fileName); // Add entry corresponding to the directory also to the list
-                if (embeddedArchives != null) {
-                    if (!embeddedArchives.contains(fileName)) {
-                        getListOfFiles(aList, files, null, logger);
+        List<String> files = new ArrayList<String>();
+
+        // walkFileTree: Symbolic links are not followed. All levels of the tree are visited.
+        try {
+            Files.walkFileTree(directory.toPath(), new SimpleFileVisitor<Path>() {
+
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    if (directory.toPath().equals(dir)) {
+                        // Skip the main directory
+                    } else {
+                        // Add sub directory names
+                        String fileName = getFileOrDirectoryName(dir);
+                        if (isEntryValid(fileName, logger)) {
+                            files.add(fileName);
+                        } else {
+                            // Ignore folder
+                            return FileVisitResult.SKIP_SUBTREE;
+                        }
                     }
-                } else {
-                    getListOfFiles(aList, files, null, logger);
+                    return FileVisitResult.CONTINUE;
                 }
-            }
+
+                @Override
+                public FileVisitResult visitFile(Path aList, BasicFileAttributes attrs) {
+                    String fileName = getFileOrDirectoryName(aList);
+                    if (!fileName.equals(JarFile.MANIFEST_NAME) && isEntryValid(fileName, logger)) {
+                        files.add(fileName);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            deplLogger.log(Level.WARNING, FILE_LIST_FAILURE, directory.getAbsolutePath());
         }
+        return files;
+    }
+
+    private String getFileOrDirectoryName(Path path) {
+        String fileName = path.toAbsolutePath().toString().substring(archive.getAbsolutePath().length() + 1);
+        return fileName.replace(File.separatorChar, '/');
     }
 
     private boolean deleteEntry(String name, final boolean isLogging) {
@@ -768,19 +762,16 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
                     return;
                 }
 
-                final URI archiveURI = archiveFile.toURI();
-                PrintStream ps = null;
-                try {
-                    ps = new PrintStream(markerFile(archiveFile));
+                final Path archiveURI = archiveFile.toPath();
+                try (PrintStream ps = new PrintStream(markerFile(archiveFile))) {
+                    for (; staleFileIt.hasNext();) {
+                        final Path relativeURI = archiveURI.relativize(staleFileIt.next().toPath());
+                        ps.println(relativeURI);
+                        deplLogger.log(DEBUG_LEVEL, "FileArchive.StaleFileManager recording left-over file {0}", relativeURI);
+                    }
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-                for (; staleFileIt.hasNext();) {
-                    final URI relativeURI = archiveURI.relativize(staleFileIt.next().toURI());
-                    ps.println(relativeURI);
-                    deplLogger.log(DEBUG_LEVEL, "FileArchive.StaleFileManager recording left-over file {0}", relativeURI);
-                }
-                ps.close();
             }
 
             /**
@@ -902,15 +893,15 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     private static class StaleFileManagerImpl implements StaleFileManager {
 
-        private final static String LINE_SEP = System.getProperty("line.separator");
+        private final static String LINE_SEP = System.lineSeparator();
         private final File archiveFile;
-        private final URI archiveURI;
+        private final Path archivePath;
         private final Collection<String> staleEntryNames;
         private final File markerFile;
 
         private StaleFileManagerImpl(final File archive) throws FileNotFoundException, IOException {
             archiveFile = archive;
-            archiveURI = archive.toURI();
+            archivePath = archive.toPath();
             markerFile = StaleFileManager.Util.markerFile(archive);
             staleEntryNames = readStaleEntryNames(markerFile);
         }
@@ -928,10 +919,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             if (!markerFile.exists()) {
                 return result;
             }
-            LineNumberReader reader = null;
-            try {
-                reader = new LineNumberReader(new FileReader(markerFile));
-
+            try (LineNumberReader reader = new LineNumberReader(new FileReader(markerFile));) {
                 // Avoid some work if logging is coarser than FINE.
                 final boolean isShowEntriesToBeSkipped = deplLogger.isLoggable(DEBUG_LEVEL);
                 final StringBuffer entriesToSkip = isShowEntriesToBeSkipped ? new StringBuffer() : null;
@@ -947,10 +935,6 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
                             new Object[] { LINE_SEP, entriesToSkip.toString() });
                 }
                 return result;
-            } finally {
-                if (reader != null) {
-                    reader.close();
-                }
             }
         }
 
@@ -961,10 +945,10 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
 
         @Override
         public boolean isEntryValid(final File f, final boolean isLogging, final Logger logger) {
-            final boolean result = (!isEntryMarkerFile(f)) && (!staleEntryNames.contains(archiveURI.relativize(f.toURI()).getPath()));
+            final boolean result = (!isEntryMarkerFile(f)) && (!staleEntryNames.contains(archivePath.relativize(f.toPath()).toString()));
             if (!result && !isEntryMarkerFile(f) && isLogging) {
                 deplLogger.log(Level.WARNING, STALE_FILES_SKIPPED,
-                        new Object[] { archiveURI.relativize(f.toURI()).toASCIIString(), archiveFile.getAbsolutePath() });
+                        new Object[] { archivePath.relativize(f.toPath()).toString(), archiveFile.getAbsolutePath() });
             }
             return result;
         }
@@ -1016,9 +1000,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
 
         private boolean isStaleEntryInDir(final File dir) {
-            final String dirURIPath = archiveURI.relativize(dir.toURI()).getPath();
+            final String dirPath = archivePath.relativize(dir.toPath()).toString();
             for (String staleEntryName : staleEntryNames) {
-                if (staleEntryName.startsWith(dirURIPath) && !staleEntryName.equals(dirURIPath)) {
+                if (staleEntryName.startsWith(dirPath) && !staleEntryName.equals(dirPath)) {
                     deplLogger.log(DEBUG_LEVEL, "FileArchive.StaleFileManager.isStaleEntryInDir found remaining stale entry {0} in {1}",
                             new Object[] { staleEntryName, dir.getAbsolutePath() });
                     return true;
@@ -1033,7 +1017,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
                 return false;
             }
 
-            final String entryName = archiveURI.relativize(f.toURI()).toASCIIString();
+            final String entryName = archivePath.relativize(f.toPath()).toString();
             final boolean wasStale = staleEntryNames.remove(entryName);
             if (wasStale) {
                 deplLogger.log(DEBUG_LEVEL, msg, entryName);
@@ -1060,16 +1044,13 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
                         "FileArchive.StatleFileManager.flush could not delete marker file {0}; continuing by writing out an empty marker file",
                         marker.getAbsolutePath());
             }
-            PrintStream ps = null;
-            try {
-                ps = new PrintStream(Util.markerFile(archiveFile));
+            try (PrintStream ps = new PrintStream(Util.markerFile(archiveFile))) {
+                for (String staleEntryName : staleEntryNames) {
+                    ps.println(staleEntryName);
+                }
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
-            for (String staleEntryName : staleEntryNames) {
-                ps.println(staleEntryName);
-            }
-            ps.close();
             deplLogger.log(DEBUG_LEVEL, "FileArchive.StaleFileManager.flush rewrote on-disk file {0} containing {1}",
                     new Object[] { markerFile.getAbsolutePath(), staleEntryNames.toString() });
         }

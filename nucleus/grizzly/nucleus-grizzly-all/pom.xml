@@ -75,11 +75,6 @@
             <artifactId>grizzly-config</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.gmbal</groupId>
-            <artifactId>gmbal</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>

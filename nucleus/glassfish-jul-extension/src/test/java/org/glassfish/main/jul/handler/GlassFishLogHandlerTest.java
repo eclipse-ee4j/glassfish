@@ -211,8 +211,14 @@ public class GlassFishLogHandlerTest {
 
     private static void waitForSize(File file, long minLineCount) throws IOException {
         long start = System.currentTimeMillis();
+        long lastLength = 0;
         do {
             Thread.onSpinWait();
+            long newLength = file.length();
+            if (newLength == lastLength) {
+                continue;
+            }
+            lastLength = newLength;
             final long lineCount;
             try (Stream<String> stream = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
                 lineCount = stream.count();

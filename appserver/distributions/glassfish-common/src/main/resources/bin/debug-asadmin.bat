@@ -1,5 +1,6 @@
 @echo off
 REM
+REM  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -15,20 +16,17 @@ REM
 REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
-
-REM  Always use JDK 1.6 or higher
-REM  Depends on Java from ..\glassfish\config\asenv.bat
 VERIFY OTHER 2>nul
-setlocal ENABLEEXTENSIONS
+setlocal EnableExtensions EnableDelayedExpansion
 if ERRORLEVEL 0 goto ok
 echo "Unable to enable extensions"
 exit /B 1
+
 :ok
-call "%~dp0..\glassfish\config\asenv.bat"
-if "%AS_JAVA%x" == "x" goto UsePath
-set JAVA="%AS_JAVA%\bin\java"
-goto run
-:UsePath
-set JAVA=java
-:run
-%JAVA% -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008 -jar "%~dp0..\glassfish\lib\client\appserver-cli.jar" %*
+set "AS_CONFIG=%~dp0..\glassfish\config"
+set "AS_CONFIG_BAT=%AS_CONFIG%\config.bat"
+call "%AS_CONFIG_BAT%" || (
+    echo Error: Cannot load config file
+    exit /B 1
+)
+"%JAVA%" -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008 -jar "%AS_INSTALL%\lib\client\appserver-cli.jar" %*

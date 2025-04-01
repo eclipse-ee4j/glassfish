@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -15,7 +16,10 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-AS_INSTALL=`dirname $0`/..
+AS_CONFIG="$(dirname "$(realpath -s "$0")")/../config"
+AS_CONFIG_SH="${AS_CONFIG}/config.sh"
+source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
+
 AS_INSTALL_LIB=$AS_INSTALL/modules
 JSP_IMPL=$AS_INSTALL_LIB/wasp.jar
 EL_IMPL=$AS_INSTALL_LIB/expressly:$AS_INSTALL_LIB/jakarta.el-api.jar
@@ -23,4 +27,4 @@ JSTL_IMPL=$AS_INSTALL_LIB/jakarta.servlet.jsp.jstl.jar
 AS_LIB=$AS_INSTALL/lib
 JAKARTAEE_API=$AS_LIB/jakartaee.jar
 
-java -cp "$JSP_IMPL:$JAKARTAEE_API:$AS_LIB" org.glassfish.wasp.JspC -sysClasspath "$JSP_IMPL:$EL_IMPL:$JSTL_IMPL:$JAKARTAEE_API:$AS_LIB" -schemas "/schemas/" -dtds "/dtds/" "$@"
+"${JAVA}" -cp "$JSP_IMPL:$JAKARTAEE_API:$AS_LIB" org.glassfish.wasp.JspC -sysClasspath "$JSP_IMPL:$EL_IMPL:$JSTL_IMPL:$JAKARTAEE_API:$AS_LIB" -schemas "/schemas/" -dtds "/dtds/" "$@"

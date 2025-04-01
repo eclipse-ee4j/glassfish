@@ -52,10 +52,12 @@ import org.glassfish.concurro.ContextServiceImpl;
 import org.glassfish.concurro.ManagedExecutorServiceImpl;
 import org.glassfish.concurro.ManagedScheduledExecutorServiceImpl;
 import org.glassfish.concurro.ManagedThreadFactoryImpl;
-import org.glassfish.concurro.virtualthreads.VirtualThreadsManagedExecutorService;
 import org.glassfish.concurro.spi.ContextHandle;
 import org.glassfish.concurro.spi.ContextSetupProvider;
 import org.glassfish.concurro.spi.TransactionSetupProvider;
+import org.glassfish.concurro.virtualthreads.VirtualThreadsManagedExecutorService;
+import org.glassfish.concurro.virtualthreads.VirtualThreadsManagedScheduledExecutorService;
+import org.glassfish.concurro.virtualthreads.VirtualThreadsManagedThreadFactory;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
@@ -68,8 +70,6 @@ import static com.sun.enterprise.deployment.types.StandardContextType.JNDI;
 import static com.sun.enterprise.deployment.types.StandardContextType.Security;
 import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static java.util.Collections.emptySet;
-import org.glassfish.concurro.virtualthreads.VirtualThreadsManagedScheduledExecutorService;
-import org.glassfish.concurro.virtualthreads.VirtualThreadsManagedThreadFactory;
 
 /**
  * This class provides API to create various Concurrency Utilities objects

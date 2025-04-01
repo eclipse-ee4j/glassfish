@@ -1114,6 +1114,7 @@ public abstract class GFLauncher {
             psFile = configDir.resolve("gfstart.ps1");
             StringBuilder batContent = new StringBuilder(8192);
             batContent.append("@echo off\n");
+            batContent.append("set CMD=");
             ListIterator<String> itemsOfCommand = command.listIterator();
             while (itemsOfCommand.hasNext()) {
                 String line = itemsOfCommand.next();
@@ -1126,6 +1127,7 @@ public abstract class GFLauncher {
                 }
                 batContent.append('\n');
             }
+            batContent.append("call %CMD% ");
             if (stdinPreloaded) {
                 batContent.append("< %1\n");
             }

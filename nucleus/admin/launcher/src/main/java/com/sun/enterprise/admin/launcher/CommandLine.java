@@ -31,8 +31,8 @@ import java.util.stream.Stream;
  */
 public final class CommandLine implements Iterable<String> {
 
-    private final List<String> command = new ArrayList<>();
     private final CommandFormat format;
+    private final List<String> command = new ArrayList<>();
 
     /**
      * @param format BAT files use specific format compared to command line.
@@ -54,7 +54,7 @@ public final class CommandLine implements Iterable<String> {
      * @param item
      */
     public void append(String item) {
-        command.add(item);
+        command.add(toQuotedIfNeeded(item));
     }
 
 
@@ -100,7 +100,7 @@ public final class CommandLine implements Iterable<String> {
      * @param item
      */
     public void appendJavaOption(String item) {
-        command.add(item);
+        command.add(toQuotedIfNeeded(item));
     }
 
 
@@ -145,7 +145,7 @@ public final class CommandLine implements Iterable<String> {
      */
     @Override
     public String toString() {
-        return command.stream().collect(Collectors.joining(" "));
+        return toString(" ");
     }
 
 
@@ -173,8 +173,11 @@ public final class CommandLine implements Iterable<String> {
     private String toQuotedIfNeeded(String value) {
         // BAT files have issues when then string doesn't contain a space
         // and we would use quotation marks.
-        if (format == CommandFormat.BatFile && value.indexOf(' ') >= 0) {
-            return toQuoted(value);
+        if (format == CommandFormat.BatFile) {
+            if (value.indexOf(' ') >= 0) {
+                return escapeSpecialCharactersIfNeeded(toQuoted(value));
+            }
+            return escapeSpecialCharactersIfNeeded(value);
         }
         // ProcessBuilder resolves it on its own.
         return value;
@@ -183,6 +186,17 @@ public final class CommandLine implements Iterable<String> {
 
     private static String toQuoted(String value) {
         return "\"" + value  + "\"";
+    }
+
+
+    private String escapeSpecialCharactersIfNeeded(String value) {
+        // BAT files try to interpret % as a variable,
+        // ie %t means current date and time
+        // BAT files also can interpret quotation marks, so we need to escape them.
+        if (format == CommandFormat.BatFile) {
+            return value.replaceAll("%", "%%").replaceAll("\"", "^\"");
+        }
+        return value;
     }
 
 

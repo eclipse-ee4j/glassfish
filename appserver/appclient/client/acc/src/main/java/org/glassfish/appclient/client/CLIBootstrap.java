@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -83,7 +83,7 @@ public class CLIBootstrap {
     private final static String SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR = "-Djava.security.auth.login.config=";
     private final static String SYSTEM_CLASS_LOADER_PROPERTY_EXPR = "-Djava.system.class.loader=org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
 
-    private final static String[] ENV_VARS = { "_AS_INSTALL", "APPCPATH", "VMARGS" };
+    private final static String[] ENV_VARS = { "AS_INSTALL", "APPCPATH", "VMARGS" };
 
     private JavaInfo java = new JavaInfo();
     private GlassFishInfo gfInfo = new GlassFishInfo();
@@ -867,7 +867,7 @@ public class CLIBootstrap {
     /**
      * Encapsulates information about the GlassFish installation, mostly useful directories within the installation.
      * <p>
-     * Note that we use the property acc._AS_INSTALL to find the installation.
+     * Note that we use the property acc. AS_INSTALL to find the installation.
      */
     static class GlassFishInfo {
 
@@ -878,9 +878,9 @@ public class CLIBootstrap {
         private static final String ACC_CONFIG_PREFIX = "domains/domain1/config";
 
         GlassFishInfo() {
-            String asInstallPath = System.getProperty(ENV_VAR_PROP_PREFIX + "_AS_INSTALL");
+            String asInstallPath = System.getProperty(ENV_VAR_PROP_PREFIX + "AS_INSTALL");
             if (asInstallPath == null || asInstallPath.length() == 0) {
-                throw new IllegalArgumentException("_AS_INSTALL == null");
+                throw new IllegalArgumentException("AS_INSTALL == null");
             }
             this.home = new File(asInstallPath);
             modules = new File(home, "modules");
@@ -953,11 +953,11 @@ public class CLIBootstrap {
         private final static String SHELL_PROP_NAME = "org.glassfish.appclient.shell";
 
         /*
-         * The appclient and appclient.bat scripts set ACCJava. Properties would be nicer instead of env vars, but the Windows
+         * The appclient and appclient.bat scripts set JAVA. Properties would be nicer instead of env vars, but the Windows
          * script handling of command line args in the for statement treats the = in -Dprop=value as an argument separator and
          * breaks the property assignment apart into two arguments.
          */
-        private final static String ACCJava_ENV_VAR_NAME = "ACCJava";
+        private final static String ACCJava_ENV_VAR_NAME = "JAVA";
 
         private final boolean useWindowsSyntax = File.separatorChar == '\\' && (System.getProperty(SHELL_PROP_NAME) == null);
 

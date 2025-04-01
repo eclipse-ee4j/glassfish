@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_SCHE
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
-import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.USE_VIRTUAL_THREADS;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
@@ -51,7 +51,7 @@ public class ManagedScheduledExecutorDefinitionNode
         Map<String,String> map = super.getDispatchTable();
         map.put(NAME, "setName");
         map.put(QUALIFIER, "addQualifier");
-        map.put(VIRTUAL, "setVirtual");
+        map.put(USE_VIRTUAL_THREADS, "setUseVirtualThreads");
         map.put(MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC, "setMaxAsync");
         map.put(MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
         map.put(MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungTaskThreshold");
@@ -66,7 +66,7 @@ public class ManagedScheduledExecutorDefinitionNode
         for (String qualifier : descriptor.getQualifiers()) {
             appendTextChild(node, QUALIFIER, qualifier);
         }
-        appendTextChild(node, VIRTUAL, descriptor.isVirtual());
+        appendTextChild(node, USE_VIRTUAL_THREADS, descriptor.getUseVirtualThreads());
         appendTextChild(node, MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC, descriptor.getMaxAsync());
         appendTextChild(node, MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF, descriptor.getContext());
         appendTextChild(node, MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(descriptor.getHungTaskThreshold()));

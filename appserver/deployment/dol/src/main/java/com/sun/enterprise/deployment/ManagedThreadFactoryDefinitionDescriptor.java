@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -90,14 +90,14 @@ public class ManagedThreadFactoryDefinitionDescriptor extends ResourceDescriptor
 
 
     @Override
-    public boolean isVirtual() {
-        return data.isVirtual();
+    public boolean getUseVirtualThreads() {
+        return data.getUseVirtualThreads();
     }
 
 
     @Override
-    public void setVirtual(boolean virtual) {
-        data.setVirtual(virtual);
+    public void setUseVirtualThreads(boolean useVirtualThreads) {
+        data.setUseVirtualThreads(useVirtualThreads);
     }
 
 

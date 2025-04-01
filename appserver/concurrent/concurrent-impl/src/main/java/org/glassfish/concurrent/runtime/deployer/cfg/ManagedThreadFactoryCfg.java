@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,11 +35,13 @@ public class ManagedThreadFactoryCfg implements Serializable {
     private static final long serialVersionUID = -7772066566768020144L;
 
     private final ConcurrentServiceCfg serviceConfig;
+    private final boolean useVirtualThreads;
     private final int threadPriority;
 
     public ManagedThreadFactoryCfg(ManagedThreadFactory config) {
         Set<ConcurrencyContextType> propagated = parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
         serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
+        useVirtualThreads = Boolean.parseBoolean(config.getUseVirtualThreads());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
     }
 
@@ -46,6 +49,9 @@ public class ManagedThreadFactoryCfg implements Serializable {
         return this.serviceConfig;
     }
 
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
+    }
 
     public int getThreadPriority() {
         return threadPriority;

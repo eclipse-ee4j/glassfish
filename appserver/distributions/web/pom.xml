@@ -116,6 +116,12 @@
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
                                 
+                                <!-- To support Annnotations 4 -->
+                                <jarupdate
+                                    basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
+                                />
+                                
                                 <!-- Path for OSGI locator osgiresourcelocator -->
                                 <jarupdate
                                     basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"

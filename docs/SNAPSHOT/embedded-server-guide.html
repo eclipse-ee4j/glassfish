@@ -56,7 +56,8 @@
 <li><a href="#creating-starting-and-stopping-embedded-glassfish-server">Creating, Starting, and Stopping Embedded Eclipse GlassFish</a>
 <ul class="sectlevel3">
 <li><a href="#creating-and-configuring-an-embedded-glassfish-server">Creating and Configuring an Embedded Eclipse GlassFish</a></li>
-<li><a href="#running-an-embedded-glassfish-server">Running an Embedded Eclipse GlassFish</a></li>
+<li><a href="#supported-properties">Configuration properties supported by Embedded Eclipse GlassFish</a></li>
+<li><a href="#running-an-embedded-glassfish-server">Running Embedded Eclipse GlassFish from a Java application</a></li>
 </ul>
 </li>
 <li><a href="#deploying-and-undeploying-an-application-in-an-embedded-glassfish-server">Deploying and Undeploying an Application in an Embedded Eclipse GlassFish</a>
@@ -1036,13 +1037,23 @@ or info in the application descriptors.</p>
 <div class="paragraph">
 <p>Load properties from a file. This option can be repeated to
 load properties from multiple files. The propertes in the file can be
-any of the following:
-    - Any properties supported by Embedded $Eclipse GlassFish.
-    - Any command line options with the name of the option as the key,
-without the initial hyphens, and the value of the option as the value.
-    - Keys that start with the "command." prefix, followed by any text.
-The value will be treated as a command to execute at startup.
-    - Keys that start with the "deploy." prefix, followed by any text. The
+any of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Any properties supported by Embedded $Eclipse GlassFish. See <a href="#supported-properties">Configuration properties supported by Embedded Eclipse GlassFish</a>.</p>
+</li>
+<li>
+<p>Any command line options with the name of the option as the key,
+without the initial hyphens, and the value of the option as the value.</p>
+</li>
+<li>
+<p>Keys that start with the "command." prefix, followed by any text.
+The value will be treated as a command to execute at startup.</p>
+</li>
+<li>
+<p>Keys that start with the "deploy." prefix, followed by any text. The
 value will be treated as an application to deploy at startup, as if it
 was specified on the command line.
 For example, the $Eclipse GlassFish domain directory can be specified with the
@@ -1056,6 +1067,8 @@ behavior can be specified via a property key "deploy.app=myapp.war". The
 property "properties" can also be defined in this file, pointing to
 another file. In that case, properties will be loaded also from that
 file.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><code>-p=PORT, --httpPort=PORT, --port=PORT</code></p>
@@ -1099,7 +1112,7 @@ port 8080.</p>
 <div class="paragraph">
 <p>Files and directories in this directory will be deployed as
 applications (in random order), as if they were specified on the command
-line.</p>
+line. The default directory name is 'autodeploy'.</p>
 </div>
 <div class="paragraph">
 <p><code>--logLevel=LEVEL</code></p>
@@ -1130,6 +1143,12 @@ application cleanly. Also useful for Class Data Sharing and similar
 startup optimizations - to start the server, get it to a ready state
 (applications deployed, etc.), and then shut down cleanly, so that the
 JVM can store the cached data.</p>
+</div>
+<div class="paragraph">
+<p><code>--prompt</code></p>
+</div>
+<div class="paragraph">
+<p>Run interactive prompt that allows running admin commands. This is useful in development to manipulate a running GlassFish instance. After exiting the prompt, the server shuts down.</p>
 </div>
 <div class="paragraph">
 <p><code>--help</code></p>
@@ -1440,9 +1459,18 @@ the existing domain-dir
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-an-embedded-glassfish-server"><a class="anchor" href="#running-an-embedded-glassfish-server"></a>Running an Embedded Eclipse GlassFish</h4>
+<h4 id="supported-properties"><a class="anchor" href="#supported-properties"></a>Configuration properties supported by Embedded Eclipse GlassFish</h4>
 <div class="paragraph">
-<p>After you create an embedded Eclipse GlassFish as described in
+<p>In <code>GlassFishProperties</code> and in a properties file, Embedded Eclipse GlassFish supports the same configuration properties as the <code>set</code> and <code>get</code> administration commands of the Eclipse GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>In addition, it also accepts properties with the <code>embedded-glassfish-config.</code> prefix. This prefix is removed before applying the property (e.g., <code>resources.jdbc-connection-pool&#8230;&#8203;</code> can be defined as <code>embedded-glassfish-config.resources.jdbc-connection-pool&#8230;&#8203;</code>). This prefix is no longer necessary and its usage is deprecated, but it&#8217;s supported for backwards compatibility.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-an-embedded-glassfish-server"><a class="anchor" href="#running-an-embedded-glassfish-server"></a>Running Embedded Eclipse GlassFish from a Java application</h4>
+<div class="paragraph">
+<p>After you create an embedded Eclipse GlassFish server as described in
 <a href="#creating-and-configuring-an-embedded-glassfish-server">Creating and Configuring an Embedded Eclipse GlassFish</a>, you
 can perform operations such as:</p>
 </div>
@@ -2397,7 +2425,7 @@ Add the following <code>configuration</code> element to your POM file:</p>
                     <span class="tag">&lt;/bootstrapProperties&gt;</span>
                     <span class="tag">&lt;bootstrapPropertiesFile&gt;</span>bootstrap.properties<span class="tag">&lt;/bootstrapPropertiesFile&gt;</span>
                     <span class="tag">&lt;glassfishProperties&gt;</span>
-<span class="tag">&lt;property&gt;</span>embedded-glassfish-config.server.jms-service.jms-host.default_JMS_host.port=17676<span class="tag">&lt;/property&gt;</span>
+<span class="tag">&lt;property&gt;</span>server.jms-service.jms-host.default_JMS_host.port=17676<span class="tag">&lt;/property&gt;</span>
                     <span class="tag">&lt;/glassfishProperties&gt;</span>
                     <span class="tag">&lt;glassfishPropertiesFile&gt;</span>glassfish.properties<span class="tag">&lt;/glassfishPropertiesFile&gt;</span>
                     <span class="tag">&lt;systemProperties&gt;</span>
@@ -3660,7 +3688,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-30 11:10:20 UTC
+Last updated 2025-04-02 10:50:45 UTC
 </div>
 </div>
 </body>

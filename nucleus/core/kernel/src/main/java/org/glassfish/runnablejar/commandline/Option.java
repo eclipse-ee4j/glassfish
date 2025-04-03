@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -43,7 +42,7 @@ public enum Option {
     PROPERTIES("properties", "--properties=FILE",
             "Load GlassFish properties from a file. This option can be repeated to load properties from multiple files."
             + " The propertes in the file can be any of the following:\n"
-            + " - Any properties supported by GlassFish Embedded.\n"
+            + " - Any properties supported by Embedded GlassFish. See SUPPORTED PROPERTIES\n"
             + " - Any command line options with the name of the option as the key,"
             + " without the initial hyphens, and the value of the option as the value.\n"
             + " - Keys that start with the \"" + Arguments.COMMAND_KEY_PREFIX
@@ -85,7 +84,7 @@ public enum Option {
             "Set the location of domain configuration file (i.e., domain.xml) using which GlassFish should run.") {
         @Override
         public void handle(String value, Arguments arguments) {
-            arguments.glassFishProperties.setConfigFileURI(new File(value).toURI().toString());
+            arguments.glassFishProperties.setConfigFile(new File(value).toURI());
         }
     },
     DOMAIN_DIR("domainDir", Set.of("instanceRoot"), "--domainDir=DIRECTORY, --instanceRoot=DIRECTORY",
@@ -104,7 +103,7 @@ public enum Option {
     },
     AUTO_DEPLOY_DIR("autoDeployDir", "--autoDeployDir=DIRECTORY",
             "Files and directories in this directory will be deployed as applications (in random order), as if they"
-            + " were specified on the command line.") {
+            + " were specified on the command line. The default directory name is 'autodeploy'.") {
         @Override
         public void handle(String value, Arguments arguments) {
             loadApplicationsFromDirectory(value, arguments);
@@ -148,6 +147,14 @@ public enum Option {
         @Override
         public void handle(String value, Arguments arguments) {
             arguments.shutdown = true;
+        }
+    },
+    PROMPT("prompt", "--prompt",
+    "Run interactive prompt that allows running admin commands. This is useful in development"
+    + " to manipulate a running GlassFish instance. After exiting the prompt, the server shuts down.") {
+        @Override
+        public void handle(String value, Arguments arguments) {
+            arguments.prompt = true;
         }
     },
     HELP("help", "--help", "Print this help") {
@@ -222,11 +229,11 @@ public enum Option {
 
     protected void loadPropertiesFromFile(String fileName, Arguments arguments) {
         try {
-            final Properties properties = new Properties();
+            final OrderedProperties properties = new OrderedProperties();
             properties.load(Files.newBufferedReader(Paths.get(fileName)));
-            properties.forEach((k, v) -> {
+            properties.forEachOrdered((key, value) -> {
                 try {
-                    arguments.setOption((String) k, (String) v);
+                    arguments.setOption(key, value);
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Invalid property '" + e.getKey() + "' in file " + fileName);
                 }

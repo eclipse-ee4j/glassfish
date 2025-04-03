@@ -24,17 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.lang.System.err;
 
 /**
  *
  * @author Ondro Mihalyi
  */
 public class GfEmbeddedUtils {
+
     public static Process runGlassFishEmbedded(String glassfishEmbeddedJarName, String... additionalArguments) throws IOException {
         List<String> arguments = new ArrayList<>();
         arguments.addAll(List.of(ProcessHandle.current().info().command().get(),
-                        "-jar", glassfishEmbeddedJarName,
-                        "--stop"));
+                //                "-Xrunjdwp:transport=dt_socket,server=y,suspend=y", // enable debugging on random port
+                "-jar", glassfishEmbeddedJarName,
+                "--stop"));
         for (String argument : additionalArguments) {
             arguments.add(argument);
         }
@@ -49,7 +52,9 @@ public class GfEmbeddedUtils {
         InputStream gfEmbeddedOutput = gfEmbeddedProcess.getErrorStream();
         return new BufferedReader(
                 new InputStreamReader(gfEmbeddedOutput, StandardCharsets.UTF_8)
-        ).lines();
+        )
+                .lines()
+                .peek(err::println);
     }
 
 }

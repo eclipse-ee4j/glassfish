@@ -18,7 +18,7 @@
 
 startAsMainProcess () {
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
-      exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --help
+      exec "$JAVA" "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$ASADMIN_JAR" start-domain --help
     fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
@@ -38,7 +38,7 @@ startAsMainProcess () {
       else
         DRY_RUN_OUTPUT+=("$COM");
       fi
-    done < <("$JAVA" -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
+    done < <("$JAVA" "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
     if [[ x"$DRY_RUN_OUTPUT" == x ]]
       then
         echo -n -e "${DRY_RUN_OUTPUT_BEFORE_DUMP}" >&2

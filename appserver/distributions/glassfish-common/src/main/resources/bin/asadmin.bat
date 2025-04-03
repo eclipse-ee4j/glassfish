@@ -29,4 +29,4 @@ call "%AS_CONFIG_BAT%" || (
     echo Error: Cannot load config file
     exit /B 1
 )
-"%JAVA%" -jar "%AS_INSTALL%\lib\client\appserver-cli.jar" %*
+"%JAVA%" "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%AS_INSTALL%\lib\client\appserver-cli.jar" %*

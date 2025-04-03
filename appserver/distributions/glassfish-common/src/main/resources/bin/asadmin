@@ -19,4 +19,4 @@
 AS_CONFIG="$(dirname "$(realpath "$0")")/../glassfish/config"
 AS_CONFIG_SH="${AS_CONFIG}/config.sh"
 source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
-exec "$JAVA" -jar "$AS_INSTALL/lib/client/appserver-cli.jar" "$@"
+exec "$JAVA" "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "$AS_INSTALL/lib/client/appserver-cli.jar" "$@"

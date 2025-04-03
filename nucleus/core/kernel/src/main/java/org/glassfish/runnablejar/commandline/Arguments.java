@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024,2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,6 +60,8 @@ public class Arguments {
     public boolean askedForHelp = false;
     public boolean noInfo = false;
     public boolean shutdown = false;
+    public boolean prompt = false;
+    private String argumentsDocList = null;
 
     public void setDefaults() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);
@@ -190,15 +192,20 @@ public class Arguments {
     }
 
     private String replaceArguments(String line) {
-        final WordWrapCollector wordWrapper = new WordWrapCollector(HELP_LINE_LENGTH, 40, HELP_LINE_INDENT);
+        return line.replace("${ARGUMENTS}", getArgumentsDocList());
+    }
 
-        final String arguments = Stream.concat(
-                Arrays.stream(Option.values())
-                        .map(option -> "[" + option.getUsage() + "]"),
-                Stream.of("[applications or admin commands...]")
-        )
-                .collect(wordWrapper);
-        return line.replace("${ARGUMENTS}", arguments);
+    private String getArgumentsDocList() {
+        if (argumentsDocList == null) {
+            final WordWrapCollector wordWrapper = new WordWrapCollector(HELP_LINE_LENGTH, 40, HELP_LINE_INDENT);
+            argumentsDocList = Stream.concat(
+                    Arrays.stream(Option.values())
+                            .map(option -> "[" + option.getUsage() + "]"),
+                    Stream.of("[applications or admin commands...]")
+            )
+                    .collect(wordWrapper);
+        }
+        return argumentsDocList;
     }
 
     private String replaceOptions(String line) {

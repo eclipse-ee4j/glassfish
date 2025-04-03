@@ -29,4 +29,5 @@ call "%AS_CONFIG_BAT%" || (
     echo Error: Cannot load config file
     exit /B 1
 )
-"%JAVA%" "-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager" -jar "%AS_INSTALL%\modules\admin-cli.jar" start-domain --verbose %*
+set ASADMIN_CLASSPATH="%AS_INSTALL%/admin-cli.jar:%AS_INSTALL%/modules/*"
+"%JAVA%" "%ASADMIN_JVM_OPTIONS%" --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" com.sun.enterprise.admin.cli.AdminMain start-domain --verbose %*

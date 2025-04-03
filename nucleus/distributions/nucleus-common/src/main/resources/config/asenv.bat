@@ -44,3 +44,6 @@ set AS_CONFIG=..\config
 set AS_DEF_DOMAINS_PATH=..\domains
 set AS_DEF_NODES_PATH=..\nodes
 set AS_DERBY_INSTALL=..\..\javadb
+
+set ASADMIN_MODULEPATH="%AS_INSTALL%\lib\bootstrap"
+set ASADMIN_JVM_OPTIONS="-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager"

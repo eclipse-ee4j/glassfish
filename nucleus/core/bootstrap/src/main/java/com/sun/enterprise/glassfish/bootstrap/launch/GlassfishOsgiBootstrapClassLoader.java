@@ -72,8 +72,8 @@ public class GlassfishOsgiBootstrapClassLoader extends GlassfishUrlClassLoader {
 
     private static URL[] createUrls(final File glassfishDir) throws IOException {
         final List<URL> urls = new ArrayList<>();
-        final File libDir = glassfishDir.toPath().resolve(Path.of("lib", "bootstrap")).toFile();
-        urls.add(getURL(libDir, "glassfish-osgi-bootstrap"));
+        final File moduleDir = glassfishDir.toPath().resolve(Path.of("modules")).toFile();
+        urls.add(getURL(moduleDir, "glassfish-osgi-bootstrap"));
         return urls.toArray(URL[]::new);
     }
 

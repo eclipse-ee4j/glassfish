@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,7 @@ import java.security.CodeSource;
 import java.security.PermissionCollection;
 
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 public class JWSACCClassLoader extends GlassfishUrlClassLoader {
 

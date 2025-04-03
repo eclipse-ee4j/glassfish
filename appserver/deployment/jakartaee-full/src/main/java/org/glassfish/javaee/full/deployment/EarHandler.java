@@ -32,7 +32,6 @@ import com.sun.enterprise.security.ee.perms.EarEEPermissionsProcessor;
 import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
 import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.security.integration.DDPermissionsLoader;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -84,6 +83,7 @@ import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 

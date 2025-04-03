@@ -18,6 +18,8 @@ package com.sun.enterprise.glassfish.bootstrap.cfg;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 
 public class ServerFiles {
@@ -84,5 +86,24 @@ public class ServerFiles {
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid path: " + path, e);
         }
+    }
+
+    /**
+     * @return autodetected glassfish directory based on where usually is this class.
+     */
+    public static File detectInstallRoot() {
+        // glassfish/lib/bootstrap/glassfish.jar
+        File bootstrapFile = findBootstrapFile();
+        // glassfish/
+        return bootstrapFile.getParentFile().getParentFile().getParentFile();
+    }
+
+
+    /**
+     * @return uses this class to locate its jar file.
+     */
+    private static File findBootstrapFile() {
+        URL jarUrl = ServerFiles.class.getProtectionDomain().getCodeSource().getLocation();
+        return new File(URI.create(jarUrl.toExternalForm().replaceFirst("jar:", "file:")));
     }
 }

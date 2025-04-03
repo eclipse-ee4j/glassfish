@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.weld.connector.WeldUtils;
 import org.glassfish.weld.connector.WeldUtils.BDAType;
 import org.glassfish.weld.ejb.EjbDescriptorImpl;

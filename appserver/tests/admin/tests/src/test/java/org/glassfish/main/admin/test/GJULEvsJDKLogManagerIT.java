@@ -31,9 +31,12 @@ public class GJULEvsJDKLogManagerIT {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
     private static final Path LOGDIR = GlassFishTestEnvironment.getDomain1Directory().resolve("logs").toAbsolutePath();
-    private static final String SYSOPT_ERR_LOG = "'-XX:ErrorFile=" + LOGDIR.resolve("java_error%p.log") + "'";
-    private static final String SYSOPT_GC_LOG = "'-Xlog:gc*:file=" + LOGDIR.resolve("gc-%t.log")
-        + ":time:filecount=10'";
+    // Apostrophes are needed to prevent interpretation for asadmin shell command
+    // Quoting is needed to keep paths with spaces together when starting the domain
+    // % need to be managed just for bat files, the CommandLine class will take care of it
+    private static final String SYSOPT_ERR_LOG = "'-XX:ErrorFile=\"" + LOGDIR.resolve("java_error%p.log") + "\"'";
+    private static final String SYSOPT_GC_LOG = "'-Xlog:gc*:file=\"" + LOGDIR.resolve("gc-%t.log")
+        + "\":time:filecount=10'";
 
     @BeforeAll
     static void setAndBackup() {

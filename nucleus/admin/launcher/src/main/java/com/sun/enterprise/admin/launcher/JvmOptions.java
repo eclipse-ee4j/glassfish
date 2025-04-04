@@ -29,6 +29,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.sun.enterprise.util.StringUtils.ok;
+import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.CLASS_LOG_MANAGER_GLASSFISH;
+import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.JVM_OPT_LOGGING_CFG_BLOCK;
+import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.JVM_OPT_LOGGING_MANAGER;
 
 /**
  *
@@ -68,6 +71,7 @@ class JvmOptions {
         }
 
         filter();
+        addMissing();
         setOsgiPort();
     }
 
@@ -257,6 +261,21 @@ class JvmOptions {
             if (!settingPresent) {
                 addPlainProp("-d32");
             }
+        }
+    }
+
+
+    /**
+     * Add missing options which were not set in the domain.xml - usually if user copy pasted
+     * domain.xml from an older version.
+     */
+    private void addMissing() {
+        if (sysProps.get(JVM_OPT_LOGGING_MANAGER) == null) {
+            sysProps.put(JVM_OPT_LOGGING_MANAGER, CLASS_LOG_MANAGER_GLASSFISH);
+        }
+        if (sysProps.get(JVM_OPT_LOGGING_CFG_BLOCK) == null
+            && sysProps.get(JVM_OPT_LOGGING_MANAGER).equals(CLASS_LOG_MANAGER_GLASSFISH)) {
+            sysProps.put(JVM_OPT_LOGGING_CFG_BLOCK, "true");
         }
     }
 

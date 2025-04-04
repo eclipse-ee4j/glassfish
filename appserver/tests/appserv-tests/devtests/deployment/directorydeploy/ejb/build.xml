@@ -114,6 +114,11 @@
 
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${tgtPort}"/>
+            <jvmarg value="--add-modules" />
+            <jvmarg value="ALL-MODULE-PATH" />
+            <modulepath>
+                <pathelement path="${env.S1AS_HOME}/lib/bootstrap" />
+            </modulepath>
 
             <classpath>
                 <path refid="gfv3.classpath"/>

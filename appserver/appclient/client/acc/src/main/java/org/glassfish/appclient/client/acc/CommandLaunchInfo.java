@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,29 +49,16 @@ public class CommandLaunchInfo {
     /* records the client JAR file path, directory path, class name, or class file path */
     private String clientName;
 
-    private String appcPath = null;
+    private String appcPath;
 
-//    /**
-//     * Creates and returns a new CommandLaunchInfo instance.
-//     * <p>
-//     * Typically the caller is the agent which will pass the agent arguments
-//     * it received when the VM invoked its premain method.
-//     *
-//     * @param agentArgs string of agent arguments
-//     * @return new CommandLaunchInfo object
-//     */
-//    public static CommandLaunchInfo newInstance(final String agentArgs) throws UserError {
-//        CommandLaunchInfo result = new CommandLaunchInfo(agentArgs);
-//        return result;
-//    }
 
-    public static CommandLaunchInfo newInstance(final AgentArguments agentArgs) throws UserError {
+    public static CommandLaunchInfo newInstance(final AgentArguments agentArgs) {
         final CommandLaunchInfo result = new CommandLaunchInfo(agentArgs);
         return result;
     }
 
 
-    private CommandLaunchInfo(final AgentArguments agentArgs) throws UserError {
+    private CommandLaunchInfo(final AgentArguments agentArgs) {
         clientLaunchType = saveArgInfo(agentArgs);
     }
 
@@ -98,8 +86,7 @@ public class CommandLaunchInfo {
         return appcPath;
     }
 
-    private ClientLaunchType saveArgInfo(
-            final AgentArguments agentArgs) throws UserError {
+    private ClientLaunchType saveArgInfo(final AgentArguments agentArgs) {
         if (agentArgs == null){
             return ClientLaunchType.UNKNOWN;
         }
@@ -117,7 +104,7 @@ public class CommandLaunchInfo {
     }
 
     private String lastFromList(final List<String> list) {
-        return (list.isEmpty() ? null : list.get(list.size() - 1));
+        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     private ClientLaunchType processClientArg(final String clientSpec) {
@@ -132,9 +119,7 @@ public class CommandLaunchInfo {
         if (clientName.startsWith("\"") && clientName.endsWith("\"")) {
             clientName = clientName.substring(1, clientName.length() - 1);
         }
-        ClientLaunchType type = ClientLaunchType.byType(clientType);
-
-        return type;
+        return ClientLaunchType.byType(clientType);
     }
 
     private void processAppcPath(final String appcPath) {

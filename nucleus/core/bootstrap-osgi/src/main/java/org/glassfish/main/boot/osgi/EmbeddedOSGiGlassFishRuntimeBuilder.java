@@ -69,14 +69,13 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
     }
 
-    private BundleContext getBundleContext(ClassLoader classloader) {
-        return BundleReference.class.cast(classloader).getBundle().getBundleContext();
-    }
-
     private void provisionBundles(BootstrapProperties bsProps, ClassLoader classloader) {
         BundleProvisioner bundleProvisioner = new BundleProvisioner(getBundleContext(classloader), bsProps.getProperties());
         bundleProvisioner.installBundles();
         bundleProvisioner.startBundles();
     }
 
+    private BundleContext getBundleContext(ClassLoader classloader) {
+        return BundleReference.class.cast(classloader).getBundle().getBundleContext();
+    }
 }

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.appclient.client;
+package org.glassfish.appclient.client.acc.agent;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;

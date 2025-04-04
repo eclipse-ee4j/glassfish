@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>ant-tests</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M11</version>
     </parent>
     <artifactId>webtest</artifactId>
     <packaging>jar</packaging>

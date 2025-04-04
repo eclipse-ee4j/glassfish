@@ -29,5 +29,5 @@ call "%AS_CONFIG_BAT%" || (
     echo Error: Cannot load config file
     exit /B 1
 )
-set ASADMIN_CLASSPATH="%AS_INSTALL%/appserver-cli.jar:%AS_INSTALL%/admin-cli.jar:%AS_INSTALL%/modules/*"
-"%JAVA%" "%ASADMIN_JVM_OPTIONS%" --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" org.glassfish.admin.cli.AsadminMain start-domain --verbose %*
+set ASADMIN_CLASSPATH="%AS_INSTALL%\appserver-cli.jar:%ASADMIN_CLASSPATH%"
+"%JAVA%" %ASADMIN_JVM_OPTIONS% --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" org.glassfish.admin.cli.AsadminMain start-domain --verbose %*

@@ -53,22 +53,6 @@
         </developer>
     </developers>
 
-    <properties>
-        <path.lib>../lib</path.lib>
-        <path.apps>${path.lib}/install/applications</path.apps>
-        <path.appclient>${path.lib}/appclient</path.appclient>
-        <path.derby>../../javadb/lib</path.derby>
-        <path.mq>../../mq/lib</path.mq>
-
-        <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
-        <classpath.jaxrra>${path.apps}/jaxr-ra/jaxr-ra.jar</classpath.jaxrra>
-        <classpath.jdbcra>${path.apps}/__ds_jdbc_ra/jdbc-ra-ds.jar ${path.apps}/__cp_jdbc_ra/jdbc-ra-cp.jar ${path.apps}/__xa_jdbc_ra/jdbc-ra-xa.jar ${path.apps}/__dm_jdbc_ra/jdbc-ra-dm.jar</classpath.jdbcra>
-        <classpath.mq>${path.mq}/imq.jar ${path.mq}/imqadmin.jar ${path.mq}/imqutil.jar ${path.mq}/fscontext.jar ${path.apps}/jmsra/imqjmsra.jar</classpath.mq>
-        <classpath.weld>${path.appclient}/weld-se-shaded.jar</classpath.weld>
-
-        <classpath.additions>${path.lib}/bootstrap/glassfish-jul-extension.jar ${classpath.mq} ${classpath.derby} ${classpath.jaxrra} ${classpath.jdbcra} ${classpath.weld}</classpath.additions>
-    </properties>
-
     <dependencies>
         <!-- Dependencies are used just to generate the Class-Path attribute of the manifest -->
         <dependency>
@@ -133,16 +117,11 @@
                         <manifest>
                             <mainClass>org.glassfish.appclient.client.AppClientFacade</mainClass>
                             <packageName>org.glassfish.appclient.client.acc</packageName>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>../modules/</classpathPrefix>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</customClasspathLayout>
                         </manifest>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                         <manifestEntries>
                             <PreMain-Class>org.glassfish.appclient.client.acc.agent.AppClientContainerAgent</PreMain-Class>
                             <GlassFish-ServerExcluded>true</GlassFish-ServerExcluded>
-                            <Class-Path>${classpath.additions}</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

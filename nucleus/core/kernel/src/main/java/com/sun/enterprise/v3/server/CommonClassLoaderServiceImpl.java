@@ -46,6 +46,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.INFO;
 
 /**
  * This class is responsible for setting up Common Class Loader. As the
@@ -171,7 +172,7 @@ public class CommonClassLoaderServiceImpl {
 
         final File derbyLib = derbyHome.resolve("lib").toFile();
         if (!derbyLib.exists()) {
-            LOG.info(KernelLoggerInfo.cantFindDerby);
+            LOG.log(INFO, KernelLoggerInfo.cantFindDerby, derbyLib);
             return Collections.emptyList();
         }
 

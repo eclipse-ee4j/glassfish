@@ -135,6 +135,9 @@
                             <configuration>
                                 <executable>${nadmin.executable}</executable>
                                 <commandlineArgs>${create-domain.args}</commandlineArgs>
+                                <inheritIo>true</inheritIo>
+                                <!-- To make it work on Windows too -->
+                                <longClasspath>true</longClasspath>
                             </configuration>
                         </execution>
                     </executions>

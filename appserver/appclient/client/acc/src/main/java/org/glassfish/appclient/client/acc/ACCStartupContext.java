@@ -72,7 +72,7 @@ public class ACCStartupContext extends StartupContext {
             "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
         Map<String, File> files = new EnvToPropsConverter(rootDirectory.toPath()).convert(pairs);
         Properties env = new Properties();
-        files.entrySet().forEach(e -> env.put(e.getKey(), e.getValue().getAbsolutePath()));
+        files.entrySet().forEach(e -> env.put(e.getKey(), e.getValue().getPath()));
         return env;
     }
 

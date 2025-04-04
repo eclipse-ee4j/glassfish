@@ -158,9 +158,9 @@ public class AdminMain {
                 locations.add(modules);
             }
         } else {
-            for (String path : envClasspath.split(":")) {
+            for (String path : envClasspath.split(File.pathSeparator)) {
                 File file = new File(path);
-                // nuclesus doesn't contain some files, ie. backup.jar
+                // nucleus doesn't contain some files, ie. backup.jar
                 if (file.exists()) {
                     locations.add(file);
                 }

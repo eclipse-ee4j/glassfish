@@ -882,7 +882,7 @@ public class CLIBootstrap {
 
         GlassFishInfo() {
             String asInstallPath = System.getProperty(ENV_VAR_PROP_PREFIX + "AS_INSTALL");
-            if (asInstallPath == null || asInstallPath.length() == 0) {
+            if (asInstallPath == null || asInstallPath.isEmpty()) {
                 throw new IllegalArgumentException("AS_INSTALL == null");
             }
             this.home = new File(asInstallPath);

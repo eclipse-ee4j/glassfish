@@ -27,22 +27,18 @@ import com.sun.enterprise.resource.allocator.ConnectorAllocator;
 import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
 import com.sun.enterprise.resource.allocator.NoTxConnectorAllocator;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.enterprise.resource.pool.mock.JavaEETransactionManagerMock;
 import com.sun.enterprise.resource.pool.mock.JavaEETransactionMock;
+import com.sun.enterprise.resource.pool.mock.MyJavaEETransactionManager;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.transaction.spi.TransactionalResource;
 
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.api.admin.ProcessEnvironment;
@@ -81,7 +77,7 @@ public class PoolManagerImplTest {
     private PoolManagerImpl poolManagerImpl = new MyPoolManagerImpl();
     private PoolInfo poolInfo = getPoolInfo();
     private JavaEETransaction javaEETransaction = new MyJavaEETransaction();
-    private MyJavaEETransactionManager javaEETransactionManager = new MyJavaEETransactionManager();
+    private MyJavaEETransactionManager javaEETransactionManager = new MyJavaEETransactionManager(javaEETransaction);
     private PoolType poolType;
 
     @BeforeEach
@@ -448,31 +444,6 @@ public class PoolManagerImplTest {
         public PoolType getPoolType(PoolInfo poolInfo) throws ConnectorRuntimeException {
             // Overriden to avoid ResourceNamingService jndi lookup calls in unit test
             return poolType;
-        }
-    }
-
-    // We cannot depend on the real JavaEETransactionManagerSimplified implementation due to dependency limitations
-    private class MyJavaEETransactionManager extends JavaEETransactionManagerMock {
-
-        Map<TransactionalResource, Boolean> delistIsCalled = new HashMap<>();
-
-        @Override
-        public Transaction getTransaction() throws SystemException {
-            // Assuming only 1 transaction used in each unit test, return it
-            return javaEETransaction;
-        }
-
-        @Override
-        public boolean delistResource(Transaction tran, TransactionalResource resource, int flag) throws IllegalStateException, SystemException {
-            // Store state for unit test validation
-            delistIsCalled.put(resource, Boolean.TRUE);
-
-            // Return delist success
-            return true;
-        }
-
-        public boolean isDelistIsCalled(TransactionalResource resource) {
-            return delistIsCalled.getOrDefault(resource, Boolean.FALSE);
         }
     }
 

@@ -38,6 +38,7 @@ REM  directory.
 REM
 REM  This file uses UTF-8 character encoding.
 
+endlocal
 set AS_IMQ_LIB=..\..\mq\lib
 set AS_IMQ_BIN=..\..\mq\bin
 set AS_CONFIG=..\config

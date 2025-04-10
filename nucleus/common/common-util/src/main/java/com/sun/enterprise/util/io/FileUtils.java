@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -1031,6 +1032,24 @@ public final class FileUtils {
         }
         return matches;
     }
+
+
+    /**
+     * Convert a URL to an absolute file if it is possible..
+     *
+     * @param resourceUrl
+     * @return absolute path to the file or directory pointed by the URL
+     * @throws IllegalArgumentException if the URL cannot be converted to a File
+     *
+     */
+    public static File toFile(URL resourceUrl) throws IllegalArgumentException {
+        try {
+            return new File(resourceUrl.toURI()).getAbsoluteFile();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cannot convert URL to File: " + resourceUrl, e);
+        }
+    }
+
 
     /**
      * Represents a unit of work that should be retried, if needed, until it

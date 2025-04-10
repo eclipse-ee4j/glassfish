@@ -43,7 +43,7 @@ if defined AS_JAVA (
     set "javaSearchType=JAVA_HOME"
     set "javaSearchTarget=%JAVA_HOME%"
 ) else (
-    for %%i in (java.exe) do set "JAVA=%%~$PATH:i"
+    for %%i in (java.exe) do set "JAVA=%%~$PATH;i"
     set "javaSearchType=PATH"
     set "javaSearchTarget=%PATH%"
 )

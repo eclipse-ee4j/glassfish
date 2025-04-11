@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +54,6 @@ import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBMON_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.COMMAND_LINE;
 import static com.sun.enterprise.universal.collections.CollectionUtils.propertiesToStringMap;
 import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
-import static com.sun.enterprise.universal.io.SmartFile.sanitize;
 import static com.sun.enterprise.universal.process.ProcessStreamDrainer.dispose;
 import static com.sun.enterprise.universal.process.ProcessStreamDrainer.redirect;
 import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
@@ -146,7 +144,7 @@ public abstract class GFLauncher {
      */
     private Map<String, String> domainXMLSystemProperty;
 
-    private File javaExe;
+    private Path javaExe;
     private File[] classpath;
     private String adminFileRealmKeyFile;
     private boolean secureAdminEnabled;
@@ -451,7 +449,7 @@ public abstract class GFLauncher {
             cmds.add("bsexec");
             cmds.add("/");
             cmds.addAll(commandLine.toList());
-        } else if (commandLine.getFormat() == CommandFormat.BatFile) {
+        } else if (commandLine.getFormat() == CommandFormat.Script) {
             cmds = prepareWindowsEnvironment(commandLine, getInfo().getConfigDir().toPath(), isSSHSession());
         } else if (getInfo().isVerboseOrWatchdog()) {
             cmds = new ArrayList<>();
@@ -726,14 +724,13 @@ public abstract class GFLauncher {
         }
 
         File logFile = new File(logFilename);
-
         if (!logFile.isAbsolute()) {
             // this is quite normal. Logging Service will by default return a relative path!
             logFile = new File(callerParameters.getInstanceRootDir(), logFilename);
         }
 
         // Get rid of garbage like "c:/gf/./././../gf"
-        logFile = sanitize(logFile);
+        logFile = logFile.toPath().toAbsolutePath().normalize().toFile();
 
         // if the file doesn't exist -- make sure the parent dir exists
         // this is common in unit tests AND the first time the instance is
@@ -788,7 +785,7 @@ public abstract class GFLauncher {
         }
 
         if (javaFile.exists()) {
-            javaExe = sanitize(javaFile);
+            javaExe = javaFile.toPath().toAbsolutePath();
             return true;
         }
 
@@ -796,7 +793,7 @@ public abstract class GFLauncher {
     }
 
     void setClasspath() throws GFLauncherException {
-        List<File> mainCP = getMainClasspath(); // subclass provides this
+        List<File> mainCP = getMainClasspath();
         List<File> envCP = domainXMLjavaConfig.getEnvClasspath();
         List<File> sysCP = domainXMLjavaConfig.getSystemClasspath();
         List<File> prefixCP = domainXMLjavaConfig.getPrefixClasspath();
@@ -815,10 +812,12 @@ public abstract class GFLauncher {
     }
 
     void initCommandLine() throws GFLauncherException {
-        boolean batRequired = isWindows() && !getInfo().isVerboseOrWatchdog();
-        CommandLine cmdLine = new CommandLine(batRequired ? CommandFormat.BatFile : CommandFormat.ProcessBuilder);
-        cmdLine.append(javaExe.toPath());
-        cmdLine.appendClassPath(getClasspath());
+        final boolean useScript = isWindows() && !getInfo().isVerboseOrWatchdog();
+        final CommandLine cmdLine = new CommandLine(useScript ? CommandFormat.Script : CommandFormat.ProcessBuilder);
+        cmdLine.append(javaExe);
+        if (classpath.length > 0) {
+            cmdLine.appendClassPath(getClasspath());
+        }
         addIgnoreNull(cmdLine, domainXMLjavaConfigDebugOptions);
 
         String CLIStartTime = System.getProperty("WALL_CLOCK_START");
@@ -1042,16 +1041,13 @@ public abstract class GFLauncher {
         File flashlightJarFile = new File(libMonDir, FLASHLIGHT_AGENT_NAME);
 
         if (flashlightJarFile.isFile()) {
-            return "javaagent:" + getCleanPath(flashlightJarFile);
+            return "javaagent:" + flashlightJarFile.toPath().toAbsolutePath().normalize();
         }
         String msg = strings.get("no_flashlight_agent", flashlightJarFile);
         GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
         throw new GFLauncherException(msg);
     }
 
-    private static String getCleanPath(File f) {
-        return sanitize(f).getPath().replace('\\', '/');
-    }
 
     private List<String> getSpecialSystemProperties() throws GFLauncherException {
         Map<String, String> props = new HashMap<>();
@@ -1107,80 +1103,71 @@ public abstract class GFLauncher {
 
     private static List<String> prepareWindowsEnvironment(final CommandLine command, final Path configDir,
             final boolean stdinPreloaded) throws GFLauncherException {
-        Path psFile;
-        Path batFile;
+        Path schedulerPsFile;
         try {
-            batFile = configDir.resolve("gfstart.bat");
-            psFile = configDir.resolve("gfstart.ps1");
-            StringBuilder batContent = new StringBuilder(8192);
-            batContent.append("@echo off\n");
-            batContent.append("set CMD=");
-            ListIterator<String> itemsOfCommand = command.listIterator();
-            while (itemsOfCommand.hasNext()) {
-                String line = itemsOfCommand.next();
-                if (!itemsOfCommand.hasPrevious()) {
-                    batContent.append("  ");
-                }
-                batContent.append(line);
-                if (itemsOfCommand.hasNext()) {
-                    batContent.append(" ^");
-                }
-                batContent.append('\n');
-            }
-            batContent.append("call %CMD% ");
-            if (stdinPreloaded) {
-                batContent.append("< %1\n");
-            }
-            Files.writeString(batFile, batContent, UTF_8, TRUNCATE_EXISTING, CREATE);
+            schedulerPsFile = configDir.resolve("scheduler.ps1");
 
-            StringBuilder psContent = new StringBuilder(8192);
-            psContent.append("param(\n");
-            psContent.append("    [Parameter(Mandatory=$true)]\n");
-            psContent.append("    [string]$BatchFilePath\n");
-            psContent.append(")\n");
+            StringBuilder schedulerFileContent = new StringBuilder(8192);
+            schedulerFileContent.append("$ErrorActionPreference = \"Stop\"\n\n");
 
-            psContent.append("$pidFile = \"").append(new File(configDir.toFile(), "pid").getAbsolutePath()).append("\"\n");
-            psContent.append("if (Test-Path $pidFile) {\n");
-            psContent.append("    Remove-Item $pidFile -Force\n");
-            psContent.append("}\n");
+            schedulerFileContent.append("$pidFile = \"").append(new File(configDir.toFile(), "pid").getAbsolutePath()).append("\"\n");
+            schedulerFileContent.append("if (Test-Path $pidFile) {\n");
+            schedulerFileContent.append("    Remove-Item $pidFile -Force\n");
+            schedulerFileContent.append("}\n");
             if (stdinPreloaded) {
-                psContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
-                psContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
-                psContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
+                schedulerFileContent.append("$stdin = [System.IO.StreamReader]::new([Console]::OpenStandardInput()).ReadToEnd()\n");
+                schedulerFileContent.append("$tempFile = [System.IO.Path]::GetTempFileName()\n");
+                schedulerFileContent.append("[System.IO.File]::WriteAllText($tempFile, $stdin)\n");
             }
+            List<String> commandArgs = command.toList();
+            StringBuilder scriptBlock = new StringBuilder();
+            scriptBlock.append("$javaExe = ").append(commandArgs.get(0)).append('\n');
+            if (stdinPreloaded) {
+                scriptBlock.append("$tempFile = $args[0]\n");
+            }
+            scriptBlock.append("$javaArgs = @(").append(toPowerShellArgumentList(commandArgs)).append(")\n");
+
+            scriptBlock.append("Start-Process -NoNewWindow -PassThru -FilePath ");
+            scriptBlock.append(commandArgs.get(0));
+            if (stdinPreloaded) {
+                scriptBlock.append(" -RedirectStandardInput");
+                scriptBlock.append(" \"$tempFile\"");
+            }
+            scriptBlock.append(" -ArgumentList $javaArgs\n");
             if (!isSSHSession()) {
-                psContent.append("Start-Process -FilePath \"$BatchFilePath\" -NoNewWindow -PassThru");
-                if (stdinPreloaded) {
-                    psContent.append(" < $tempFile");
-                }
-                psContent.append('\n');
+                // FIXME: Use ProcessBuilder instead and print warning that the instance will be killed by Windows.
+                schedulerFileContent.append(scriptBlock);
+                schedulerFileContent.append('\n');
             } else {
-                psContent.append("$action = New-ScheduledTaskAction -Execute \"cmd.exe\" -Argument \"/c $BatchFilePath");
-                if (stdinPreloaded) {
-                    psContent.append(" < $tempFile");
-                }
-                psContent.append("\"\n");
-                psContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
-                psContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
-                psContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
-                psContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
-                psContent.append("Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings\n");
+                Path startPsFile = configDir.resolve("start.ps1");
+                Files.writeString(startPsFile, scriptBlock, UTF_8, TRUNCATE_EXISTING, CREATE);
+                schedulerFileContent.append("$action = New-ScheduledTaskAction -Execute \"powershell.exe\" -Argument \"-File `\"").append(startPsFile).append("`\" `\"$tempFile`\"\"\n");
+                schedulerFileContent.append("$taskName = \"GlassFishInstance_\" + [System.Guid]::NewGuid().ToString()\n");
+                schedulerFileContent.append("$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(1)\n");
+                schedulerFileContent.append("$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U\n");
+                schedulerFileContent.append("$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 0)\n");
 
-                psContent.append("Start-ScheduledTask -TaskName $taskName\n");
-                psContent.append("Start-Sleep -Seconds 5\n");
-                psContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
+                schedulerFileContent.append("Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings\n");
+                schedulerFileContent.append("Start-ScheduledTask -TaskName $taskName\n");
+                schedulerFileContent.append("Unregister-ScheduledTask -TaskName $taskName -Confirm:$false\n");
             }
-            psContent.append("$start = Get-Date\n");
-            psContent.append("$timeout = 60\n");
-            psContent.append("while (-not (Test-Path $pidFile)) {\n");
-            psContent.append("    if ((New-TimeSpan -Start $start -End (Get-Date)).TotalSeconds -gt $timeout) {\n");
-            psContent.append("        Write-Error \"Timeout waiting for GlassFish to start (pid file not created within $timeout seconds)\"\n");
-            psContent.append("        exit 1\n");
-            psContent.append("    }\n");
-            psContent.append("    Start-Sleep -Seconds 1\n");
-            psContent.append("}\n");
+            schedulerFileContent.append("$start = Get-Date\n");
+            schedulerFileContent.append("$timeout = 60\n");
+            schedulerFileContent.append("while (-not (Test-Path $pidFile)) {\n");
+            schedulerFileContent.append("    if ((New-TimeSpan -Start $start -End (Get-Date)).TotalSeconds -gt $timeout) {\n");
+            if (stdinPreloaded) {
+                schedulerFileContent.append("        Remove-Item $tempFile -Force\n");
+            }
+            schedulerFileContent.append("        Write-Error \"Timeout waiting for GlassFish to start (pid file not created within $timeout seconds)\"\n");
+            schedulerFileContent.append("        exit 1\n");
+            schedulerFileContent.append("    }\n");
+            schedulerFileContent.append("    Start-Sleep -Seconds 1\n");
+            schedulerFileContent.append("}\n");
+            if (stdinPreloaded) {
+                schedulerFileContent.append("Remove-Item $tempFile -Force\n");
+            }
 
-            Files.writeString(psFile, psContent, UTF_8, TRUNCATE_EXISTING, CREATE);
+            Files.writeString(schedulerPsFile, schedulerFileContent, UTF_8, TRUNCATE_EXISTING, CREATE);
         } catch (IOException e) {
             throw new GFLauncherException(e);
         }
@@ -1190,9 +1177,18 @@ public abstract class GFLauncher {
             cmds.add("-noninteractive");
         }
         cmds.add("-File");
-        cmds.add("\"" + psFile.toFile().getAbsolutePath() + "\"");
-        cmds.add("-BatchFilePath");
-        cmds.add("\"" + batFile.toFile().getAbsolutePath() + "\"");
+        cmds.add("\"" + schedulerPsFile.toFile().getAbsolutePath() + "\"");
         return cmds;
+    }
+
+    private static StringBuilder toPowerShellArgumentList(List<String> command) {
+        StringBuilder psContent = new StringBuilder();
+        for (int i = 1; i < command.size(); i++) {
+            psContent.append('\n');
+            psContent.append('"');
+            psContent.append(command.get(i).replace("\"", "`\""));
+            psContent.append('"');
+        }
+        return psContent;
     }
 }

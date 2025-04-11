@@ -173,11 +173,11 @@ public final class CommandLine implements Iterable<String> {
     private String toQuotedIfNeeded(String value) {
         // BAT files have issues when then string doesn't contain a space
         // and we would use quotation marks.
-        if (format == CommandFormat.BatFile) {
+        if (format == CommandFormat.Script) {
             if (value.indexOf(' ') >= 0) {
-                return escapeSpecialCharactersIfNeeded(toQuoted(value));
+                return toQuoted(value);
             }
-            return escapeSpecialCharactersIfNeeded(value);
+            return value;
         }
         // ProcessBuilder resolves it on its own.
         return value;
@@ -189,17 +189,6 @@ public final class CommandLine implements Iterable<String> {
     }
 
 
-    private String escapeSpecialCharactersIfNeeded(String value) {
-        // BAT files try to interpret % as a variable,
-        // ie %t means current date and time
-        // BAT files also can interpret quotation marks, so we need to escape them.
-        if (format == CommandFormat.BatFile) {
-            return value.replaceAll("%", "%%").replaceAll("\"", "^\"");
-        }
-        return value;
-    }
-
-
     private static String toJavaPath(Path path) {
         // Even windows can work with /, however it has some rules.
         // ProcessBuilder escapes what is needed automatically - but that is not a case of
@@ -207,7 +196,7 @@ public final class CommandLine implements Iterable<String> {
         // Paths with backslash can be used without quotation marks - not in bat,
         // because space is a separator.
         // Strings with backspaces quoted are taken as strings -> backslash means escaping.
-        return path.normalize().toAbsolutePath().toString().replace('\\', '/');
+        return path.normalize().toAbsolutePath().toString();
     }
 
     static enum CommandFormat {
@@ -220,6 +209,6 @@ public final class CommandLine implements Iterable<String> {
          * To be written into a bat file which will be executed.
          * We need to ensure the proper formatting for the Windows BAT file.
          */
-        BatFile,;
+        Script,;
     }
 }

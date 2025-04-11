@@ -18,7 +18,7 @@
 # of the server installation (the glassfish directory).
 # Then sets it as AS_INSTALL environment variable.
 resolveAsInstall() {
-    AS_INSTALL="$(realpath -s "$1/..")"
+    AS_INSTALL="$(realpath "$1/..")"
     case "`uname`" in
       CYGWIN*) AS_INSTALL=`cygpath --windows "$AS_INSTALL"`
                cygwinProp=-Dorg.glassfish.isCygwin=true

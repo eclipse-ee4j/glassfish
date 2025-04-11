@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -73,7 +73,7 @@ class GFEmbeddedLauncher extends GFLauncher {
 
     @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        throw new GFLauncherException("not needed?!?");
+        return List.of();
     }
 
     @Override
@@ -174,7 +174,9 @@ class GFEmbeddedLauncher extends GFLauncher {
         CommandLine cmdLine = new CommandLine(CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe.toPath());
         addThreadDump(cmdLine);
-        cmdLine.appendClassPath(getClasspath());
+        if (getClasspath().length > 0) {
+            cmdLine.appendClassPath(getClasspath());
+        }
         addDebug(cmdLine);
         cmdLine.append(getMainClass());
         cmdLine.append("--installdir");

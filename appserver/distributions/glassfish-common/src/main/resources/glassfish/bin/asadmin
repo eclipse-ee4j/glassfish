@@ -16,7 +16,7 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-AS_CONFIG="$(dirname "$(realpath -s "$0")")/../config"
+AS_CONFIG="$(dirname "$(realpath "$0")")/../config"
 AS_CONFIG_SH="${AS_CONFIG}/config.sh"
 source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
 exec "$JAVA" -jar "$AS_INSTALL/lib/client/appserver-cli.jar" "$@"

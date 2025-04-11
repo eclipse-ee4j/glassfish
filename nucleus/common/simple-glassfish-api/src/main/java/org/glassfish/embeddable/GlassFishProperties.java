@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package org.glassfish.embeddable;
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Encapsulates the set of properties required to create a new GlassFish instance.
@@ -87,6 +88,24 @@ public class GlassFishProperties {
     public Properties getProperties() {
         return gfProperties;
     }
+
+
+    /**
+     * @return set of configured property names
+     */
+    public Set<String> getPropertyNames() {
+        return gfProperties.stringPropertyNames();
+    }
+
+
+    /**
+     * @param name
+     * @return value for the given property or null if not set
+     */
+    public String getProperty(String name) {
+        return gfProperties.getProperty(name);
+    }
+
 
     /**
      * Set any custom glassfish property. May be required for the plugged in

@@ -34,12 +34,13 @@ import java.util.Enumeration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.condition.JRE.JAVA_24;
 
 public class SMGlobalPolicyUtilTest {
 
@@ -96,9 +97,8 @@ public class SMGlobalPolicyUtilTest {
     }
 
     @Test
+    @EnabledForJreRange(max = JAVA_24)
     public void testPolicyLoading() throws NoSuchAlgorithmException, MalformedURLException, URISyntaxException {
-        assumeTrue(System.getProperty("java.vm.specification.version").compareTo("24") < 0);
-
         System.out.println("Starting testDefPolicy loading - ee");
 
         PermissionCollection defaultPC = Policy.getInstance("JavaPolicy",

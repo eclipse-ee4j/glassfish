@@ -19,11 +19,17 @@ package com.sun.enterprise.security.ee.perms;
 
 import java.io.File;
 import java.io.FilePermission;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.security.CodeSource;
+import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
 import java.security.PermissionCollection;
+import java.security.Policy;
+import java.security.URIParameter;
+import java.security.cert.Certificate;
 import java.util.Enumeration;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -33,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class SMGlobalPolicyUtilTest {
 
@@ -86,6 +93,62 @@ public class SMGlobalPolicyUtilTest {
         assertThrows(IllegalArgumentException.class, () -> SMGlobalPolicyUtil.convertComponentType(""));
         assertThrows(IllegalArgumentException.class, () -> SMGlobalPolicyUtil.convertComponentType("bla"));
         assertThrows(NullPointerException.class, () -> SMGlobalPolicyUtil.convertComponentType(null));
+    }
+
+    @Test
+    public void testPolicyLoading() throws NoSuchAlgorithmException, MalformedURLException, URISyntaxException {
+        assumeTrue(System.getProperty("java.vm.specification.version").compareTo("24") < 0);
+
+        System.out.println("Starting testDefPolicy loading - ee");
+
+        PermissionCollection defaultPC = Policy.getInstance("JavaPolicy",
+                new URIParameter(SMGlobalPolicyUtilTest.class.getResource("nobody.policy").toURI()))
+            .getPermissions(new CodeSource(new URL("file:/module/ALL"), (Certificate[]) null));
+
+        int defaultCount = dumpPermissions("Grant", "ALL", defaultPC);
+        assertEquals(4, defaultCount);
+        PermissionCollection defEjbGrantededPC
+            = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.ejb);
+        int count = dumpPermissions("Grant", "Ejb", defEjbGrantededPC);
+        assertEquals(5, count - defaultCount);
+
+        PermissionCollection defWebGrantededPC
+            = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.war);
+        count = dumpPermissions("Grant", "Web", defWebGrantededPC);
+        assertEquals(6, count - defaultCount);
+
+        PermissionCollection defRarGrantededPC
+            = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.rar);
+        count = dumpPermissions("Grant", "Rar", defRarGrantededPC);
+        assertEquals(5, count - defaultCount);
+
+        PermissionCollection defClientGrantededPC
+            = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.car);
+        count = dumpPermissions("Grant", "Client", defClientGrantededPC);
+        assertEquals(10, count - defaultCount);
+
+        System.out.println("Starting testDefPolicy loading - ee restrict");
+
+        PermissionCollection defEjbRestrictedPC
+            = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.ejb);
+        count = dumpPermissions("Restricted", "Ejb", defEjbRestrictedPC);
+        assertEquals(2, count - defaultCount);
+
+        PermissionCollection defWebRestrictedPC
+            = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.war);
+        count = dumpPermissions("Restricted", "Web", defWebRestrictedPC);
+        assertEquals(2, count - defaultCount);
+
+        PermissionCollection defRarRestrictedPC
+            = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.rar);
+        count = dumpPermissions("Restricted", "Rar", defRarRestrictedPC);
+        assertEquals(1, count - defaultCount);
+
+        PermissionCollection defClientRestrictedPC
+            = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.car);
+        count = dumpPermissions("Restricted", "Client", defClientRestrictedPC);
+        assertEquals(2, count - defaultCount);
+
     }
 
     @Test

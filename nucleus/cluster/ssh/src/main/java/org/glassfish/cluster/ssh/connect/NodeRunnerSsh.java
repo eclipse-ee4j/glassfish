@@ -24,6 +24,7 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.glassfish.api.admin.SSHCommandExecutionException;
 import org.glassfish.cluster.ssh.launcher.SSHException;
@@ -87,9 +88,9 @@ public class NodeRunnerSsh {
         try {
             // We can just use "nadmin" even on Windows since the SSHD provider
             // will locate the command (.exe or .bat) for us
-            fullcommand.add(installDir + "/lib/nadmin");
+            fullcommand.add("\"" + installDir + "/lib/nadmin\"");
             fullcommand.addAll(args);
-            lastCommandRun = commandListToString(fullcommand);
+            lastCommandRun = fullcommand.stream().collect(Collectors.joining(" "));
             LOG.log(DEBUG, () -> "Running command on " + node.getNodeHost() + ": " + lastCommandRun);
             final StringBuilder commandOutput = new StringBuilder();
             try (SSHSession session = sshL.openSession()) {
@@ -104,15 +105,5 @@ public class NodeRunnerSsh {
             cee.setCommandRun(lastCommandRun);
             throw cee;
         }
-    }
-
-
-    private String commandListToString(List<String> command) {
-        StringBuilder fullCommand = new StringBuilder();
-        for (String s : command) {
-            fullCommand.append(' ');
-            fullCommand.append(s);
-        }
-        return fullCommand.toString();
     }
 }

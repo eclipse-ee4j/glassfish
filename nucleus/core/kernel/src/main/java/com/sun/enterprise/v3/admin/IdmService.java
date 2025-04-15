@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -164,9 +165,10 @@ public class IdmService implements PostConstruct, IdentityManagement {
 
     private boolean setFromStdin() {
         logger.fine("Reading the master password from stdin> ");
-        String s;
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // We will close the standard input as we don't use it any more.
+        // On windows it would block deletion of the temporary file otherwise.
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            String s;
             while ((s = br.readLine()) != null) {
                 int ind = s.indexOf(MP_PROPERTY);
                 if (ind == -1) {
@@ -184,6 +186,14 @@ public class IdmService implements PostConstruct, IdentityManagement {
         } catch (Exception e) {
             logger.fine("Stdin isn't behaving, ignoring it ..." + e.getMessage());
             return false;
+        } finally {
+            try {
+                System.in.close();
+            } catch (IOException e) {
+                logger.fine("Error closing stdin: " + e.getMessage());
+            } finally {
+                System.setIn(null);
+            }
         }
     }
 

@@ -133,7 +133,14 @@ public class PolicyLoader {
                     policy = loadPolicy(javaPolicyClassName);
                 }
 
-                Policy.setPolicy(policy);
+                try {
+                    Policy.setPolicy(policy);
+                } catch (UnsupportedOperationException e) {
+                    Class<?> authorizationServiceClass = Class.forName("org.glassfish.exousia.AuthorizationService");
+
+                    Method setPolicyMethod = authorizationServiceClass.getMethod("setPolicy", Policy.class);
+                    setPolicyMethod.invoke(null, policy);
+                }
 
                 // TODO: causing ClassCircularity error when SM ON and
                 // deployment use library feature and ApplibClassLoader

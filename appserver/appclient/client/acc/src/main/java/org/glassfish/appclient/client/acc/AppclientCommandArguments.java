@@ -35,6 +35,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.embeddable.client.UserError;
+
 /**
  * Encapsulates handling of appclient script command arguments and options.
  * <p>

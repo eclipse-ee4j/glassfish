@@ -17,14 +17,9 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.io.SmartFile;
-
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
@@ -64,24 +59,13 @@ class GlassFishMainLauncher extends GFLauncher {
 
     @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        Path dir = Path.of(getEnvProps().get(INSTALL_ROOT_PROPERTY), "lib", "bootstrap");
-        List<File> classpath = Stream
-            .of("glassfish.jar", "glassfish-jul-extension.jar", "glassfish-jdk-extensions.jar",
-                "simple-glassfish-api.jar")
-            .map(dir::resolve).map(Path::toFile).map(SmartFile::sanitize).collect(Collectors.toList());
-        if (isFakeLaunch()) {
-            return classpath;
-        }
-        List<File> missing = new ArrayList<>(classpath.size());
-        for (File file : classpath) {
-            if (!file.exists()) {
-                missing.add(file);
-            }
-        }
-        if (missing.isEmpty()) {
-            return classpath;
-        }
-        throw new GFLauncherException("nobootjar", missing);
+        return List.of();
+    }
+
+    @Override
+    List<File> getMainModulepath() throws GFLauncherException {
+        Path installRoot = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY)).toPath();
+        return List.of(installRoot.resolve(Path.of("lib", "bootstrap")).toAbsolutePath().normalize().toFile());
     }
 
     @Override

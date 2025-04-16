@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -72,8 +71,8 @@ public class GlassfishOsgiBootstrapClassLoader extends GlassfishUrlClassLoader {
 
     private static URL[] createUrls(final File glassfishDir) throws IOException {
         final List<URL> urls = new ArrayList<>();
-        final File libDir = glassfishDir.toPath().resolve(Path.of("lib", "bootstrap")).toFile();
-        urls.add(getURL(libDir, "glassfish-osgi-bootstrap"));
+        final File moduleDir = new File(glassfishDir, "modules");
+        urls.add(getURL(moduleDir, "glassfish-osgi-bootstrap"));
         return urls.toArray(URL[]::new);
     }
 

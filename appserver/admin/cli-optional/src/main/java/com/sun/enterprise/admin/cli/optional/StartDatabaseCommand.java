@@ -92,6 +92,11 @@ public final class StartDatabaseCommand extends DatabaseCommand {
             cmd.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:9011");
         }
 
+        cmd.add("--module-path");
+        cmd.add(modulepath.toString());
+        cmd.add("--add-modules");
+        cmd.add("ALL-MODULE-PATH");
+
         cmd.add("-cp");
         cmd.add(sClasspath + pathSeparator + sDatabaseClasspath);
         if (jvmoptions != null) {
@@ -117,8 +122,11 @@ public final class StartDatabaseCommand extends DatabaseCommand {
                 javaHome + separator + "bin" + separator + "java",
                 "-Djava.library.path=" + installRoot + separator + "lib",
                 "-Dderby.storage.fileSyncTransactionLog=True",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "sysinfo",
                 dbHost, dbPort, "false" };
@@ -127,8 +135,11 @@ public final class StartDatabaseCommand extends DatabaseCommand {
         return new String[] {
             javaHome + separator + "bin" + separator + "java",
             "-Djava.library.path=" + installRoot + separator + "lib",
+            "--module-path",
+            modulepath.toString(),
+            "--add-modules",
+            "ALL-MODULE-PATH",
             "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
-
             "com.sun.enterprise.admin.cli.optional.DerbyControl",
             "sysinfo",
             dbHost, dbPort, "false" };
@@ -144,6 +155,11 @@ public final class StartDatabaseCommand extends DatabaseCommand {
             cmd.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:9012");
         }
 
+        cmd.add("--module-path");
+        cmd.add(modulepath.toString());
+        cmd.add("--add-modules");
+        cmd.add("ALL-MODULE-PATH");
+
         cmd.add("-cp");
         cmd.add(sClasspath + pathSeparator + sDatabaseClasspath);
 
@@ -158,7 +174,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
             cmd.add(dbPassword);
         }
 
-        return cmd.toArray(new String[cmd.size()]);
+        return cmd.toArray(String[]::new);
     }
 
     /**

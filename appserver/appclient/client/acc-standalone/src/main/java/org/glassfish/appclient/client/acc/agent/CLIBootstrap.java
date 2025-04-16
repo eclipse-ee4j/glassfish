@@ -15,23 +15,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.appclient.client;
-
-import com.sun.enterprise.util.OS;
+package org.glassfish.appclient.client.acc.agent;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.glassfish.appclient.client.acc.UserError;
-import org.glassfish.appclient.common.ClassPathUtils;
+import org.glassfish.embeddable.client.ApplicationClientCLIEncoding;
+import org.glassfish.embeddable.client.UserError;
 
 import static java.lang.System.arraycopy;
 
@@ -69,9 +65,9 @@ import static java.lang.System.arraycopy;
  */
 public class CLIBootstrap {
 
+    private static final boolean IS_WINDOWS = System.getProperty("os.name", "generic").startsWith("Win");
     public final static String FILE_OPTIONS_INTRODUCER = "argsfile=";
 
-    private final static String COMMA_IN_ARG_PLACEHOLDER = "+-+-+-+";
     private final static boolean isDebug = System.getenv("AS_DEBUG") != null;
     private final static String INPUT_ARGS = System.getenv("inputArgs");
 
@@ -81,7 +77,7 @@ public class CLIBootstrap {
     private final static String INSTALL_ROOT_PROPERTY_EXPR = "-Dcom.sun.aas.installRoot=";
     private final static String SECURITY_POLICY_PROPERTY_EXPR = "-Djava.security.policy=";
     private final static String SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR = "-Djava.security.auth.login.config=";
-    private final static String SYSTEM_CLASS_LOADER_PROPERTY_EXPR = "-Djava.system.class.loader=org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
+    private final static String SYSPROP_SYSTEM_CLASS_LOADER = "-Djava.system.class.loader=";
 
     private final static String[] ENV_VARS = { "AS_INSTALL", "APPCPATH", "VMARGS" };
 
@@ -170,8 +166,6 @@ public class CLIBootstrap {
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
-        } catch (UserError ue) {
-            ue.displayAndExit();
         }
     }
 
@@ -216,7 +210,7 @@ public class CLIBootstrap {
 
 
     // #### Instance methods
-    CLIBootstrap() throws UserError {
+    CLIBootstrap() throws Error {
     }
 
 
@@ -231,7 +225,7 @@ public class CLIBootstrap {
      * @param args
      * @throws UserError
      */
-    private String run(String[] args) throws UserError {
+    private String run(String[] args) throws Error {
         java = new JavaInfo();
         gfInfo = new GlassFishInfo();
 
@@ -252,7 +246,7 @@ public class CLIBootstrap {
                 }
             }
             if (!isMatched) {
-                throw new UserError("arg " + i + " = " + augmentedArgs[i] + " not recognized");
+                throw new Error("arg " + i + " = " + augmentedArgs[i] + " not recognized");
             }
         }
 
@@ -287,21 +281,22 @@ public class CLIBootstrap {
      * @param command
      */
     private void addProperties(final StringBuilder command) {
-        command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
+        final Path gfBootstrapLibs = gfInfo.lib.toPath().resolve("bootstrap").normalize();
+        command.append(' ').append("--module-path ").append(quote(gfBootstrapLibs.toString()));
+        command.append(' ').append("--add-modules ALL-MODULE-PATH");
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
-        command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
-        command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
-        command.append(' ').append("-classpath").append(' ').append(gfInfo.agentJarPath()).append(File.pathSeparatorChar).append('.');
-        command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
         command.append(' ').append("-Xshare:off");
+        command.append(' ').append(SYSPROP_SYSTEM_CLASS_LOADER).append("org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader");
+        command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
+        command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
+        command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
         command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
     }
 
     /**
      * Adds the -javaagent option to the command line.
-     *
      */
-    private void addAgentOption() throws UserError {
+    private void addAgentOption() throws Error {
         otherJVMOptions.processValue(new String[] { "-javaagent:" + quote(gfInfo.agentJarPath()) + agentOptionsFromFile() }, 0);
     }
 
@@ -340,7 +335,7 @@ public class CLIBootstrap {
      * @return
      */
     private static String quoteSuppressTokenSubst(String string) {
-        return (OS.isWindows() ? quote(string) : quote(string.replace("$", "\\$")));
+        return IS_WINDOWS ? quote(string) : quote(string.replace("$", "\\$"));
     }
 
     /**
@@ -350,31 +345,10 @@ public class CLIBootstrap {
      * @return
      */
     static String quoteEscapedArgument(String string) {
-        if (!OS.isWindows()) {
+        if (!IS_WINDOWS) {
             string = string.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
         }
         return "\"" + string + "\"";
-    }
-
-    /**
-     * Replaces commas in an argument value (which can confuse the ACC agent argument parsing because shells strip out
-     * double-quotes) with a special sequence.
-     *
-     * @param string string to encode
-     * @return encoded string
-     */
-    public static String encodeArg(String string) {
-        return string.replace(",", COMMA_IN_ARG_PLACEHOLDER);
-    }
-
-    /**
-     * Replaces occurrences of comma encoding with commas.
-     *
-     * @param string possibly encoded string
-     * @return decoded string
-     */
-    public static String decodeArg(String string) {
-        return string.replace(COMMA_IN_ARG_PLACEHOLDER, ",");
     }
 
 
@@ -407,7 +381,7 @@ public class CLIBootstrap {
          * @param accArg
          */
         final void addACCArg(String accArg) {
-            add("arg=" + encodeArg(accArg));
+            add("arg=" + ApplicationClientCLIEncoding.encodeArg(accArg));
         }
 
         @Override
@@ -427,7 +401,6 @@ public class CLIBootstrap {
     private class CommandLineElement {
 
         private final Pattern pattern;
-        Matcher matcher;
 
         private final Pattern whiteSpacePattern = Pattern.compile("[\\r\\n]");
 
@@ -443,7 +416,7 @@ public class CLIBootstrap {
         }
 
         final boolean matchesPattern(String element) {
-            matcher = pattern.matcher(element);
+            Matcher matcher = pattern.matcher(element);
             return matcher.matches();
         }
 
@@ -462,7 +435,7 @@ public class CLIBootstrap {
          * @throws UserError if the user specified an option that requires a value but provided no value (either the next
          *                   command line element is another option or there is no next element)
          */
-        int processValue(String[] args, int slot) throws UserError {
+        int processValue(String[] args, int slot) throws Error {
             // Ignore an argument that is just unquoted white space.
             Matcher matcher = whiteSpacePattern.matcher(args[slot]);
             if (!matcher.matches()) {
@@ -493,9 +466,9 @@ public class CLIBootstrap {
          * @param currentSlot
          * @throws UserError
          */
-        void ensureNonOptionNextArg(final String[] args, final int currentSlot) throws UserError {
+        void ensureNonOptionNextArg(final String[] args, final int currentSlot) throws Error {
             if ((currentSlot >= args.length - 1) || (args[currentSlot + 1].charAt(0) == '-')) {
-                throw new UserError("Command line element " + args[currentSlot] + " requires non-option value");
+                throw new Error("Command line element " + args[currentSlot] + " requires non-option value");
             }
         }
 
@@ -602,7 +575,7 @@ public class CLIBootstrap {
         }
 
         @Override
-        int processValue(String[] args, int slot) throws UserError {
+        int processValue(String[] args, int slot) throws Error {
             ensureNonOptionNextArg(args, slot);
             optValues.add(new OptionValue(args[slot++], args[slot++]));
 
@@ -639,7 +612,7 @@ public class CLIBootstrap {
         }
 
         @Override
-        int processValue(String[] args, int slot) throws UserError {
+        int processValue(String[] args, int slot) throws Error {
             final int result = super.processValue(args, slot);
             final OptionValue newOptionValue = optValues.get(optValues.size() - 1);
             agentArgs.addACCArg(newOptionValue.option);
@@ -676,7 +649,7 @@ public class CLIBootstrap {
         }
 
         @Override
-        int processValue(String[] args, int slot) throws UserError {
+        int processValue(String[] args, int slot) throws Error {
             final int result = super.processValue(args, slot);
             agentArgs.addACCArg(values.get(values.size() - 1));
             return result;
@@ -741,7 +714,7 @@ public class CLIBootstrap {
     private class JVMMainOption extends CommandLineElement {
         private static final String JVM_MAIN_PATTERN = "-jar|-client|[^-][^\\s]*";
 
-        private String introducer = null;
+        private String introducer;
 
         JVMMainOption() {
             super(JVM_MAIN_PATTERN);
@@ -769,69 +742,66 @@ public class CLIBootstrap {
         }
 
         @Override
-        int processValue(String[] args, int slot) throws UserError {
+        int processValue(String[] args, int slot) throws Error {
             // We only care about the most recent setting.
             values.clear();
 
-            // If arg[slot] is -jar or -client we expect the next value to be the file. Make sure there is a next item and that it
+            // If arg[slot] is -jar or -client we expect the next value to be the file.
+            // Make sure there is a next item and that it
             if (args[slot].charAt(0) != '-') {
-                // This must be a main class specified on the command line.
+                values.add("-classpath");
+                values.add(gfInfo.agentJarPath() + File.pathSeparatorChar
+                    + ClassPathUtils.getClassPathForGfClient("."));
                 final int result = super.processValue(args, slot);
-                agentArgs.add("client=class=" + values.get(values.size() - 1));
+                String className = values.get(values.size() - 1);
+                agentArgs.add("client=class=" + className);
                 return result;
             }
             if (!nextLooksOK(args, slot)) {
-                throw new UserError("-jar or -client requires value but missing");
+                throw new Error("-jar or -client requires value but missing");
             }
             introducer = args[slot++];
             final int result = super.processValue(args, slot);
-            final String clientJarPath = values.get(values.size() - 1);
+            final String clientJarPath = values.remove(values.size() - 1);
             final File clientJarFile = new File(clientJarPath);
             if (clientJarFile.isDirectory()) {
-                // Record in the agent args that the user is launching a directory. Set the main class launch info to launch the ACC JAR.
+                // Record in the agent args that the user is launching a directory.
+                // Set the main class launch info to launch the ACC JAR.
                 agentArgs.add("client=dir=" + quote(clientJarFile.getAbsolutePath()));
                 introducer = "-jar";
-                values.set(values.size() - 1, gfInfo.agentJarPath());
+                values.add(gfInfo.agentJarPath());
             } else {
                 agentArgs.add("client=jar=" + quote(clientJarPath));
-                // The client path is not a directory. It should be a .jar or a .ear file. If an EAR, then we want Java to launch
-                // our ACC jar. If a JAR, then we will launch that JAR.
+                // The client path is not a directory. It should be a .jar or a .ear file.
+                // If an EAR, then we want Java to launch our ACC jar.
+                // If a JAR, then we will launch that JAR.
                 if (clientJarPath.endsWith(".ear")) {
                     introducer = "-jar";
-                    values.set(values.size() - 1, gfInfo.agentJarPath());
+                    values.add(gfInfo.agentJarPath());
                 } else if (clientJarPath.endsWith(".jar")) {
                     introducer = null;
-                    values.set(values.size() - 1, "-classpath");
-                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient(clientJarPath));
+                    values.add("-classpath");
+                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar
+                        + ClassPathUtils.getClassPathForGfClient(clientJarPath));
                     String mainClass = ClassPathUtils.getMainClass(clientJarFile);
                     values.add(mainClass == null ? "" : mainClass);
+                } else {
+                    throw new Error("Unexpected client: " + clientJarPath);
                 }
             }
             return result;
         }
 
 
-        private String getClassPathForGfClient(String clientJarPath) {
-            URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
-            if (classpath.length == 0) {
-                return clientJarPath;
-            }
-            return clientJarPath + File.pathSeparator + Stream.of(classpath).map(ClassPathUtils::convertToString)
-                .collect(Collectors.joining(File.pathSeparator));
-        }
-
-
         @Override
         boolean format(final StringBuilder commandLine) {
-            if (introducer != null) {
-                /*
-                 * In the generated command we always use "-jar" to indicate the JAR to be launched, even if the user specified
-                 * "-client" on the appclient command line.
-                 */
-                super.format(commandLine, false /* useQuotes */, "-jar");
-                return super.format(commandLine, true /* useQuotes */);
+            if (introducer == null) {
+                return super.format(commandLine, false /* useQuotes */);
             }
-            return super.format(commandLine, false /* useQuotes */);
+            // In the generated command we always use "-jar" to indicate the JAR to be launched,
+            // even if the user specified "-client" on the appclient command line.
+            super.format(commandLine, false /* useQuotes */, introducer);
+            return super.format(commandLine, true /* useQuotes */);
         }
 
         private boolean nextLooksOK(final String[] args, final int slot) {
@@ -857,17 +827,16 @@ public class CLIBootstrap {
 
     private File fileContainingAgentArgs() throws IOException {
         File argsFile = File.createTempFile("acc", ".dat");
-        PrintStream ps = new PrintStream(argsFile);
-        ps.println(agentArgs.toString());
-        ps.close();
-
+        try (PrintStream ps = new PrintStream(argsFile)) {
+            ps.println(agentArgs.toString());
+        }
         return argsFile;
     }
 
     /**
      * Encapsulates information about the GlassFish installation, mostly useful directories within the installation.
      * <p>
-     * Note that we use the property acc. AS_INSTALL to find the installation.
+     * Note that we use the property acc.AS_INSTALL to find the installation.
      */
     static class GlassFishInfo {
 
@@ -879,13 +848,13 @@ public class CLIBootstrap {
 
         GlassFishInfo() {
             String asInstallPath = System.getProperty(ENV_VAR_PROP_PREFIX + "AS_INSTALL");
-            if (asInstallPath == null || asInstallPath.length() == 0) {
+            if (asInstallPath == null || asInstallPath.isEmpty()) {
                 throw new IllegalArgumentException("AS_INSTALL == null");
             }
-            this.home = new File(asInstallPath);
-            modules = new File(home, "modules");
-            lib = new File(home, "lib");
-            libAppclient = new File(lib, "appclient");
+            this.home = new File(asInstallPath).toPath().normalize().toFile();
+            this.modules = new File(home, "modules");
+            this.lib = new File(home, "lib");
+            this.libAppclient = new File(lib, "appclient");
         }
 
         File home() {
@@ -898,6 +867,10 @@ public class CLIBootstrap {
 
         File lib() {
             return lib;
+        }
+
+        File libAppclient() {
+            return libAppclient;
         }
 
         File configxml() {
@@ -1017,7 +990,7 @@ public class CLIBootstrap {
 
         private final List<CommandLineElement> evElements = new ArrayList<>();
 
-        UserVMArgs(String vmargs) throws UserError {
+        UserVMArgs(String vmargs) throws Error {
 
             if (isDebug) {
                 System.err.println("VMARGS = " + (vmargs == null ? "null" : vmargs));
@@ -1042,7 +1015,7 @@ public class CLIBootstrap {
             evElements.add(evOtherJVMOptions);
         }
 
-        private void processEVCommandLineElements(final String[] envVarJVMArgs) throws UserError {
+        private void processEVCommandLineElements(final String[] envVarJVMArgs) throws Error {
             /*
              * Process each command-line argument by the first CommandLineElement which matches the argument.
              */
@@ -1056,7 +1029,7 @@ public class CLIBootstrap {
                     }
                 }
                 if (!isMatched) {
-                    throw new UserError("arg " + i + " = " + envVarJVMArgs[i] + " not recognized");
+                    throw new Error("arg " + i + " = " + envVarJVMArgs[i] + " not recognized");
                 }
             }
         }

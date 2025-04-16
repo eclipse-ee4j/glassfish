@@ -21,4 +21,4 @@ AS_CONFIG_SH="${AS_CONFIG}/config.sh"
 source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
 AS_MODULES="$AS_INSTALL/modules"
 WS_CLASSPATH="$AS_MODULES/webservices-api-osgi.jar:$AS_MODULES/webservices-osgi.jar:$AS_MODULES/jakarta.xml.bind-api.jar:$AS_MODULES/jaxb-osgi.jar:$AS_MODULES/jakarta.activation-api.jar:$AS_MODULES/angus-activation.jar"
-exec "$JAVA" -cp "$WS_CLASSPATH" com.sun.tools.xjc.Driver "$@"
+exec "$JAVA" --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$WS_CLASSPATH" com.sun.tools.xjc.Driver "$@"

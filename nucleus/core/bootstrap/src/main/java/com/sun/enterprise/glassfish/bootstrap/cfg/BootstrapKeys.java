@@ -26,10 +26,12 @@ public final class BootstrapKeys {
     /** bundle containing module startup */
     public static final String GF_KERNEL = "org.glassfish.core.kernel";
 
+    public static final String ASADMIN_MP = "-asadmin-modulepath";
     public static final String ASADMIN_CP = "-asadmin-classpath";
     public static final String ASADMIN_CN = "-asadmin-classname";
     public static final String ASADMIN_ARGS = "-asadmin-args";
 
+    public static final String ORIGINAL_MP = "-startup-modulepath";
     public static final String ORIGINAL_CP = "-startup-classpath";
     public static final String ORIGINAL_CN = "-startup-classname";
     public static final String ORIGINAL_ARGS = "-startup-args";

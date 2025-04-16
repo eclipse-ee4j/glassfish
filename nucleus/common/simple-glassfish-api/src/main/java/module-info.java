@@ -29,5 +29,6 @@ module org.glassfish.main.api.simple {
     uses org.glassfish.embeddable.spi.RuntimeBuilder;
 
     exports org.glassfish.embeddable;
+    exports org.glassfish.embeddable.client;
     exports org.glassfish.embeddable.spi;
 }

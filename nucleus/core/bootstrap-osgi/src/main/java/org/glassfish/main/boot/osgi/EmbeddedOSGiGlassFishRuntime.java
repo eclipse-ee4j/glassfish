@@ -17,7 +17,6 @@
 
 package org.glassfish.main.boot.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.module.bootstrap.Main;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -47,6 +47,7 @@ import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.boot.impl.GlassFishImpl;
 import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.props.EnvToPropsConverter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -57,6 +58,13 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_R
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINEST;
 import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
@@ -103,7 +111,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
             final ServiceLocator serviceLocator = hk2Main.createServiceLocator(mr, startupContext, null, null);
             final ModuleStartup gfKernel = hk2Main.findStartupService(mr, serviceLocator, null, startupContext);
-            final GlassFish glassFish = createGlassFish(gfKernel, serviceLocator, gfProps.getProperties());
+            final GlassFish glassFish = createGlassFish(gfKernel, serviceLocator);
             glassFishes.add(glassFish);
 
             return glassFish;
@@ -225,23 +233,32 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
     private void setEnv(Properties bootstrapProperties) {
         final String installRootValue = bootstrapProperties.getProperty(INSTALL_ROOT_PROP_NAME);
         if (installRootValue != null && !installRootValue.isEmpty()) {
+            final Map<String, String> pairs = Map.of(
+                "AS_DERBY_INSTALL", DERBY_ROOT_PROPERTY,
+                "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
+                "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
+                "AS_CONFIG", CONFIG_ROOT_PROPERTY,
+                "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
+                "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
+                "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
+
             File installRoot = new File(installRootValue);
-            System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
-            final AsenvConf asenv = AsenvConf.parseAsEnv(installRoot);
-            asenv.mirrorToSystemProperties();
+            new EnvToPropsConverter(installRoot.toPath()).convert(pairs).entrySet()
+                .forEach(e -> System.setProperty(e.getKey(), e.getValue().getPath()));
+            System.setProperty(INSTALL_ROOT_PROP_NAME, installRootValue);
             System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
         }
 
         final String instanceRootValue = bootstrapProperties.getProperty(INSTANCE_ROOT_PROP_NAME);
         if (instanceRootValue != null && !instanceRootValue.isEmpty()) {
-            File instanceRoot = new File(instanceRootValue);
+            File instanceRoot = new File(instanceRootValue).toPath().normalize().toFile();
             System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
             System.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
         }
     }
 
 
-    private GlassFish createGlassFish(ModuleStartup gfKernel, ServiceLocator locator, Properties gfProps)
+    private GlassFish createGlassFish(ModuleStartup gfKernel, ServiceLocator locator)
         throws GlassFishException {
         GlassFish gf = new GlassFishImpl(gfKernel, locator);
         return new EmbeddedOSGiGlassFishImpl(gf, context);

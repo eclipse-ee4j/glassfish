@@ -48,6 +48,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 
 /**
@@ -93,7 +94,7 @@ public class CommonClassLoaderServiceImpl {
 
 
     @PostConstruct
-    public void postConstruct() {
+    void postConstruct() {
         this.apiClassLoader = Objects.requireNonNull(acls.getAPIClassLoader(), "API ClassLoader is null!");
         final List<URL> urls = toUrls(createClasspathElements(env));
         this.commonClassPath = urlsToClassPath(urls.stream());
@@ -194,7 +195,7 @@ public class CommonClassLoaderServiceImpl {
         }
         final File derbyLib = derbyHome.resolve("lib").toFile();
         if (!derbyLib.exists()) {
-            LOG.info(KernelLoggerInfo.cantFindDerby);
+            LOG.log(INFO, KernelLoggerInfo.cantFindDerby, derbyLib);
             return Collections.emptyList();
         }
         return Arrays

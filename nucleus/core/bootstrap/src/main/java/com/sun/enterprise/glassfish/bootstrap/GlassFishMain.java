@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
@@ -31,6 +30,8 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import org.glassfish.main.jdke.props.EnvToPropsConverter;
+
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.glassfish.bootstrap.cp.ClassLoaderBuilder.createOSGiFrameworkLauncherCL;
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
@@ -42,8 +43,6 @@ import static java.util.logging.Level.SEVERE;
  * @author David Matejcek
  */
 public class GlassFishMain {
-
-    private static final String DEFAULT_DOMAINS_DIR_PROPNAME = "AS_DEF_DOMAINS_PATH";
 
     // logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
@@ -105,6 +104,7 @@ public class GlassFishMain {
                 map.put("default", args[i]);
             }
         }
+        // no sense doing this if we were started by CLI...
         if (!wasStartedByCLI(map)) {
             for (int i = 0; i < args.length; i++) {
                 if (i > 0) {
@@ -113,9 +113,9 @@ public class GlassFishMain {
                 sb.append(args[i]);
             }
             map.setProperty(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
-            // no sense doing this if we were started by CLI...
             map.setProperty(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
             map.setProperty(BootstrapKeys.ORIGINAL_CN, GlassFishMain.class.getName());
+            map.setProperty(BootstrapKeys.ORIGINAL_MP, System.getProperty("jdk.module.path"));
         }
         return map;
     }
@@ -192,16 +192,18 @@ public class GlassFishMain {
 
 
     private static File getDefaultDomainsDir(File installRoot) {
-        AsenvConf asEnv = AsenvConf.parseAsEnv(installRoot);
-        String dirname = asEnv.getProperty(DEFAULT_DOMAINS_DIR_PROPNAME);
-        if (!isSet(dirname)) {
-            throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + " is not set.");
+        String domainsRootSys = "com.sun.aas.domainsRoot";
+        String domainsRootEnv = "AS_DEF_DOMAINS_PATH";
+        // Can be a just a link
+        File domainsDirFile = new EnvToPropsConverter(installRoot.toPath()).convert(domainsRootEnv, domainsRootSys);
+        if (domainsDirFile == null) {
+            throw new RuntimeException(
+                "Neither " + domainsRootEnv + " env property nor " + domainsRootSys + " system property is set.");
         }
 
-        File domainsDir = absolutize(new File(dirname));
+        File domainsDir = absolutize(domainsDirFile);
         if (!domainsDir.isDirectory()) {
-            throw new RuntimeException(DEFAULT_DOMAINS_DIR_PROPNAME + "[" + dirname + "]"
-                + " is specifying a file that is NOT a directory.");
+            throw new RuntimeException(domainsDir + " is specifying a file that is NOT a directory.");
         }
         return domainsDir;
     }

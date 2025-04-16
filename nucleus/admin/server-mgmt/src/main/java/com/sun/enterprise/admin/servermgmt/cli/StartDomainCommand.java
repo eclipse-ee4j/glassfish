@@ -215,7 +215,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         launchParameters.setWatchdog(watchdog);
         launchParameters.setDropInterruptedCommands(drop_interrupted_commands);
 
-        launchParameters.setRespawnInfo(programOpts.getClassName(), programOpts.getClassPath(), respawnArgs());
+        launchParameters.setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(), programOpts.getClassPath(), respawnArgs());
 
         glassFishLauncher.setup();
     }

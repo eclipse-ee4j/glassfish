@@ -45,11 +45,22 @@
     <!-- classpath at QuickLook runtime (i.e. not for building of testing apps) -->
     <path id="run.testng.classpath">
         <fileset dir="${glassfish.home}/modules">
-            <include name="**/hk2*.jar" />
-            <include name="**/glassfish-api.jar" />
-            <include name="**/amx-core.jar" />
-            <include name="**/amx-jakartaee.jar" />
-            <include name="**/gf-client-module.jar" />
+            <include name="amx-core.jar" />
+            <include name="amx-jakartaee.jar" />
+            <include name="common-util.jar" />
+            <include name="gf-client-module.jar" />
+            <include name="glassfish-api.jar" />
+            <include name="gmbal*.jar" />
+            <include name="ha-api.jar" />
+            <include name="hk2*.jar" />
+            <include name="jakarta.activation-api.jar" />
+            <include name="jakarta.annotation-api.jar" />
+            <include name="jakarta.xml.bind-api.jar" />
+            <include name="jaxb-osgi.jar" />
+            <include name="osgi-resource-locator.jar" />
+            <include name="webservices-api-osgi.jar" />
+            <include name="webservices-osgi.jar" />
+            <include name="xmlsec.jar" />
         </fileset>
         <fileset dir="${maven.repo.local}/com/beust/jcommander">
             <include name="**/1.72/jcommander-1.72.jar" />
@@ -61,7 +72,7 @@
     <!-- classpath at QuickLook build time for building testing apps -->
     <path id="class.path">
         <fileset dir="${glassfish.home}/modules">
-            <include name="**/*.jar" />
+            <include name="*.jar" />
             <!-- excluding some obviously unnecessary jars to reduce classpath length (> 32kB causes javac to fail on WinXP) -->
             <exclude name="cmp*.jar" />
             <exclude name="connectors-*.jar" />
@@ -72,9 +83,7 @@
             <exclude name="org.apache.felix.*" />
             <exclude name="org.eclipse.persistence.*" />
             <exclude name="stats77.jar" />
-            <exclude name="trilead-ssh2-repackaged.jar" />
-            <exclude name="virt-core.jar" />
-            <exclude name="woodstox-osgi.jar" />
+            <exclude name="woodstox-core.jar" />
         </fileset>
         <pathelement location="${class.output}" />
         <pathelement location="${test.class.output}" />
@@ -104,14 +113,14 @@
         <echo message="Listing of source files: ${source.file.list}" />
 
         <mkdir dir="${test.class.output}" />
-        <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="${basedir}/src/test" sourcepath="" destdir="${test.class.output}">
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="${basedir}/src/test" sourcepath="" destdir="${test.class.output}">
             <include name="**/*.java" />
         </javac>
     </target>
 
     <target name="compile-util" description="compile the test ng util">
         <mkdir dir="${test.class.output}" />
-        <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="${ws.root}/admincli/src/test/admincli/util:${ws.root}/utils" destdir="${test.class.output}">
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="${ws.root}/admincli/src/test/admincli/util:${ws.root}/utils" destdir="${test.class.output}">
         </javac>
     </target>
 
@@ -154,7 +163,7 @@
     <target name="compile-single">
         <delete dir="$class.output}" />
         <mkdir dir="${class.output}" />
-        <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="src" destdir="${class.output}" />
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src" destdir="${class.output}" />
     </target>
 
 
@@ -168,7 +177,7 @@
         <mkdir dir="web/html" />
         <mkdir dir="web/jsp" />
         <mkdir dir="src/java" />
-        <javac debug="true" source="8" target="8" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
 
         <mkdir dir="${class.output}/META-INF" />
         <copy file="metadata/persistence.xml" todir="${class.output}/META-INF" failonerror="false" />
@@ -204,7 +213,7 @@
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
         <echo message="Now compiling" />
-        <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="src/java" destdir="${class.output}" />
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/java" destdir="${class.output}" />
         <echo message="Now creating a war file ${dist.dir}/${app.file.ext}" />
         <jar destfile="${dist.dir}/${app.file.ext}" update="true" basedir="${class.output}" />
     </target>
@@ -215,7 +224,7 @@
         <delete file="${app.file.ext}" />
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
-        <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
         <echo message="war.classes ============== : ${war.classes}" />
         <war destfile="${dist.dir}/${app.file}Web.war" webxml="metadata/web.xml">
             <fileset dir="web/html" />
@@ -243,7 +252,7 @@
         <delete file="${app.file.ext}" />
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
-        <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="src/com" failonerror="false" destdir="${class.output}" />
+        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/com" failonerror="false" destdir="${class.output}" />
         <mkdir dir="${class.output}/META-INF" />
         <copy file="metadata/sun-application-client.xml" tofile="${class.output}/META-INF/sun-application-client.xml" failonerror="false" />
         <jar destfile="${dist.dir}/${app.file}-client.jar" basedir="${class.output}" includes="**/Client.class" manifest="./metadata/MANIFEST.MF">
@@ -357,7 +366,9 @@
     <target name="runwsittest-impl-class" depends="checkTestNGXML" unless="testng.xml.present">
         <echo message="=============Starting TestNG test at ${test.class.output}  ============" />
         <mkdir dir="${result.output}" />
-        <testng outputdir="${result.output}" verbose="2" suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="wsit.classpath" classpath="${build.classes.home}:${basedir}/etc">
+        <testng outputdir="${result.output}" suitename="${testsuite.name}" testname="${testng.test.name}"
+          verbose="-1"
+          classpathref="wsit.classpath" classpath="${build.classes.home}:${basedir}/etc">
             <classfileset dir="${build.classes.home}" includes="**/${testng.testclient}.class" />
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
@@ -368,7 +379,9 @@
     <target name="runwsittest-impl-xml" depends="checkTestNGXML" if="testng.xml.present">
         <echo message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============" />
         <mkdir dir="${result.output}" />
-        <testng outputdir="${result.output}" suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="wsit.classpath" classpath="${build.classes.home}:${basedir}/etc">
+        <testng outputdir="${result.output}" suitename="${testsuite.name}" testname="${testng.test.name}"
+          verbose="-1"
+          classpathref="wsit.classpath" classpath="${build.classes.home}:${basedir}/etc">
             <xmlfileset dir="." includes="testng.xml" />
             <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
             <jvmarg value="-Dhttp.port=${glassfish.http.port}" />

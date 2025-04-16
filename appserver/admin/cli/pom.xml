@@ -59,14 +59,7 @@
                     <archive>
                         <manifest>
                             <mainClass>org.glassfish.admin.cli.AsadminMain</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
-                            <classpathPrefix>../../modules</classpathPrefix>
                         </manifest>
-                        <manifestEntries>
-                            <Class-Path>../bootstrap/glassfish-jul-extension.jar ../bootstrap/glassfish-jdk-extensions.jar ../bootstrap/simple-glassfish-api.jar</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

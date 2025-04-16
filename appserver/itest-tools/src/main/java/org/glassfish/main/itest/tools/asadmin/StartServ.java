@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -149,8 +149,7 @@ public class StartServ {
         }
 
         final String stdErr = processManager.getStderr() + '\n' + asadminErrorMessage;
-        final AsadminResult result;
-        result = new AsadminResult(this.getCommandName(), exitCode, processManager.getStdout(), stdErr);
+        final AsadminResult result = new AsadminResult(getCommandName(), exitCode, processManager.getStdout(), stdErr);
         if (!result.getStdOut().isEmpty()) {
             System.out.println(result.getStdOut());
         }
@@ -158,6 +157,12 @@ public class StartServ {
             System.err.println(result.getStdErr());
         }
         return result;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.startServ.toString();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,7 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.FINAL_STA
  * This is a special implementation used in non-embedded environment.
  * It assumes that it has launched the framework during bootstrap and hence can stop it upon
  * shutdown.
- * It also creates a specialized GlassFishImpl called {@link OSGiGlassFishImpl}
+ * It also creates a specialized {@link GlassFish} implementation called {@link OSGiGlassFishImpl}
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */

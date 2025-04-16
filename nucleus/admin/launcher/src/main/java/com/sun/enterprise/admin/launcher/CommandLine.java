@@ -59,7 +59,7 @@ public final class CommandLine implements Iterable<String> {
 
 
     /**
-     * Appends classpath argument (whole <code>-cp [paths]</code>)
+     * Appends paths argument (whole <code>-cp [paths]</code>)
      *
      * @param paths
      */
@@ -68,6 +68,22 @@ public final class CommandLine implements Iterable<String> {
             .collect(Collectors.joining(File.pathSeparator));
         command.add("-cp");
         command.add(toQuotedIfNeeded(value));
+    }
+
+
+    /**
+     * Appends paths argument (whole
+     * <code>--module-path [paths] --add-modules ALL-MODULE-PATH</code>)
+     *
+     * @param paths
+     */
+    public void appendModulePath(File... paths) {
+        command.add("--module-path");
+        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toAbsoluteStringPath)
+            .collect(Collectors.joining(File.pathSeparator));
+        command.add(toQuotedIfNeeded(value));
+        command.add("--add-modules");
+        command.add("ALL-MODULE-PATH");
     }
 
 

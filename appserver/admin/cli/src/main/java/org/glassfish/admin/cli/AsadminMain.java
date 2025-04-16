@@ -20,9 +20,6 @@ package org.glassfish.admin.cli;
 import com.sun.enterprise.admin.cli.AdminMain;
 import com.sun.enterprise.admin.cli.Environment;
 
-import java.io.File;
-import java.util.Set;
-
 /**
  * The asadmin main program.
  */
@@ -46,19 +43,5 @@ public class AsadminMain extends AdminMain {
     @Override
     protected String getCommandName() {
         return "asadmin";
-    }
-
-
-    @Override
-    protected Set<File> getExtensions() {
-        final Set<File> locations = super.getExtensions();
-        // FIXME: Identify just modules containing admin commands and their dependencies.
-        //        Then split those jar files to server and cli part.
-        //        Then cli parts should be under lib/admin
-        //        And server parts under modules.
-        //        They should not depend on each other.
-        final File modules = getInstallRoot().resolve("modules").toFile();
-        locations.add(modules);
-        return locations;
     }
 }

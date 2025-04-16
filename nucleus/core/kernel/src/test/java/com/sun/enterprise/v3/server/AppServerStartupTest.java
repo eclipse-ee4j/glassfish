@@ -62,11 +62,13 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.kernel.event.EventsImpl;
 import org.glassfish.main.core.apiexporter.APIExporterImpl;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.glassfish.tests.utils.mock.TestServerEnvironment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
@@ -96,6 +98,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Tom Beerbower
  */
+@ExtendWith(KernelJUnitExtension.class)
 public class AppServerStartupTest {
 
     /**

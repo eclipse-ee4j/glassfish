@@ -23,4 +23,5 @@ module org.glassfish.main.jdke {
 
     exports org.glassfish.main.jdke.cl;
     exports org.glassfish.main.jdke.i18n;
+    exports org.glassfish.main.jdke.props;
 }

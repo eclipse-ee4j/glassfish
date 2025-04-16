@@ -81,8 +81,11 @@ public final class StopDatabaseCommand extends DatabaseCommand {
                     javaHome + separator + "bin" + separator + "java",
                     "-Djava.library.path=" + installRoot + separator + "lib",
                     "-Dderby.storage.fileSyncTransactionLog=True",
+                    "--module-path",
+                    modulepath.toString(),
+                    "--add-modules",
+                    "ALL-MODULE-PATH",
                     "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
-
                     "com.sun.enterprise.admin.cli.optional.DerbyControl",
                     "shutdown",
                     dbHost, dbPort, "false" };
@@ -91,8 +94,11 @@ public final class StopDatabaseCommand extends DatabaseCommand {
             return new String[] {
                 javaHome + separator + "bin" + separator + "java",
                 "-Djava.library.path=" + installRoot + separator + "lib",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "shutdown",
                 dbHost, dbPort, "false" };
@@ -100,10 +106,13 @@ public final class StopDatabaseCommand extends DatabaseCommand {
 
         if (OS.isDarwin()) {
             return new String[] { javaHome + separator + "bin" + separator + "java",
-                "-Djava.library.path=" + installRoot + separator +
-                "lib", "-Dderby.storage.fileSyncTransactionLog=True",
+                "-Djava.library.path=" + installRoot + separator + "lib",
+                "-Dderby.storage.fileSyncTransactionLog=True",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "shutdown",
                 dbHost, dbPort, "false", dbUser, dbPassword };
@@ -112,8 +121,11 @@ public final class StopDatabaseCommand extends DatabaseCommand {
         return new String[] {
             javaHome + separator + "bin" + separator + "java",
             "-Djava.library.path=" + installRoot + separator + "lib",
+            "--module-path",
+            modulepath.toString(),
+            "--add-modules",
+            "ALL-MODULE-PATH",
             "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
-
             "com.sun.enterprise.admin.cli.optional.DerbyControl",
             "shutdown",
             dbHost, dbPort, "false", dbUser, dbPassword };

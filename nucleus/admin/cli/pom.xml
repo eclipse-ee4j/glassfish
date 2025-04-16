@@ -207,7 +207,13 @@
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
             <artifactId>cluster-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.cluster</groupId>
+            <artifactId>cluster-ssh</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
@@ -258,7 +264,7 @@
                             com.sun.enterprise.admin.cli.schemadoc
                         </Export-Package>
                     </instructions>
-                </configuration>
+              </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -266,13 +272,7 @@
                     <archive>
                         <manifest>
                             <mainClass>com.sun.enterprise.admin.cli.AdminMain</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                         </manifest>
-                        <manifestEntries>
-                            <Class-Path>../lib/bootstrap/glassfish-jul-extension.jar ../lib/bootstrap/glassfish-jdk-extensions.jar ../lib/bootstrap/simple-glassfish-api.jar</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

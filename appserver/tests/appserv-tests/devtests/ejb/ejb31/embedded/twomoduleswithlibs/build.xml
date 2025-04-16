@@ -108,14 +108,13 @@
        <echo message="Running with ${embedded.classpath} in classpath"/>
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-ejb1.jar:${assemble.dir}/${appname}-ejb2.jar:${assemble.dir}/${appname}-base.jar:${assemble.dir}/${appname}-pu1.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
-<!--
-            <jvmarg value="-Xdebug"/>
-            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8085"/>
--->
            <arg line="${appname}"/>
         </java>
     </target>
@@ -124,8 +123,11 @@
        <echo message="Running with ${embedded.classpath} in classpath"/>
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-ejb2/classes:${assemble.dir}/${appname}-ejb1/classes:${assemble.dir}/${appname}-base/classes:${assemble.dir}/${appname}-pu1:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />

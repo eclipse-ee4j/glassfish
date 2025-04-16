@@ -20,11 +20,11 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.Runtime.Version;
 import java.net.ConnectException;
@@ -81,7 +81,7 @@ public class AdminMain {
     private static final String[] SYS_PROPERTIES_TO_SET_FROM_ASENV = {
         INSTALL_ROOT_PROPERTY,
         SystemPropertyConstants.CONFIG_ROOT_PROPERTY,
-        SystemPropertyConstants.PRODUCT_ROOT_PROPERTY
+        SystemPropertyConstants.PRODUCT_ROOT_PROPERTY,
     };
     private static final LocalStringsImpl strings = new LocalStringsImpl(AdminMain.class);
 
@@ -97,6 +97,7 @@ public class AdminMain {
     }
 
     private final Path installRoot;
+    private String modulePath;
     private String classPath;
     private String className;
     private String command;
@@ -106,18 +107,7 @@ public class AdminMain {
 
 
     public AdminMain() {
-        this.installRoot = Path.of(System.getProperty(INSTALL_ROOT_PROPERTY));
-        if (installRoot == null) {
-            throw new Error("The install root was not specified by the system property " + INSTALL_ROOT_PROPERTY);
-        }
-        try {
-            final File dir = installRoot.toRealPath().toFile();
-            if (!dir.isDirectory() && dir.canRead()) {
-                throw new Error("The install root is not an existing readable directory: " + installRoot);
-            }
-        } catch (IOException e) {
-            throw new Error("The install root is not valid: " + installRoot, e);
-        }
+        this.installRoot = GFLauncherUtils.getInstallDir().toPath();
     }
 
     protected Path getInstallRoot() {
@@ -130,7 +120,7 @@ public class AdminMain {
      * @return a class loader used to load local commands
      */
     private ClassLoader getExtensionClassLoader(final Set<File> extensions) {
-        final ClassLoader ecl = AdminMain.class.getClassLoader();
+        final ClassLoader ecl = getClass().getClassLoader();
         if (extensions == null || extensions.isEmpty()) {
             return ecl;
         }
@@ -156,11 +146,29 @@ public class AdminMain {
     protected Set<File> getExtensions() {
         final Set<File> locations = new HashSet<>();
         final File ext = installRoot.resolve(Path.of("lib", "asadmin")).toFile();
-        if (ext.exists() && ext.isDirectory()) {
+        if (ext.isDirectory()) {
             locations.add(ext);
-            return locations;
+        } else {
+            throw new Error(strings.get("ExtDirMissing", ext));
         }
-        throw new Error(strings.get("ExtDirMissing", ext));
+        final String envClasspath = System.getenv("ASADMIN_CLASSPATH");
+        if (envClasspath == null) {
+            System.err.println(
+                "The ASADMIN_CLASSPATH environment variable is not set. Adding whole modules directory as a default.");
+            final File modules = getInstallRoot().resolve("modules").toFile();
+            if (modules.isDirectory()) {
+                locations.add(modules);
+            }
+        } else {
+            for (String path : envClasspath.split(File.pathSeparator)) {
+                File file = new File(path);
+                // nucleus doesn't contain some files, ie. backup.jar
+                if (file.exists()) {
+                    locations.add(file);
+                }
+            }
+        }
+        return locations;
     }
 
 
@@ -206,10 +214,12 @@ public class AdminMain {
         cliContainer = new CLIContainer(ecl, extensions, logger);
 
         classPath = SmartFile.sanitizePaths(System.getProperty("java.class.path"));
+        modulePath = SmartFile.sanitize(System.getProperty("jdk.module.path"));
         className = AdminMain.class.getName();
 
-        if (logger.isLoggable(FINER)) {
-            logger.log(FINER, "Classpath: {0}\nArguments: {1}", new Object[] {classPath, Arrays.toString(args)});
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, getClass() + "\nModulePath: {0}\nClasspath: {1}\nExtensions: {2}\nArguments: {3}",
+                new Object[] {modulePath, classPath, ecl, Arrays.toString(args)});
         }
 
         if (args.length == 0) {
@@ -278,6 +288,7 @@ public class AdminMain {
                 po = new ProgramOptions(env);
             }
             po.toEnvironment(env);
+            po.setModulePath(modulePath);
             po.setClassPath(classPath);
             po.setClassName(className);
             po.setCommandName(getCommandName());

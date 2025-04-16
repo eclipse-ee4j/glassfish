@@ -22,11 +22,13 @@ module org.glassfish.main.bootstrap {
     requires java.base;
     requires java.logging;
 
+    requires org.glassfish.main.api.simple;
+    requires org.glassfish.main.jdke;
+
     // felix framework is supplied by other jpms modules which don't overlap osgi.core
     requires static org.apache.felix.framework;
     // logging annotations are used just by maven compiler plugin and they are not used in runtime.
     requires static org.glassfish.annotation.processing.logging;
-    requires org.glassfish.main.jdke;
 
     exports com.sun.enterprise.glassfish.bootstrap.cfg;
     exports com.sun.enterprise.glassfish.bootstrap.launch;

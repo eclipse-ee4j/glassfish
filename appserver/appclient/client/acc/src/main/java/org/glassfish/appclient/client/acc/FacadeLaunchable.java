@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,6 +46,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.appclient.common.ACCAppClientArchivist;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
 
@@ -267,15 +268,8 @@ public class FacadeLaunchable implements Launchable {
              */
             archivist.setAnnotationProcessingRequested( ! isJWSLaunch);
 
-            final ACCClassLoader tempLoader = AccessController.doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-
-                @Override
-                public ACCClassLoader run() {
-                    return new ACCClassLoader(loader.getURLs(), loader.getParent());
-                }
-
-            });
-
+            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
+            final TransformingClassLoader tempLoader = AccessController.doPrivileged(action);
 
             archivist.setClassLoader(tempLoader);
 

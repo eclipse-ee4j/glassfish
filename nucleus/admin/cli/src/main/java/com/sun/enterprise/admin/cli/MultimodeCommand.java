@@ -225,6 +225,7 @@ public class MultimodeCommand extends CLICommand {
                  */
                 po = new ProgramOptions(env);
                 // copy over AsadminMain info
+                po.setModulePath(programOpts.getModulePath());
                 po.setClassPath(programOpts.getClassPath());
                 po.setClassName(programOpts.getClassName());
                 po.setCommandName(programOpts.getCommandName());

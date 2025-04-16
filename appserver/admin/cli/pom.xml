@@ -65,7 +65,7 @@
                             <classpathPrefix>../../modules</classpathPrefix>
                         </manifest>
                         <manifestEntries>
-                            <Class-Path>../../lib/bootstrap/glassfish-jul-extension.jar</Class-Path>
+                            <Class-Path>../bootstrap/glassfish-jul-extension.jar ../bootstrap/glassfish-jdk-extensions.jar ../bootstrap/simple-glassfish-api.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

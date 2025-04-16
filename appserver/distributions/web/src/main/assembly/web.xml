@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
     Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -200,7 +200,11 @@
             <directory>${temp.dir}</directory>
             <fileMode>640</fileMode>
             <includes>
+                <include>glassfish.jar</include>
+                <include>glassfish-osgi-bootstrap.jar</include>
+                <include>glassfish-jdk-extensions.jar</include>
                 <include>glassfish-jul-extension.jar</include>
+                <include>simple-glassfish-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/lib/bootstrap</outputDirectory>
         </fileSet>
@@ -251,7 +255,11 @@
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>appserver-domain.jar</exclude>
+                <exclude>glassfish.jar</exclude>
+                <exclude>glassfish-osgi-bootstrap.jar</exclude>
+                <exclude>glassfish-jdk-extensions.jar</exclude>
                 <exclude>glassfish-jul-extension.jar</exclude>
+                <exclude>simple-glassfish-api.jar</exclude>
                 <exclude>cli-optional.jar</exclude>
                 <exclude>appserver-cli.jar</exclude>
                 <exclude>cluster-cli.jar</exclude>

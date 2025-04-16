@@ -16,12 +16,12 @@ REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
 VERIFY OTHER 2>nul
+setlocal EnableExtensions EnableDelayedExpansion
 if ERRORLEVEL 0 goto ok
 echo "Unable to enable extensions"
 exit /B 1
 
 :ok
-endlocal
 set "AS_CONFIG=%~dp0..\config"
 set "AS_CONFIG_BAT=%AS_CONFIG%\config.bat"
 call "%AS_CONFIG_BAT%" || (
@@ -34,5 +34,4 @@ set "EL_IMPL=%AS_INSTALL_LIB%\expressly;%AS_INSTALL_LIB%\jakarta.el-api.jar"
 set "JSTL_IMPL=%AS_INSTALL_LIB%\jakarta.servlet.jsp.jstl.jar"
 set "AS_LIB=%~dp0..\lib"
 set "JAKARTAEE_API=%AS_LIB%\jakartaee.jar"
-setlocal EnableExtensions EnableDelayedExpansion
 "%JAVA%" -cp "%JSP_IMPL%;%JAKARTAEE_API%;%AS_LIB%" org.glassfish.wasp.JspC -sysClasspath "%JSP_IMPL%;%EL_IMPL%;%JSTL_IMPL%;%JAKARTAEE_API%;%AS_LIB%" -schemas "/schemas/" -dtds "/dtds/" %*

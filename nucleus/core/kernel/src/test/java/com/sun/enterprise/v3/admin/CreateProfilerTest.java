@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,6 @@ import jakarta.inject.Inject;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.security.auth.Subject;
@@ -66,9 +65,6 @@ public class CreateProfilerTest {
 
     @Inject
     private ServiceLocator locator;
-
-    @Inject
-    private Logger logger;
 
     @Inject
     private MockGenerator mockGenerator;

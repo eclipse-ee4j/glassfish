@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,6 +47,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 
 /**
  * Driver Loader to load the jdbc drivers and get driver/datasource classnames
@@ -492,7 +494,7 @@ public class DriverLoader implements ConnectorConstants {
 
     private List<File> getJdbcDriverLocations() {
     List<File> jarFileLocations = new ArrayList<>();
-        jarFileLocations.add(getLocation(SystemPropertyConstants.DERBY_ROOT_PROPERTY));
+        jarFileLocations.add(getLocation(DERBY_ROOT_PROP_NAME));
         jarFileLocations.add(getLocation(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         jarFileLocations.add(getLocation(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
         return jarFileLocations;

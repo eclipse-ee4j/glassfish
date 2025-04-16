@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
-import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,9 +47,6 @@ public class CommandRunnerImplServiceTest {
 
     @Inject
     private ServiceLocator locator;
-
-    @Inject
-    private MockGenerator mockGenerator;
 
     private CommandRunnerImpl commandRunner;
     private InternalSystemAdministrator sysAdmin;

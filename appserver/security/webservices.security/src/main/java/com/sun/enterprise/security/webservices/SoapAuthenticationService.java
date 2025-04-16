@@ -169,7 +169,7 @@ public class SoapAuthenticationService extends BaseAuthenticationService {
             if (clientSecurityContext != null) {
                 subject = clientSecurityContext.getSubject();
             }
-            if (subject == null) {
+            if (subject == null && System.getProperty("java.vm.specification.version").compareTo("24") < 0) {
                 subject = Subject.getSubject(AccessController.getContext());
             }
         } else {

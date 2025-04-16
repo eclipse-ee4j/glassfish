@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,9 @@ import java.util.Properties;
 
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
+
 /**
  * Start-up context for the ACC.  Note that this context is used also for
  * Java Web Start launches.
@@ -39,8 +42,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @Singleton
 public class ACCStartupContext extends StartupContext {
-
-    private static final String DERBY_ROOT_PROPERTY = "AS_DERBY_INSTALL";
 
     public ACCStartupContext() {
         super(accEnvironment());
@@ -53,11 +54,12 @@ public class ACCStartupContext extends StartupContext {
      * @return
      */
     private static Properties accEnvironment() {
-        final Properties environment = AsenvConf.parseAsEnv(getRootDirectory()).toProperties();
-        environment.setProperty("com.sun.aas.installRoot", getRootDirectory().getAbsolutePath());
-        final File javadbDir = new File(getRootDirectory().getParentFile(), "javadb");
+        final File rootDirectory = getRootDirectory();
+        final Properties environment = AsenvConf.parseAsEnv(rootDirectory).toProperties();
+        environment.setProperty(INSTALL_ROOT_PROP_NAME, rootDirectory.getAbsolutePath());
+        final File javadbDir = new File(rootDirectory.getParentFile(), "javadb");
         if (javadbDir.isDirectory()) {
-            environment.setProperty(DERBY_ROOT_PROPERTY, javadbDir.getAbsolutePath());
+            environment.setProperty(DERBY_ROOT_PROP_NAME, javadbDir.getAbsolutePath());
         }
         return environment;
     }
@@ -69,7 +71,7 @@ public class ACCStartupContext extends StartupContext {
          */
         URI jarURI = null;
         try {
-            jarURI = ACCClassLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            jarURI = ACCStartupContext.class.getProtectionDomain().getCodeSource().getLocation().toURI();
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }

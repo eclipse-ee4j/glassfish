@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +28,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 
@@ -77,7 +77,7 @@ public abstract class DatabaseCommand extends CLICommand {
         }
 
         javaHome = new File(getSystemProperty(JAVA_ROOT_PROPERTY));
-        dbLocation = new File(getSystemProperty(DERBY_ROOT_PROPERTY));
+        dbLocation = new File(getSystemProperty(DERBY_ROOT_PROP_NAME));
         checkIfDbInstalled(dbLocation);
 
         sClasspath.add(new File(installRoot, "lib/asadmin/cli-optional.jar"));
@@ -137,7 +137,7 @@ public abstract class DatabaseCommand extends CLICommand {
 
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "ping",
-                dbHost, dbPort, Boolean.valueOf(bRedirect).toString() };
+                dbHost, dbPort, Boolean.toString(bRedirect) };
 
         }
 
@@ -148,7 +148,7 @@ public abstract class DatabaseCommand extends CLICommand {
 
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "ping",
-                dbHost, dbPort, Boolean.valueOf(bRedirect).toString() };
+                dbHost, dbPort, Boolean.toString(bRedirect) };
     }
 
     /**

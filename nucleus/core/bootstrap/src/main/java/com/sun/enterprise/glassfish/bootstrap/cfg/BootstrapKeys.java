@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,6 +71,9 @@ public final class BootstrapKeys {
     public static final String FILE_SCHEME = "file";
 
     public static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
+
+    public static final String DERBY_ROOT_PROP_NAME = "com.sun.aas.derbyRoot";
+
 
     private BootstrapKeys() {
     }

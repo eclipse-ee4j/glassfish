@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -95,6 +96,7 @@ public class LoggingPrintStreamTest {
             () -> assertEquals("", record.getMessage()),
             () -> assertNull(record.getMessageKey()),
             () -> assertNull(record.getParameters()),
+            () -> assertThat(record.getThreadID(), greaterThan(0)),
             () -> assertEquals(Thread.currentThread().getName(), record.getThreadName()),
             () -> assertSame(exception, record.getThrown()),
             () -> assertEquals("testPrintStacktrace", record.getSourceMethodName())

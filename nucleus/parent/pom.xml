@@ -189,7 +189,6 @@
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
         <test.enableDefaultLogCfg>true</test.enableDefaultLogCfg>
-
         <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish7/glassfish</glassfish.distribution.dir>
     </properties>
 
@@ -848,7 +847,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>4.0.2</version>
+                    <version>4.1.0</version>
                     <!-- Adds support for glassfish-jar and it's customized lifecycle-->
                     <extensions>true</extensions>
                     <dependencies>

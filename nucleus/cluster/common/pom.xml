@@ -32,7 +32,6 @@
     <name>cluster-common</name>
 
     <properties>
-        <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
         <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
     </properties>
 

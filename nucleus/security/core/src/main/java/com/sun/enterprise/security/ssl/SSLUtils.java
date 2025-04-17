@@ -290,8 +290,10 @@ public final class SSLUtils {
                 return;
             }
 
-            Permission perm = new RuntimePermission("SSLPassword");
-            AccessController.checkPermission(perm);
+            if (System.getProperty("java.vm.specification.version").compareTo("24") < 0) {
+                Permission perm = new RuntimePermission("SSLPassword");
+                AccessController.checkPermission(perm);
+            }
         } catch (AccessControlException e) {
             String message = e.getMessage();
             Permission perm = new PropertyPermission(key, "read");

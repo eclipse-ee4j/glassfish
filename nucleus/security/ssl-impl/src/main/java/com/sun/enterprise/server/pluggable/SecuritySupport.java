@@ -280,7 +280,7 @@ public class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        if (processEnvironment.getProcessType().isStandaloneServer()) {
+        if (System.getProperty("java.vm.specification.version").compareTo("24") < 0 && processEnvironment.getProcessType().isStandaloneServer()) {
             checkPermission(KEYSTORE_PASS_PROP);
         }
 

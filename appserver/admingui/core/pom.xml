@@ -33,11 +33,6 @@
 
     <name>Admin Console Core Jar</name>
 
-    <properties>
-        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
-        <copy.modules.to.distribution.destFile>${basedir}/../../../${glassfish.distribution.dir}/lib/install/applications/__admingui/WEB-INF/lib/console-core-${project.version}.jar</copy.modules.to.distribution.destFile>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -77,4 +72,13 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+                <copy.modules.to.distribution.destFile>${basedir}/../../../${glassfish.distribution.dir}/lib/install/applications/__admingui/WEB-INF/lib/console-core-${project.version}.jar</copy.modules.to.distribution.destFile>
+            </properties>
+        </profile>
+    </profiles>
 </project>

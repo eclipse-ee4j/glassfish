@@ -44,10 +44,6 @@
         </developer>
     </developers>
 
-    <properties>
-        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main</groupId>
@@ -112,4 +108,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

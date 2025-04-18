@@ -33,10 +33,6 @@
     <name>Admin Console Clustering Support Plugin</name>
     <description>Clustering support plugin bundle for GlassFish Admin Console</description>
 
-    <properties>
-        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
@@ -51,4 +47,13 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

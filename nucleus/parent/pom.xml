@@ -2323,7 +2323,7 @@
                             <executions>
                                 <execution>
                                     <id>copy-module-to-distribution</id>
-                                    <phase>package</phase>
+                                    <phase>install</phase>
                                     <goals>
                                         <goal>copy-file</goal>
                                     </goals>

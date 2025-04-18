@@ -214,4 +214,14 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+                <copy.modules.to.distribution.destFile>${basedir}/../../..//${glassfish.distribution.dir}/lib/asadmin/server-mgmt.jar </copy.modules.to.distribution.destFile>
+            </properties>
+        </profile>
+    </profiles>
 </project>

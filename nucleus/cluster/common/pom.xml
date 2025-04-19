@@ -31,6 +31,10 @@
 
     <name>cluster-common</name>
 
+    <properties>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

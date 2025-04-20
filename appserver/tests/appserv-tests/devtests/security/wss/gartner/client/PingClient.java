@@ -68,7 +68,7 @@ public class PingClient {
             ex.printStackTrace();
             stat.addStatus("JWSS Servlet Ping", stat.FAIL);
         }
-        
+
         stat.printSummary("security-wss-ping");
     }
 }

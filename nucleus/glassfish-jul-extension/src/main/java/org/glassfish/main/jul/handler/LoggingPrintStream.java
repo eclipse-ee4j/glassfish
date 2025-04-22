@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -93,7 +93,7 @@ public class LoggingPrintStream extends PrintStream {
 
     @Override
     public PrintStream format(String format, Object... args) {
-        StringBuilder sb = new StringBuilder(format.length());
+        StringBuilder sb = new StringBuilder(format.length() + 128);
         try (Formatter formatter = new Formatter(sb, Locale.getDefault())) {
             formatter.format(format, args);
         }
@@ -104,7 +104,7 @@ public class LoggingPrintStream extends PrintStream {
 
     @Override
     public PrintStream format(Locale locale, String format, Object... args) {
-        StringBuilder sb = new StringBuilder(format.length());
+        StringBuilder sb = new StringBuilder(format.length() + 128);
         try (Formatter formatter = new Formatter(sb, locale)) {
             formatter.format(format, args);
         }

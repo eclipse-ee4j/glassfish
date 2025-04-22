@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>nucleus-core</artifactId>
-        <version>7.0.24-SNAPSHOT</version>
+        <version>7.0.25-SNAPSHOT</version>
     </parent>
 
     <artifactId>api-exporter</artifactId>

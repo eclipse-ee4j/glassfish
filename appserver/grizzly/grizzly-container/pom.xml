@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.grizzly</groupId>
         <artifactId>glassfish-grizzly</artifactId>
-        <version>7.0.24</version>
+        <version>7.0.25-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -61,14 +62,14 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.kernel.event.EventsImpl;
 import org.glassfish.main.core.apiexporter.APIExporterImpl;
-import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.server.ServerEnvironmentImpl;
+import org.glassfish.tests.utils.mock.TestServerEnvironment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static java.util.Collections.singletonList;
 import static org.glassfish.api.admin.ServerEnvironment.Status.starting;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
@@ -90,10 +91,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * If test failed, look into logs, because exceptions are not thrown outside the {@link AppServerStartup}
  * implementation.
+ * <p>
+ * This test intentionally does not use the {@link org.glassfish.tests.utils.junit.HK2JUnit5Extension}
  *
  * @author Tom Beerbower
  */
-@ExtendWith(KernelJUnitExtension.class)
 public class AppServerStartupTest {
 
     /**
@@ -141,10 +143,15 @@ public class AppServerStartupTest {
         descriptor.addContractType(ExecutorService.class);
         config.addActiveDescriptor(descriptor);
 
-        config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new ServerEnvironmentImpl()));
+        final Properties startupContextProperties = new Properties();
+        final String rootPath = AppServerStartupTest.class.getResource("/").getPath();
+        startupContextProperties.setProperty(INSTALL_ROOT_PROP_NAME, rootPath);
+        StartupContext startupContext = new StartupContext(startupContextProperties);
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new EventsImpl()));
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new Version()));
-        config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new StartupContext()));
+        config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(startupContext));
+        config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new TestServerEnvironment(startupContext),
+            "TestServerEnvironment", ServerEnvironment.class, ServerEnvironmentImpl.class));
 
         config.bind(BuilderHelper.link(RunLevelControllerImpl.class).to(RunLevelController.class).build());
 

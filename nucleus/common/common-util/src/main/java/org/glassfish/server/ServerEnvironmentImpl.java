@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 import java.io.File;
@@ -30,7 +31,6 @@ import java.util.Properties;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -43,7 +43,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author Byron Nevins
  */
 @Service
-public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
+public class ServerEnvironmentImpl implements ServerEnvironment {
 
     /** Folder where all generated code like compiled jsps, stubs is stored */
     public static final String kGeneratedDirName = "generated";
@@ -107,7 +107,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
     /**
      * This is where the real initialization happens.
      */
-    @Override
+    @PostConstruct
     public void postConstruct() {
 
         // todo : dochez : this will need to be reworked...

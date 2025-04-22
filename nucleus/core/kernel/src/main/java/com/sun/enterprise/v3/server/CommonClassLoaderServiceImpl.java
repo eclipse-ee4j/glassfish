@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -150,7 +151,8 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         if (domainLibDir.isDirectory()) {
             Collections.addAll(cpElements, domainLibDir.listFiles(new JarFileFilter()));
         }
-        cpElements.addAll(findDerbyJars(installDir));
+        final Properties startupCtxArgs = env.getStartupContext().getArguments();
+        cpElements.addAll(findDerbyJars(installDir, startupCtxArgs));
         return cpElements;
     }
 
@@ -183,30 +185,32 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         return urls.map(FileUtils::toFile).map(File::getAbsolutePath).collect(Collectors.joining(File.pathSeparator));
     }
 
-    private static List<File> findDerbyJars(File installDir) {
-        Path derbyHome = getDerbyDir(installDir);
+    private static List<File> findDerbyJars(File installDir, Properties startupCtxArgs) {
+        Path derbyHome = getDerbyDir(installDir, startupCtxArgs);
         LOG.log(CONFIG, "Using derby home: {0}", derbyHome);
-
+        if (derbyHome == null) {
+            LOG.info(KernelLoggerInfo.cantFindDerby);
+            return Collections.emptyList();
+        }
         final File derbyLib = derbyHome.resolve("lib").toFile();
         if (!derbyLib.exists()) {
             LOG.info(KernelLoggerInfo.cantFindDerby);
             return Collections.emptyList();
         }
-
         return Arrays
             .asList(derbyLib.listFiles((dir, name) -> name.endsWith(".jar") && !name.startsWith("derbyLocale_")));
     }
 
-    private static Path getDerbyDir(File installDir) {
+    private static Path getDerbyDir(File installDir, Properties startupCtxArgs) {
+        String derbyHomePropertyCtx = startupCtxArgs.getProperty(DERBY_ROOT_PROP_NAME);
+        if (derbyHomePropertyCtx != null) {
+            return new File(derbyHomePropertyCtx).toPath();
+        }
         String derbyHomeProperty = System.getProperty(DERBY_ROOT_PROP_NAME);
-        if (derbyHomeProperty == null) {
-            return installDir.toPath().resolve(Path.of("..", "javadb"));
+        if (derbyHomeProperty != null) {
+            return new File(derbyHomeProperty).toPath();
         }
-        Path derbyHome = Path.of(derbyHomeProperty);
-        if (derbyHome.isAbsolute()) {
-            return derbyHome;
-        }
-        return new File(installDir, "config").toPath().resolve(derbyHome);
+        return null;
     }
 
     private static class JarFileFilter implements FilenameFilter {

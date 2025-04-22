@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.cluster</groupId>
         <artifactId>cluster</artifactId>
-        <version>7.0.24-SNAPSHOT</version>
+        <version>7.0.24</version>
     </parent>
 
     <artifactId>gms-bootstrap</artifactId>

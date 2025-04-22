@@ -74,6 +74,7 @@ import static java.util.logging.Level.CONFIG;
 public class CommonClassLoaderServiceImpl implements PostConstruct {
 
     private static final Logger LOG = KernelLoggerInfo.getLogger();
+    private static final String SERVER_EXCLUDED_ATTR_NAME = "GlassFish-ServerExcluded";
 
     /**
      * The common classloader.
@@ -87,53 +88,21 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     private ServerEnvironment env;
 
     private ClassLoader apiClassLoader;
-    private String commonClassPath = "";
+    private String commonClassPath;
 
-    private static final String SERVER_EXCLUDED_ATTR_NAME = "GlassFish-ServerExcluded";
 
     @Override
     public void postConstruct() {
-        apiClassLoader = Objects.requireNonNull(acls.getAPIClassLoader(), "API ClassLoader is null!");
-        createCommonClassLoader();
-    }
-
-    private void createCommonClassLoader() {
-        List<File> cpElements = new ArrayList<>();
-        File domainDir = env.getInstanceRoot();
-        final String installRoot = System.getProperty(INSTALL_ROOT_PROP_NAME);
-        if (installRoot == null) {
-            throw new IllegalStateException("The system property is not set: " + INSTALL_ROOT_PROP_NAME);
-        }
-        File installDir = new File(installRoot);
-        File installLibDir = new File(installDir, "lib");
-        if (installLibDir.isDirectory()) {
-            Collections.addAll(cpElements, installLibDir.listFiles(new CompiletimeJarFileFilter()));
-        }
-        final File domainLibDir = new File(domainDir, "lib");
-        final File domainClassesDir = new File(domainLibDir, "classes");
-        if (domainClassesDir.exists()) {
-            cpElements.add(domainClassesDir);
-        }
-        if (domainLibDir.isDirectory()) {
-            Collections.addAll(cpElements, domainLibDir.listFiles(new JarFileFilter()));
-        }
-        cpElements.addAll(findDerbyJars(installDir));
-        List<URL> urls = new ArrayList<>();
-        for (File file : cpElements) {
-            try {
-                urls.add(file.toURI().toURL());
-            } catch (IOException e) {
-                LOG.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry, new Object[] {file, e});
-            }
-        }
-        commonClassPath = urlsToClassPath(urls.stream());
+        this.apiClassLoader = Objects.requireNonNull(acls.getAPIClassLoader(), "API ClassLoader is null!");
+        final List<URL> urls = toUrls(createClasspathElements(env));
+        this.commonClassPath = urlsToClassPath(urls.stream());
         if (urls.isEmpty()) {
             LOG.logp(Level.FINE, "CommonClassLoaderManager",
                 "Skipping creation of CommonClassLoader as there are no libraries available", "urls = {0}", urls);
         } else {
             // Skip creation of an unnecessary classloader in the hierarchy,
             // when all it would have done was to delegate up.
-            commonClassLoader = new GlassfishUrlClassLoader(urls.toArray(URL[]::new), apiClassLoader);
+            this.commonClassLoader = new GlassfishUrlClassLoader(urls.toArray(URL[]::new), apiClassLoader);
             LOG.log(Level.FINE, "Created common classloader: {0}", commonClassLoader);
         }
     }
@@ -142,8 +111,13 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         return commonClassLoader == null ? apiClassLoader : commonClassLoader;
     }
 
+    public String getCommonClassPath() {
+        return commonClassPath;
+    }
+
     /**
      * Adds a classpath element to the common classloader if the classloader supports it.
+     *
      * @param url URL of the classpath element to add
      * @throws UnsupportedOperationException If adding not supported by the classloader
      */
@@ -157,8 +131,39 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         commonClassPath = urlsToClassPath(Arrays.stream(commonClassLoader.getURLs()));
     }
 
-    public String getCommonClassPath() {
-        return commonClassPath;
+    private static List<File> createClasspathElements(ServerEnvironment env) {
+        final String installRoot = System.getProperty(INSTALL_ROOT_PROP_NAME);
+        if (installRoot == null) {
+            throw new IllegalStateException("The system property is not set: " + INSTALL_ROOT_PROP_NAME);
+        }
+        final File installDir = new File(installRoot);
+        final List<File> cpElements = new ArrayList<>();
+        final File installLibDir = new File(installDir, "lib");
+        if (installLibDir.isDirectory()) {
+            Collections.addAll(cpElements, installLibDir.listFiles(new CompiletimeJarFileFilter()));
+        }
+        final File domainLibDir = new File(env.getInstanceRoot(), "lib");
+        final File domainClassesDir = new File(domainLibDir, "classes");
+        if (domainClassesDir.exists()) {
+            cpElements.add(domainClassesDir);
+        }
+        if (domainLibDir.isDirectory()) {
+            Collections.addAll(cpElements, domainLibDir.listFiles(new JarFileFilter()));
+        }
+        cpElements.addAll(findDerbyJars(installDir));
+        return cpElements;
+    }
+
+    private static List<URL> toUrls(final List<File> cpElements) {
+        List<URL> urls = new ArrayList<>();
+        for (File file : cpElements) {
+            try {
+                urls.add(file.toURI().toURL());
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry, new Object[] {file, e});
+            }
+        }
+        return urls;
     }
 
     private static URL validateUrl(URL url) {
@@ -178,7 +183,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         return urls.map(FileUtils::toFile).map(File::getAbsolutePath).collect(Collectors.joining(File.pathSeparator));
     }
 
-    private List<File> findDerbyJars(File installDir) {
+    private static List<File> findDerbyJars(File installDir) {
         Path derbyHome = getDerbyDir(installDir);
         LOG.log(CONFIG, "Using derby home: {0}", derbyHome);
 

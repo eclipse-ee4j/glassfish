@@ -48,6 +48,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.WARNING;
 
 /**
  * This class is responsible for setting up Common Class Loader. As the
@@ -133,15 +134,19 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     }
 
     private static List<File> createClasspathElements(ServerEnvironment env) {
-        final String installRoot = System.getProperty(INSTALL_ROOT_PROP_NAME);
-        if (installRoot == null) {
-            throw new IllegalStateException("The system property is not set: " + INSTALL_ROOT_PROP_NAME);
-        }
-        final File installDir = new File(installRoot);
+        final Properties startupCtxArgs = env.getStartupContext().getArguments();
         final List<File> cpElements = new ArrayList<>();
-        final File installLibDir = new File(installDir, "lib");
-        if (installLibDir.isDirectory()) {
-            Collections.addAll(cpElements, installLibDir.listFiles(new CompiletimeJarFileFilter()));
+        final String installRoot = startupCtxArgs.getProperty(INSTALL_ROOT_PROP_NAME);
+        if (installRoot == null) {
+            LOG.log(WARNING, "The startup context property is not set: " + INSTALL_ROOT_PROP_NAME);
+        } else {
+            final File installDir = new File(installRoot);
+            LOG.log(CONFIG, "Using install root: {0}", installRoot);
+            final File installLibDir = new File(installDir, "lib");
+            if (installLibDir.isDirectory()) {
+                Collections.addAll(cpElements, installLibDir.listFiles(new CompiletimeJarFileFilter()));
+            }
+            cpElements.addAll(findDerbyJars(installDir, startupCtxArgs));
         }
         final File domainLibDir = new File(env.getInstanceRoot(), "lib");
         final File domainClassesDir = new File(domainLibDir, "classes");
@@ -151,8 +156,6 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         if (domainLibDir.isDirectory()) {
             Collections.addAll(cpElements, domainLibDir.listFiles(new JarFileFilter()));
         }
-        final Properties startupCtxArgs = env.getStartupContext().getArguments();
-        cpElements.addAll(findDerbyJars(installDir, startupCtxArgs));
         return cpElements;
     }
 
@@ -162,7 +165,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
             try {
                 urls.add(file.toURI().toURL());
             } catch (IOException e) {
-                LOG.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry, new Object[] {file, e});
+                LOG.log(WARNING, KernelLoggerInfo.invalidClassPathEntry, new Object[] {file, e});
             }
         }
         return urls;
@@ -236,7 +239,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
                         }
                     }
                 } catch (IOException e) {
-                    LOG.log(Level.WARNING, KernelLoggerInfo.exceptionProcessingJAR,
+                    LOG.log(WARNING, KernelLoggerInfo.exceptionProcessingJAR,
                         new Object[] {file.getAbsolutePath(), e});
                 }
                 return true;

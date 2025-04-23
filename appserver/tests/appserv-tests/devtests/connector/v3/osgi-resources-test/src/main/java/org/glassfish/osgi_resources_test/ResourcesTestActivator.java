@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -110,9 +111,6 @@ public class ResourcesTestActivator implements BundleActivator {
 
         testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.EmbeddedXADataSource)");
         testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.ClientDataSource)");
-
-        testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.ClientDataSource40)");
-        testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.EmbeddedXADataSource40)");
 
         testJdbcResources("(jndi-name=jdbc/__TimerPool)");
         testJdbcResources("(jndi-name=jdbc/__default)");

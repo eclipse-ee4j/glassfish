@@ -105,12 +105,8 @@ public class LogCollectorHandler extends Handler {
      */
     public List<GlassFishLogRecord> getAll() {
         final List<GlassFishLogRecord> list = new ArrayList<>(this.buffer.getSize());
-        while (!this.buffer.isEmpty()) {
-            final GlassFishLogRecord record = this.buffer.poll();
-            if (record == null) {
-                // Unreachable code, but just in case.
-                throw new IllegalStateException("Buffer is empty but should contain records.");
-            }
+        GlassFishLogRecord record;
+        while ((record = this.buffer.poll()) != null) {
             list.add(record);
         }
         return list;
@@ -133,8 +129,9 @@ public class LogCollectorHandler extends Handler {
      * Drops all collected records.
      */
     public void reset() {
-        while (!this.buffer.isEmpty()) {
-            this.buffer.poll();
-        }
+        GlassFishLogRecord record;
+        do {
+            record = this.buffer.poll();
+        } while (record != null);
     }
 }

@@ -177,10 +177,10 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
                 Thread.onSpinWait();
             }
             if (getState() == State.WAITING) {
-                this.interrupt();
+                interrupt();
             }
             try {
-                this.join();
+                join();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -201,12 +201,10 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
 
 
         private void logAllPendingRecords() {
-            while (true) {
-                if (!logRecord(buffer.poll())) {
-                    // end if there was nothing more to log
-                    return;
-                }
-            }
+            GlassFishLogRecord record;
+            do {
+                record = buffer.poll();
+            } while (logRecord(record));
         }
 
 

@@ -165,14 +165,25 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
 
 
         /**
-         * Kindly asks the pump to closed it's service. If the pump is locked waiting
-         * on the buffer, interrupts the thread.
+         * Kindly asks the pump to shut down it's service.
+         * If the pump is locked waiting on the buffer, interrupts the thread, but if it is
+         * in a runnable state, we let it finish.
          * <p>
          * The pump can be locked, waiting
          */
         void shutdown() {
             pumpClosed = true;
-            this.interrupt();
+            while (getState() == State.RUNNABLE) {
+                Thread.onSpinWait();
+            }
+            if (getState() == State.WAITING) {
+                interrupt();
+            }
+            try {
+                join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             // we interrupted waiting or working thread, now we have to process remaining records.
             logAllPendingRecords();
         }
@@ -190,12 +201,10 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
 
 
         private void logAllPendingRecords() {
-            while (true) {
-                if (!logRecord(buffer.poll())) {
-                    // end if there was nothing more to log
-                    return;
-                }
-            }
+            GlassFishLogRecord record;
+            do {
+                record = buffer.poll();
+            } while (logRecord(record));
         }
 
 

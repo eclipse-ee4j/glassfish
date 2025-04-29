@@ -17,7 +17,7 @@ The following topics are addressed here:
 * xref:#introduction-to-embedded-glassfish-server[Introduction to Embedded {productName}]
 * xref:#embedded-glassfish-server-file-system[Embedded {productName} File System]
 * xref:#including-the-glassfish-server-embedded-server-api-in-applications[Including the {productName} Embedded Server API in Applications]
-* xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Testing Applications with the Maven Plug-in for Embedded {productName}]
+* xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Running and Testing Applications with the Maven Plug-in for Embedded {productName}]
 * xref:#GSESG00039[Using the EJB 3.1 Embeddable API with Embedded {productName}]
 * xref:#changing-log-levels-in-embedded-glassfish-server[Changing Log Levels in Embedded {productName}]
 * xref:#default-java-persistence-data-source-for-embedded-glassfish-server[Default Java Persistence Data Source for Embedded {productName}]
@@ -42,7 +42,7 @@ You can use embedded {productName} in the following ways:
 
 * With the Embedded Server API (see xref:#including-the-glassfish-server-embedded-server-api-in-applications[Including the {productName} Embedded Server API in Applications])
 * As an executable JAR, executed with `java -jar` (see xref:#running-from-command-line[Running {productName} Embedded Server from Command Line])
-* With the Maven Plug-in (see xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Testing Applications with the
+* With the Maven Plug-in (see xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Running and Testing Applications with the
 Maven Plug-in for Embedded {productName}])
 * With the EJB 3.1 Embeddable API (see xref:#GSESG00039[Using the EJB 3.1
 Embeddable API with Embedded {productName}])
@@ -1218,7 +1218,7 @@ public class Main {
 
 [[testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server]]
 
-== Testing Applications with the Maven Plug-in for Embedded {productName}
+== Running and Testing Applications with the Maven Plug-in for Embedded {productName}
 
 If you are using http://maven.apache.org/[Apache Maven]
 (`http://maven.apache.org/`), the plug-in for embedded {productName}

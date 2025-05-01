@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,16 +53,14 @@ public class GetDatabaseVendorNames implements AdminCommand {
     private ConnectorRuntime connectorRuntime;
 
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         try {
             Set<String> vendorNames = connectorRuntime.getDatabaseVendorNames();
             Properties extraProperties = new Properties();
-            extraProperties.put("vendorNames", new ArrayList(vendorNames));
+            extraProperties.put("vendorNames", new ArrayList<>(vendorNames));
             report.setExtraProperties(extraProperties);
         } catch (Exception e) {
             report.setMessage("_get-database-vendor-names failed : " + e.getMessage());

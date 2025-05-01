@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,8 @@
  */
 
 package com.sun.appserv.connectors.internal.api;
+
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -310,9 +312,13 @@ public interface ConnectorConstants extends ResourceConstants {
     String RA = "ResourceAdapter";
     String JDBC = "Jdbc";
 
-    String INSTALL_ROOT = "com.sun.aas.installRoot";
+    /**
+     * @deprecated Duplicates SystemPropertyConstants.INSTALL_ROOT_PROPERTY
+     */
+    @Deprecated(forRemoval = true, since = "7.0.25")
+    String INSTALL_ROOT = SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
-
+    String DB_VENDOR_MAPPING_ROOT = "org.glassfish.connectors.dbVendorMappingRoot";
 
     // name by which connector's implemenation of message-bean-client-factory service is available.
     // MDB-Container can use this constant to get connector's implementation of the factory

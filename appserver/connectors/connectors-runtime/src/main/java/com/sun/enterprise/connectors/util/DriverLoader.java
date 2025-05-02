@@ -550,7 +550,7 @@ public class DriverLoader implements ConnectorConstants {
     }
 
     private List<File> getJdbcDriverLocations() {
-    List<File> jarFileLocations = new ArrayList<>();
+        List<File> jarFileLocations = new ArrayList<>();
         File derby = getLocation(DERBY_ROOT_PROP_NAME);
         if (derby != null) {
             jarFileLocations.add(derby);

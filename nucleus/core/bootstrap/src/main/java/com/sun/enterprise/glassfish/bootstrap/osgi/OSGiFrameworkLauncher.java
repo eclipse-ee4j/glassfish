@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,10 +41,17 @@ import org.osgi.util.tracker.ServiceTracker;
 public class OSGiFrameworkLauncher {
 
     private final Properties properties;
+    private final ClassLoader classloader;
     private Framework framework;
 
-    public OSGiFrameworkLauncher(Properties properties) {
+    public OSGiFrameworkLauncher(Properties properties, ClassLoader classloader) {
         this.properties = properties;
+        this.classloader = classloader;
+    }
+
+
+    public ClassLoader getClassLoader() {
+        return classloader;
     }
 
 
@@ -53,8 +60,7 @@ public class OSGiFrameworkLauncher {
             throw new IllegalStateException("An OSGi framework is already running...");
         }
         // Locate an OSGi framework and initialize it
-        ServiceLoader<FrameworkFactory> frameworkFactories = ServiceLoader.load(FrameworkFactory.class,
-            getClass().getClassLoader());
+        ServiceLoader<FrameworkFactory> frameworkFactories = ServiceLoader.load(FrameworkFactory.class, classloader);
         Map<String, String> mm = new HashMap<>();
         for (Map.Entry<Object, Object> e : properties.entrySet()) {
             mm.put((String) e.getKey(), (String) e.getValue());
@@ -91,10 +97,10 @@ public class OSGiFrameworkLauncher {
             throw new IllegalStateException("OSGi framework has not yet been launched.");
         }
         final BundleContext context = framework.getBundleContext();
-        ServiceTracker tracker = new ServiceTracker(context, type.getName(), null);
+        ServiceTracker<?, T> tracker = new ServiceTracker<>(context, type.getName(), null);
         try {
             tracker.open(true);
-            return type.cast(tracker.waitForService(0));
+            return tracker.waitForService(0);
         } finally {
             tracker.close();
         }
@@ -108,6 +114,6 @@ public class OSGiFrameworkLauncher {
      * @return false if we are already called in the context of OSGi framework, else true.
      */
     private boolean isOSGiEnv() {
-        return getClass().getClassLoader() instanceof BundleReference;
+        return classloader instanceof BundleReference;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,7 +89,7 @@ public class CarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader("CarHandler", parent);
         ASURLClassLoader cloader = AccessController.doPrivileged(action);
         try {
             cloader.addURL(context.getSource().getURI().toURL());
@@ -99,12 +99,8 @@ public class CarHandler extends AbstractArchiveHandler {
             }
 
             try {
-                final DeploymentContext dc = context;
-                final ClassLoader cl = cloader;
-
-                AccessController.doPrivileged(
-                        new PermsArchiveDelegate.SetPermissionsAction(
-                                SMGlobalPolicyUtil.CommponentType.car, dc, cl));
+                AccessController.doPrivileged(new PermsArchiveDelegate.SetPermissionsAction(
+                    SMGlobalPolicyUtil.CommponentType.car, context, cloader));
             } catch (PrivilegedActionException e) {
                 throw new SecurityException(e.getException());
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -84,7 +84,8 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
 
             final URL[] urlsA = urls.toArray(new URL[urls.size()]);
 
-            PrivilegedAction<ClassLoader> action = () -> new GlassfishUrlClassLoader(urlsA, Globals.class.getClassLoader());
+            PrivilegedAction<ClassLoader> action = () -> new GlassfishUrlClassLoader("DomainXmlVerifier", urlsA,
+                Globals.class.getClassLoader());
             ClassLoader cl = AccessController.doPrivileged(action);
             ModulesRegistry registry = new StaticModulesRegistry(cl);
             ServiceLocator serviceLocator = registry.createServiceLocator("default");

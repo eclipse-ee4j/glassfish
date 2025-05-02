@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +42,10 @@ import java.util.logging.Logger;
  */
 public class ConnectorClassLoader extends ASURLClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private static final Logger _logger = LogDomains.getLogger(ConnectorClassLoader.class, LogDomains.RSR_LOGGER);
 
     private volatile static ConnectorClassLoader classLoader;
@@ -73,10 +77,11 @@ public class ConnectorClassLoader extends ASURLClassLoader {
     }
 
     private ConnectorClassLoader() {
+        super("Connector", ClassLoader.getSystemClassLoader());
     }
 
     private ConnectorClassLoader(ClassLoader parent) {
-        super(parent);
+        super("Connector", parent);
         this.parent = parent;
     }
 
@@ -111,7 +116,7 @@ public class ConnectorClassLoader extends ASURLClassLoader {
 
         try {
             File file = new File(moduleDir);
-            PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+            PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader("ResourceAdapter(" + rarName + ")", parent);
             ASURLClassLoader cl = AccessController.doPrivileged(action);
 
             cl.appendURL(file.toURI().toURL());

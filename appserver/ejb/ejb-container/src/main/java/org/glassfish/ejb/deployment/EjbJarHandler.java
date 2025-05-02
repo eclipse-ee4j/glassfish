@@ -101,7 +101,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader("EjbJarHandler", parent);
         ASURLClassLoader cloader = AccessController.doPrivileged(action);
 
         try {

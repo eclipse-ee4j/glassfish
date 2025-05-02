@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,9 +92,8 @@ public class ServletContainerInitializerUtil {
      *
      * @return Iterable over all ServletContainerInitializers that were found
      */
-    public static ServiceLoader<ServletContainerInitializer> getServletContainerInitializers(
-            Map<String, String> webFragmentMap, List<Object> absoluteOrderingList,
-            boolean hasOthers, ClassLoader cl) {
+    public static ServiceLoader<ServletContainerInitializer> getServletContainerInitializers(String containerName,
+        Map<String, String> webFragmentMap, List<Object> absoluteOrderingList, boolean hasOthers, ClassLoader cl) {
         /*
          * If there is an absoluteOrderingList specified, then make sure that
          * any ServletContainerInitializers included in fragment JARs
@@ -139,7 +138,8 @@ public class ServletContainerInitializerUtil {
             // Create temporary classloader for ServiceLoader#load
             // TODO: Have temporary classloader honor delegate flag from sun-web.xml
             final URL[] urlArray = newClassLoaderUrlList.toArray(URL[]::new);
-            PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(urlArray, webAppCl.getParent());
+            PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
+                "ServletContainerInitializer(" + containerName + ")", urlArray, webAppCl.getParent());
             cl = AccessController.doPrivileged(action);
         }
 

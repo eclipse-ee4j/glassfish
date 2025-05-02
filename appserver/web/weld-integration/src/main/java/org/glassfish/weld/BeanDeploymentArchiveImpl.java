@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -315,7 +315,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         String initVal = "|ID: " + getId() + ", bdaType= " + bdaType + ", accessibleBDAs #:" + getBeanDeploymentArchives().size() + ", "
                 + formatAccessibleBDAs(this) + ", Bean Classes #: " + getBeanClasses().size() + "," + beanClassesString + ", ejbs="
                 + getEjbs() + "\n";
-        StringBuffer valBuff = new StringBuffer(initVal);
+        StringBuilder valBuff = new StringBuilder(initVal);
 
         Collection<BeanDeploymentArchive> bdas = getBeanDeploymentArchives();
         for (BeanDeploymentArchive bda : bdas) {
@@ -616,9 +616,9 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             try {
                 // use a throwaway classloader to load the application's beans.xml
                 final URL beansXmlUrl;
-                try (GlassfishUrlClassLoader throwAwayClassLoader = new GlassfishUrlClassLoader(
+                try (GlassfishUrlClassLoader classloader = new GlassfishUrlClassLoader("BeanXml",
                     new URL[] {archive.getURI().toURL()}, null)) {
-                    beansXmlUrl = throwAwayClassLoader.getResource(entry);
+                    beansXmlUrl = classloader.getResource(entry);
                 }
                 if (beansXmlUrl != null && !beansXmlURLs.contains(beansXmlUrl)) {
                     beansXmlURLs.add(beansXmlUrl);

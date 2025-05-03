@@ -64,8 +64,6 @@
         <temp.dir>${project.build.directory}/dependency</temp.dir>
         <include.group.ids>org.glassfish.main.packager</include.group.ids>
         <install.dir.name>${nucleus.install.dir.name}</install.dir.name>
-        <create-domain.args>--user admin create-domain --nopassword --savelogin=true --checkports=false --adminport 4848
-            --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
         <nadmin.executable>${stage.dir}/${nucleus.install.dir.name}/bin/nadmin${file.executable.suffix}</nadmin.executable>
     </properties>
@@ -134,7 +132,20 @@
                             </goals>
                             <configuration>
                                 <executable>${nadmin.executable}</executable>
-                                <commandlineArgs>${create-domain.args}</commandlineArgs>
+                                <inheritIo>true</inheritIo>
+                                <arguments>
+                                    <argument>--user</argument>
+                                    <argument>admin</argument>
+                                    <argument>create-domain</argument>
+                                    <argument>--nopassword</argument>
+                                    <argument>--savelogin=true</argument>
+                                    <argument>--checkports=false</argument>
+                                    <argument>--adminport=4848</argument>
+                                    <argument>--instanceport=8080</argument>
+                                    <argument>--keytooloptions</argument>
+                                    <argument>CN=localhost</argument>
+                                    <argument>domain1</argument>
+                                </arguments>
                             </configuration>
                         </execution>
                     </executions>

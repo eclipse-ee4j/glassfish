@@ -23,6 +23,7 @@ import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
+import java.net.ConnectException;
 import java.time.Duration;
 import java.util.logging.Level;
 
@@ -154,7 +155,20 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final RemoteCLICommand cmd = new RemoteCLICommand("_stop-instance", programOpts, env);
         try {
-            cmd.executeAndReturnOutput("_stop-instance", "--force", force.toString());
+            try {
+                cmd.executeAndReturnOutput("_stop-instance", "--force", force.toString());
+            } catch (CommandException e) {
+                if (e.getCause() instanceof ConnectException) {
+                    logger.log(Level.FINE,
+                        "Remote _stop-instance call thrown a ConnectException."
+                            + " It is usual on Windows, where immediately after port closes, firewalls break"
+                            + " any connection even before we can process the response."
+                            + " However it is not critical, we will still monitor the PID.",
+                        e);
+                } else {
+                    throw e;
+                }
+            }
             if (printDots) {
                 System.out.print(Strings.get("StopInstance.waitForDeath") + " ");
             }

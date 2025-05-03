@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,13 @@ import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import org.glassfish.embeddable.CommandResult;
+import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
@@ -42,6 +46,7 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELE
 class AutoDisposableGlassFish extends GlassFishImpl {
 
     private static final Logger LOG = System.getLogger(AutoDisposableGlassFish.class.getName());
+    private static final String GENERAL_CONFIG_PROP_PREFIX = "embedded-glassfish-config.";
 
     private final File instanceRoot;
     private final boolean autoDelete;
@@ -49,10 +54,40 @@ class AutoDisposableGlassFish extends GlassFishImpl {
 
     AutoDisposableGlassFish(ModuleStartup gfKernel, ServiceLocator serviceLocator, GlassFishProperties gfProps,
         Consumer<GlassFish> onDispose) throws GlassFishException {
-        super(gfKernel, serviceLocator, gfProps.getProperties());
+        super(gfKernel, serviceLocator);
         this.instanceRoot = new File(gfProps.getInstanceRoot());
-        this.autoDelete = Boolean.parseBoolean(gfProps.getProperties().getProperty(AUTO_DELETE));
+        this.autoDelete = Boolean.parseBoolean(gfProps.getProperty(AUTO_DELETE));
         this.onDisposeAction = onDispose;
+
+        // If there are custom configurations like http.port, https.port, jmx.port then configure them.
+        CommandRunner commandRunner = null;
+        Set<String> knownPropertyPrefixes = new HashSet<>();
+        for (String key : gfProps.getPropertyNames()) {
+            String propertyName = key;
+            if (key.startsWith(GENERAL_CONFIG_PROP_PREFIX)) {
+                propertyName = key.substring(GENERAL_CONFIG_PROP_PREFIX.length());
+            }
+            String propertyValue = gfProps.getProperty(key);
+            if (commandRunner == null) {
+                // only create the CommandRunner if needed
+                commandRunner = serviceLocator.getService(CommandRunner.class);
+            }
+            String propertyPrefix = propertyName.split("\\.")[0];
+            if (!knownPropertyPrefixes.contains(propertyPrefix)) {
+                CommandResult resultList = commandRunner.run("list", propertyPrefix);
+                if (resultList.getExitStatus() == CommandResult.ExitStatus.SUCCESS
+                        && resultList.getOutput().contains(propertyPrefix)) {
+                    knownPropertyPrefixes.add(propertyPrefix);
+                } else {
+                    // unknown property prefix, skip it
+                    continue;
+                }
+            }
+            CommandResult result = commandRunner.run("set", propertyName + "=" + propertyValue);
+            if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
+                throw new GlassFishException(result.getOutput(), result.getFailureCause());
+            }
+        }
     }
 
     @Override

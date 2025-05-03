@@ -186,6 +186,7 @@
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
         <test.enableDefaultLogCfg>true</test.enableDefaultLogCfg>
+        <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish7/glassfish</glassfish.distribution.dir>
     </properties>
 
     <dependencyManagement>
@@ -827,7 +828,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>4.0.1</version>
+                    <version>4.1.0</version>
                     <!-- Adds support for glassfish-jar and it's customized lifecycle-->
                     <extensions>true</extensions>
                     <dependencies>
@@ -930,7 +931,7 @@
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
-                            adds all property files in the tree -->
+                        adds all property files in the tree -->
                         <resourceExcludes>
                             **/appserver/**/src/main/resources/**/*,
                             **/deployment/**/src/main/resources/**/*,
@@ -1342,8 +1343,8 @@
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgiversion-maven-plugin</artifactId>
                 <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the
-                    following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier
-                    and then use that property in osgi.bundle while exporting. -->
+                following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier
+                and then use that property in osgi.bundle while exporting. -->
                 <configuration>
                     <dropVersionComponent>qualifier</dropVersionComponent>
                     <versionPropertyName>project.osgi.version</versionPropertyName>
@@ -1612,6 +1613,48 @@
                         <configuration>
                             <testCompilerArgument>-proc:full</testCompilerArgument>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>true</copy.modules.to.distribution.skip>
+                <copy.modules.to.distribution.path.to.root>../../..</copy.modules.to.distribution.path.to.root>
+                <copy.modules.to.distribution.destFile>${basedir}/${copy.modules.to.distribution.path.to.root}/${glassfish.distribution.dir}/modules/${project.build.finalName}.jar</copy.modules.to.distribution.destFile>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.glassfish.build</groupId>
+                            <artifactId>glassfishbuild-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>copy-module-to-distribution</id>
+                                    <phase>install</phase>
+                                    <goals>
+                                        <goal>copy-file</goal>
+                                    </goals>
+                                    <configuration>
+                                        <skip>${copy.modules.to.distribution.skip}</skip>
+                                        <destFile>${copy.modules.to.distribution.destFile}</destFile>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.build</groupId>
+                        <artifactId>glassfishbuild-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-module-to-distribution</id>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

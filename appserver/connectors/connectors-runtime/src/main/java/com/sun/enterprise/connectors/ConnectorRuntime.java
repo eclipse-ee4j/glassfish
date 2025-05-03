@@ -500,7 +500,12 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
         } catch (NamingException ne) {
             if (force && isDAS()) {
                 _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", ri);
-                return lookupDataSourceInDAS(ri);
+                try {
+                    return lookupDataSourceInDAS(ri);
+                } catch (ConnectorRuntimeException ex) {
+                    ne.addSuppressed(ex);
+                    throw ne;
+                }
             }
             throw ne;
         }
@@ -532,7 +537,12 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
         } catch (NamingException ne) {
             if (force && isDAS()) {
                 _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", ri);
-                return lookupDataSourceInDAS(ri);
+                try {
+                    return lookupDataSourceInDAS(ri);
+                } catch (ConnectorRuntimeException ex) {
+                    ne.addSuppressed(ex);
+                    throw ne;
+                }
             }
             throw ne;
         }
@@ -553,17 +563,13 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      * @param resourceInfo jndi name of the resource
      * @return DataSource representing the resource.
      */
-    private <T> T lookupDataSourceInDAS(ResourceInfo resourceInfo) {
-        try {
+    private <T> T lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
             Collection<ConnectorRuntimeExtension> extensions = serviceLocator
                 .getAllServices(ConnectorRuntimeExtension.class);
             for (ConnectorRuntimeExtension extension : extensions) {
                 return extension.lookupDataSourceInDAS(resourceInfo);
             }
             return null;
-        } catch (ConnectorRuntimeException cre) {
-            throw new RuntimeException(cre.getMessage(), cre);
-        }
     }
 
     /**

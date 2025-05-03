@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -172,16 +172,19 @@ public class JmsHandlers {
             insureJmsBrokerIsRunning();
 
             String objectName = getJmsDestinationObjectName(SUBTYPE_MONITOR, name, type);
-            AttributeList attributes = getMBeanServerConnection(target).getAttributes(new ObjectName(objectName), ATTRS_MONITOR);
-            ResourceBundle bundle = GuiUtil.getBundle("org.glassfish.jms.admingui.Strings");
-            statsList.add(createRow("Name", name, ""));
-            statsList.add(createRow("Type", type.substring(0, 1).toUpperCase(GuiUtil.guiLocale) + type.substring(1), ""));
-            for (Attribute attribute : attributes.asList()) {
-                statsList.add(
-                        createRow(
-                                GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName()),
-                                attribute.getValue(),
-                                GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName() + "Help")));
+            try (MQJMXConnectorInfo mqInfo = getMqJMXInfo(target)) {
+                MBeanServerConnection beanServerConnection = mqInfo.getMQMBeanServerConnection();
+                AttributeList attributes = beanServerConnection.getAttributes(new ObjectName(objectName), ATTRS_MONITOR);
+                ResourceBundle bundle = GuiUtil.getBundle("org.glassfish.jms.admingui.Strings");
+                statsList.add(createRow("Name", name, ""));
+                statsList.add(createRow("Type", type.substring(0, 1).toUpperCase(GuiUtil.guiLocale) + type.substring(1), ""));
+                for (Attribute attribute : attributes.asList()) {
+                    statsList.add(
+                            createRow(
+                            GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName()),
+                            attribute.getValue(),
+                            GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName() + "Help")));
+                }
             }
         } catch (Exception ex) {
             GuiUtil.handleException(handlerCtx, ex);
@@ -441,7 +444,7 @@ public class JmsHandlers {
         return map;
     }
 
-    private static MBeanServerConnection getMBeanServerConnection(String target) throws ConnectorRuntimeException, Exception {
+    private static MQJMXConnectorInfo getMqJMXInfo(String target) throws ConnectorRuntimeException, Exception {
         ServiceLocator habitat = GuiUtil.getHabitat();
         Domain domain = habitat.getService(Domain.class);
         Cluster cluster = domain.getClusterNamed(target);
@@ -454,10 +457,7 @@ public class JmsHandlers {
         }
 
         PhysicalDestinations pd = new PhysicalDestinations();
-        try (MQJMXConnectorInfo mqInfo = pd.createConnectorInfo(target, configRef, habitat, domain)) {
-            // fyi, the connection is just a description, not closeable.
-            return mqInfo.getMQMBeanServerConnection();
-        }
+        return pd.createConnectorInfo(target, configRef, habitat, domain);
     }
 
     private static class PhysicalDestinations extends JMSDestination {

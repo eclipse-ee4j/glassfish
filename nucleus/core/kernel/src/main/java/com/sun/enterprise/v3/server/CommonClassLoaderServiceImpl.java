@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,7 @@ package com.sun.enterprise.v3.server;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
 
@@ -32,7 +33,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -159,6 +159,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
      * @throws UnsupportedOperationException If adding not supported by the classloader
      */
     public void addToClassPath(URL url) {
+        validateUrl(url);
         if (commonClassLoader == null) {
             commonClassLoader = new GlassfishUrlClassLoader(new URL[] {url}, APIClassLoader);
         } else {
@@ -171,13 +172,21 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         return commonClassPath;
     }
 
+    private static URL validateUrl(URL url) {
+        if (url == null) {
+            throw new IllegalArgumentException("URL cannot be null");
+        }
+        if (!url.getProtocol().equalsIgnoreCase("file")) {
+            throw new IllegalArgumentException("URL must be a file URL");
+        }
+        if (url.getPath().isEmpty()) {
+            throw new IllegalArgumentException("URL path cannot be empty");
+        }
+        return url;
+    }
+
     private static String urlsToClassPath(Stream<URL> urls) {
-        return urls
-                .map(URL::getFile)
-                .filter(Predicate.not(String::isBlank))
-                .map(File::new)
-                .map(File::getAbsolutePath)
-                .collect(Collectors.joining(File.pathSeparator));
+        return urls.map(FileUtils::toFile).map(File::getAbsolutePath).collect(Collectors.joining(File.pathSeparator));
     }
 
     private List<File> findDerbyClient() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,9 +28,12 @@ import com.sun.enterprise.resource.ResourceState;
 import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.datastructure.DataStructure;
+import com.sun.enterprise.resource.pool.mock.MyJavaEETransactionManager;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Provider;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.RetryableUnavailableException;
@@ -69,6 +72,7 @@ import static org.easymock.EasyMock.replay;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -168,11 +172,13 @@ public class ConnectionPoolTest {
         ResourceHandle resource1 = connectionPool.getResource(resourceSpec, alloc, transaction);
         assertNotNull(resource1);
         assertResourceIsBusy(resource1);
+        assertResourceIsNotEnlisted(resource1);
         assertResourcesSize(1);
 
         ResourceHandle resource2 = connectionPool.getResource(resourceSpec, alloc, transaction);
         assertNotNull(resource2);
         assertResourceIsBusy(resource2);
+        assertResourceIsNotEnlisted(resource2);
         assertResourcesSize(2);
 
         PoolingException assertThrows = assertThrows(PoolingException.class, () -> {
@@ -189,6 +195,7 @@ public class ConnectionPoolTest {
         connectionPool.setResourceStateToFree(resource1);
         connectionPool.resourceClosed(resource1);
         assertResourceIsNotBusy(resource1);
+        assertResourceIsNotEnlisted(resource1);
 
         // Test how many resources are available
         assertResourcesSize(2);
@@ -247,7 +254,17 @@ public class ConnectionPoolTest {
      */
     @Test
     @Timeout(value = 10)
-    void basicConnectionPoolMultiThreadedTest() throws Exception {
+    void basicConnectionPoolMultiThreadedSharebleFalseTest() throws Exception {
+        basicConnectionPoolMultiThreaded(false);
+    }
+
+    @Test
+    @Timeout(value = 10)
+    void basicConnectionPoolMultiThreadedSharebleTrueTest() throws Exception {
+        basicConnectionPoolMultiThreaded(true);
+    }
+
+    void basicConnectionPoolMultiThreaded(boolean isShareable) throws Exception {
         // Use a low value to try and fill up the whole pool
         int maxConnectionPoolSize = 5;
 
@@ -262,7 +279,7 @@ public class ConnectionPoolTest {
         createConnectionPool(maxConnectionPoolSize, maxWaitTimeInMillis, poolResizeQuantity);
 
         ResourceAllocator alloc = new LocalTxConnectorAllocator(null, managedConnectionFactory, resourceSpec, null,
-                null, null, null, false);
+                null, null, null, isShareable);
 
         // Keep track of resources and number of tasks executed
         final Set<ResourceHandle> usedResourceHandles = Collections.synchronizedSet(new HashSet<>());
@@ -311,6 +328,10 @@ public class ConnectionPoolTest {
         // Pool should be filled up to the maximum pool size. Resources can be idle for "idle-timeout-in-seconds" (which is 789
         // seconds) before they can be removed from the pool. We cannot check against "maxConnectionPoolSize" value, on some
         // systems the pool is never used to the maximum and we do not want to increase the taskCount to avoid long during unit tests.
+        // The resources in the pool should have been reused
+        // TODO: is this really correct with shareable false?
+        // This part of the test fails if weird "if (resourceHandle.isShareable() ==
+        // resourceAllocator.shareableWithinComponent()) {" logic in ConnectionPool.getResourceFromPool is changed
         assertResourcesSize(usedResourceHandles.size());
 
         cleanupConnectionPool();
@@ -321,10 +342,72 @@ public class ConnectionPoolTest {
         // No new resources are being used, check the remaining ones for the state.
         for (ResourceHandle resource : usedResourceHandles) {
             assertResourceIsNotBusy(resource);
+            assertResourceIsNotEnlisted(resource);
         }
 
         // Validate there are no more resources created, than the maximum pool size, because they should be reused
         assertTrue(usedResourceHandles.size() <= maxConnectionPoolSize, "failed, size=" + usedResourceHandles.size());
+    }
+
+    /**
+     * Test to mimic #24805 situation, where in some rare cases the connection pool contains resources that are returned to
+     * the pool, but are still enlisted in a transaction.
+     */
+    @Test
+    void noEnlistedResourceIsReturnedFromThePoolTest() throws Exception {
+        // Use the lowest maxWaitTimeInMillis, because if the pool is exhausted we want it to fail asap.
+        // Do not use 0, because it means wait indefinitely.
+        final int maxWaitTimeInMillis = 1;
+
+        // Use poolResizeQuantity 1, to have the easiest understanding and predictability of the test
+        final int poolResizeQuantity = 1;
+
+        // Allow a maximum of 2 resources in the pool
+        createConnectionPool(2, maxWaitTimeInMillis, poolResizeQuantity);
+
+        ResourceAllocator alloc = new LocalTxConnectorAllocator(null, managedConnectionFactory, resourceSpec, null,
+                null, null, null, false);
+        Transaction transaction = javaEETransaction;
+
+        // Test how many resources are available. Expect 0 because the pool is not initialized yet. It will be initialized when
+        // the first resource is requested and steady pool size is configured as 0.
+        assertResourcesSize(0);
+
+        // Get one resource from the pool, make sure it is not enlisted
+        ResourceHandle resource1 = connectionPool.getResource(resourceSpec, alloc, transaction);
+        assertNotNull(resource1);
+        assertResourceIsBusy(resource1);
+        assertResourceIsNotEnlisted(resource1);
+        assertResourcesSize(1);
+
+        // Return the resource to the pool as enlisted, to mimic issue #24805 situation
+        connectionPool.resourceClosed(resource1);
+        assertResourcesSize(1);
+        // Force the resource back in the pool by changing the state AFTER the resource is back in the pool to mimic
+        // a possible issue #24805 situation.
+        //
+        // Marking setEnlisted to true before the call to resourceClosed is not possible, the call will fail due to an
+        // existing check that the returned resource may not have enlisted=true.
+        //
+        // Note there is only 1 location in the code base where a Resource can be marked as enlisted:
+        // com.sun.enterprise.resource.pool.PoolTxHelper.resourceEnlisted(Transaction, ResourceHandle), however the call to this
+        // method must somehow have kept a reference to the resource handle, and calling 'resourceEnlisted' after returning it
+        // to the connection pool resulting in this possible issue #24805 situation.
+        resource1.getResourceState().setEnlisted(true);
+
+        // Try out getting a new resource multiple times. Because the connection pool logic will first hand out new resources we
+        // would not start at "Resource 1". We know the pool size is a maximum of 2 resources. So try for more than 2 times.
+        for (int i = 0; i < 5; i++) {
+            ResourceHandle resource2 = connectionPool.getResource(resourceSpec, alloc, transaction);
+            assertNotNull(resource2);
+            assertNotEquals(resource1, resource2);
+            assertResourceIsBusy(resource2);
+            assertResourceIsNotEnlisted(resource2);
+            assertResourcesSize(2);
+            connectionPool.resourceClosed(resource2);
+        }
+
+        cleanupConnectionPool();
     }
 
     /**
@@ -384,6 +467,7 @@ public class ConnectionPoolTest {
 
                 // We can test the resource results, because the resource should not be reused by another thread
                 assertResourceIsNotBusy(resource);
+                assertResourceIsNotEnlisted(resource);
 
                 numberOfThreadsFinished.incrementAndGet();
                 return null;
@@ -413,7 +497,7 @@ public class ConnectionPoolTest {
 
         // Call get() to see if there was any assertion error in the thread execution, this call
         // forces the ExecutionException to be thrown, if the Callable execution failed.
-        for (Future future : futures) {
+        for (Future<?> future : futures) {
             future.get();
         }
     }
@@ -430,6 +514,10 @@ public class ConnectionPoolTest {
         ResourceState resourceState = resource.getResourceState();
         assertTrue(resourceState.isFree(), "assertResourceIsNotBusy - Expected isFree for resource" + resource);
         assertFalse(resourceState.isBusy(), "assertResourceIsNotBusy - Expected !isBusy for resource" + resource);
+    }
+
+    private void assertResourceIsNotEnlisted(ResourceHandle resource) {
+        assertFalse(resource.getResourceState().isEnlisted());
     }
 
     private void assertResourcesSize(int expectedSize) {
@@ -484,10 +572,17 @@ public class ConnectionPoolTest {
 
     public class MyConnectorRuntime extends ConnectorRuntime {
         private ProcessEnvironment processEnvironment = new ProcessEnvironment();
+        private Provider<JavaEETransactionManager> javaEETransactionManagerProvider = new Provider<JavaEETransactionManager>() {
+            @Override
+            public JavaEETransactionManager get() {
+                return new MyJavaEETransactionManager(null);
+            }
+        };
 
         public MyConnectorRuntime() throws Exception {
-            // Force 'injection' of private field processEnvironment
+            // Force 'injection' of private fields
             InjectionUtil.injectPrivateField(ConnectorRuntime.class, this, "processEnvironment", processEnvironment);
+            InjectionUtil.injectPrivateField(ConnectorRuntime.class, this, "javaEETransactionManagerProvider", javaEETransactionManagerProvider);
         }
 
         @Override

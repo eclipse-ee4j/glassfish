@@ -116,5 +116,6 @@ install_jacoco;
 rm -rf "${GLASSFISH_HOME}"
 rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
 rm -f ./appserver/tests/appserv-tests/test_results.xml
+
 ./appserver/tests/gftest.sh run_test "${test}"
 

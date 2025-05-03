@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -241,9 +241,8 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
                 if (maxConnectionUsage_ > 0 && h.getUsageCount() >= maxConnectionUsage_) {
                     performMaxConnectionUsageOperation(h);
                 } else {
-
                     if (!((AssocWithThreadResourceHandle) h).isAssociated()) {
-                        dataStructure.returnResource(h);
+                        returnResourceToPool(h);
                     }
                     // update monitoring data
                     if (poolLifeCycleListener != null) {

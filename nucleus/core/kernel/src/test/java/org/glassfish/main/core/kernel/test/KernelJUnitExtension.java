@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +17,15 @@
 package org.glassfish.main.core.kernel.test;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
+import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.v3.admin.ObjectInputStreamWithServiceLocator;
 
+import java.nio.file.Path;
 import java.util.Set;
 
 import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.JUnitSystem;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 
@@ -32,6 +35,14 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @author David Matejcek
  */
 public class KernelJUnitExtension extends HK2JUnit5Extension {
+
+    static {
+        Path installRoot = JUnitSystem.detectBasedir();
+        Path instanceRoot = installRoot.resolve(Path.of("target", "test-domain"));
+        FileUtils.mkdirsMaybe(instanceRoot.toFile());
+        System.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.toString());
+        System.setProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME, instanceRoot.toString());
+    }
 
     @Override
     protected String getDomainXml(final Class<?> testClass) {

@@ -176,4 +176,33 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-main-artifact</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${basedir}/../../../${glassfish.distribution.dir}/lib/install/applications/__admingui"/>
+                                        <unzip src="${project.build.directory}/${project.build.finalName}.war" dest="${basedir}/../../../${glassfish.distribution.dir}/lib/install/applications/__admingui" />
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

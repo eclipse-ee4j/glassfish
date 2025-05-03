@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -812,37 +813,6 @@ public final class FileUtils {
     }
 
 
-    /**
-     * Given a string (typically a path), quote the string such that spaces
-     * are protected from interpretation by a Unix or Windows command shell.
-     * Note that this method does not handle quoting for all styles of special
-     * characters. Just for the basic case of strings with spaces.
-     *
-     * @param s input string
-     * @return a String which is quoted to protect spaces
-     */
-    public static String quoteString(String s) {
-        if (s == null) {
-            throw new IllegalArgumentException("null string");
-        }
-
-        if (!s.contains("\'")) {
-            return ("\'" + s + "\'");
-        } else if (!s.contains("\"")) {
-            return ("\"" + s + "\"");
-        } else {
-            // Contains a single quote and a double quote. Use backslash
-            // On Unix. Double quotes on Windows. This method does not claim
-            // to support this case well if at all
-            if (OS.isWindows()) {
-                return("\"" + s + "\"");
-            } else {
-                return(s.replaceAll("\040", "\134 "));
-            }
-        }
-    }
-
-
     static boolean isValidString(String s) {
         return s != null && !s.isEmpty();
     }
@@ -1031,6 +1001,24 @@ public final class FileUtils {
         }
         return matches;
     }
+
+
+    /**
+     * Convert a URL to an absolute file if it is possible..
+     *
+     * @param resourceUrl
+     * @return absolute path to the file or directory pointed by the URL
+     * @throws IllegalArgumentException if the URL cannot be converted to a File
+     *
+     */
+    public static File toFile(URL resourceUrl) throws IllegalArgumentException {
+        try {
+            return new File(resourceUrl.toURI()).getAbsoluteFile();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cannot convert URL to File: " + resourceUrl, e);
+        }
+    }
+
 
     /**
      * Represents a unit of work that should be retried, if needed, until it

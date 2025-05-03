@@ -226,7 +226,7 @@ public class GlassFishLogHandlerTest {
             if (lineCount >= minLineCount) {
                 return;
             }
-        } while (System.currentTimeMillis() - start < 2000L);
+        } while (System.currentTimeMillis() - start < 10000L);
         fail("Timeout waiting until the file " + file + " grows to " + minLineCount + " lines. File content: \n"
             + Files.readString(file.toPath(), handler.getConfiguration().getEncoding()));
     }

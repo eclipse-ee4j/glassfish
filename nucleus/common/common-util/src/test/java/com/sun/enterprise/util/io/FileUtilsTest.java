@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -146,5 +147,15 @@ public class FileUtilsTest {
             assertEquals(testFile.length(), outputFile.length());
             assertEquals(0, inputStream.available(), "available bytes");
         }
+    }
+
+
+    @Test
+    public void testToFile() throws Exception {
+        URL url = new File("test.txt").toURI().toURL();
+        File file = FileUtils.toFile(url);
+        assertTrue(file.isAbsolute(), "isAbsolute");
+        assertThrows(IllegalArgumentException.class,
+            () -> FileUtils.toFile(new URL("http://localhost:8080/test.txt")));
     }
 }

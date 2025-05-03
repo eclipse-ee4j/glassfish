@@ -24,46 +24,58 @@
 <project name="deployment" default="all" basedir=".">
   &commonBuild;
 
-  <target name="private-all">
-    <ant dir="war" target="private-all">
-      <property name="build" value="${build}/war" />
-    </ant>
-    <ant dir="ear" target="private-all">
-      <property name="build" value="${build}/ear" />
-    </ant>
-    <ant dir="dol" target="private-all">
-      <property name="build" value="${build}/dol" />
-    </ant>
-    <ant dir="ejb30" target="private-all">
-      <property name="build" value="${build}/ejb30" />
-    </ant>
-    <ant dir="ejb31" target="private-all">
-      <property name="build" value="${build}/ejb31" />
-    </ant>
-    <ant dir="descriptor_free_zone" target="private-all">
-      <property name="build" value="${build}/descriptor_free_zone" />
-    </ant>
-    <ant dir="directorydeploy" target="private-all">
-      <property name="build" value="${build}/directorydeploy" />
-    </ant>
-    <ant dir="versioning" target="private-all">
-      <property name="build" value="${build}/versioning" />
-    </ant>
-    <ant dir="osgi" target="private-all">
-      <property name="build" value="${build}/osgi" />
-    </ant>
-    <ant dir="webservices" target="private-all">
-      <property name="build" value="${build}/webservices" />
-    </ant>
-    <ant dir="javaee8" target="private-all">
-      <property name="build" value="${build}/javaee8" />
-    </ant>
-  </target>
+    <target name="private-all">
+        <run-deployment-test path="war" target="private-all" build="${build}/war" />
+        <run-deployment-test path="ear" target="private-all" build="${build}/ear" />
+        <run-deployment-test path="dol" target="private-all" build="${build}/dol" />
+        <run-deployment-test path="ejb30" target="private-all" build="${build}/ejb30" />
+        <run-deployment-test path="ejb31" target="private-all" build="${build}/ejb31" />
+        <run-deployment-test path="descriptor_free_zone" target="private-all" build="${build}/descriptor_free_zone" />
+        <run-deployment-test path="directorydeploy" target="private-all" build="${build}/directorydeploy" />
+        <run-deployment-test path="versioning" target="private-all" build="${build}/versioning" />
+        <run-deployment-test path="osgi" target="private-all" build="${build}/osgi" />
+        <run-deployment-test path="webservices" target="private-all" build="${build}/webservices" />
+        <run-deployment-test path="javaee8" target="private-all" build="${build}/javaee8" />
+    </target>
 
-  <target name="clobber" depends="clean">
-    <delete file="${basedir}/tests-results.xml" />
-    <delete file="${basedir}/results.html" />
-    <delete file="${basedir}/client.log" />
-    <delete file="${annotation.report.dir}" />
-  </target>
+    <target name="clobber" depends="clean">
+        <delete file="${basedir}/tests-results.xml" />
+        <delete file="${basedir}/results.html" />
+        <delete file="${basedir}/client.log" />
+        <delete file="${annotation.report.dir}" />
+    </target>
+
+    <macrodef name="run-deployment-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <attribute name="target" />
+        <attribute name="build" />
+
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.deployment}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.deployment" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator} ${line.separator}" />
+                <echo message=" **************************************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" * Build @{build} " />
+                <echo message=" * deployment: ${env.deployment} " />
+                <echo message=" **************************************************" />
+                <echo message="${line.separator} ${line.separator}" />
+                <ant dir="@{path}" target="@{target}">
+                    <property name="build" value="@{build}" />
+                </ant>
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

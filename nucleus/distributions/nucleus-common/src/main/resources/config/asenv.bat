@@ -1,5 +1,5 @@
 REM
-REM  Copyright (c) 2024 Contributors to the Eclipse Foundation.
+REM  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -38,10 +38,10 @@ REM  directory.
 REM
 REM  This file uses UTF-8 character encoding.
 
+endlocal
 set AS_IMQ_LIB=..\..\mq\lib
 set AS_IMQ_BIN=..\..\mq\bin
 set AS_CONFIG=..\config
-set AS_INSTALL=..
 set AS_DEF_DOMAINS_PATH=..\domains
 set AS_DEF_NODES_PATH=..\nodes
 set AS_DERBY_INSTALL=..\..\javadb

@@ -1,0 +1,61 @@
+name: Bug Report
+description: Report a bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Provide a general summary of the issue in the Title above
+        If you are reporting a security issue or vulnerability, please contact the Eclipse Foundation Security Team instead of creating a GitHub issue.
+        Security policy: https://github.com/eclipse-ee4j/glassfish/security/policy
+
+  - type: input
+    attributes:
+      label: GlassFish Version (and build number)
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: JDK version
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: OS
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Database
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Problem Description
+      description: |
+        Describe the bug in detail highlighting current behavior vs expected behavior.
+        State if the problem is easily reproducible or happens intermittently.
+        Include stack traces or command outputs.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Step by step instructions to reproduce the problem
+        Provide sample code/application if relevant
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Impact of Issue
+      description: |
+        How has this issue affected you? What are you trying to accomplish?
+    validations:
+      required: false

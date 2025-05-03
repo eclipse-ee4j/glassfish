@@ -1,0 +1,9 @@
+name: Committer Task
+description: For Eclipse project members to create issues
+
+body:
+  - type: textarea
+    attributes:
+      label: Description
+    validations:
+      required: true

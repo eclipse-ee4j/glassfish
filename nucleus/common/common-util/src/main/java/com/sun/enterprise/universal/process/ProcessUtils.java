@@ -296,7 +296,11 @@ public final class ProcessUtils {
             return null;
         }
         try {
-            return Long.valueOf(FileUtils.readSmallFile(pidFile, ISO_8859_1).trim());
+            // Usually the process is concurrent to the process writing to the file.
+            // Reproduced by tests at least once that the file can be created but empty
+            // while we are already reading it.
+            final String fileContent = FileUtils.readSmallFile(pidFile, ISO_8859_1).trim();
+            return fileContent.isEmpty() ? null : Long.valueOf(fileContent);
         } catch (NumberFormatException | IOException e) {
             throw new IllegalArgumentException("Could not parse the PID file: " + pidFile, e);
         }

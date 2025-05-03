@@ -2,6 +2,7 @@
 <!--
 
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,24 +53,6 @@
     |  javax.sql.ConnectionPoolDataSource   org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource  |
     |  javax.sql.XADataSource               org.apache.derby.jdbc.EmbeddedXADataSource              |
     =================================================================================================
-
-    Datasource classnames for Derby's Network mode, when using JDK 1.6, JDBC 4.0     :
-    =================================================================================================
-    |  res-type                             datasource-classname                                    |
-    =================================================================================================
-    |  javax.sql.DataSource                 org.apache.derby.jdbc.ClientDataSource40                |
-    |  javax.sql.ConnectionPoolDataSource   org.apache.derby.jdbc.ClientConnectionPoolDataSource40  |
-    |  javax.sql.XADataSource               org.apache.derby.jdbc.ClientXADataSource40              |
-    =================================================================================================
-
-    Datasource classnames for Derby's Embedded mode, when using JDK 1.6, JDBC 4.0   :
-    ==================================================================================================
-    |  res-type                             datasource-classname                                     |
-    ==================================================================================================
-    |  javax.sql.DataSource                 org.apache.derby.jdbc.EmbeddedDataSource40               |
-    |  javax.sql.ConnectionPoolDataSource   org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource40 |
-    |  javax.sql.XADataSource               org.apache.derby.jdbc.EmbeddedXADataSource40             |
-    ==================================================================================================
 -->
 
 <resources>

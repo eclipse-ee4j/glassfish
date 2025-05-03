@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -105,8 +105,9 @@ public class LogCollectorHandler extends Handler {
      */
     public List<GlassFishLogRecord> getAll() {
         final List<GlassFishLogRecord> list = new ArrayList<>(this.buffer.getSize());
-        while (!this.buffer.isEmpty()) {
-            list.add(this.buffer.poll());
+        GlassFishLogRecord record;
+        while ((record = this.buffer.poll()) != null) {
+            list.add(record);
         }
         return list;
     }
@@ -128,8 +129,9 @@ public class LogCollectorHandler extends Handler {
      * Drops all collected records.
      */
     public void reset() {
-        while (!this.buffer.isEmpty()) {
-            this.buffer.poll();
-        }
+        GlassFishLogRecord record;
+        do {
+            record = this.buffer.poll();
+        } while (record != null);
     }
 }

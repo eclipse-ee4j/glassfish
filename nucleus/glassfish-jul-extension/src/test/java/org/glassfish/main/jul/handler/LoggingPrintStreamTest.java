@@ -26,6 +26,7 @@ import org.glassfish.main.jul.JULHelperFactory;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -36,6 +37,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -83,7 +85,7 @@ public class LoggingPrintStreamTest {
     public void testPrintStacktrace() throws Exception {
         final RuntimeException exception = new RuntimeException();
         exception.printStackTrace(stream);
-        Thread.sleep(20L);
+        stream.close();
         final GlassFishLogRecord record = handler.pop();
         assertNotNull(record);
         assertNull(handler.pop());
@@ -99,7 +101,8 @@ public class LoggingPrintStreamTest {
             () -> assertThat(record.getThreadID(), greaterThan(0)),
             () -> assertEquals(Thread.currentThread().getName(), record.getThreadName()),
             () -> assertSame(exception, record.getThrown()),
-            () -> assertEquals("testPrintStacktrace", record.getSourceMethodName())
+            () -> assertEquals("testPrintStacktrace", record.getSourceMethodName()),
+            () -> assertFalse(stream.checkError())
         );
     }
 
@@ -120,9 +123,12 @@ public class LoggingPrintStreamTest {
         // as the stacktrace was forgotten we can simply print it.
         // This will create the third log record.
         stream.println(throwable.getStackTrace()[1].toString());
-        Thread.sleep(50L);
+        stream.close();
         List<GlassFishLogRecord> records = handler.getAll();
-        assertThat(records.toString(), records, hasSize(3));
+        assertAll(
+            () -> assertThat(records.toString(), records, hasSize(3)),
+            () -> assertFalse(stream.checkError())
+        );
     }
 
 
@@ -135,6 +141,7 @@ public class LoggingPrintStreamTest {
      * @throws Exception
      */
     @Test
+    @RepeatedTest(100)
     public void testStreamMethods() throws Exception {
         stream.append('x');
         stream.append("-y");
@@ -172,6 +179,7 @@ public class LoggingPrintStreamTest {
         stream.close();
         List<String> list = handler.getAll(LogRecord::getMessage);
         assertAll(
+            () -> assertFalse(stream.checkError()),
             () -> assertThat(list,
                 containsInAnyOrder("x", "-y", "-z", "false", "c", "hmm", "0.55", "1.553", "50", "6", "FINE", "why?",
                     "true", "d", "okay", "8.3", "99.99", "67", "89", "OFF", "It's fine.", "F", "This: XXX",

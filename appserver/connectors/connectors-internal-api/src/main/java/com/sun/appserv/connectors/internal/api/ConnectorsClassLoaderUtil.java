@@ -41,6 +41,7 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.belongsToSystemRA;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
 
@@ -144,7 +145,7 @@ public class ConnectorsClassLoaderUtil {
         if (processEnvironment.getProcessType().isEmbedded() && !rarsInitializedInEmbeddedServerMode) {
             synchronized (ConnectorsClassLoaderUtil.class) {
                 if (!rarsInitializedInEmbeddedServerMode) {
-                    String installDir = System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator;
+                    String installDir = System.getProperty(INSTALL_ROOT_PROPERTY) + File.separator;
                     for (String jdbcRarName : ConnectorConstants.jdbcSystemRarNames) {
                         String rarPath = ConnectorsUtil.getSystemModuleLocation(jdbcRarName);
                         File rarDir = new File(rarPath);

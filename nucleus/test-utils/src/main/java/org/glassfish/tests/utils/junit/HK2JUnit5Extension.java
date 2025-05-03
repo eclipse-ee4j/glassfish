@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -53,6 +53,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.glassfish.tests.utils.mock.MockGenerator;
 import org.glassfish.tests.utils.mock.TestDocument;
+import org.glassfish.tests.utils.mock.TestServerEnvironment;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -262,12 +263,8 @@ public class HK2JUnit5Extension
         addOneConstant(locator, mockGenerator);
         addOneConstant(locator, startupContext);
         addOneConstant(locator, modulesRegistry);
-        String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT_PROP_NAME);
-        if (installRoot == null) {
-            addOneConstant(locator, new ServerEnvironmentImpl());
-        } else {
-            addOneConstant(locator, new ServerEnvironmentImpl(new File(installRoot)));
-        }
+        addOneConstant(locator, new TestServerEnvironment(startupContext), "TestServerEnvironment",
+            ServerEnvironment.class, ServerEnvironmentImpl.class);
     }
 
 

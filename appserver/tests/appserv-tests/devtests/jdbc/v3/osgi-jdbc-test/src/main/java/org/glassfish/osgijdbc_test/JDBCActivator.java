@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,9 +46,6 @@ public class JDBCActivator implements BundleActivator {
         testJdbcResources("(osgi.jdbc.driver.class=oracle.jdbc.pool.OracleDataSource)");
         testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.EmbeddedXADataSource)");
         testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.ClientDataSource)");
-
-        testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.ClientDataSource40)");
-        testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.EmbeddedXADataSource40)");
 
         testJdbcResources("(jndi-name=jdbc/oracle_type4_resource)");
         testJdbcResources("(jndi-name=jdbc/__TimerPool)");

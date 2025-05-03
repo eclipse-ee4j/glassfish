@@ -234,7 +234,7 @@ public class SshClusterITest {
         command.append(" && mkdir -p /root/.ssh");
         command.append(" && cat /adminkey.pub >> /root/.ssh/authorized_keys");
         command.append(getCommandCreatePrivateDir(PATH_SSH_USERDIR));
-        command.append(" && sshd -E " + PATH_SSHD_LOG);
+        command.append(" && /usr/sbin/sshd -E " + PATH_SSHD_LOG);
         command.append(" && sleep 1");
         command.append(" && ps -lAf");
         command.append(" && echo \"" + MSG_NODE_STARTED + "\"");

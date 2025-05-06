@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,6 +62,7 @@ import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.runtime.WebProperty;
 import org.glassfish.web.deployment.util.WebValidatorWithCL;
+import org.glassfish.web.hk2.CombiningServiceLocator;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
@@ -276,12 +277,15 @@ final class WebModuleListener implements LifecycleListener {
 
     }
 
+    ServiceLocator webAppServices;
+
     private ServiceLocator createWebAppServices(WebModule webModule, ServiceLocator defaultServices) {
         ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(webModule.getComponentId(), defaultServices);
         initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());
 
-        return webAppServices;
+        return new CombiningServiceLocator(webAppServices, defaultServices);
     }
+
 
     private static void initializeServicesFromClassLoader(ServiceLocator serviceLocator, ClassLoader classLoader) {
         DynamicConfigurationService dcs =
@@ -446,4 +450,5 @@ final class WebModuleListener implements LifecycleListener {
             wrapper.addInitParameter("fileEncoding", fileEncoding);
         }
     }
+
 }

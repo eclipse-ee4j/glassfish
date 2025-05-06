@@ -2,7 +2,9 @@ name: Build on MacOS
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches:
+    - "master"
+    - "8.0"
 
 jobs:
   build:

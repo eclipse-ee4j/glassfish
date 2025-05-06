@@ -92,7 +92,7 @@ public class CommonClassLoaderServiceImplTest {
     }
 
 
-    // @Test
+    @Test
     @Order(10)
     void testAddingEmptyPath() throws Exception {
         assertThrows(IllegalArgumentException.class, () -> commonCLService.addToClassPath(new URL("file://")));
@@ -105,7 +105,7 @@ public class CommonClassLoaderServiceImplTest {
      * We need to retrieve the classloader after adding URLs, otherwise we
      * would get its parent because of an optimization in the service
      */
-    // @Test
+    @Test
     @Order(20)
     void testAddingUrlWithNoInitialUrls() throws Exception {
         commonCLService.postConstruct();

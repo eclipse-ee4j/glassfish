@@ -45,14 +45,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class ServerUtils {
 
     /**
-     * Tries to allocate a free local ports, avoid duplicates and excluded numbers.
+     * Tries to allocate a free local ports, avoids duplicates.
      *
      * @param count count of free ports to find.
-     * @param excluded list of ports to avoid
      * @return a modifiable queue of free local port numbers.
      * @throws IllegalStateException if it fails for 20 times
      */
-    public static Queue<Integer> getFreePorts(int count, int... excluded) throws IllegalStateException {
+    public static Queue<Integer> getFreePorts(int count) throws IllegalStateException {
         final ArrayDeque<Integer> generatedPorts = new ArrayDeque<>(count);
         final Set<Integer> excludedPorts = new HashSet<>();
         for (int i = 0; i < count; i++) {

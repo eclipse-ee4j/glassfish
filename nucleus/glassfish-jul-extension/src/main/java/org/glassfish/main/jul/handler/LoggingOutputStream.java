@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.main.jul.GlassFishLogManager;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
+import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
 
 /**
@@ -156,9 +157,9 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
             while (!pumpClosed) {
                 try {
                     logAllPendingRecordsOrWait();
-                } catch (final Exception e) {
+                } catch (Exception e) {
                     // Continue the loop without exiting
-                    // Something is broken, but we cannot log it
+                    GlassFishLoggingTracer.error(getClass(), "Pump failed to log records!", e);
                 }
             }
         }
@@ -176,13 +177,13 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
             while (getState() == State.RUNNABLE) {
                 Thread.onSpinWait();
             }
-            if (getState() == State.WAITING) {
+            if (getState() == State.WAITING || getState() == State.BLOCKED || getState() == State.TIMED_WAITING) {
                 interrupt();
             }
             try {
                 join();
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                GlassFishLoggingTracer.error(getClass(), "Pump interrupted while waiting for shutdown.", e);
             }
             // we interrupted waiting or working thread, now we have to process remaining records.
             logAllPendingRecords();

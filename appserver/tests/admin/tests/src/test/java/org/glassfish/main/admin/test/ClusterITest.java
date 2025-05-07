@@ -19,12 +19,14 @@ package org.glassfish.main.admin.test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.tests.utils.ServerUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -33,7 +35,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.glassfish.main.admin.test.ConnectionUtils.getURL;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
-import static org.glassfish.tests.utils.ServerUtils.getFreePort;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -52,9 +53,10 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @TestMethodOrder(OrderAnnotation.class)
 public class ClusterITest {
 
+    private static final Queue<Integer> RANDOM_FREE_PORTS = ServerUtils.getFreePorts(16);
     private static final String TEST_APP_NAME = "testapp";
-    private static final int PORT_INSTANCE_1 = getFreePort();
-    private static final int PORT_INSTANCE_2 = getFreePort();
+    private static final int PORT_INSTANCE_1 = RANDOM_FREE_PORTS.remove();
+    private static final int PORT_INSTANCE_2 = RANDOM_FREE_PORTS.remove();
     private static final String CLUSTER_NAME = "eec1";
     private static final String INSTANCE_NAME_1 = "eein1-with-a-very-very-very-long-name";
     private static final String INSTANCE_NAME_2 = "eein2";
@@ -87,28 +89,29 @@ public class ClusterITest {
     @Test
     @Order(3)
     public void createInstancesTest() {
+        // Create a cluster with two instances
         assertThat(
                 ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
                         "HTTP_LISTENER_PORT=" + PORT_INSTANCE_1
-                        + ":HTTP_SSL_LISTENER_PORT=" + getFreePort()
-                        + ":IIOP_SSL_LISTENER_PORT=" + getFreePort()
-                        + ":IIOP_LISTENER_PORT=" + getFreePort()
-                        + ":JMX_SYSTEM_CONNECTOR_PORT=" + getFreePort()
-                        + ":IIOP_SSL_MUTUALAUTH_PORT=" + getFreePort()
-                        + ":JMS_PROVIDER_PORT=" + getFreePort()
-                        + ":ASADMIN_LISTENER_PORT=" + getFreePort(),
+                        + ":HTTP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMX_SYSTEM_CONNECTOR_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_MUTUALAUTH_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMS_PROVIDER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove(),
                         INSTANCE_NAME_1), asadminOK());
 
         assertThat(
                 ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
                         "HTTP_LISTENER_PORT=" + PORT_INSTANCE_2
-                        + ":HTTP_SSL_LISTENER_PORT=" + getFreePort()
-                        + ":IIOP_SSL_LISTENER_PORT=" + getFreePort()
-                        + ":IIOP_LISTENER_PORT=" + getFreePort()
-                        + ":JMX_SYSTEM_CONNECTOR_PORT=" + getFreePort()
-                        + ":IIOP_SSL_MUTUALAUTH_PORT=" + getFreePort()
-                        + ":JMS_PROVIDER_PORT=" + getFreePort()
-                        + ":ASADMIN_LISTENER_PORT=" + getFreePort(),
+                        + ":HTTP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMX_SYSTEM_CONNECTOR_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_MUTUALAUTH_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMS_PROVIDER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove(),
                         INSTANCE_NAME_2), asadminOK());
     }
 

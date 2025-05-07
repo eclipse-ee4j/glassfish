@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,11 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.GlassFish;
@@ -41,21 +45,56 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class ServerUtils {
 
     /**
+     * Tries to allocate a free local ports, avoid duplicates and excluded numbers.
+     *
+     * @param count count of free ports to find.
+     * @param excluded list of ports to avoid
+     * @return a modifiable queue of free local port numbers.
+     * @throws IllegalStateException if it fails for 20 times
+     */
+    public static Queue<Integer> getFreePorts(int count, int... excluded) throws IllegalStateException {
+        final ArrayDeque<Integer> generatedPorts = new ArrayDeque<>(count);
+        final Set<Integer> excludedPorts = new HashSet<>();
+        for (int i = 0; i < count; i++) {
+            int port = getFreePort(excludedPorts);
+            generatedPorts.add(port);
+            // Avoid duplicates
+            excludedPorts.add(port);
+        }
+        return generatedPorts;
+    }
+
+
+    /**
      * Tries to allocate a free local port.
      *
      * @return a free local port number.
      * @throws IllegalStateException if it fails for 20 times
      */
     public static int getFreePort() throws IllegalStateException {
+        return getFreePort(Set.of());
+    }
+
+
+    /**
+     * Tries to allocate a free local port.
+     *
+     * @param excluded ports to avoid
+     * @return a free local port number.
+     * @throws IllegalStateException if it fails for 20 times
+     */
+    public static int getFreePort(Set<Integer> excluded) throws IllegalStateException {
         int counter = 0;
         while (true) {
             counter++;
-            try {
-                final ServerSocket socket = new ServerSocket(0);
+            try (ServerSocket socket = new ServerSocket(0)) {
                 final int port = socket.getLocalPort();
                 socket.setSoTimeout(1);
                 socket.setReuseAddress(true);
-                socket.close();
+                if (excluded.contains(port) && counter >= 20) {
+                    throw new IllegalStateException("Cannot open random port, tried 20 times. Port " + port
+                        + " is excluded and we were not able to find another.");
+                }
                 return port;
             } catch (IOException e) {
                 if (counter >= 20) {

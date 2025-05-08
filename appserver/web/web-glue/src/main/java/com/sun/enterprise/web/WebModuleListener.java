@@ -277,8 +277,6 @@ final class WebModuleListener implements LifecycleListener {
 
     }
 
-    ServiceLocator webAppServices;
-
     private ServiceLocator createWebAppServices(WebModule webModule, ServiceLocator defaultServices) {
         ServiceLocator webAppServices = ServiceLocatorFactory.getInstance().create(webModule.getComponentId(), defaultServices);
         initializeServicesFromClassLoader(webAppServices, Thread.currentThread().getContextClassLoader());

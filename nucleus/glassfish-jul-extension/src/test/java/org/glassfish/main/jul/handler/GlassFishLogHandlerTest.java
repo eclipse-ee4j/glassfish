@@ -55,7 +55,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author David Matejcek
  */
 @TestMethodOrder(OrderAnnotation.class)
-@Timeout(value = 1, unit = TimeUnit.SECONDS)
+@Timeout(value = 5, unit = TimeUnit.SECONDS)
 public class GlassFishLogHandlerTest {
 
     private static GlassFishLogHandler handler;

@@ -18,16 +18,19 @@ package org.glassfish.main.jul.handler;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.glassfish.main.jul.JULHelperFactory;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
+import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINE;
@@ -45,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 /**
  * @author David Matejcek
  */
+@Timeout(value = 1, unit = TimeUnit.SECONDS)
 public class LoggingPrintStreamTest {
 
     private LogCollectorHandler handler;
@@ -54,10 +58,11 @@ public class LoggingPrintStreamTest {
 
     @BeforeEach
     public void init() {
+        GlassFishLoggingTracer.setTracingEnabled(true);
         logger = JULHelperFactory.getHelper().getJULLogger(getClass());
         logger.setLevel(Level.ALL);
         handler = new LogCollectorHandler(logger);
-        stream = LoggingPrintStream.create(logger, FINE, 100, UTF_8);
+        stream = LoggingPrintStream.create(logger, FINE, 15, UTF_8);
     }
 
 
@@ -69,6 +74,7 @@ public class LoggingPrintStreamTest {
         if (stream != null) {
             stream.close();
         }
+        GlassFishLoggingTracer.setTracingEnabled(false);
     }
 
 

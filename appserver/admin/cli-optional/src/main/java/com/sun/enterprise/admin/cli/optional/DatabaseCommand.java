@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.optional;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.ClassPathBuilder;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.OS;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import java.io.File;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
@@ -55,6 +55,7 @@ public abstract class DatabaseCommand extends CLICommand {
     @Param(name = "dbport", optional = true, defaultValue = DB_PORT_DEFAULT)
     protected String dbPort;
 
+    protected final ClassPathBuilder modulepath = new ClassPathBuilder();
     protected final ClassPathBuilder sClasspath = new ClassPathBuilder();
     protected final ClassPathBuilder sDatabaseClasspath = new ClassPathBuilder();
 
@@ -80,7 +81,8 @@ public abstract class DatabaseCommand extends CLICommand {
         dbLocation = new File(getSystemProperty(DERBY_ROOT_PROP_NAME));
         checkIfDbInstalled(dbLocation);
 
-        sClasspath.add(new File(installRoot, "lib/asadmin/cli-optional.jar"));
+        modulepath.addAll(new File(installRoot, "lib/bootstrap"), f -> f.isFile());
+        sClasspath.add(new File(installRoot, System.getProperty("java.class.path")));
         sDatabaseClasspath.add(dbLocation, "lib", "derby.jar")
                           .add(dbLocation, "lib", "derbyshared.jar")
                           .add(dbLocation, "lib", "derbytools.jar")
@@ -133,8 +135,11 @@ public abstract class DatabaseCommand extends CLICommand {
                 getJavaExe().toString(),
                 "-Djava.library.path=" + installRoot + File.separator + "lib",
                 "-Dderby.storage.fileSyncTransactionLog=True",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + File.pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "ping",
                 dbHost, dbPort, Boolean.toString(bRedirect) };
@@ -144,8 +149,11 @@ public abstract class DatabaseCommand extends CLICommand {
         return new String[] {
                 getJavaExe().toString(),
                 "-Djava.library.path=" + installRoot + File.separator + "lib",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + File.pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "ping",
                 dbHost, dbPort, Boolean.toString(bRedirect) };

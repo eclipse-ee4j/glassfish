@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.cli;
 
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -46,6 +45,7 @@ import org.glassfish.api.ActionReport.MessagePart;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

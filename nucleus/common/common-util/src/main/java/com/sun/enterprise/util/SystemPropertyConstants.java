@@ -21,6 +21,7 @@ import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.File;
 
+// FIXME: Visit BootstrapKeys and remove duplicit constants here
 public class SystemPropertyConstants {
 
     /**

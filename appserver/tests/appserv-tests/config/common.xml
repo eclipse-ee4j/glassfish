@@ -61,17 +61,26 @@ Variables used:
     <echo message="common.xml: Compiling test source files" level="verbose" />
 
     <mkdir dir="${src}" />
-    <javac srcdir="${src}" destdir="${build.classes.dir}" classpath="${s1astest.classpath}"
-        debug="on" includeantruntime="false" failonerror="true" fork="yes" />
+    <javac srcdir="${src}" destdir="${build.classes.dir}"
+        modulepath="${env.S1AS_HOME}/lib/bootstrap"
+        classpath="${s1astest.classpath}"
+        debug="on" includeantruntime="false" failonerror="true" fork="yes" verbose="false">
+        <compilerarg value="--add-modules"/>
+        <compilerarg value="ALL-MODULE-PATH"/>
+      </javac>
 </target>
 
 <target name="compile-common-with-endorsed-dir" depends="init-common">
     <mkdir dir="${build.classes.dir}" />
     <echo message="common.xml: Compiling test source files" level="verbose" />
     <mkdir dir="${src}" />
-    <javac srcdir="${src}" destdir="${build.classes.dir}" classpath="${s1astest.classpath}"
-        debug="on" includeantruntime="false" failonerror="true">
-    </javac>
+    <javac srcdir="${src}" destdir="${build.classes.dir}"
+        modulepath="${env.S1AS_HOME}/lib/bootstrap"
+        classpath="${s1astest.classpath}"
+        debug="on" includeantruntime="false" failonerror="true" verbose="false">
+        <compilerarg value="--add-modules"/>
+        <compilerarg value="ALL-MODULE-PATH"/>
+      </javac>
 </target>
 
 
@@ -1399,13 +1408,41 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
     <echo message="Running Web Test from ${basedir}" level="verbose" />
     <echo message="http host: ${http.host}" level="verbose" />
     <echo message="http port: ${http.port}" level="verbose" />
-    <java fork="on" failonerror="false" classpath="${env.APS_HOME}/lib/target/webtest.jar:${s1astest.classpath}"
+    <java fork="on" failonerror="false"
+        classpath="${env.APS_HOME}/lib/target/webtest.jar:${s1astest.classpath}"
         classname="com.sun.ejte.ccl.webrunner.webtest.WebTest">
+        <modulepath>
+            <pathelement path="${env.S1AS_HOME}/lib/bootstrap" />
+        </modulepath>
+        <jvmarg value="--add-modules" />
+        <jvmarg value="ALL-MODULE-PATH" />
         <arg value="script.txt" />
         <arg value="${http.host}" />
         <arg value="${http.port}" />
         <arg value="appserv-tests" />
         <arg value="${testsuite.id}" />
+    </java>
+</target>
+
+<target name="runclient-own">
+    <echo message="Running standalone app client with classpath: ${appclient.standalone.classpath}" level="verbose" />
+    <java fork="on" failonerror="true" classname="${mainClass}">
+        <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+        <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+        <jvmarg value="--add-modules" />
+        <jvmarg value="ALL-MODULE-PATH" />
+        <jvmarg value="${appclient.standalone.debug}" />
+        <jvmarg line="${appclient.standalone.jvmargs.ext}" />
+        <modulepath>
+            <pathelement path="${env.S1AS_HOME}/lib/bootstrap" />
+        </modulepath>
+        <classpath>
+            <pathelement path="${appclient.standalone.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar" />
+            <pathelement path="${appclient.standalone.classpath.ext}" />
+        </classpath>
+        <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
+        <sysproperty key="org.glassfish.gmbal.no.multipleUpperBoundsException" value="true" />
+        <arg line="${args}"/>
     </java>
 </target>
 

@@ -33,7 +33,7 @@ public class KnopflerfishAdapter implements OsgiPlatformAdapter {
 
 
     @Override
-    public void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-        cpb.addJar(new File(kfHome, "framework.jar"));
+    public ClassPathBuilder addFrameworkJars(ClassPathBuilder cpb) throws IOException {
+        return cpb.addJar(new File(kfHome, "framework.jar"));
     }
 }

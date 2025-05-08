@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,23 @@
 
 package org.glassfish.appclient.client;
 
-import org.glassfish.appclient.client.acc.UserError;
+import org.glassfish.appclient.client.acc.AppClientContainer;
+import org.glassfish.embeddable.client.ApplicationClientClassLoader;
+import org.glassfish.embeddable.client.UserError;
 
 /**
+ * The AppClientContainerAgent initializes instrumentation, class loaders and also
+ * the {@link AppClientContainer} instance, which must be reachable for this class then
+ * - and that was a problem. The solution is to "smuggle" the container using
+ * the class loader, which is the only thing which can be shared with the agent.
+ * <p>
+ * With the usage of JPMS it got yet bit more complicated as we had to keep some order
+ * between classes and class loaders and we also noticed an issue with Windows which limit
+ * the length of the command line; therefore we introduced another layer which automatically
+ * detects some GlassFish's jar files and we don't need to add them to the -classpath argument.
  *
  * @author tjquinn
+ * @author David Matejcek
  */
 public class AppClientGroupFacade {
 
@@ -29,19 +42,14 @@ public class AppClientGroupFacade {
      */
     public static void main(String[] args) {
         try {
-            if (AppClientFacade.acc() == null) {
-                /*
-                 * The facade JAR has been run directly, not via the appclient script and not via Java Web Start. So we have no agent
-                 * arguments and no instrumentation for registering transformations.
-                 */
-                AppClientFacade.prepareACC(null, null);
-            }
-            AppClientFacade.launch(args);
+            ApplicationClientClassLoader loader = (ApplicationClientClassLoader) Thread.currentThread()
+                .getContextClassLoader();
+            loader.getApplicationClientContainer().launch(args);
+        } catch (UserError ue) {
+            ue.displayAndExit();
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
-        } catch (UserError ue) {
-            ue.displayAndExit();
         }
     }
 }

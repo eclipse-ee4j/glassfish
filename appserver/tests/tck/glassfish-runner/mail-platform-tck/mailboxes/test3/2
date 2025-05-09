@@ -1,0 +1,61 @@
+From jmk@cochin Thu Feb 12 14:06:30 1998 -0800
+Return-Path: <jmr@labyrinth>
+Received: from rita.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA15773; Fri, 20 Jun 1997 10:25:51 -0700
+Received: from labyrinth.eng.sun.com by rita.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA06857; Fri, 20 Jun 1997 10:25:49 -0700
+Received: from labyrinth by labyrinth.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA03369; Fri, 20 Jun 1997 10:25:02 -0700
+Date: Fri, 20 Jun 1997 10:25:02 -0700 (PDT)
+From: John Russo <jmr@labyrinth>
+Reply-To: John Russo <jmr@labyrinth>
+Subject: Re: Attachment dialog
+To: javamail@rita
+Message-ID: <libSDtMail.9706201025.22411.jmr@labyrinth/labyrinth>
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: nCvZV8LEH92j0CceprVrcw==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1_48 SunOS 5.5.1 sun4u sparc 
+Content-Length: 1253
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 1
+
+We couldn't abandon something we never had ;) I guess we could
+abandon the idea of double click, but it's my understanding if
+there's a double click in the system now, it's a bug.
+
+BTW - I'm not discounting the merits of double-click. This is
+just the way I understand the spec to-date.
+
+> From: cotton@snow-goon (Chris Cotton)
+> Date: 20 Jun 1997 18:13:33 GMT
+> To: mspivak@apilon, jmk@shorter, gentner@apilon
+> Cc: javamail@rita
+> Subject: Re: Attachment dialog
+> Content-Transfer-Encoding: 7bit
+> Mime-Version: 1.0
+> 
+> 
+> > Date: Fri Jun 20 09:55:20 PDT 1997
+> > From: mspivak@apilon
+> > To: jmk@shorter gentner@apilon 
+> > Cc: javamail@rita 
+> > Subject: Re: Attachment dialog
+> > 
+> > And it'll get worse too.  With the new FileChooser that I'm currently 
+implementing, double-click goes away completely, as we're moving to the 
+single-click model to be consistent with the rest of views. 
+> 
+> I hope that we are not seriously abadoning double click.  I agree that if we 
+have a single click model, we should try to use that everyone it makes sense.  
+But double click can easily allow you to distinguish between a selection of an 
+item and a particular action on an item.
+> 
+> What's the word Don?
+> 
+> ___________________
+> Christopher Cotton
+
+

@@ -1,0 +1,62 @@
+From jmk@cochin Thu Feb 12 14:06:34 1998 -0800
+Return-Path: <owner-java-internal@java-aces>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA24235; Wed, 6 Aug 1997 10:25:52 -0700
+Received: from java-aces.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA04030; Wed, 6 Aug 1997 10:25:43 -0700
+Received: by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20081; Wed, 6 Aug 1997 12:15:43 -0500
+Received: from Eng.Sun.COM by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20076; Wed, 6 Aug 1997 12:15:42 -0500
+Received: from shadows.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA02694; Wed, 6 Aug 1997 10:21:43 -0700
+Received: from Eng.Sun.COM by shadows.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA26520; Wed, 6 Aug 1997 10:21:41 -0700
+Received: from sunmail1.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA03597; Wed, 6 Aug 1997 10:21:40 -0700
+Received: from Eng.Sun.COM by sunmail1.Sun.COM (SMI-8.6/SMI-4.1)
+	id KAA25417; Wed, 6 Aug 1997 10:21:39 -0700
+Received: from hsmpka.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA02671; Wed, 6 Aug 1997 10:21:39 -0700
+Received: from minoo by hsmpka.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA16077; Wed, 6 Aug 1997 10:21:38 -0700
+Message-Id: <199708061721.KAA16077@hsmpka.eng.sun.com>
+Date: Wed, 6 Aug 1997 10:21:35 -0700 (PDT)
+From: Minoo Bakke <bakke@hsmpka-122.eng.sun.com>
+Reply-To: Minoo Bakke <bakke@hsmpka-122.eng.sun.com>
+Subject: PLEASE VERIFY
+To: java-internal@Sun.COM
+Cc: bakke@minoo.eng.sun.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: RaqGxqzCemmWa46e4A+mRw==
+X-Mailer: dtmail 1.2.0 CDE Version 1.2 SunOS 5.6 sun4m sparc 
+Sender: owner-java-internal@qwerty.eng.sun.com
+Precedence: bulk
+Content-Length: 586
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 21
+
+I am about to put the following statement in some sales brochure.  I 
+would like to verify its accuracy with you. Any help would be appreciated.
+
+
+----------------------
+
+The Java Development Kit (JDK) provides an environment that requires no 
+compiling, no debugging, and no extra tools.  In fact, Java requires absolutely 
+no porting, so it is simpler, easier, and faster than programming in C++.
+
+-----------------------
+
+I got this claim from the web. However, it does not sound right to me due to 
+the fact we have debugger tools, etc.
+
+I would appreciate your commments.
+
+Minoo
+
+
+

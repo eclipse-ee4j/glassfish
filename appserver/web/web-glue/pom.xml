@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2023 Contributors to the Eclipse Foundation.
+    Copyright 2023, 2025 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -215,6 +215,11 @@
             <groupId>org.glassfish.annotations</groupId>
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

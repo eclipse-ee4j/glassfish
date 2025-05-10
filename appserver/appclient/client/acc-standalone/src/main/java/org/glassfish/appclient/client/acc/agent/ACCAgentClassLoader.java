@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,10 +40,18 @@ import static java.security.AccessController.doPrivileged;
  * <p>
  * This class and it's dependencies must not use logging, which could cause recursion in class
  * loading. So don't extend GlassfishUrlClassLoader. Reproducer: TCK tests use this classloader.
+ * <p>
+ * The name of this class must not be changed - it is explicitly used in the TCK Platform Test
+ * package.
  *
  * @author tjquinn
+ * @author David Matejcek
  */
 public class ACCAgentClassLoader extends URLClassLoader {
+
+    static {
+        registerAsParallelCapable();
+    }
 
     private boolean isActive = true;
 
@@ -52,12 +60,12 @@ public class ACCAgentClassLoader extends URLClassLoader {
      * java command created from the appclient script).
      */
     public ACCAgentClassLoader(ClassLoader parent) {
-        super(new URL[] {}, prepareLoader(parent));
+        super("Agent", new URL[] {}, prepareLoader(parent));
     }
 
 
     private static URLClassLoader prepareLoader(ClassLoader parent) {
-        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader(
+        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader("User",
             new URL[] {ClassPathUtils.getGFClientJarURL()}, new ClassLoaderWrapper(parent));
         return doPrivileged(action);
     }

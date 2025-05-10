@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,9 +47,8 @@ public class RemoteViewTestNG {
             test_result = true;
         } catch(ExecutionException e) {
             test_result = false;
-            System.out.println("Got async ExecutionException. Cause is " +
-                e.getCause().getMessage());
-                e.getCause().printStackTrace();
+            System.out.println("Got async ExecutionException.");
+            e.printStackTrace();
         }
         Assert.assertEquals(test_result, true,"Unexpected Results");
     }
@@ -66,7 +66,8 @@ public class RemoteViewTestNG {
             test_result = true;
         } catch(Exception e) {
             test_result = false;
-            System.out.println("Exception from portableGlobal:"+e);
+            System.err.println("Exception from portableGlobal");
+            e.printStackTrace();
         }
         Assert.assertEquals(test_result, true,"Unexpected Results");
     }
@@ -84,17 +85,18 @@ public class RemoteViewTestNG {
             test_result = true;
         } catch(Exception e) {
             test_result = false;
-            System.out.println("Exception from portableGlobal:"+e);
+            System.err.println("Exception from portableGlobal:");
+            e.printStackTrace();
         }
         Assert.assertEquals(test_result, true,"Unexpected Results");
     }
 
     private static void callHome(HelloHome home) throws Exception {
         HelloRemote hr = home.create();
-        //System.out.println("2.x HelloRemote.hello() says " + hr.hello());
+        System.out.println("2.x HelloRemote.hello() says " + hr.hello());
     }
     private static void callBusHome(Hello h) {
-    String hret = h.hello();
-        //System.out.println("Hello.hello() says " + h.hello());
+        String hret = h.hello();
+        System.out.println("Hello.hello() says " + h.hello());
     }
 }

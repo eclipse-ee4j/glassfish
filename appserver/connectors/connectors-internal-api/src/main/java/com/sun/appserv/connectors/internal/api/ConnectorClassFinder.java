@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,11 +28,15 @@ import org.glassfish.internal.api.DelegatingClassLoader;
  */
 public class ConnectorClassFinder extends ASURLClassLoader implements DelegatingClassLoader.ClassFinder {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private final DelegatingClassLoader.ClassFinder librariesClassFinder;
     private volatile String raName;
 
     public ConnectorClassFinder(ClassLoader parent, String raName, DelegatingClassLoader.ClassFinder finder) {
-        super(parent);
+        super("Connector(" + raName + ')', parent);
         this.raName = raName;
 
         // There should be better approach to skip libraries Classloader when none specified.

@@ -58,8 +58,8 @@ public class ContainerRegistry {
         return sniffers;
     }
 
-    public synchronized EngineInfo<?, ?> getContainer(String containerType) {
-        return containers.get(containerType);
+    public synchronized EngineInfo<?, ?> getContainer(String name) {
+        return containers.get(name);
     }
 
     public synchronized EngineInfo<?, ?> removeContainer(EngineInfo<?, ?> container) {

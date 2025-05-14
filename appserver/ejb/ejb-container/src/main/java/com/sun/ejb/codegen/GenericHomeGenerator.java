@@ -49,7 +49,7 @@ public class GenericHomeGenerator extends Generator {
     public GenericHomeGenerator(final ClassLoader loader, final Class<?> anchorClass) {
         super(loader);
         this.anchorClass = anchorClass;
-        this.packageName = getClass().getPackageName();
+        this.packageName = anchorClass.getPackageName();
     }
 
 

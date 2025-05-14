@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -77,5 +78,12 @@ public class ConfigCustomizationToken {
 
     public void setValue(String tokenValue) {
         this.value = tokenValue;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigCustomizationToken[" + "name='" + name + ", value='" + value + "' description='" + description
+            + "', validationExpression='" + validationExpression + "', tokenTypeDetails=" + tokenTypeDetails
+            + ", customizationType=" + customizationType + ']';
     }
 }

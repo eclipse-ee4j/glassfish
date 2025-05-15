@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
+import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
@@ -34,7 +35,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;
@@ -85,7 +85,7 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
             final URL[] urlsA = urls.toArray(new URL[urls.size()]);
 
             PrivilegedAction<ClassLoader> action = () -> new GlassfishUrlClassLoader("DomainXmlVerifier", urlsA,
-                Globals.class.getClassLoader());
+                CLICommand.class.getClassLoader());
             ClassLoader cl = AccessController.doPrivileged(action);
             ModulesRegistry registry = new StaticModulesRegistry(cl);
             ServiceLocator serviceLocator = registry.createServiceLocator("default");

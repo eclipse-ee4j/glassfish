@@ -84,11 +84,12 @@ public class EventsTest {
         events.register(listener);
     }
 
+
     @AfterEach
     public void deleteApplications() {
-       if (application != null) {
-           application.delete();
-       }
+        if (application != null) {
+            application.delete();
+        }
     }
 
 

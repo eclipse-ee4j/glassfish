@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.servermgmt.template;
 
 import com.sun.enterprise.admin.servermgmt.DomainException;
 import com.sun.enterprise.admin.servermgmt.xml.templateinfo.TemplateInfo;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
@@ -33,6 +32,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.xml.sax.InputSource;
 
 public class TemplateInfoHolder {

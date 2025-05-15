@@ -18,7 +18,6 @@ package com.sun.enterprise.admin.cli.remote;
 
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.admin.remote.sse.GfSseInboundEvent;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
@@ -28,6 +27,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandState;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Whenever a command is executed with --detach this class will close the Server Sent Events for detached commands and

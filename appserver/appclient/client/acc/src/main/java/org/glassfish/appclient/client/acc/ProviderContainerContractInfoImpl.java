@@ -36,8 +36,8 @@ import java.util.HashSet;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
 
 /**

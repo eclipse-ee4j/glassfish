@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
@@ -52,6 +51,7 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.AsadminInput;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.main.jul.GlassFishLogManager;
 import org.glassfish.main.jul.GlassFishLogManagerInitializer;
 import org.glassfish.main.jul.cfg.GlassFishLogManagerConfiguration;

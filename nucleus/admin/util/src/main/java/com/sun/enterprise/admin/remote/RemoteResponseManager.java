@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.admin.remote;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +27,8 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 

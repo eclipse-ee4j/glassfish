@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import jakarta.inject.Inject;
@@ -81,7 +81,7 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
 
     @Override
     public File getInstallRoot() {
-        return StartupContextUtil.getInstallRoot(startupContext);
+        return new File(startupContext.getArguments().getProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME));
     }
 
     @Override

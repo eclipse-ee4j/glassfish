@@ -73,7 +73,7 @@ import org.glassfish.appclient.client.acc.config.ClientCredential;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -364,12 +364,12 @@ public class AppClientFacade {
         return builder.newContainer(URI.create(appClientPath), null /* callbackHandler */, mainClassName, clientName);
     }
 
-    private static AppClientContainer createContainerForClassName(Builder builder, String className) throws Exception, UserError {
 
-        /*
-         * Place "." on the class path so that when we convert the class file path to a fully-qualified class name and try to
-         * load it, we'll find it.
-         */
+    /**
+     * Place "." on the class path so that when we convert the class file path
+     * to a fully-qualified class name and try to load it, we'll find it.
+     */
+    private static AppClientContainer createContainerForClassName(Builder builder, String className) throws Exception, UserError {
 
         ClassLoader loader = prepareLoaderToFindClassFile(Thread.currentThread().getContextClassLoader());
         Thread.currentThread().setContextClassLoader(loader);

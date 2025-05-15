@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.security.store.IdentityManagement;
 
@@ -28,8 +27,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.PasswordAliasStore;
@@ -38,6 +40,9 @@ import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.security.services.impl.JCEKSPasswordAliasStore;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ARG_SEP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_ARGS;
 
 /**
  * An implementation of the @link {IdentityManagement} that manages the password needs of the server. This
@@ -48,21 +53,21 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "jks-based")
 public class IdmService implements PostConstruct, IdentityManagement {
 
-    private final Logger logger = Logger.getAnonymousLogger();
-
-    @Inject
-    private volatile StartupContext sc = null;
-
-    @Inject
-    private volatile ServerEnvironmentImpl env = null;
-
-    private char[] masterPassword;
-
     private static final String FIXED_KEY = "master-password"; // the fixed key for master-password file
     private static final String PASSWORDFILE_OPTION_TO_ASMAIN = "-passwordfile"; // note single hyphen, in line with other args to ASMain!
     private static final String STDIN_OPTION_TO_ASMAIN = "-read-stdin"; // note single hyphen, in line with other args to ASMain!
 
     private static final String MP_PROPERTY = "AS_ADMIN_MASTERPASSWORD";
+
+    private final Logger logger = Logger.getAnonymousLogger();
+
+    @Inject
+    private volatile StartupContext sc;
+
+    @Inject
+    private volatile ServerEnvironmentImpl env;
+
+    private char[] masterPassword;
 
     @Override
     public void postConstruct() {
@@ -114,7 +119,7 @@ public class IdmService implements PostConstruct, IdentityManagement {
     private boolean setFromAsMainArguments() {
         File pwf = null;
         try {
-            String[] args = StartupContextUtil.getOriginalArguments(sc);
+            String[] args = getOriginalArguments(sc);
             int index = 0;
             for (String arg : args) {
                 if (PASSWORDFILE_OPTION_TO_ASMAIN.equals(arg)) {
@@ -197,4 +202,21 @@ public class IdmService implements PostConstruct, IdentityManagement {
         }
     }
 
+    /**
+     * @param context
+     * @return parsed array of arguments saved as {@link #ORIGINAL_ARGS}
+     */
+    private static String[] getOriginalArguments(StartupContext context) {
+        Properties args = context.getArguments();
+        String s = args.getProperty(ORIGINAL_ARGS);
+        if (s == null) {
+            return new String[0];
+        }
+        StringTokenizer st = new StringTokenizer(s, ARG_SEP, false);
+        List<String> result = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            result.add(st.nextToken());
+        }
+        return result.toArray(new String[result.size()]);
+    }
 }

@@ -17,13 +17,14 @@
 package com.sun.enterprise.util.io;
 
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Map;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * A class for keeping track of the directories that a domain lives in and under.

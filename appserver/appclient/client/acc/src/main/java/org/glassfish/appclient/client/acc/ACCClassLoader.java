@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 
 import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.security.AccessController.doPrivileged;
 

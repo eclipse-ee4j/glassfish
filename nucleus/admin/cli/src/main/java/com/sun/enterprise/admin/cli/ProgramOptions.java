@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.cli;
 
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.HostAndPort;
 
@@ -40,6 +39,7 @@ import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Representation of the options known to the asadmin program. These options control the overall behavior of asadmin,

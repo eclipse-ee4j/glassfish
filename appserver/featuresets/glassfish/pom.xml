@@ -866,7 +866,6 @@
                 <dependency>
                     <groupId>org.eclipse.microprofile.rest.client</groupId>
                     <artifactId>microprofile-rest-client-api</artifactId>
-                    <version>${microprofile.rest-client.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.jersey.ext</groupId>

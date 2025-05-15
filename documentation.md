@@ -4,7 +4,7 @@ layout: documentation
 
 # Eclipse GlassFish Documentation
 
-## Current Release - 7.0.23 {#current}
+## Current Release - 7.0.24 {#current}
 
 * [Add On Component Development Guide](docs/latest/add-on-component-development-guide.html)
   ([pdf](docs/latest/add-on-component-development-guide.pdf))
@@ -41,7 +41,7 @@ layout: documentation
 
 ### Documentation for other GlassFish versions {#older}
 
-* [Development version (7.0.25-SNAPSHOT)](docs#development)
+* [Development version (7.1.0-SNAPSHOT)](docs#development)
 * [5.1.0 release](docs#5.1.0)
 
 ## Documentation for GlassFish Docker images {#docker}

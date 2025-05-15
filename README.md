@@ -7,6 +7,15 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## April 23, 2025 -- Eclipse GlassFish 7.0.24 Available
+
+This release marks an important step forward by introducing support for JDK 24 in GlassFish 7 — a capability that had previously only been available in milestone builds of GlassFish 8. Achieving this required new versions of CORBA, ORB, and PFL, the result of many months of dedicated work by the team.
+
+The team also undertook a significant revision of how scripts are used across the project. All Linux scripts now consistently use Bash, and a unified method has been adopted for resolving the AS_INSTALL path across all platforms. Additionally, an issue on Windows related to the %t placeholder—used in JDK log formatting—was resolved by ensuring it is properly escaped.
+
+Faster Deployment was achieved by improved file handling; the team replaced custom file discovery with Files.walkFileTree and switched from URI to Path, also adopting try-with-resources for better resource management. On Windows 11, deployment time for specifically selected huge applications dropped from 110s to 100s, with potential for 92s using caching. YourKit profiling showed a 19s improvement in FileSystem.hasBooleanAttributes.
+
+
 ## March 14, 2025 -- Eclipse GlassFish 7.0.23 Available
 
 The key feature for this release is making SSH nodes work on the Windows operating system, and while at it improve the way they work on Linux. The team mainly focussed on this work, and a lot of effort went into it. We're really happy to have achieved the goal to have it fully working. Next to that some important fixes were done for logging and specifically a regression for the security principal was fixed.

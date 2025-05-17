@@ -84,7 +84,7 @@ class StartServerShutdownHook extends Thread {
         try {
             // We do want to be the last thread alive.
             Thread.onSpinWait();
-            waitForThreads(FILTER_OTHER_HOOKS);
+            waitForThreads();
             // We do want this in the server.log.
             LOG.log(INFO, "Starting process {0} in directory {1}", this.builder.command(), this.builder.directory());
             stopLogging();
@@ -121,8 +121,8 @@ class StartServerShutdownHook extends Thread {
     }
 
 
-    private void waitForThreads(Predicate<Thread> filter) {
-        final Thread[] threads = getThreadsToDie(filter);
+    private void waitForThreads() {
+        final Thread[] threads = getThreadsToDie();
         log(() -> "Waiting for shutdown of threads:\n" + toString(threads));
         while(true) {
             Thread thread = getFirstAlive(threads);
@@ -140,12 +140,12 @@ class StartServerShutdownHook extends Thread {
     }
 
 
-    private Thread[] getThreadsToDie(Predicate<Thread> filter) {
+    private Thread[] getThreadsToDie() {
         final Thread[] threads = new Thread[Thread.activeCount() + 10];
         Thread.enumerate(threads);
         log(() -> "Found threads:\n" + toString(threads));
         return Stream.of(threads).filter(Objects::nonNull).filter(t -> t != this).filter(t -> !t.isDaemon())
-            .filter(filter).toArray(Thread[]::new);
+            .filter(FILTER_OTHER_HOOKS).toArray(Thread[]::new);
     }
 
 

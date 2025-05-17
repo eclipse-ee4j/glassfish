@@ -29,4 +29,5 @@ call "%AS_CONFIG_BAT%" || (
     echo Error: Cannot load config file
     exit /B 1
 )
-"%JAVA%" -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008 -jar "%AS_INSTALL%\lib\client\appserver-cli.jar" %*
+set "ASADMIN_CLASSPATH=%AS_INSTALL%\appserver-cli.jar;%ASADMIN_CLASSPATH%"
+"%JAVA%" %ASADMIN_JVM_OPTIONS% -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008 --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%ASADMIN_CLASSPATH%" org.glassfish.admin.cli.AsadminMain %*

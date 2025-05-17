@@ -73,8 +73,8 @@ import org.apache.naming.resources.Resource;
 import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
 
 import static java.lang.System.Logger.Level.DEBUG;

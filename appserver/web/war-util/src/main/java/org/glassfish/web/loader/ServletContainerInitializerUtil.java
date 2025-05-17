@@ -44,7 +44,6 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.ClassDependencyBuilder;
 import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;
 import org.glassfish.hk2.classmodel.reflect.AnnotationType;
@@ -54,6 +53,7 @@ import org.glassfish.hk2.classmodel.reflect.Member;
 import org.glassfish.hk2.classmodel.reflect.Parameter;
 import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.lang.Runtime.version;
 import static java.util.logging.Level.FINE;

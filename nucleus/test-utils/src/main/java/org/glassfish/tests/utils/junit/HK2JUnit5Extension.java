@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.tests.utils.junit;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -241,7 +242,7 @@ public class HK2JUnit5Extension
      */
     protected Properties getStartupContextProperties(final ExtensionContext context) {
         final Properties startupContextProperties = new Properties();
-        final String rootPath = context.getRequiredTestClass().getResource("/").getPath();
+        final String rootPath = FileUtils.toFile(context.getRequiredTestClass().getResource("/")).getPath();
         startupContextProperties.put(INSTALL_ROOT_PROP_NAME, rootPath);
         startupContextProperties.put(INSTANCE_ROOT_PROP_NAME, rootPath);
         return startupContextProperties;

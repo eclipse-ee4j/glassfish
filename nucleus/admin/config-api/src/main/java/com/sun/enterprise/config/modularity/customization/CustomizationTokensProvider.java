@@ -37,8 +37,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * @author Masoud Kalali

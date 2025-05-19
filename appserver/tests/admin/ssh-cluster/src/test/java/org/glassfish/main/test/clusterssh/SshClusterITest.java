@@ -160,9 +160,8 @@ public class SshClusterITest {
     @Order(2)
     public void createNode1() throws Exception {
         ExecResult result = AS_DOMAIN.execInContainer(UTF_8, PATH_DOCKER_ASADMIN, "--user", "admin",
-            "--passwordfile", "/password.txt", "create-node-ssh", "--nodehost", "node1", "--install", "true",
-            "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root",
-            "node1");
+            "--passwordfile", "/password.txt", "--interactive=false", "create-node-ssh", "--nodehost", "node1",
+            "--install=true", "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root", "node1");
         assertEquals(0, result.getExitCode(), result.getStdout() + result.getStderr());
     }
 

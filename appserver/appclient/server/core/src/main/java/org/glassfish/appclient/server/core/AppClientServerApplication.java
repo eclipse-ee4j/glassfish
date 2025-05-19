@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -150,10 +150,9 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
 
     @Override
     public ClassLoader getClassLoader() {
-        /*
-         * This cannot be null or it prevents the framework from invoking unload on the deployer for this app.
-         */
-        return new GlassfishUrlClassLoader(new URL[0]);
+        // This cannot be null or it prevents the framework from invoking unload
+        // on the deployer for this app.
+        return new GlassfishUrlClassLoader("AppClientServer(" + deployedAppName + ")", new URL[0]);
     }
 
     public DeploymentContext dc() {

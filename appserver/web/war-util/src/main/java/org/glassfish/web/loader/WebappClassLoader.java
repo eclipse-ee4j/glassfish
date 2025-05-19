@@ -247,7 +247,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
      * but no defined repositories.
      */
     public WebappClassLoader(ClassLoader parent) {
-        super(new URL[0], parent);
+        // We overload getName(), however we don't know the name at this moment.
+        super("WebappClassLoader", new URL[0], parent);
         this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
     }
@@ -972,7 +973,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
     public ClassLoader copy() {
         LOG.log(DEBUG, "copy()");
         // set getParent() as the parent of the cloned class loader
-        return new GlassfishUrlClassLoader(getURLs(), getParent());
+        return new GlassfishUrlClassLoader(getName(), getURLs(), getParent());
     }
 
     @Override

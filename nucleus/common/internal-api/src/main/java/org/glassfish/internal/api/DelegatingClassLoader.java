@@ -45,6 +45,10 @@ import static java.util.Collections.unmodifiableList;
  */
 public class DelegatingClassLoader extends ClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     /**
      * This interface is an optimization.
      * <p>
@@ -215,6 +219,7 @@ public class DelegatingClassLoader extends ClassLoader {
         return new CompositeEnumeration(enumerators);
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,11 +54,12 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     @Override
-    public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
+    public GlassFishRuntime build(BootstrapProperties bsProps, ClassLoader classloader) throws GlassFishException {
         configureBundles(bsProps);
-        provisionBundles(bsProps);
-        GlassFishRuntime gfr = new EmbeddedOSGiGlassFishRuntime(getBundleContext());
-        getBundleContext().registerService(GlassFishRuntime.class.getName(), gfr, (Hashtable) bsProps.getProperties());
+        provisionBundles(bsProps, classloader);
+        BundleContext bundleContext = getBundleContext(classloader);
+        GlassFishRuntime gfr = new EmbeddedOSGiGlassFishRuntime(bundleContext);
+        bundleContext.registerService(GlassFishRuntime.class.getName(), gfr, (Hashtable) bsProps.getProperties());
         return gfr;
     }
 
@@ -68,12 +69,12 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
     }
 
-    private BundleContext getBundleContext() {
-        return BundleReference.class.cast(getClass().getClassLoader()).getBundle().getBundleContext();
+    private BundleContext getBundleContext(ClassLoader classloader) {
+        return BundleReference.class.cast(classloader).getBundle().getBundleContext();
     }
 
-    private void provisionBundles(BootstrapProperties bsProps) {
-        BundleProvisioner bundleProvisioner = new BundleProvisioner(getBundleContext(), bsProps.getProperties());
+    private void provisionBundles(BootstrapProperties bsProps, ClassLoader classloader) {
+        BundleProvisioner bundleProvisioner = new BundleProvisioner(getBundleContext(classloader), bsProps.getProperties());
         bundleProvisioner.installBundles();
         bundleProvisioner.startBundles();
     }

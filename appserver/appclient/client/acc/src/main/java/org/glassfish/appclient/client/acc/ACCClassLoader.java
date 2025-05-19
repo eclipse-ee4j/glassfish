@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,6 +43,10 @@ import static org.glassfish.appclient.common.ClassPathUtils.getJavaClassPathForA
  * @author tjquinn
  */
 public class ACCClassLoader extends GlassfishUrlClassLoader {
+
+    static {
+        registerAsParallelCapable();
+    }
 
     private static final String AGENT_LOADER_CLASS_NAME = "org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
     private static ACCClassLoader instance;
@@ -96,12 +100,12 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
 
     public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
-        super(new URL[0], parent);
+        super("ApplicationClient", new URL[0], parent);
         this.shouldTransform = shouldTransform;
     }
 
     public ACCClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
+        super("ApplicationClient", urls, parent);
     }
 
     private ACCClassLoader(URL[] urls, ClassLoader parent, boolean shouldTransform) {

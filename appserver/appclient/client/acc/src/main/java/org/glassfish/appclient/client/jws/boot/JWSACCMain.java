@@ -394,7 +394,7 @@ public class JWSACCMain implements Runnable {
      *@return the class loader
      */
     private static ClassLoader prepareClassLoader(File downloadedAppclientJarFile) throws IOException, URISyntaxException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return new GlassfishUrlClassLoader(downloadedJarURLs, classPathManager.getParentClassLoader());
+        return new GlassfishUrlClassLoader("JWS-ACC", downloadedJarURLs, classPathManager.getParentClassLoader());
     }
 
     /*

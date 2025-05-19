@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,14 +19,15 @@ package org.glassfish.main.admin.test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.tests.utils.ServerUtils;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * @author Tom Mueller
@@ -51,14 +53,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(OrderAnnotation.class)
 public class ClusterITest {
 
+    private static final Queue<Integer> RANDOM_FREE_PORTS = ServerUtils.getFreePorts(16);
     private static final String TEST_APP_NAME = "testapp";
-    private static final String PORT1 = "55123";
-    private static final String PORT2 = "55124";
+    private static final int PORT_INSTANCE_1 = RANDOM_FREE_PORTS.remove();
+    private static final int PORT_INSTANCE_2 = RANDOM_FREE_PORTS.remove();
     private static final String CLUSTER_NAME = "eec1";
     private static final String INSTANCE_NAME_1 = "eein1-with-a-very-very-very-long-name";
     private static final String INSTANCE_NAME_2 = "eein2";
-    private static final String URL1 = "http://localhost:" + PORT1;
-    private static final String URL2 = "http://localhost:" + PORT2;
+    private static final String URL_INSTANCE_1 = "http://localhost:" + PORT_INSTANCE_1;
+    private static final String URL_INSTANCE_2 = "http://localhost:" + PORT_INSTANCE_2;
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
     private static final AtomicBoolean INSTANCES_REACHABLE = new AtomicBoolean();
     private static final AtomicBoolean APP_DEPLOYED = new AtomicBoolean();
@@ -86,28 +89,29 @@ public class ClusterITest {
     @Test
     @Order(3)
     public void createInstancesTest() {
+        // Create a cluster with two instances
         assertThat(
                 ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
-                        "HTTP_LISTENER_PORT=" + PORT1
-                        + ":HTTP_SSL_LISTENER_PORT=18181"
-                        + ":IIOP_SSL_LISTENER_PORT=13800"
-                        + ":IIOP_LISTENER_PORT=13700"
-                        + ":JMX_SYSTEM_CONNECTOR_PORT=17676"
-                        + ":IIOP_SSL_MUTUALAUTH_PORT=13801"
-                        + ":JMS_PROVIDER_PORT=18686"
-                        + ":ASADMIN_LISTENER_PORT=14848",
+                        "HTTP_LISTENER_PORT=" + PORT_INSTANCE_1
+                        + ":HTTP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMX_SYSTEM_CONNECTOR_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_MUTUALAUTH_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMS_PROVIDER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove(),
                         INSTANCE_NAME_1), asadminOK());
 
         assertThat(
                 ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
-                        "HTTP_LISTENER_PORT=" + PORT2
-                        + ":HTTP_SSL_LISTENER_PORT=28181"
-                        + ":IIOP_SSL_LISTENER_PORT=23800"
-                        + ":IIOP_LISTENER_PORT=23700"
-                        + ":JMX_SYSTEM_CONNECTOR_PORT=27676"
-                        + ":IIOP_SSL_MUTUALAUTH_PORT=23801"
-                        + ":JMS_PROVIDER_PORT=28686"
-                        + ":ASADMIN_LISTENER_PORT=24848",
+                        "HTTP_LISTENER_PORT=" + PORT_INSTANCE_2
+                        + ":HTTP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMX_SYSTEM_CONNECTOR_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":IIOP_SSL_MUTUALAUTH_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JMS_PROVIDER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove(),
                         INSTANCE_NAME_2), asadminOK());
     }
 
@@ -122,8 +126,8 @@ public class ClusterITest {
     @Order(5)
     public void checkClusterTest() {
         assertThat(ASADMIN.exec("list-instances"), asadminOK());
-        assertThat(getURL(URL1), stringContainsInOrder("GlassFish Server"));
-        assertThat(getURL(URL2), stringContainsInOrder("GlassFish Server"));
+        assertThat(getURL(URL_INSTANCE_1), stringContainsInOrder("GlassFish Server"));
+        assertThat(getURL(URL_INSTANCE_2), stringContainsInOrder("GlassFish Server"));
         INSTANCES_REACHABLE.set(true);
     }
 
@@ -134,14 +138,14 @@ public class ClusterITest {
         assertThat(result, asadminOK());
         assertThat("list-applications output", result.getStdOut(), containsString(TEST_APP_NAME));
         APP_DEPLOYED.set(true);
-        assertThat(getURL(URL1 + "/" + TEST_APP_NAME), stringContainsInOrder("Simple test app"));
-        assertThat(getURL(URL2 + "/" + TEST_APP_NAME), stringContainsInOrder("Simple test app"));
+        assertThat(getURL(URL_INSTANCE_1 + "/" + TEST_APP_NAME), stringContainsInOrder("Simple test app"));
+        assertThat(getURL(URL_INSTANCE_2 + "/" + TEST_APP_NAME), stringContainsInOrder("Simple test app"));
     }
 
     @Test
     @Order(10)
     public void retrieveCollectedLogFilesTest() throws IOException {
-        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
+        assumeTrue(INSTANCES_REACHABLE.get());
 
         Path logDir = Files.createTempDirectory("log");
 
@@ -167,7 +171,7 @@ public class ClusterITest {
     @Test
     @Order(11)
     public void collectLogFilesFromInstanceTest() {
-        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
+        assumeTrue(INSTANCES_REACHABLE.get());
 
         AsadminResult result = ASADMIN.exec("collect-log-files", "--target", INSTANCE_NAME_1);
         assertAll(
@@ -182,14 +186,13 @@ public class ClusterITest {
     @Test
     @Order(20)
     public void undeployAppsTest() {
-        Assumptions.assumeTrue(APP_DEPLOYED.get());
+        assumeTrue(APP_DEPLOYED.get());
         assertThat(ASADMIN.exec("undeploy", "--target", CLUSTER_NAME, TEST_APP_NAME), asadminOK());
     }
 
     @Test
     @Order(21)
     public void stopInstancesTest() {
-        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_1), asadminOK());
         assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_2), asadminOK());
     }
@@ -197,7 +200,6 @@ public class ClusterITest {
     @Test
     @Order(22)
     public void deleteInstancesTest() {
-        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_1), asadminOK());
         assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_2), asadminOK());
     }

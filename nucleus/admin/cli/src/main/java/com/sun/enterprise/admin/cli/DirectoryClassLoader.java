@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +38,10 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
  */
 public class DirectoryClassLoader extends GlassfishUrlClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private static final LocalStringsImpl STRINGS = new LocalStringsImpl(DirectoryClassLoader.class);
     private static final int MAX_DEPTH = 5;
     private static final Comparator<Path> FILENAME_COMPARATOR = Comparator.comparing(Path::getFileName);
@@ -57,7 +61,7 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
      * @param parent - parent has higher priority.
      */
     public DirectoryClassLoader(final Set<File> jarsAndDirs, final ClassLoader parent) {
-        super(getJars(jarsAndDirs), parent);
+        super("AdminCli", getJars(jarsAndDirs), parent);
     }
 
 
@@ -69,7 +73,7 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
      * @param parent the parent class loader
      */
     public DirectoryClassLoader(final File dir, final ClassLoader parent) {
-        super(getJars(dir), parent);
+        super("AdminCli(" + dir.getName() + ")", getJars(dir), parent);
     }
 
 

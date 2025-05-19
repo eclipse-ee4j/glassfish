@@ -130,6 +130,18 @@ public class JavaWebStartInfo implements ConfigListener {
             action = "If users should be able to launch this client using Java Web Start, either deploy the application again without --properties or adjust the configuration using the admin console or the asadmin 'set' command")
     public static final String JWS_DISABLED = "AS_ACDEPL_00102";
 
+    @LogMessageInfo(
+        message = "Error preparing to server JARs referenced by app client; referenced JAR file {0} contains no manifest; continuing",
+        cause = "A JAR file which an app client directory or indirectly refers to contains no manifest, in violation of the JAR specification, so it cannot be checked for further dependencies.",
+        action = "Check that the referenced JAR file has been built correctly. It should contain a manifest but does not.")
+    public static final String JAR_MANIFEST_MISSING = "AS_ACDEPL_00113";
+
+    @LogMessageInfo(
+        message = "The manifest in dependent JAR {0} contains no main attributes, such as Class-Path, and so is an invalid JAR. Continuing.",
+        cause = "The JAR specification requires JARs to have a main attributes section, which this JAR does not have.",
+        action = "Make sure the JAR was created correctly with a main attributes section and has not been corrupted.")
+    public static final String JAR_MANIFEST_ATTR = "AS_ACDEPL_00116";
+
     private VendorInfo vendorInfo;
 
     private String signingAlias;

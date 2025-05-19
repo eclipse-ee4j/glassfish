@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,12 +61,18 @@ import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static org.glassfish.appclient.server.core.jws.JavaWebStartInfo.JAR_MANIFEST_ATTR;
+import static org.glassfish.appclient.server.core.jws.JavaWebStartInfo.JAR_MANIFEST_MISSING;
+
 
 public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
     private final static String LIBRARY_SECURITY_PROPERTY_NAME = "library.security";
     private final static String LIBRARY_JARS_PROPERTY_NAME = "library.jars";
     private final static String LIBRARY_JNLP_PATH_PROPERTY_NAME = "library.jnlp.path";
+
+    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
+        JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     private static final String LIBRARY_DOCUMENT_TEMPLATE =
             JavaWebStartInfo.DOC_TEMPLATE_PREFIX + "libraryJarsDocumentTemplate.jnlp";
@@ -79,10 +86,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
     private ApplicationSignedJARManager signedJARManager;
 
-    private StringBuilder libExtensionElementsForMainDocument = null;
-
-    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+    private StringBuilder libExtensionElementsForMainDocument;
 
     /**
      * records the downloads needed to support this app client,
@@ -135,7 +139,6 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
         }
 
         groupFacadeGenerator.run(this);
-
     }
 
     @Override
@@ -149,8 +152,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     public String appLibraryExtensions() {
-        return (libExtensionElementsForMainDocument == null ?
-            "" : libExtensionElementsForMainDocument.toString());
+        return libExtensionElementsForMainDocument == null ? "" : libExtensionElementsForMainDocument.toString();
     }
 
     @Override
@@ -543,7 +545,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
         try {
             return URI.create(VersioningUtils.getUntaggedName(appName(dc)) + "Client/" + relativeFacadeURI(dc));
         } catch (VersioningSyntaxException ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return URI.create("");
     }
@@ -564,7 +566,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
         try {
             uri = URI.create(VersioningUtils.getUntaggedName(appName(dc)) + "Client.jar");
         } catch (VersioningSyntaxException ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return uri;
     }
@@ -593,7 +595,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
         try {
             return URI.create(VersioningUtils.getUntaggedName(appName(dc)) + "Client/");
         } catch (VersioningSyntaxException ex) {
-           logger.log(Level.SEVERE, ex.getMessage(), ex);
+           LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return URI.create("");
     }
@@ -749,7 +751,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                         result = new JARArtifact(artifactFile);
                     }
                 } else {
-                    logger.log(Level.FINE,
+                    LOG.log(Level.FINE,
                             "Attempt to create artifact with URI {0} which translates to the file {1}  but no such file exists.",
                             new Object[]{
                                 canonicalArtifactURIWithinEAR.toASCIIString(),
@@ -927,27 +929,21 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                                 downloadsForReferencedArtifacts);
                     }
                 } else {
-                    /*
-                 * The file inside the directory is not another directory,
-                 * so simply include it as another download with no
-                 * special processing.
-                     */
+                    // The file inside the directory is not another directory,
+                    // so simply include it as another download with no
+                    // special processing.
                     URI fileURI = f.toURI();
-                    /*
-                 * Note that for Java Web Start support we need to sign JARs.
-                 * Even though this JAR appears as just another file in this
-                 * directory that was referenced from some JAR file in the app,
-                 * it might actually be referenced directly from the Class-Path
-                 * of JAR that will appear on the runtime class path.  That
-                 * means we'll want to sign the JAR.
-                     */
+                    // Note that for Java Web Start support we need to sign JARs.
+                    // Even though this JAR appears as just another file in this
+                    // directory that was referenced from some JAR file in the app,
+                    // it might actually be referenced directly from the Class-Path
+                    // of JAR that will appear on the runtime class path. That
+                    // means we'll want to sign the JAR.
                     if (f.getName().endsWith(".jar")) {
                         fileURI = signedJARManager.addJAR(fileURI);
                     }
                     final URI fileURIWithinEAR = earDirUserURI(dc()).resolve(earURI.relativize(fileURI));
-                    Artifacts.FullAndPartURIs fileDependency
-                            = new FullAndPartURIs(fileURI, fileURIWithinEAR);
-//                                earURI.relativize(fileURI));
+                    final FullAndPartURIs fileDependency = new FullAndPartURIs(fileURI, fileURIWithinEAR);
                     downloadsForReferencedArtifacts.add(fileDependency);
                     artifactURIsProcessed.add(fileURIWithinEAR);
                 }
@@ -983,25 +979,16 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                 return;
             }
             final URI uriWithinAnchor = earDirUserURI(dc()).resolve(uriWithinEAR);
-            Artifacts.FullAndPartURIs fileDependency =
-                    new FullAndPartURIs(fileURI, uriWithinAnchor);
+            final FullAndPartURIs fileDependency = new FullAndPartURIs(fileURI, uriWithinAnchor);
             downloadsForReferencedArtifacts.add(fileDependency);
             signedJARManager.addJAR(uriWithinAnchor, fileURI);
             recordArtifactAsProcessed(artifactURIsProcessed, downloadsForThisArtifact);
 
-            Manifest jarManifest;
-            try {
-                final JarFile dependentJar = new JarFile(physicalFile());
-                try {
-                  jarManifest = dependentJar.getManifest();
-                } finally
-                {
-                  dependentJar.close();
-                }
+            final Manifest jarManifest;
+            try (JarFile dependentJar = new JarFile(physicalFile())) {
+                jarManifest = dependentJar.getManifest();
                 if (jarManifest == null) {
-                    logger.log(Level.WARNING,
-                            "enterprise.deployment.appclient.jws.nomf",
-                            fileURI.toASCIIString());
+                    LOG.log(Level.WARNING, JAR_MANIFEST_MISSING, fileURI.toASCIIString());
                     return;
                 }
             } catch (IOException ex) {
@@ -1014,28 +1001,20 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
             final Attributes mainAttrs = jarManifest.getMainAttributes();
             if (mainAttrs == null) {
-                logger.log(Level.WARNING,
-                            "enterprise.deployment.appclient.jws.depJarNoMainAttrs",
-                            fileURI.toASCIIString());
-                    return;
+                LOG.log(Level.WARNING, JAR_MANIFEST_ATTR, fileURI.toASCIIString());
+                return;
             }
 
             final String jarClassPath = mainAttrs.getValue(Attributes.Name.CLASS_PATH);
             if (jarClassPath != null) {
                 for (String elt : jarClassPath.split(" ")) {
-                    /*
-                     * A Class-Path list might have multiple spaces as a separator.
-                     * Ignore empty elements.
-                     */
-                    if (elt.trim().length() > 0) {
+                    // A Class-Path list might have multiple spaces as a separator.
+                    // Ignore empty elements.
+                    if (!elt.isBlank()) {
                         final URI eltURI = URI.create(elt);
-                        final Artifact classPathArtifact =
-                                newArtifact(
-                                    this, eltURI);
+                        final Artifact classPathArtifact = newArtifact(this, eltURI);
                         if (classPathArtifact != null) {
-                            classPathArtifact.processArtifact(
-                                artifactURIsProcessed,
-                                downloadsForReferencedArtifacts,
+                            classPathArtifact.processArtifact(artifactURIsProcessed, downloadsForReferencedArtifacts,
                                 downloadsForReferencedArtifacts);
                         }
                     }

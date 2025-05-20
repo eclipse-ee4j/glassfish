@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.util.List;
@@ -37,6 +36,8 @@ import org.glassfish.config.support.PropertyResolver;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.jvnet.hk2.config.Dom;
+
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 
 /**
  * The {@code Server.java} file is getting pretty bloated. Offload some utilities here.
@@ -52,8 +53,9 @@ public class ServerHelper {
         server = theServer;
         config = theConfig;
 
-        if (server == null || config == null)
+        if (server == null || config == null) {
             throw new IllegalArgumentException();
+        }
     }
 
     public final int getAdminPort() {
@@ -84,10 +86,9 @@ public class ServerHelper {
         if (server.isDas()) {
             if (env.isDas()) {
                 // We are the DAS. Return our hostname
-                return System.getProperty(SystemPropertyConstants.HOST_NAME_PROPERTY);
-            } else {
-                return null; // IT 12778 -- it is impossible to know
+                return System.getProperty(HOST_NAME.getSystemPropertyName());
             }
+            return null;
         }
 
         String hostName = null;

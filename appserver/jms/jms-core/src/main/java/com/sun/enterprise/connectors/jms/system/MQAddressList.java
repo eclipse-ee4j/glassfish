@@ -52,6 +52,7 @@ import org.glassfish.api.logging.LogHelper;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ServerContext;
 
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
@@ -192,7 +193,7 @@ public class MQAddressList {
                 String hostName = getHostNameFromDasProperties();
                 if ("localhost".equals(hostName)) {
                     // instance is co-located on same machine as DAS. Hence read host name from system property
-                    return System.getProperty(SystemPropertyConstants.HOST_NAME_PROPERTY);
+                    return System.getProperty(HOST_NAME.getSystemPropertyName());
                 }
             }
         }

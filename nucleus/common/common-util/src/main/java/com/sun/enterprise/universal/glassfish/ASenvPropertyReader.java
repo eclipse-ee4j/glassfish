@@ -30,12 +30,13 @@ import org.glassfish.main.jdke.props.EnvToPropsConverter;
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.HOST_NAME_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
@@ -129,22 +130,19 @@ public class ASenvPropertyReader {
         ASenvMap(File installDir) {
             new EnvToPropsConverter(installDir.toPath()).convert(ENV_TO_SYS_PROPERTY).entrySet()
                 .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
-            String javaHome = new File(System.getProperty("java.home")).toPath().toString();
+            String javaHome = new File(System.getProperty(JAVA_HOME.getSystemPropertyName())).toPath().toString();
             put(JAVA_ROOT.getPropertyName(), javaHome);
             put(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
             put(PRODUCT_ROOT_PROPERTY, installDir.getParentFile().toPath().toString());
-            put(HOST_NAME_PROPERTY, getHostname());
+            put(HOST_NAME.getPropertyName(), getHostname());
         }
 
         private static String getHostname() {
-            String hostname = "localhost";
             try {
-                // canonical name checks to make sure host is proper
-                hostname = NetUtils.getCanonicalHostName();
+                return NetUtils.getCanonicalHostName();
             } catch (Exception ex) {
-                // ignore, go with "localhost"
+                return "localhost";
             }
-            return hostname;
         }
     }
 }

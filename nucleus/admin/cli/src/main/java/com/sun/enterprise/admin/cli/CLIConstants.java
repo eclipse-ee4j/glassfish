@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,7 +62,6 @@ public final class CLIConstants {
     public static final String NODEAGENT_DEFAULT_DAS_PORT = String.valueOf(CLIConstants.DEFAULT_ADMIN_PORT);
     public static final String NODEAGENT_DEFAULT_HOST_ADDRESS = "0.0.0.0";
     public static final String NODEAGENT_JMX_DEFAULT_PROTOCOL = "rmi_jrmp";
-    public static final String HOST_NAME_PROPERTY = "com.sun.aas.hostName";
     public static final int RESTART_CHECK_INTERVAL_MSEC = 10;
 
     private CLIConstants() {

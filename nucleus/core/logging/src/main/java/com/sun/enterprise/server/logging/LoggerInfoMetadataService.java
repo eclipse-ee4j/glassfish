@@ -182,7 +182,8 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                         urls[i] = uris[i].toURL();
                     }
                     ResourceBundle rb;
-                    try (GlassfishUrlClassLoader loader = new GlassfishUrlClassLoader(urls, new NullClassLoader())) {
+                    try (GlassfishUrlClassLoader loader = new GlassfishUrlClassLoader("LoggerInfoMetadata", urls,
+                        new NullClassLoader())) {
                         rb = ResourceBundle.getBundle(RBNAME, locale, loader);
                     }
                     for (String key : rb.keySet()) {

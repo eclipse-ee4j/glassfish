@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.main.extras.embedded.test.all.deployment;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Queue;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -29,6 +30,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.main.extras.embedded.test.app.ejb.RemoteInterface;
+import org.glassfish.tests.utils.ServerUtils;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -37,13 +39,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import static java.lang.String.format;
-import static org.glassfish.tests.utils.ServerUtils.getFreePort;
 import static org.glassfish.tests.utils.ServerUtils.runCommand;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RemoteDeploymentITestBase {
 
+    private static final Queue<Integer> RANDOM_FREE_PORTS = ServerUtils.getFreePorts(3);
     private static final String LOOKUP_STRING =
         "java:global/%s/RemoteBean!org.glassfish.main.extras.embedded.test.app.ejb.RemoteInterface";
 
@@ -64,15 +66,15 @@ public class RemoteDeploymentITestBase {
         runCommand(
             glassfish,
             "set",
-            "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.port=" + getFreePort());
+            "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.port=" + RANDOM_FREE_PORTS.remove());
         runCommand(
             glassfish,
             "set",
-            "configs.config.server-config.iiop-service.iiop-listener.SSL.port=" + getFreePort());
+            "configs.config.server-config.iiop-service.iiop-listener.SSL.port=" + RANDOM_FREE_PORTS.remove());
         runCommand(
             glassfish,
             "set",
-            "configs.config.server-config.iiop-service.iiop-listener.SSL_MUTUALAUTH.port=" + getFreePort());
+            "configs.config.server-config.iiop-service.iiop-listener.SSL_MUTUALAUTH.port=" + RANDOM_FREE_PORTS.remove());
     }
 
     @AfterEach

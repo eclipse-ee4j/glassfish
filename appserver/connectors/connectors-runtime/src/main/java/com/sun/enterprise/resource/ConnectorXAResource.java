@@ -192,11 +192,16 @@ public class ConnectorXAResource implements XAResource {
         return false;
     }
 
-    private ResourceHandle getResourceHandle() throws PoolingException {
+    // package default for unit test
+    ResourceHandle getResourceHandle() throws PoolingException {
+        return getResourceHandle(true);
+    }
+
+    private ResourceHandle getResourceHandle(boolean beginLocalTransactionIfStateIsUnenlisted) throws PoolingException {
         try {
             ResourceHandle resourceHandle = null;
             JavaEETransaction javaEETransaction = getCurrentTransaction();
-            if (javaEETransaction == null) { // Only if some thing is wrong with tx manager.
+            if (javaEETransaction == null || javaEETransaction.getNonXAResource() == null) { // Only if some thing is wrong with tx manager.
                 resourceHandle = localHandle_; // Just return the local handle.
             } else {
                 resourceHandle = (ResourceHandle) javaEETransaction.getNonXAResource();
@@ -210,7 +215,7 @@ public class ConnectorXAResource implements XAResource {
                 }
             }
 
-            if (resourceHandle.getResourceState().isUnenlisted()) {
+            if (resourceHandle.getResourceState().isUnenlisted() && beginLocalTransactionIfStateIsUnenlisted) {
                 ManagedConnection managedConnection = resourceHandle.getResource();
 
                 // Begin the local transaction if first time
@@ -224,13 +229,16 @@ public class ConnectorXAResource implements XAResource {
         }
     }
 
-    private JavaEETransaction getCurrentTransaction() throws SystemException {
+    // package default for unit test
+    JavaEETransaction getCurrentTransaction() throws SystemException {
         return (JavaEETransaction) ConnectorRuntime.getRuntime().getTransactionManager().getTransaction();
     }
 
     private void resetAssociation() throws XAException {
         try {
-            ResourceHandle handle = getResourceHandle();
+            // Do not begin a local managed connection in case of reset association
+            ResourceHandle handle = getResourceHandle(false);
+
             LocalTxConnectionEventListener listener = (LocalTxConnectionEventListener) handle.getListener();
 
             // Clear the associations and Map all associated handles back to their actual Managed Connection.

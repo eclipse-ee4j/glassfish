@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -379,8 +379,8 @@ public class AppClientFacade {
 
     private static ClassLoader prepareLoaderToFindClassFile(final ClassLoader currentLoader) throws MalformedURLException {
         File currentDirPath = new File(System.getProperty("user.dir"));
-        ClassLoader newLoader = new GlassfishUrlClassLoader(new URL[] { currentDirPath.toURI().toURL() }, currentLoader);
-        return newLoader;
+        return new GlassfishUrlClassLoader("AppClientFacade(" + currentDirPath + ")",
+            new URL[] {currentDirPath.toURI().toURL()}, currentLoader);
     }
 
     private static AppClientContainer createContainerForClassFile(Builder builder, String classFilePath)

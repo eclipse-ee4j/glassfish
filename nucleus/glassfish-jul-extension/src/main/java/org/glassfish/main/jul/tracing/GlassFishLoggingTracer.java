@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -136,15 +136,17 @@ public final class GlassFishLoggingTracer {
     /**
      * Logs the message and the exception's stacktrace to STDERR.
      *
-     * @param source
-     * @param message
-     * @param cause
+     * @param source class where the error is processed.
+     * @param message description of the error
+     * @param cause may be null
      */
     public static void error(final Class<?> source, final String message, final Throwable cause) {
         LOCK.lock();
         try {
             ERR.println(source.getCanonicalName() + ": " + message);
-            cause.printStackTrace(ERR);
+            if (cause != null) {
+                cause.printStackTrace(ERR);
+            }
             ERR.flush();
         } finally {
             LOCK.unlock();

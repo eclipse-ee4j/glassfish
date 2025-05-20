@@ -42,6 +42,10 @@ import static java.util.logging.Level.WARNING;
  */
 public class ConnectorClassLoader extends ASURLClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private static final Logger _logger = LogDomains.getLogger(ConnectorClassLoader.class, LogDomains.RSR_LOGGER);
 
     private volatile static ConnectorClassLoader classLoader;
@@ -73,10 +77,11 @@ public class ConnectorClassLoader extends ASURLClassLoader {
     }
 
     private ConnectorClassLoader() {
+        super("Connector", ClassLoader.getSystemClassLoader());
     }
 
     private ConnectorClassLoader(ClassLoader parent) {
-        super(parent);
+        super("Connector", parent);
         this.parent = parent;
     }
 
@@ -110,8 +115,7 @@ public class ConnectorClassLoader extends ASURLClassLoader {
     public void addResourceAdapter(String rarName, String moduleDir) {
         try {
             File file = new File(moduleDir);
-            ASURLClassLoader cl = new ASURLClassLoader(parent);
-
+            ASURLClassLoader cl = new ASURLClassLoader("ResourceAdapter(" + rarName + ")", parent);
             cl.appendURL(file.toURI().toURL());
             appendJars(file, cl);
             classLoaderChain.add(cl);

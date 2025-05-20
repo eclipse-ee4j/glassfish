@@ -30,7 +30,6 @@ import org.glassfish.main.jdke.props.EnvToPropsConverter;
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
@@ -38,6 +37,7 @@ import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
  * Class ASenvPropertyReader
@@ -133,7 +133,7 @@ public class ASenvPropertyReader {
             String javaHome = new File(System.getProperty(JAVA_HOME.getSystemPropertyName())).toPath().toString();
             put(JAVA_ROOT.getPropertyName(), javaHome);
             put(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
-            put(PRODUCT_ROOT_PROPERTY, installDir.getParentFile().toPath().toString());
+            put(PRODUCT_ROOT.getPropertyName(), installDir.getParentFile().toPath().toString());
             put(HOST_NAME.getPropertyName(), getHostname());
         }
 

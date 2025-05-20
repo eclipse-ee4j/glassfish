@@ -276,7 +276,7 @@ public abstract class GFLauncher {
         // unless it is empty or it is already refering to a substitution of
         // the environment variable.
         String javaHome = domainXMLjavaConfig.getJavaHome();
-        if (ok(javaHome) && !javaHome.trim().equals("${" + JAVA_ROOT.getSystemPropertyName() + "}")) {
+        if (ok(javaHome) && !javaHome.trim().equals(JAVA_ROOT.toExpression())) {
             asenvProps.put(JAVA_ROOT.getPropertyName(), javaHome);
         }
 

@@ -51,7 +51,6 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.AsadminInput;
-import org.glassfish.embeddable.GlassFishVariable;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.main.jul.GlassFishLogManager;
 import org.glassfish.main.jul.GlassFishLogManagerInitializer;
@@ -65,6 +64,8 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
  * The admin main program (nadmin).
@@ -79,9 +80,9 @@ public class AdminMain {
     private static final String ADMIN_CLI_LOGGER = "com.sun.enterprise.admin.cli";
 
     private static final String[] SYS_PROPERTIES_TO_SET_FROM_ASENV = {
-        GlassFishVariable.INSTALL_ROOT.getSystemPropertyName(),
+        INSTALL_ROOT.getSystemPropertyName(),
         SystemPropertyConstants.CONFIG_ROOT_PROPERTY,
-        SystemPropertyConstants.PRODUCT_ROOT_PROPERTY,
+        PRODUCT_ROOT.getSystemPropertyName()
     };
     private static final LocalStringsImpl strings = new LocalStringsImpl(AdminMain.class);
 

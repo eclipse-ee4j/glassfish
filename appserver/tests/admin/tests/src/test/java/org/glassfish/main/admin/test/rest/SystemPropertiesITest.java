@@ -40,7 +40,7 @@ public class SystemPropertiesITest extends RestTestBase {
     private static final String URL_INSTANCE_SYSTEM_PROPERTIES = "/domain/servers/server/%instanceName%/system-properties";
     private static final String URL_DAS_SYSTEM_PROPERTIES = URL_INSTANCE_SYSTEM_PROPERTIES.replaceAll("%instanceName%", "server");
     private static final String URL_CREATE_INSTANCE = "/domain/create-instance";
-    private static final String PROP_VALUE = "${" + INSTANCE_ROOT.getPropertyName() + "}/foo";
+    private static final String PROP_VALUE = INSTANCE_ROOT.toExpression() + "/foo";
 
     @Test
     public void getSystemProperties() {

@@ -61,16 +61,6 @@ public class SystemPropertyConstants {
     /**
      * Field
      */
-    public static final String PRODUCT_ROOT_PROPERTY = "com.sun.aas.productRoot";
-
-    /**
-     * Field
-     */
-    public static final String ICU_LIB_PROPERTY = "com.sun.aas.icuLib";
-
-    /**
-     * Field
-     */
     public static final String DEFAULT_LOCALE_PROPERTY = "com.sun.aas.defaultLocale";
 
     /**

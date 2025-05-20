@@ -70,7 +70,6 @@ public class LogFilter {
     private static final String RESULTS_ATTRIBUTE = "Results";
 
     private static final String NV_SEPARATOR = ";";
-    private static final String INSTANCEROOT_EXPRESSION = "${" + INSTANCE_ROOT.getSystemPropertyName() + "}";
 
     static final String[] LOG_LEVELS = {"SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST"};
 
@@ -278,16 +277,16 @@ public class LogFilter {
 
         final String loggingFile;
         // replacing instanceRoot value if it's there
-        if (logFileDetailsForInstance.contains(INSTANCEROOT_EXPRESSION + "/logs") && node.getNodeDir() != null) {
+        if (logFileDetailsForInstance.contains(INSTANCE_ROOT.toExpression() + "/logs") && node.getNodeDir() != null) {
             // this code is used if no changes made in logging.properties file
             String loggingDir = node.getNodeDir() + File.separator + serverNode
                 + File.separator + targetServerName;
-            loggingFile = logFileDetailsForInstance.replace(INSTANCEROOT_EXPRESSION, loggingDir);
-        } else if (logFileDetailsForInstance.contains(INSTANCEROOT_EXPRESSION + "/logs")
+            loggingFile = logFileDetailsForInstance.replace(INSTANCE_ROOT.toExpression(), loggingDir);
+        } else if (logFileDetailsForInstance.contains(INSTANCE_ROOT.toExpression() + "/logs")
             && node.getInstallDir() != null) {
             String loggingDir = node.getInstallDir() + File.separator + "glassfish" + File.separator + "nodes"
                 + File.separator + serverNode + File.separator + targetServerName;
-            loggingFile = logFileDetailsForInstance.replace(INSTANCEROOT_EXPRESSION, loggingDir);
+            loggingFile = logFileDetailsForInstance.replace(INSTANCE_ROOT.toExpression(), loggingDir);
         } else {
             loggingFile = logFileDetailsForInstance;
         }

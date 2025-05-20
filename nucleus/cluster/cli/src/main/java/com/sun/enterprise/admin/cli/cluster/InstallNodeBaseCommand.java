@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileListerRelative;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.zip.ZipFileException;
@@ -46,6 +45,7 @@ import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.util.logging.Level.FINER;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
  * @author Rajiv Mordani
@@ -123,7 +123,7 @@ abstract class InstallNodeBaseCommand extends NativeRemoteCommandsBase {
 
 
     private File createZipFileIfNeeded(List<SFTPPath> binDirFiles) throws IOException, ZipFileException {
-        final String baseRootValue = getSystemProperty(SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+        final String baseRootValue = getSystemProperty(PRODUCT_ROOT.getSystemPropertyName());
         final File installRoot = new File(baseRootValue);
         final File zipFileDir;
         final File zipFile;

@@ -17,12 +17,9 @@
 
 package com.sun.enterprise.util;
 
-import com.sun.enterprise.util.i18n.StringManager;
-
 import java.io.File;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
-import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 // FIXME: Visit GlassFishVariable and replace duplicit constants here
 public class SystemPropertyConstants {
@@ -171,79 +168,6 @@ public class SystemPropertyConstants {
     private static final int DEFAULT_ADMIN_TIMEOUT_VALUE = 5000;
 
     public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.envPreferredToProperties";
-
-    private static final StringManager sm = StringManager.getManager(SystemPropertyConstants.class);
-
-    public static final String OPEN = "${";
-    public static final String CLOSE = "}";
-
-    /**
-     * A method that returns the passed String as a property that can be replaced at run time.
-     *
-     * @param name String that represents a property, e.g INSTANCE_ROOT_PROPERTY in this class. The String may not be null.
-     * @return a String that represents the replaceable value of passed String. Generally speaking it will be decorated with
-     * a pair of braces with $ in the front (e.g. "a" will be returned as "${a}").
-     * @throws IllegalArgumentException if the passed String is null
-     */
-    public static final String getPropertyAsValue(final String name) {
-        if (name == null) {
-            throw new IllegalArgumentException(sm.getString("spc.null_name", "property"));
-        }
-
-        return new StringBuilder().append(OPEN)
-                                 .append(name)
-                                 .append(CLOSE)
-                                 .toString();
-    }
-
-    /**
-     * Returns the string removing the "system-property syntax" from it. If the given string is not in "system-property
-     * syntax" the same string is returned. The "system-propery syntax" is "${...}" The given String may not be null. The
-     * returned String may be an empty String, if it is of the form "${}" (rarely so).
-     */
-    public static final String unSystemProperty(final String sp) {
-        if (sp == null) {
-            throw new IllegalArgumentException("null_arg");
-        }
-
-        String ret = sp;
-        if (isSystemPropertySyntax(sp)) {
-            ret = sp.substring(2, sp.length() - 1);
-        }
-
-        return ret;
-    }
-
-    public static final boolean isSystemPropertySyntax(final String s) {
-        if (s == null) {
-            throw new IllegalArgumentException("null_arg");
-        }
-
-        boolean sp = false;
-        if (s.startsWith(OPEN) && s.endsWith(CLOSE)) {
-            sp = true;
-        }
-
-        return sp;
-    }
-
-    /**
-     * Returns the default value (as would appear in the domain.xml on installation) of docroot of a virtual server, as a
-     * String. Never returns a null. Returned String contains no backslashes. Note that it is <b> not <b> the absolute value
-     * of the path on a file system.
-     */
-    public static final String getDocRootDefaultValue() {
-        return new StringBuilder(getPropertyAsValue(INSTANCE_ROOT.getSystemPropertyName())).append("/docroot").toString();
-    }
-
-    /**
-     * Returns the default value (as would appear in the domain.xml on installation) of file where the acess log of a
-     * virtual server is stored, as a String. Never returns a null. Returned String contains no backslashes. Note that it is
-     * <b> not <b> the absolute value of the path on a file system.
-     */
-    public static final String getAccessLogDefaultValue() {
-        return new StringBuilder(getPropertyAsValue(INSTANCE_ROOT.getSystemPropertyName())).append("/logs/access").toString();
-    }
 
     /**
      * Returns the system specific file.separator delimited path to the asadmin script. Any changes to file layout should

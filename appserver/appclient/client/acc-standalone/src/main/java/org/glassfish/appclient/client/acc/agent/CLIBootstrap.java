@@ -30,6 +30,7 @@ import org.glassfish.embeddable.client.ApplicationClientCLIEncoding;
 import org.glassfish.embeddable.client.UserError;
 
 import static java.lang.System.arraycopy;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Constructs a java command to launch the ACC with the correct agent and command line arguments, based on the current
@@ -74,7 +75,6 @@ public class CLIBootstrap {
     static final String ENV_VAR_PROP_PREFIX = "acc.";
 
 
-    private final static String INSTALL_ROOT_PROPERTY_EXPR = "-Dcom.sun.aas.installRoot=";
     private final static String SECURITY_POLICY_PROPERTY_EXPR = "-Djava.security.policy=";
     private final static String SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR = "-Djava.security.auth.login.config=";
     private final static String SYSPROP_SYSTEM_CLASS_LOADER = "-Djava.system.class.loader=";
@@ -240,7 +240,8 @@ public class CLIBootstrap {
         for (int i = 0; i < augmentedArgs.length;) {
             boolean isMatched = false;
             for (CommandLineElement cle : elementsInScanOrder) {
-                if (isMatched = cle.matches(augmentedArgs[i])) {
+                isMatched = cle.matches(augmentedArgs[i]);
+                if (isMatched) {
                     i = cle.processValue(augmentedArgs, i);
                     break;
                 }
@@ -287,7 +288,7 @@ public class CLIBootstrap {
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
         command.append(' ').append("-Xshare:off");
         command.append(' ').append(SYSPROP_SYSTEM_CLASS_LOADER).append("org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader");
-        command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
+        command.append(' ').append("-D").append(INSTALL_ROOT).append('=').append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
         command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));

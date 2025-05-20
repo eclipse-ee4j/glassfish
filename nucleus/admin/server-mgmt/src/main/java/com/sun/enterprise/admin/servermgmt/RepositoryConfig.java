@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +29,9 @@ import com.sun.enterprise.util.io.FileUtils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * This class represents a repository configuration. A repository can be either a domain, a node
@@ -100,8 +104,8 @@ public class RepositoryConfig extends HashMap<String, Object> {
         // created a config context, then they should explicitly say so.
         put(K_REFRESH_CONFIG_CONTEXT, true);
         if (envProperties != null) {
-            put(K_INSTALL_ROOT, getFilePath(envProperties.get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)));
-            put(K_CONFIG_ROOT, getFilePath(envProperties.get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)));
+            put(K_INSTALL_ROOT, getFilePath(envProperties.get(INSTALL_ROOT.getPropertyName())));
+            put(K_CONFIG_ROOT, getFilePath(envProperties.get(INSTALL_ROOT.getPropertyName())));
         }
     }
 
@@ -114,7 +118,7 @@ public class RepositoryConfig extends HashMap<String, Object> {
     }
 
     public RepositoryConfig() {
-        this(System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
+        this(System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
     }
 
     /**
@@ -130,7 +134,7 @@ public class RepositoryConfig extends HashMap<String, Object> {
         _configurationName = null;
         final Map<String, String> envProperties = getEnvProps();
         if (envProperties != null) {
-            put(K_INSTALL_ROOT, envProperties.get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+            put(K_INSTALL_ROOT, envProperties.get(INSTALL_ROOT.getPropertyName()));
             put(K_CONFIG_ROOT, getFilePath(envProperties.get(SystemPropertyConstants.CONFIG_ROOT_PROPERTY)));
         }
     }

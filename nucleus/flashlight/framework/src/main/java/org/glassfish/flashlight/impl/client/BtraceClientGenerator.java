@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,13 +17,6 @@
 
 package org.glassfish.flashlight.impl.client;
 
-/**
- * @author Mahesh Kannan
- * Started: Jul 20, 2008
- * @author Byron Nevins, August 2009
- */
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
@@ -37,6 +30,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.objectweb.asm.Opcodes.V11;
 
 public class BtraceClientGenerator {
@@ -128,8 +122,8 @@ public class BtraceClientGenerator {
 
         try {
             int index = generatedClassName.lastIndexOf('/');
-            String rootPath = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY) +
-                    File.separator + "lib" + File.separator;
+            String rootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator
+                + "lib" + File.separator;
 
             String fileName = rootPath + generatedClassName.substring(index + 1) + ".class";
             //System.out.println("***ClassFile: " + fileName);

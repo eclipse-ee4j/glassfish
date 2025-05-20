@@ -36,6 +36,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import static java.text.MessageFormat.format;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * Client class to retrieve customize tokens.
@@ -71,10 +73,10 @@ public class CustomTokenClient {
                 Integer portBase = getPortBase(domainConfig);
 
                 Map<String, String> filePaths = new HashMap<>(3, 1);
-                filePaths.put(SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
-                    System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-                filePaths.put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
-                    System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
+                filePaths.put(INSTALL_ROOT.getPropertyName(),
+                    System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
+                filePaths.put(INSTANCE_ROOT.getPropertyName(),
+                    System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
                 filePaths.put(SystemPropertyConstants.JAVA_ROOT_PROPERTY,
                     System.getProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY));
                 noOfTokens = customTokens.size();

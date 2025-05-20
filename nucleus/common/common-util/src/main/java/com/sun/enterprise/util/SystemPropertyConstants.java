@@ -21,6 +21,10 @@ import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.File;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
+// FIXME: Visit GlassFishVariable and replace duplicit constants here
 public class SystemPropertyConstants {
 
     /**
@@ -67,11 +71,6 @@ public class SystemPropertyConstants {
     /**
      * Field
      */
-    public static final String INSTALL_ROOT_PROPERTY = "com.sun.aas.installRoot";
-
-    /**
-     * Field
-     */
     public static final String PRODUCT_ROOT_PROPERTY = "com.sun.aas.productRoot";
 
     /**
@@ -94,11 +93,6 @@ public class SystemPropertyConstants {
      * Field
      */
     public static final String DOMAINS_ROOT_PROPERTY = "com.sun.aas.domainsRoot";
-
-    /**
-     * Field
-     */
-    public static final String INSTANCE_ROOT_PROPERTY = "com.sun.aas.instanceRoot";
 
     /**
      * Field
@@ -178,9 +172,6 @@ public class SystemPropertyConstants {
 
     public static final String JDMK_HOME_PROPERTY = "com.sun.aas.jdmkHome";
 
-    @Deprecated
-    public static final String DERBY_ROOT_PROPERTY = "com.sun.aas.derbyRoot";
-
     /** Java ES Monitoring Framework install directory */
     public static final String MFWK_HOME_PROPERTY = "com.sun.aas.mfwkHome";
 
@@ -226,7 +217,7 @@ public class SystemPropertyConstants {
             throw new IllegalArgumentException(sm.getString("spc.null_name", "property"));
         }
 
-        return new StringBuffer().append(OPEN)
+        return new StringBuilder().append(OPEN)
                                  .append(name)
                                  .append(CLOSE)
                                  .toString();
@@ -269,7 +260,7 @@ public class SystemPropertyConstants {
      * of the path on a file system.
      */
     public static final String getDocRootDefaultValue() {
-        return new StringBuffer(getPropertyAsValue(INSTANCE_ROOT_PROPERTY)).append("/docroot").toString();
+        return new StringBuilder(getPropertyAsValue(INSTANCE_ROOT.getSystemPropertyName())).append("/docroot").toString();
     }
 
     /**
@@ -278,7 +269,7 @@ public class SystemPropertyConstants {
      * <b> not <b> the absolute value of the path on a file system.
      */
     public static final String getAccessLogDefaultValue() {
-        return new StringBuffer(getPropertyAsValue(INSTANCE_ROOT_PROPERTY)).append("/logs/access").toString();
+        return new StringBuilder(getPropertyAsValue(INSTANCE_ROOT.getSystemPropertyName())).append("/logs/access").toString();
     }
 
     /**
@@ -294,7 +285,7 @@ public class SystemPropertyConstants {
      * INSTALL_ROOT_PROPERTY is not defined
      */
     public static final String getAsAdminScriptLocation() {
-        return getAdminScriptLocation(System.getProperty(INSTALL_ROOT_PROPERTY));
+        return getAdminScriptLocation(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
     }
 
     public static final String getAsAdminScriptLocation(String installRoot) {
@@ -324,7 +315,7 @@ public class SystemPropertyConstants {
      * @return String representing the component identifier.
      */
     public static final String getComponentName() {
-        return new File(System.getProperty(INSTALL_ROOT_PROPERTY)).getName();
+        return new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).getName();
     }
 
     /**

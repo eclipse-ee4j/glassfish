@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,6 +52,8 @@ import org.glassfish.api.logging.LogHelper;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ServerContext;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 /**
  * Defines an MQ addressList.
  *
@@ -61,7 +64,7 @@ public class MQAddressList {
     private static final Logger logger = JMSLoggerInfo.getLogger();
     private String myName = System.getProperty(SystemPropertyConstants.SERVER_NAME);
 
-    private List<MQUrl> urlList = new ArrayList<MQUrl>();
+    private final List<MQUrl> urlList = new ArrayList<>();
 
     private JmsService jmsService = null;
     //private AppserverClusterViewFromCacheRepository rep = null;
@@ -136,8 +139,9 @@ public class MQAddressList {
                 setupClusterViewFromRepository();
                 setupForCluster();
             } else {
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logFine("setting up for SI/DAS " + this.targetName);
+                }
                 if (isAConfig(targetName) || isDAS(targetName)) {
                     if (logger.isLoggable(Level.FINE)) {
                         logFine("performing default setup for DAS/remote clusters/PE instance " + targetName);
@@ -204,10 +208,9 @@ public class MQAddressList {
 
         String agentsDirPath = getSystemProperty(SystemPropertyConstants.AGENT_ROOT_PROPERTY);
         if (!StringUtils.ok(agentsDirPath)) {
-            String installRootPath = getSystemProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
-
+            String installRootPath = getSystemProperty(INSTALL_ROOT.getPropertyName());
             if (!StringUtils.ok(installRootPath)) {
-                installRootPath = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+                installRootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
             }
             agentsDirPath = installRootPath + File.separator + "nodes";
         }
@@ -283,8 +286,8 @@ public class MQAddressList {
         Domain domain = Globals.get(Domain.class);
         Configs configs = domain.getConfigs();
         List configList = configs.getConfig();
-        for (int i = 0; i < configList.size(); i++) {
-            Config config = (Config) configList.get(i);
+        for (Object element : configList) {
+            Config config = (Config) element;
             if (config.getName().equals(cfgRef)) {
                 return config;
             }
@@ -332,8 +335,8 @@ public class MQAddressList {
         Clusters clusters = domain.getClusters();
         List clusterList = clusters.getCluster();
 
-        for (int i = 0; i < clusterList.size(); i++) {
-            Cluster cluster = (Cluster) clusterList.get(i);
+        for (Object element : clusterList) {
+            Cluster cluster = (Cluster) element;
             if (cluster.getName().equals(clusterName)) {
                 return cluster;
             }
@@ -420,8 +423,8 @@ public class MQAddressList {
         logFine("performing defaultsetup");
         JmsService jmsService = Globals.get(JmsService.class);
         List hosts = jmsService.getJmsHost();
-        for (int i=0; i < hosts.size(); i++) {
-            MQUrl url = createUrl((JmsHost)hosts.get(i));
+        for (Object host : hosts) {
+            MQUrl url = createUrl((JmsHost)host);
             urlList.add(url);
         }
     }
@@ -450,7 +453,7 @@ public class MQAddressList {
     }
 
     public Map<String, JmsHost> getResolvedLocalJmsHostsInMyCluster(final boolean includeMe) {
-        final Map<String, JmsHost> map = new HashMap<String, JmsHost>();
+        final Map<String, JmsHost> map = new HashMap<>();
         Cluster cluster = getClusterForServer(myName);
         if (cluster != null) {
             final Server[] buddies = getServersInCluster(cluster);
@@ -477,8 +480,8 @@ public class MQAddressList {
          Clusters clusters = domain.getClusters();
          List clusterList = clusters.getCluster();
 
-         for (int i =0; i < clusterList.size(); i++){
-             Cluster cluster = (Cluster)clusterList.get(i);
+         for (Object element : clusterList) {
+             Cluster cluster = (Cluster)element;
              if (isServerInCluster(cluster, instanceName)) {
                 return cluster;
             }
@@ -488,8 +491,8 @@ public class MQAddressList {
 
     private boolean isServerInCluster (Cluster cluster, String instanceName){
         List instances = cluster.getInstances();
-        for (int i = 0; i < instances.size(); i++) {
-            if (instanceName.equals(((Server) instances.get(i)).getName())) {
+        for (Object instance : instances) {
+            if (instanceName.equals(((Server) instance).getName())) {
                 return true;
             }
         }
@@ -504,6 +507,7 @@ public class MQAddressList {
      * @return AddressList String
      * @see MQUrl
      */
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
@@ -620,10 +624,11 @@ public class MQAddressList {
         Servers servers = domain.getServers();
         List serverList = servers.getServer();
 
-        for (int i = 0; i < serverList.size(); i++) {
-            Server server = (Server) serverList.get(i);
-            if (serverName.equals(server.getName()))
+        for (Object element : serverList) {
+            Server server = (Server) element;
+            if (serverName.equals(server.getName())) {
                 return server;
+            }
         }
         return null;
     }
@@ -706,9 +711,9 @@ public class MQAddressList {
         List <JmsHost> jmsHosts = jmsService.getJmsHost();
         JmsHost jmsHost = null;
         if (defaultJmsHost != null && !defaultJmsHost.equals("") && jmsHosts != null && jmsHosts.size() > 0) {
-            for (int i = 0; i < jmsHosts.size(); i++) {
-                if (defaultJmsHost.equals((jmsHosts.get(i)).getName())) {
-                    return jmsHosts.get(i);
+            for (JmsHost jmsHost2 : jmsHosts) {
+                if (defaultJmsHost.equals((jmsHost2).getName())) {
+                    return jmsHost2;
                 }
             }
         }

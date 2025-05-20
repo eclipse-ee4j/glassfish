@@ -49,11 +49,11 @@ import org.jvnet.hk2.config.types.Property;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_JMS_ADAPTER;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 public class JmsRaUtil {
 
@@ -242,7 +242,7 @@ public class JmsRaUtil {
                                 continue;
                             }
                             reconnectEnabled =
-                                Boolean.valueOf(p.getValue()).booleanValue();
+                                Boolean.parseBoolean(p.getValue());
                         }
                         else if (name.equals
                                  (propName_reconnect_delay_in_seconds)) {
@@ -336,9 +336,9 @@ public class JmsRaUtil {
             return;
         }
 
-        String installRoot = System.getProperty(INSTALL_ROOT_PROPERTY);
+        String installRoot = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         if (installRoot == null) {
-            _logger.log(Level.SEVERE, "Install root system property not set: " + INSTALL_ROOT_PROPERTY);
+            _logger.log(Level.SEVERE, "Install root system property not set: " + INSTALL_ROOT.getSystemPropertyName());
             return;
         }
 

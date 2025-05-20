@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +28,8 @@ import java.util.List;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Maintains the in-memory representation for the customization points of
@@ -67,14 +70,15 @@ public class DeveloperContentService implements PostConstruct {
     private ServerEnvironment serverEnv;
 
     /** the always-current data reflecting what is in the on-disk file */
-    private ClientJNLPConfigData configData = null;
+    private ClientJNLPConfigData configData;
 
+    @Override
     public void postConstruct() {
         configData = new ClientJNLPConfigData(installConfigDir(), domainConfigDir());
     }
 
     private File installConfigDir() {
-        return new File(startupContext.getArguments().getProperty("com.sun.aas.installRoot"), "config");
+        return new File(startupContext.getArguments().getProperty(INSTALL_ROOT.getPropertyName()), "config");
     }
 
     private File domainConfigDir() {

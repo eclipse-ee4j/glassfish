@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +33,6 @@ import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.security.store.AsadminSecurityUtil;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -66,6 +65,8 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * A remote command handled by the asadmin CLI.
@@ -879,7 +880,7 @@ public class RemoteCommand extends CLICommand {
         if (moduleClassLoader != null) {
             return moduleClassLoader;
         }
-        File installDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        File installDir = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
         File modulesDir = new File(installDir, "modules");
         moduleClassLoader = new DirectoryClassLoader(modulesDir, CLICommand.class.getClassLoader());
         return moduleClassLoader;

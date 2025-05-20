@@ -17,7 +17,6 @@
 
 package org.glassfish.uberjar;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.security.AccessController;
@@ -29,6 +28,8 @@ import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
+
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
  *
@@ -79,8 +80,8 @@ public class UberJarMain {
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY,
-                            System.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name()));
+                    props.setProperty(OSGI_PLATFORM.getPropertyName(),
+                        System.getProperty(OSGI_PLATFORM.getSystemPropertyName(), OsgiPlatform.Felix.name()));
 
                     long startTime = System.currentTimeMillis();
 

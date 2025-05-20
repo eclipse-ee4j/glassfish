@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +43,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo.CredentialType.USERNAME_PASSWORD;
 import static java.util.Arrays.asList;
 import static org.glassfish.appclient.client.acc.Util.writeTextToTempFile;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  *
@@ -92,7 +94,8 @@ public class AppClientContainerSecurityHelper {
         final String appclientloginConfContent = System.getProperty("appclient.login.conf.content");
         URI configURI;
         if (appclientloginConfContent == null) {
-            configURI = new File(System.getProperty("com.sun.aas.installRoot")).toURI().resolve("lib/appclient/appclientlogin.conf");
+            configURI = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toURI()
+                .resolve("lib/appclient/appclientlogin.conf");
         } else {
             configURI = writeTextToTempFile(appclientloginConfContent, "appclientlogin", ".conf", false).toURI();
         }

@@ -17,7 +17,6 @@
 
 package org.glassfish.uberjar.activator;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.security.AccessController;
@@ -32,6 +31,8 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.launch.Framework;
+
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
  * This is an activator to allow just dropping the uber jar
@@ -60,7 +61,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
+                    props.setProperty(OSGI_PLATFORM.getPropertyName(), OsgiPlatform.Felix.name());
 
                     logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
                             ", classloader = " + getClass().getClassLoader());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import jakarta.inject.Inject;
@@ -36,6 +35,8 @@ import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * This is the Server Context object.
@@ -81,7 +82,7 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
 
     @Override
     public File getInstallRoot() {
-        return new File(startupContext.getArguments().getProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME));
+        return new File(startupContext.getArguments().getProperty(INSTALL_ROOT.getPropertyName()));
     }
 
     @Override

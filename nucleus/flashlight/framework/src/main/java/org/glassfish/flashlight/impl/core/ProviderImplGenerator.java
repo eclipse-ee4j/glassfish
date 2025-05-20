@@ -17,11 +17,6 @@
 
 package org.glassfish.flashlight.impl.core;
 
-/**
- * @author Mahesh Kannan
- *         Date: Jul 20, 2008
- */
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
@@ -40,6 +35,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.objectweb.asm.Opcodes.V11;
 
 public class ProviderImplGenerator {
@@ -153,7 +149,7 @@ public class ProviderImplGenerator {
             }
             FileOutputStream fos = null;
             try {
-                String rootPath = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)
+                String rootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName())
                         + File.separator + "lib" + File.separator;
 
                 String fileName = rootPath + clsName + ".class";

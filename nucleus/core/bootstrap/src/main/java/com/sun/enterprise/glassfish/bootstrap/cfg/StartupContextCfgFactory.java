@@ -26,9 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.STARTUP_MODULESTARTUP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.STARTUP_MODULE_NAME;
@@ -36,6 +34,8 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.TIME_ZERO
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_FMWCONF;
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static java.util.logging.Level.INFO;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
 public final class StartupContextCfgFactory {
@@ -54,11 +54,11 @@ public final class StartupContextCfgFactory {
         properties.setProperty(TIME_ZERO_NAME, Long.toString(System.currentTimeMillis()));
 
         File installRoot = files.getInstallRoot().toFile();
-        properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        properties.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.getAbsolutePath());
         properties.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
 
         File instanceRoot = files.getInstanceRoot().toFile();
-        properties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
+        properties.setProperty(INSTANCE_ROOT.getPropertyName(), instanceRoot.getAbsolutePath());
         properties.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
 
         properties.setProperty(STARTUP_MODULE_NAME, BootstrapKeys.GF_KERNEL);

@@ -26,6 +26,8 @@ import java.io.IOException;
 
 import org.glassfish.api.admin.CommandException;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 /**
  * A class for keeping track of the directories that an instance lives in and under.
  * All the methods throw checked exception to avoid the inevitable NPE otherwise -
@@ -172,8 +174,7 @@ public final class InstanceDirs {
      * @throws IOException if the GlassFish install root is not found
      */
     protected String getInstallRootPath() throws IOException {
-        String installRootPath = System.getProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installRootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
 
         if (!StringUtils.ok(installRootPath)) {
             throw new IOException("noInstallDirPath");

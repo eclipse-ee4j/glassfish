@@ -43,6 +43,8 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 /**
  * A base class for local commands that manage a local server instance.
  * This base class is used by a LOT of other classes.  There is a big comment before
@@ -428,12 +430,10 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @throws CommandException if the GlassFish install root is not found
      */
     protected String getInstallRootPath() throws CommandException {
-        String installRootPath = getSystemProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installRootPath = getSystemProperty(INSTALL_ROOT.getPropertyName());
 
         if (!StringUtils.ok(installRootPath)) {
-            installRootPath = System.getProperty(
-                    SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            installRootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         }
 
         if (!StringUtils.ok(installRootPath)) {

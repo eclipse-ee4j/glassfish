@@ -51,6 +51,8 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELE
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * The {@link GlassFishRuntime} implementation for non-OSGi environments.
@@ -135,7 +137,7 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         }
 
         File instanceRoot = new File(instanceRootValue);
-        System.setProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
+        System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot.getAbsolutePath());
         System.setProperty(BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
 
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
@@ -150,11 +152,11 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
 
         // Some legacy code might depend on setting installRoot as system property.
         // Ideally everyone should depend only on StartupContext.
-        System.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        System.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRoot.getAbsolutePath());
         System.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
 
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
-        gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+        gfProps.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.getAbsolutePath());
         gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
     }
 

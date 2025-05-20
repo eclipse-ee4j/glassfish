@@ -61,8 +61,6 @@ import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
 import static com.sun.enterprise.util.OS.isDarwin;
 import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
 import static java.lang.Boolean.TRUE;
@@ -72,6 +70,8 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * This is the main Launcher class designed for external and internal usage.
@@ -270,7 +270,7 @@ public abstract class GFLauncher {
         renameOsgiCache();
         setupMonitoring(domainXML);
         domainXMLSystemProperty = domainXML.getSystemProperties();
-        asenvProps.put(INSTANCE_ROOT_PROPERTY, getInfo().getInstanceRootDir().getPath());
+        asenvProps.put(INSTANCE_ROOT.getSystemPropertyName(), getInfo().getInstanceRootDir().getPath());
 
         // Set the config java-home value as the Java home for the environment,
         // unless it is empty or it is already refering to a substitution of
@@ -974,8 +974,8 @@ public abstract class GFLauncher {
 
     private List<String> getSpecialSystemProperties() throws GFLauncherException {
         Map<String, String> props = new HashMap<>();
-        props.put(INSTALL_ROOT_PROPERTY, getInfo().getInstallDir().getAbsolutePath());
-        props.put(INSTANCE_ROOT_PROPERTY, getInfo().getInstanceRootDir().getAbsolutePath());
+        props.put(INSTALL_ROOT.getSystemPropertyName(), getInfo().getInstallDir().getAbsolutePath());
+        props.put(INSTANCE_ROOT.getSystemPropertyName(), getInfo().getInstanceRootDir().getAbsolutePath());
 
         return propsToJvmOptions(props);
     }

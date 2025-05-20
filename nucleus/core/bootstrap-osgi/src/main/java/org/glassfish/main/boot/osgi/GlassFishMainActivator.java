@@ -36,6 +36,8 @@ import org.osgi.framework.ServiceReference;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_INSTALL_PROP;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_START_PROP;
 import static java.lang.System.Logger.Level.DEBUG;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * This activator is used when glassfish.jar is installed and started
@@ -190,10 +192,10 @@ public class GlassFishMainActivator implements BundleActivator {
             }
         }
 
-        installRoot = context.getProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME);
-        properties.setProperty(BootstrapKeys.INSTALL_ROOT_PROP_NAME, installRoot);
-        String instanceRoot = context.getProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME);
-        properties.setProperty(BootstrapKeys.INSTANCE_ROOT_PROP_NAME, instanceRoot);
+        installRoot = context.getProperty(INSTALL_ROOT.getPropertyName());
+        properties.setProperty(INSTALL_ROOT.getPropertyName(), installRoot);
+        String instanceRoot = context.getProperty(INSTANCE_ROOT.getPropertyName());
+        properties.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot);
         properties.putAll(makeProvisioningOptions(context));
 
         // This property is understood by our corresponding builder.

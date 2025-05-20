@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.servermgmt.services;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
@@ -39,6 +38,7 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.CREDENTIALS
 import static com.sun.enterprise.admin.servermgmt.services.Constants.PRIVILEGES_TN;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.README;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.TIMEOUT_SECONDS_TN;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Represents the SMF Service. Holds the tokens and their values that are consumed by the SMF templates. The recommended
@@ -285,9 +285,10 @@ public final class SMFService extends ServiceAdapter {
      */
     @Override
     public File getManifestTemplateFile() {
-        String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String ir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         if (!ok(ir)) {
-            throw new RuntimeException("Internal Error - System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            throw new RuntimeException(
+                "Internal Error - System Property not set: " + INSTALL_ROOT.getSystemPropertyName());
         }
 
         File rootDir = SmartFile.sanitize(new File(ir));

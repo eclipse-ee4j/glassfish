@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.universal.glassfish;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
@@ -28,6 +27,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Package private static utility methods
@@ -168,14 +169,9 @@ public final class GFLauncherUtils {
         return sb.toString();
     }
 
-    /**
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     private static File resolveInstallDir() throws IOException, URISyntaxException {
         // Property first, because it could be already set by this JVM and we respect it.
-        String sys = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String sys = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         if (sys != null) {
             return toValidDirectory(sys);
         }
@@ -201,4 +197,3 @@ public final class GFLauncherUtils {
         return canonical;
     }
 }
-

@@ -25,7 +25,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.LogHelper;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.uuid.UuidGenerator;
 import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
 import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
@@ -167,7 +166,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         events.register(this);
 
         epd = new AdminEndpointDecider(config);
-        addDocRoot(env.getProps().get(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY) + "/asadmindocroot/");
+        addDocRoot(env.getInstanceRoot().getAbsolutePath() + "/asadmindocroot/");
     }
 
     /**

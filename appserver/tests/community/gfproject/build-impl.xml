@@ -52,8 +52,8 @@
     </path>
 
     <path id="class.path">
-        <fileset dir="${glassfish.home}">
-            <include name="**/*javaee*.jar"/>
+        <fileset dir="${glassfish.home}/lib">
+            <include name="jakartaee.jar"/>
         </fileset>
         <pathelement location="${class.output}"/>
         <pathelement location="${test.class.output}"/>

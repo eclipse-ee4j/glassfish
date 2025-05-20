@@ -18,7 +18,6 @@
 package org.glassfish.uberjar.bootstrap;
 
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
-import com.sun.enterprise.glassfish.bootstrap.osgi.OSGiFrameworkLauncher;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
@@ -37,6 +36,7 @@ import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
+import org.glassfish.main.boot.osgi.OSGiFrameworkLauncher;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;

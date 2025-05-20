@@ -122,7 +122,7 @@ final class CLIContainer {
             }
         }
         File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-        File adminCliJar = new File(new File(inst, "modules"), "admin-cli.jar");
+        File adminCliJar = new File(inst, "admin-cli.jar");
         if (!adminCliJar.exists()) {
             throw new IOException(adminCliJar.getAbsolutePath());
         }

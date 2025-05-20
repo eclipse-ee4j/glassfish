@@ -40,8 +40,7 @@
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
         </antcall>
-        <javac classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
-
+        <javac classpath="${s1astest.classpath}" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
         </javac>
     </target>
 

@@ -144,7 +144,6 @@
             resultproperty="result">
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-
             <classpath>
                 <path refid="gfv3.classpath"/>
                 <path location="${client.build.dir}"/>

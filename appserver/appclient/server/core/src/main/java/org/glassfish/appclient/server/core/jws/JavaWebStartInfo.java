@@ -18,7 +18,6 @@
 package org.glassfish.appclient.server.core.jws;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import jakarta.inject.Inject;
 
@@ -59,6 +58,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;

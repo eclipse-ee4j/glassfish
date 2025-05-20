@@ -56,8 +56,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.jaxb.runtime.api.JAXBRIContext;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.WebServiceContractImpl;
 

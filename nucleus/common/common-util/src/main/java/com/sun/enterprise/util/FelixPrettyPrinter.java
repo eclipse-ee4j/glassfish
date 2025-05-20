@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +25,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.osgi.framework.BundleException;
-
 /**
- * Tools for obtaining readable information from the {@link BundleException}
+ * Tools for obtaining readable information from the {@link org.osgi.framework.BundleException}
  */
 public class FelixPrettyPrinter {
 

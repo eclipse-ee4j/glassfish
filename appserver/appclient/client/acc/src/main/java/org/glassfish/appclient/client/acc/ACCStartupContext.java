@@ -17,7 +17,6 @@
 
 package org.glassfish.appclient.client.acc;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.AsenvConf;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -26,13 +25,20 @@ import jakarta.inject.Singleton;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Properties;
 
+import org.glassfish.main.jdke.props.EnvToPropsConverter;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
-
+import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
 /**
  * Start-up context for the ACC.  Note that this context is used also for
  * Java Web Start launches.
@@ -55,13 +61,19 @@ public class ACCStartupContext extends StartupContext {
      */
     private static Properties accEnvironment() {
         final File rootDirectory = getRootDirectory();
-        final Properties environment = AsenvConf.parseAsEnv(rootDirectory).toProperties();
-        environment.setProperty(INSTALL_ROOT_PROP_NAME, rootDirectory.getAbsolutePath());
-        final File javadbDir = new File(rootDirectory.getParentFile(), "javadb");
-        if (javadbDir.isDirectory()) {
-            environment.setProperty(DERBY_ROOT_PROP_NAME, javadbDir.getAbsolutePath());
-        }
-        return environment;
+        final Map<String, String> pairs = Map.of(
+            "AS_DERBY_INSTALL", DERBY_ROOT_PROPERTY,
+            "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
+            "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
+            "AS_CONFIG", CONFIG_ROOT_PROPERTY,
+            "AS_INSTALL", INSTALL_ROOT_PROPERTY,
+            "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
+            "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
+            "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
+        Map<String, File> files = new EnvToPropsConverter(rootDirectory.toPath()).convert(pairs);
+        Properties env = new Properties();
+        files.entrySet().forEach(e -> env.put(e.getKey(), e.getValue().getPath()));
+        return env;
     }
 
     private static File getRootDirectory() {

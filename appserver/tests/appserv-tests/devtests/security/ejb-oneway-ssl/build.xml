@@ -37,7 +37,7 @@
     <target name="run-test" depends="build,deploy,run,undeploy"/>
 
     <target name="clean" depends="init-common">
-      <antcall target="clean-common"/>
+        <antcall target="clean-common"/>
     </target>
 
     <target name="compile" depends="clean">
@@ -58,22 +58,22 @@
     </target>
 
     <target name="run" depends="init-common">
-         <antcall target="runclient-local"/>
-         <antcall target="run-standalone-client"/>
+        <antcall target="runclient-local"/>
+        <antcall target="run-standalone-client"/>
     </target>
 
     <target name="runclient-local" depends="prepare-truststore-common">
-      <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
-        <arg value="-client" />
-        <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-      </exec>
+        <exec executable="${APPCLIENT}">
+            <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
+            <arg value="-client" />
+            <arg value="${assemble.dir}/${appname}AppClient.jar"/>
+        </exec>
     </target>
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>
 
-  <!-- =============================================== -->
+    <!-- =============================================== -->
     <!-- Target to run the standalone client without ACC -->
     <!-- =============================================== -->
     <target name="run-standalone-client" depends="prepare-truststore-common">
@@ -82,17 +82,21 @@
         <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
         <echo message="provider.url used is ${provider.url}"/>
-      <java classname="${test.client}"
-        classpath="${s1astest.classpath}:${env.S1AS_HOME}/lib/appserv-rt.jar:${assemble.dir}/${appname}AppClient.jar"
-        failonerror="true" fork="true">
-        <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-        <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-        <jvmarg value="-Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks"/>
-        <jvmarg value="-Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
-        <arg value="${provider.url}"/>
-        <arg value="${ctxfactory}"/>
-        <arg value="${jndi.name}"/>
-      </java>
+        <java classname="${test.client}" failonerror="true" fork="true"
+            classpath="${s1astest.classpath}:${env.S1AS_HOME}/lib/appserv-rt.jar:${assemble.dir}/${appname}AppClient.jar">
+            <modulepath>
+                <pathelement path="${env.S1AS_HOME}/lib/bootstrap" />
+            </modulepath>
+            <jvmarg value="--add-modules" />
+            <jvmarg value="ALL-MODULE-PATH" />
+            <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+            <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+            <jvmarg value="-Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks"/>
+            <jvmarg value="-Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
+            <arg value="${provider.url}"/>
+            <arg value="${ctxfactory}"/>
+            <arg value="${jndi.name}"/>
+        </java>
     </target>
 
 

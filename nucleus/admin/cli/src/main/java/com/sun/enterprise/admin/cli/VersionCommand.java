@@ -19,13 +19,13 @@ package com.sun.enterprise.admin.cli;
 
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**

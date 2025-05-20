@@ -49,10 +49,9 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes"
-                   value="**/*.class"/>
+            <param name="ejbjar.classes" value="**/*.class"/>
             <param name="appclientjar.classes"
-                   value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class"/>
+                value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class"/>
         </antcall>
     </target>
 
@@ -60,7 +59,6 @@
         <antcall target="execute-sql-common">
             <param name="sql.file" value="sql/create_pointbase.sql"/>
         </antcall>
-
         <antcall target="setup"/>
         <antcall target="deploy-common"/>
     </target>
@@ -72,8 +70,7 @@
         <antcall target="runclient-common"/>
         <antcall target="asadmin-common">
             <param name="admin.command" value="flush-connection-pool"/>
-            <param name="operand.props"
-                   value="jdbc-flushconnectionpool-pool"/>
+            <param name="operand.props" value="jdbc-flushconnectionpool-pool"/>
         </antcall>
         <antcall target="runclient-common"/>
     </target>
@@ -82,7 +79,6 @@
         <antcall target="execute-sql-common">
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
-
         <antcall target="unsetup"/>
         <antcall target="undeploy-common"/>
     </target>
@@ -92,29 +88,22 @@
     </target>
 
     <target name="setup" depends="init-common">
-
         <antcall target="deploy-jdbc-common">
             <param name="jdbc.conpool.name" value="jdbc-flushconnectionpool-pool"/>
             <param name="db.class" value="org.apache.derby.jdbc.ClientDataSource"/>
             <param name="jdbc.resource.type" value="javax.sql.DataSource"/>
             <param name="jdbc.resource.name" value="jdbc/flushconnectionpool"/>
         </antcall>
-
-
-
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-flushconnectionpool-pool.steady_pool_size=1"/>
         </antcall>
-
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-flushconnectionpool-pool.max_pool_size=1"/>
         </antcall>
-
-
         <!--        <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
@@ -126,10 +115,8 @@
         <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/flushconnectionpool"/>
         </antcall>
-
         <antcall target="delete-jdbc-connpool-common">
             <param name="jdbc.conpool.name" value="jdbc-flushconnectionpool-pool"/>
         </antcall>
     </target>
-
 </project>

@@ -68,8 +68,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.util.logging.Level.INFO;
 

@@ -319,7 +319,7 @@ public class KernelLoggerInfo {
     public static final String invalidClassPathEntry = LOGMSG_PREFIX + "-00045";
 
     @LogMessageInfo(
-            message = "Cannot find javadb client jar file, derby jdbc driver will not be available by default.",
+            message = "Cannot find javadb client jar file, derby jdbc driver will not be available by default: {0}.",
             level = "INFO")
     public static final String cantFindDerby = LOGMSG_PREFIX + "-00046";
 

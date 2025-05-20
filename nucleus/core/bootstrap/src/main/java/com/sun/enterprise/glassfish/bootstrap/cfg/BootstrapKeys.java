@@ -25,6 +25,13 @@ public final class BootstrapKeys {
     public static final String PLATFORM_PROPERTY_KEY = "GlassFish_Platform";
     /** bundle containing module startup */
     public static final String GF_KERNEL = "org.glassfish.core.kernel";
+
+    public static final String ASADMIN_MP = "-asadmin-modulepath";
+    public static final String ASADMIN_CP = "-asadmin-classpath";
+    public static final String ASADMIN_CN = "-asadmin-classname";
+    public static final String ASADMIN_ARGS = "-asadmin-args";
+
+    public static final String ORIGINAL_MP = "-startup-modulepath";
     public static final String ORIGINAL_CP = "-startup-classpath";
     public static final String ORIGINAL_CN = "-startup-classname";
     public static final String ORIGINAL_ARGS = "-startup-args";
@@ -71,6 +78,12 @@ public final class BootstrapKeys {
     public static final String FILE_SCHEME = "file";
 
     public static final String AUTO_DELETE = "org.glassfish.embeddable.autoDelete";
+
+    // Following constants were copy-pasted from com.sun.enterprise.module.bootstrap.StartupContext
+    // to avoid dependency on HK2 jar files.
+    public final static String TIME_ZERO_NAME = "__time_zero";
+    public final static String STARTUP_MODULE_NAME = "hk2.startup.context.mainModule";
+    public final static String STARTUP_MODULESTARTUP_NAME = "hk2.startup.context.moduleStartup";
 
     public static final String DERBY_ROOT_PROP_NAME = "com.sun.aas.derbyRoot";
 

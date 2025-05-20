@@ -23,6 +23,7 @@ import org.glassfish.appclient.client.acc.config.ClientContainer;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.TargetServer;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 
 /**

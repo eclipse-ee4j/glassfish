@@ -182,20 +182,18 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
      * Sets the launcher and info fields.
      */
     @Override
-    public void createLauncher()
-                        throws GFLauncherException, MiniXmlParserException {
-            setLauncher(GFLauncherFactory.getInstance(getType()));
-            setInfo(getLauncher().getInfo());
-            getInfo().setInstanceName(instanceName);
-            getInfo().setInstanceRootDir(instanceDir);
-            getInfo().setVerbose(verbose);
-            getInfo().setWatchdog(watchdog);
-            getInfo().setDebug(debug);
-            getInfo().setRespawnInfo(programOpts.getClassName(),
-                            programOpts.getClassPath(),
-                            respawnArgs());
+    public void createLauncher() throws GFLauncherException, MiniXmlParserException {
+        setLauncher(GFLauncherFactory.getInstance(getType()));
+        setInfo(getLauncher().getInfo());
+        getInfo().setInstanceName(instanceName);
+        getInfo().setInstanceRootDir(instanceDir);
+        getInfo().setVerbose(verbose);
+        getInfo().setWatchdog(watchdog);
+        getInfo().setDebug(debug);
+        getInfo().setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(), programOpts.getClassPath(),
+            respawnArgs());
 
-            getLauncher().setup();
+        getLauncher().setup();
     }
 
     /**

@@ -26,7 +26,6 @@ import com.sun.enterprise.admin.cli.MultimodeCommand;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import jakarta.inject.Inject;
 
@@ -54,6 +53,7 @@ import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
@@ -357,6 +357,7 @@ public class LocalOSGiShellCommand extends CLICommand {
                      */
                     final ProgramOptions programOptions = new ProgramOptions(env);
                     // copy over AsadminMain info
+                    programOptions.setModulePath(programOpts.getModulePath());
                     programOptions.setClassPath(programOpts.getClassPath());
                     programOptions.setClassName(programOpts.getClassName());
                     // remove the old one and replace it

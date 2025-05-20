@@ -148,7 +148,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
      * A keep alive thread that keeps the server JVM from going down as long as GlassFish kernel is up.
      */
     private Thread serverThread;
-    private boolean shutdownSignal = false;
+    private boolean shutdownSignal;
 
     private final static String THREAD_POLICY_PROPERTY = "org.glassfish.startupThreadPolicy";
     private final static String MAX_STARTUP_THREAD_PROPERTY = "org.glassfish.maxStartupThreads";

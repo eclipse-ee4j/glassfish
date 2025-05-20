@@ -18,7 +18,6 @@ package com.sun.enterprise.admin.cli.remote;
 
 import com.sun.enterprise.admin.progress.ProgressStatusClient;
 import com.sun.enterprise.admin.remote.sse.GfSseInboundEvent;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
@@ -30,6 +29,7 @@ import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
 import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.progress.ProgressStatusDTO;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Prints ProgressStatus changes to given logger

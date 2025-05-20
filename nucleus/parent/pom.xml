@@ -404,10 +404,10 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
             <dependency>
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-npn-api</artifactId>
-                <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
                 <version>${grizzly.npn.version}</version>
             </dependency>
 
@@ -2024,9 +2024,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
+                            <addClasspath>false</addClasspath>
                         </manifest>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>

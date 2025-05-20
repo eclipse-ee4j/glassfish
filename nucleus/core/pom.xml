@@ -34,6 +34,7 @@
 
     <modules>
         <module>bootstrap</module>
+        <module>bootstrap-osgi</module>
         <module>kernel</module>
         <module>api-exporter</module>
         <module>extra-jre-packages</module>

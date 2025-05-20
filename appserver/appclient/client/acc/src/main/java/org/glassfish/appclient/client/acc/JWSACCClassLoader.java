@@ -22,7 +22,7 @@ import java.security.CodeSource;
 import java.security.PermissionCollection;
 
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 public class JWSACCClassLoader extends GlassfishUrlClassLoader {
 

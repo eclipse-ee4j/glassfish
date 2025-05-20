@@ -28,9 +28,9 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * This is an abstract class to be inherited by StartDatabaseCommand and StopDatabaseCommand. This classes prepares the
@@ -67,7 +67,7 @@ public abstract class DatabaseCommand extends CLICommand {
      * Prepare variables to invoke start/ping database command.
      */
     protected void prepareProcessExecutor() throws Exception {
-        installRoot = new File(getSystemProperty(INSTALL_ROOT_PROPERTY));
+        installRoot = new File(getSystemProperty(INSTALL_ROOT.getSystemPropertyName()));
         if (dbHost == null) {
             dbHost = DB_HOST_DEFAULT;
         }
@@ -78,7 +78,7 @@ public abstract class DatabaseCommand extends CLICommand {
         }
 
         javaHome = new File(getSystemProperty(JAVA_ROOT_PROPERTY));
-        dbLocation = new File(getSystemProperty(DERBY_ROOT_PROP_NAME));
+        dbLocation = new File(getSystemProperty(DERBY_ROOT.getSystemPropertyName()));
         checkIfDbInstalled(dbLocation);
 
         modulepath.addAll(new File(installRoot, "lib/bootstrap"), f -> f.isFile());

@@ -31,8 +31,8 @@ import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ASADMIN_ARGS;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -91,8 +91,8 @@ class ClassLoaderBuilderIT {
         Properties args = new Properties();
         Path cfgDir = Files.createDirectories(installRoot.resolve(Path.of("config")));
         Files.createFile(cfgDir.resolve("osgi.properties"));
-        args.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.toFile().getAbsolutePath());
-        args.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.toFile().getAbsolutePath());
+        args.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.toFile().getAbsolutePath());
+        args.setProperty(INSTANCE_ROOT.getPropertyName(), instanceRoot.toFile().getAbsolutePath());
         args.setProperty(ASADMIN_ARGS, "-something");
 
         return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, files, args);

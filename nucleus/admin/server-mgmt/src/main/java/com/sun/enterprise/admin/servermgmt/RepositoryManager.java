@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * The RepositoryManager serves as a common base class for the following PEDomainsManager,
  * PEInstancesManager, AgentManager (the SE Node Agent).
@@ -291,9 +293,9 @@ public class RepositoryManager extends MasterPasswordFileManager {
         s += "\nrepdir exists: " + regex + ", canon exists: " + canex + ", parent exists: " + parentex + ", reg is dir: " + regdir
                 + ", canon isdir: " + candir + ", parent is dir: " + parentdir;
         s += "\nInstance root sys property (";
-        s += SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
+        s += INSTANCE_ROOT.getSystemPropertyName();
         s += "): ";
-        s += System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+        s += System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
 
         return s;
     }

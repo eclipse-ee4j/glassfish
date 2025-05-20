@@ -122,6 +122,7 @@ import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Represents an active JMS resource adapter. This does
@@ -989,7 +990,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         // look for IMQ relative to the installation directory
         final String brokerHomeDir;
         if (brokerBinDir == null) {
-            brokerHomeDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)).toPath()
+            brokerHomeDir = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toPath()
                 .resolve(Path.of("..", "mq")).normalize().toFile().getAbsolutePath();
         } else {
             brokerHomeDir = new File(brokerBinDir).getParentFile().getAbsolutePath();

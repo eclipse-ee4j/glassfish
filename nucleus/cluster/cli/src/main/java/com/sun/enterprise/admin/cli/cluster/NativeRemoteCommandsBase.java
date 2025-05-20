@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.DomainDirs;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -37,6 +36,8 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.internal.api.RelativePathResolver;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  *  Base class for SSH provisioning commands.
@@ -188,7 +189,7 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
             File[] files = domainsDirFile.listFiles(File::isDirectory);
             for (File f : files) {
                 //the following property is required for initializing the password helper
-                System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, f.getAbsolutePath());
+                System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), f.getAbsolutePath());
                 try {
                     final PasswordAdapter pa = new PasswordAdapter(null);
                     final boolean exists = pa.aliasExists(alias);

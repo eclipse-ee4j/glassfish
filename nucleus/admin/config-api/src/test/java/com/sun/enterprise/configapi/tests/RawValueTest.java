@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@
 package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -30,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -48,13 +48,13 @@ public class RawValueTest {
 
     @BeforeEach
     public void initSysProps() {
-        System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, "cafebabe");
+        System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), "cafebabe");
     }
 
 
     @AfterEach
     public void reset() {
-        System.clearProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+        System.clearProperty(INSTANCE_ROOT.getSystemPropertyName());
     }
 
     @Test

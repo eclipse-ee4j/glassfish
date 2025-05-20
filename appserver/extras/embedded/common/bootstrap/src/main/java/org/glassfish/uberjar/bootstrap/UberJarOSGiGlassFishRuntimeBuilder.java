@@ -44,13 +44,13 @@ import org.osgi.framework.BundleReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.util.tracker.ServiceTracker;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.util.io.FileUtils.USER_HOME;
 import static org.glassfish.embeddable.GlassFishProperties.CONFIG_FILE_URI_PROP_NAME;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 import static org.osgi.framework.Constants.BUNDLE_VERSION;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA;
@@ -70,7 +70,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     @Override
     public boolean handles(BootstrapProperties bsOptions) {
-        OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(bsOptions.getProperty(PLATFORM_PROPERTY_KEY));
+        OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(bsOptions.getProperty(OSGI_PLATFORM.getPropertyName()));
         if (osgiPlatform == null) {
             osgiPlatform = OsgiPlatform.Felix;
         }
@@ -127,10 +127,10 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         // XXX : Assuming that this property will be set along with Bootstrap options.
         // This is a temporary hack, we need to separate the properties out between bootstrap and newGlassfish methods clearly
         // and not mix them in the code.
-        String instanceRoot = bsOptions.getProperty(INSTANCE_ROOT_PROP_NAME);
+        String instanceRoot = bsOptions.getProperty(INSTANCE_ROOT.getPropertyName());
         if (instanceRoot == null) {
             instanceRoot = getDefaultInstanceRoot();
-            bsOptions.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
+            bsOptions.setProperty(INSTANCE_ROOT.getPropertyName(), instanceRoot);
             bsOptions.setProperty(INSTANCE_ROOT_URI_PROP_NAME, new File(instanceRoot).toURI().toString());
         }
         FileUtils.ensureWritableDir(new File(instanceRoot));
@@ -140,9 +140,9 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             throw new GlassFishException(ex);
         }
 
-        String platform = bsOptions.getProperty(PLATFORM_PROPERTY_KEY);
+        String platform = bsOptions.getProperty(OSGI_PLATFORM.getPropertyName());
         if (platform == null) {
-            bsOptions.setProperty(PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
+            bsOptions.setProperty(OSGI_PLATFORM.getPropertyName(), OsgiPlatform.Felix.name());
         }
 
         System.setProperty(UBER_JAR_URI, jar.toString()); // embedded-osgi-main module will need this to extract the modules.
@@ -162,8 +162,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         bsOptions.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
         System.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
 
-        System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot);
-        System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
+        System.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRoot);
+        System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot);
 
         String version = loadVersion();
         bsOptions.setProperty(FRAMEWORK_SYSTEMPACKAGES_EXTRA, "org.glassfish.simpleglassfishapi; version=" + version);

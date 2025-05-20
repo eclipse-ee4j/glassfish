@@ -45,7 +45,7 @@ import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 
 /**
@@ -152,7 +152,7 @@ public class ConnectorsClassLoaderUtil {
         if (processEnv.getProcessType().isEmbedded() && !rarsInitializedInEmbeddedServerMode) {
             synchronized (ConnectorsClassLoaderUtil.class) {
                 if (!rarsInitializedInEmbeddedServerMode) {
-                    String installDir = System.getProperty(INSTALL_ROOT_PROPERTY) + File.separator;
+                    String installDir = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator;
                     for (String jdbcRarName : ConnectorConstants.jdbcSystemRarNames) {
                         String rarPath = ConnectorsUtil.getSystemModuleLocation(jdbcRarName);
                         File rarDir = new File(rarPath);

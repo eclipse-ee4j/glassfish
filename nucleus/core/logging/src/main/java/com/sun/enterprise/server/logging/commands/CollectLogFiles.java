@@ -56,6 +56,8 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * Created by IntelliJ IDEA.
  * User: naman
@@ -129,7 +131,7 @@ public class CollectLogFiles implements AdminCommand {
 
             try {
                 final Path sourceDir;
-                if (logFileDetails.contains("${com.sun.aas.instanceRoot}/logs")) {
+                if (logFileDetails.contains("${" + INSTANCE_ROOT.getPropertyName() + "}/logs")) {
                     sourceDir = env.getInstanceRoot().toPath().resolve("logs");
                 } else {
                     sourceDir = new File(logFileDetails).toPath().getParent();
@@ -274,7 +276,7 @@ public class CollectLogFiles implements AdminCommand {
 
             try {
                 Path sourceDir;
-                if (logFileDetails.contains("${com.sun.aas.instanceRoot}/logs")) {
+                if (logFileDetails.contains("${" + INSTANCE_ROOT.getSystemPropertyName() + "}/logs")) {
                     sourceDir = env.getInstanceRoot().toPath().resolve("logs");
                 } else {
                     sourceDir = new File(logFileDetails).toPath().getParent();

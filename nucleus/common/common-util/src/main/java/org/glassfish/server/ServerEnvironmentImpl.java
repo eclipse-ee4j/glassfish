@@ -33,6 +33,9 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * Defines various global configuration for the running {@code GlassFish} instance.
  *
@@ -88,8 +91,6 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
     private RuntimeType serverType = RuntimeType.DAS; // Set to DAS to avoid null
     private Status status = Status.starting;
 
-    private final static String INSTANCE_ROOT_PROP_NAME = "com.sun.aas.instanceRoot";
-    private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
 
     /**
      * Compute all the values per default.
@@ -111,14 +112,14 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
     public void postConstruct() {
 
         // todo : dochez : this will need to be reworked...
-        String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT_PROP_NAME);
+        String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT.getPropertyName());
         if (installRoot == null) {
             // During unit testing, we find an empty StartupContext.
             // Let's first see if the installRoot system property is set in the client VM. If not
             // to be consistent with earlier code (i.e., code that relied on StartupContext.getRootDirectory()),
             // I am setting user.dir as installRoot.
-            if (System.getProperty(INSTALL_ROOT_PROP_NAME) != null) {
-                installRoot = System.getProperty(INSTALL_ROOT_PROP_NAME);
+            if (System.getProperty(INSTALL_ROOT.getSystemPropertyName()) != null) {
+                installRoot = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
             } else {
                 installRoot = System.getProperty("user.dir");
             }
@@ -126,12 +127,12 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
         asenv = new ASenvPropertyReader(new File(installRoot));
 
         // Default
-        if (this.root==null) {
-            String envVar = System.getProperty(INSTANCE_ROOT_PROP_NAME);
+        if (this.root == null) {
+            String envVar = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
             if (envVar!=null) {
                 root = new File(envVar);
             } else {
-                String instanceRoot = startupContext.getArguments().getProperty(INSTANCE_ROOT_PROP_NAME);
+                String instanceRoot = startupContext.getArguments().getProperty(INSTANCE_ROOT.getPropertyName());
                 if (instanceRoot == null) {
                     // In client container, instanceRoot is not set. It is a different question altogether as to why
                     // an object called ServerEnvironmentImpl is at all active in client runtime. To be consistent
@@ -152,7 +153,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
          * in a debugger
          * createGlassFish(gfKernel, habitat, gfProps.getProperties())
          */
-        asenv.getProps().put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, root.getAbsolutePath());
+        asenv.getProps().put(INSTANCE_ROOT.getPropertyName(), root.getAbsolutePath());
         for (Map.Entry<String, String> entry : asenv.getProps().entrySet()) {
 
             if (entry.getValue() == null) { // don't NPE File ctor
@@ -161,7 +162,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
 
             File location = new File(entry.getValue());
             if (!location.isAbsolute()) {
-                location = new File(asenv.getProps().get(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY), entry.getValue());
+                location = new File(asenv.getProps().get(INSTANCE_ROOT.getPropertyName()), entry.getValue());
             }
             System.setProperty(entry.getKey(), location.getAbsolutePath());
         }
@@ -327,7 +328,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
      *  Never returns a {@code null}.
      */
     public File getDefaultAdminConsoleFolderOnDisk() {
-        File install = new File(asenv.getProps().get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        File install = new File(asenv.getProps().get(INSTALL_ROOT.getPropertyName()));
         return new File(new File(new File(install, "lib"), "install"), "applications");
     }
 

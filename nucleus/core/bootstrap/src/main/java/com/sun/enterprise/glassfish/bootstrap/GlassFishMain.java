@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,11 +32,11 @@ import java.util.Properties;
 
 import org.glassfish.main.jdke.props.EnvToPropsConverter;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.glassfish.bootstrap.cp.ClassLoaderBuilder.createOSGiFrameworkLauncherCL;
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -53,7 +53,7 @@ public class GlassFishMain {
 
             final String platformName = whichPlatform();
             // Set the system property to allow downstream code to know the platform on which GlassFish runs.
-            System.setProperty(PLATFORM_PROPERTY_KEY, platformName);
+            System.setProperty(OSGI_PLATFORM.getPropertyName(), platformName);
             final OsgiPlatform platform = OsgiPlatform.valueOf(platformName);
             STDOUT.println("Launching GlassFish on " + platform + " platform");
 
@@ -130,11 +130,11 @@ public class GlassFishMain {
 
 
     private static String whichPlatform() {
-        final String platformSysOption = System.getProperty(PLATFORM_PROPERTY_KEY);
+        final String platformSysOption = System.getProperty(OSGI_PLATFORM.getSystemPropertyName());
         if (platformSysOption != null && !platformSysOption.isBlank()) {
             return platformSysOption.trim();
         }
-        final String platformEnvOption = System.getenv(PLATFORM_PROPERTY_KEY);
+        final String platformEnvOption = System.getenv(OSGI_PLATFORM.getEnvName());
         if (platformEnvOption != null && !platformEnvOption.isBlank()) {
             return platformEnvOption.trim();
         }

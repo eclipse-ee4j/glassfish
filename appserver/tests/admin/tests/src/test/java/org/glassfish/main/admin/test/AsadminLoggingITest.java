@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getDomain1Directory;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.glassfish.tests.utils.junit.matcher.DirectoryMatchers.hasEntryCount;
@@ -147,7 +148,7 @@ public class AsadminLoggingITest {
                 + "org.glassfish.main.jul.handler.GlassFishLogHandler,"
                 + "org.glassfish.main.jul.handler.SyslogHandler>")),
             () -> assertThat(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
-                equalTo("<${com.sun.aas.instanceRoot}/logs/server.log>"))
+                equalTo("<${" + INSTANCE_ROOT.getSystemPropertyName() + "}/logs/server.log>"))
         );
     }
 

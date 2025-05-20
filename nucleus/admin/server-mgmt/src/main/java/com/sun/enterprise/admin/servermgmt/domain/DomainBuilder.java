@@ -31,7 +31,6 @@ import com.sun.enterprise.admin.servermgmt.template.TemplateInfoHolder;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Property;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.PropertyType;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedOutputStream;
@@ -53,6 +52,7 @@ import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
 import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.DOMAIN_XML_FILE;
 import static java.text.MessageFormat.format;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Domain builder class.
@@ -99,8 +99,8 @@ public class DomainBuilder {
                 throw new DomainException("Missing default template information in branding file.");
             }
             Map<String, String> envProperties = new ASenvPropertyReader().getProps();
-            templateJarPath = envProperties.get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY) + File.separator
-                    + DEFUALT_TEMPLATE_RELATIVE_PATH + File.separator + defaultTemplateName;
+            templateJarPath = envProperties.get(INSTALL_ROOT.getPropertyName()) + File.separator
+                + DEFUALT_TEMPLATE_RELATIVE_PATH + File.separator + defaultTemplateName;
         }
         File template = new File(templateJarPath);
         if (!template.exists() || !template.getName().endsWith(".jar")) {

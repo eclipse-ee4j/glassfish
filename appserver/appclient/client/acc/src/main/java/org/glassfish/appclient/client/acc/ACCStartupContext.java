@@ -33,12 +33,13 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 /**
  * Start-up context for the ACC.  Note that this context is used also for
  * Java Web Start launches.
@@ -62,11 +63,11 @@ public class ACCStartupContext extends StartupContext {
     private static Properties accEnvironment() {
         final File rootDirectory = getRootDirectory();
         final Map<String, String> pairs = Map.of(
-            "AS_DERBY_INSTALL", DERBY_ROOT_PROPERTY,
+            DERBY_ROOT.getEnvName(), DERBY_ROOT.getPropertyName(),
             "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
             "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
             "AS_CONFIG", CONFIG_ROOT_PROPERTY,
-            "AS_INSTALL", INSTALL_ROOT_PROPERTY,
+            "AS_INSTALL", INSTALL_ROOT.getPropertyName(),
             "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
             "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
             "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);

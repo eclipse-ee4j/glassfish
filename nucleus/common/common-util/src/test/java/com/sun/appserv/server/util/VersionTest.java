@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,13 +37,13 @@ public class VersionTest {
     public static void initJvmOption() throws Exception {
         URL root = VersionTest.class.getClassLoader().getResource(".");
         File rootDir = Paths.get(root.toURI()).toFile();
-        System.setProperty(INSTALL_ROOT_PROPERTY, rootDir.getAbsolutePath());
+        System.setProperty(INSTALL_ROOT.getSystemPropertyName(), rootDir.getAbsolutePath());
     }
 
 
     @AfterAll
     public static void clearJvmOption() throws Exception {
-        System.clearProperty(INSTALL_ROOT_PROPERTY);
+        System.clearProperty(INSTALL_ROOT.getSystemPropertyName());
     }
 
 

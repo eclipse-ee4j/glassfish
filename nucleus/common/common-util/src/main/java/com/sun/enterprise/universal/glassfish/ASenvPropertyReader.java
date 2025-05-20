@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,15 +29,15 @@ import org.glassfish.main.jdke.props.EnvToPropsConverter;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.HOST_NAME_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
 import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Class ASenvPropertyReader
@@ -51,7 +51,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPE
 public class ASenvPropertyReader {
 
     private static final Map<String, String> ENV_TO_SYS_PROPERTY = Map.of(
-        "AS_DERBY_INSTALL", DERBY_ROOT_PROPERTY,
+        DERBY_ROOT.getEnvName(), DERBY_ROOT.getSystemPropertyName(),
         "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
         "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
         "AS_CONFIG", CONFIG_ROOT_PROPERTY,
@@ -100,9 +100,9 @@ public class ASenvPropertyReader {
     }
 
     /**
-     * Returns the properties that were processed.  This includes going to a bit of
-     * trouble setting up the hostname and java root.
-     * @return A Map<String,String> with all the properties
+     * Returns the properties that were processed
+     * This includes going to a bit of trouble setting up the hostname and java root.
+     * @return A Map<String,String> with all the system properties like properties.
      */
     public Map<String, String> getProps() {
         return props;
@@ -126,13 +126,14 @@ public class ASenvPropertyReader {
 
 
     static class ASenvMap extends HashMap<String, String> {
+
         ASenvMap(File installDir) {
             new EnvToPropsConverter(installDir.toPath()).convert(ENV_TO_SYS_PROPERTY).entrySet()
                 .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
             String javaHome = new File(System.getProperty("java.home")).toPath().toString();
             put(JAVA_ROOT_PROPERTY, javaHome);
             put(JAVA_ROOT_PROPERTY_ASENV, javaHome);
-            put(INSTALL_ROOT_PROPERTY, installDir.toPath().toString());
+            put(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
             put(PRODUCT_ROOT_PROPERTY, installDir.getParentFile().toPath().toString());
             put(HOST_NAME_PROPERTY, getHostname());
         }

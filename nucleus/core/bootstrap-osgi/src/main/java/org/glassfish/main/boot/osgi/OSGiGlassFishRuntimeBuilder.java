@@ -45,6 +45,7 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INHABITAN
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ONDEMAND_BUNDLE_PROVISIONING;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PROVISIONING_OPTIONS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PROVISIONING_OPTIONS_PREFIX;
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 
@@ -155,7 +156,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
         // This builder can't handle Generic OSGi platform, because we read framework configuration
         // from a framework specific file in MainHelper.buildStartupContext(properties);
-        String platformStr = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
+        String platformStr = bsProps.getProperty(OSGI_PLATFORM.getPropertyName());
         if (platformStr != null && !platformStr.isBlank()) {
             try {
                 OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(platformStr);

@@ -39,6 +39,8 @@ import org.glassfish.embeddable.spi.RuntimeBuilder;
 import org.glassfish.main.boot.log.LogFacade;
 import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+
 /**
  * @author bhavanishankar@dev.java.net
  */
@@ -89,7 +91,7 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
         if (builderName != null && !builderName.equals(getClass().getName())) {
             return false;
         }
-        String platform = bsProps.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY);
+        String platform = bsProps.getProperty(OSGI_PLATFORM.getPropertyName());
         return platform == null || OsgiPlatform.Embedded.name().equalsIgnoreCase(platform)
             || OsgiPlatform.Static.name().equalsIgnoreCase(platform);
     }

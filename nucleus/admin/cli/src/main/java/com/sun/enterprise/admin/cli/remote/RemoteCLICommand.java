@@ -35,7 +35,6 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.security.store.AsadminSecurityUtil;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -75,6 +74,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.component.MultiMap;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * A remote command handled by the asadmin CLI.
@@ -974,7 +975,7 @@ public class RemoteCLICommand extends CLICommand {
         if (moduleClassLoader != null) {
             return moduleClassLoader;
         }
-        File installDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        File installDir = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
         File modulesDir = new File(installDir, "modules");
         moduleClassLoader = new DirectoryClassLoader(modulesDir, CLICommand.class.getClassLoader());
         return moduleClassLoader;

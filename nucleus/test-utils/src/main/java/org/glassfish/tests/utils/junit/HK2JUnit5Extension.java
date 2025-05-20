@@ -69,10 +69,10 @@ import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
 import org.objectweb.asm.ClassReader;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
@@ -243,8 +243,8 @@ public class HK2JUnit5Extension
     protected Properties getStartupContextProperties(final ExtensionContext context) {
         final Properties startupContextProperties = new Properties();
         final String rootPath = FileUtils.toFile(context.getRequiredTestClass().getResource("/")).getPath();
-        startupContextProperties.put(INSTALL_ROOT_PROP_NAME, rootPath);
-        startupContextProperties.put(INSTANCE_ROOT_PROP_NAME, rootPath);
+        startupContextProperties.put(INSTALL_ROOT.getPropertyName(), rootPath);
+        startupContextProperties.put(INSTANCE_ROOT.getPropertyName(), rootPath);
         return startupContextProperties;
     }
 

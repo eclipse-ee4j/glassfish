@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Prepares JVM configuration to use GlassFishMain to launch the domain or instance of the server
@@ -64,7 +64,7 @@ class GlassFishMainLauncher extends GFLauncher {
 
     @Override
     List<File> getMainModulepath() throws GFLauncherException {
-        Path installRoot = new File(getEnvProps().get(INSTALL_ROOT_PROPERTY)).toPath();
+        Path installRoot = new File(getEnvProps().get(INSTALL_ROOT.getPropertyName())).toPath();
         return List.of(installRoot.resolve(Path.of("lib", "bootstrap")).toAbsolutePath().normalize().toFile());
     }
 

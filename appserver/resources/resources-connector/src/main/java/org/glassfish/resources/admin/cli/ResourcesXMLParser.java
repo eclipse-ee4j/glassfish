@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.resources.admin.cli;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 
 import java.io.File;
@@ -68,6 +67,7 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ADMIN_OBJECT_CLASS_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ALLOW_NON_COMPONENT_CALLERS;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ASSOCIATE_WITH_THREAD;
@@ -1584,7 +1584,7 @@ public class ResourcesXMLParser implements EntityResolver {
         }
 
         try {
-            String dtd = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY) +
+            String dtd = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) +
                 File.separator + "lib" + File.separator + "dtds" + File.separator +
                 dtdFileName;
             if (_logger.isLoggable(Level.FINEST)) {

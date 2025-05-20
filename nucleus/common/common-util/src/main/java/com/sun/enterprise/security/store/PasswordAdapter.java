@@ -32,8 +32,8 @@ import java.util.Enumeration;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * This class implements an adapter for password manipulation a JCEKS. Note that although it uses locks ('synchronized'), it
@@ -52,7 +52,7 @@ public final class PasswordAdapter {
     }
 
     private static String getDefaultKeyFileName() {
-        return System.getProperty(INSTANCE_ROOT_PROPERTY) + File.separator + "config" + File.separator + PASSWORD_ALIAS_KEYSTORE;
+        return System.getProperty(INSTANCE_ROOT.getSystemPropertyName()) + File.separator + "config" + File.separator + PASSWORD_ALIAS_KEYSTORE;
     }
 
     /**

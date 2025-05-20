@@ -55,6 +55,8 @@ import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * GlassFish implementation of the EJBContainerProvider.
  *
@@ -238,10 +240,10 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
      * is not specified, from the System classpath. Also adds library references.
      */
     private Set<DeploymentElement> addModules(Map<?, ?> properties, Locations l) {
-        Set<DeploymentElement> modules = new HashSet<DeploymentElement>();
+        Set<DeploymentElement> modules = new HashSet<>();
         Object obj = (properties == null)? null : properties.get(EJBContainer.MODULES);
         boolean skip_module_with_main_class = getBooleanProperty(properties, SKIP_CLIENT_MODULES);
-        Map<String, Boolean> moduleNames = new HashMap<String, Boolean>();
+        Map<String, Boolean> moduleNames = new HashMap<>();
 
         // Check EJBContainer.MODULES setting first - it can have an explicit set of files
         if (obj != null) {
@@ -344,10 +346,12 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
 
             return result;
         } finally {
-            if (archive != null)
+            if (archive != null) {
                 archive.close();
-            if (is != null)
+            }
+            if (is != null) {
                 is.close();
+            }
         }
     }
 
@@ -643,7 +647,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             Object value = properties.get(key);
             if (value != null) {
                 if (value instanceof String) {
-                    result = Boolean.valueOf((String)value);
+                    result = Boolean.parseBoolean((String)value);
                 } else {
                     try {
                         result = (Boolean) value;
@@ -660,7 +664,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
      */
     private void validateInstanceDirectory() {
         // Verify that the instance was created properly
-        File instance_directory = new File(System.getProperty("com.sun.aas.instanceRoot"));
+        File instance_directory = new File(System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
         if (!instance_directory.exists()) {
             throw new IllegalStateException("Unexpected ERROR: Instance directory " + instance_directory + " does not exist");
         } else if (!instance_directory.isDirectory()) {

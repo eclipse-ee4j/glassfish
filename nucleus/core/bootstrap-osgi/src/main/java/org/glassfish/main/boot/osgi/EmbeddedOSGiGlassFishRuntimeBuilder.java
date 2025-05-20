@@ -29,6 +29,8 @@ import org.glassfish.embeddable.spi.RuntimeBuilder;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleReference;
 
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+
 /**
  * This {@link org.glassfish.embeddable.spi.RuntimeBuilder} is responsible for setting up a {@link GlassFishRuntime}
  * when user has a regular installation of GlassFish and they want to embed GlassFish in an existing OSGi runtime.
@@ -64,8 +66,8 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private void configureBundles(BootstrapProperties bsProps) {
-        if (System.getProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY) == null) {
-            System.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Embedded.name());
+        if (System.getProperty(OSGI_PLATFORM.getSystemPropertyName()) == null) {
+            System.setProperty(OSGI_PLATFORM.getSystemPropertyName(), OsgiPlatform.Embedded.name());
         }
     }
 

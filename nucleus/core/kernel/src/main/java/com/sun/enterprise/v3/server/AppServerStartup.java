@@ -85,6 +85,7 @@ import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Server;
 import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
 import static org.glassfish.api.admin.ServerEnvironment.Status.stopping;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
  * Main class for Glassfish startup This class spawns a non-daemon Thread when the start() is called. Having a
@@ -142,7 +143,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
     private long platformInitTime;
 
-    private String platform = System.getProperty("GlassFish_Platform");
+    private String platform = System.getProperty(OSGI_PLATFORM.getSystemPropertyName());
 
     /**
      * A keep alive thread that keeps the server JVM from going down as long as GlassFish kernel is up.
@@ -431,7 +432,6 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public synchronized void stop() {
         if (serverEnvironment.getStatus() == stopped) {
             // During shutdown because of shutdown hooks, we can be stopped multiple times.

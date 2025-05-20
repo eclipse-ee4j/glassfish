@@ -56,18 +56,18 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINEST;
 import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
+import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 
 /**
  * Implementation of GlassFishRuntime in an OSGi environment.
@@ -237,10 +237,10 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
                 DERBY_ROOT.getEnvName(), DERBY_ROOT.getSystemPropertyName(),
                 IMQ_LIB.getEnvName(), IMQ_LIB.getSystemPropertyName(),
                 IMQ_BIN.getEnvName(), IMQ_BIN.getSystemPropertyName(),
-                "AS_CONFIG", CONFIG_ROOT_PROPERTY,
+                CONFIG_ROOT.getEnvName(), CONFIG_ROOT.getSystemPropertyName(),
                 JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
-                "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
-                "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
+                DOMAINS_ROOT.getEnvName(), DOMAINS_ROOT.getSystemPropertyName(),
+                NODES_ROOT.getEnvName(), NODES_ROOT.getSystemPropertyName());
 
             File installRoot = new File(installRootValue);
             new EnvToPropsConverter(installRoot.toPath()).convert(pairs).entrySet()

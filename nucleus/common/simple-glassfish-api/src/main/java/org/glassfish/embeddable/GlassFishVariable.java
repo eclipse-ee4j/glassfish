@@ -24,8 +24,12 @@ import java.util.stream.Collectors;
  * GlassFish variables used as environment options or system properties and their mapping.
  */
 public enum GlassFishVariable {
+    /** Directory with asenv.conf, {@link #INSTALL_ROOT}/config */
+    CONFIG_ROOT("AS_CONFIG", "com.sun.aas.configRoot"),
     /** Derby database main directory, containing lib directory with jar files. */
     DERBY_ROOT("AS_DERBY_INSTALL", "com.sun.aas.derbyRoot"),
+    /** Directory where we have domains */
+    DOMAINS_ROOT("AS_DEF_DOMAINS_PATH", "com.sun.aas.domainsRoot"),
     /** Autodetected host name. */
     HOST_NAME(null, "com.sun.aas.hostName"),
     /** Java home directory set by JVM automatically via <code>java.home</code> or via JAVA_HOME by user. */
@@ -45,8 +49,10 @@ public enum GlassFishVariable {
     INSTALL_ROOT("AS_INSTALL", "com.sun.aas.installRoot"),
     /** Instance directory */
     INSTANCE_ROOT(null, "com.sun.aas.instanceRoot"),
+    /** Node agents directory */
+    NODES_ROOT("AS_DEF_NODES_PATH", "com.sun.aas.agentRoot"),
     /** Install root parent, resolved from {@link #INSTANCE_ROOT}. */
-    PRODUCT_ROOT(null, "com.sun.aas.productRoot");
+    PRODUCT_ROOT(null, "com.sun.aas.productRoot")
     ;
 
     private final String envName;

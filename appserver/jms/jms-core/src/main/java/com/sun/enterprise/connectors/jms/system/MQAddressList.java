@@ -54,6 +54,7 @@ import org.glassfish.internal.api.ServerContext;
 
 import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 
 /**
  * Defines an MQ addressList.
@@ -207,7 +208,7 @@ public class MQAddressList {
             return dasPropertiesHostName;
         }
 
-        String agentsDirPath = getSystemProperty(SystemPropertyConstants.AGENT_ROOT_PROPERTY);
+        String agentsDirPath = getSystemProperty(NODES_ROOT.getSystemPropertyName());
         if (!StringUtils.ok(agentsDirPath)) {
             String installRootPath = getSystemProperty(INSTALL_ROOT.getPropertyName());
             if (!StringUtils.ok(installRootPath)) {

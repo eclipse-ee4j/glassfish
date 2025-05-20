@@ -43,27 +43,7 @@ public class SystemPropertyConstants {
     /**
      * Field
      */
-    public static final String WEB_SERVICES_LIB_PROPERTY = "com.sun.aas.webServicesLib";
-
-    /**
-     * Field
-     */
-    public static final String PERL_ROOT_PROPERTY = "com.sun.aas.perlRoot";
-
-    /**
-     * Field
-     */
-    public static final String CONFIG_ROOT_PROPERTY = "com.sun.aas.configRoot";
-
-    /**
-     * Field
-     */
     public static final String DEFAULT_LOCALE_PROPERTY = "com.sun.aas.defaultLocale";
-
-    /**
-     * Field
-     */
-    public static final String DOMAINS_ROOT_PROPERTY = "com.sun.aas.domainsRoot";
 
     /**
      * Field
@@ -75,8 +55,6 @@ public class SystemPropertyConstants {
      */
     public static final String AGENT_CERT_NICKNAME = "com.sun.aas.agentCertNickname";
 
-    public static final String AGENT_ROOT_PROPERTY = "com.sun.aas.agentRoot";
-
     public static final String AGENT_NAME_PROPERTY = "com.sun.aas.agentName";
 
     /**
@@ -84,8 +62,6 @@ public class SystemPropertyConstants {
      */
     public static final String WEBCONSOLE_LIB_PROPERTY = "com.sun.aas.webconsoleLib";
     public static final String WEBCONSOLE_APP_PROPERTY = "com.sun.aas.webconsoleApp";
-
-    public static final String JATO_ROOT_PROPERTY = "com.sun.aas.jatoRoot";
 
     public static final String ANT_ROOT_PROPERTY = "com.sun.aas.antRoot";
 

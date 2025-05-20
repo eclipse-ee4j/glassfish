@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.servermgmt.cli.LocalServerCommand;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.InstanceDirs;
 import com.sun.enterprise.util.io.ServerDirs;
@@ -44,6 +43,7 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
@@ -648,8 +648,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @throws CommandException if the GlassFish install root is not found
      */
     private String getNodeDirRootDefault() throws CommandException {
-        String nodeDirDefault = getSystemProperty(
-                SystemPropertyConstants.AGENT_ROOT_PROPERTY);
+        String nodeDirDefault = getSystemProperty(NODES_ROOT.getSystemPropertyName());
 
         if (StringUtils.ok(nodeDirDefault)) {
             return nodeDirDefault;

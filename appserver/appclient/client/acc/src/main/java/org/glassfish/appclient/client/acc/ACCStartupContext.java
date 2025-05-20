@@ -31,14 +31,14 @@ import java.util.Properties;
 import org.glassfish.main.jdke.props.EnvToPropsConverter;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 
 /**
  * Start-up context for the ACC.  Note that this context is used also for
@@ -66,11 +66,11 @@ public class ACCStartupContext extends StartupContext {
             DERBY_ROOT.getEnvName(), DERBY_ROOT.getPropertyName(),
             IMQ_LIB.getEnvName(), IMQ_LIB.getPropertyName(),
             IMQ_BIN.getEnvName(), IMQ_BIN.getPropertyName(),
-            "AS_CONFIG", CONFIG_ROOT_PROPERTY,
+            CONFIG_ROOT.getEnvName(), CONFIG_ROOT.getPropertyName(),
             INSTALL_ROOT.getEnvName(), INSTALL_ROOT.getPropertyName(),
             JAVA_ROOT.getEnvName(), JAVA_ROOT.getPropertyName(),
-            "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
-            "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
+            DOMAINS_ROOT.getEnvName(), DOMAINS_ROOT.getPropertyName(),
+            NODES_ROOT.getEnvName(), NODES_ROOT.getEnvName());
         Map<String, File> files = new EnvToPropsConverter(rootDirectory.toPath()).convert(pairs);
         Properties env = new Properties();
         files.entrySet().forEach(e -> env.put(e.getKey(), e.getValue().getPath()));

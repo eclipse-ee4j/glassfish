@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,13 +52,13 @@ public final class EnvToPropsConverter {
      * The resolved file is added to the resulting map using the input map's value as a key.
      * There is no guarantee the file does exist.
      *
-     * @param envToSys - key is env name, value is system property name.
+     * @param envToSysMappings - key is env name, value is system property name.
      * @return map of system property names and absolute files.
      */
-    public Map<String, File> convert(final Map<String, String> envToSys) {
-        final Map<String, File> files = new HashMap<>(envToSys.size());
-        for (final String envPropertyName : envToSys.keySet()) {
-            final String systemPropertyName = envToSys.get(envPropertyName);
+    public Map<String, File> convert(final Map<String, String> envToSysMappings) {
+        final Map<String, File> files = new HashMap<>(envToSysMappings.size());
+        for (final String envPropertyName : envToSysMappings.keySet()) {
+            final String systemPropertyName = envToSysMappings.get(envPropertyName);
             if (systemPropertyName == null) {
                 continue;
             }
@@ -80,8 +80,8 @@ public final class EnvToPropsConverter {
      * Then if the retrieved value is relative, it is resolved against the anchor path from
      * constructor.
      *
-     * @param envPropertyName
-     * @param systemPropertyName
+     * @param envPropertyName - can be null, then it is ignored.
+     * @param systemPropertyName - can be null, then it is ignored.
      * @return file - there is no guarantee the file does exist.
      */
     public File convert(final String envPropertyName, final String systemPropertyName) {
@@ -91,13 +91,17 @@ public final class EnvToPropsConverter {
 
 
     private String evaluate(final String envPropertyName, final String systemPropertyName) {
-        final String sysValue = System.getProperty(systemPropertyName);
-        if (sysValue != null) {
-            return sysValue;
+        if (systemPropertyName != null) {
+            final String sysValue = System.getProperty(systemPropertyName);
+            if (sysValue != null) {
+                return sysValue;
+            }
         }
-        final String envValue = System.getenv(envPropertyName);
-        if (envValue != null) {
-            return envValue;
+        if (envPropertyName != null) {
+            final String envValue = System.getenv(envPropertyName);
+            if (envValue != null) {
+                return envValue;
+            }
         }
 //        System.err.println("Missing env " + envPropertyName + " or system property " + systemPropertyName);
         return null;

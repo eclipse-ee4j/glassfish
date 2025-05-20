@@ -148,7 +148,7 @@ public class AsadminLoggingITest {
                 + "org.glassfish.main.jul.handler.GlassFishLogHandler,"
                 + "org.glassfish.main.jul.handler.SyslogHandler>")),
             () -> assertThat(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
-                equalTo("<${" + INSTANCE_ROOT.getSystemPropertyName() + "}/logs/server.log>"))
+                equalTo("<" + INSTANCE_ROOT.toExpression() + "/logs/server.log>"))
         );
     }
 

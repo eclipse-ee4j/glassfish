@@ -44,6 +44,7 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
  * A base class for local commands that manage a local server instance.
@@ -453,12 +454,10 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @throws CommandException if the GlassFish install root is not found
      */
     protected String getProductRootPath() throws CommandException {
-        String productRootPath = getSystemProperty(
-                SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+        String productRootPath = getSystemProperty(PRODUCT_ROOT.getPropertyName());
 
         if (!StringUtils.ok(productRootPath)) {
-            productRootPath = System.getProperty(
-                    SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+            productRootPath = System.getProperty(PRODUCT_ROOT.getSystemPropertyName());
         }
 
         if (!StringUtils.ok(productRootPath)) {

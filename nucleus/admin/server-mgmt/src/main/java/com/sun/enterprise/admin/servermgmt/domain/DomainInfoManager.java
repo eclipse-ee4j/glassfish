@@ -22,7 +22,6 @@ import com.sun.enterprise.admin.servermgmt.xml.domaininfo.DomainInfo;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.ObjectFactory;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.TemplateRef;
 import com.sun.enterprise.admin.servermgmt.xml.templateinfo.TemplateInfo;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
@@ -36,6 +35,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.logging.LogHelper;
 
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 public class DomainInfoManager {
 
@@ -62,7 +62,7 @@ public class DomainInfoManager {
                 javaHome = System.getProperty(JAVA_HOME.getSystemPropertyName());
             }
             domainInfo.setJavahome(javaHome);
-            domainInfo.setMwhome(System.getProperty(SystemPropertyConstants.PRODUCT_ROOT_PROPERTY));
+            domainInfo.setMwhome(System.getProperty(PRODUCT_ROOT.getPropertyName()));
             TemplateRef templateRef = new TemplateRef();
             templateRef.setName(templateInfo.getName());
             templateRef.setVersion(templateInfo.getVersion());

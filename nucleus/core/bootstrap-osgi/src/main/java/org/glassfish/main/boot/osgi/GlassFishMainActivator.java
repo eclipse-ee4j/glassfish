@@ -195,7 +195,7 @@ public class GlassFishMainActivator implements BundleActivator {
         installRoot = context.getProperty(INSTALL_ROOT.getPropertyName());
         properties.setProperty(INSTALL_ROOT.getPropertyName(), installRoot);
         String instanceRoot = context.getProperty(INSTANCE_ROOT.getPropertyName());
-        properties.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot);
+        properties.setProperty(INSTANCE_ROOT.getPropertyName(), instanceRoot);
         properties.putAll(makeProvisioningOptions(context));
 
         // This property is understood by our corresponding builder.

@@ -38,10 +38,15 @@ public enum GlassFishVariable {
     IMQ_BIN("AS_IMQ_BIN", "com.sun.aas.imqBin"),
     /** JMS Message Broker lib directory */
     IMQ_LIB("AS_IMQ_LIB", "com.sun.aas.imqLib"),
-    /** Which installation root the GlassFish should run with. */
+    /**
+     * Which installation root the GlassFish should run with.
+     * Usually <code>glassfish[x]/glassfish</code>
+     */
     INSTALL_ROOT("AS_INSTALL", "com.sun.aas.installRoot"),
     /** Instance directory */
     INSTANCE_ROOT(null, "com.sun.aas.instanceRoot"),
+    /** Install root parent, resolved from {@link #INSTANCE_ROOT}. */
+    PRODUCT_ROOT(null, "com.sun.aas.productRoot");
     ;
 
     private final String envName;
@@ -62,6 +67,15 @@ public enum GlassFishVariable {
      */
     public String getEnvName() {
         return this.envName;
+    }
+
+
+    /**
+     * @return <code>${{@link #getPropertyName()}}</code>, for example:
+     *         <code>${com.sun.aas.installRoot}</code>
+     */
+    public String toExpression() {
+        return "${" + getPropertyName() + '}';
     }
 
 

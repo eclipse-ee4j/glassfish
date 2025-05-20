@@ -25,7 +25,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.server.logging.LogFacade;
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilterForInstance;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -56,6 +55,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.DAS_SERVER_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
@@ -82,7 +82,7 @@ public class CollectLogFiles implements AdminCommand {
     private static final Logger LOGGER = LogFacade.LOGGING_LOGGER;
 
     @Param(optional = true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = DAS_SERVER_NAME;
 
     @Param(name = "retrieve", optional = true, defaultValue = "false")
     boolean retrieve;
@@ -131,7 +131,7 @@ public class CollectLogFiles implements AdminCommand {
 
             try {
                 final Path sourceDir;
-                if (logFileDetails.contains("${" + INSTANCE_ROOT.getPropertyName() + "}/logs")) {
+                if (logFileDetails.contains(INSTANCE_ROOT.toExpression() + "/logs")) {
                     sourceDir = env.getInstanceRoot().toPath().resolve("logs");
                 } else {
                     sourceDir = new File(logFileDetails).toPath().getParent();
@@ -225,7 +225,7 @@ public class CollectLogFiles implements AdminCommand {
                 // Creating zip file and returning zip file absolute path.
                 String zipFilePath = getZipFilePath().getAbsolutePath();
                 zipFile = loggingConfig.createZipFile(zipFilePath);
-                if (zipFile == null || new File(zipFile) == null) {
+                if (zipFile == null) {
                     // Failure during zip
                     final String errorMsg = localStrings.getLocalString(
                             "collectlogfiles.creatingZip", "Error while creating zip file {0}.", zipFilePath);
@@ -264,29 +264,28 @@ public class CollectLogFiles implements AdminCommand {
                 // getting log file values from logging.propertie file.
                 logFileDetails = loggingConfig.getLoggingFileDetails();
             } catch (Exception ex) {
-                final String errorMsg = localStrings.getLocalString(
-                        "collectlogfiles.errGettingLogFiles", "Error while getting log file attribute for {0}.", target);
+                final String errorMsg = localStrings.getLocalString("collectlogfiles.errGettingLogFiles",
+                    "Error while getting log file attribute for {0}.", target);
                 report.setMessage(errorMsg);
                 report.setFailureCause(ex);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
 
-            targetDir = makingDirectoryOnDas(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME, report);
+            targetDir = makingDirectoryOnDas(DAS_SERVER_NAME, report);
 
             try {
-                Path sourceDir;
-                if (logFileDetails.contains("${" + INSTANCE_ROOT.getSystemPropertyName() + "}/logs")) {
+                final Path sourceDir;
+                if (logFileDetails.contains(INSTANCE_ROOT.toExpression() + "/logs")) {
                     sourceDir = env.getInstanceRoot().toPath().resolve("logs");
                 } else {
                     sourceDir = new File(logFileDetails).toPath().getParent();
                 }
 
-                copyLogFilesForLocalhost(sourceDir, targetDir.getAbsolutePath(), report,
-                    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME);
+                copyLogFilesForLocalhost(sourceDir, targetDir.getAbsolutePath(), report, DAS_SERVER_NAME);
             } catch (Exception ex) {
-                final String errorMsg = localStrings.getLocalString(
-                        "collectlogfiles.errInstanceDownloading", "Error while downloading log files from {0}.", target);
+                final String errorMsg = localStrings.getLocalString("collectlogfiles.errInstanceDownloading",
+                    "Error while downloading log files from {0}.", target);
                 report.setMessage(errorMsg);
                 report.setFailureCause(ex);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);

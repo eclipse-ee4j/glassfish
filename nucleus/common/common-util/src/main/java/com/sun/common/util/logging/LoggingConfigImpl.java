@@ -69,8 +69,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
     private static final Logger LOG = Logger.getLogger(LoggingConfigImpl.class.getName());
 
-    private static final String DEFAULT_SERVER_LOG_PATH = "${" + INSTANCE_ROOT.getSystemPropertyName()
-        + "}/logs/server.log";
+    private static final String DEFAULT_SERVER_LOG_PATH = INSTANCE_ROOT.toExpression() + "/logs/server.log";
 
     private static final Map<String, String> DEFAULT_LOG_PROPERTIES = new HashMap<>();
     static {

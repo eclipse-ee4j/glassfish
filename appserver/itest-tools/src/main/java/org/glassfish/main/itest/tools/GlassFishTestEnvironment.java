@@ -57,6 +57,7 @@ import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -369,11 +370,11 @@ public class GlassFishTestEnvironment {
     }
 
     private static File findKeyTool() {
-        return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.exe" : "bin/keytool");
+        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/keytool.exe" : "bin/keytool");
     }
 
     private static File findJarSigner() {
-        return new File(System.getProperty("java.home"), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
+        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
     }
 
     private static boolean isWindows() {

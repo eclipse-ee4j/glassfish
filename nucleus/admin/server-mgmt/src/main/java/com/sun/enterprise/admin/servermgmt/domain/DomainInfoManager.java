@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,16 +29,17 @@ import jakarta.xml.bind.Marshaller;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.logging.LogHelper;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+
 public class DomainInfoManager {
 
     private static final Logger _logger = SLogger.getLogger();
-
-    private static final String JAVA_HOME = "JAVA_HOME";
 
     /**
      * Parses template information file and uses its information to create domain info file.
@@ -55,9 +57,9 @@ public class DomainInfoManager {
             outputStream = new FileOutputStream(domainInfoXML);
             ObjectFactory objFactory = new ObjectFactory();
             DomainInfo domainInfo = objFactory.createDomainInfo();
-            String javaHome = System.getenv(JAVA_HOME);
+            String javaHome = System.getenv(JAVA_HOME.getEnvName());
             if (javaHome == null || javaHome.isEmpty()) {
-                javaHome = System.getProperty("java.home");
+                javaHome = System.getProperty(JAVA_HOME.getSystemPropertyName());
             }
             domainInfo.setJavahome(javaHome);
             domainInfo.setMwhome(System.getProperty(SystemPropertyConstants.PRODUCT_ROOT_PROPERTY));
@@ -69,7 +71,7 @@ public class DomainInfoManager {
 
             JAXBContext context = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(jakarta.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8.name());
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(objFactory.createDomainInfo(domainInfo), outputStream);
         } catch (Exception e) {

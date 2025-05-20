@@ -24,7 +24,6 @@ import com.sun.enterprise.config.modularity.customization.ConfigCustomizationTok
 import com.sun.enterprise.config.modularity.customization.CustomizationTokensProvider;
 import com.sun.enterprise.config.modularity.customization.FileTypeDetails;
 import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
@@ -38,6 +37,7 @@ import java.util.Set;
 import static java.text.MessageFormat.format;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * Client class to retrieve customize tokens.
@@ -77,8 +77,8 @@ public class CustomTokenClient {
                     System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
                 filePaths.put(INSTANCE_ROOT.getPropertyName(),
                     System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
-                filePaths.put(SystemPropertyConstants.JAVA_ROOT_PROPERTY,
-                    System.getProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY));
+                filePaths.put(JAVA_ROOT.getPropertyName(),
+                    System.getProperty(JAVA_ROOT.getSystemPropertyName()));
                 noOfTokens = customTokens.size();
                 for (ConfigCustomizationToken token : customTokens) {
                     String name = token.getName();

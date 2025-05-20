@@ -44,6 +44,8 @@ import org.glassfish.deployment.common.ClientArtifactsManager;
 import org.glassfish.ejb.spi.CMPDeployer;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+
 /**
  * This class is used to generate the RMI-IIOP version of a
  * remote business interface.
@@ -69,41 +71,24 @@ public class StaticRmiStubGenerator {
         // Find java path and tools.jar
 
         //Try this jre's parent
-        String jreHome = System.getProperty("java.home");
-        File jdkDir = null;
-        if(jreHome != null) {
-            // on the mac the java.home does not point to the jre
-            // subdirectory.
-            if (OS.isDarwin()) {
-                jdkDir = new File(jreHome);
-            } else {
-                jdkDir = (new File(jreHome)).getParentFile();       //jdk_dir/jre/..
-            }
-
-            jdkDir = getValidDirectory(jdkDir);
+        String javaHome = System.getProperty(JAVA_HOME.getSystemPropertyName());
+        File jdkDir;
+        if (javaHome != null) {
+            jdkDir = getValidDirectory(new File(javaHome));
+        } else {
+            jdkDir = null;
         }
 
-        if(jdkDir == null) {
+        if (jdkDir == null) {
             // Check for "JAVA_HOME" -- which is set via Server.xml during initialization
             // of the Server that is calling us.
-
-            String jh = System.getProperty("JAVA_HOME");
-            if(jh != null) {
-                jdkDir = getValidDirectory(new File(jh));  // e.g. c:/ias7/jdk
+            String jh = System.getenv(JAVA_HOME.getEnvName());
+            if (jh != null) {
+                jdkDir = getValidDirectory(new File(jh));
             }
         }
 
-/** XXX ???
-        if(jdkDir == null) {
-            //Somehow, JAVA_HOME is not set. Try the "well-known" location...
-            if(installRoot != null) {
-                jdkDir = getValidDirectory(new File(installRoot + "/jdk"));
-
-            }
-        }
-** XXX **/
-
-        if(jdkDir == null) {
+        if (jdkDir == null) {
             _logger.warning("Cannot identify JDK location.");
             toolsJarPath = null;
         } else {
@@ -115,14 +100,13 @@ public class StaticRmiStubGenerator {
             }
         }
 
-        JavaConfig jc = services.getService(JavaConfig.class,
-                ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        JavaConfig jc = services.getService(JavaConfig.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         String rmicOptions = jc.getRmicOptions();
 
-        rmicOptionsList = new ArrayList<String>();
+        rmicOptionsList = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(rmicOptions, " ");
         while (st.hasMoreTokens()) {
-            String op = (String) st.nextToken();
+            String op = st.nextToken();
             rmicOptionsList.add(op);
             _logger.log(Level.INFO, "Detected Rmic option: " + op);
         }
@@ -197,7 +181,7 @@ public class StaticRmiStubGenerator {
 
         // ---- RMIC ALL STUB CLASSES --------------------------------------
 
-        Set<String> allStubClasses = new HashSet<String>();
+        Set<String> allStubClasses = new HashSet<>();
 
         // stubs classes for ejbs within this app that need rmic
         Set<String> ejbStubClasses = getStubClasses(jcl, ejbBundle);
@@ -211,7 +195,7 @@ public class StaticRmiStubGenerator {
         // ---- END OF RMIC ALL STUB CLASSES -------------------------------
 
         // Create list of all server files and client files
-        List<String> allClientFiles = new ArrayList<String>();
+        List<String> allClientFiles = new ArrayList<>();
 
         // assemble the client files
         addGeneratedFiles(allStubClasses, allClientFiles, stubsDir);
@@ -258,7 +242,7 @@ public class StaticRmiStubGenerator {
                                          "generator.compiling_rmi_iiop",
                                          "Compiling RMI-IIOP code."));
 
-        List<String> cmds = new ArrayList<String>();
+        List<String> cmds = new ArrayList<>();
         cmds.addAll(rmicOptionsList);
         cmds.add("-classpath");
 
@@ -325,8 +309,9 @@ public class StaticRmiStubGenerator {
 
         String stubName = packageName + "_" + className + "_Stub";
 
-        if(isSpecialPackage(fullName))
+        if(isSpecialPackage(fullName)) {
             stubName = ORG_OMG_STUB_PREFIX + stubName;
+        }
 
         return stubName;
     }
@@ -339,8 +324,9 @@ public class StaticRmiStubGenerator {
 
         // this is really an error.  But we have enough errors. Let's be forgiving
         // and not allow a NPE out of here...
-        if(name == null)
+        if(name == null) {
             return false;
+        }
 
         // Licensee bug 4959550
         // if(name.startsWith("com.sun.") || name.startsWith("javax."))
@@ -382,12 +368,9 @@ public class StaticRmiStubGenerator {
             throws IOException, ClassNotFoundException
     {
 
-        Set<String> stubClasses     = new HashSet<String>();
+        Set<String> stubClasses     = new HashSet<>();
 
-        for (Iterator iter = ejbBundle.getEjbs().iterator(); iter.hasNext();)
-        {
-
-            EjbDescriptor desc = (EjbDescriptor) iter.next();
+        for (EjbDescriptor desc : ejbBundle.getEjbs()) {
             if( desc.isRemoteInterfacesSupported() ) {
 
                 String home   = desc.getHomeClassName();

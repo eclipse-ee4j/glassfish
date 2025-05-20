@@ -34,9 +34,9 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
@@ -64,11 +64,11 @@ public class ACCStartupContext extends StartupContext {
         final File rootDirectory = getRootDirectory();
         final Map<String, String> pairs = Map.of(
             DERBY_ROOT.getEnvName(), DERBY_ROOT.getPropertyName(),
-            "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
-            "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
+            IMQ_LIB.getEnvName(), IMQ_LIB.getPropertyName(),
+            IMQ_BIN.getEnvName(), IMQ_BIN.getPropertyName(),
             "AS_CONFIG", CONFIG_ROOT_PROPERTY,
-            "AS_INSTALL", INSTALL_ROOT.getPropertyName(),
-            JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
+            INSTALL_ROOT.getEnvName(), INSTALL_ROOT.getPropertyName(),
+            JAVA_ROOT.getEnvName(), JAVA_ROOT.getPropertyName(),
             "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
             "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
         Map<String, File> files = new EnvToPropsConverter(rootDirectory.toPath()).convert(pairs);
@@ -82,19 +82,17 @@ public class ACCStartupContext extends StartupContext {
          * During launches not using Java Web Start the root directory
          * is important; it is used in setting some system properties.
          */
-        URI jarURI = null;
+        final URI jarURI;
         try {
             jarURI = ACCStartupContext.class.getProtectionDomain().getCodeSource().getLocation().toURI();
-        } catch (URISyntaxException ex) {
-            throw new RuntimeException(ex);
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("Could not resolve URI of the current JAR!", e);
         }
         if (jarURI.getScheme().startsWith("http")) {
             // We do not really rely on the root directory during Java
             // Web Start launches but we must return something.
             return FileUtils.USER_HOME;
         }
-        File jarFile = new File(jarURI);
-        File dirFile = jarFile.getParentFile().getParentFile();
-        return dirFile;
+        return new File(jarURI).getParentFile().getParentFile();
     }
 }

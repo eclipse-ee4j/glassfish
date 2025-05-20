@@ -34,6 +34,10 @@ public enum GlassFishVariable {
     JAVA_ROOT("AS_JAVA", "com.sun.aas.javaRoot"),
     /** OSGi implementation selector. */
     OSGI_PLATFORM("GlassFish_Platform"),
+    /** JMS Message Broker bin directory */
+    IMQ_BIN("AS_IMQ_BIN", "com.sun.aas.imqBin"),
+    /** JMS Message Broker lib directory */
+    IMQ_LIB("AS_IMQ_LIB", "com.sun.aas.imqLib"),
     /** Which installation root the GlassFish should run with. */
     INSTALL_ROOT("AS_INSTALL", "com.sun.aas.installRoot"),
     /** Instance directory */

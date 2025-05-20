@@ -59,12 +59,12 @@ import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINEST;
 import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
@@ -234,9 +234,9 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
         final String installRootValue = bootstrapProperties.getProperty(INSTALL_ROOT.getPropertyName());
         if (installRootValue != null && !installRootValue.isEmpty()) {
             final Map<String, String> pairs = Map.of(
-                DERBY_ROOT.getEnvName(), DERBY_ROOT.getPropertyName(),
-                "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
-                "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
+                DERBY_ROOT.getEnvName(), DERBY_ROOT.getSystemPropertyName(),
+                IMQ_LIB.getEnvName(), IMQ_LIB.getSystemPropertyName(),
+                IMQ_BIN.getEnvName(), IMQ_BIN.getSystemPropertyName(),
                 "AS_CONFIG", CONFIG_ROOT_PROPERTY,
                 JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
                 "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
@@ -244,7 +244,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
             File installRoot = new File(installRootValue);
             new EnvToPropsConverter(installRoot.toPath()).convert(pairs).entrySet()
-            .forEach(e -> System.setProperty(e.getKey(), e.getValue().getPath()));
+                .forEach(e -> System.setProperty(e.getKey(), e.getValue().getPath()));
             System.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRootValue);
             System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
         }

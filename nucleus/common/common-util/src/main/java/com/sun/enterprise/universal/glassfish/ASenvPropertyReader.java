@@ -30,11 +30,11 @@ import org.glassfish.main.jdke.props.EnvToPropsConverter;
 import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
@@ -52,8 +52,8 @@ public class ASenvPropertyReader {
 
     private static final Map<String, String> ENV_TO_SYS_PROPERTY = Map.of(
         DERBY_ROOT.getEnvName(), DERBY_ROOT.getSystemPropertyName(),
-        "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
-        "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
+        IMQ_LIB.getEnvName(), IMQ_LIB.getSystemPropertyName(),
+        IMQ_BIN.getEnvName(), IMQ_BIN.getSystemPropertyName(),
         "AS_CONFIG", CONFIG_ROOT_PROPERTY,
         JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
         "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,

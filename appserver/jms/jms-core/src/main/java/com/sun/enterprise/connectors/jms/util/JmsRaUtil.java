@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,11 +48,11 @@ import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.config.types.Property;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_JMS_ADAPTER;
-import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 public class JmsRaUtil {
@@ -62,7 +62,7 @@ public class JmsRaUtil {
     /** lib/install/applications */
     private static final Path SYSTEM_APP_DIR = Path.of("lib", "install", "applications");
 
-    /** jmsra/META-INF/MANIFEST.MF */
+    /** META-INF/MANIFEST.MF */
     private static final Path MQ_RAR_MANIFEST = Path.of("META-INF", "MANIFEST.MF");
 
     // Manifest version tag.
@@ -143,7 +143,7 @@ public class JmsRaUtil {
 
 
     /**
-     * Return true if the given server instance is part of a cluster.
+     * @return true if the given server instance is part of a cluster.
      */
     public static boolean isServerClustered(List clusters, String instanceName) {
         return (getClusterForServer(clusters, instanceName) != null);
@@ -330,9 +330,9 @@ public class JmsRaUtil {
      * directory.
      */
     public void upgradeIfNecessary() {
-        String imqLibPath = System.getProperty(IMQ_LIB_PROPERTY);
+        String imqLibPath = System.getProperty(IMQ_LIB.getSystemPropertyName());
         if (imqLibPath == null) {
-            _logger.log(Level.SEVERE, "IMQ lib root system property not set: " + IMQ_LIB_PROPERTY);
+            _logger.log(Level.SEVERE, "IMQ lib root system property not set: " + IMQ_LIB.getSystemPropertyName());
             return;
         }
 
@@ -446,7 +446,6 @@ public class JmsRaUtil {
             if (unalisedPwd != null && "".equals(unalisedPwd)) {
                 return unalisedPwd;
             }
-
         } catch (Exception e) {
 
         }

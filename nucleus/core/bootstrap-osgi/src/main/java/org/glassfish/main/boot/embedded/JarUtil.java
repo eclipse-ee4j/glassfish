@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 
 import org.glassfish.main.boot.log.LogFacade;
 
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
+
 /**
  * Most part is copied from com.sun.appserv.connectors.internal.api.ConnectorsUtil
  * <p/>
@@ -97,8 +99,8 @@ final class JarUtil {
 
     public static void setEnv(String installDir) {
         String location = getSystemModuleLocation(installDir, DEFAULT_JMS_ADAPTER);
-        String imqLib = System.getProperty("com.sun.aas.imqLib", location);
-        System.setProperty("com.sun.aas.imqLib", imqLib);
+        String imqLib = System.getProperty(IMQ_LIB.getSystemPropertyName(), location);
+        System.setProperty(IMQ_LIB.getSystemPropertyName(), imqLib);
     }
 
     private static boolean extractRar(String installDir, String rarName) {

@@ -14,10 +14,14 @@ Faster Deployment was achieved by improved file handling; the team replaced cust
 
 Download:
 
-* [Eclipse GlassFish 7.0.24, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.24.zip)
-* [Eclipse GlassFish 7.0.24, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.24.zip)
-* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Platform, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.24)
-* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Web Profile, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.24)
+* [Eclipse GlassFish 7.0.24, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.24.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/7.0.24)
+* [Eclipse GlassFish 7.0.24, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.24.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/7.0.24)
+* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Platform, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/7.0.24/glassfish-embedded-all-7.0.24.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.24)
+* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Web Profile, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/7.0.24/glassfish-embedded-web-7.0.24.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.24)
 
 More details:
 

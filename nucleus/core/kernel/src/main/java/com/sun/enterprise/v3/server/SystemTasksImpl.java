@@ -26,7 +26,6 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.universal.process.ProcessUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.ServerDirs;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -51,6 +50,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
@@ -111,16 +111,9 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         System.setProperty("glassfish.version", Version.getProductIdInfo());
     }
 
-    /**
-     * Here is where we make the change Post-TP2 to *not* use JVM System Properties
-     */
-    private void setSystemProperty(String name, String value) {
-        System.setProperty(name, value);
-    }
-
     private void setSystemPropertiesFromEnv() {
         // adding our version of some system properties.
-        setSystemProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
+        System.setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
         String hostname = "localhost";
         try {
             // canonical name checks to make sure host is proper
@@ -129,7 +122,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
         }
         if (hostname != null) {
-            setSystemProperty(SystemPropertyConstants.HOST_NAME_PROPERTY, hostname);
+            System.setProperty(HOST_NAME.getSystemPropertyName(), hostname);
         }
     }
 
@@ -187,7 +180,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
                     String name = m.group(1);
                     String value = TranslatedConfigView.expandValue(m.group(2));
                     LOG.log(Level.FINEST, "Setting {0}={1}", new Object[] {name, value});
-                    setSystemProperty(name, value);
+                    System.setProperty(name, value);
                 }
             }
         }
@@ -199,7 +192,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             String value = sp.getValue();
 
             if (ok(name)) {
-                setSystemProperty(name, value);
+                System.setProperty(name, value);
             }
         }
     }

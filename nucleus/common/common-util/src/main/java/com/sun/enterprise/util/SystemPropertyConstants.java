@@ -175,7 +175,6 @@ public class SystemPropertyConstants {
      */
     /** name of the domain key */
     public static final String DOMAIN_NAME = "domain.name";
-    public static final String HOST_NAME_PROPERTY = "com.sun.aas.hostName";
     public static final String CONFIG_NAME_PROPERTY = "com.sun.aas.configName";
     public static final String DOCROOT_PROPERTY = "docroot";
     public static final String ACCESSLOG_PROPERTY = "accesslog";

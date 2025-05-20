@@ -56,16 +56,6 @@ public class SystemPropertyConstants {
     /**
      * Field
      */
-    public static final String IMQ_LIB_PROPERTY = "com.sun.aas.imqLib";
-
-    /**
-     * Field
-     */
-    public static final String IMQ_BIN_PROPERTY = "com.sun.aas.imqBin";
-
-    /**
-     * Field
-     */
     public static final String CONFIG_ROOT_PROPERTY = "com.sun.aas.configRoot";
 
     /**

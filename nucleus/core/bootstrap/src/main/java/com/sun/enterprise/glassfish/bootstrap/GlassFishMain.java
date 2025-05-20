@@ -36,6 +36,7 @@ import static com.sun.enterprise.glassfish.bootstrap.cp.ClassLoaderBuilder.creat
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
@@ -192,18 +193,16 @@ public class GlassFishMain {
 
 
     private static File getDefaultDomainsDir(File installRoot) {
-        String domainsRootSys = "com.sun.aas.domainsRoot";
-        String domainsRootEnv = "AS_DEF_DOMAINS_PATH";
-        // Can be a just a link
-        File domainsDirFile = new EnvToPropsConverter(installRoot.toPath()).convert(domainsRootEnv, domainsRootSys);
-        if (domainsDirFile == null) {
+        String envKey = DOMAINS_ROOT.getEnvName();
+        String sysKey = DOMAINS_ROOT.getSystemPropertyName();
+        File domainsDir = new EnvToPropsConverter(installRoot.toPath()).convert(envKey, sysKey);
+        if (domainsDir == null) {
             throw new RuntimeException(
-                "Neither " + domainsRootEnv + " env property nor " + domainsRootSys + " system property is set.");
+                "Neither " + envKey + " env property nor " + sysKey + " system property is set.");
         }
-
-        File domainsDir = absolutize(domainsDirFile);
         if (!domainsDir.isDirectory()) {
-            throw new RuntimeException(domainsDir + " is specifying a file that is NOT a directory.");
+            throw new RuntimeException(
+                DOMAINS_ROOT.getPropertyName() + "[" + domainsDir + "]" + " is NOT a directory.");
         }
         return domainsDir;
     }
@@ -255,15 +254,6 @@ public class GlassFishMain {
             val = argsAsProps.getProperty("--" + name);
         }
         return val;
-    }
-
-
-    private static File absolutize(File f) {
-        try {
-            return f.getCanonicalFile();
-        } catch (Exception e) {
-            return f.getAbsoluteFile();
-        }
     }
 
 

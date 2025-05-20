@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -175,7 +175,7 @@ public final class GFLauncherUtils {
         if (sys != null) {
             return toValidDirectory(sys);
         }
-        String env = System.getenv("AS_INSTALL");
+        String env = System.getenv(INSTALL_ROOT.getEnvName());
         if (env != null) {
             return toValidDirectory(env);
         }

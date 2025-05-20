@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,6 +65,7 @@ import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMS_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMX_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORTBASE_OSGI_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORT_MAX_VAL;
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 
 /**
  * This is a local command that creates a domain.
@@ -81,7 +82,10 @@ public final class CreateDomainCommand extends CLICommand {
     private static final String INSTANCE_PORT = "instanceport";
     private static final String DOMAIN_PROPERTIES = "domainproperties";
     private static final String PORTBASE_OPTION = "portbase";
-    private String adminUser = null;
+    private static final LocalStringsImpl strings = new LocalStringsImpl(CreateDomainCommand.class);
+
+    private String adminUser;
+
     @Param(name = ADMIN_PORT, optional = true)
     private String adminPort;
     @Param(name = PORTBASE_OPTION, optional = true)
@@ -114,7 +118,6 @@ public final class CreateDomainCommand extends CLICommand {
     private boolean checkPorts = true;
     @Param(name = "domain_name", primary = true)
     private String domainName;
-    private static final LocalStringsImpl strings = new LocalStringsImpl(CreateDomainCommand.class);
 
     public CreateDomainCommand() {
     }
@@ -146,7 +149,7 @@ public final class CreateDomainCommand extends CLICommand {
     @Override
     protected void validate() throws CommandException, CommandValidationException {
         if (domainDir == null) {
-            domainDir = getSystemProperty(SystemPropertyConstants.DOMAINS_ROOT_PROPERTY);
+            domainDir = getSystemProperty(DOMAINS_ROOT.getPropertyName());
         }
         if (domainDir == null) {
             throw new CommandValidationException(strings.get("InvalidDomainPath", domainDir));

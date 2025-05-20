@@ -22,7 +22,6 @@ import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -64,6 +63,7 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
@@ -81,7 +81,7 @@ public class AdminMain {
 
     private static final String[] SYS_PROPERTIES_TO_SET_FROM_ASENV = {
         INSTALL_ROOT.getSystemPropertyName(),
-        SystemPropertyConstants.CONFIG_ROOT_PROPERTY,
+        CONFIG_ROOT.getSystemPropertyName(),
         PRODUCT_ROOT.getSystemPropertyName()
     };
     private static final LocalStringsImpl strings = new LocalStringsImpl(AdminMain.class);

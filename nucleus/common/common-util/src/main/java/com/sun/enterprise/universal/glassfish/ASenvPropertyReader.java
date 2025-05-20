@@ -27,16 +27,16 @@ import java.util.Set;
 
 import org.glassfish.main.jdke.props.EnvToPropsConverter;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.AGENT_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
@@ -54,10 +54,10 @@ public class ASenvPropertyReader {
         DERBY_ROOT.getEnvName(), DERBY_ROOT.getSystemPropertyName(),
         IMQ_LIB.getEnvName(), IMQ_LIB.getSystemPropertyName(),
         IMQ_BIN.getEnvName(), IMQ_BIN.getSystemPropertyName(),
-        "AS_CONFIG", CONFIG_ROOT_PROPERTY,
+        CONFIG_ROOT.getEnvName(), CONFIG_ROOT.getSystemPropertyName(),
         JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
-        "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
-        "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
+        DOMAINS_ROOT.getEnvName(), DOMAINS_ROOT.getSystemPropertyName(),
+        NODES_ROOT.getEnvName(), NODES_ROOT.getSystemPropertyName());
 
 
     /**
@@ -131,10 +131,10 @@ public class ASenvPropertyReader {
             new EnvToPropsConverter(installDir.toPath()).convert(ENV_TO_SYS_PROPERTY).entrySet()
                 .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
             String javaHome = new File(System.getProperty(JAVA_HOME.getSystemPropertyName())).toPath().toString();
-            put(JAVA_ROOT.getPropertyName(), javaHome);
-            put(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
-            put(PRODUCT_ROOT.getPropertyName(), installDir.getParentFile().toPath().toString());
-            put(HOST_NAME.getPropertyName(), getHostname());
+            putIfAbsent(JAVA_ROOT.getPropertyName(), javaHome);
+            putIfAbsent(HOST_NAME.getPropertyName(), getHostname());
+            putIfAbsent(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
+            putIfAbsent(PRODUCT_ROOT.getPropertyName(), installDir.getParentFile().toPath().toString());
         }
 
         private static String getHostname() {

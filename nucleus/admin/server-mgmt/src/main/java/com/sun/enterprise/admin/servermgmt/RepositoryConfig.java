@@ -23,13 +23,13 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
@@ -98,14 +98,14 @@ public class RepositoryConfig extends HashMap<String, Object> {
         _configurationName = configName;
         final Map<String, String> envProperties = getEnvProps();
 
-        // Since the changes for the startup, we have the problem of refreshing
-        // config context. So, by default, I am making a change to refresh the
-        // config context. If some processes (e.g. start-domain) have already
-        // created a config context, then they should explicitly say so.
+        // Since the changes for the startup, we have the problem of refreshing config context.
+        // So, by default, I am making a change to refresh the config context.
+        // If some processes (e.g. start-domain) have already created a config context, then they
+        // should explicitly say so.
         put(K_REFRESH_CONFIG_CONTEXT, true);
         if (envProperties != null) {
-            put(K_INSTALL_ROOT, getFilePath(envProperties.get(INSTALL_ROOT.getPropertyName())));
-            put(K_CONFIG_ROOT, getFilePath(envProperties.get(INSTALL_ROOT.getPropertyName())));
+            put(K_INSTALL_ROOT, envProperties.get(INSTALL_ROOT.getPropertyName()));
+            put(K_CONFIG_ROOT, envProperties.get(CONFIG_ROOT.getPropertyName()));
         }
     }
 
@@ -135,7 +135,7 @@ public class RepositoryConfig extends HashMap<String, Object> {
         final Map<String, String> envProperties = getEnvProps();
         if (envProperties != null) {
             put(K_INSTALL_ROOT, envProperties.get(INSTALL_ROOT.getPropertyName()));
-            put(K_CONFIG_ROOT, getFilePath(envProperties.get(SystemPropertyConstants.CONFIG_ROOT_PROPERTY)));
+            put(K_CONFIG_ROOT, envProperties.get(CONFIG_ROOT.getPropertyName()));
         }
     }
 
@@ -143,11 +143,6 @@ public class RepositoryConfig extends HashMap<String, Object> {
     public String toString() {
         return ("repositoryRoot " + _repositoryRoot + " repositoryName " + _repositoryName + " instanceName " + _instanceName
                 + " configurationName " + _configurationName);
-    }
-
-    protected String getFilePath(String propertyName) {
-        File f = new File(propertyName);
-        return FileUtils.makeForwardSlashes(f.getAbsolutePath());
     }
 
     public void setConfigurationName(String configurationName) {

@@ -26,6 +26,10 @@ import java.util.stream.Collectors;
 public enum GlassFishVariable {
     /** Derby database main directory, containing lib directory with jar files. */
     DERBY_ROOT("AS_DERBY_INSTALL", "com.sun.aas.derbyRoot"),
+    /** Java home directory set by JVM automatically via <code>java.home</code> or via JAVA_HOME by user. */
+    JAVA_HOME("JAVA_HOME", "java.home"),
+    /** Java home set by AS_JAVA, has higher priority than JAVA_HOME. */
+    JAVA_ROOT("AS_JAVA", "com.sun.aas.javaRoot"),
     /** OSGi implementation selector. */
     OSGI_PLATFORM("GlassFish_Platform"),
     /** Which installation root the GlassFish should run with. */

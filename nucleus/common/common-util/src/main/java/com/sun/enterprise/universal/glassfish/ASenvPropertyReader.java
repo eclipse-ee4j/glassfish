@@ -33,11 +33,10 @@ import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPE
 import static com.sun.enterprise.util.SystemPropertyConstants.HOST_NAME_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
 import static com.sun.enterprise.util.SystemPropertyConstants.PRODUCT_ROOT_PROPERTY;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * Class ASenvPropertyReader
@@ -55,7 +54,7 @@ public class ASenvPropertyReader {
         "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
         "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
         "AS_CONFIG", CONFIG_ROOT_PROPERTY,
-        "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
+        JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
         "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
         "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
 
@@ -131,8 +130,7 @@ public class ASenvPropertyReader {
             new EnvToPropsConverter(installDir.toPath()).convert(ENV_TO_SYS_PROPERTY).entrySet()
                 .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
             String javaHome = new File(System.getProperty("java.home")).toPath().toString();
-            put(JAVA_ROOT_PROPERTY, javaHome);
-            put(JAVA_ROOT_PROPERTY_ASENV, javaHome);
+            put(JAVA_ROOT.getPropertyName(), javaHome);
             put(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
             put(PRODUCT_ROOT_PROPERTY, installDir.getParentFile().toPath().toString());
             put(HOST_NAME_PROPERTY, getHostname());

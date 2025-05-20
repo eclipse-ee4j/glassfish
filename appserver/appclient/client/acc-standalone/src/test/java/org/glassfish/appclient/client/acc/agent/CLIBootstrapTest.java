@@ -25,6 +25,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -40,8 +42,8 @@ public class CLIBootstrapTest {
 
     @BeforeEach
     public void setUp() {
-        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "AS_JAVA", "");
-        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "JAVA_HOME", "");
+        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + JAVA_ROOT.getEnvName(), "");
+        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + JAVA_HOME.getEnvName(), "");
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "PATH", System.getenv("PATH"));
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "AS_INSTALL",
             "/Users/Tim/asgroup/v3/H/publish/glassfish7/glassfish");
@@ -49,12 +51,12 @@ public class CLIBootstrapTest {
 
     @Test
     public void testChooseJavaASJAVAAsCurrent() {
-        runTest("AS_JAVA");
+        runTest(JAVA_ROOT.getEnvName());
     }
 
     @Test
     public void testChooseJavaJAVAHOMEAsCurrent() {
-        runTest("JAVA_HOME");
+        runTest(JAVA_HOME.getEnvName());
     }
 
 
@@ -65,20 +67,20 @@ public class CLIBootstrapTest {
 
     @Test
     public void testChooseJAVAHOMEAsBad() {
-        runTestUsingBadLocation("JAVA_HOME");
+        runTestUsingBadLocation(JAVA_HOME.getEnvName());
     }
 
     private void runTestUsingBadLocation(final String envVarName) {
-        final CLIBootstrap boot = assertDoesNotThrow(() -> new CLIBootstrap());
+        final CLIBootstrap boot = assertDoesNotThrow(CLIBootstrap::new);
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName, "shouldnotexistanywhere");
         CLIBootstrap.JavaInfo javaInfo = boot.initJava();
         assertNotNull(javaInfo);
     }
 
     private void runTest(final String envVarName) {
-        String javaHome = System.getProperty("java.home");
+        String javaHome = System.getProperty(JAVA_HOME.getSystemPropertyName());
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName, javaHome);
-        final CLIBootstrap boot = assertDoesNotThrow(() -> new CLIBootstrap());
+        final CLIBootstrap boot = assertDoesNotThrow(CLIBootstrap::new);
         CLIBootstrap.JavaInfo javaInfo = boot.initJava();
         assertAll(
             () -> assertNotNull(javaInfo, "found no match; expected to match on " + envVarName),

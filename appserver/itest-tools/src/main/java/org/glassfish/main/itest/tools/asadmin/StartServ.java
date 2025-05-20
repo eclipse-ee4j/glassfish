@@ -30,6 +30,9 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+
 /**
  * Tool for executing startserv command.
  * The tool is stateless.
@@ -132,8 +135,8 @@ public class StartServ {
             processManager.setEnvironment("AS_TRACE", "true");
         }
         // override any env property to what is used by tests
-        processManager.setEnvironment("JAVA_HOME", System.getProperty("java.home"));
-        processManager.setEnvironment("AS_JAVA", System.getProperty("java.home"));
+        processManager.setEnvironment(JAVA_HOME.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
+        processManager.setEnvironment(JAVA_ROOT.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
 
         int exitCode;
         String asadminErrorMessage = "";

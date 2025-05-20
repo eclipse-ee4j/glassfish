@@ -36,9 +36,9 @@ import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPER
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * Start-up context for the ACC.  Note that this context is used also for
@@ -68,7 +68,7 @@ public class ACCStartupContext extends StartupContext {
             "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
             "AS_CONFIG", CONFIG_ROOT_PROPERTY,
             "AS_INSTALL", INSTALL_ROOT.getPropertyName(),
-            "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
+            JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
             "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
             "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
         Map<String, File> files = new EnvToPropsConverter(rootDirectory.toPath()).convert(pairs);

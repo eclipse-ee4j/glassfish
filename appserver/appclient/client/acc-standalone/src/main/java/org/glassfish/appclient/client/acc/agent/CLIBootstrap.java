@@ -31,6 +31,7 @@ import org.glassfish.embeddable.client.UserError;
 
 import static java.lang.System.arraycopy;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 
 /**
  * Constructs a java command to launch the ACC with the correct agent and command line arguments, based on the current
@@ -943,7 +944,7 @@ public class CLIBootstrap {
         }
 
         private void init() {
-            jreHome = new File(System.getProperty("java.home"));
+            jreHome = new File(System.getProperty(JAVA_HOME.getSystemPropertyName()));
             javaExe = javaExe();
         }
 

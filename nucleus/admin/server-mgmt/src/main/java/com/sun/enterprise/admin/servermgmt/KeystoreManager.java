@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,6 @@ import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -45,6 +44,7 @@ import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTOR
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * @author kebbs
@@ -68,8 +68,7 @@ public class KeystoreManager {
     static {
         // Byron Nevins, July 2011
         String nonFinalKeyTool = KEYTOOL_EXE_NAME; // at the end we set the final
-        String propName = SystemPropertyConstants.JAVA_ROOT_PROPERTY;
-        String javaroot = new ASenvPropertyReader().getProps().get(propName);
+        String javaroot = new ASenvPropertyReader().getProps().get(JAVA_ROOT.getPropertyName());
         File keyToolBin = new File(new File(javaroot, "bin"), KEYTOOL_EXE_NAME);
 
         if (keyToolBin.canExecute()) {

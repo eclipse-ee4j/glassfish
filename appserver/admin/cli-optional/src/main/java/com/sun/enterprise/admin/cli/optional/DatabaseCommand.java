@@ -28,9 +28,9 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * This is an abstract class to be inherited by StartDatabaseCommand and StopDatabaseCommand. This classes prepares the
@@ -77,7 +77,7 @@ public abstract class DatabaseCommand extends CLICommand {
             checkIfPortIsValid(dbPort);
         }
 
-        javaHome = new File(getSystemProperty(JAVA_ROOT_PROPERTY));
+        javaHome = new File(getSystemProperty(JAVA_ROOT.getSystemPropertyName()));
         dbLocation = new File(getSystemProperty(DERBY_ROOT.getSystemPropertyName()));
         checkIfDbInstalled(dbLocation);
 

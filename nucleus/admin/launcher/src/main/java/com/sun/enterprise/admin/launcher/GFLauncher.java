@@ -61,7 +61,6 @@ import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
 import static com.sun.enterprise.util.OS.isDarwin;
 import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
@@ -72,6 +71,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * This is the main Launcher class designed for external and internal usage.
@@ -276,8 +276,8 @@ public abstract class GFLauncher {
         // unless it is empty or it is already refering to a substitution of
         // the environment variable.
         String javaHome = domainXMLjavaConfig.getJavaHome();
-        if (ok(javaHome) && !javaHome.trim().equals("${" + JAVA_ROOT_PROPERTY + "}")) {
-            asenvProps.put(JAVA_ROOT_PROPERTY, javaHome);
+        if (ok(javaHome) && !javaHome.trim().equals("${" + JAVA_ROOT.getSystemPropertyName() + "}")) {
+            asenvProps.put(JAVA_ROOT.getPropertyName(), javaHome);
         }
 
         domainXMLjavaConfigDebugOptions = getDebugOptionsFromDomainXMLJavaConfig();
@@ -736,7 +736,7 @@ public abstract class GFLauncher {
         }
 
         // second choice is from asenv
-        if (!setJavaExecutableIfValid(asenvProps.get(JAVA_ROOT_PROPERTY))) {
+        if (!setJavaExecutableIfValid(asenvProps.get(JAVA_ROOT.getPropertyName()))) {
             throw new GFLauncherException("nojvm");
         }
 

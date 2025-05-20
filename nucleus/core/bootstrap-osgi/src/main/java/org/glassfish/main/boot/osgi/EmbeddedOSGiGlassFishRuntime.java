@@ -61,13 +61,13 @@ import static com.sun.enterprise.util.SystemPropertyConstants.CONFIG_ROOT_PROPER
 import static com.sun.enterprise.util.SystemPropertyConstants.DOMAINS_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_BIN_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.IMQ_LIB_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY_ASENV;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINEST;
 import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
 import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * Implementation of GlassFishRuntime in an OSGi environment.
@@ -238,7 +238,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
                 "AS_IMQ_LIB", IMQ_LIB_PROPERTY,
                 "AS_IMQ_BIN", IMQ_BIN_PROPERTY,
                 "AS_CONFIG", CONFIG_ROOT_PROPERTY,
-                "AS_JAVA", JAVA_ROOT_PROPERTY_ASENV,
+                JAVA_ROOT.getEnvName(), JAVA_ROOT.getSystemPropertyName(),
                 "AS_DEF_DOMAINS_PATH", DOMAINS_ROOT_PROPERTY,
                 "AS_DEF_NODES_PATH", AGENT_ROOT_PROPERTY);
 

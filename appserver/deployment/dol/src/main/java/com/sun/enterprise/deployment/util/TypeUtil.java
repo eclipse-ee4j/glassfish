@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -425,6 +425,10 @@ public class TypeUtil {
      */
     private static boolean sameReturnTypes(Method m1, Method m2) {
         if (m1.getReturnType().equals(m2.getReturnType())) {
+            return true;
+        }
+
+        if (m1.getReturnType().isAssignableFrom(m2.getReturnType())) {
             return true;
         }
 

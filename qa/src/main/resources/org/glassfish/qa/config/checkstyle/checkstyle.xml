@@ -71,7 +71,6 @@
             <property name="severity" value="warning" />
         </module>
         <module name="JavadocVariable">
-            <property name="scope" value="protected" />
             <property name="severity" value="warning" />
         </module>
 

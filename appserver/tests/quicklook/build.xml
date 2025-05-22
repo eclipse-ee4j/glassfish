@@ -469,6 +469,10 @@
             <jvmarg value="-DASADMIN=${ASADMIN}" />
             <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
             <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+            <jvmarg value="--add-modules" />
+            <jvmarg value="ALL-MODULE-PATH" />
+            <jvmarg value="--module-path" />
+            <jvmarg value="${env.S1AS_HOME}/lib/bootstrap" />
             <sysproperty key="glassfish.home" value="${glassfish.home}" />
             <sysproperty key="BASEDIR" value="${basedir}" />
             <xmlfileset dir="." includes="${testng.xml}" />

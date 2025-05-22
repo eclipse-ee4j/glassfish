@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 #
 # Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
@@ -22,6 +22,7 @@ copy_ql_results(){
         cp -r ${WORKSPACE}/appserver/tests/quicklook/test-output/* ${WORKSPACE}/results/
         cp ${WORKSPACE}/appserver/tests/quicklook/test-output/TESTS-TestSuites.xml ${WORKSPACE}/results/junitreports/test_results_junit.xml
         cp ${WORKSPACE}/appserver/tests/quicklook/quicklook_summary.txt ${WORKSPACE}/results || true
+        cat ${WORKSPACE}/results/junitreports/test_results_junit.xml | grep -B 1 -C 7 "<error" || true
     else
         cp ${WORKSPACE}/nucleus/domains/domain1/logs/server.log* ${WORKSPACE}/results
     fi

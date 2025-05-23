@@ -1396,6 +1396,7 @@
                             <includeScope>runtime</includeScope>
                             <includeTypes>jar,glassfish-jar</includeTypes>
                             <includes>**/*.class</includes>
+                            <excludes>module-info.class</excludes>
                         </configuration>
                     </execution>
                     <execution>

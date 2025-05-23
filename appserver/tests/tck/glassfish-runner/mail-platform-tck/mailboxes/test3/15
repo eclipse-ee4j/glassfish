@@ -1,0 +1,51 @@
+From jmk@cochin Thu Feb 12 14:06:33 1998 -0800
+Return-Path: <owner-java-internal@java-aces>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA25648; Wed, 6 Aug 1997 10:48:04 -0700
+Received: from java-aces.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA10789; Wed, 6 Aug 1997 10:47:56 -0700
+Received: by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20180; Wed, 6 Aug 1997 12:39:10 -0500
+Received: from Eng.Sun.COM by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20175; Wed, 6 Aug 1997 12:39:09 -0500
+Received: from shadows.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA10194; Wed, 6 Aug 1997 10:45:10 -0700
+Received: from Eng.Sun.COM by shadows.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA26532; Wed, 6 Aug 1997 10:45:08 -0700
+Received: from sunmail1.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA10191; Wed, 6 Aug 1997 10:45:07 -0700
+Received: from Eng.Sun.COM by sunmail1.Sun.COM (SMI-8.6/SMI-4.1)
+	id KAA28182; Wed, 6 Aug 1997 10:45:06 -0700
+Received: from hape.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA10185; Wed, 6 Aug 1997 10:45:06 -0700
+Received: from positive.eng.sun.com by hape.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA18569; Wed, 6 Aug 1997 10:45:03 -0700
+Received: by positive.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA01406; Wed, 6 Aug 1997 10:45:05 -0700
+Date: Wed, 6 Aug 1997 10:45:05 -0700
+From: linden@hsmpk14a-105.eng.sun.com (Peter van der Linden)
+Message-Id: <199708061745.KAA01406@positive.eng.sun.com>
+To: java-internal@Sun.COM, bakke@hsmpka-122.eng.sun.com
+Subject: Re: PLEASE VERIFY
+X-Sun-Charset: US-ASCII
+Sender: owner-java-internal@qwerty.eng.sun.com
+Precedence: bulk
+Content-Length: 395
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 14
+
+I wouldn't say that.
+
+I would say something like 
+
+  The Java Development Kit (JDK) provides a complete software development
+  and execution environment for the Java language.
+
+  Java was designed with simplicity in mind, and Java programs are binary 
+  compatible on all systems, so it is simpler, easier, and faster than 
+  programming in C++.
+
+Don't believe everything you read on the web.  
+

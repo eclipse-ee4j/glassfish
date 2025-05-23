@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+  <engine>
+    <property name="deploymentExportPath">target/deployments</property>
+  </engine>
+
+  <extension qualifier="glassfish-descriptors">
+    <property name="descriptorDir">target/</property>
+  </extension>
+
+  <group qualifier="glassfish-servers" default="true">
+    <container qualifier="tck-appclient" default="true">
+        <configuration>
+            <property name="glassFishHome">target/glassfish8</property>
+        </configuration>
+        <protocol type="appclient" default="true">
+            <property name="runClient">true</property>
+            <property name="runAsVehicle">true</property>
+            <property name="clientEarDir">target/appclient</property>
+            <property name="unpackClientEar">true</property>
+            <!-- Need to populate from ts.jte command.testExecuteAppClient setting for glassfish -->
+            <property name="clientCmdLineString">${glassfish.home}/glassfish/bin/appclient \
+                -Djdk.tls.client.enableSessionTicketExtension=false \
+                -Djdk.tls.server.enableSessionTicketExtension=false \
+                -Djava.security.policy=${glassfish.home}/glassfish/lib/appclient/client.policy \
+                -Dcts.tmp=${ts.home}/tmp \
+                -Djava.security.auth.login.config=${glassfish.home}/glassfish/lib/appclient/appclientlogin.conf \
+                -Djava.protocol.handler.pkgs=javax.net.ssl \
+                -Djavax.net.ssl.keyStore=${ts.home}/bin/certificates/clientcert.jks \
+                -Djavax.net.ssl.keyStorePassword=changeit \
+                -Djavax.net.ssl.trustStore=${glassfish.home}/glassfish/domains/domain1/config/cacerts.jks \
+                -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl \
+                -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl \
+                -Djavax.xml.transform.TransformerFactory=com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl \
+                -Dorg.xml.sax.driver=com.sun.org.apache.xerces.internal.parsers.SAXParser \
+                -Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter \
+                -Doracle.jdbc.J2EE13Compliant=true \
+                -Doracle.jdbc.mapDateToTimestamp \
+                -Dstartup.login=false \
+                -Dauth.gui=false \
+                -Dlog.file.location=${glassfish.home}/glassfish/domains/domain1/logs \
+                -Dri.log.file.location=${glassfish.home}/glassfish/domains/domain1/logs \
+                -DwebServerHost.2=localhost \
+                -DwebServerPort.2=8080 \
+                -Ddeliverable.class=com.sun.ts.lib.deliverable.cts.CTSDeliverable \
+                -jar \
+                ${clientEarDir}/${clientAppArchive}
+            </property>
+            <property name="cmdLineArgSeparator">\\</property>
+            <!-- Pass ENV vars here -->
+            <!-- <property name="clientEnvString">PATH=${env.PATH};LD_LIBRARY_PATH=${glassfish.home}/lib;AS_DEBUG=true;
+                APPCPATH=${glassfish.home}/glassfish/lib/arquillian-protocol-lib.jar:${glassfish.home}/glassfish/lib/tck-porting-lib.jar:target/appclient/lib/arquillian-core.jar:target/appclient/lib/arquillian-junit5.jar:${glassfish.home}/glassfish/modules/security.jar</property> -->
+            <property name="clientEnvString">PATH=${env.PATH};LD_LIBRARY_PATH=${glassfish.home}/lib;AS_DEBUG=true;
+                APPCPATH=target/lib/arquillian-protocol-lib.jar:target/lib/runtime.jar:target/lib/tck-porting-lib.jar:target/appclient/lib/arquillian-core.jar:target/appclient/lib/arquillian-junit5.jar:${glassfish.home}/glassfish/modules/security.jar:${glassfish.home}/glassfish/lib/gf-client.jar</property>
+            <property name="clientDir">${project.basedir}</property>
+            <property name="workDir">/tmp</property>
+            <property name="tsJteFile">jakartaeetck/bin/ts.jte</property>
+            <property name="tsSqlStmtFile">sql/derby/derby.dml.sql</property>
+            <property name="trace">true</property>
+            <property name="clientTimeout">20000</property>
+        </protocol>
+    </container>
+  </group>
+
+</arquillian>

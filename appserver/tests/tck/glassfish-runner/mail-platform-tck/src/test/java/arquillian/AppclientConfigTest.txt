@@ -1,0 +1,34 @@
+package arquillian;
+
+import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
+import org.jboss.arquillian.config.descriptor.api.ProtocolDef;
+import org.jboss.arquillian.container.test.impl.MapObject;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.junit.jupiter.api.Test;
+import tck.arquillian.protocol.appclient.AppClientProtocolConfiguration;
+
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Map;
+
+public class AppclientConfigTest {
+    @Test
+    public void testLoadAppclientConfig() throws Exception{
+        System.out.println("AppclientConfigTest.testLoadAppclientConfig");
+        InputStream input = AppclientConfigTest.class.getResource("/arquillian.xml").openStream();
+        ArquillianDescriptor descriptor = Descriptors.importAs(ArquillianDescriptor.class)
+                .fromStream(input);
+        System.out.println("########################" +descriptor.getGroups().get(0));
+        AppClientProtocolConfiguration config = new AppClientProtocolConfiguration();
+        ProtocolDef appclientDef = descriptor.getGroups().get(0).getGroupContainers().get(0).getProtocols().get(0);
+        System.out.println(appclientDef);
+        Map<String, String> props = appclientDef.getProtocolProperties();
+        System.out.println(props);
+        MapObject.populate(config, props);
+        System.out.println(config.getClientCmdLineString());
+        System.out.println("--- ENV array:");
+        System.out.println(Arrays.asList(config.clientEnvAsArray()));
+        System.out.println("--- CMD array:");
+        System.out.println(Arrays.asList(config.clientCmdLineAsArray()));
+    }
+}

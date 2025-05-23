@@ -196,8 +196,8 @@
   </configs>
   <property name="administrative.domain.name" value="domain1"></property>
   <secure-admin special-admin-indicator="39e72cac-e399-453c-8232-6a0cebf10709">
-    <secure-admin-principal dn="CN=localhost,OU=GlassFish,O=Eclipse.org Foundation Inc,L=Ottawa,ST=Ontario,C=CA"></secure-admin-principal>
-    <secure-admin-principal dn="CN=localhost-instance,OU=GlassFish,O=Eclipse.org Foundation Inc,L=Ottawa,ST=Ontario,C=CA"></secure-admin-principal>
+    <secure-admin-principal dn="CN=localhost,OU=GlassFish,O=Eclipse Foundation"></secure-admin-principal>
+    <secure-admin-principal dn="CN=localhost-instance,OU=GlassFish,O=Eclipse Foundation"></secure-admin-principal>
   </secure-admin>
   <clusters></clusters>
   <applications></applications>

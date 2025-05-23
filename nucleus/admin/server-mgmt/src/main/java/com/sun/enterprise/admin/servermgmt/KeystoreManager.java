@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,9 @@ import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +64,7 @@ public class KeystoreManager {
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
     private static final StringManager _strMgr = StringManager.getManager(KeystoreManager.class);
-    protected PEFileLayout _fileLayout;
+    private PEFileLayout fileLayout;
 
 
     static {
@@ -94,7 +96,7 @@ public class KeystoreManager {
             addKeytoolCommand();
         }
 
-        public KeytoolExecutor(String[] args, int timeoutInSeconds, String[] inputLines) {
+        public KeytoolExecutor(String[] args, int timeoutInSeconds, String... inputLines) {
             super(args);
             setTimeoutMsec(timeoutInSeconds * 1000);
             setStdinLines(Arrays.asList(inputLines));
@@ -156,11 +158,11 @@ public class KeystoreManager {
     }
 
     protected PEFileLayout getFileLayout(RepositoryConfig config) {
-        if (_fileLayout == null) {
-            _fileLayout = new PEFileLayout(config);
+        if (fileLayout == null) {
+            fileLayout = new PEFileLayout(config);
         }
 
-        return _fileLayout;
+        return fileLayout;
     }
 
     /**
@@ -212,8 +214,10 @@ public class KeystoreManager {
     private void copyCertificateFromKeyStoreToTrustStore(final File configRoot, final String alias, final String masterPassword) throws RepositoryException {
         File keystore = new File(configRoot, KEYSTORE_FILE);
         File truststore = new File(configRoot, TRUSTSTORE_FILE);
+        if (!truststore.exists()) {
+            createKeyStoreFile(masterPassword, truststore);
+        }
         File certFile = null;
-        String[] input = { masterPassword };
         String[] keytoolCmd = null;
         KeytoolExecutor keytoolExecutor = null;
 
@@ -224,19 +228,21 @@ public class KeystoreManager {
                     "-export",
                     "-keystore", keystore.getAbsolutePath(),
                     "-alias", alias,
-                    "-file", certFile.getAbsolutePath(), };
+                    "-file", certFile.getAbsolutePath(),
+                };
 
-            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, input);
+            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, masterPassword);
             keytoolExecutor.execute("trustStoreNotCreated", truststore);
 
             // Import the newly created certificate into the truststore
             keytoolCmd = new String[] {
-                    "-import", "-noprompt",
+                    "-import",
                     "-keystore", truststore.getAbsolutePath(),
                     "-alias", alias,
-                    "-file", certFile.getAbsolutePath(), };
+                    "-file", certFile.getAbsolutePath(),
+                };
 
-            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, input);
+            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, masterPassword, "yes");
             keytoolExecutor.execute("trustStoreNotCreated", truststore);
 
         } finally {
@@ -245,6 +251,16 @@ public class KeystoreManager {
                     getLogger().log(WARNING, BAD_DELETE_TEMP_CERT_FILE, certFile.getAbsolutePath());
                 }
             }
+        }
+    }
+
+    private void createKeyStoreFile(final String masterPassword, File truststore) throws RepositoryException {
+        try {
+            KeyStore cacerts = KeyStore.getInstance("JKS");
+            cacerts.load(null, masterPassword.toCharArray());
+            cacerts.store(new FileOutputStream(truststore), masterPassword.toCharArray());
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RepositoryException(_strMgr.getString("trustStoreNotCreated", truststore), e);
         }
     }
 

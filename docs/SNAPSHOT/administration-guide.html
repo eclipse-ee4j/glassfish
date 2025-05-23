@@ -142,7 +142,7 @@
 <li><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-windows">To Configure a DAS or an Instance for Automatic Restart on Windows</a></li>
 <li><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-linux">To Configure a DAS or an Instance for Automatic Restart on Linux</a></li>
 <li><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris">To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris</a></li>
-<li><a href="#to-prevent-service-shutdown-when-a-user-logs-out-on-windows">To Prevent Service Shutdown When a User Logs Out on Windows</a></li>
+<li><a href="#to-prevent-shutdown-when-a-user-logs-out-on-windows">To Prevent Shutdown When a User Logs Out on Windows</a></li>
 </ul>
 </li>
 <li><a href="#backing-up-and-restoring-a-domain">Backing Up and Restoring a Domain</a>
@@ -8261,7 +8261,7 @@ must prevent service shutdown when a user logs out.</p>
 <p><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris">To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris</a></p>
 </li>
 <li>
-<p><a href="#to-prevent-service-shutdown-when-a-user-logs-out-on-windows">To Prevent Service Shutdown When a User Logs Out on Windows</a></p>
+<p><a href="#to-prevent-shutdown-when-a-user-logs-out-on-windows">To Prevent Shutdown When a User Logs Out on Windows</a></p>
 </li>
 </ul>
 </div>
@@ -8536,13 +8536,10 @@ Oracle Solaris documentation:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>"<a href="https://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=SYSADV1hbrunlevels-25516">Managing
-Services (Overview)</a>" in System Administration Guide: Basic
-Administration</p>
+<p>"<a href="https://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=SYSADV1hbrunlevels-25516">Managing Services (Overview)</a>" in System Administration Guide: Basic Administration</p>
 </li>
 <li>
-<p>"<a href="https://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=SYSADV1faauf">Managing
-Services (Tasks)</a>" in System Administration Guide: Basic Administration</p>
+<p>"<a href="https://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=SYSADV1faauf">Managing Services (Tasks)</a>" in System Administration Guide: Basic Administration</p>
 </li>
 <li>
 <p><a href="https://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1auths-1"><code>auths</code>(1)</a></p>
@@ -8572,59 +8569,39 @@ Services (Tasks)</a>" in System Administration Guide: Basic Administration</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="to-prevent-service-shutdown-when-a-user-logs-out-on-windows"><a class="anchor" href="#to-prevent-service-shutdown-when-a-user-logs-out-on-windows"></a>To Prevent Service Shutdown When a User Logs Out on Windows</h4>
+<h4 id="to-prevent-shutdown-when-a-user-logs-out-on-windows"><a class="anchor" href="#to-prevent-shutdown-when-a-user-logs-out-on-windows"></a>To Prevent Shutdown When a User Logs Out on Windows</h4>
 <div class="paragraph">
-<p>By default, the Java Virtual Machine (VM) receives signals from Windows
-that indicate that Windows is shutting down, or that a user is logging
-out of Windows, which causes the system to shut itself down cleanly.
-This behavior causes the Eclipse GlassFish service to shut down. To
-prevent the service from shutting down when a user logs out, you must
-set the <code>-Xrs</code> Java VM option
-(<code><a href="https://github.com/eclipse-ee4j/glassfishdocumentation" class="bare">https://github.com/eclipse-ee4j/glassfishdocumentation</a></code>).</p>
+<p>On old distributions of Windows operating systems (before Windows 7) it was possible
+to limit signal set accepted by the JVM using the <code>-Xrs</code> JVM option and that
+effectively prevented killing of the JVM.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="paragraph">
+<p>This does not work any more, even worse, the JVM even doesn&#8217;t execute shutdown hooks
+and behaves as if user would use the SIGKILL signal on Linux.</p>
+</div>
+<div class="paragraph">
+<p>The problem is registered by several issues reported to OpenJDK:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>Ensure that the DAS is running.</p>
+<p>"<a href="https://bugs.openjdk.org/browse/JDK-8253445">OpenJDK Bug 8253445 - Java applications on Windows do not execute shutdown hooks on system reboot/shutdown or user log-off</a>"</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To prevent killing of GlassFish instances you have two options, for both user needs special permissions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To create a service using the <a href="reference-manual.html#create-service"><code>create-service</code></a> command.</p>
 </li>
 <li>
-<p>Set the <code>-Xrs</code> Java VM option for the DAS.
-Use the <a href="reference-manual.html#create-jvm-options"><code>create-jvm-options</code></a> subcommand for this purpose.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; create-jvm-options -Xrs</code></pre>
-</div>
-</div>
+<p>To use Windows Scheduler to start the instance. We use this way to manage SSH Nodes too.
+See "<a href="https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtask">Microsoft PowerShell: New-ScheduledTask</a>"</p>
 </li>
-<li>
-<p>Set the <code>-Xrs</code> Java VM option for the Java VM within which the <code>asadmin</code> utility runs.
-To set this option, edit the <code>asadmin.bat</code> file to add the <code>-Xrs</code> option
-to the line that runs the <code>admin-cli.jar</code> file.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>In the as-install<code>\bin\asadmin.bat</code> file, edit the line to read as follows:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>%JAVA% -Xrs -jar &quot;%~dp0..\modules\admin-cli.jar&quot; %*</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>In the as-install-parent<code>\bin\asadmin.bat</code> file, edit the line to read as follows:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>%JAVA% -Xrs -jar &quot;%~dp0..\glassfish\modules\admin-cli.jar&quot; %*</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>If the Eclipse GlassFish service is running, restart the service for your changes to take effect.</p>
-</li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -32649,7 +32626,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-22 20:21:31 UTC
+Last updated 2025-05-23 19:26:34 UTC
 </div>
 </div>
 </body>

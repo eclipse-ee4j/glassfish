@@ -1426,123 +1426,88 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Would ask to add certificate - default is no -->
+                    <noprompt>true</noprompt>
+                    <validity>3650</validity>
+                    <keyalg>RSA</keyalg>
+                    <keypass>changeit</keypass>
+                    <storetype>JKS</storetype>
+                    <storepass>changeit</storepass>
+                </configuration>
                 <executions>
                     <execution>
                         <id>keystore-s1as</id>
                         <!-- maven resources plugin will create the output directory first -->
                         <phase>process-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>generateKeyPair</goal>
                         </goals>
                         <configuration>
-                            <executable>${java.home}/bin/keytool${file.executable.suffix}</executable>
-                            <arguments>
-                                <argument>-genkey</argument>
-                                <argument>-keyalg</argument>
-                                <argument>RSA</argument>
-                                <argument>-keystore</argument>
-                                <argument>${project.build.outputDirectory}/config/keystore.jks</argument>
-                                <argument>-alias</argument>
-                                <argument>s1as</argument>
-                                <argument>-dname</argument>
-                                <argument>CN=localhost,OU=GlassFish,O=Eclipse Foundation AISBL,L=Brussels,C=BE</argument>
-                                <argument>-validity</argument>
-                                <argument>3650</argument>
-                                <argument>-keypass</argument>
-                                <argument>changeit</argument>
-                                <argument>-storepass</argument>
-                                <argument>changeit</argument>
-                                <argument>-storetype</argument>
-                                <argument>JKS</argument>
-                                <argument>-noprompt</argument>
-                            </arguments>
+                            <keystore>${project.build.outputDirectory}/config/keystore.jks</keystore>
+                            <alias>s1as</alias>
+                            <dname>CN=localhost,OU=GlassFish,O=Eclipse Foundation AISBL,L=Brussels,C=BE</dname>
                         </configuration>
                     </execution>
                     <execution>
                         <id>keystore-glassfish-instance</id>
                         <phase>process-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>generateKeyPair</goal>
                         </goals>
                         <configuration>
-                            <executable>${java.home}/bin/keytool${file.executable.suffix}</executable>
-                            <arguments>
-                                <argument>-genkey</argument>
-                                <argument>-keyalg</argument>
-                                <argument>RSA</argument>
-                                <argument>-keystore</argument>
-                                <argument>${project.build.outputDirectory}/config/keystore.jks</argument>
-                                <argument>-alias</argument>
-                                <argument>glassfish-instance</argument>
-                                <argument>-dname</argument>
-                                <argument>CN=localhost-instance,OU=GlassFish,O=Eclipse Foundation AISBL,L=Brussels,C=BE</argument>
-                                <argument>-validity</argument>
-                                <argument>3650</argument>
-                                <argument>-keypass</argument>
-                                <argument>changeit</argument>
-                                <argument>-storepass</argument>
-                                <argument>changeit</argument>
-                                <argument>-storetype</argument>
-                                <argument>JKS</argument>
-                                <argument>-noprompt</argument>
-                            </arguments>
+                            <keystore>${project.build.outputDirectory}/config/keystore.jks</keystore>
+                            <alias>glassfish-instance</alias>
+                            <dname>CN=localhost-instance,OU=GlassFish,O=Eclipse Foundation AISBL,L=Brussels,C=BE</dname>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>export-s1as</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exportCertificate</goal>
+                        </goals>
+                        <configuration>
+                            <keystore>${project.build.outputDirectory}/config/keystore.jks</keystore>
+                            <alias>s1as</alias>
+                            <file>${project.build.directory}/s1as.cer</file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>export-glassfish-instance</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exportCertificate</goal>
+                        </goals>
+                        <configuration>
+                            <keystore>${project.build.outputDirectory}/config/keystore.jks</keystore>
+                            <alias>glassfish-instance</alias>
+                            <file>${project.build.directory}/glassfish-instance.cer</file>
                         </configuration>
                     </execution>
                     <execution>
                         <id>cacerts-s1as</id>
                         <phase>process-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>importCertificate</goal>
                         </goals>
                         <configuration>
-                            <executable>${java.home}/bin/keytool${file.executable.suffix}</executable>
-                            <arguments>
-                                <argument>-importkeystore</argument>
-                                <argument>-srckeystore</argument>
-                                <argument>${project.build.outputDirectory}/config/keystore.jks</argument>
-                                <argument>-destkeystore</argument>
-                                <argument>${project.build.outputDirectory}/config/cacerts.jks</argument>
-                                <argument>-srcalias</argument>
-                                <argument>s1as</argument>
-                                <argument>-destalias</argument>
-                                <argument>s1as</argument>
-                                <argument>-srcstorepass</argument>
-                                <argument>changeit</argument>
-                                <argument>-deststorepass</argument>
-                                <argument>changeit</argument>
-                                <argument>-deststoretype</argument>
-                                <argument>JKS</argument>
-                                <argument>-noprompt</argument>
-                            </arguments>
+                            <keystore>${project.build.outputDirectory}/config/cacerts.jks</keystore>
+                            <alias>s1as</alias>
+                            <file>${project.build.directory}/s1as.cer</file>
                         </configuration>
                     </execution>
                     <execution>
                         <id>cacerts-glassfish-instance</id>
                         <phase>process-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>importCertificate</goal>
                         </goals>
                         <configuration>
-                            <executable>${java.home}/bin/keytool${file.executable.suffix}</executable>
-                            <arguments>
-                                <argument>-importkeystore</argument>
-                                <argument>-srckeystore</argument>
-                                <argument>${project.build.outputDirectory}/config/keystore.jks</argument>
-                                <argument>-destkeystore</argument>
-                                <argument>${project.build.outputDirectory}/config/cacerts.jks</argument>
-                                <argument>-srcalias</argument>
-                                <argument>glassfish-instance</argument>
-                                <argument>-destalias</argument>
-                                <argument>glassfish-instance</argument>
-                                <argument>-srcstorepass</argument>
-                                <argument>changeit</argument>
-                                <argument>-deststorepass</argument>
-                                <argument>changeit</argument>
-                                <argument>-deststoretype</argument>
-                                <argument>JKS</argument>
-                                <argument>-noprompt</argument>
-                            </arguments>
+                            <keystore>${project.build.outputDirectory}/config/cacerts.jks</keystore>
+                            <alias>glassfish-instance</alias>
+                            <file>${project.build.directory}/glassfish-instance.cer</file>
                         </configuration>
                     </execution>
                 </executions>

@@ -1687,15 +1687,9 @@
         </dependency>
     </dependencies>
 
-   <build>
+    <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -1836,7 +1830,7 @@
         </plugins>
     </build>
 
-   <profiles>
+    <profiles>
         <profile>
             <!-- generate empty javadoc jar -->
             <id>oss-release</id>

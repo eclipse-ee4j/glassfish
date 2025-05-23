@@ -157,6 +157,12 @@
                                     basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-common.jar"
                                 />
+                                
+                                <!-- To have a manifest at all -->
+                                <jarupdate
+                                    basedir="${patches}/jakarta-data-api" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jakarta.data-api.jar"
+                                />
                             </target>
                         </configuration>
                     </execution>

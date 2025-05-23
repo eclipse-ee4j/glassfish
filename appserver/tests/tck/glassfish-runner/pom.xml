@@ -54,7 +54,7 @@
         <module>mail-platform-tck</module>
         <module>messaging-platform-tck</module>
         <module>messaging-tck</module>
-        <module>pages-debugging-other</module>
+        <module>pages-debugging-other-tck</module>
         <module>pages-platform-extra-tck</module>
         <module>pages-tck</module>
         <module>persistence-platform-tck</module>

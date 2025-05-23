@@ -77,9 +77,6 @@ Embedded {productName} comes with the following flavours:
   Contains classes needed for deploying Jakarta EE web applications.
   Download this file from
   `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web`.
-`glassfish-embedded-nucleus.jar`::
-  Corresponds to the nucleus distribution. Download this file from
-  `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-nucleus`.
 `glassfish-embedded-static-shell.jar`::
   Contains references to classes needed for deploying Jakarta EE
   applications. Must be used with a non-embedded installation of
@@ -178,10 +175,6 @@ java -jar glassfish-embedded-all.jar
 
 ```
 java -jar glassfish-embedded-web.jar
-```
-
-```
-java -jar glassfish-embedded-nucleus.jar
 ```
 
 ```

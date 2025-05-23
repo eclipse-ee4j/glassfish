@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.AccessControlException;
@@ -226,7 +227,7 @@ public class SecuritySupport {
         for (int i = 0; i < kstores.length; i++) {
             checkCertificateDates(kstores[i], initDate);
             KeyManagerFactory kmf = KeyManagerFactory
-                .getInstance((algorithm != null) ? algorithm : KeyManagerFactory.getDefaultAlgorithm());
+                .getInstance(algorithm == null ? KeyManagerFactory.getDefaultAlgorithm() : algorithm);
             kmf.init(kstores[i], keyStorePasswords.get(i));
             KeyManager[] kmgrs = kmf.getKeyManagers();
             if (kmgrs != null) {
@@ -252,7 +253,7 @@ public class SecuritySupport {
         for (KeyStore tstore : tstores) {
             checkCertificateDates(tstore, initDate);
             TrustManagerFactory tmf = TrustManagerFactory
-                .getInstance((algorithm != null) ? algorithm : TrustManagerFactory.getDefaultAlgorithm());
+                .getInstance(algorithm == null ? TrustManagerFactory.getDefaultAlgorithm() : algorithm);
             tmf.init(tstore);
             TrustManager[] tmgrs = tmf.getTrustManagers();
             if (tmgrs != null) {
@@ -280,7 +281,7 @@ public class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        if (System.getProperty("java.vm.specification.version").compareTo("24") < 0 && processEnvironment.getProcessType().isStandaloneServer()) {
+        if (Runtime.version().feature() < 24 && processEnvironment.getProcessType().isStandaloneServer()) {
             checkPermission(KEYSTORE_PASS_PROP);
         }
 
@@ -331,12 +332,11 @@ public class SecuritySupport {
     }
 
 
-    private void loadStores(String tokenName, Provider provider, String keyStoreFile, char[] keyStorePass,
-        String keyStoreType, String trustStoreFile, char[] trustStorePass, String trustStoreType) {
-
+    private void loadStores(String tokenName, Provider provider, String keyStoreFilePath, char[] keyStorePass,
+        String keyStoreType, String trustStoreFilePath, char[] trustStorePass, String trustStoreType) {
         try {
-            KeyStore keyStore = loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
-            KeyStore trustStore = loadKS(trustStoreType, provider, trustStoreFile, trustStorePass);
+            KeyStore keyStore = initKS(keyStoreType, provider, keyStoreFilePath, keyStorePass);
+            KeyStore trustStore = initKS(trustStoreType, provider, trustStoreFilePath, trustStorePass);
             keyStores.add(keyStore);
             trustStores.add(trustStore);
             keyStorePasswords.add(Arrays.copyOf(keyStorePass, keyStorePass.length));
@@ -353,11 +353,17 @@ public class SecuritySupport {
      *
      * @param keyStoreType
      * @param provider
-     * @param keyStoreFile
+     * @param keyStoreFilePath
      * @param keyStorePass
      * @retun keystore loaded, never null.
      */
-    private static KeyStore loadKS(String keyStoreType, Provider provider, String keyStoreFile, char[] keyStorePass) throws Exception {
+    private static KeyStore initKS(String keyStoreType, Provider provider, String keyStoreFilePath, char[] keyStorePass) throws Exception {
+        final File keyStoreFile = keyStoreFilePath == null ? null : new File(keyStoreFilePath);
+        return loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
+    }
+
+
+    private static KeyStore loadKS(String keyStoreType, Provider provider, File keyStoreFile, char[] keyStorePass) throws Exception {
         final KeyStore keyStore;
         if (provider == null) {
             keyStore = KeyStore.getInstance(keyStoreType);
@@ -374,9 +380,9 @@ public class SecuritySupport {
                 new Object[] {keyStoreFile, keyStorePass == null});
             keyStore.load(bstream, keyStorePass);
         }
-
         return keyStore;
     }
+
 
     /**
      * Check X509 certificates in a store for expiration.

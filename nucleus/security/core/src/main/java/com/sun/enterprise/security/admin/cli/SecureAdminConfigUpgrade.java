@@ -20,7 +20,6 @@ package com.sun.enterprise.security.admin.cli;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.security.SecurityUpgradeService;
@@ -64,6 +63,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static com.sun.enterprise.config.serverbeans.SecureAdmin.DEFAULT_INSTANCE_ALIAS;
 
 /**
  * Upgrades older config to current.
@@ -286,7 +287,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         UnrecoverableKeyException, ProcessManagerException {
         // No need to add glassfish-instance to the keystore if it already exists.
         final KeyStore ks = sslUtils().getKeyStore();
-        if (ks.containsAlias(SecureAdmin.DEFAULT_INSTANCE_ALIAS)) {
+        if (ks.containsAlias(DEFAULT_INSTANCE_ALIAS)) {
             return;
         }
 
@@ -299,8 +300,8 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         final String pw = masterPassword();
         {
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-genkey", "-keyalg", "RSA", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS, "-dname",
-                getCertificateDN(), "-validity", "3650", "-keypass", pw, "-storepass", pw,});
+                keyStoreFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS, "-dname",
+                getCertificateDN(), "-validity", "3650", "-keypass", pw, "-storepass", pw});
             int exitValue = pm.execute();
             if (exitValue != 0) {
                 final String err = pm.getStdout();
@@ -311,7 +312,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         tempCertFile.deleteOnExit();
         {
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-exportcert", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS, "-keypass", pw,
+                keyStoreFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS, "-keypass", pw,
                 "-storepass", pw, "-file", tempCertFile.getAbsolutePath()});
             int exitValue = pm.execute();
             if (exitValue != 0) {
@@ -324,7 +325,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
             }
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-importcert", "-noprompt", "-trustcacerts",
                 "-storepass", pw, "-keypass", pw, "-keystore", trustStoreFile.getAbsolutePath(), "-file",
-                tempCertFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS});
+                tempCertFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS});
             int exitValue = pm.execute();
             if (!tempCertFile.delete()) {
                 LOG.log(Level.FINE, "Unable to delete temp file {0}; continuing", tempCertFile.getAbsolutePath());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.corba.ee.impl.misc.ORBUtility;
-import com.sun.corba.ee.spi.misc.ORBConstants;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.corba.ee.spi.transport.Acceptor;
 import com.sun.corba.ee.spi.transport.ORBSocketFactory;
@@ -57,6 +56,8 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.IiopService;
 import org.glassfish.security.common.CipherInfo;
+
+import static com.sun.corba.ee.spi.misc.ORBConstants.SOCKETCHANNEL;
 
 
 /**
@@ -208,16 +209,18 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             protocol = "SSL";
         }
 
-        String[] ssl3TlsCipherArr = null;
+        final String[] ssl3TlsCipherArr;
         if (tlsEnabled || ssl3Enabled) {
-            ssl3TlsCipherArr = getEnabledCipherSuites(ssl3TlsCiphers,
-                    false, ssl3Enabled, tlsEnabled);
+            ssl3TlsCipherArr = getEnabledCipherSuites(ssl3TlsCiphers, false, ssl3Enabled, tlsEnabled);
+        } else {
+            ssl3TlsCipherArr = null;
         }
 
-        String[] ssl2CipherArr = null;
+        final String[] ssl2CipherArr;
         if (ssl2Enabled) {
-            ssl2CipherArr = getEnabledCipherSuites(ssl2Ciphers,
-                    true, false, false);
+            ssl2CipherArr = getEnabledCipherSuites(ssl2Ciphers, true, false, false);
+        } else {
+            ssl2CipherArr = null;
         }
 
         SSLContext ctx = SSLContext.getInstance(protocol);
@@ -225,9 +228,6 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             IIOPSSLUtil sslUtil = Globals.getDefaultHabitat().getService(IIOPSSLUtil.class);
             KeyManager[] mgrs = sslUtil.getKeyManagers(alias);
             ctx.init(mgrs, sslUtil.getTrustManagers(), sslUtil.getInitializedSecureRandom());
-        } else {
-            //do nothing
-            //ctx.init(mgrs, sslUtil.getTrustManagers(), sslUtil.getInitializedSecureRandom());
         }
 
         return new SSLInfo(ctx, ssl3TlsCipherArr, ssl2CipherArr);
@@ -259,21 +259,17 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         if(type.equals(SSL_MUTUALAUTH) || type.equals(SSL) ||
             type.equals(PERSISTENT_SSL)) {
             return createSSLServerSocket(type, inetSocketAddress);
-        } else {
-                ServerSocket serverSocket = null;
-                if (orb.getORBData().acceptorSocketType().equals(
-                        ORBConstants.SOCKETCHANNEL)) {
-                    ServerSocketChannel serverSocketChannel =
-                            ServerSocketChannel.open();
-                    serverSocket = serverSocketChannel.socket();
-                } else {
-                    serverSocket = new ServerSocket();
-                }
-
-            serverSocket.bind(inetSocketAddress);
-            return serverSocket;
-
         }
+        ServerSocket serverSocket = null;
+        if (orb.getORBData().acceptorSocketType().equals(SOCKETCHANNEL)) {
+            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+            serverSocket = serverSocketChannel.socket();
+        } else {
+            serverSocket = new ServerSocket();
+        }
+
+         serverSocket.bind(inetSocketAddress);
+         return serverSocket;
     }
 
     /**
@@ -296,29 +292,23 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             if (type.equals(SSL) || type.equals(SSL_MUTUALAUTH)) {
                 String host = inetSocketAddress.getHostName();
                 return createSSLSocket(host, port);
+            }
+            LOG.log(Level.FINE, "Creating CLEAR_TEXT socket for: {0}", port);
+
+            final Socket socket;
+            if (SOCKETCHANNEL.equals(orb.getORBData().connectionSocketType())) {
+                SocketChannel socketChannel = ORBUtility.openSocketChannel(inetSocketAddress);
+                socket = socketChannel.socket();
             } else {
-                Socket socket = null;
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "Creating CLEAR_TEXT socket for:" +port);
-                }
-
-                if (orb.getORBData().connectionSocketType().equals(
-                    ORBConstants.SOCKETCHANNEL)) {
-                    SocketChannel socketChannel = ORBUtility.openSocketChannel(inetSocketAddress);
-                    socket = socketChannel.socket();
-                } else {
-                    String host = inetSocketAddress.getHostName();
-                    socket = new Socket(host, port);
-                }
-
-                // Disable Nagle's algorithm (i.e. always send immediately).
-                socket.setTcpNoDelay(true);
-                return socket;
+                String host = inetSocketAddress.getHostName();
+                socket = new Socket(host, port);
             }
-        } catch ( Exception ex ) {
-            if(LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE,"Exception creating socket",ex);
-            }
+
+            // Disable Nagle's algorithm (i.e. always send immediately).
+            socket.setTcpNoDelay(true);
+            return socket;
+        } catch (Exception ex) {
+            LOG.log(Level.FINE,"Exception creating socket",ex);
             throw new RuntimeException(ex);
         }
     }

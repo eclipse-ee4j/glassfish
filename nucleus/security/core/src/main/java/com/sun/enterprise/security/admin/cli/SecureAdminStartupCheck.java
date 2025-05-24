@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,10 @@
 
 package com.sun.enterprise.security.admin.cli;
 
+import jakarta.inject.Inject;
+
 import org.glassfish.api.StartupRunLevel;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
@@ -50,15 +54,18 @@ import org.jvnet.hk2.annotations.Service;
 @RunLevel(StartupRunLevel.VAL)
 public class SecureAdminStartupCheck extends SecureAdminUpgradeHelper implements PostConstruct {
 
+    @Inject
+    private ServerEnvironment serverEnvironment;
+
+    /**
+     * If a formal upgrade is in progress then this Startup service
+     * will be invoked first.  The upgrade should take care of things,
+     * so this becomes a no-op.
+     */
     @Override
     public void postConstruct() {
         try {
-            /*
-             * If a formal upgrade is in progress then this Startup service
-             * will be invoked first.  The upgrade should take care of things,
-             * so this becomes a no-op.
-             */
-            if (isFormalUpgrade()) {
+            if (isFormalUpgrade() || serverEnvironment.isEmbedded()) {
                 return;
             }
             ensureSecureAdminReady();

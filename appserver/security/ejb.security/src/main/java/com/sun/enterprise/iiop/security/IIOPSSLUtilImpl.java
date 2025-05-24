@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +27,6 @@ import jakarta.inject.Singleton;
 
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.KeyManager;
@@ -40,6 +39,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
@@ -69,31 +70,28 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     @Override
     public KeyManager[] getKeyManagers(String alias) {
-        KeyManager[] mgrs = null;
         try {
             if (alias != null && !sslUtils.isTokenKeyAlias(alias)) {
-                throw new IllegalStateException("IIOP1004: Key alias '" + alias + "' not found in keystore");
+                LOG.log(WARNING,
+                    "IIOP1004: Key alias {0} not found in keystore. Returning no key managers, SSL will not be supported.",
+                    alias);
+                return new KeyManager[0];
             }
-
-            mgrs = sslUtils.getKeyManagers();
+            KeyManager[] mgrs = sslUtils.getKeyManagers();
             if (alias != null && mgrs != null && mgrs.length > 0) {
                 KeyManager[] newMgrs = new KeyManager[mgrs.length];
                 for (int i = 0; i < mgrs.length; i++) {
-                    if (LOG.isLoggable(Level.FINE)) {
-                        StringBuffer msg = new StringBuffer("Setting J2EEKeyManager for ");
-                        msg.append(" alias : " + alias);
-                        LOG.log(Level.FINE, msg.toString());
-                    }
+                    LOG.log(FINE, "Setting J2EEKeyManager for alias {0}", alias);
                     newMgrs[i] = new J2EEKeyManager((X509KeyManager) mgrs[i], alias);
                 }
                 mgrs = newMgrs;
             }
+            return mgrs;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return mgrs;
     }
 
     @Override
@@ -131,10 +129,10 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
                     .getServerPort("SSL_MUTUALAUTH");
             }
         } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
-            LOG.log(Level.FINE, "UnknownType exception", ute);
+            LOG.log(FINE, "UnknownType exception", ute);
         }
 
-        LOG.log(Level.FINE, "sslMutualAuthPort: {0}", sslMutualAuthPort);
+        LOG.log(FINE, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
         CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(orb, sslMutualAuthPort);
         EjbDescriptor desc = ctc.getEjbDescriptor(iorInfo);

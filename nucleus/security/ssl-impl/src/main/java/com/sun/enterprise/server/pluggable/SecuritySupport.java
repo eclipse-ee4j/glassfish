@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +25,12 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.security.AccessController;
+import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -63,6 +65,9 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.security.common.MasterPassword;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 
 /**
@@ -226,7 +231,7 @@ public class SecuritySupport {
         for (int i = 0; i < kstores.length; i++) {
             checkCertificateDates(kstores[i], initDate);
             KeyManagerFactory kmf = KeyManagerFactory
-                .getInstance((algorithm != null) ? algorithm : KeyManagerFactory.getDefaultAlgorithm());
+                .getInstance(algorithm == null ? KeyManagerFactory.getDefaultAlgorithm() : algorithm);
             kmf.init(kstores[i], keyStorePasswords.get(i));
             KeyManager[] kmgrs = kmf.getKeyManagers();
             if (kmgrs != null) {
@@ -252,7 +257,7 @@ public class SecuritySupport {
         for (KeyStore tstore : tstores) {
             checkCertificateDates(tstore, initDate);
             TrustManagerFactory tmf = TrustManagerFactory
-                .getInstance((algorithm != null) ? algorithm : TrustManagerFactory.getDefaultAlgorithm());
+                .getInstance(algorithm == null ? TrustManagerFactory.getDefaultAlgorithm() : algorithm);
             tmf.init(tstore);
             TrustManager[] tmgrs = tmf.getTrustManagers();
             if (tmgrs != null) {
@@ -280,7 +285,7 @@ public class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        if (System.getProperty("java.vm.specification.version").compareTo("24") < 0 && processEnvironment.getProcessType().isStandaloneServer()) {
+        if (Runtime.version().feature() < 24 && processEnvironment.getProcessType().isStandaloneServer()) {
             checkPermission(KEYSTORE_PASS_PROP);
         }
 
@@ -331,12 +336,11 @@ public class SecuritySupport {
     }
 
 
-    private void loadStores(String tokenName, Provider provider, String keyStoreFile, char[] keyStorePass,
-        String keyStoreType, String trustStoreFile, char[] trustStorePass, String trustStoreType) {
-
+    private void loadStores(String tokenName, Provider provider, String keyStoreFilePath, char[] keyStorePass,
+        String keyStoreType, String trustStoreFilePath, char[] trustStorePass, String trustStoreType) {
         try {
-            KeyStore keyStore = loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
-            KeyStore trustStore = loadKS(trustStoreType, provider, trustStoreFile, trustStorePass);
+            KeyStore keyStore = getKeyStore(keyStoreType, provider, keyStoreFilePath, keyStorePass);
+            KeyStore trustStore = getKeyStore(trustStoreType, provider, trustStoreFilePath, trustStorePass);
             keyStores.add(keyStore);
             trustStores.add(trustStore);
             keyStorePasswords.add(Arrays.copyOf(keyStorePass, keyStorePass.length));
@@ -353,30 +357,51 @@ public class SecuritySupport {
      *
      * @param keyStoreType
      * @param provider
-     * @param keyStoreFile
+     * @param keyStoreFilePath
      * @param keyStorePass
      * @retun keystore loaded, never null.
      */
-    private static KeyStore loadKS(String keyStoreType, Provider provider, String keyStoreFile, char[] keyStorePass) throws Exception {
-        final KeyStore keyStore;
-        if (provider == null) {
-            keyStore = KeyStore.getInstance(keyStoreType);
-        } else {
-            keyStore = KeyStore.getInstance(keyStoreType, provider);
-        }
+    private static KeyStore getKeyStore(String keyStoreType, Provider provider, String keyStoreFilePath, char[] keyStorePass) throws Exception {
+        final File keyStoreFile = keyStoreFilePath == null ? null : new File(keyStoreFilePath);
         if (keyStoreFile == null) {
-            keyStore.load(null, keyStorePass);
-            return keyStore;
+            return createEmptyKeyStore(keyStoreType, provider, keyStorePass);
         }
+        if (!keyStoreFile.exists()) {
+            LOG.log(WARNING, "Keystore file does not exist: {0}. Generating default empty keystore.", keyStoreFile);
+            return createEmptyKeyStore(keyStoreType, provider, keyStorePass);
+        }
+        return loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
+    }
+
+
+    private static KeyStore loadKS(String keyStoreType, Provider provider, File keyStoreFile, char[] keyStorePass)
+        throws Exception {
+        final KeyStore keyStore = createKeyStore(keyStoreType, provider);
         try (FileInputStream istream = new FileInputStream(keyStoreFile);
             BufferedInputStream bstream = new BufferedInputStream(istream)) {
-            LOG.log(Level.FINE, "Loading keystoreFile = {0}, keystorePass is null = {1}",
+            LOG.log(FINE, "Loading keystoreFile = {0}, keystorePass is null = {1}",
                 new Object[] {keyStoreFile, keyStorePass == null});
             keyStore.load(bstream, keyStorePass);
         }
-
         return keyStore;
     }
+
+
+    private static KeyStore createEmptyKeyStore(String keyStoreType, Provider provider, char[] keyStorePass)
+        throws IOException, GeneralSecurityException {
+        final KeyStore keyStore = createKeyStore(keyStoreType, provider);
+        keyStore.load(null, keyStorePass);
+        return keyStore;
+    }
+
+
+    private static KeyStore createKeyStore(String keyStoreType, Provider provider) throws KeyStoreException {
+        if (provider == null) {
+            return KeyStore.getInstance(keyStoreType);
+        }
+        return KeyStore.getInstance(keyStoreType, provider);
+    }
+
 
     /**
      * Check X509 certificates in a store for expiration.

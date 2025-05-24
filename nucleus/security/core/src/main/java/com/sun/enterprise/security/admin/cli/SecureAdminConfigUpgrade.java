@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.security.admin.cli;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.security.SecurityUpgradeService;
@@ -35,9 +34,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -62,6 +63,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static com.sun.enterprise.config.serverbeans.SecureAdmin.DEFAULT_INSTANCE_ALIAS;
 
 /**
  * Upgrades older config to current.
@@ -95,8 +98,8 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
 
     private final static String ASADMIN_VS_NAME = "__asadmin";
 
-    private static String CERTIFICATE_DN_PREFIX = "CN=";
-    private static String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse.org Foundation Inc,L=Ottawa,ST=Ontario,C=CA";
+    private static final String CERTIFICATE_DN_PREFIX = "CN=";
+    private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation AISBL,L=Brussels,C=BE";
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
     // Thanks to Jerome for suggesting this injection to make sure the
@@ -284,7 +287,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         UnrecoverableKeyException, ProcessManagerException {
         // No need to add glassfish-instance to the keystore if it already exists.
         final KeyStore ks = sslUtils().getKeyStore();
-        if (ks.containsAlias(SecureAdmin.DEFAULT_INSTANCE_ALIAS)) {
+        if (ks.containsAlias(DEFAULT_INSTANCE_ALIAS)) {
             return;
         }
 
@@ -297,8 +300,8 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         final String pw = masterPassword();
         {
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-genkey", "-keyalg", "RSA", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS, "-dname",
-                getCertificateDN(), "-validity", "3650", "-keypass", pw, "-storepass", pw,});
+                keyStoreFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS, "-dname",
+                getCertificateDN(), "-validity", "3650", "-keypass", pw, "-storepass", pw});
             int exitValue = pm.execute();
             if (exitValue != 0) {
                 final String err = pm.getStdout();
@@ -309,7 +312,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         tempCertFile.deleteOnExit();
         {
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-exportcert", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS, "-keypass", pw,
+                keyStoreFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS, "-keypass", pw,
                 "-storepass", pw, "-file", tempCertFile.getAbsolutePath()});
             int exitValue = pm.execute();
             if (exitValue != 0) {
@@ -317,9 +320,12 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
             }
         }
         {
+            if (!trustStoreFile.exists()) {
+                createKeyStoreFile(trustStoreFile, pw);
+            }
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-importcert", "-noprompt", "-trustcacerts",
                 "-storepass", pw, "-keypass", pw, "-keystore", trustStoreFile.getAbsolutePath(), "-file",
-                tempCertFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS});
+                tempCertFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS});
             int exitValue = pm.execute();
             if (!tempCertFile.delete()) {
                 LOG.log(Level.FINE, "Unable to delete temp file {0}; continuing", tempCertFile.getAbsolutePath());
@@ -332,6 +338,16 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         // Reload the keystore and truststore from disk.
         reload(sslUtils().getKeyStore(), keyStoreFile, pw);
         reload(sslUtils().getTrustStore(), serverEnv.getTrustStore(), pw);
+    }
+
+    private void createKeyStoreFile(final File trustStoreFile, final String pw) {
+        try {
+            KeyStore cacerts = KeyStore.getInstance("JKS");
+            cacerts.load(null, pw.toCharArray());
+            cacerts.store(new FileOutputStream(trustStoreFile), pw.toCharArray());
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void reload(final KeyStore keystore, final File keystoreFile, final String pw)

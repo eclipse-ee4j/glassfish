@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>admin-tests-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M12</version>
     </parent>
 
     <artifactId>ssh-cluster-tests</artifactId>

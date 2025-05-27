@@ -41,6 +41,15 @@
                 </property>
             </activation>
             <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                        <includes>
+                            <include>*.properties</include>
+                        </includes>
+                        <filtering>true</filtering>
+                    </testResource>
+                </testResources>
                 <plugins>
                     <plugin>
                         <groupId>org.glassfish.embedded</groupId>
@@ -49,15 +58,13 @@
                             <bootstrapProperties>
                                 <property>test_key=test_value</property>
                             </bootstrapProperties>
-                            <bootstrapPropertiesFile>bootstrap.properties</bootstrapPropertiesFile>
-                            <glassfishProperties>
-                                <property>embedded-glassfish-config.server.jms-service.jms-host.default_JMS_host.port=17676</property>
-                            </glassfishProperties>
-                            <glassfishPropertiesFile>glassfish.properties</glassfishPropertiesFile>
+                            <bootstrapPropertiesFile>${project.build.testOutputDirectory}/bootstrap.properties</bootstrapPropertiesFile>
+                            <glassfishPropertiesFile>${project.build.testOutputDirectory}/glassfish.properties</glassfishPropertiesFile>
+                            <!-- Test verifies that it is possible to combine system properties -->
                             <systemProperties>
                                 <property>ANTLR_USE_DIRECT_CLASS_LOADING=true</property>
                             </systemProperties>
-                            <systemPropertiesFile>system.properties</systemPropertiesFile>
+                            <systemPropertiesFile>${project.build.testOutputDirectory}/system.properties</systemPropertiesFile>
                         </configuration>
                         <executions>
                             <execution>
@@ -77,24 +84,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.ejb</groupId>
-            <artifactId>jakarta.ejb-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main</groupId>
-            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
 </project>

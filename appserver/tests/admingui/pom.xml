@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.admingui</groupId>
     <artifactId>admingui</artifactId>
-    <version>7.0.25-SNAPSHOT</version>
+    <version>7.0.25</version>
     <packaging>pom</packaging>
     <name>GlassFish admingui Tests</name>
 

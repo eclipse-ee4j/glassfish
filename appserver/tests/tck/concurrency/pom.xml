@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.25-SNAPSHOT</version>
+        <version>7.0.25</version>
     </parent>
 
     <artifactId>glassfish-external-tck-concurrency</artifactId>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>nucleus-security</artifactId>
-        <version>7.0.25-SNAPSHOT</version>
+        <version>7.0.25</version>
     </parent>
 
     <artifactId>ssl-impl</artifactId>

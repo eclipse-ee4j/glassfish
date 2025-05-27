@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.0.25</version>
+        <version>7.0.26-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta-activation-tck</artifactId>

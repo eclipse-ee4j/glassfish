@@ -24,8 +24,13 @@ import static java.lang.System.Logger.Level.WARNING;
 /**
  * Extension for {@link System#setProperties(java.util.Properties)} and methods around.
  */
-public class SystemProperties {
+public final class SystemProperties {
     private static final Logger LOG = System.getLogger(SystemProperties.class.getName());
+
+    private SystemProperties() {
+        // hidden
+    }
+
 
     /**
      * Sets a system property, logging the action.
@@ -34,20 +39,20 @@ public class SystemProperties {
      * @param value if null, will remove the property
      * @param force if false, will not override an existing property with the same key
      */
-    public static void setProperty(String key, String value, boolean force) {
+    public static String setProperty(String key, String value, boolean force) {
         final String oldValue = System.getProperty(key);
         if (oldValue == null) {
             LOG.log(DEBUG, "Setting property {0} to {1}", key, value);
         } else {
             if (oldValue.equals(value)) {
                 LOG.log(TRACE, "Property {0} already set to the same value {1}", key, oldValue);
-                return;
+                return oldValue;
             }
             if (force) {
                 LOG.log(WARNING, "Property {0} already set to {1}, overriding with {2}", key, oldValue, value);
             } else {
                 LOG.log(WARNING, "Property {0} already set to {1}, not overriding with {2}", key, oldValue, value);
-                return;
+                return oldValue;
             }
         }
         if (value == null) {
@@ -55,5 +60,6 @@ public class SystemProperties {
         } else {
             System.setProperty(key, value);
         }
+        return oldValue;
     }
 }

@@ -60,4 +60,13 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

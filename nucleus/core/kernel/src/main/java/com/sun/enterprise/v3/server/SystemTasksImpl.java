@@ -88,6 +88,11 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
 
     @Override
     public void postConstruct() {
+        if (env.isEmbedded()) {
+            initEmbeddedSystemOptions();
+            LOG.log(INFO, "Loaded embedded server named: {0}", server.getName());
+            return;
+        }
         setVersion();
         setSystemPropertiesFromEnv();
         setSystemPropertiesFromDomainXml();
@@ -108,6 +113,15 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, I18N.get("internal_error", e), e);
         }
+    }
+
+    /**
+     * In embedded environment, we don't have a domain.xml, but we still have defaults.
+     * System properties should be set from the outside except few.
+     */
+    private void initEmbeddedSystemOptions() {
+        // JMS may not be available.
+        setProperty("org.glassfish.jms.InitializeOnDemand", "true", false);
     }
 
     private void setVersion() {

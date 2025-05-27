@@ -25,7 +25,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -150,6 +152,7 @@ public class SnifferManagerImpl implements SnifferManager {
                 continue;
             }
 
+            addSniffer:
             for (String annotationName : annotationNames) {
                 Type type = types.getBy(annotationName);
                 if (type instanceof AnnotationType) {
@@ -159,11 +162,11 @@ public class SnifferManagerImpl implements SnifferManager {
                             final Type t = getDeclaringType(element);
                             if (t != null && t.wasDefinedIn(uris)) {
                                 applicableSniffers.add(sniffer);
-                                break;
+                                break addSniffer;
                             }
                         } else {
                             applicableSniffers.add(sniffer);
-                            break;
+                            break addSniffer;
                         }
                     }
                 }
@@ -174,21 +177,32 @@ public class SnifferManagerImpl implements SnifferManager {
     }
 
     public void validateSniffers(Collection<? extends Sniffer> sniffers, DeploymentContext context) {
+        Map<String, Sniffer> sniffersByModuleType = null;
         for (Sniffer sniffer : sniffers) {
             String[] incompatibleTypes = sniffer.getIncompatibleSnifferTypes();
-            if (incompatibleTypes == null) {
-                return;
+            if (incompatibleTypes == null || incompatibleTypes.length == 0) {
+                continue;
+            }
+
+            if (sniffersByModuleType == null) {
+                sniffersByModuleType = createMapOfSniffersByModuleType(sniffers);
             }
 
             for (String type : incompatibleTypes) {
-                for (Sniffer sniffer2 : sniffers) {
-                    if (sniffer2.getModuleType().equals(type)) {
-                        throw new IllegalArgumentException(localStrings.getLocalString("invalidarchivepackaging",
-                                "Invalid archive packaging {2}", sniffer.getModuleType(), type, context.getSourceDir().getPath()));
-                    }
+                if (sniffersByModuleType.containsKey(type)) {
+                    throw new IllegalArgumentException(localStrings.getLocalString("invalidarchivepackaging",
+                            "Invalid archive packaging {2}", sniffer.getModuleType(), type, context.getSourceDir().getPath()));
                 }
             }
         }
+    }
+
+    private static HashMap createMapOfSniffersByModuleType(Collection<? extends Sniffer> sniffers) {
+        HashMap sniffersByModuleType = new HashMap();
+        for (Sniffer sniffer : sniffers) {
+            sniffersByModuleType.put(sniffer.getModuleType(), sniffer);
+        }
+        return sniffersByModuleType;
     }
 
     /**

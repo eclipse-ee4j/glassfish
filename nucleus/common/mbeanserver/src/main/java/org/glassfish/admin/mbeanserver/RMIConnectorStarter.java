@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,6 +57,8 @@ import org.glassfish.admin.mbeanserver.ssl.SecureRMIServerSocketFactory;
 import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * This class configures and starts the JMX RMI connector server using rmi_jrmp protocol.
@@ -172,24 +174,20 @@ final class RMIConnectorStarter extends ConnectorStarter {
     }
 
     static String setupRMIHostname(final String host) {
-        return System.setProperty(RMI_HOSTNAME_PROP, host);
+        return setProperty(RMI_HOSTNAME_PROP, host, true);
     }
 
     private static void restoreRMIHostname(final String saved,
                                            final String expectedValue) {
         if (saved == null) {
-            System.clearProperty(RMI_HOSTNAME_PROP);
+            setProperty(RMI_HOSTNAME_PROP, null, true);
         } else {
-            final String temp = System.setProperty(RMI_HOSTNAME_PROP, saved);
+            final String temp = setProperty(RMI_HOSTNAME_PROP, saved, true);
             // check that it didn't change since the last setup
             if (!temp.equals(expectedValue)) {
                 throw new IllegalStateException("Something changed " + RMI_HOSTNAME_PROP + " to " + temp);
             }
         }
-    }
-
-    private static void debug(final Object o) {
-        System.out.println("" + o);
     }
 
     /**
@@ -230,13 +228,12 @@ final class RMIConnectorStarter extends ConnectorStarter {
     private Registry _startRegistry(final int port) {
         // Ensure cryptographically strong random number generator used
         // to choose the object number - see java.rmi.server.ObjID
-        System.setProperty("java.rmi.server.randomIDs", "true");
+        setProperty("java.rmi.server.randomIDs", "true", true);
         try {
             if (isSecurityEnabled()) {
                 return LocateRegistry.createRegistry(port, sslCsf, sslServerSocketFactory);
-            } else {
-                return LocateRegistry.createRegistry(port, null, mServerSocketFactory);
             }
+            return LocateRegistry.createRegistry(port, null, mServerSocketFactory);
         } catch (final Exception e) {
             throw new RuntimeException("Port " + port + " is not available for the internal rmi registry. " +
                     "This means that a call was made with the same port, without closing earlier " +
@@ -318,8 +315,6 @@ final class RMIConnectorStarter extends ConnectorStarter {
             }
             UnicastRemoteObject.unexportObject(mRegistry, true);
         } catch (RemoteException ex) {
-
-
             Util.getLogger().log(Level.SEVERE, ERROR_STOPPING, ex);
         } catch (NotBoundException ex) {
             Util.getLogger().log(Level.SEVERE, ERROR_STOPPING, ex);
@@ -346,20 +341,20 @@ final class RMIConnectorStarter extends ConnectorStarter {
 
         String enabledProtocols = sslCC.getEnabledProtocolsAsString();
         if (enabledProtocols != null) {
-            System.setProperty("javax.rmi.ssl.client.enabledProtocols", enabledProtocols);
+            setProperty("javax.rmi.ssl.client.enabledProtocols", enabledProtocols, true);
         }
 
         String enabledCipherSuites = sslCC.getEnabledCipherSuitesAsString();
         if (enabledCipherSuites != null) {
-            System.setProperty("javax.rmi.ssl.client.enabledCipherSuites", enabledCipherSuites);
+            setProperty("javax.rmi.ssl.client.enabledCipherSuites", enabledCipherSuites, true);
         }
 
         // The keystore and truststore locations are already available as System properties
         // Hence we just add the passwords
-        System.setProperty("javax.net.ssl.keyStorePassword",
-                sslParams.getKeyStorePassword() == null ? "changeit" : sslParams.getKeyStorePassword());
-        System.setProperty("javax.net.ssl.trustStorePassword",
-                sslParams.getTrustStorePassword() == null ? "changeit" : sslParams.getTrustStorePassword());
+        setProperty("javax.net.ssl.keyStorePassword",
+            sslParams.getKeyStorePassword() == null ? "changeit" : sslParams.getKeyStorePassword(), true);
+        setProperty("javax.net.ssl.trustStorePassword",
+            sslParams.getTrustStorePassword() == null ? "changeit" : sslParams.getTrustStorePassword(), true);
 
         SslRMIClientSocketFactory sslRMICsf = new SslRMIClientSocketFactory();
         return sslRMICsf;

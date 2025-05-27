@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,11 @@ package com.sun.enterprise.security;
 import com.sun.enterprise.security.auth.login.ClientPasswordLoginModule;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.SecurityConstants;
 
-import java.security.PrivilegedAction;
-import java.util.logging.Logger;
+import javax.security.auth.callback.CallbackHandler;
+
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:
@@ -36,8 +37,7 @@ import java.util.logging.Logger;
  * } catch (LoginException le) {
  *     le.printStackTrace();
  * }
- *
- * </PRE>
+ * </pre>
  *
  * Ideally the login should be done with the system property -Dj2eelogin.name and -Dj2eelogin.password
  *
@@ -46,40 +46,25 @@ import java.util.logging.Logger;
 
 public final class LoginContext {
 
-    private static Logger _logger = null;
-    static {
-        _logger = SecurityLoggerInfo.getLogger();
-    }
-
-    private boolean guiAuth = false;
-
     // declaring this different from the Appcontainer as
     // this will be called from standalone clients.
-    public javax.security.auth.callback.CallbackHandler handler = null;
+    private final CallbackHandler handler;
 
     /**
      * Creates the LoginContext with the defauly callback handler
      */
     public LoginContext() {
-        handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(guiAuth);
+        this.handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(false);
     }
 
     /**
      * Login method to login username and password
+     * @deprecated Sets password as a system property
      */
+    @Deprecated(forRemoval = true, since = "7.1.0")
     public void login(String user, String pass) throws LoginException {
-        final String username = user;
-        final String password = pass;
-        AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public java.lang.Object run() {
-
-                System.setProperty(ClientPasswordLoginModule.LOGIN_NAME, username);
-                System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password);
-
-                return null;
-            }
-        });
+        setProperty(ClientPasswordLoginModule.LOGIN_NAME, user, false);
+        setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, pass, false);
         // Since this is  a private api and the user is not supposed to use
         // this. We use the default the LoginCallbackHandler.
         LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD, handler);
@@ -89,8 +74,6 @@ public final class LoginContext {
      * This method has been provided to satisfy the CTS Porting Package requirement for logging in a certificate
      */
     public void login(String username, byte[] authData) throws LoginException {
-
         // do nothing
     }
-
 }

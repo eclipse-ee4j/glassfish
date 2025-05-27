@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,6 +37,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
 import org.glassfish.main.boot.osgi.OSGiFrameworkLauncher;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -145,7 +146,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             bsOptions.setProperty(OSGI_PLATFORM.getPropertyName(), OsgiPlatform.Felix.name());
         }
 
-        System.setProperty(UBER_JAR_URI, jar.toString()); // embedded-osgi-main module will need this to extract the modules.
+        // embedded-osgi-main module will need this to extract the modules.
+        SystemProperties.setProperty(UBER_JAR_URI, jar.toString(), true);
 
         String osgiMainModule = "jar:" + jar.toString() + "!/uber-osgi-main.jar";
         bsOptions.setProperty("glassfish.auto.start", osgiMainModule);
@@ -160,10 +162,9 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
 
         bsOptions.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
-        System.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation);
-
-        System.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRoot);
-        System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot);
+        SystemProperties.setProperty(AUTO_START_BUNDLES_PROP, autoStartBundleLocation, true);
+        SystemProperties.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRoot, true);
+        SystemProperties.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot, true);
 
         String version = loadVersion();
         bsOptions.setProperty(FRAMEWORK_SYSTEMPACKAGES_EXTRA, "org.glassfish.simpleglassfishapi; version=" + version);

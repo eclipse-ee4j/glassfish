@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,6 +49,7 @@ import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FAC
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  *
@@ -99,7 +101,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         LOG.log(DEBUG, "SEC9002: ACC: Security Manager is {0}", secMgr);
 
         // Set the parser to ConfigXMLParser
-        System.setProperty("config.parser", DEFAULT_PARSER_CLASS);
+        setProperty("config.parser", DEFAULT_PARSER_CLASS, true);
         util.setAppClientMsgSecConfigs(msgSecConfigs);
 
         try {

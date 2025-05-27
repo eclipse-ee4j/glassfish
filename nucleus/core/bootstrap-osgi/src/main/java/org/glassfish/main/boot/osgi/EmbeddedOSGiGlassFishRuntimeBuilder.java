@@ -30,6 +30,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleReference;
 
 import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * This {@link org.glassfish.embeddable.spi.RuntimeBuilder} is responsible for setting up a {@link GlassFishRuntime}
@@ -66,9 +67,7 @@ public class EmbeddedOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private void configureBundles(BootstrapProperties bsProps) {
-        if (System.getProperty(OSGI_PLATFORM.getSystemPropertyName()) == null) {
-            System.setProperty(OSGI_PLATFORM.getSystemPropertyName(), OsgiPlatform.Embedded.name());
-        }
+        setProperty(OSGI_PLATFORM.getSystemPropertyName(), OsgiPlatform.Embedded.name(), false);
     }
 
     private void provisionBundles(BootstrapProperties bsProps, ClassLoader classloader) {

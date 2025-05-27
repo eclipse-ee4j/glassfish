@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,6 +53,7 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * The {@link GlassFishRuntime} implementation for non-OSGi environments.
@@ -137,8 +138,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         }
 
         File instanceRoot = new File(instanceRootValue);
-        System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot.getAbsolutePath());
-        System.setProperty(BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
+        setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot.getAbsolutePath(), true);
+        setProperty(BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString(), true);
 
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
         if (installRootValue == null) {
@@ -152,8 +153,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
 
         // Some legacy code might depend on setting installRoot as system property.
         // Ideally everyone should depend only on StartupContext.
-        System.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRoot.getAbsolutePath());
-        System.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+        setProperty(INSTALL_ROOT.getSystemPropertyName(), installRoot.getAbsolutePath(), true);
+        setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString(), true);
 
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
         gfProps.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.getAbsolutePath());

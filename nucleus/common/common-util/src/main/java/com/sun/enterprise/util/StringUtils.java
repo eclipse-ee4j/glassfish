@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -453,39 +453,6 @@ public class StringUtils {
         }
 
         return tokens;
-    }
-
-    /**
-     * Get a system propety given a property name, possibly trying all combination
-     * of upercase, name mangling to get a value.
-     *
-     * @param propName the approximate system property name
-     * @return the property value if found, null otherwise
-     */
-    public static String getProperty(String propName) {
-        // xxx.yyy
-        String value = System.getProperty(propName);
-        if (value != null) {
-            return value;
-        }
-        // XXX.YYY
-        value = System.getProperty(propName.toUpperCase(Locale.getDefault()));
-        if (value != null) {
-            System.setProperty(propName, value);
-            return value;
-        }
-        // xxx_yyy
-        value = System.getProperty(propName.replace('.', '_'));
-        if (value != null) {
-            System.setProperty(propName, value);
-            return value;
-        }
-        // XXX_YYY
-        value = System.getProperty(propName.toUpperCase(Locale.getDefault()).replace('.', '_'));
-        if (value != null) {
-            System.setProperty(propName, value);
-        }
-        return value;
     }
 
     /**

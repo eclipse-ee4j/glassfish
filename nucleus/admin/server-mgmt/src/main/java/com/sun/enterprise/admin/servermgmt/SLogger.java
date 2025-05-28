@@ -43,8 +43,6 @@ public class SLogger {
     // these messages are historical.  We've transitioned to this latest Logging API
     @LogMessageInfo(message = "Caught an Exception: {0}", comment = "Unhandled Exception", cause = "see Exception message", action = "see Exception message", level = "SEVERE")
     public static final String UNHANDLED_EXCEPTION = "NCLS-SRVRMGMT-00000";
-    @LogMessageInfo(message = "Error attemping to delete temporary certificate file: {0}", comment = "Delete error", cause = "see message", action = "delete the file manually", level = "WARNING")
-    public static final String BAD_DELETE_TEMP_CERT_FILE = "NCLS-SRVRMGMT-00001";
     @LogMessageInfo(message = "Renaming {0} to {1}", comment = "No error",
             //cause = "No error",
             //action = "delete the file manually",

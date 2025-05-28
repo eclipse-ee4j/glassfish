@@ -269,6 +269,7 @@ public class DomainBuilder {
                     + "\n can always use JDK-keytool program to do the needful. A temporary JKS-keystore"
                     + "\n will be created. You should replace it with proper keystore before using it for SSL."
                     + "\n Refer to documentation for details. Actual error is:\n" + e.getMessage());
+                e.printStackTrace();
                 File keystoreFile = new File(configDir, DomainConstants.KEYSTORE_FILE);
                 try (FileOutputStream fos = new FileOutputStream(keystoreFile)) {
                     fos.write(_keystoreBytes);

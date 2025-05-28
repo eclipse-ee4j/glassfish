@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -70,6 +70,21 @@ public interface ManagedThreadFactory extends ConfigBeanProxy, Resource, Bindabl
      * @param threadPriority allowed object is {@link String}
      */
     void setThreadPriority(String threadPriority) throws PropertyVetoException;
+
+    /**
+     * Gets the value of the useVirtualThreads property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getUseVirtualThreads();
+
+    /**
+     * Sets the value of the useVirtualThreads property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setUseVirtualThreads(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the {@code context} property.

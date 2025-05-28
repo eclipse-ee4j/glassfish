@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -82,6 +82,7 @@ import org.jvnet.hk2.config.types.PropertyBag;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
+import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
 /**
@@ -144,7 +145,7 @@ public class ConnectorsUtil {
      * @return directory location
      */
     public static String getSystemModuleLocation(String moduleName) {
-        String j2eeModuleDirName = System.getProperty(ConnectorConstants.INSTALL_ROOT) +
+        String j2eeModuleDirName = System.getProperty(INSTALL_ROOT_PROPERTY) +
                 File.separator + "lib" +
                 File.separator + "install" +
                 File.separator + "applications" +

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -70,7 +70,10 @@ public class CreateManagedThreadFactory implements AdminCommand {
     @Param(name="threadpriority", alias="threadPriority", defaultValue=""+Thread.NORM_PRIORITY, optional=true)
     private Integer threadpriority;
 
-    @Param(optional=true)
+    @Param(name = "usevirtualthreads", alias = "useVirtualThreads", defaultValue = "false", optional = true)
+    protected Boolean useVirtualThreads;
+
+    @Param(optional = true)
     private String description;
 
     @Param(name="property", optional=true, separator=':')
@@ -100,6 +103,7 @@ public class CreateManagedThreadFactory implements AdminCommand {
         attrList.put(ConcurrencyTagNames.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.put(ConcurrencyTagNames.CONTEXT_INFO, contextinfo);
         attrList.put(ConcurrencyTagNames.THREAD_PRIORITY, threadpriority.toString());
+        attrList.put(ConcurrencyTagNames.USE_VIRTUAL_THREADS, useVirtualThreads.toString());
         attrList.put(ServerTags.DESCRIPTION, description);
         attrList.put(ResourceConstants.ENABLED, enabled.toString());
         ResourceStatus rs;

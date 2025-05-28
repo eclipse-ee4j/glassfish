@@ -201,4 +201,14 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+                <copy.modules.to.distribution.path.to.root>../../../..</copy.modules.to.distribution.path.to.root>
+            </properties>
+        </profile>
+    </profiles>
 </project>

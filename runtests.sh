@@ -93,6 +93,9 @@ else
    unset GLASSFISH_SUSPEND
 fi
 
+echo GF_VERSION=$GF_VERSION
+echo GLASSFISH_SUSPEND=$GLASSFISH_SUSPEND
+
 export JACOCO_ENABLED="true"
 export WORKSPACE="$(pwd)/target"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
@@ -113,5 +116,6 @@ install_jacoco;
 rm -rf "${GLASSFISH_HOME}"
 rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
 rm -f ./appserver/tests/appserv-tests/test_results.xml
+
 ./appserver/tests/gftest.sh run_test "${test}"
 

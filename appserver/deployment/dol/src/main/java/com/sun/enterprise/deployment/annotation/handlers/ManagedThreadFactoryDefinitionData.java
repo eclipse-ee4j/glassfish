@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,7 +29,7 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     private String name;
     private String context;
     private int priority = Thread.NORM_PRIORITY;
-    private boolean virtual;
+    private boolean useVirtualThreads;
     private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
@@ -77,14 +77,14 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
 
 
     @Override
-    public boolean isVirtual() {
-        return virtual;
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
     }
 
 
     @Override
-    public void setVirtual(boolean virtual) {
-        this.virtual = virtual;
+    public void setUseVirtualThreads(boolean useVirtualThreads) {
+        this.useVirtualThreads = useVirtualThreads;
     }
 
 
@@ -111,6 +111,6 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     @Override
     public String toString() {
         return super.toString() + "[name=" + getName() + ", context=" + context + ", priority=" + priority
-            + ", virtual=" + virtual + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
+                + ", useVirtualThreads=" + useVirtualThreads + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
 }

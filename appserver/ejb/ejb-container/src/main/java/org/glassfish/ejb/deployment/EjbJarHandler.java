@@ -94,8 +94,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        ASURLClassLoader cloader = new ASURLClassLoader(parent);
-
+        ASURLClassLoader cloader = new ASURLClassLoader("EjbJarHandler", parent);
         try {
             String compatProp = context.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY);
             // If user does not specify the compatibility property

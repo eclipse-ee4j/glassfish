@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
@@ -28,7 +28,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXEC
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_MAX_ASYNC;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
-import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.VIRTUAL;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.USE_VIRTUAL_THREADS;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
@@ -52,7 +52,7 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
         map.put(QUALIFIER, "addQualifier");
-        map.put(VIRTUAL, "setVirtual");
+        map.put(USE_VIRTUAL_THREADS, "setUseVirtualThreads");
         map.put(MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
         map.put(MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
         map.put(MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
@@ -67,7 +67,7 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
         for (String qualifier : descriptor.getQualifiers()) {
             appendTextChild(node, QUALIFIER, qualifier);
         }
-        appendTextChild(node, VIRTUAL, descriptor.isVirtual());
+        appendTextChild(node, USE_VIRTUAL_THREADS, descriptor.getUseVirtualThreads());
         appendTextChild(node, MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(descriptor.getMaximumPoolSize()));
         appendTextChild(node, MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(descriptor.getHungAfterSeconds()));
         appendTextChild(node, MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, descriptor.getContext());

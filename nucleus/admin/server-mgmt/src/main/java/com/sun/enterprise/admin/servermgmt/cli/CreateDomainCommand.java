@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -409,18 +410,13 @@ public final class CreateDomainCommand extends CLICommand {
      */
     private void createTheDomain(final String domainPath, Properties domainProperties) throws DomainException, CommandValidationException {
 
-        //
-        // fix for bug# 4930684
-        // domain name is validated before the ports
-        //
-        String domainFilePath = (domainPath + File.separator + domainName);
-        if (FileUtils.safeGetCanonicalFile(new File(domainFilePath)).exists()) {
+        if (FileUtils.safeGetCanonicalFile(new File(domainPath, domainName)).exists()) {
             throw new CommandValidationException(strings.get("DomainExists", domainName));
         }
         DomainConfig domainConfig = null;
         if (template == null || template.endsWith(".jar")) {
-            domainConfig = new DomainConfig(domainName, domainPath, adminUser, adminPassword, masterPassword, saveMasterPassword, adminPort,
-                    instancePort, domainProperties);
+            domainConfig = new DomainConfig(domainName, domainPath, adminUser, adminPassword, masterPassword,
+                saveMasterPassword, adminPort, instancePort, domainProperties);
             domainConfig.put(DomainConfig.K_VALIDATE_PORTS, Boolean.valueOf(checkPorts));
             domainConfig.put(DomainConfig.KEYTOOLOPTIONS, keytoolOptions);
             domainConfig.put(DomainConfig.K_TEMPLATE_NAME, template);

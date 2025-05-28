@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #
+# Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -15,15 +16,7 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-AS_INSTALL=`dirname "$0"`/..
-case "`uname`" in
-  CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
-esac
-AS_INSTALL_LIB="$AS_INSTALL/lib"
-. "${AS_INSTALL}/config/asenv.conf"
-JAVA=java
-#Depends upon Java from ../config/asenv.conf
-if [ ${AS_JAVA} ]; then
-    JAVA=${AS_JAVA}/bin/java
-fi
-exec "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" "$@"
+AS_CONFIG="$(dirname "$(realpath "$0")")/../config"
+AS_CONFIG_SH="${AS_CONFIG}/config.sh"
+source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
+exec "$JAVA" -jar "$AS_INSTALL/lib/client/appserver-cli.jar" "$@"

@@ -42,6 +42,8 @@ import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static java.util.logging.Level.SEVERE;
+
 /**
  * GlassFish implementation of the EJBContainer.
  *
@@ -50,16 +52,13 @@ import org.glassfish.hk2.api.ServiceLocator;
 public class EJBContainerImpl extends EJBContainer {
 
     // Use Bundle from another package
-    private static final Logger _logger =
-            LogDomains.getLogger(EjbContainerUtilImpl.class, LogDomains.EJB_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(EjbContainerUtilImpl.class, LogDomains.EJB_LOGGER);
 
     private final GlassFish server;
-
     private final Deployer deployer;
-
     private String deployedAppName;
 
-    private final ServiceLocator habitat;
+    private final ServiceLocator serviceLocator;
 
     private volatile int state = STARTING;
     private final Cleanup cleanup;
@@ -77,7 +76,7 @@ public class EJBContainerImpl extends EJBContainer {
         this.server = server;
         this.server.start();
 
-        this.habitat = server.getService(ServiceLocator.class);
+        this.serviceLocator = server.getService(ServiceLocator.class);
         deployer = server.getDeployer();
         state = RUNNING;
         cleanup = new Cleanup(this);
@@ -88,7 +87,7 @@ public class EJBContainerImpl extends EJBContainer {
      */
     void deploy(Map<?, ?> properties, Set<DeploymentElement> modules) throws EJBException {
         try {
-            String appName = (properties == null)? null : (String)properties.get(EJBContainer.APP_NAME);
+            String appName = (properties == null) ? null : (String) properties.get(EJBContainer.APP_NAME);
             res_app = DeploymentElement.getOrCreateApplication(modules, appName);
             Object app = res_app.getApplication();
 
@@ -105,7 +104,7 @@ public class EJBContainerImpl extends EJBContainer {
 
             String[] params;
             if (appName != null) {
-                params = new String[] {"--name", appName};
+                params = new String[] { "--name", appName };
             } else {
                 params = new String[] {};
             }
@@ -113,10 +112,10 @@ public class EJBContainerImpl extends EJBContainer {
             _logger.info("[EJBContainerImpl] GlassFish status: " + server.getStatus());
             if (app instanceof ScatteredArchive) {
                 _logger.info("[EJBContainerImpl] Deploying as a ScatteredArchive");
-                deployedAppName = deployer.deploy(((ScatteredArchive)app).toURI(), params);
+                deployedAppName = deployer.deploy(((ScatteredArchive) app).toURI(), params);
             } else {
                 _logger.info("[EJBContainerImpl] Deploying as a File");
-                deployedAppName = deployer.deploy((File)app, params);
+                deployedAppName = deployer.deploy((File) app, params);
             }
 
         } catch (Exception e) {
@@ -129,8 +128,7 @@ public class EJBContainerImpl extends EJBContainer {
     }
 
     /**
-     * Retrieve a naming context for looking up references to session beans
-     * executing in the embeddable container.
+     * Retrieve a naming context for looking up references to session beans executing in the embeddable container.
      *
      * @return naming context
      */
@@ -142,8 +140,7 @@ public class EJBContainerImpl extends EJBContainer {
         try {
             return new InitialContext();
         } catch (Exception e) {
-            throw new EJBException(_logger.getResourceBundle().getString(
-                    "ejb.embedded.cannot_create_context"), e);
+            throw new EJBException(_logger.getResourceBundle().getString("ejb.embedded.cannot_create_context"), e);
         }
     }
 
@@ -172,7 +169,7 @@ public class EJBContainerImpl extends EJBContainer {
         cleanupConnectorRuntime();
         if (res_app != null && res_app.deleteOnExit()) {
             try {
-                FileUtils.whack((File)res_app.getApplication());
+                FileUtils.whack((File) res_app.getApplication());
             } catch (Exception e) {
                 _logger.log(Level.WARNING, "Error in removing temp file", e);
             }
@@ -190,49 +187,32 @@ public class EJBContainerImpl extends EJBContainer {
     private void cleanupTransactions() {
         try {
             /*
-            Providers<TransactionManager> txProviders = habitat.forContract(TransactionManager.class);
-            if (txProviders != null) {
-                Provider<TransactionManager> provider = txProviders.getProvider();
-                if (provider != null && provider.isActive()) {
-                    TransactionManager txMgr = provider.get();
-                    txMgr.rollback();
-                }
-            }
-            */
-            ServiceHandle<TransactionManager> inhabitant =
-                    habitat.getServiceHandle(TransactionManager.class);
+             * Providers<TransactionManager> txProviders = habitat.forContract(TransactionManager.class); if (txProviders != null) {
+             * Provider<TransactionManager> provider = txProviders.getProvider(); if (provider != null && provider.isActive()) {
+             * TransactionManager txMgr = provider.get(); txMgr.rollback(); } }
+             */
+            ServiceHandle<TransactionManager> inhabitant = serviceLocator.getServiceHandle(TransactionManager.class);
             if (inhabitant != null && inhabitant.isActive()) {
                 TransactionManager txmgr = inhabitant.getService();
-                if ( txmgr.getTransaction() != null ) {
+                if (txmgr.getTransaction() != null) {
                     txmgr.rollback();
                 }
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "Error in cleanupTransactions", t);
+            _logger.log(SEVERE, "Error in cleanupTransactions", t);
         }
 
     }
 
     private void cleanupConnectorRuntime() {
         try {
-            /*
-            Providers<ConnectorRuntime> txProviders = habitat.forContract(ConnectorRuntime.class);
-            if (txProviders != null) {
-                Provider<ConnectorRuntime> provider = txProviders.getProvider();
-                if (provider != null && provider.isActive()) {
-                    ConnectorRuntime connectorRuntime = provider.get();
-                    connectorRuntime.cleanUpResourcesAndShutdownAllActiveRAs();
-                }
-            }
-            */
-            ServiceHandle<ConnectorRuntime> inhabitant =
-                    habitat.getServiceHandle(ConnectorRuntime.class);
+            ServiceHandle<ConnectorRuntime> inhabitant = serviceLocator.getServiceHandle(ConnectorRuntime.class);
             if (inhabitant != null && inhabitant.isActive()) {
                 ConnectorRuntime connectorRuntime = inhabitant.getService();
                 connectorRuntime.cleanUpResourcesAndShutdownAllActiveRAs();
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "Error in cleanupConnectorRuntime", t);
+            _logger.log(SEVERE, "Error in cleanupConnectorRuntime", t);
         }
     }
 
@@ -250,6 +230,7 @@ public class EJBContainerImpl extends EJBContainer {
         if (state == CLOSED) {
             return;
         }
+
         try {
             server.stop();
         } catch (GlassFishException e) {
@@ -271,20 +252,11 @@ public class EJBContainerImpl extends EJBContainer {
 
         Cleanup(EJBContainerImpl container) {
             this.container = container;
-            Runtime.getRuntime().addShutdownHook(
-                    cleanupThread = new Thread(this, "GlassFish EJBContainerImpl Cleanup Shutdown Hook"));
+            Runtime.getRuntime().addShutdownHook(cleanupThread = new Thread(this, "GlassFish EJBContainerImpl Cleanup Shutdown Hook"));
         }
 
         void disable() {
-            java.security.AccessController.doPrivileged(
-                new java.security.PrivilegedAction() {
-                    @Override
-                    public Object run() {
-                        Runtime.getRuntime().removeShutdownHook(cleanupThread);
-                        return null;
-                    }
-                }
-            );
+            Runtime.getRuntime().removeShutdownHook(cleanupThread);
         }
 
         @Override

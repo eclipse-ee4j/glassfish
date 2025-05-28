@@ -29,6 +29,9 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableCollection;
+
 /**
  * This descriptor contains all common information amongst root element
  * of the J2EE Deployment Descriptors (application, ejb-jar, web-app,
@@ -220,6 +223,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
             moduleDescriptor.setModuleType(getModuleType());
             moduleDescriptor.setDescriptor(this);
         }
+
         return (ModuleDescriptor<T>) moduleDescriptor;
     }
 
@@ -258,6 +262,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
         if (moduleID != null) {
             toStringBuffer.append("\n Module ID = ").append(moduleID);
         }
+
         if (getSchemaLocation() != null) {
             toStringBuffer.append("\n Client SchemaLocation = ").append(getSchemaLocation());
         }
@@ -268,10 +273,12 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      * @return an unmodifiable collection of extensions or empty collection if none.
      */
     public Collection<RootDeploymentDescriptor> getExtensionsDescriptors() {
-        ArrayList<RootDeploymentDescriptor> flattened = new ArrayList<>();
-        for (List<? extends RootDeploymentDescriptor> extensionsByType : extensions.values()) {
+        List<RootDeploymentDescriptor> flattened = new ArrayList<>();
+
+        for (var extensionsByType : extensions.values()) {
             flattened.addAll(extensionsByType);
         }
+
         return Collections.unmodifiableCollection(flattened);
     }
 
@@ -280,13 +287,15 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      * @param type requested extension type
      * @return an unmodifiable collection of extensions or empty collection if none.
      */
+    @SuppressWarnings("unchecked")
     public <T extends RootDeploymentDescriptor> Collection<T> getExtensionsDescriptors(Class<T> type) {
-        for (Map.Entry<Class<? extends RootDeploymentDescriptor>, List<RootDeploymentDescriptor>> entry : extensions.entrySet()) {
+        for (var entry : extensions.entrySet()) {
             if (type.isAssignableFrom(entry.getKey())) {
-                return Collections.unmodifiableCollection((Collection<T>) entry.getValue());
+                return unmodifiableCollection((Collection<T>) entry.getValue());
             }
         }
-        return Collections.emptyList();
+
+        return emptyList();
     }
 
 
@@ -329,15 +338,11 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     }
 
     /**
-     * @return whether this descriptor is an extension descriptor
-     *         of a main descriptor, e.g. the EjbBundleDescriptor for
-     *         ejb in war case should return true.
+     * @return whether this descriptor is an extension descriptor of a main descriptor, e.g. the EjbBundleDescriptor for ejb
+     * in war case should return true.
      */
     public boolean isExtensionDescriptor() {
-        if (getModuleDescriptor().getDescriptor() != this) {
-            return true;
-        }
-        return false;
+        return getModuleDescriptor().getDescriptor() != this;
     }
 
     /**
@@ -348,6 +353,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
         if (isExtensionDescriptor()) {
             return getModuleDescriptor().getDescriptor();
         }
+
         return this;
     }
 }

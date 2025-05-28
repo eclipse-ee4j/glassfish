@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.main.jul.GlassFishLogManager;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
+import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
 
 /**
@@ -116,6 +117,7 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
      */
     @Override
     public void close() throws IOException {
+        flush();
         closed.set(true);
         pump.shutdown();
         super.close();
@@ -155,23 +157,34 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
             while (!pumpClosed) {
                 try {
                     logAllPendingRecordsOrWait();
-                } catch (final Exception e) {
+                } catch (Exception e) {
                     // Continue the loop without exiting
-                    // Something is broken, but we cannot log it
+                    GlassFishLoggingTracer.error(getClass(), "Pump failed to log records!", e);
                 }
             }
         }
 
 
         /**
-         * Kindly asks the pump to closed it's service. If the pump is locked waiting
-         * on the buffer, interrupts the thread.
+         * Kindly asks the pump to shut down it's service.
+         * If the pump is locked waiting on the buffer, interrupts the thread, but if it is
+         * in a runnable state, we let it finish.
          * <p>
          * The pump can be locked, waiting
          */
         void shutdown() {
             pumpClosed = true;
-            this.interrupt();
+            while (getState() == State.RUNNABLE) {
+                Thread.onSpinWait();
+            }
+            if (getState() == State.WAITING || getState() == State.BLOCKED || getState() == State.TIMED_WAITING) {
+                interrupt();
+            }
+            try {
+                join();
+            } catch (InterruptedException e) {
+                GlassFishLoggingTracer.error(getClass(), "Pump interrupted while waiting for shutdown.", e);
+            }
             // we interrupted waiting or working thread, now we have to process remaining records.
             logAllPendingRecords();
         }
@@ -189,12 +202,10 @@ final class LoggingOutputStream extends ByteArrayOutputStream {
 
 
         private void logAllPendingRecords() {
-            while (true) {
-                if (!logRecord(buffer.poll())) {
-                    // end if there was nothing more to log
-                    return;
-                }
-            }
+            GlassFishLogRecord record;
+            do {
+                record = buffer.poll();
+            } while (logRecord(record));
         }
 
 

@@ -17,9 +17,6 @@
 
 package com.sun.ejb.codegen;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -80,10 +77,7 @@ public class AsmSerializableBeanGenerator extends BeanGeneratorBase {
 
         cw.visitEnd();
 
-        PrivilegedAction<Class<?>> action =
-                () -> defineClass(loader, subClassName, cw.toByteArray(), superClass.getProtectionDomain());
-
-        return AccessController.doPrivileged(action);
+        return defineClass(loader, subClassName, cw.toByteArray(), superClass.getProtectionDomain());
     }
 
     private static void generateWriteObjectMethod(ClassVisitor cv) {

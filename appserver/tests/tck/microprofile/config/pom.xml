@@ -32,26 +32,36 @@
     <name>TCK: MicroProfile Config</name>
 
     <dependencies>
-        <!-- Required dependencies for Arquillian deployments -->
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-impl</artifactId>
-        </dependency>
 
+        <!-- 
+            This is the actual MP config test classes archive 
+        -->
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-tck</artifactId>
             <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
+            <version>3.1</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Required dependencies for Arquillian deployments -->
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core-impl</artifactId>
+            <version>6.0.1.Final</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

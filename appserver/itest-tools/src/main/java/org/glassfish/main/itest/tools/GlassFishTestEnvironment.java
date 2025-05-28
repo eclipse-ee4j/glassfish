@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Eclipse Foundation and/or its affiliates.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,6 +39,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -108,6 +109,15 @@ public class GlassFishTestEnvironment {
         // Note: --suspend implicitly enables --debug
         assertThat(asadmin.exec(timeout,"start-domain",
                 isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
+    }
+
+
+    /**
+     * @return the installation directory, usually referred as AS_INSTALL and named
+     *         <code>glassfish</code> (without version number).
+     */
+    public static File getGlassFishDirectory() {
+        return GF_ROOT;
     }
 
 
@@ -469,21 +479,22 @@ public class GlassFishTestEnvironment {
         return client;
     }
 
+    // FIXME: add loading of the right certificate from keystore.
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
         new X509TrustManager() {
             @Override
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
 
-            @Override
-            public void checkClientTrusted(
-                    java.security.cert.X509Certificate[] certs, String authType) {
-            }
 
             @Override
-            public void checkServerTrusted(
-                    java.security.cert.X509Certificate[] certs, String authType) {
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
             }
         }
     };

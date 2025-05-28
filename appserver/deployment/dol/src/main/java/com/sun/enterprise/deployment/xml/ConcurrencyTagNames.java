@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +43,7 @@ public interface ConcurrencyTagNames extends TagNames {
     String CONTEXT_INFO_ENABLED = "context-info-enabled";
     String QUALIFIER = "qualifier";
     String THREAD_PRIORITY = "thread-priority";
-    String VIRTUAL = "virtual";
+    String USE_VIRTUAL_THREADS = "use-virtual-threads";
     String LONG_RUNNING_TASKS = "long-runnings-tasks";
     String HUNG_AFTER_SECONDS = "hung-after-seconds";
     String HUNG_LOGGER_PRINT_ONCE = "hung-logger-print-once";

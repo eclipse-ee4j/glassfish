@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,8 +25,8 @@ import org.glassfish.concurrent.config.ManagedThreadFactory;
 import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
+import org.glassfish.concurro.AbstractManagedExecutorService;
 import org.glassfish.concurro.ContextServiceImpl;
-import org.glassfish.concurro.ManagedExecutorServiceImpl;
 import org.glassfish.concurro.ManagedThreadFactoryImpl;
 import org.glassfish.concurro.internal.ManagedThreadPoolExecutor;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,7 +87,8 @@ public class ConcurrentRuntimeTest {
         expect(managedThreadFactoryCfg.getContextInfo()).andReturn("Classloader, jndi, Security").anyTimes();
         expect(managedThreadFactoryCfg.getContextInfoEnabled()).andReturn("true").anyTimes();
         expect(managedThreadFactoryCfg.getJndiName()).andReturn("concurrent/ctxSrv").anyTimes();
-        expect(managedThreadFactoryCfg.getThreadPriority()).andReturn("8").anyTimes();
+        expect(managedThreadFactoryCfg.getThreadPriority()).andReturn("5").anyTimes();
+        expect(managedThreadFactoryCfg.getUseVirtualThreads()).andReturn("false").anyTimes();
         replay(managedThreadFactoryCfg);
 
         ManagedThreadFactoryCfg cfg = new ManagedThreadFactoryCfg(managedThreadFactoryCfg);
@@ -106,7 +107,7 @@ public class ConcurrentRuntimeTest {
         );
 
         int threadPriority = getField(managedThreadFactory, "priority", ManagedThreadFactoryImpl.class);
-        assertEquals(8, threadPriority);
+        assertEquals(5, threadPriority);
     }
 
 
@@ -128,10 +129,11 @@ public class ConcurrentRuntimeTest {
         expect(config.getKeepAliveSeconds()).andReturn("88").anyTimes();
         expect(config.getThreadPriority()).andReturn("3").anyTimes();
         expect(config.getThreadLifetimeSeconds()).andReturn("99").anyTimes();
+        expect(config.getUseVirtualThreads()).andReturn("false").anyTimes();
         replay(config);
 
         ManagedExecutorServiceCfg managedExecutorServiceCfg = new ManagedExecutorServiceCfg(config);
-        ManagedExecutorServiceImpl mes = runtime.getManagedExecutorService(managedExecutorServiceCfg);
+        AbstractManagedExecutorService mes = runtime.getManagedExecutorService(managedExecutorServiceCfg);
         ManagedThreadFactoryImpl managedThreadFactory = mes.getManagedThreadFactory();
 
         assertEquals(100_000L, managedThreadFactory.getHungTaskThreshold());

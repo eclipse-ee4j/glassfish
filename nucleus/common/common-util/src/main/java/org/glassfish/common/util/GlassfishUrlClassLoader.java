@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,33 +51,36 @@ public class GlassfishUrlClassLoader extends URLClassLoader {
     /**
      * Initializes the internal classpath.
      *
+     * @param name
      * @param urls
      */
-    public GlassfishUrlClassLoader(URL[] urls) {
-        super(urls);
+    public GlassfishUrlClassLoader(String name, URL[] urls) {
+        super(name, urls, ClassLoader.getSystemClassLoader());
     }
 
 
     /**
      * Initializes the internal classpath.
      *
+     * @param name
      * @param urls
      * @param parent
      */
-    public GlassfishUrlClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
+    public GlassfishUrlClassLoader(String name, URL[] urls, ClassLoader parent) {
+        super(name, urls, parent);
     }
 
 
     /**
      * Initializes the internal classpath.
      *
+     * @param name
      * @param urls
      * @param parent
      * @param factory
      */
-    public GlassfishUrlClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
-        super(urls, parent, factory);
+    public GlassfishUrlClassLoader(String name, URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
+        super(name, urls, parent, factory);
     }
 
     // turn protected to public

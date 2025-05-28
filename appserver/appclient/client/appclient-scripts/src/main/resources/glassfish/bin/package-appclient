@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #
+# Copyright (c) 2025 Contributors to the Eclipse Foundation.
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -15,21 +16,8 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-
-# set -x
-_AS_INSTALL=`dirname "$0"`/..
-#
-# Run with the user-specified Java, if any.
-#
-case "`uname`" in
-  CYGWIN*) _AS_INSTALL=`cygpath --windows $_AS_INSTALL`
-esac
-. "${_AS_INSTALL}/config/asenv.conf"
-JAVA=java
-# Depends upon Java from ../config/asenv.conf
-if [ ${AS_JAVA} ]; then
-    JAVA=${AS_JAVA}/bin/java
-fi
-
-_AS_INSTALL_LIB=$_AS_INSTALL/lib
-$JAVA -classpath "$_AS_INSTALL_LIB/gf-client.jar" org.glassfish.appclient.client.packageappclient.PackageAppClient "$@"
+AS_CONFIG="$(dirname "$(realpath "$0")")/../config"
+AS_CONFIG_SH="${AS_CONFIG}/config.sh"
+source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
+AS_INSTALL_LIB=$AS_INSTALL/lib
+"${JAVA}" -classpath "$AS_INSTALL_LIB/gf-client.jar" org.glassfish.appclient.client.packageappclient.PackageAppClient "$@"

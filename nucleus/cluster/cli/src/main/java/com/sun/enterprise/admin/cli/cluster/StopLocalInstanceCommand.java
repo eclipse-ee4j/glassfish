@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +23,7 @@ import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
+import java.net.ConnectException;
 import java.time.Duration;
 import java.util.logging.Level;
 
@@ -149,16 +150,29 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
          */
         programOpts.setInteractive(false);
 
-        final Long pid = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        final Long pid = getServerPid();
         final boolean printDots = !programOpts.isTerse();
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final RemoteCLICommand cmd = new RemoteCLICommand("_stop-instance", programOpts, env);
         try {
-            cmd.executeAndReturnOutput("_stop-instance", "--force", force.toString());
+            try {
+                cmd.executeAndReturnOutput("_stop-instance", "--force", force.toString());
+            } catch (CommandException e) {
+                if (e.getCause() instanceof ConnectException) {
+                    logger.log(Level.FINE,
+                        "Remote _stop-instance call thrown a ConnectException."
+                            + " It is usual on Windows, where immediately after port closes, firewalls break"
+                            + " any connection even before we can process the response."
+                            + " However it is not critical, we will still monitor the PID.",
+                        e);
+                } else {
+                    throw e;
+                }
+            }
             if (printDots) {
                 System.out.print(Strings.get("StopInstance.waitForDeath") + " ");
             }
-            final boolean dead = ProcessUtils.waitWhileIsAlive(pid, timeout, printDots);
+            final boolean dead = pid == null || ProcessUtils.waitWhileIsAlive(pid, timeout, printDots);
             if (!dead) {
                 throw new CommandException(Strings.get("StopInstance.instanceNotDead", DEATH_TIMEOUT_MS / 1000));
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -70,7 +71,7 @@ public class ArchiveTest extends TestCase {
 
         ApplicationArchivist reader = (ApplicationArchivist) TestUtil.getByType(ApplicationArchivist.class);
         reader.setAnnotationProcessingRequested(true);
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
         reader.setClassLoader(classLoader);
         Application applicationDesc = reader.open(archive);

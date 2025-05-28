@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -120,7 +120,7 @@ public class CustomizationTokensProvider {
         if (ext.isDirectory()) {
             PrivilegedAction<Void> action = () -> {
                 try {
-                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader(getJars(ext));
+                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader("HK2Modules", getJars(ext));
                     ModulesRegistry registry = new StaticModulesRegistry(classLoader);
                     locator = registry.createServiceLocator("default");
                 } catch (IOException ex) {

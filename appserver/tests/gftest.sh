@@ -18,6 +18,7 @@
 run_test() {
     local testid=${1}
     local found=false
+    
     for runtest in `find . -name run_test\.sh`; do
         for id in `${runtest} list_test_ids`; do
             if [[ "${id}" = "${testid}" ]]; then
@@ -25,11 +26,15 @@ run_test() {
                 break
             fi
         done
+
         if [[ "${found}" = true ]]; then
+            echo Running ${runtest} run_test_id ${testid}
             ${runtest} run_test_id ${testid}
+            echo Done!
             break
         fi
     done
+    
     if [[ "${found}" = false ]]; then
         echo Invalid Test Id.
         exit 1

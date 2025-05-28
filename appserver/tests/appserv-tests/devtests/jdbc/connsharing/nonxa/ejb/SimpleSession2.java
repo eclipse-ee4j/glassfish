@@ -24,4 +24,5 @@ public interface SimpleSession2 extends EJBObject {
     public boolean test1UpdateWhereId100() throws RemoteException;
     public boolean test2UpdateWhereId200() throws RemoteException;
     public boolean test3GetConnection() throws RemoteException;
+    public boolean test9Issue24085() throws RemoteException;
 }

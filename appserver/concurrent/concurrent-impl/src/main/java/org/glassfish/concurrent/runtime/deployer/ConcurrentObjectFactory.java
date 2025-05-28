@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,8 @@ package org.glassfish.concurrent.runtime.deployer;
 
 import com.sun.logging.LogDomains;
 
+import jakarta.enterprise.concurrent.ManagedExecutorService;
+
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,8 +35,6 @@ import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
 import org.glassfish.concurro.ContextServiceImpl;
-import org.glassfish.concurro.ManagedExecutorServiceAdapter;
-import org.glassfish.concurro.ManagedScheduledExecutorServiceAdapter;
 import org.glassfish.concurro.ManagedThreadFactoryImpl;
 
 import static org.glassfish.concurrent.runtime.ConcurrentRuntime.getRuntime;
@@ -69,11 +69,11 @@ public class ConcurrentObjectFactory implements ObjectFactory {
         return getRuntime().getManagedThreadFactory(config);
     }
 
-    private ManagedExecutorServiceAdapter getManagedExecutorService(ManagedExecutorServiceCfg config) {
+    private ManagedExecutorService getManagedExecutorService(ManagedExecutorServiceCfg config) {
         return getRuntime().getManagedExecutorService(config).getAdapter();
     }
 
-    private ManagedScheduledExecutorServiceAdapter getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
+    private ManagedExecutorService getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
         return getRuntime().getManagedScheduledExecutorService(config).getAdapter();
     }
 }

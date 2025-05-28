@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
 
 import java.io.File;
@@ -53,13 +52,8 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
-        /* Step 1. Build the classloader. */
-        // The classloader should contain installRoot/modules/**/*.jar files.
         String installRoot = getInstallRoot(bsProps);
-        if (installRoot != null) {
-            System.setProperty("org.glassfish.embeddable.installRoot", installRoot);
-        }
-        // Required to add moduleJarURLs to support 'java -jar modules/glassfish.jar case'
+        // Required to add moduleJarURLs to support 'java -jar glassfish.jar case'
         List<URL> moduleJarURLs = getModuleJarURLs(installRoot);
         final ClassLoader cl;
         if (moduleJarURLs.isEmpty()) {
@@ -67,20 +61,26 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
         } else {
             cl = new EmbeddedClassLoader(getClass().getClassLoader(), moduleJarURLs);
         }
+        return build(bsProps, cl, installRoot);
+    }
 
-        // Step 2. Setup the module subsystem.
-        Main main = new EmbeddedMain();
+    @Override
+    public GlassFishRuntime build(BootstrapProperties bsProps, ClassLoader cl) throws GlassFishException {
+        String installRoot = getInstallRoot(bsProps);
+        return build(bsProps, cl, installRoot);
+    }
+
+
+    private GlassFishRuntime build(BootstrapProperties bsProps, ClassLoader cl, String installRoot) {
+        if (installRoot != null) {
+            System.setProperty("org.glassfish.embeddable.installRoot", installRoot);
+        }
         SingleHK2Factory.initialize(cl);
         ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
         modulesRegistry.setParentClassLoader(cl);
-
-        // Step 3. Create NonOSGIGlassFishRuntime
-        GlassFishRuntime glassFishRuntime = new EmbeddedGlassFishRuntime(main);
-        LOG.logp(Level.FINER, getClass().getName(), "build",
-                "Created GlassFishRuntime {0} with InstallRoot {1}, Bootstrap Options {2}",
-                new Object[]{glassFishRuntime, installRoot, bsProps});
-        return glassFishRuntime;
+        return new EmbeddedGlassFishRuntime(new EmbeddedMain());
     }
+
 
     @Override
     public boolean handles(BootstrapProperties bsProps) {
@@ -144,9 +144,12 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private static class EmbeddedClassLoader extends GlassfishUrlClassLoader {
+        static {
+            registerAsParallelCapable();
+        }
 
-        EmbeddedClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
-            super(moduleJarURLs.toArray(URL[]::new), parent);
+        private EmbeddedClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
+            super("EmbeddedCL", moduleJarURLs.toArray(URL[]::new), parent);
         }
     }
 

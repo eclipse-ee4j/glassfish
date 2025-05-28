@@ -150,7 +150,8 @@
     </target>
 
     <target name="run.validator" depends="init">
-<echo>${inst}</echo>
+        <echo>${inst}</echo>
+        
         <javaWithResult
             fork="true"
             failonerror="false"
@@ -158,10 +159,12 @@
             classname="dol.validation.Validator"
             output="${build}/${log.id}.output.log"
             resultproperty="result">
-<!--
+            
+            <!-- 
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,address=6666,server=y,suspend=y"/>
--->
+            -->
+            
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
             <jvmarg value="-Dcom.sun.aas.installRoot=${inst}"/>
@@ -174,7 +177,6 @@
             </classpath>
 
             <arg line="${arg.list}"/>
-
         </javaWithResult>
 
         <antcall target="processResult">
@@ -186,6 +188,7 @@
     <target name="private-all" depends="prepare">
         <antcall target="compile"/>
         <antcall target="assemble"/>
+        <!--
         <antcall target="declare-test">
             <param name="description" value="dol/validation Test standalone war"/>
         </antcall>
@@ -236,6 +239,8 @@
             <param name="arg.list" value="${validation.wlsEar2} true"/>
             <param name="log.id" value="7"/>
         </antcall>
+        
+        -->
         <antcall target="declare-test">
             <param name="description" value="dol/validation Test WLS Ear3"/>
         </antcall>

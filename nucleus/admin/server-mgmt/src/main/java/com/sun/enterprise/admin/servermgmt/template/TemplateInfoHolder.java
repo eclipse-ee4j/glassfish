@@ -47,7 +47,7 @@ public class TemplateInfoHolder {
         try {
             _templateInfo = parse(inputSteam);
         } catch (Exception e) {
-            throw new DomainException(_strings.get("failedToParse", TEMPLATE_INFO_SCHEMA_PATH));
+            throw new DomainException(_strings.get("failedToParse", TEMPLATE_INFO_SCHEMA_PATH), e);
         }
         _location = location;
     }

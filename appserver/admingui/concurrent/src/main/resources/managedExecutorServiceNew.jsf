@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2025 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +32,7 @@
         setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/concurrent/managedExecutorServices.jsf");
         setPageSessionAttribute(key="childType" value="managed-executor-service");
         setPageSessionAttribute(key="isConcurrent" value="true");
-        setPageSessionAttribute(key="convertToFalseList" value={"enabled", "contextInfoEnabled","longRunningTasks", "hungLoggerPrintOnce" });
+        setPageSessionAttribute(key="convertToFalseList" value={"enabled", "contextInfoEnabled", "useVirtualThreads", "longRunningTasks", "hungLoggerPrintOnce" });
         setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
         gf.getDefaultValues(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", valueMap="#{pageSession.valueMap}");
         setPageSessionAttribute(key="edit" value="#{false}" );

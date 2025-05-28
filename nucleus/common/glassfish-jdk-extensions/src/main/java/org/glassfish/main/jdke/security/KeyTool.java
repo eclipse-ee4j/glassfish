@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 
 /**
@@ -56,6 +57,7 @@ public class KeyTool {
      * The repository may not exist yet.
      *
      * @param keyStore the file representing the keystore
+     * @param password keystore and key password, must have at least 6 characters
      */
     public KeyTool(File keyStore, char[] password) {
         this.keyStore = keyStore;
@@ -82,6 +84,10 @@ public class KeyTool {
             "-keystore", keyStore.getAbsolutePath(),
             "-storetype", "JKS"
         );
+        if (keyStore.getParentFile().mkdirs()) {
+            // The directory must exist, keytool will not create it
+            LOG.log(DEBUG, "Created directory for keystore: {0}", keyStore.getParentFile());
+        }
         LOG.log(INFO, "Executing command: {0}", command);
         final ProcessBuilder builder = new ProcessBuilder(command).directory(keyStore.getParentFile());
         final Process process;
@@ -104,7 +110,7 @@ public class KeyTool {
             final ByteArrayOutputStream output = new ByteArrayOutputStream();
             process.getInputStream().transferTo(output);
             process.getErrorStream().transferTo(output);
-            LOG.log(INFO, () -> "Command output: " + output.toString(Charset.defaultCharset()));
+            LOG.log(DEBUG, () -> "Command output: " + output.toString(Charset.defaultCharset()));
             if (exitCode != 0) {
                 throw new IllegalStateException("KeyTool command failed with exit code: " + exitCode);
             }

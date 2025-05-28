@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,14 +34,19 @@ import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.GlassFishVariable;
 import org.glassfish.embeddable.web.HttpsListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.config.SslConfig;
 import org.glassfish.embeddable.web.config.WebContainerConfig;
+import org.glassfish.main.jdke.security.KeyTool;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Tests WebContainer#addWebListener(HttpsListener)
@@ -50,6 +55,8 @@ import org.junit.jupiter.api.Test;
  */
 public class EmbeddedAddHttpsListenerTest {
 
+    @TempDir
+    static File tempDir;
     static GlassFish glassfish;
     static WebContainer embedded;
     static File root;
@@ -57,6 +64,12 @@ public class EmbeddedAddHttpsListenerTest {
 
     @BeforeAll
     public static void setupServer() throws GlassFishException {
+
+        File keystore = new File("keystore.jks");
+        setProperty(GlassFishVariable.KEYSTORE_FILE.getSystemPropertyName(), keystore.getAbsolutePath(), true);
+        KeyTool keyTool = new KeyTool(keystore, "changeit".toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
         embedded = glassfish.getService(WebContainer.class);
@@ -143,22 +156,26 @@ public class EmbeddedAddHttpsListenerTest {
         //verify(9292);
         //verify(9393);
 
-        if (appName!=null)
+        if (appName!=null) {
             deployer.undeploy(appName);
+        }
 
     }
 
     public static void disableCertValidation() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
 
+            @Override
             public void checkClientTrusted(X509Certificate[] certs, String authType) {
                 return;
             }
 
+            @Override
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 return;
             }

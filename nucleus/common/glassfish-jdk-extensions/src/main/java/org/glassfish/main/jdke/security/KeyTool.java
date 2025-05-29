@@ -47,6 +47,7 @@ import static java.lang.System.Logger.Level.INFO;
 public class KeyTool {
 
     private static final Logger LOG = System.getLogger(KeyTool.class.getName());
+    private static final long EXEC_TIMEOUT = 10;
     private static final String KEYTOOL;
 
     static {
@@ -65,8 +66,8 @@ public class KeyTool {
     private char[] password;
 
     /**
-     * Creates a new instance of KeyTool managing the repository.
-     * The repository may not exist yet.
+     * Creates a new instance of KeyTool managing the keystore file.
+     * The file may not exist yet.
      *
      * @param keyStore the file representing the keystore
      * @param password keystore and key password, must have at least 6 characters
@@ -139,7 +140,7 @@ public class KeyTool {
 
     /**
      * Copies a certificate from the key store to another key store.
-     * The destination key store will be created if it does not exist.
+     * The destination key store of the same type will be created if it does not exist.
      *
      * @param alias the alias of the certificate to copy
      * @param destKeyStore the destination key store file
@@ -151,10 +152,6 @@ public class KeyTool {
         try {
             certFile.delete();
             exportCertificate(alias, certFile);
-
-            if (!destKeyStore.exists()) {
-                createKeyStoreFile(destKeyStore);
-            }
             final List<String> importCommand = List.of(
                 KEYTOOL,
                 "-J-Duser.language=en",
@@ -165,7 +162,9 @@ public class KeyTool {
                 "-keystore", destKeyStore.getAbsolutePath(),
                 "-file", certFile.getAbsolutePath()
                 );
-            execute(importCommand, destKeyStorePassword);
+            // 3 times - once for key store, once for key password, once more for confirmation
+            // 1 times if the key store does not exist.
+            execute(importCommand, destKeyStorePassword, destKeyStorePassword, destKeyStorePassword);
         } finally {
             if (certFile.exists() && !certFile.delete()) {
                 LOG.log(ERROR, "Failed to delete temporary certificate file: {0}", certFile);
@@ -241,9 +240,23 @@ public class KeyTool {
     }
 
 
-    private void createKeyStoreFile(final File file) throws IOException {
+    /**
+     * Creates an empty key store file with the specified type and password.
+     *
+     * @param file
+     * @param keyStoreType
+     * @param password
+     * @return KeyTool suitable to manage the newly created key store
+     * @throws IOException
+     */
+    public static KeyTool createEmptyKeyStore(File file, String keyStoreType, char[] password) throws IOException {
+        if (file == null || password == null) {
+            throw new IllegalArgumentException(
+                "Key store file and password must not be null (usually must have at least 6 characters,"
+                    + " depends on keystore implementation).");
+        }
         try {
-            KeyStore cacerts = KeyStore.getInstance("JKS");
+            KeyStore cacerts = KeyStore.getInstance(keyStoreType);
             cacerts.load(null, password);
             try (FileOutputStream output = new FileOutputStream(file)) {
                 cacerts.store(output, password);
@@ -251,6 +264,7 @@ public class KeyTool {
         } catch (GeneralSecurityException | IOException e) {
             throw new IOException("Could not create new keystore: " + file, e);
         }
+        return new KeyTool(file, password);
     }
 
 
@@ -268,8 +282,9 @@ public class KeyTool {
             if (stdinLines != null && stdinLines.length > 0) {
                 writeStdIn(stdinLines, stdin);
             }
-            if (!process.waitFor(1, TimeUnit.MINUTES)) {
-                throw new IOException("KeyTool command timed out after 60 seconds");
+
+            if (!process.waitFor(EXEC_TIMEOUT, TimeUnit.SECONDS)) {
+                throw new IOException("KeyTool command timed out after " + EXEC_TIMEOUT + " seconds");
             }
             final int exitCode = process.exitValue();
             final ByteArrayOutputStream output = new ByteArrayOutputStream();

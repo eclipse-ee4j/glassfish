@@ -4,7 +4,7 @@
 
 Eclipse GlassFish is an application server, implementing [Jakarta EE](https://jakarta.ee/about).
 This release is corresponding with the [Jakarta EE 10](https://jakarta.ee/specifications/platform/10) specification, which is a major feature release.
-Jakarta EE 10 requires JDK 11 as a minimum, but also officially works on JDK 17 and JDK 21.
+Jakarta EE 10 requires JDK 11 as a minimum, but also officially works on JDK 17.
 
 GlassFish 7.0.25 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 24. MicroProfile support requires JDK 17 or higher.
 

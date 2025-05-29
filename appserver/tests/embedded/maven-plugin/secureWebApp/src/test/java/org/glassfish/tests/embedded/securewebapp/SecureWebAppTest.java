@@ -40,6 +40,7 @@ import org.glassfish.tests.utils.junit.JUnitSystem;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SecureWebAppTest {
@@ -65,7 +66,7 @@ public class SecureWebAppTest {
     @BeforeAll
     public static void createKeyStore() throws Exception {
         File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "keystore.jks")).toFile();
-        KeyTool keyTool = new KeyTool(keystore, "changeit".toCharArray());
+        KeyTool keyTool = new KeyTool(keystore, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
         keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
     }
 

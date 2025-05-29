@@ -57,6 +57,7 @@ import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 import org.glassfish.main.jdke.security.KeyTool;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
@@ -173,7 +174,7 @@ public class GlassFishTestEnvironment {
     public static KeyStore getDomain1KeyStore() {
         Path keystore = getDomain1Directory().resolve(Paths.get("config", "keystore.jks"));
         try {
-            return new KeyTool(keystore.toFile(), "changeit".toCharArray()).loadKeyStore();
+            return new KeyTool(keystore.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -183,7 +184,7 @@ public class GlassFishTestEnvironment {
     public static KeyStore getDomain1TrustStore() {
         Path cacerts = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"));
         try {
-            return new KeyTool(cacerts.toFile(), "changeit".toCharArray()).loadKeyStore();
+            return new KeyTool(cacerts.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

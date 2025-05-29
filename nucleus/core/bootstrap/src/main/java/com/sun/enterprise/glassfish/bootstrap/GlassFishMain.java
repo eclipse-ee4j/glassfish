@@ -38,6 +38,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.logging.Level.SEVERE;
 import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -54,7 +55,7 @@ public class GlassFishMain {
 
             final String platformName = whichPlatform();
             // Set the system property to allow downstream code to know the platform on which GlassFish runs.
-            System.setProperty(OSGI_PLATFORM.getPropertyName(), platformName);
+            setProperty(OSGI_PLATFORM.getPropertyName(), platformName, true);
             final OsgiPlatform platform = OsgiPlatform.valueOf(platformName);
             STDOUT.println("Launching GlassFish on " + platform + " platform");
 

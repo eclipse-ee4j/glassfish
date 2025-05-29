@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.glassfish.pfl.basic.func.NullaryFunction;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.CompletionStatus;
@@ -87,7 +88,7 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
     private void createInterceptor(ORBInitInfo info, Codec codec) {
         if (processEnv.getProcessType().isServer()) {
             try {
-                System.setProperty(InterceptorImpl.CLIENT_POLICY_CHECKING, String.valueOf(false));
+                SystemProperties.setProperty(InterceptorImpl.CLIENT_POLICY_CHECKING, Boolean.FALSE.toString(), true);
             } catch (Exception ex) {
                 _logger.log(Level.WARNING, "iiop.readproperty_exception", ex);
             }
@@ -112,9 +113,8 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
             // initialized
             com.sun.corba.ee.spi.orb.ORB theORB = ((ORBInitInfoExt) info).getORB();
 
-            // Set ORB and TSIdentification: needed for app clients,
-            // standalone clients.
-            interceptor.setOrb(theORB);
+            // Set ORB and TSIdentification: needed for app clients, standalone clients.
+            InterceptorImpl.setOrb(theORB);
             try {
                 DefaultTransactionService jts = new DefaultTransactionService();
                 jts.identify_ORB(theORB, tsIdent, jtsProperties);
@@ -140,10 +140,8 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
             info.add_ior_interceptor(iorInterceptor);
 
         } catch (Exception e) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Exception registering JTS interceptors", e);
-            }
-            throw new RuntimeException(e.getMessage());
+            _logger.log(Level.FINE, "Exception registering JTS interceptors", e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

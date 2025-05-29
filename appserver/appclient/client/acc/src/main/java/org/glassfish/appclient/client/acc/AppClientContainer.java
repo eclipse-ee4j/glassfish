@@ -75,6 +75,7 @@ import org.omg.CORBA.NO_PERMISSION;
 import org.xml.sax.SAXException;
 
 import static org.glassfish.appclient.client.acc.AppClientContainer.ClientMainClassSetting.getClientMainClass;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Embeddable Glassfish app client container (ACC).
@@ -303,7 +304,7 @@ public class AppClientContainer implements ApplicationClientContainer {
         prepareURLStreamHandling();
 
         // This is required for us to enable interrupt jaxws service creation calls
-        System.setProperty("jakarta.xml.ws.spi.Provider", "com.sun.xml.ws.spi.ProviderImpl");
+        setProperty("jakarta.xml.ws.spi.Provider", "com.sun.xml.ws.spi.ProviderImpl", true);
         // InjectionManager's injectClass will be called from getMainMethod
 
         // Load any managed beans

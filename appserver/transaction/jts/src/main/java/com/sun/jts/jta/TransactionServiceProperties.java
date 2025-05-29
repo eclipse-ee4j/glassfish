@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
 import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
 import com.sun.enterprise.transaction.config.TransactionService;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.RecoveryManager;
 import com.sun.jts.utils.RecoveryHooks.FailureInducer;
@@ -40,6 +40,7 @@ import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.config.types.Property;
 
 /**
@@ -50,9 +51,6 @@ public class TransactionServiceProperties {
 
     private static Logger _logger =
             LogDomains.getLogger(TransactionServiceProperties.class, LogDomains.TRANSACTION_LOGGER);
-
-    private static StringManager localStrings =
-            StringManager.getManager(TransactionServiceProperties.class);
 
     private static final String JTS_XA_SERVER_NAME = "com.sun.jts.xa-servername";
     private static final String J2EE_SERVER_ID_PROP = "com.sun.enterprise.J2EEServerId";
@@ -176,8 +174,7 @@ public class TransactionServiceProperties {
                     // and requests are delivered to a new server, the
                     // ServerId in the request will match the new server.
 
-                    String serverId = String.valueOf(DEFAULT_SERVER_ID);
-                    System.setProperty(J2EE_SERVER_ID_PROP, serverId);
+                    SystemProperties.setProperty(J2EE_SERVER_ID_PROP, Integer.toString(DEFAULT_SERVER_ID), true);
 
                     ServerContext ctx = serviceLocator.getService(ServerContext.class);
                     String instanceName = ctx.getInstanceName();
@@ -299,8 +296,9 @@ public class TransactionServiceProperties {
                 }
                 // Release all locks
                 RecoveryManager.startResyncThread();
-                if (_logger.isLoggable(Level.FINE))
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE,"[JTS] Started ResyncThread");
+                }
             }
         }
     }
@@ -331,6 +329,7 @@ public class TransactionServiceProperties {
             this.interval = interval;
         }
 
+        @Override
         public void run() {
             ResourceRecoveryManager recoveryManager = serviceLocator.getService(ResourceRecoveryManager.class);
             if (interval <= 0) {
@@ -347,23 +346,26 @@ public class TransactionServiceProperties {
                 while(true) {
                     Thread.sleep(interval*1000L);
                     if (!RecoveryManager.isIncompleteTxRecoveryRequired()) {
-                        if (_logger.isLoggable(Level.FINE))
+                        if (_logger.isLoggable(Level.FINE)) {
                             _logger.log(Level.FINE, "Incomplete transaction recovery is "
                                     + "not requeired,  waiting for the next interval");
+                        }
                         continue;
                     }
                     if (RecoveryManager.sizeOfInCompleteTx() <= prevSize) {
-                        if (_logger.isLoggable(Level.FINE))
+                        if (_logger.isLoggable(Level.FINE)) {
                             _logger.log(Level.FINE, "Incomplete transaction recovery is "
                                     + "not required,  waiting for the next interval SIZE");
+                        }
                        continue;
                     }
                     prevSize = RecoveryManager.sizeOfInCompleteTx();
                     recoveryManager.recoverIncompleteTx(false, null);
                 }
             } catch (Exception ex) {
-                if (_logger.isLoggable(Level.FINE))
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, " Exception occurred in recoverInCompleteTx ");
+                }
             }
         }
     }

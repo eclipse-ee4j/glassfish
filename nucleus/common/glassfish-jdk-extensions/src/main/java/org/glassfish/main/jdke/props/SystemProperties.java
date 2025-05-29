@@ -16,6 +16,8 @@
 package org.glassfish.main.jdke.props;
 
 import java.lang.System.Logger;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
@@ -38,9 +40,10 @@ public final class SystemProperties {
      * @param key must not be null.
      * @param value if null, will remove the property
      * @param force if false, will not override an existing property with the same key
+     * @return the old value of the property, or null if it was not set before
      */
     public static String setProperty(String key, String value, boolean force) {
-        final String oldValue = System.getProperty(key);
+        final String oldValue = executePrivilegedAction(() -> System.getProperty(key));
         if (oldValue == null) {
             LOG.log(DEBUG, "Setting property {0} to {1}", key, value);
         } else {
@@ -55,11 +58,12 @@ public final class SystemProperties {
                 return oldValue;
             }
         }
-        if (value == null) {
-            System.clearProperty(key);
-        } else {
-            System.setProperty(key, value);
-        }
+        executePrivilegedAction(value == null ? () -> System.clearProperty(key) : () -> System.setProperty(key, value));
         return oldValue;
+    }
+
+
+    private static String executePrivilegedAction(PrivilegedAction<String> action) {
+        return AccessController.doPrivileged(action);
     }
 }

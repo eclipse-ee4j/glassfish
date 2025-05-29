@@ -79,6 +79,9 @@ public class SystemPropertyConstants {
 
     public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.envPreferredToProperties";
 
+    public static final String KEYSTORE_TYPE_DEFAULT = "JKS";
+    public static final String KEYSTORE_PASSWORD_DEFAULT = "changeit";
+
     /**
      * Returns the system specific file.separator delimited path to the asadmin script. Any changes to file layout should
      *

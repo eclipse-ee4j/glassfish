@@ -100,8 +100,7 @@ public class ASenvPropertyReader {
     }
 
     /**
-     * Returns the properties that were processed
-     * This includes going to a bit of trouble setting up the hostname and java root.
+     * Returns the properties that were processed from asenv.[bat|conf].
      * @return A Map<String,String> with all the system properties like properties.
      */
     public Map<String, String> getProps() {

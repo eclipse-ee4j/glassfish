@@ -50,6 +50,9 @@ import javax.net.ssl.X509KeyManager;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.util.Collections.list;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
 /**
  * Handy class containing static functions.
@@ -182,11 +185,11 @@ public final class SSLUtils {
     }
 
     public static String getKeyStoreType() {
-        return System.getProperty(SecuritySupport.KEYSTORE_TYPE_PROP, KeyStore.getDefaultType());
+        return System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KeyStore.getDefaultType());
     }
 
     public static String getTrustStoreType() {
-        return System.getProperty(SecuritySupport.TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType());
+        return System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KeyStore.getDefaultType());
     }
 
     /**
@@ -243,7 +246,7 @@ public final class SSLUtils {
      * @return PrivateKeyEntry
      */
     public PrivateKeyEntry getPrivateKeyEntryFromTokenAlias(String certNickname) throws Exception {
-        checkPermission(SecuritySupport.KEYSTORE_PASS_PROP);
+        checkPermission(KEYSTORE_PASSWORD.getSystemPropertyName());
 
         PrivateKeyEntry privateKeyEntry = null;
 
@@ -290,7 +293,7 @@ public final class SSLUtils {
                 return;
             }
 
-            if (System.getProperty("java.vm.specification.version").compareTo("24") < 0) {
+            if (Runtime.version().feature() < 24) {
                 Permission perm = new RuntimePermission("SSLPassword");
                 AccessController.checkPermission(perm);
             }

@@ -64,6 +64,8 @@ import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMS_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMX_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORTBASE_OSGI_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORT_MAX_VAL;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 
 /**
@@ -76,7 +78,6 @@ public final class CreateDomainCommand extends CLICommand {
     private static final String ADMIN_PORT = "adminport";
     private static final String ADMIN_PASSWORD = "password";
     private static final String MASTER_PASSWORD = "masterpassword";
-    private static final String DEFAULT_MASTER_PASSWORD = KeystoreManager.DEFAULT_MASTER_PASSWORD;
     private static final String SAVE_MASTER_PASSWORD = "savemasterpassword";
     private static final String INSTANCE_PORT = "instanceport";
     private static final String DOMAIN_PROPERTIES = "domainproperties";
@@ -257,9 +258,9 @@ public final class CreateDomainCommand extends CLICommand {
         adminUser = programOpts.getUser();
         if (!ok(adminUser)) {
             adminUser = SystemPropertyConstants.DEFAULT_ADMIN_USER;
-            adminPassword = SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD;
+            adminPassword = DEFAULT_ADMIN_PASSWORD;
         } else if (noPassword) {
-            adminPassword = SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD;
+            adminPassword = DEFAULT_ADMIN_PASSWORD;
         } else {
             char[] pwdArr = getAdminPassword();
             adminPassword = pwdArr != null ? new String(pwdArr) : null;
@@ -273,9 +274,9 @@ public final class CreateDomainCommand extends CLICommand {
         if (masterPassword == null) {
             if (useMasterPassword) {
                 char[] mpArr = getMasterPassword();
-                masterPassword = mpArr != null ? new String(mpArr) : null;
+                masterPassword = mpArr == null ? null : new String(mpArr);
             } else {
-                masterPassword = DEFAULT_MASTER_PASSWORD;
+                masterPassword = KEYSTORE_PASSWORD_DEFAULT;
             }
         }
 
@@ -291,6 +292,7 @@ public final class CreateDomainCommand extends CLICommand {
 
             // saving the login information happens inside this method
             createTheDomain(domainDir, domainProperties);
+            return 0;
         } catch (CommandException ce) {
             logger.info(ce.getLocalizedMessage());
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), ce);
@@ -298,7 +300,6 @@ public final class CreateDomainCommand extends CLICommand {
             logger.fine(e.getLocalizedMessage());
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), e);
         }
-        return 0;
     }
 
     /**
@@ -310,7 +311,7 @@ public final class CreateDomainCommand extends CLICommand {
         po.prompt = strings.get("AdminPassword");
         po.promptAgain = strings.get("AdminPasswordAgain");
         po.param._password = true;
-        return getPassword(po, SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD, true);
+        return getPassword(po, DEFAULT_ADMIN_PASSWORD, true);
     }
 
     /**
@@ -322,7 +323,7 @@ public final class CreateDomainCommand extends CLICommand {
         po.prompt = strings.get("MasterPassword");
         po.promptAgain = strings.get("MasterPasswordAgain");
         po.param._password = true;
-        return getPassword(po, DEFAULT_MASTER_PASSWORD, true);
+        return getPassword(po, KEYSTORE_PASSWORD_DEFAULT, true);
     }
 
     /**
@@ -438,7 +439,7 @@ public final class CreateDomainCommand extends CLICommand {
         logger.info(strings.get("DomainCreated", domainName));
         Integer aPort = (Integer) domainConfig.get(DomainConfig.K_ADMIN_PORT);
         logger.info(strings.get("DomainPort", domainName, Integer.toString(aPort)));
-        if (adminPassword != null && adminPassword.equals(SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD)) {
+        if (adminPassword != null && adminPassword.equals(DEFAULT_ADMIN_PASSWORD)) {
             logger.info(strings.get("DomainAllowsUnauth", domainName, adminUser));
         } else {
             logger.info(strings.get("DomainAdminUser", domainName, adminUser));

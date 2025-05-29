@@ -46,6 +46,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINER;
 
@@ -231,7 +232,7 @@ public abstract class LocalServerCommand extends CLICommand {
         if (mpv == null) {
             // not specified in the password file
             // optimization for the default case
-            mpv = "changeit";
+            mpv = KEYSTORE_PASSWORD_DEFAULT;
             if (!verifyMasterPassword(mpv)) {
                 mpv = readFromMasterPasswordFile();
                 if (!verifyMasterPassword(mpv)) {

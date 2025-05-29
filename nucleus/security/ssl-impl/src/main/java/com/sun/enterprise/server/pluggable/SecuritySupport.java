@@ -66,6 +66,7 @@ import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.security.common.MasterPassword;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
@@ -100,9 +101,6 @@ public class SecuritySupport {
 
     private static final Logger LOG = Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
-    private static final String DEFAULT_KEYSTORE_PASS = "changeit";
-    private static final String DEFAULT_TRUSTSTORE_PASS = "changeit";
-
     private final List<KeyStore> keyStores = new ArrayList<>();
     private final List<KeyStore> trustStores = new ArrayList<>();
     private final List<char[]> keyStorePasswords = new ArrayList<>();
@@ -131,13 +129,13 @@ public class SecuritySupport {
         // found from master password helper or not.
         if (keyStorePass == null || isAcc) {
             final String keyStorePassOverride = System.getProperty(KEYSTORE_PASSWORD.getSystemPropertyName(),
-                DEFAULT_KEYSTORE_PASS);
+                KEYSTORE_PASSWORD_DEFAULT);
             if (keyStorePassOverride != null) {
                 keyStorePass = keyStorePassOverride.toCharArray();
             }
 
             final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(),
-                DEFAULT_TRUSTSTORE_PASS);
+                KEYSTORE_PASSWORD_DEFAULT);
             if (trustStorePassOverride != null) {
                 trustStorePass = trustStorePassOverride.toCharArray();
             }

@@ -58,6 +58,7 @@ import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
@@ -357,9 +358,11 @@ final class RMIConnectorStarter extends ConnectorStarter {
         // The keystore and truststore locations are already available as System properties
         // Hence we just add the passwords
         setProperty(KEYSTORE_PASSWORD.getSystemPropertyName(),
-            sslParams.getKeyStorePassword() == null ? "changeit" : sslParams.getKeyStorePassword(), true);
+            sslParams.getKeyStorePassword() == null ? KEYSTORE_PASSWORD_DEFAULT : sslParams.getKeyStorePassword(),
+            true);
         setProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(),
-            sslParams.getTrustStorePassword() == null ? "changeit" : sslParams.getTrustStorePassword(), true);
+            sslParams.getTrustStorePassword() == null ? KEYSTORE_PASSWORD_DEFAULT : sslParams.getTrustStorePassword(),
+            true);
 
         return new SslRMIClientSocketFactory();
     }

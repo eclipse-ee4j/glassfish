@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.main.jdke.security.KeyTool;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
 
@@ -240,7 +241,7 @@ public class AsadminSecurityUtil {
     }
 
     private char[] defaultMasterPassword() {
-        return System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), "changeit").toCharArray();
+        return System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT).toCharArray();
     }
 
 }

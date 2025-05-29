@@ -33,10 +33,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -61,6 +59,7 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 
 import static com.sun.enterprise.config.serverbeans.SecureAdmin.DEFAULT_INSTANCE_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 
 /**
  * Upgrades older config to current.
@@ -295,40 +294,22 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         reload(sslUtils().getTrustStore(), serverEnv.getTrustStore(), pw);
     }
 
-    private void createKeyStoreFile(final File trustStoreFile, final String pw) {
-        try {
-            KeyStore cacerts = KeyStore.getInstance("JKS");
-            cacerts.load(null, pw.toCharArray());
-            cacerts.store(new FileOutputStream(trustStoreFile), pw.toCharArray());
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void reload(final KeyStore keystore, final File keystoreFile, final String pw)
         throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException {
-
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(keystoreFile));
+        try (InputStream is = new BufferedInputStream(new FileInputStream(keystoreFile))) {
             keystore.load(is, pw.toCharArray());
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 
     private String masterPassword() throws IOException {
-        String masterPW = "changeit";
         final String pwFileArg = startupArg("-passwordfile");
         if (pwFileArg != null) {
             final String masterPWFromPWFile = pwProps(pwFileArg).getProperty("AS_ADMIN_MASTERPASSWORD");
             if (masterPWFromPWFile != null) {
-                masterPW = masterPWFromPWFile;
+                return masterPWFromPWFile;
             }
         }
-        return masterPW;
+        return KEYSTORE_PASSWORD_DEFAULT;
     }
 
     private Properties pwProps(final String pwFilePath) throws IOException {

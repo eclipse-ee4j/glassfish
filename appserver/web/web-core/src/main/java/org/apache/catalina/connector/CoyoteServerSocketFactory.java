@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -21,6 +21,8 @@ package org.apache.catalina.connector;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 
 
 /**
@@ -58,7 +60,7 @@ public class CoyoteServerSocketFactory
     private String keystoreFile;
     private String randomFile;
     private String rootFile;
-    private String keystorePass = "changeit";
+    private String keystorePass = KEYSTORE_PASSWORD_DEFAULT;
     private String keystoreType = "JKS";
     private String protocol = "TLS";
     private String protocols;

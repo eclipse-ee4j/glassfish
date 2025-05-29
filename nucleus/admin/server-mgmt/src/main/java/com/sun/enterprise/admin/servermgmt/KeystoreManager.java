@@ -50,7 +50,6 @@ public class KeystoreManager {
     private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation";
     public static final String CERTIFICATE_ALIAS = "s1as";
     public static final String INSTANCE_SECURE_ADMIN_ALIAS = "glassfish-instance";
-    public static final String DEFAULT_MASTER_PASSWORD = "changeit";
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
     private static final StringManager _strMgr = StringManager.getManager(KeystoreManager.class);

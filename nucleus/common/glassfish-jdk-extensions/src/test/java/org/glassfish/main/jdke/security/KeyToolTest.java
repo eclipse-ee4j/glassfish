@@ -25,16 +25,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- *
- */
 public class KeyToolTest {
-
 
     private static final char[] PASSWORD = "passwordpassword".toCharArray();;
     private static final char[] PASSWORD2 = "123456".toCharArray();
@@ -46,7 +43,7 @@ public class KeyToolTest {
 
     @BeforeAll
     static void createKeyTool() throws Exception {
-        keyStoreFile = File.createTempFile("keystore", ".jks", tmp);
+        keyStoreFile = File.createTempFile("keystore", ".p12", tmp);
         keyStoreFile.delete();
         keyTool = new KeyTool(keyStoreFile, PASSWORD);
     }
@@ -54,9 +51,11 @@ public class KeyToolTest {
     @Test
     void usualUseCase() throws Exception {
         keyTool.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
-        File copyKeyStoreFile = new File(tmp, "copy.jks");
+        File copyKeyStoreFile = new File(tmp, "copy.p12");
         keyTool.copyCertificate("keypair001", copyKeyStoreFile);
+
         File copyKeyStoreFile2 = new File(tmp, "copy2.jks");
+        KeyTool keyTool2 = KeyTool.createEmptyKeyStore(copyKeyStoreFile2, "JKS", PASSWORD);
         keyTool.copyCertificate("keypair001", copyKeyStoreFile2);
         assertThrows(IOException.class, () -> keyTool.changeKeyStorePassword("short".toCharArray()));
         keyTool.changeKeyStorePassword(PASSWORD2);
@@ -68,10 +67,13 @@ public class KeyToolTest {
         assertNotNull(keyStore.getKey("keypair001", PASSWORD2));
 
         KeyStore copy1 = new KeyTool(copyKeyStoreFile, PASSWORD).loadKeyStore();
+        assertEquals("PKCS12", copy1.getType());
         assertTrue(copy1.containsAlias("keypair001"));
         assertNull(copy1.getKey("keypair001", PASSWORD));
         assertNotNull(copy1.getCertificate("keypair001"));
 
+        KeyStore copy2 = keyTool2.loadKeyStore();
+        assertEquals("JKS", copy2.getType());
     }
 
 }

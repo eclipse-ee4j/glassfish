@@ -37,6 +37,7 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.internal.api.RelativePathResolver;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
@@ -155,9 +156,8 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                 //i18n
                 char[] mpArr = readPassword(Strings.get("DomainMasterPasswordPrompt", domain));
                 masterPass = mpArr != null ? new String(mpArr) : null;
-            }
-            else {
-                masterPass = "changeit"; //default
+            } else {
+                masterPass = KEYSTORE_PASSWORD_DEFAULT;
             }
         }
         return masterPass;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,12 +41,12 @@ public class CLIUtilTest {
         f.deleteOnExit();
         try (BufferedWriter out = new BufferedWriter(new FileWriter(f, UTF_8))) {
             out.write("AS_ADMIN_PASSWORD=adminadmin\n");
-            out.write("AS_ADMIN_MASTERPASSWORD=changeit\n");
+            out.write("AS_ADMIN_MASTERPASSWORD=changeit123\n");
         }
 
         Map<String, String> po = CLIUtil.readPasswordFileOptions(fileName, false);
         assertEquals("adminadmin", po.get("password"), "admin password");
-        assertEquals("changeit", po.get("masterpassword"), "master password");
+        assertEquals("changeit123", po.get("masterpassword"), "master password");
         assertNull(po.get("foobar"), "null");
     }
 }

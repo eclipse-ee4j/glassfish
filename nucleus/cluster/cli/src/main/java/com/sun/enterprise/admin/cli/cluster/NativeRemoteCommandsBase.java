@@ -38,6 +38,7 @@ import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.internal.api.RelativePathResolver;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  *  Base class for SSH provisioning commands.
@@ -188,8 +189,8 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
             // get the list of domains
             File[] files = domainsDirFile.listFiles(File::isDirectory);
             for (File f : files) {
-                //the following property is required for initializing the password helper
-                System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), f.getAbsolutePath());
+                // the following property is required for initializing the password helper
+                setProperty(INSTANCE_ROOT.getSystemPropertyName(), f.getAbsolutePath(), true);
                 try {
                     final PasswordAdapter pa = new PasswordAdapter(null);
                     final boolean exists = pa.aliasExists(alias);

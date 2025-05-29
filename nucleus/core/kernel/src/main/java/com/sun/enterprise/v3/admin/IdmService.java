@@ -43,6 +43,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ARG_SEP;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_ARGS;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 
 /**
  * An implementation of the @link {IdentityManagement} that manages the password needs of the server. This
@@ -82,7 +83,7 @@ public class IdmService implements PostConstruct, IdentityManagement {
             }
         }
         if (!success) {
-            masterPassword = "changeit".toCharArray(); // the default;
+            masterPassword = KEYSTORE_PASSWORD_DEFAULT.toCharArray();
         }
     }
 

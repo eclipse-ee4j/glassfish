@@ -41,6 +41,7 @@ import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
@@ -258,10 +259,10 @@ public class GrizzlyConfigTest {
         ClassLoader cl = getClass().getClassLoader();
         setProperty(TRUSTSTORE_FILE.getSystemPropertyName(),
             new File(cl.getResource("cacerts.jks").toURI()).getAbsolutePath(), true);
-        setProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), "changeit", true);
+        setProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT, true);
         setProperty(KEYSTORE_FILE.getSystemPropertyName(),
             new File(cl.getResource("keystore.jks").toURI()).getAbsolutePath(), true);
-        setProperty(KEYSTORE_PASSWORD.getSystemPropertyName(), "changeit", true);
+        setProperty(KEYSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT, true);
     }
 
     @Test

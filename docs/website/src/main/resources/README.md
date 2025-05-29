@@ -11,6 +11,8 @@ sponsored by the Eclipse Foundation.
 
 This update emphasizes major cleanups, system optimizations, and prepares the codebase for easier future maintenance, notably in anticipation of the upcoming 7.1.0 release.
 
+Download links are available from the [GlassFish Download page](download.md).
+
 ## April 23, 2025 -- Eclipse GlassFish 7.0.24 Available
 
 This release marks an important step forward by introducing support for JDK 24 in GlassFish 7 — a capability that had previously only been available in milestone builds of GlassFish 8. Achieving this required new versions of CORBA, ORB, and PFL, the result of many months of dedicated work by the team.

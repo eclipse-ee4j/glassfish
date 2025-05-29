@@ -80,7 +80,7 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
         try {
             if (Util.isEmbeddedServer()) {
                 // If the user-defined login.conf/server.policy are set as system properties, then they are given priority
-                setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").getAbsolutePath(), false);
+                setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").toURI().toURL().toExternalForm(), false);
                 setProperty(SYS_PROP_JAVA_SEC_POLICY, writeConfigFileToTempDir("server.policy").getAbsolutePath(), false);
             }
 

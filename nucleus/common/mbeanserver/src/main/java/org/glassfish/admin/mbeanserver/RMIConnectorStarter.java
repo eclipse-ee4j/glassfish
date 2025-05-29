@@ -58,6 +58,11 @@ import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
@@ -351,13 +356,12 @@ final class RMIConnectorStarter extends ConnectorStarter {
 
         // The keystore and truststore locations are already available as System properties
         // Hence we just add the passwords
-        setProperty("javax.net.ssl.keyStorePassword",
+        setProperty(KEYSTORE_PASSWORD.getSystemPropertyName(),
             sslParams.getKeyStorePassword() == null ? "changeit" : sslParams.getKeyStorePassword(), true);
-        setProperty("javax.net.ssl.trustStorePassword",
+        setProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(),
             sslParams.getTrustStorePassword() == null ? "changeit" : sslParams.getTrustStorePassword(), true);
 
-        SslRMIClientSocketFactory sslRMICsf = new SslRMIClientSocketFactory();
-        return sslRMICsf;
+        return new SslRMIClientSocketFactory();
     }
 
     /**
@@ -375,14 +379,14 @@ final class RMIConnectorStarter extends ConnectorStarter {
         String trustStorePwd =
                 sslConfig.getTrustStorePassword() == null ? masterPassword : sslConfig.getTrustStorePassword();
         File trustStore =
-                sslConfig.getTrustStore() == null ? new File(System.getProperty("javax.net.ssl.trustStore")) : new File(sslConfig.getTrustStore());
+                sslConfig.getTrustStore() == null ? new File(System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName())) : new File(sslConfig.getTrustStore());
 
         String keyStoreType =
-                sslConfig.getTrustStoreType() == null ? System.getProperty("javax.net.ssl.keyStoreType", "JKS") : sslConfig.getKeyStoreType();
+                sslConfig.getTrustStoreType() == null ? System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), "JKS") : sslConfig.getKeyStoreType();
         String keyStorePwd =
                 sslConfig.getTrustStorePassword() == null ? masterPassword : sslConfig.getKeyStorePassword();
         File keyStore =
-                sslConfig.getTrustStore() == null ? new File(System.getProperty("javax.net.ssl.keyStore")) : new File(sslConfig.getKeyStore());
+                sslConfig.getTrustStore() == null ? new File(System.getProperty(KEYSTORE_FILE.getSystemPropertyName())) : new File(sslConfig.getKeyStore());
 
 
         SSLParams sslParams = new SSLParams(trustStore, trustStorePwd, trustStoreType);
@@ -493,15 +497,3 @@ final class RMIConnectorStarter extends ConnectorStarter {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

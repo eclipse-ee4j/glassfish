@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +20,10 @@ package com.sun.enterprise.security.store;
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.io.FileUtils;
 
-import java.io.BufferedInputStream;
 import java.io.Console;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -36,9 +33,10 @@ import java.security.cert.CertificateException;
 import java.util.logging.Logger;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PASSWORD_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
 
 /**
  * Various utility methods related to certificate-based security.
@@ -111,16 +109,6 @@ public class AsadminSecurityUtil {
         return getInstance(null, isPromptable);
     }
 
-
-
-    /**
-     * @return the master password for the keystore and truststore, as set by the system property
-     * (defaulted if the property is not set).
-     */
-    public static char[] getAsadminTruststorePassword() {
-        return System.getProperty(CLIENT_TRUSTSTORE_PASSWORD_PROPERTY, "changeit").toCharArray();
-    }
-
     private AsadminSecurityUtil(final char[] commandLineMasterPassword, final boolean isPromptable) {
         try {
             init(commandLineMasterPassword, isPromptable);
@@ -178,10 +166,8 @@ public class AsadminSecurityUtil {
             }
         } catch (IOException ex) {
             if (ex.getCause() instanceof UnrecoverableKeyException) {
-                /*
-                 * The password did not allow access to the keystore.  Prompt
-                 * the user if possible.
-                 */
+                // The password did not allow access to the keystore.
+                // Prompt the user if possible.
                 if (!isPromptable) {
                     throw ex;
                 }
@@ -222,15 +208,11 @@ public class AsadminSecurityUtil {
      */
     private KeyStore openKeystore(final char[] candidateMasterPassword)
         throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        final KeyStore permanentKS = KeyStore.getInstance("JKS");
-
-        try (InputStream keyStoreStream = asadminKeyStoreStream()) {
-            if (keyStoreStream == null) {
-                return null;
-            }
-            permanentKS.load(keyStoreStream, candidateMasterPassword);
-            return permanentKS;
+        final File keystoreFile = getAsadminKeyStoreFile();
+        if (keystoreFile == null) {
+            return null;
         }
+        return new KeyTool(keystoreFile, candidateMasterPassword).loadKeyStore();
     }
 
     /**
@@ -246,19 +228,19 @@ public class AsadminSecurityUtil {
     /**
      * Returns an open stream to the keystore.
      *
-     * @return stream to the keystore
+     * @return keystore file or null
      * @throws FileNotFoundException
      */
-    private InputStream asadminKeyStoreStream() throws FileNotFoundException {
-        String location = System.getProperty(KEYSTORE_PROPERTY);
+    private File getAsadminKeyStoreFile() throws FileNotFoundException {
+        String location = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
         if (location == null) {
             return null;
         }
-        return new BufferedInputStream(new FileInputStream(location));
+        return new File(location);
     }
 
     private char[] defaultMasterPassword() {
-        return System.getProperty(CLIENT_TRUSTSTORE_PASSWORD_PROPERTY, "changeit").toCharArray();
+        return System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), "changeit").toCharArray();
     }
 
 }

@@ -41,6 +41,11 @@ import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -251,12 +256,12 @@ public class GrizzlyConfigTest {
 
     private void configure() throws URISyntaxException {
         ClassLoader cl = getClass().getClassLoader();
-        System.setProperty("javax.net.ssl.trustStore",
-            new File(cl.getResource("cacerts.jks").toURI()).getAbsolutePath());
-        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-        System.setProperty("javax.net.ssl.keyStore",
-            new File(cl.getResource("keystore.jks").toURI()).getAbsolutePath());
-        System.setProperty("javax.net.ssl.keyStorePassword", "changeit");
+        setProperty(TRUSTSTORE_FILE.getSystemPropertyName(),
+            new File(cl.getResource("cacerts.jks").toURI()).getAbsolutePath(), true);
+        setProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), "changeit", true);
+        setProperty(KEYSTORE_FILE.getSystemPropertyName(),
+            new File(cl.getResource("keystore.jks").toURI()).getAbsolutePath(), true);
+        setProperty(KEYSTORE_PASSWORD.getSystemPropertyName(), "changeit", true);
     }
 
     @Test

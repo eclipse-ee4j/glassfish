@@ -95,7 +95,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
     private final static String ASADMIN_VS_NAME = "__asadmin";
 
     private static final String CERTIFICATE_DN_PREFIX = "CN=";
-    private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation AISBL,L=Brussels,C=BE";
+    private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation";
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
     // Thanks to Jerome for suggesting this injection to make sure the

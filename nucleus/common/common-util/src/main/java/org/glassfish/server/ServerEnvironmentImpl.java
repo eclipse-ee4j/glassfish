@@ -31,6 +31,7 @@ import java.util.Properties;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
@@ -164,7 +165,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
             if (!location.isAbsolute()) {
                 location = new File(asenv.getProps().get(INSTANCE_ROOT.getPropertyName()), entry.getValue());
             }
-            System.setProperty(entry.getKey(), location.getAbsolutePath());
+            SystemProperties.setProperty(entry.getKey(), location.getAbsolutePath(), true);
         }
 
         Properties args = startupContext.getArguments();
@@ -181,15 +182,10 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
         domainName = s;
 
         s = args.getProperty("-instancename");
+        instanceName = isNotEmpty(s) ? s : "server";
 
-        if (!isNotEmpty(s)) {
-            instanceName = "server";
-        } else {
-            instanceName = s;
-        }
-        // bnevins IT 10209
         asenv.getProps().put(SystemPropertyConstants.SERVER_NAME, instanceName);
-        System.setProperty(SystemPropertyConstants.SERVER_NAME, instanceName);
+        SystemProperties.setProperty(SystemPropertyConstants.SERVER_NAME, instanceName, true);
 
         // bnevins Apr 2010 adding clustering support...
         String typeString = args.getProperty("-type");
@@ -356,6 +352,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
         this.status = status;
     }
 
+    @Override
     public boolean isEmbedded() {
         return serverType == RuntimeType.EMBEDDED;
     }

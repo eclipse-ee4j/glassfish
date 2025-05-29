@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +44,7 @@ import static com.sun.enterprise.security.appclient.integration.AppClientSecurit
 import static java.util.Arrays.asList;
 import static org.glassfish.appclient.client.acc.Util.writeTextToTempFile;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  *
@@ -108,7 +109,7 @@ public class AppClientContainerSecurityHelper {
          * config file contains a blank then ConfigFile class expects the URL to contain a blank, not %20 for example. So, we
          * need to use the deprecated File.toURL() method to create such a URL.
          */
-        System.setProperty("java.security.auth.login.config", configFile.toURI().toURL().toString());
+        setProperty("java.security.auth.login.config", configFile.toURI().toURL().toString(), true);
     }
 
     /**

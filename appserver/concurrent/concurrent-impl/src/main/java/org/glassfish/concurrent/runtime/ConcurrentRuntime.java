@@ -266,7 +266,7 @@ public class ConcurrentRuntime {
 
     public ManagedThreadFactoryImpl createManagedThreadFactory(ManagedThreadFactoryCfg config, ContextServiceImpl contextService) {
         SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
-        if (config.getUseVirtualThreads()) {
+        if (config.getUseVirtualThreads() && System.getProperty("java.vm.specification.version").compareTo("17") > 0) {
             ManagedThreadFactoryImpl virtFactory = new VirtualThreadsManagedThreadFactory(jndiName.toString(), contextService);
             return virtFactory;
         } else {

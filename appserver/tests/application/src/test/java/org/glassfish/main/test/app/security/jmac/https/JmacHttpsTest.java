@@ -85,9 +85,7 @@ public class JmacHttpsTest {
     public static void prepareDeployment() throws Exception {
         myKeyStore = new File(tempDir, "httpstest.jks");
         myKeyStoreTool = new KeyTool(myKeyStore, MYKS_PASSWORD);
-        myKeyStoreTool.generateKeyPair("httpstest",
-            "CN=HTTPSTEST, OU=Eclipse GlassFish Tests, O=Eclipse Foundation, L=Brussels, ST=Belgium, C=Belgium", "RSA",
-            7);
+        myKeyStoreTool.generateKeyPair("httpstest", "CN=HTTPSTEST,OU=Eclipse GlassFish Tests", "RSA", 7);
 
         File cacertsFile = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks")).toFile();
         myKeyStoreTool.copyCertificate("httpstest", cacertsFile, "changeit".toCharArray());

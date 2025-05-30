@@ -23,10 +23,9 @@ import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.datastructure.DataStructureFactory;
+import com.sun.enterprise.resource.pool.datastructure.ListDataStructure;
 import com.sun.enterprise.resource.pool.resizer.AssocWithThreadPoolResizer;
 import com.sun.enterprise.resource.pool.resizer.Resizer;
-
-import jakarta.transaction.Transaction;
 
 import java.util.Hashtable;
 
@@ -48,7 +47,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
 
     @Override
     protected void initializePoolDataStructure() throws PoolingException {
-        dataStructure = DataStructureFactory.getDataStructure("com.sun.enterprise.resource.pool.datastructure.ListDataStructure",
+        dataStructure = DataStructureFactory.getDataStructure(ListDataStructure.class.getName(),
                 dataStructureParameters, maxPoolSize, this);
     }
 
@@ -56,13 +55,12 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
      * Prefetch is called to check whether there there is a free resource is already associated with the thread Only when
      * prefetch is unable to find a resource, normal routine (getUnenlistedResource) will happen.
      *
-     * @param spec ResourceSpec
-     * @param alloc ResourceAllocator
-     * @param tran Transaction
+     * @param spec the ResourceSpec used to locate the correct resource pool
+     * @param alloc ResourceAllocator to create a resource
      * @return ResourceHandle resource associated with the thread, if any
      */
     @Override
-    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc, Transaction tran) {
+    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc) {
         AssocWithThreadResourceHandle ar = localResource.get();
         if (ar != null) {
             // synch on ar and do a quick-n-dirty check to see if the local
@@ -163,15 +161,14 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
         }
     }
 
-    // this is the RI getResource() with some modifications
     /**
+     * This is the RI getUnenlistedResource() with some modifications
      * return resource in free list. If none is found, returns null
      */
     @Override
-    protected ResourceHandle getUnenlistedResource(ResourceSpec spec, ResourceAllocator alloc, Transaction tran) throws PoolingException {
+    protected ResourceHandle getUnenlistedResource(ResourceSpec spec, ResourceAllocator alloc) throws PoolingException {
 
-        ResourceHandle result;
-        result = super.getUnenlistedResource(spec, alloc, tran);
+        ResourceHandle result = super.getUnenlistedResource(spec, alloc);
 
         // It is possible that Resizer might have marked the resource for recycle
         // and hence we should not use this resource.
@@ -229,24 +226,24 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
     }
 
     /**
-     * return the resource back to pool only if it is not associated with the thread.
+     * Return the resource back to pool only if it is not associated with the thread.
      *
-     * @param h ResourceHandle
+     * @param resourceHandle the ResourceHandle to be returned
      */
     @Override
-    protected synchronized void freeUnenlistedResource(ResourceHandle h) {
-        if (this.cleanupResource(h)) {
-            if (h instanceof AssocWithThreadResourceHandle) {
+    protected synchronized void freeUnenlistedResource(ResourceHandle resourceHandle) {
+        if (this.cleanupResource(resourceHandle)) {
+            if (resourceHandle instanceof AssocWithThreadResourceHandle) {
                 // Only when resource handle usage count is more than maxConnUsage
-                if (maxConnectionUsage_ > 0 && h.getUsageCount() >= maxConnectionUsage_) {
-                    performMaxConnectionUsageOperation(h);
+                if (maxConnectionUsage_ > 0 && resourceHandle.getUsageCount() >= maxConnectionUsage_) {
+                    performMaxConnectionUsageOperation(resourceHandle);
                 } else {
-                    if (!((AssocWithThreadResourceHandle) h).isAssociated()) {
-                        returnResourceToPool(h);
+                    if (!((AssocWithThreadResourceHandle) resourceHandle).isAssociated()) {
+                        returnResourceToPool(resourceHandle);
                     }
                     // update monitoring data
                     if (poolLifeCycleListener != null) {
-                        poolLifeCycleListener.decrementConnectionUsed(h.getId());
+                        poolLifeCycleListener.decrementConnectionUsed(resourceHandle.getId());
                         poolLifeCycleListener.incrementNumConnFree(false, steadyPoolSize);
                     }
                 }

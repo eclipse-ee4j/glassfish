@@ -32,30 +32,27 @@ import java.util.Set;
  *
  * @author Srikanth P
  */
-
 public final class ConnectorDescriptorInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String rarName_;
-    private String resourceAdapterClass_;
-    private String connectionDefinitionName_;
-    private String managedConnectionFactoryClass_;
-    private String connectionFactoryClass_;
-    private String connectionFactoryInterface_;
-    private String connectionClass_;
-    private String connectionInterface_;
-    private Set<ConnectorConfigProperty> mcfConfigProperties_;
-    private Set<ConnectorConfigProperty > resourceAdapterConfigProperties_;
+    private String rarName;
+    private String resourceAdapterClass;
+    private String connectionDefinitionName;
+    private String managedConnectionFactoryClass;
+    private String connectionFactoryClass;
+    private String connectionFactoryInterface;
+    private String connectionClass;
+    private String connectionInterface;
+    private Set<ConnectorConfigProperty> mcfConfigProperties;
+    private Set<ConnectorConfigProperty > resourceAdapterConfigProperties;
 
     /**
      * Default constructor
      */
     public ConnectorDescriptorInfo() {
-
-        mcfConfigProperties_ = new LinkedHashSet< >();
-        resourceAdapterConfigProperties_ = new LinkedHashSet< >();
+        this.mcfConfigProperties = new LinkedHashSet< >();
+        this.resourceAdapterConfigProperties = new LinkedHashSet< >();
     }
-
 
     /**
      * Clone method
@@ -64,16 +61,16 @@ public final class ConnectorDescriptorInfo implements Serializable {
      */
     public ConnectorDescriptorInfo doClone() {
         ConnectorDescriptorInfo cdi = new ConnectorDescriptorInfo();
-        cdi.setMCFConfigProperties(mcfConfigProperties_);
-        cdi.setResourceAdapterConfigProperties(resourceAdapterConfigProperties_);
-        cdi.setRarName(rarName_);
-        cdi.setResourceAdapterClassName(resourceAdapterClass_);
-        cdi.setConnectionDefinitionName(connectionDefinitionName_);
-        cdi.setManagedConnectionFactoryClass(managedConnectionFactoryClass_);
-        cdi.setConnectionFactoryClass(connectionFactoryClass_);
-        cdi.setConnectionFactoryInterface(connectionFactoryInterface_);
-        cdi.setConnectionClass(connectionClass_);
-        cdi.setConnectionInterface(connectionInterface_);
+        cdi.setMCFConfigProperties(mcfConfigProperties);
+        cdi.setResourceAdapterConfigProperties(resourceAdapterConfigProperties);
+        cdi.setRarName(rarName);
+        cdi.setResourceAdapterClassName(resourceAdapterClass);
+        cdi.setConnectionDefinitionName(connectionDefinitionName);
+        cdi.setManagedConnectionFactoryClass(managedConnectionFactoryClass);
+        cdi.setConnectionFactoryClass(connectionFactoryClass);
+        cdi.setConnectionFactoryInterface(connectionFactoryInterface);
+        cdi.setConnectionClass(connectionClass);
+        cdi.setConnectionInterface(connectionInterface);
         return cdi;
     }
 
@@ -89,17 +86,16 @@ public final class ConnectorDescriptorInfo implements Serializable {
         this();
         if (mcfConfigProperties != null) {
             for (ConnectorConfigProperty mcfConfigProperty : mcfConfigProperties) {
-                mcfConfigProperties_.add(mcfConfigProperty);
+                this.mcfConfigProperties.add(mcfConfigProperty);
             }
 
             if (resourceAdapterConfigProperties != null) {
                 for (ConnectorConfigProperty mcfConfigProperty : mcfConfigProperties) {
-                    resourceAdapterConfigProperties_.add(mcfConfigProperty);
+                    this.resourceAdapterConfigProperties.add(mcfConfigProperty);
                 }
             }
         }
     }
-
 
     /**
      * Adds an MCF config property to the existing array/Set of MCF config
@@ -109,10 +105,9 @@ public final class ConnectorDescriptorInfo implements Serializable {
      */
     public void addMCFConfigProperty(ConnectorConfigProperty configProperty) {
         if (configProperty != null) {
-            mcfConfigProperties_.add(configProperty);
+            mcfConfigProperties.add(configProperty);
         }
     }
-
 
     /**
      * Removes an config property from the existing array/Set of MCF config
@@ -122,10 +117,9 @@ public final class ConnectorDescriptorInfo implements Serializable {
      */
     public void removeMCFConfigProperty(ConnectorConfigProperty configProperty) {
         if (configProperty != null) {
-            mcfConfigProperties_.remove(configProperty);
+            mcfConfigProperties.remove(configProperty);
         }
     }
-
 
     /**
      * Setter method for MCFConfigProperties property.
@@ -133,9 +127,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param configProperties Set MCF config properties
      */
     public void setMCFConfigProperties(Set<ConnectorConfigProperty> configProperties) {
-        mcfConfigProperties_ = configProperties;
+        mcfConfigProperties = configProperties;
     }
-
 
     /**
      * Setter method for MCFConfigProperties property.
@@ -145,7 +138,7 @@ public final class ConnectorDescriptorInfo implements Serializable {
     public void setMCFConfigProperties(ConnectorConfigProperty[] configProperties) {
         if (configProperties != null) {
             for (ConnectorConfigProperty element : configProperties) {
-                mcfConfigProperties_.add(element);
+                mcfConfigProperties.add(element);
             }
         }
     }
@@ -156,7 +149,7 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return Set of managed connection factory config properties
      */
     public Set<ConnectorConfigProperty> getMCFConfigProperties() {
-        return mcfConfigProperties_;
+        return mcfConfigProperties;
     }
 
     /**
@@ -167,10 +160,9 @@ public final class ConnectorDescriptorInfo implements Serializable {
      */
     public void addResourceAdapterConfigProperty(ConnectorConfigProperty  configProperty) {
         if (configProperty != null) {
-            resourceAdapterConfigProperties_.add(configProperty);
+            resourceAdapterConfigProperties.add(configProperty);
         }
     }
-
 
     /**
      * Removes a Resource Adapter config property to the existing array/Set
@@ -180,10 +172,9 @@ public final class ConnectorDescriptorInfo implements Serializable {
      */
     public void removeResourceAdapterConfigProperty(ConnectorConfigProperty configProperty) {
         if (configProperty != null) {
-            resourceAdapterConfigProperties_.remove(configProperty);
+            resourceAdapterConfigProperties.remove(configProperty);
         }
     }
-
 
     /**
      * Setter method for ResourceAdapterConfigProperties property.
@@ -191,9 +182,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param configProperties Set ResourceAdapter config properties
      */
     public void setResourceAdapterConfigProperties(Set<ConnectorConfigProperty> configProperties) {
-        resourceAdapterConfigProperties_ = configProperties;
+        resourceAdapterConfigProperties = configProperties;
     }
-
 
     /**
      * Setter method for ResourceAdapterConfigProperties property.
@@ -203,11 +193,10 @@ public final class ConnectorDescriptorInfo implements Serializable {
     public void setResourceAdapterConfigProperties(ConnectorConfigProperty[] configProperties) {
         if (configProperties != null) {
             for (ConnectorConfigProperty configProperty : configProperties) {
-                resourceAdapterConfigProperties_.add(configProperty);
+                resourceAdapterConfigProperties.add(configProperty);
             }
         }
     }
-
 
     /**
      * Getter method for ResourceAdapterConfigProperties property
@@ -215,9 +204,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return Set of resource adapter config properties
      */
     public Set<ConnectorConfigProperty> getResourceAdapterConfigProperties() {
-        return resourceAdapterConfigProperties_;
+        return resourceAdapterConfigProperties;
     }
-
 
     /**
      * Getter method for RarName property
@@ -225,9 +213,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return rarName
      */
     public String getRarName() {
-        return rarName_;
+        return rarName;
     }
-
 
     /**
      * Setter method for RarName property
@@ -235,9 +222,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param rarName rar name
      */
     public void setRarName(String rarName) {
-        rarName_ = rarName;
+        this.rarName = rarName;
     }
-
 
     /**
      * Getter method for ResourceAdapterClassName property
@@ -245,9 +231,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return Resource adapter class name
      */
     public String getResourceAdapterClassName() {
-        return resourceAdapterClass_;
+        return resourceAdapterClass;
     }
-
 
     /**
      * Setter method for ResourceAdapterClassName property
@@ -255,7 +240,7 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param resourceAdapterClass Resource adapter class name
      */
     public void setResourceAdapterClassName(String resourceAdapterClass) {
-        resourceAdapterClass_ = resourceAdapterClass;
+        this.resourceAdapterClass = resourceAdapterClass;
     }
 
     /**
@@ -264,7 +249,7 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return connection definition name
      */
     public String getConnectionDefinitionName() {
-        return connectionDefinitionName_;
+        return connectionDefinitionName;
     }
 
     /**
@@ -273,9 +258,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param connectionDefinitionName connection definition name
      */
     public void setConnectionDefinitionName(String connectionDefinitionName) {
-        connectionDefinitionName_ = connectionDefinitionName;
+        this.connectionDefinitionName = connectionDefinitionName;
     }
-
 
     /**
      * Getter method for ManagedConnectionFactoryClass property
@@ -283,9 +267,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return managed connection factory class
      */
     public String getManagedConnectionFactoryClass() {
-        return managedConnectionFactoryClass_;
+        return managedConnectionFactoryClass;
     }
-
 
     /**
      * Setter method for ManagedConnectionFactoryClass property
@@ -293,9 +276,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param managedConnectionFactoryClass managed connection factory class
      */
     public void setManagedConnectionFactoryClass(String managedConnectionFactoryClass) {
-        managedConnectionFactoryClass_ = managedConnectionFactoryClass;
+        this.managedConnectionFactoryClass = managedConnectionFactoryClass;
     }
-
 
     /**
      * Getter method for ConnectionFactoryClass property
@@ -303,9 +285,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return connection factory class
      */
     public String getConnectionFactoryClass() {
-        return connectionFactoryClass_;
+        return connectionFactoryClass;
     }
-
 
     /**
      * Setter method for ConnectionFactoryClass property
@@ -313,9 +294,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param connectionFactoryClass connection factory class
      */
     public void setConnectionFactoryClass(String connectionFactoryClass) {
-        connectionFactoryClass_ = connectionFactoryClass;
+        this.connectionFactoryClass = connectionFactoryClass;
     }
-
 
     /**
      * Getter method for ConnectionFactoryInterface property
@@ -323,9 +303,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return connection factory interface class
      */
     public String getConnectionFactoryInterface() {
-        return connectionFactoryInterface_;
+        return connectionFactoryInterface;
     }
-
 
     /**
      * Setter method for ConnectionFactoryInterface property
@@ -333,9 +312,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param connectionFactoryInterface connection factory interface class
      */
     public void setConnectionFactoryInterface(String connectionFactoryInterface) {
-        connectionFactoryInterface_ = connectionFactoryInterface;
+        this.connectionFactoryInterface = connectionFactoryInterface;
     }
-
 
     /**
      * Getter method for ConnectionClass property
@@ -343,9 +321,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return connection class
      */
     public String getConnectionClass() {
-        return connectionClass_;
+        return connectionClass;
     }
-
 
     /**
      * Setter method for ConnectionClass property
@@ -353,9 +330,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param connectionClass connection Class
      */
     public void setConnectionClass(String connectionClass) {
-        connectionClass_ = connectionClass;
+        this.connectionClass = connectionClass;
     }
-
 
     /**
      * Getter method for ConnectionInterface property
@@ -363,9 +339,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @return connectionInterface class
      */
     public String getConnectionInterface() {
-        return connectionInterface_;
+        return connectionInterface;
     }
-
 
     /**
      * Setter method for ConnectionInterface property
@@ -373,9 +348,8 @@ public final class ConnectorDescriptorInfo implements Serializable {
      * @param connectionInterface connection interface class
      */
     public void setConnectionInterface(String connectionInterface) {
-        connectionInterface_ = connectionInterface;
+        this.connectionInterface = connectionInterface;
     }
-
 
     /**
      * Compare the MCF Config properties in this object with the
@@ -390,7 +364,6 @@ public final class ConnectorDescriptorInfo implements Serializable {
         return compareMCFConfigProperties(cdi, new HashSet<>());
     }
 
-
     /**
      * Compare the MCF Config properties in this object with the
      * passed ones. The properties in the Set of excluded properties
@@ -404,7 +377,7 @@ public final class ConnectorDescriptorInfo implements Serializable {
      */
     public ReconfigAction compareMCFConfigProperties(ConnectorDescriptorInfo cdi, Set<String> excluded) {
         Set<ConnectorConfigProperty> mcfConfigProps = cdi.getMCFConfigProperties();
-        if (mcfConfigProps.size() != mcfConfigProperties_.size()) {
+        if (mcfConfigProps.size() != mcfConfigProperties.size()) {
             // return false;
             // Cannot determine anything due to size disparity - assume restart
             return ReconfigAction.RECREATE_POOL;
@@ -419,7 +392,7 @@ public final class ConnectorDescriptorInfo implements Serializable {
                 continue;
             }
 
-            for (ConnectorConfigProperty property : mcfConfigProperties_) {
+            for (ConnectorConfigProperty property : mcfConfigProperties) {
                 if (isEnvPropEqual(mcfConfigProp, property)) {
                     // we have a match
                     same = true;
@@ -437,7 +410,6 @@ public final class ConnectorDescriptorInfo implements Serializable {
 
         return ReconfigAction.NO_OP;
     }
-
 
     /**
      * The ConnectorConfigProperty ::equals method only checks for name equality

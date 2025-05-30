@@ -406,20 +406,14 @@ Possible values of `--wrapjdbcobjects` are as follows:
     timeout period, so as to complete the transaction. New connection
     requests will wait for the pool reconfiguration to complete and
     connections will be acquired using the modified pool configuration.
-  `LazyConnectionEnlistment`;;
-    Deprecated. Use the equivalent attribute. The default value is
-    false.
-  `LazyConnectionAssociation`;;
-    Deprecated. Use the equivalent attribute. The default value is
-    false.
-  `AssociateWithThread`;;
-    Deprecated. Use the equivalent attribute. The default value is
-    false.
-  `MatchConnections`;;
-    Deprecated. Use the equivalent attribute. The default value is true.
-  `Prefer-Validate-Over-Recreate`;;
+  `prefer-validate-over-recreate`;;
     Specifies whether pool resizer should validate idle connections
-    before destroying and recreating them. The default value is true.
+    before destroying and recreating them. The default value is false.
+    This property has no effect on non-idle connections. If set to `true`, 
+    idle connections are validated during pool resizing, and only those
+    found to be invalid are destroyed and recreated. If `false`, all idle
+    connections are destroyed and recreated during pool resizing. The 
+    default is `false`.
   `time-to-keep-queries-in-minutes`;;
     Specifies the number of minutes that will be cached for use in
     calculating frequently used queries. Takes effect when SQL tracing

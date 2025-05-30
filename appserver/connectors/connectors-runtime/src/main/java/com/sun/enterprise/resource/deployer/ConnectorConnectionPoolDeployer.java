@@ -292,8 +292,8 @@ public class ConnectorConnectionPoolDeployer
             }
 
             //Below are useful in pooled environment only.
-            //Throw warning for connection validation/validate-atmost-once/
-            //match-connections/max-connection-usage-count/idele-timeout
+            //Throw warning for connection-validation/validate-atmost-once-period/
+            //match-connections/max-connection-usage-count/idle-timeout
             if(Boolean.parseBoolean(domainCcp.getIsConnectionValidationRequired())) {
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination",
                         domainCcp.getName());

@@ -28,7 +28,10 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Java adapter to call the keytool command.
@@ -63,18 +67,34 @@ public class KeyTool {
     }
 
     private final File keyStore;
+    private final String keyStoreType;
     private char[] password;
+
+    /**
+     * Creates a new instance of KeyTool managing the keystore file.
+     * The file may not exist yet.
+     * The type is detected automatically from the file extension.
+     *
+     * @param keyStore the file representing the keystore
+     * @param password keystore and key password, must have at least 6 characters
+     */
+    public KeyTool(File keyStore, char[] password) {
+        this(keyStore, guessKeyStoreType(keyStore), password);
+    }
+
 
     /**
      * Creates a new instance of KeyTool managing the keystore file.
      * The file may not exist yet.
      *
      * @param keyStore the file representing the keystore
+     * @param keyStoreType the type of the keystore, e.g. "PKCS12", "JKS"
      * @param password keystore and key password, must have at least 6 characters
      */
-    public KeyTool(File keyStore, char[] password) {
+    public KeyTool(File keyStore, String keyStoreType, char[] password) {
         this.keyStore = keyStore;
         this.password = password;
+        this.keyStoreType = keyStoreType;
     }
 
 
@@ -113,7 +133,7 @@ public class KeyTool {
             "-keyalg", keyAlgorithm,
             "-validity", Integer.toString(certValidity),
             "-keystore", keyStore.getAbsolutePath(),
-            "-storetype", "JKS"
+            "-storetype", keyStoreType
         );
         if (keyStore.getParentFile().mkdirs()) {
             // The directory must exist, keytool will not create it
@@ -196,6 +216,7 @@ public class KeyTool {
 
     /**
      * Changes the key store password and remembers it.
+     * Changes also passwords of all keys in the key store which use the same password.
      *
      * @param newPassword the new key store password
      * @throws IOException
@@ -209,12 +230,43 @@ public class KeyTool {
             "-keystore", this.keyStore.getAbsolutePath()
         );
         execute(command, password, newPassword, newPassword, newPassword);
+        final char[] oldPassword = password;
         this.password = newPassword;
+        if ("PKCS12".equals(this.keyStoreType)) {
+            // PKCS12 key store type changes passwords of keys together with the key store password
+            // JKS and JCEKS key store types require changing passwords of keys separately
+            return;
+        }
+        KeyStore ks = loadKeyStore();
+        final List<String> aliases;
+        try {
+            aliases = Collections.list(ks.aliases());
+        } catch (KeyStoreException e) {
+            throw new IOException("Could not list aliases in keystore: " + keyStore, e);
+        }
+        for (String alias : aliases) {
+            try {
+                if (ks.isKeyEntry(alias)) {
+                    changeKeyPassword(ks, alias, oldPassword, newPassword);
+                }
+            } catch (IOException | KeyStoreException e) {
+                LOG.log(WARNING, "Could not change key password for alias: {0}, it may use different password.", alias);
+            }
+        }
+        try (FileOutputStream output = new FileOutputStream(keyStore)) {
+            ks.store(output, password);
+        } catch (GeneralSecurityException e) {
+            throw new IOException(
+                "Keystore password successfuly changed, however failed changing key passwords: " + keyStore, e);
+        }
     }
 
 
     /**
      * Changes the key password
+     * <p>
+     * WARNING: This is not required for the PKCS12 key store type, as it changes passwords of keys
+     * together with the key store password.
      *
      * @param alias the alias of the key whose password should be changed
      * @param oldPassword the current key entry password
@@ -222,21 +274,36 @@ public class KeyTool {
      * @throws IOException
      */
     public void changeKeyPassword(String alias, char[] oldPassword, char[] newPassword) throws IOException {
-        List<String> command = List.of(
-            KEYTOOL,
-            "-J-Duser.language=en",
-            "-noprompt",
-            "-keypasswd",
-            "-alias", alias,
-            "-keystore", this.keyStore.getAbsolutePath()
-        );
-
-        execute(command, password, newPassword, newPassword);
+        try {
+            KeyStore sourceStore = loadKeyStore();
+            Certificate[] chain = sourceStore.getCertificateChain(alias);
+            PrivateKey key = (PrivateKey) sourceStore.getKey(alias, oldPassword);
+            sourceStore.setKeyEntry(alias, key, newPassword, chain);
+            try (FileOutputStream output = new FileOutputStream(keyStore)) {
+                sourceStore.store(output, password);
+            }
+        } catch (GeneralSecurityException e) {
+            throw new IOException("Could not change key password for alias: " + alias, e);
+        }
     }
 
 
     private void execute(final List<String> command, char[]... stdinLines) throws IOException {
         execute(keyStore, command, stdinLines);
+    }
+
+
+    /**
+     * Creates an empty key store file with the specified password.
+     * The type is detected from the file extension.
+     *
+     * @param file
+     * @param password
+     * @return KeyTool suitable to manage the newly created key store
+     * @throws IOException
+     */
+    public static KeyTool createEmptyKeyStore(File file, char[] password) throws IOException {
+        return createEmptyKeyStore(file, guessKeyStoreType(file), password);
     }
 
 
@@ -265,6 +332,41 @@ public class KeyTool {
             throw new IOException("Could not create new keystore: " + file, e);
         }
         return new KeyTool(file, password);
+    }
+
+
+    private static String guessKeyStoreType(File keyStore) {
+        String filename = keyStore.getName();
+        int lastDot = filename.lastIndexOf('.');
+        if (lastDot < 0) {
+            throw new IllegalArgumentException(
+                "Key store file name must have an extension to guess the key store type: " + keyStore);
+        }
+        String suffix = filename.substring(lastDot + 1).toUpperCase();
+        switch (suffix) {
+            case "JKS":
+                return "JKS";
+            case "P12":
+            case "PFX":
+                return "PKCS12";
+            case "JCEKS":
+                return "JCEKS";
+            default:
+                LOG.log(WARNING, "Unknown key store type for file {0}, using its suffix as a keystore type.", keyStore);
+                return suffix;
+        }
+    }
+
+
+    private static void changeKeyPassword(KeyStore keyStore, String alias, char[] oldPassword, char[] newPassword)
+        throws IOException {
+        try {
+            Certificate[] chain = keyStore.getCertificateChain(alias);
+            PrivateKey key = (PrivateKey) keyStore.getKey(alias, oldPassword);
+            keyStore.setKeyEntry(alias, key, newPassword, chain);
+        } catch (GeneralSecurityException e) {
+            throw new IOException("Could not change key password for alias: " + alias, e);
+        }
     }
 
 

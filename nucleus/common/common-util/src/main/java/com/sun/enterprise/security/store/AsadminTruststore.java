@@ -29,6 +29,7 @@ import java.security.cert.CertificateException;
 
 import org.glassfish.main.jdke.security.KeyTool;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 
 /**
@@ -65,7 +66,7 @@ public class AsadminTruststore {
         if (keyFile.exists()) {
             keyStore = new KeyTool(keyFile, password).loadKeyStore();
         } else {
-            keyStore = KeyStore.getInstance("JKS");
+            keyStore = KeyStore.getInstance(KEYSTORE_TYPE_DEFAULT);
             keyStore.load(null, password);
         }
     }

@@ -59,11 +59,13 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
@@ -168,23 +170,19 @@ final class RMIConnectorStarter extends ConnectorStarter {
      * @return InetAddress
      * @throws UnknownHostException
      */
-    private static InetAddress getAddress(final String addrSpec)
-            throws UnknownHostException {
+    private static InetAddress getAddress(final String addrSpec) throws UnknownHostException {
         String actual = addrSpec;
         if (addrSpec.equals("localhost")) {
             actual = "127.0.0.1";
         }
-
-        final InetAddress addr = InetAddress.getByName(actual);
-        return addr;
+        return InetAddress.getByName(actual);
     }
 
     static String setupRMIHostname(final String host) {
         return setProperty(RMI_HOSTNAME_PROP, host, true);
     }
 
-    private static void restoreRMIHostname(final String saved,
-                                           final String expectedValue) {
+    private static void restoreRMIHostname(final String saved, final String expectedValue) {
         if (saved == null) {
             setProperty(RMI_HOSTNAME_PROP, null, true);
         } else {
@@ -377,20 +375,25 @@ final class RMIConnectorStarter extends ConnectorStarter {
     private SSLParams convertToSSLParams(Ssl sslConfig) {
 
         // Get the values from the System properties
-        String trustStoreType =
-                sslConfig.getTrustStoreType() == null ? System.getProperty("javax.net.ssl.trustStoreType", "JKS") : sslConfig.getTrustStoreType();
-        String trustStorePwd =
-                sslConfig.getTrustStorePassword() == null ? masterPassword : sslConfig.getTrustStorePassword();
-        File trustStore =
-                sslConfig.getTrustStore() == null ? new File(System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName())) : new File(sslConfig.getTrustStore());
+        String trustStoreType = sslConfig.getTrustStoreType() == null
+            ? System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT)
+            : sslConfig.getTrustStoreType();
+        String trustStorePwd = sslConfig.getTrustStorePassword() == null
+            ? masterPassword
+            : sslConfig.getTrustStorePassword();
+        File trustStore = sslConfig.getTrustStore() == null
+            ? new File(System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName()))
+            : new File(sslConfig.getTrustStore());
 
-        String keyStoreType =
-                sslConfig.getTrustStoreType() == null ? System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), "JKS") : sslConfig.getKeyStoreType();
-        String keyStorePwd =
-                sslConfig.getTrustStorePassword() == null ? masterPassword : sslConfig.getKeyStorePassword();
-        File keyStore =
-                sslConfig.getTrustStore() == null ? new File(System.getProperty(KEYSTORE_FILE.getSystemPropertyName())) : new File(sslConfig.getKeyStore());
-
+        String keyStoreType = sslConfig.getTrustStoreType() == null
+            ? System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT)
+            : sslConfig.getKeyStoreType();
+        String keyStorePwd = sslConfig.getTrustStorePassword() == null
+            ? masterPassword
+            : sslConfig.getKeyStorePassword();
+        File keyStore = sslConfig.getTrustStore() == null
+            ? new File(System.getProperty(KEYSTORE_FILE.getSystemPropertyName()))
+            : new File(sslConfig.getKeyStore());
 
         SSLParams sslParams = new SSLParams(trustStore, trustStorePwd, trustStoreType);
 
@@ -476,8 +479,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
             final String saved = setupRMIHostname(mBindToAddr);
             try {
                 super.export();
-                JMX_LOGGER.log(Level.INFO, EXPORTED,
-                        mBindToAddr);
+                JMX_LOGGER.log(Level.INFO, EXPORTED, mBindToAddr);
             } finally {
                 restoreRMIHostname(saved, mBindToAddr);
             }
@@ -491,8 +493,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
             final String saved = setupRMIHostname(mBindToAddr);
 
             try {
-                Util.getLogger().log(Level.INFO, MAKE_CLIENT,
-                        System.getProperty(RMI_HOSTNAME_PROP));
+                Util.getLogger().log(Level.INFO, MAKE_CLIENT, System.getProperty(RMI_HOSTNAME_PROP));
                 return super.makeClient(connectionId, subject);
             } finally {
                 restoreRMIHostname(saved, mBindToAddr);

@@ -42,6 +42,7 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 
 
@@ -264,7 +265,7 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
         }
 
         if (saveMasterPassword) {
-            File mp = new File(new File(getServerDirs().getServerDir(), "config"), "keystore.jks");
+            File mp = new File(new File(getServerDirs().getServerDir(), "config"), KEYSTORE_FILENAME_DEFAULT);
             if (mp.canRead()) {
                 if (verifyMasterPassword(masterPassword)) {
                     createMasterPasswordFile(masterPassword);

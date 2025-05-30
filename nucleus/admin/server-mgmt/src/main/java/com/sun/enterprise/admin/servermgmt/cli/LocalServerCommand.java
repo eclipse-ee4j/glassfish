@@ -46,6 +46,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINER;
 
@@ -407,7 +408,7 @@ public abstract class LocalServerCommand extends CLICommand {
             return null;
         }
 
-        File mp = new File(new File(serverDirs.getServerDir(), "config"), "cacerts.jks");
+        File mp = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
         if (!mp.canRead()) {
             return null;
         }

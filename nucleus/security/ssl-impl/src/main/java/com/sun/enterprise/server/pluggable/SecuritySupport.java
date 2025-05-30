@@ -67,6 +67,7 @@ import org.glassfish.security.common.MasterPassword;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
@@ -144,9 +145,9 @@ public class SecuritySupport {
         loadStores(
             null, null,
             keyStoreFileName, keyStorePass,
-            System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KeyStore.getDefaultType()),
+            System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT),
             trustStoreFileName, trustStorePass,
-            System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KeyStore.getDefaultType()));
+            System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT));
         Arrays.fill(keyStorePass, ' ');
         Arrays.fill(trustStorePass, ' ');
     }

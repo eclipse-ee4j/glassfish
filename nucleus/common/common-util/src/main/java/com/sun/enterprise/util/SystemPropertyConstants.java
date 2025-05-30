@@ -79,6 +79,8 @@ public class SystemPropertyConstants {
 
     public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.envPreferredToProperties";
 
+    public static final String TRUSTSTORE_FILENAME_DEFAULT = "cacerts.jks";
+    public static final String KEYSTORE_FILENAME_DEFAULT = "keystore.jks";
     public static final String KEYSTORE_TYPE_DEFAULT = "JKS";
     public static final String KEYSTORE_PASSWORD_DEFAULT = "changeit";
 

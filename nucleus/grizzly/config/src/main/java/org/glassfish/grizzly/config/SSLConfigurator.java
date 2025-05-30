@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +44,7 @@ import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.hk2.api.ServiceLocator;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
@@ -154,14 +155,20 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             }
 
             // Key store settings
-            setAttribute(sslContextFactory, "keystore", ssl == null ? null : ssl.getKeyStore(), KEYSTORE_FILE.getSystemPropertyName(), null);
-            setAttribute(sslContextFactory, "keystoreType", ssl == null ? null : ssl.getKeyStoreType(), KEYSTORE_TYPE.getSystemPropertyName(), "JKS");
-            setAttribute(sslContextFactory, "keystorePass", ssl == null ? null : getKeyStorePassword(ssl), KEYSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
+            setAttribute(sslContextFactory, "keystore", ssl == null ? null : ssl.getKeyStore(),
+                KEYSTORE_FILE.getSystemPropertyName(), null);
+            setAttribute(sslContextFactory, "keystoreType", ssl == null ? null : ssl.getKeyStoreType(),
+                KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
+            setAttribute(sslContextFactory, "keystorePass", ssl == null ? null : getKeyStorePassword(ssl),
+                KEYSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
 
             // Trust store settings
-            setAttribute(sslContextFactory, "truststore", ssl == null ? null : ssl.getTrustStore(), TRUSTSTORE_FILE.getSystemPropertyName(), null);
-            setAttribute(sslContextFactory, "truststoreType", ssl == null ? null : ssl.getTrustStoreType(), TRUSTSTORE_TYPE.getSystemPropertyName(), "JKS");
-            setAttribute(sslContextFactory, "truststorePass", ssl == null ? null : getTrustStorePassword(ssl), TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
+            setAttribute(sslContextFactory, "truststore", ssl == null ? null : ssl.getTrustStore(),
+                TRUSTSTORE_FILE.getSystemPropertyName(), null);
+            setAttribute(sslContextFactory, "truststoreType", ssl == null ? null : ssl.getTrustStoreType(),
+                TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
+            setAttribute(sslContextFactory, "truststorePass", ssl == null ? null : getTrustStorePassword(ssl),
+                TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
 
             // Cert nick name
             sslContextFactory.setAttribute("keyAlias", ssl == null ? null : ssl.getCertNickname());

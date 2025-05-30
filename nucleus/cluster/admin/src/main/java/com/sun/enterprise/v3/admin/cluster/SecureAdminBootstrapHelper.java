@@ -36,6 +36,9 @@ import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.sftp.SFTPPath;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+
 /**
  * Bootstraps the secure admin-related files, either over ssh (copying files from the
  * current runtime environment to the remote system via secure ftp) or locally
@@ -48,8 +51,8 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
     private static final Path DOMAIN_XML_PATH = Path.of("config", "domain.xml");
     private static final Path[] SECURE_ADMIN_FILE_REL_URIS_TO_COPY = new Path[] {
         DOMAIN_XML_PATH,
-        Path.of("config", "keystore.jks"),
-        Path.of("config", "cacerts.jks")
+        Path.of("config", KEYSTORE_FILENAME_DEFAULT),
+        Path.of("config", TRUSTSTORE_FILENAME_DEFAULT)
     };
     private static final Path[] SECURE_ADMIN_FILE_DIRS_TO_CREATE = new Path[] {Path.of("config")};
 

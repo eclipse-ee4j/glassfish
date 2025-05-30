@@ -125,7 +125,7 @@ public class AsadminSecurityUtil {
      *
      * @return the password to the client side truststore
      */
-    private char[] promptForPassword() throws IOException {
+    private char[] promptForPassword() {
         Console console = System.console();
         if (console != null) {
             return console.readPassword(strmgr.get("certificateDbPrompt"));

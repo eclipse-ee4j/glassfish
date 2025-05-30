@@ -19,7 +19,6 @@ package org.glassfish.admin.mbeanserver.ssl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -220,7 +219,7 @@ public class SSLClientConfigurator {
      * Gets the initialized key managers.
      */
     protected KeyManager[] getKeyManagers(String algorithm, String keyAlias) throws Exception {
-        if(System.getProperty(KEYSTORE_FILE.getSystemPropertyName()) == null) {
+        if (System.getProperty(KEYSTORE_FILE.getSystemPropertyName()) == null) {
             _logger.log(Level.WARNING, noKeyStores);
             return null;
         }
@@ -357,33 +356,17 @@ public class SSLClientConfigurator {
         InputStream istream = null;
         try {
             ks = KeyStore.getInstance(type);
-            if (!("PKCS11".equalsIgnoreCase(type) ||
-                    "".equalsIgnoreCase(path))) {
+            if (!"PKCS11".equalsIgnoreCase(type) && !"".equalsIgnoreCase(path)) {
                 File keyStoreFile = new File(path);
                 if (!keyStoreFile.isAbsolute()) {
-                    keyStoreFile = new File(System.getProperty("catalina.base"),
-                                            path);
+                    keyStoreFile = new File(System.getProperty("catalina.base"), path);
                 }
                 istream = new FileInputStream(keyStoreFile);
             }
-
             ks.load(istream, pass.toCharArray());
-
-        } catch (FileNotFoundException fnfe) {
-             _logger.log(Level.SEVERE,
-                     formatMessage(keystoreLoadFailed, type, path, fnfe.getMessage()),
-                     fnfe);
-            throw fnfe;
-        } catch (IOException ioe) {
-             _logger.log(Level.SEVERE,
-                     formatMessage(keystoreLoadFailed, type, path, ioe.getMessage()),
-                     ioe);
-            throw ioe;
-        } catch(Exception ex) {
-             _logger.log(Level.SEVERE,
-                     formatMessage(keystoreLoadFailed, type, path, ex.getMessage()),
-                     ex);
-            throw new IOException(ex.getMessage());
+        } catch (Exception ex) {
+            _logger.log(Level.SEVERE, formatMessage(keystoreLoadFailed, type, path, ex.getMessage()), ex);
+            throw new IOException(ex.getMessage(), ex);
         } finally {
             if (istream != null) {
                 try {

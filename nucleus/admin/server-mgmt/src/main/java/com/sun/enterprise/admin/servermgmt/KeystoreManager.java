@@ -25,12 +25,8 @@ import com.sun.enterprise.util.net.NetUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -38,7 +34,6 @@ import org.glassfish.main.jdke.security.KeyTool;
 
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
-import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * @author kebbs
@@ -139,53 +134,6 @@ public class KeystoreManager {
     }
 
     /**
-     * Changes the key password for the default cert whose alias is s1as. The assumption here is that the keystore password
-     * is not the same as the key password. This is due to the fact that the keystore password should first be changed
-     * followed next by the key password. The end result is that the keystore and s1as key both have the same passwords.
-     * This function will tolerate deletion of the s1as alias, but it will not tolerate changing the s1as key from something
-     * other than the database password.
-     *
-     * @param config
-     * @param storePassword the keystore password
-     * @param oldKeyPassword the old password for the s1as alias
-     * @param newKeyPassword the new password for the s1as alias
-     * @throws DomainException
-     */
-    protected void changeKeyPasswords(RepositoryConfig config, String storePassword, String oldKeyPassword,
-        String newKeyPassword) throws DomainException {
-        if (storePassword.equals(oldKeyPassword) || oldKeyPassword.equals(newKeyPassword)) {
-            return;
-        }
-        final PEFileLayout layout = getFileLayout(config);
-        final File keystore = layout.getKeyStore();
-        try {
-            KeyStore keyStore = KeyStore.getInstance(keystore, storePassword.toCharArray());
-            List<String> aliases = Collections.list(keyStore.aliases());
-            List<String> keyAliases = new ArrayList<>();
-            for (String alias : aliases) {
-                Key key;
-                try {
-                    key = keyStore.getKey(alias, oldKeyPassword.toCharArray());
-                } catch (UnrecoverableKeyException e) {
-                    LOG.log(WARNING,
-                        "Key entry with alias {0} in a key store {1} could not be recovered with provided key password.",
-                        alias, keystore);
-                    continue;
-                }
-                if (key != null) {
-                    keyAliases.add(alias);
-                }
-            }
-            KeyTool keyTool = new KeyTool(keystore, storePassword.toCharArray());
-            for (String alias : keyAliases) {
-                keyTool.changeKeyPassword(alias, oldKeyPassword.toCharArray(), newKeyPassword.toCharArray());
-            }
-        } catch (Exception e) {
-            throw new DomainException(_strMgr.getString("s1asKeyPasswordNotChanged", keystore), e);
-        }
-    }
-
-    /**
      * Changes the password of the keystore, truststore and the key password of the s1as alias. It is expected that the key
      * / truststores may not exist. This is due to the fact that the user may have deleted them and wishes to set up their
      * own key/truststore
@@ -197,16 +145,11 @@ public class KeystoreManager {
     protected void changeSSLCertificateDatabasePassword(RepositoryConfig config, String oldPassword, String newPassword) throws DomainException {
         final PEFileLayout layout = getFileLayout(config);
         File keystore = layout.getKeyStore();
-        File truststore = layout.getTrustStore();
-
         if (keystore.exists()) {
-            // Change the password on the keystore
             changeKeystorePassword(oldPassword, newPassword, keystore);
-            changeKeyPasswords(config, newPassword, oldPassword, newPassword);
         }
-
+        File truststore = layout.getTrustStore();
         if (truststore.exists()) {
-            // Change the password on the truststore
             changeKeystorePassword(oldPassword, newPassword, truststore);
         }
     }

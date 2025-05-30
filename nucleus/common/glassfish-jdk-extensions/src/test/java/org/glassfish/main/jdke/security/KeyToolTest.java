@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.UnrecoverableKeyException;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -33,47 +32,76 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KeyToolTest {
 
-    private static final char[] PASSWORD = "passwordpassword".toCharArray();;
+    private static final char[] PASSWORD = "passwordpassword".toCharArray();
     private static final char[] PASSWORD2 = "123456".toCharArray();
 
     @TempDir
     private static File tmp;
-    private static KeyTool keyTool;
-    private static File keyStoreFile;
-
-    @BeforeAll
-    static void createKeyTool() throws Exception {
-        keyStoreFile = File.createTempFile("keystore", ".p12", tmp);
-        keyStoreFile.delete();
-        keyTool = new KeyTool(keyStoreFile, PASSWORD);
-    }
 
     @Test
-    void usualUseCase() throws Exception {
-        keyTool.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
-        File copyKeyStoreFile = new File(tmp, "copy.p12");
-        keyTool.copyCertificate("keypair001", copyKeyStoreFile);
+    void messingWithKeys() throws Exception {
+        File keyStoreOrig = File.createTempFile("keystore", ".p12", tmp);
+        keyStoreOrig.delete();
+        KeyTool keyToolOrig = new KeyTool(keyStoreOrig, PASSWORD);
+        keyToolOrig.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
 
-        File copyKeyStoreFile2 = new File(tmp, "copy2.jks");
-        KeyTool keyTool2 = KeyTool.createEmptyKeyStore(copyKeyStoreFile2, "JKS", PASSWORD);
-        keyTool.copyCertificate("keypair001", copyKeyStoreFile2);
-        assertThrows(IOException.class, () -> keyTool.changeKeyStorePassword("short".toCharArray()));
-        keyTool.changeKeyStorePassword(PASSWORD2);
-        keyTool.changeKeyStorePassword(PASSWORD);
-        keyTool.changeKeyPassword("keypair001", PASSWORD, PASSWORD2);
+        File ksFileP12 = new File(tmp, "copy.p12");
+        keyToolOrig.copyCertificate("keypair001", ksFileP12);
+        KeyTool keyToolP12 = new KeyTool(ksFileP12, PASSWORD);
 
-        KeyStore keyStore = keyTool.loadKeyStore();
-        assertThrows(UnrecoverableKeyException.class, () -> keyStore.getKey("keypair001", "WrongPwd".toCharArray()));
-        assertNotNull(keyStore.getKey("keypair001", PASSWORD2));
+        assertThrows(IOException.class, () -> keyToolOrig.changeKeyStorePassword("short".toCharArray()));
+        keyToolOrig.changeKeyStorePassword(PASSWORD2);
+        assertNotNull(keyToolOrig.loadKeyStore().getKey("keypair001", PASSWORD2));
+        keyToolOrig.changeKeyStorePassword(PASSWORD);
+        assertNotNull(keyToolOrig.loadKeyStore().getKey("keypair001", PASSWORD));
+        keyToolOrig.changeKeyPassword("keypair001", PASSWORD, PASSWORD2);
+        assertNotNull(keyToolOrig.loadKeyStore().getKey("keypair001", PASSWORD2));
+        keyToolOrig.changeKeyPassword("keypair001", PASSWORD2, PASSWORD);
 
-        KeyStore copy1 = new KeyTool(copyKeyStoreFile, PASSWORD).loadKeyStore();
-        assertEquals("PKCS12", copy1.getType());
-        assertTrue(copy1.containsAlias("keypair001"));
-        assertNull(copy1.getKey("keypair001", PASSWORD));
-        assertNotNull(copy1.getCertificate("keypair001"));
+        // certificate chain: must be joined with private key
+        KeyStore origKS = keyToolOrig.loadKeyStore();
+        assertEquals("PKCS12", origKS.getType());
+        assertTrue(origKS.containsAlias("keypair001"));
+        assertThrows(UnrecoverableKeyException.class, () -> origKS.getKey("keypair001", "WrongPwd".toCharArray()));
+        assertNotNull(origKS.getKey("keypair001", PASSWORD));
+        assertNotNull(origKS.getCertificate("keypair001"));
+        assertNotNull(origKS.getCertificateChain("keypair001"));
 
-        KeyStore copy2 = keyTool2.loadKeyStore();
-        assertEquals("JKS", copy2.getType());
+        KeyStore p12KS = keyToolP12.loadKeyStore();
+        assertEquals("PKCS12", p12KS.getType());
+        assertTrue(p12KS.containsAlias("keypair001"));
+        assertNull(p12KS.getKey("keypair001", PASSWORD));
+        assertNotNull(p12KS.getCertificate("keypair001"));
+        assertNull(p12KS.getCertificateChain("keypair001"));
+
+        File ksFileJKS = new File(tmp, "copy2.jks");
+        KeyTool keyToolJKS = KeyTool.createEmptyKeyStore(ksFileJKS, PASSWORD);
+        keyToolOrig.copyCertificate("keypair001", ksFileJKS);
+
+        KeyStore jKS = keyToolJKS.loadKeyStore();
+        assertEquals("JKS", jKS.getType());
+        assertTrue(jKS.containsAlias("keypair001"));
+        assertNull(jKS.getKey("keypair001", PASSWORD));
+        assertNotNull(jKS.getCertificate("keypair001"));
+        assertNull(jKS.getCertificateChain("keypair001"));
     }
 
+    /**
+     * Changing keystore password doesn't change key passwords in JKS, in PKCS12 it does.
+     * {@link KeyTool} compensates it automatically.
+     *
+     * @throws Exception
+     */
+    @Test
+    void messingWithKeysJKS() throws Exception {
+        KeyTool keyTool = new KeyTool(new File(tmp, "messingWithKeys.jks"), PASSWORD);
+        keyTool.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
+        keyTool.changeKeyStorePassword(PASSWORD2);
+        assertNotNull(keyTool.loadKeyStore().getKey("keypair001", PASSWORD2));
+        keyTool.changeKeyPassword("keypair001", PASSWORD2, PASSWORD);
+        assertNotNull(keyTool.loadKeyStore().getKey("keypair001", PASSWORD));
+        KeyStore jKS = keyTool.loadKeyStore();
+        assertEquals("JKS", jKS.getType());
+        assertNotNull(jKS.getKey("keypair001", PASSWORD));
+    }
 }

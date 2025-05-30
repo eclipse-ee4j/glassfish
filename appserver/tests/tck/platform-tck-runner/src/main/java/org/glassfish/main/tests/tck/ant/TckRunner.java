@@ -81,6 +81,9 @@ public class TckRunner {
             } else {
                 throw new IllegalStateException("The TCK runnable doesn't exist: " + command);
             }
+            if (cfg.getGlassFishVersion().substring(2).charAt(0) > '0') {
+                fixTsJteFiles();
+            }
         }
         glassfishZip = zipResolver.getZipFile("org.glassfish.main.distributions", "glassfish", cfg.getGlassFishVersion());
     }
@@ -173,6 +176,29 @@ public class TckRunner {
         deleteDirectory(new File(cfg.getTargetDir(), "jakartaeetck-work").toPath());
     }
 
+    private void fixTsJteFiles() {
+        try {
+            Files.walk(cfg.getJakartaeeDir().toPath())
+                .filter(path -> path.getFileName().toString().equals("ts.jte"))
+                .forEach(this::fixContent);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not fix ts.jte files!", e);
+        }
+    }
+
+    private void fixContent(Path file) {
+        try {
+            String content = Files.readString(file);
+            content = content.replace("s1as.truststore=${s1as.domain}/config/cacerts.jks",
+                "s1as.truststore=${s1as.domain}/config/cacerts.p12");
+            content = content.replace("ri.truststore=${ri.domain}/config/cacerts.jks",
+                "ri.truststore=${ri.domain}/config/cacerts.p12");
+            Files.writeString(file, content);
+            LOG.log(Level.INFO, "Fixed file: {0}", file);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not fix file: " + file, e);
+        }
+    }
 
     private void deleteDirectory(final Path directory) throws IOException {
         if (!directory.toFile().exists()) {

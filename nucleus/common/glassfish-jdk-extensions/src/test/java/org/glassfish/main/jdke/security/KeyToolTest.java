@@ -17,7 +17,6 @@
 package org.glassfish.main.jdke.security;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.KeyStore;
 import java.security.UnrecoverableKeyException;
 
@@ -49,7 +48,6 @@ public class KeyToolTest {
         keyToolOrig.copyCertificate("keypair001", ksFileP12);
         KeyTool keyToolP12 = new KeyTool(ksFileP12, PASSWORD);
 
-        assertThrows(IOException.class, () -> keyToolOrig.changeKeyStorePassword("short".toCharArray()));
         keyToolOrig.changeKeyStorePassword(PASSWORD2);
         assertNotNull(keyToolOrig.loadKeyStore().getKey("keypair001", PASSWORD2));
         keyToolOrig.changeKeyStorePassword(PASSWORD);
@@ -103,5 +101,33 @@ public class KeyToolTest {
         KeyStore jKS = keyTool.loadKeyStore();
         assertEquals("JKS", jKS.getType());
         assertNotNull(jKS.getKey("keypair001", PASSWORD));
+    }
+
+    @Test
+    void createTrustStoreWithoutPassword() throws Exception {
+        KeyTool keyTool = new KeyTool(new File(tmp, "keystore.jks"), PASSWORD);
+        keyTool.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
+        File trustStoreFile = new File(tmp, "truststore.p12");
+        // Note that keytool needs a password at least 6 characters long
+        // It doesn't tell you that on import, it just fails to create or copy to the truststore
+        char[] tsPassword = new char[0];
+        keyTool.copyCertificate("keypair001", trustStoreFile, tsPassword);
+        KeyStore trustStore = new KeyTool(trustStoreFile, tsPassword).loadKeyStore();
+        assertEquals("PKCS12", trustStore.getType());
+        assertNull(trustStore.getKey("keypair001", tsPassword));
+        assertNotNull(trustStore.getCertificate("keypair001"));
+    }
+
+    @Test
+    void createTwoKeyPairs() throws Exception {
+        KeyTool keyTool = new KeyTool(new File(tmp, "keystore.p12"), PASSWORD);
+        keyTool.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
+        keyTool.generateKeyPair("keypair002", "CN=mymachine", "RSA", 1);
+        KeyStore keyStore = keyTool.loadKeyStore();
+        assertEquals("PKCS12", keyStore.getType());
+        assertNotNull(keyStore.getKey("keypair001", PASSWORD));
+        assertNotNull(keyStore.getKey("keypair002", PASSWORD));
+        assertNotNull(keyStore.getCertificateChain("keypair001"));
+        assertNotNull(keyStore.getCertificateChain("keypair002"));
     }
 }

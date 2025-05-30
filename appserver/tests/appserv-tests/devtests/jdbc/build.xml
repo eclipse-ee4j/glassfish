@@ -191,66 +191,66 @@
     </target>
     
     <target name="run-tests1">
-        <ant dir="appauth" target="all"/>
-        <ant dir="appauthtx" target="all"/>
-        <ant dir="contauth" target="all"/>
-        <ant dir="contauthtx" target="all"/>
-        <ant dir="contauth1" target="all"/>
-        <ant dir="contauth1tx" target="all"/>
-        <ant dir="reconfig" target="all"/>
+        <run-jdbc-test path="appauth" target="all"/>
+        <run-jdbc-test path="appauthtx" target="all"/>
+        <run-jdbc-test path="contauth" target="all"/>
+        <run-jdbc-test path="contauthtx" target="all"/>
+        <run-jdbc-test path="contauth1" target="all"/>
+        <run-jdbc-test path="contauth1tx" target="all"/>
+        <run-jdbc-test path="reconfig" target="all"/>
     </target>
     
     <target name="run-tests2">
-       <ant dir="autocommit" target="all"/>
-       <ant dir="jdbcjmsauth" target="all"/>
-       <ant dir="nopasswdfordb" target="all"/>
-       <ant dir="txpassthrough" target="all"/>
-       <ant dir="txafternontx" target="all"/>
-       <ant dir="txafternontxjndi" target="all"/>
-       <ant dir="notxops" target="all"/>
-       <ant dir="nonacc" target="all"/>
-       <ant dir="lazyassoc" target="all"/>
+        <run-jdbc-test path="autocommit" target="all"/>
+        <run-jdbc-test path="jdbcjmsauth" target="all"/>
+        <run-jdbc-test path="nopasswdfordb" target="all"/>
+        <run-jdbc-test path="txpassthrough" target="all"/>
+        <run-jdbc-test path="txafternontx" target="all"/>
+        <run-jdbc-test path="txafternontxjndi" target="all"/>
+        <run-jdbc-test path="notxops" target="all"/>
+        <run-jdbc-test path="nonacc" target="all"/>
+        <run-jdbc-test path="lazyassoc" target="all"/>
    </target>
     
     <target name="run-tests3">
-        <ant dir="markconnectionasbad.local" target="all"/>
-        <ant dir="markconnectionasbad.xa" target="all"/>
-        <ant dir="statementwrapper" target="all"/>
-        <ant dir="maxconnectionusage" target="all"/>
-        <ant dir="switchoffACCconnpooling" target="all"/>
-        <ant dir="multipleusercredentials" target="all"/>
-        <ant dir="multiplecloseconnection" target="all"/>
-        <ant dir="statementtimeout" target="all"/>
-        <ant dir="conval" target="all"/>
-        <ant dir="conval" target="all-assoc-with-thread"/>
-        <ant dir="connleaktracing" target="all"/>
-        <ant dir="conncreationretry" target="all"/>
+        <run-jdbc-test path="markconnectionasbad.local" target="all"/>
+        <run-jdbc-test path="markconnectionasbad.xa" target="all"/>
+        <run-jdbc-test path="statementwrapper" target="all"/>
+        <run-jdbc-test path="maxconnectionusage" target="all"/>
+        <run-jdbc-test path="switchoffACCconnpooling" target="all"/>
+        <run-jdbc-test path="multipleusercredentials" target="all"/>
+        <run-jdbc-test path="multiplecloseconnection" target="all"/>
+        <run-jdbc-test path="statementtimeout" target="all"/>
+        <run-jdbc-test path="conval" target="all"/>
+        <run-jdbc-test path="conval" target="all-assoc-with-thread"/>
+        <run-jdbc-test path="connleaktracing" target="all"/>
+        <run-jdbc-test path="conncreationretry" target="all"/>
     </target>
     
     <target name="run-tests4">
-        <ant dir="validateatmostonceperiod" target="all"/>
-        <ant dir="connsharing" target="nonxa"/>
-        <ant dir="connsharing/nonxa" target="all-assoc-with-thread"/>
-        <ant dir="cpds" target="all"/>
-        <ant dir="txisolation" target="all"/>
-        <ant dir="stmtCaching_hit_miss" target="all"/>
-        <ant dir="pooling" target="all"/>
-        <ant dir="dmmcf" target="all"/>
-        <ant dir="dmmcf.markconnectionasbad.xa" target="all"/>
-        <ant dir="dmmcf.appclient" target="all"/>
+        <run-jdbc-test path="validateatmostonceperiod" target="all"/>
+        <run-jdbc-test path="connsharing" target="nonxa"/>
+        <run-jdbc-test path="connsharing/nonxa" target="all-assoc-with-thread"/>
+        <run-jdbc-test path="cpds" target="all"/>
+        <run-jdbc-test path="txisolation" target="all"/>
+        <run-jdbc-test path="stmtCaching_hit_miss" target="all"/>
+        <run-jdbc-test path="pooling" target="all"/>
+        <run-jdbc-test path="dmmcf" target="all"/>
+        <run-jdbc-test path="dmmcf.markconnectionasbad.xa" target="all"/>
+        <run-jdbc-test path="dmmcf.appclient" target="all"/>
     </target>
     
     <target name="run-tests5">
-        <ant dir="tracingsql" target="all"/>
-        <ant dir="datasource40" target="all"/>
-        <ant dir="custom-validation" target="all"/>
-        <ant dir="custom-validation-1" target="all"/>
-        <ant dir="flushconnectionpool" target="all"/>
-        <ant dir="connleakreclaimnotify" target="all"/>
-        <ant dir="stmtCaching_hit_miss.monitoring" target="all"/>
-        <ant dir="jpa-dsd" target="all" />
-        <ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
-        <ant dir="stmtCaching_hit_miss.fixed" target="all"/>
+        <run-jdbc-test path="tracingsql" target="all"/>
+        <run-jdbc-test path="datasource40" target="all"/>
+        <run-jdbc-test path="custom-validation" target="all"/>
+        <run-jdbc-test path="custom-validation-1" target="all"/>
+        <run-jdbc-test path="flushconnectionpool" target="all"/>
+        <run-jdbc-test path="connleakreclaimnotify" target="all"/>
+        <run-jdbc-test path="stmtCaching_hit_miss.monitoring" target="all"/>
+        <run-jdbc-test path="jpa-dsd" target="all" />
+        <run-jdbc-test path="jpa-dsd" target="all-appclient-exposed-dsd"/>
+        <run-jdbc-test path="stmtCaching_hit_miss.fixed" target="all"/>
     </target>
 
     <target name="ee-all">
@@ -581,4 +581,33 @@
             ant all (Executes all the jdbc tests)
         </echo>
     </target>
+    
+    <macrodef name="run-jdbc-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <attribute name="target" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.jdbc}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.jdbc" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator} ${line.separator}" />
+                <echo message=" **************************************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" * jdbc: ${env.jdbc} " />
+                <echo message=" **************************************************" />
+                <echo message="${line.separator} ${line.separator}" />
+                <ant dir="@{path}" target="@{target}" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

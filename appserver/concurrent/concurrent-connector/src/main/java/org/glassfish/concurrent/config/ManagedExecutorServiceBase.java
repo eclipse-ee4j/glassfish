@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,6 +53,21 @@ public interface ManagedExecutorServiceBase
      *            {@link String}
      */
     void setThreadPriority(String value) throws PropertyVetoException;
+
+    /**
+     * Gets the value of the useVirtualThreads property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getUseVirtualThreads();
+
+    /**
+     * Sets the value of the useVirtualThreads property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setUseVirtualThreads(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the longRunningTasks property.

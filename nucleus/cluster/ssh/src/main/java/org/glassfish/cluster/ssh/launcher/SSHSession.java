@@ -22,7 +22,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,6 +34,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.sftp.SFTPPath;
@@ -162,7 +162,7 @@ public class SSHSession implements AutoCloseable {
      * @throws SSHException
      */
     public int exec(List<String> command, List<String> stdinLines, StringBuilder output) throws SSHException {
-        return exec(commandListToQuotedString(command), listInputStream(stdinLines, capabilities.getCharset()), output);
+        return exec(command.stream().collect(Collectors.joining(" ")), listInputStream(stdinLines, capabilities.getCharset()), output);
     }
 
 
@@ -177,7 +177,7 @@ public class SSHSession implements AutoCloseable {
      * @throws SSHException
      */
     public int exec(List<String> command, List<String> stdinLines) throws SSHException {
-        return exec(commandListToQuotedString(command), stdinLines);
+        return exec(command.stream().collect(Collectors.joining(" ")), stdinLines);
     }
 
 
@@ -301,38 +301,6 @@ public class SSHSession implements AutoCloseable {
         if (session.isConnected()) {
             session.disconnect();
         }
-    }
-
-
-    /**
-     * Take a command in the form of a list and convert it to a command string.
-     * If any string in the list has spaces then the string is quoted before
-     * being added to the final command string.
-     *
-     * @param command
-     * @return
-     */
-    private static String commandListToQuotedString(List<String> command) {
-        if (command.size() == 1) {
-            return command.get(0);
-        }
-        StringBuilder commandBuilder  = new StringBuilder();
-        boolean first = true;
-
-        for (String s : command) {
-            if (!first) {
-                commandBuilder.append(" ");
-            } else {
-                first = false;
-            }
-            if (s.contains(" ")) {
-                // Quote parts of the command that contain a space
-                commandBuilder.append(FileUtils.quoteString(s));
-            } else {
-                commandBuilder.append(s);
-            }
-        }
-        return commandBuilder.toString();
     }
 
 

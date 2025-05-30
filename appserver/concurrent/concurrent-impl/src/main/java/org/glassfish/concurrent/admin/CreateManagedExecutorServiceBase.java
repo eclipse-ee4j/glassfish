@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +38,7 @@ import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.KEEP_ALIVE_S
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.LONG_RUNNING_TASKS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_LIFETIME_SECONDS;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.USE_VIRTUAL_THREADS;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 
@@ -66,7 +67,10 @@ public class CreateManagedExecutorServiceBase {
     @Param(name="threadpriority", alias="threadPriority", defaultValue=""+Thread.NORM_PRIORITY, optional=true)
     protected Integer threadpriority;
 
-    @Param(name="longrunningtasks", alias="longRunningTasks", defaultValue="false", optional=true)
+    @Param(name = "usevirtualthreads", alias = "useVirtualThreads", defaultValue = "false", optional = true)
+    protected Boolean useVirtualThreads;
+
+    @Param(name = "longrunningtasks", alias = "longRunningTasks", defaultValue = "false", optional = true)
     protected Boolean longrunningtasks;
 
     @Param(name="hungafterseconds", alias="hungAfterSeconds", defaultValue="0", optional=true)
@@ -104,6 +108,7 @@ public class CreateManagedExecutorServiceBase {
         attrList.put(CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.put(CONTEXT_INFO, contextinfo);
         attrList.put(THREAD_PRIORITY, threadpriority.toString());
+        attrList.put(USE_VIRTUAL_THREADS, useVirtualThreads.toString());
         attrList.put(LONG_RUNNING_TASKS, longrunningtasks.toString());
         attrList.put(HUNG_AFTER_SECONDS, hungafterseconds.toString());
         attrList.put(HUNG_LOGGER_PRINT_ONCE, hungloggerprintonce.toString());

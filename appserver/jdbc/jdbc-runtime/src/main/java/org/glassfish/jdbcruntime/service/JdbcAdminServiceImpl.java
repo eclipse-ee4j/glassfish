@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,17 +26,17 @@ import com.sun.enterprise.connectors.service.ConnectorConnectionPoolAdminService
 import com.sun.enterprise.connectors.service.ConnectorService;
 import com.sun.enterprise.connectors.util.DriverLoader;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.util.Enumeration;
+import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -62,36 +62,23 @@ import static java.util.logging.Level.WARNING;
 @Singleton
 public class JdbcAdminServiceImpl extends ConnectorService {
 
+    private static final String JDBC40_CONNECTION_VALIDATION = "org.glassfish.api.jdbc.validation.JDBC40ConnectionValidation";
+    private static final JdbcAdminServiceImpl jdbcAdminService = new JdbcAdminServiceImpl();
+
     private final ConnectorConnectionPoolAdminServiceImpl ccPoolAdmService;
-    private static final String DBVENDOR_MAPPINGS_ROOT =
-        System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
-        "lib" + File.separator +
-        "install" + File.separator +
-        "databases" + File.separator +
-        "dbvendormapping" + File.separator;
 
-    private final static String JDBC40_CONNECTION_VALIDATION = "org.glassfish.api.jdbc.validation.JDBC40ConnectionValidation";
-    private final static String DS_PROPERTIES = "ds.properties";
-    private final static String CPDS_PROPERTIES = "cpds.properties";
-    private final static String XADS_PROPERTIES = "xads.properties";
-    private final static String DRIVER_PROPERTIES = "driver.properties";
-    private final static String CONVAL_PROPERTIES = "validationclassnames.properties";
-
-    private static JdbcAdminServiceImpl jdbcAdminService = new JdbcAdminServiceImpl();
+    @Inject
+    private DriverLoader driverLoader;
 
     /**
      * Default constructor
      */
     public JdbcAdminServiceImpl() {
-        super();
-        ccPoolAdmService = (ConnectorConnectionPoolAdminServiceImpl) ConnectorAdminServicesFactory.getService(ConnectorConstants.CCP);
+        ccPoolAdmService = (ConnectorConnectionPoolAdminServiceImpl) ConnectorAdminServicesFactory
+            .getService(ConnectorConstants.CCP);
     }
 
     public static JdbcAdminServiceImpl getJdbcAdminService() {
-        if (jdbcAdminService == null) {
-            throw new RuntimeException("JDBC admin service not initialized");
-        }
-
         return jdbcAdminService;
     }
 
@@ -103,59 +90,27 @@ public class JdbcAdminServiceImpl extends ConnectorService {
      * @return all validation class names.
      */
     public Set<String> getValidationClassNames(String className) {
-        SortedSet classNames = new TreeSet();
+        SortedSet<String> classNames = new TreeSet<>();
         if (className == null) {
             _logger.log(WARNING, "jdbc.admin.service.ds_class_name_null");
             return classNames;
         }
-        File validationClassMappingFile;
-        String dbVendor = getDatabaseVendorName(className);
-
-        // Retrieve validation classnames from the properties file based on the
-        // retrieved
+        String dbVendor = driverLoader.getDatabaseVendorName(className);
+        if (dbVendor == null) {
+            return classNames;
+        }
+        // Retrieve validation classnames from the properties file based on the retrieved
         // dbvendor name
-        if (dbVendor != null) {
-            validationClassMappingFile = new File(DBVENDOR_MAPPINGS_ROOT + CONVAL_PROPERTIES);
-            Properties validationClassMappings = DriverLoader.loadFile(validationClassMappingFile);
-            String validationClassName = validationClassMappings.getProperty(dbVendor);
-            if (validationClassName != null) {
-                classNames.add(validationClassName);
-            }
-            // If JDBC40 runtime, add the jdbc40 validation classname
-            if (detectJDBC40(className)) {
-                classNames.add(JDBC40_CONNECTION_VALIDATION);
-            }
+        Properties validationClassMappings = driverLoader.getValidationClassMappingFile();
+        String validationClassName = validationClassMappings.getProperty(dbVendor);
+        if (validationClassName != null) {
+            classNames.add(validationClassName);
+        }
+        // If JDBC40 runtime, add the jdbc40 validation classname
+        if (detectJDBC40(className)) {
+            classNames.add(JDBC40_CONNECTION_VALIDATION);
         }
         return classNames;
-    }
-
-    private String getDatabaseVendorName(String className) {
-        String dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + DS_PROPERTIES)), className);
-        if (dbVendor == null) {
-            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + CPDS_PROPERTIES)), className);
-        }
-        if (dbVendor == null) {
-            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + XADS_PROPERTIES)), className);
-        }
-        if (dbVendor == null) {
-            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + DRIVER_PROPERTIES)), className);
-        }
-        return dbVendor;
-    }
-
-    private String getDatabaseVendorName(Properties classNameProperties, String className) {
-        String dbVendor = null;
-        Enumeration e = classNameProperties.propertyNames();
-        while (e.hasMoreElements()) {
-            String key = (String) e.nextElement();
-            String value = classNameProperties.getProperty(key);
-            if (className.equalsIgnoreCase(value)) {
-                // There could be multiple keys for a particular value.
-                dbVendor = key;
-                break;
-            }
-        }
-        return dbVendor;
     }
 
     private boolean detectJDBC40(String className) {
@@ -271,17 +226,16 @@ public class JdbcAdminServiceImpl extends ConnectorService {
      * @throws jakarta.resource.ResourceException
      */
     public static Set<String> getValidationTableNames(java.sql.Connection con, String catalog) throws ResourceException {
-
-        SortedSet<String> tableNames = new TreeSet();
-        if (catalog.trim().equals("")) {
+        if (catalog.trim().isEmpty()) {
             catalog = null;
         }
-
-        if (con != null) {
-            java.sql.ResultSet rs = null;
-            try {
-                DatabaseMetaData dmd = con.getMetaData();
-                rs = dmd.getTables(catalog, null, null, null);
+        if (con == null) {
+            throw new ResourceException("The connection is not valid as " + "the connection is null");
+        }
+        try {
+            DatabaseMetaData metaData = con.getMetaData();
+            try (ResultSet rs = metaData.getTables(catalog, null, null, null)) {
+                SortedSet<String> tableNames = new TreeSet<>();
                 while (rs.next()) {
                     String schemaName = rs.getString(2);
                     String tableName = rs.getString(3);
@@ -291,20 +245,11 @@ public class JdbcAdminServiceImpl extends ConnectorService {
                     }
                     tableNames.add(actualTableName);
                 }
-            } catch (Exception sqle) {
-                _logger.log(Level.INFO, "pool.get_validation_table_names");
-                throw new ResourceException(sqle);
-            } finally {
-                try {
-                    if (rs != null) {
-                        rs.close();
-                    }
-                } catch (Exception e1) {
-                }
+                return tableNames;
             }
-        } else {
-            throw new ResourceException("The connection is not valid as " + "the connection is null");
+        } catch (Exception sqle) {
+            _logger.log(Level.INFO, "pool.get_validation_table_names");
+            throw new ResourceException(sqle);
         }
-        return tableNames;
     }
 }

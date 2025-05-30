@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@ class HK2ClasssVisitor extends ClassVisitor {
      * @param locator
      * @param excludedClasses
      */
-    public HK2ClasssVisitor(final ServiceLocator locator, final Set<Class<?>> excludedClasses) {
+    HK2ClasssVisitor(final ServiceLocator locator, final Set<Class<?>> excludedClasses) {
         super(ASM9);
         this.locator = locator;
         this.excludedClasses = excludedClasses.stream().map(Class::getName).collect(Collectors.toSet());

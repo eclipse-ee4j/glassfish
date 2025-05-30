@@ -23,13 +23,10 @@ import com.sun.gjc.spi.ConnectionRequestInfoImpl;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.SecurityException;
 import jakarta.resource.spi.security.PasswordCredential;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.security.auth.Subject;
 
@@ -57,47 +54,42 @@ public class SecurityUtils {
      * contains a <code>ManagedConnectionFactory</code>, instance equivalent to the
      * <code>ManagedConnectionFactory</code>, parameter.
      *
-     * @param mcf <code>ManagedConnectionFactory</code>
+     * @param managedConnectionFactory <code>ManagedConnectionFactory</code>
      * @param subject <code>Subject</code>
-     * @param info <code>ConnectionRequestInfo</code>
+     * @param connectionRequestInfo <code>ConnectionRequestInfo</code>
      * @return <code>PasswordCredential</code>
      * @throws <code>ResourceException</code> generic exception if operation fails
      * @throws <code>SecurityException</code> if access to the <code>Subject</code>
      * instance is denied
      */
-    public static PasswordCredential getPasswordCredential(final ManagedConnectionFactory mcf, final Subject subject,
-            ConnectionRequestInfo info) throws ResourceException {
+    public static PasswordCredential getPasswordCredential(final ManagedConnectionFactory managedConnectionFactory, final Subject subject,
+            ConnectionRequestInfo connectionRequestInfo) throws ResourceException {
 
-        if (info == null) {
+        if (connectionRequestInfo == null) {
             if (subject == null) {
                 return null;
-            } else {
-                PasswordCredential pc = (PasswordCredential) AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
-                        Set passwdCredentialSet = subject.getPrivateCredentials(PasswordCredential.class);
-                        Iterator iter = passwdCredentialSet.iterator();
-                        while (iter.hasNext()) {
-                            PasswordCredential temp = (PasswordCredential) iter.next();
-                            if (temp.getManagedConnectionFactory().equals(mcf)) {
-                                return temp;
-                            }
-                        }
-                        return null;
-                    }
-                });
-                if (pc == null) {
-                    String msg = sm.getString("su.no_passwd_cred");
-                    throw new jakarta.resource.spi.SecurityException(msg);
-                } else {
-                    return pc;
+            }
+
+            PasswordCredential passwordCredential = null;
+
+            for (PasswordCredential temp : subject.getPrivateCredentials(PasswordCredential.class)) {
+                if (temp.getManagedConnectionFactory().equals(managedConnectionFactory)) {
+                    passwordCredential = temp;
                 }
             }
-        } else {
-            ConnectionRequestInfoImpl cxReqInfo = (ConnectionRequestInfoImpl) info;
-            PasswordCredential pc = new PasswordCredential(cxReqInfo.getUser(), cxReqInfo.getPassword());
-            pc.setManagedConnectionFactory(mcf);
-            return pc;
+
+            if (passwordCredential == null) {
+                throw new SecurityException(sm.getString("su.no_passwd_cred"));
+            }
+
+            return passwordCredential;
         }
+
+        ConnectionRequestInfoImpl cxReqInfo = (ConnectionRequestInfoImpl) connectionRequestInfo;
+        PasswordCredential passwordCredential = new PasswordCredential(cxReqInfo.getUser(), cxReqInfo.getPassword());
+        passwordCredential.setManagedConnectionFactory(managedConnectionFactory);
+
+        return passwordCredential;
     }
 
     /**

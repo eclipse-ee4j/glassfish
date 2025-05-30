@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -88,8 +88,8 @@ public class ServletContainerInitializerUtil {
      *
      * @return Iterable over all ServletContainerInitializers that were found
      */
-    public static ServiceLoader<ServletContainerInitializer> getServletContainerInitializers(Map<String, String> webFragmentMap,
-            List<Object> absoluteOrderingList, boolean hasOthers, ClassLoader jarClassLoader) {
+    public static ServiceLoader<ServletContainerInitializer> getServletContainerInitializers(String containerName,
+        Map<String, String> webFragmentMap, List<Object> absoluteOrderingList, boolean hasOthers, ClassLoader jarClassLoader) {
         /*
          * If there is an absoluteOrderingList specified, then make sure that any ServletContainerInitializers included in
          * fragment JARs NOT listed in the absoluteOrderingList will be ignored. For this, we remove any unwanted fragment JARs
@@ -135,7 +135,8 @@ public class ServletContainerInitializerUtil {
 
             // Create temporary classloader for ServiceLoader#load
             // TODO: Have temporary classloader honor delegate flag from sun-web.xml
-            jarClassLoader = new GlassfishUrlClassLoader(newClassLoaderUrlList.toArray(URL[]::new), webAppCl.getParent());
+            jarClassLoader = new GlassfishUrlClassLoader("ServletContainerInitializer(" + containerName + ")",
+                newClassLoaderUrlList.toArray(URL[]::new), webAppCl.getParent());
         }
 
         return ServiceLoader.load(ServletContainerInitializer.class, jarClassLoader);

@@ -4,21 +4,25 @@
 
 Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the Jakarta EE 10 specification, which is a major new feature release. Jakarta EE 10 requires JDK 11 as a minimum, but also works on JDK 17 and JDK 21.
 
-GlassFish 7.0.22 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 23. MicroProfile support requires JDK 17 or higher.
+GlassFish 7.0.24 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 24. MicroProfile support requires JDK 17 or higher.
 
-A smaller release while the OmniFish team is working on perfecting SSH in a separate feature branch. Still, a few important dependencies have been updated; notably Concurrō (Concurrency), EclipseLink (Persistence) and Jersey (REST). Furthermore, GlassFish has received a few security improvements: the admin flow login was improved by Alexander Pinčuk, and the OmniFish team improved the command logger, which now hides passwords in logged messages.
+This release marks an important step forward by introducing support for JDK 24 in GlassFish 7 — a capability that had previously only been available in milestone builds of GlassFish 8. Achieving this required new versions of CORBA, ORB, and PFL, the result of many months of dedicated work by the team.
+
+The team also undertook a significant revision of how scripts are used across the project. All Linux scripts now consistently use Bash, and a unified method has been adopted for resolving the AS_INSTALL path across all platforms. Additionally, an issue on Windows related to the %t placeholder—used in JDK log formatting—was resolved by ensuring it is properly escaped.
+
+Faster Deployment was achieved by improved file handling; the team replaced custom file discovery with Files.walkFileTree and switched from URI to Path, also adopting try-with-resources for better resource management. On Windows 11, deployment time for specifically selected huge applications dropped from 110s to 100s, with potential for 92s using caching. YourKit profiling showed a 19s improvement in FileSystem.hasBooleanAttributes.
 
 Download:
 
-* [Eclipse GlassFish 7.0.22, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.22.zip)
-* [Eclipse GlassFish 7.0.22, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.22.zip)
-* [Eclipse GlassFish Embedded 7.0.22, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.22/jar)
-* [Eclipse GlassFish Embedded 7.0.22, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.22/jar)
+* [Eclipse GlassFish 7.0.24, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.24.zip)
+* [Eclipse GlassFish 7.0.24, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.24.zip)
+* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Platform, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.24)
+* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Web Profile, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.24)
 
 More details:
 
-* [Eclipse GlassFish 7.0.22 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.22)
-* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Eclipse GlassFish 7.0.24 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.24)
+* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### All Eclipse GlassFish 7.x Downloads

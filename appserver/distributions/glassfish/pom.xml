@@ -140,35 +140,16 @@
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
                                 
-                                
-                                <!-- To support Expression Language 6 and Expressly 6-->
+                                <!-- Fixes missing osgi import-->
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
                                 
+                                <!-- To support Annnotations 4 -->
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
-                                />
-                                
-                                <!-- To support glassfish.pfl 5.0.0 -->
-                                
-                                <!-- Patch for gmbal 4.0.3 -->
-                                
-                                <jarupdate 
-                                    basedir="${patches}/gmbal" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/gmbal.jar"
-                                />
-                                
-                                <!-- Patch for glassfish-corba 4.2.5 -->
-                                <jarupdate
-                                    basedir="${patches}/glassfish-corba-internal-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/glassfish-corba-internal-api.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/glassfish-corba-orb" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/glassfish-corba-orb.jar"
                                 />
                                 
                                 <!-- Path for OSGI locator osgiresourcelocator -->
@@ -176,11 +157,11 @@
                                     basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-common.jar"
                                 />
-                                
-                                <!-- Patch for JDK 17-->
+
+                                <!-- To have a manifest at all -->
                                 <jarupdate
-                                    basedir="${patches}/concurro" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/concurro.jar"
+                                    basedir="${patches}/jakarta-data-api" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jakarta.data-api.jar"
                                 />
                             </target>
                         </configuration>

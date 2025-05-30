@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,7 @@ var envVars = wshShell.Environment("PROCESS");
 
 var pathSep = ";";
 
-var prelim_AS_INSTALL = new String(envVars("_AS_INSTALL"));
+var prelim_AS_INSTALL = new String(envVars("AS_INSTALL"));
 var javaProgram = new String(quoteStringIfNeeded(envVars("JAVA")));
 var driveLetter = prelim_AS_INSTALL.substring(0,1).toUpperCase();
 var AS_INSTALL = driveLetter + prelim_AS_INSTALL.substring(1);
@@ -32,7 +33,7 @@ var builtinEndorsedDirSetting = quoteMultiStringIfNeeded(
     AS_INSTALL +
     "\\lib\\endorsed" +
     pathSep +
-    AS_INSTALL_MOD + 
+    AS_INSTALL_MOD +
     "\\endorsed", pathSep);
 
 var mainClassIdentRequired = 1;
@@ -123,13 +124,13 @@ function processArgs() {
     var accNonvaluedOptions = ["-textauth", "-noappinvoke", "-usage", "-help"];
     //var re = new RegExp("\"([^\"]+)\"|[^\"\\s]+)","g");
     var re = /"([^"]+)"|([^"\s]+)/g;
-    
+
     // var tokens = inputArgs.split(" ");
     // var tokens = re.exec(inputArgs);
     var tokens = inputArgs.match(re);
     for (tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
         var token = tokens[tokenIndex];
-        
+
         var matched=null;
         matched = matchToWithType(token, jvmValuedOptions, "JVM");
         if (matched == null) {
@@ -152,7 +153,7 @@ function processArgs() {
                 expecting = null;
             }
         }
-        
+
         if (matched == null) {
             if (expecting != null) {
                 recordArg(expectingArgType, expecting, token);

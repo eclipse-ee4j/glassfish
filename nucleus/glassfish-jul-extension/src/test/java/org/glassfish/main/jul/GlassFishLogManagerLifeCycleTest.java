@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import org.glassfish.main.jul.GlassFishLogManager.Action;
 import org.glassfish.main.jul.cfg.GlassFishLogManagerConfiguration;
 import org.glassfish.main.jul.cfg.GlassFishLogManagerProperty;
 import org.glassfish.main.jul.cfg.LoggingProperties;
+import org.glassfish.main.jul.env.LoggingSystemEnvironment;
 import org.glassfish.main.jul.handler.BlockingExternallyManagedLogHandler;
 import org.glassfish.main.jul.handler.LogCollectorHandler;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
@@ -40,8 +41,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
-import static org.glassfish.main.jul.env.LoggingSystemEnvironment.isResolveLevelWithIncompleteConfiguration;
-import static org.glassfish.main.jul.env.LoggingSystemEnvironment.setResolveLevelWithIncompleteConfiguration;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -51,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This test is executed as a sequence going through some lifecycle usage.
@@ -70,13 +70,14 @@ public class GlassFishLogManagerLifeCycleTest {
 
     private static GlassFishLogManagerConfiguration originalCfg;
     private static boolean originalLevelResolution;
-    private static CompletableFuture<Void> process;
+    private static CompletableFuture<Void> reconfiguration;
+    private static CompletableFuture<Void> logWhenFlushing;
 
     @BeforeAll
     public static void backupConfiguration() {
         assertNotNull(MANAGER, () -> "Unsupported log manager used: " + LogManager.getLogManager());
         originalCfg = MANAGER.getConfiguration();
-        originalLevelResolution = isResolveLevelWithIncompleteConfiguration();
+        originalLevelResolution = LoggingSystemEnvironment.isResolveLevelWithIncompleteConfiguration();
 
         COLLECTOR.setLevel(Level.ALL);
         LOG.setUseParentHandlers(false);
@@ -88,7 +89,7 @@ public class GlassFishLogManagerLifeCycleTest {
         ACTION_FLUSH.unblock();
         ACTION_RECONFIG.unblock();
         MANAGER.reconfigure(originalCfg, null, null);
-        setResolveLevelWithIncompleteConfiguration(originalLevelResolution);
+        LoggingSystemEnvironment.setResolveLevelWithIncompleteConfiguration(originalLevelResolution);
         COLLECTOR.close();
     }
 
@@ -121,18 +122,16 @@ public class GlassFishLogManagerLifeCycleTest {
     @Order(2)
     @Timeout(5)
     public void startReconfiguration() throws Exception {
-        setResolveLevelWithIncompleteConfiguration(false);
+        LoggingSystemEnvironment.setResolveLevelWithIncompleteConfiguration(false);
         assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus(),
             "status after startReconfigurationAndBlock test");
 
-        doLog(Level.FINE, "Log before reconfiguration", 0);
-        doLog(Level.FINEST, "This log should be dropped, logger's level is FINE", 0);
-        process = runAsync(() -> MANAGER.reconfigure(originalCfg, ACTION_RECONFIG, ACTION_FLUSH));
-        Thread.sleep(10L);
-        assertAll(
-            () -> assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus()),
-            () -> assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started"));
-        doLog(Level.INFO, "Log after reconfiguration started", 0);
+        LOG.log(Level.FINE, "Log before reconfiguration");
+        LOG.log(Level.FINEST, "This log should be dropped, logger's level is FINE");
+        reconfiguration = runAsync(() -> MANAGER.reconfigure(originalCfg, ACTION_RECONFIG, ACTION_FLUSH));
+        waitForStatus(GlassFishLoggingStatus.CONFIGURING);
+        assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started");
+        LOG.log(Level.INFO, "Log after reconfiguration started");
         assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started even if we log again");
     }
 
@@ -147,14 +146,13 @@ public class GlassFishLogManagerLifeCycleTest {
     @Timeout(5)
     public void finishReconfigurationAndStartFlushing() throws Exception {
         ACTION_RECONFIG.unblock();
-        assertAll(
-            () -> assertEquals(GlassFishLoggingStatus.FLUSHING_BUFFERS, MANAGER.getLoggingStatus(),
-                "status after reconfiguration finished"),
-            () -> assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration finished")
-        );
-
-        doLog(Level.SEVERE, "Log while flushing is still executed", 5);
-        assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration finished even if we log again");
+        waitForStatus(GlassFishLoggingStatus.FLUSHING_BUFFERS);
+        assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration finished");
+        logWhenFlushing = runAsync(() -> LOG.log(Level.SEVERE, "Log while flushing is still executed"));
+        // The previous line will be stuck in onSpinWait cycle waiting for the log manager's full service state.
+        // We will let it enough time to process if the waiting would not work to fail the test.
+        Thread.sleep(100L);
+        assertNull(COLLECTOR.pop(), "COLLECTOR should be empty when we log again while manager is still flushing");
     }
 
 
@@ -169,11 +167,11 @@ public class GlassFishLogManagerLifeCycleTest {
     @Timeout(10)
     public void finishFlushing() throws Exception {
         ACTION_FLUSH.unblock();
-        doLog(Level.INFO, "Log after flushing finished", 10);
+        waitForStatus(GlassFishLoggingStatus.FULL_SERVICE);
+        logWhenFlushing.join();
+        LOG.log(Level.INFO, "Log after flushing finished");
         final List<GlassFishLogRecord> logRecords = COLLECTOR.getAll();
         assertAll(
-            () -> assertEquals(GlassFishLoggingStatus.FULL_SERVICE, MANAGER.getLoggingStatus(),
-                "status after all reconfiguration and flushing finished"),
             () -> assertThat(logRecords, hasSize(5)),
             () -> assertThat("record 0", logRecords.get(0).getLevel(), equalTo(Level.INFO)),
             () -> assertThat("record 0", logRecords.get(0).getMessage(), equalTo("Hello StartupQueue, my old friend")),
@@ -187,7 +185,7 @@ public class GlassFishLogManagerLifeCycleTest {
             () -> assertThat("record 4", logRecords.get(4).getMessage(), equalTo("Log after flushing finished"))
         );
 
-        process.get(5, TimeUnit.SECONDS);
+        reconfiguration.get(5, TimeUnit.SECONDS);
     }
 
 
@@ -201,13 +199,13 @@ public class GlassFishLogManagerLifeCycleTest {
     @Timeout(5)
     public void reconfigureWithoutResolvingLevelsWithincompleteconfiguration() throws Exception {
         reconfigureToBlockingHandler();
-        setResolveLevelWithIncompleteConfiguration(false);
+        LoggingSystemEnvironment.setResolveLevelWithIncompleteConfiguration(false);
         assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus(), "after reconfigureToBlockingHandler");
 
-        doLog(Level.FINEST, "message0", 1);
-        doLog(Level.INFO, "message1", 2);
+        LOG.log(Level.FINEST, "message0");
+        LOG.log(Level.INFO, "message1");
         MANAGER.reconfigure(originalCfg, () -> LOG.setLevel(Level.FINEST), null);
-        assertFalse(isResolveLevelWithIncompleteConfiguration(), "isResolveLevelWithIncompleteConfiguration");
+        assertFalse(LoggingSystemEnvironment.isResolveLevelWithIncompleteConfiguration(), "isResolveLevelWithIncompleteConfiguration");
 
         final List<GlassFishLogRecord> logRecords = COLLECTOR.getAll();
         assertAll("Both records must pass via startup queue",
@@ -234,13 +232,13 @@ public class GlassFishLogManagerLifeCycleTest {
     @Timeout(5)
     public void reconfigureWithResolvingLevelsWithincompleteconfiguration() throws Exception {
         reconfigureToBlockingHandler();
-        setResolveLevelWithIncompleteConfiguration(true);
+        LoggingSystemEnvironment.setResolveLevelWithIncompleteConfiguration(true);
         assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus(), "after reconfigureToBlockingHandler");
 
-        doLog(Level.FINEST, "message0", 1);
-        doLog(Level.INFO, "message1", 2);
+        LOG.log(Level.FINEST, "message0");
+        LOG.log(Level.INFO, "message1");
         MANAGER.reconfigure(originalCfg, () -> LOG.setLevel(Level.FINEST), null);
-        assertTrue(isResolveLevelWithIncompleteConfiguration(), "isResolveLevelWithIncompleteConfiguration");
+        assertTrue(LoggingSystemEnvironment.isResolveLevelWithIncompleteConfiguration(), "isResolveLevelWithIncompleteConfiguration");
 
         final List<GlassFishLogRecord> logRecords = COLLECTOR.getAll();
         assertAll("Both records must pass via startup queue",
@@ -262,30 +260,24 @@ public class GlassFishLogManagerLifeCycleTest {
     }
 
 
-    /**
-     * Because in this test is targetting locking in GJULE, we just execute log in separate thread
-     * and wait 10 millis. It cannot block us.
-     *
-     * @throws Exception
-     */
-    private void doLog(final Level level, final String message, final int sleepMillis) throws Exception {
-        new Thread(() -> LOG.log(level, message)).start();
-        if (sleepMillis > 0) {
-            Thread.sleep(sleepMillis);
+    private void waitForStatus(GlassFishLoggingStatus status) {
+        final long timeout = 1000L;
+        final long start = System.currentTimeMillis();
+        while (MANAGER.getLoggingStatus() != status) {
+            Thread.onSpinWait();
+            if (System.currentTimeMillis() > start + timeout) {
+                fail("The log manager status wasn't reached in a " + timeout + " ms timeout");
+            }
         }
     }
+
 
     private static final class BlockingAction implements Action {
 
         private final AtomicBoolean blocker = new AtomicBoolean(true);
 
-        public void unblock() throws InterruptedException {
-            blocker.set(false);
-            // in this time the log manager thread finishes the action and changes state
-            // without this we would continue wit the test without being sure all sides are
-            // in expected state.
-            // If they are not even after this, test probably detcted some error.
-            Thread.sleep(10L);
+        public void unblock() {
+            blocker.setRelease(false);
         }
 
 

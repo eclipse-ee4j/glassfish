@@ -19,6 +19,7 @@ package com.sun.s1asdev.jdbc.connsharing.nonxa.ejb;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.CreateException;
+import jakarta.ejb.EJB;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
@@ -52,7 +53,7 @@ public class SimpleSessionBean implements SessionBean {
 
     @Resource(lookup="jdbc/assoc-with-thread-resource-2")
     DataSource ds4;
-
+    
     @Override
     public void setSessionContext(SessionContext context) {
         try {
@@ -403,6 +404,41 @@ public class SimpleSessionBean implements SessionBean {
     }
 
     /**
+     * Scenario 9:
+     * 
+     * Call code that resembles issue 24805 situations: the connection pool might contain
+     * resources that are marked as enlisted in a transaction, and should not be handed out
+     * from the pool. If it would be handed out, it could end up in another transaction where
+     * it would not be enlisted and in the end closing the connection would fail because 
+     * the closeResouce logic has no transaction associated.
+     * This test only tests a single thread, to ensure the enlisted state is correct when a 
+     * resource is returned from the connection pool. 
+     *
+     * This tests asks a Singleton utility bean for a database Connection from a @Datasource,
+     * Then the connection is used and while it is in use another few connections are requested
+     * from the pool using the same Singleton. The connection pool should not return a 
+     * ResourceHandle that has the state enlisted.
+     *
+     * It could be argued that the Singleton utility class should not return a Connection, but 
+     * the utility method is marked as Transaction SUPPORTS, and it allows a codebase to only define
+     * 1 location where @Resource is located, plus it allows adding connection statistics and validations
+     * inside this 1 location. Instead of replicating this all over the codebase in a large system. 
+     */
+    public boolean test9() throws Exception {
+        logStartTest("test9");
+
+        try {
+            SimpleSession2 bean = lookupSimpleSession2();
+            bean.test9Issue24085();
+            
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * Query the value modified in the second bean and ensure that it
      * is correct.
      */
@@ -502,7 +538,7 @@ public class SimpleSessionBean implements SessionBean {
      * happens if the server implementation is changed and these tests start to
      * fail: it allows comparison of connection logic.
      */
-    private static Connection getPhysicalConnectionAndLog(DataSource ds,
+    public static Connection getPhysicalConnectionAndLog(DataSource ds,
             Connection connection) throws SQLException {
         if (ds instanceof com.sun.appserv.jdbc.DataSource) {
             Connection physicalConnection = ((com.sun.appserv.jdbc.DataSource) ds).getConnection(connection);

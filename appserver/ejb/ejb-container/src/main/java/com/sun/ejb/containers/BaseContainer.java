@@ -105,8 +105,6 @@ import java.lang.reflect.Proxy;
 import java.rmi.AccessException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -1908,6 +1906,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      */
     private void processEjbTimeoutMethod(Method method) throws Exception {
         _logger.log(FINEST, "processEjbTimeoutMethod(method={0})", method);
+
         Class<?>[] params = method.getParameterTypes();
         if (method.getReturnType() != Void.TYPE ||
             (params.length != 0 && (params.length != 1 || params[0] != jakarta.ejb.Timer.class))
@@ -1918,19 +1917,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         }
         isTimedObject_ = true;
 
-        final Method ejbTimeoutAccessible = method;
-        if (System.getSecurityManager() == null) {
-            if (!ejbTimeoutAccessible.trySetAccessible()) {
-                throw new InaccessibleObjectException("Unable to make accessible: " + ejbTimeoutAccessible);
-            }
-        } else {
-            PrivilegedExceptionAction<Void> action = () -> {
-                if (!ejbTimeoutAccessible.trySetAccessible()) {
-                    throw new InaccessibleObjectException("Unable to make accessible: " + ejbTimeoutAccessible);
-                }
-                return null;
-            };
-            AccessController.doPrivileged(action);
+        if (!method.trySetAccessible()) {
+            throw new InaccessibleObjectException("Unable to make accessible: " + method);
         }
     }
 

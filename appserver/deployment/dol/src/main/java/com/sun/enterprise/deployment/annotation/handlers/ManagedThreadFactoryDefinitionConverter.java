@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,7 +74,7 @@ class ManagedThreadFactoryDefinitionConverter extends
         for (Class<?> clazz : annotation.qualifiers()) {
             data.addQualifier(clazz.getCanonicalName());
         }
-        data.setVirtual(annotation.virtual());
+        data.setUseVirtualThreads(annotation.virtual());
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         if (annotation.priority() <= 0) {
             data.setPriority(Thread.NORM_PRIORITY);
@@ -95,8 +95,8 @@ class ManagedThreadFactoryDefinitionConverter extends
 
         mergeQualifiers(annotation, descriptor);
 
-        if (!descriptor.isVirtual()) {
-            descriptor.setVirtual(annotation.isVirtual());
+        if (!descriptor.getUseVirtualThreads()) {
+            descriptor.setUseVirtualThreads(annotation.getUseVirtualThreads());
         }
         if (descriptor.getPriority() == -1 && annotation.getPriority() != -1) {
             descriptor.setPriority(annotation.getPriority());

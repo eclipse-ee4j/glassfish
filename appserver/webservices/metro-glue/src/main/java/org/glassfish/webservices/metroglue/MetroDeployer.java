@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +19,6 @@ package org.glassfish.webservices.metroglue;
 
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.SimpleDeployer;
 import org.jvnet.hk2.annotations.Service;
 
@@ -63,13 +62,4 @@ public class MetroDeployer extends SimpleDeployer<MetroContainer, MetroDeployer.
         }
     }
 
-    @Override
-    protected void generateArtifacts(DeploymentContext dc) throws DeploymentException {
-        // noop
-    }
-
-    @Override
-    protected void cleanArtifacts(DeploymentContext dc) throws DeploymentException {
-        // noop
-    }
 }

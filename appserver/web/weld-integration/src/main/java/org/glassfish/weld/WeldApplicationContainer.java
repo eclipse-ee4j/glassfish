@@ -19,7 +19,7 @@ package org.glassfish.weld;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 
-public class WeldApplicationContainer implements ApplicationContainer {
+public class WeldApplicationContainer implements ApplicationContainer<Object> {
 
     public WeldApplicationContainer() {
     }

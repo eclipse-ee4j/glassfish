@@ -303,9 +303,9 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      */
     private void checkIfAlreadyInstalled(SSHSession session, String host, Path sshInstallDir)
         throws CommandException, SSHException {
-        //check if an installation already exists on remote host
-        String asadmin = Constants.v4 ? "/lib/nadmin' version --local --terse" : "/bin/asadmin' version --local --terse";
-        String cmd = "'" + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + asadmin;
+        String asadmin = Constants.v4 ? "/lib/nadmin" : "/bin/asadmin";
+        String cmd = "\"" + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + asadmin
+            + "\" version --local --terse";
         int status = session.exec(cmd);
         if (status == 0) {
             throw new CommandException(Strings.get("install.dir.exists", sshInstallDir));

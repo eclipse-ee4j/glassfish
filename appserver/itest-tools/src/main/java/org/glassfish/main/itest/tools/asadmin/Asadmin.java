@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -153,11 +153,11 @@ public class Asadmin {
                 .collect(Collectors.toList());
     }
 
+
     /**
-     * Executes the command with arguments asynchronously with
-     * {@value #DEFAULT_TIMEOUT_MSEC} ms timeout. The command can be attached by
-     * the attach command. You should find the job id in the
-     * {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
+     * Executes the command with arguments asynchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms
+     * timeout. The command can be attached by the attach command. You should find the job id in
+     * the {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
      *
      * @param args
      * @return {@link AsadminResult} never null.
@@ -166,9 +166,10 @@ public class Asadmin {
         return (DetachedTerseAsadminResult) exec(DEFAULT_TIMEOUT_MSEC, true, args);
     }
 
+
     /**
-     * Executes the command with arguments synchronously with
-     * {@value #DEFAULT_TIMEOUT_MSEC} ms timeout.
+     * Executes the command with arguments synchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms
+     * timeout.
      *
      * @param args
      * @return {@link AsadminResult} never null.
@@ -178,8 +179,7 @@ public class Asadmin {
     }
 
     /**
-     * Executes the command with arguments synchronously with given timeout in
-     * millis.
+     * Executes the command with arguments synchronously with given timeout in millis.
      *
      * @param timeout timeout in millis
      * @param args command and arguments.
@@ -190,21 +190,20 @@ public class Asadmin {
     }
 
     private File getPasswordFile() {
-        try {
-            if (!additionalPasswords.isEmpty()) {
+        if (!additionalPasswords.isEmpty()) {
+            Objects.requireNonNull(adminPasswordFile, "The admin password file is not set.");
+            try {
                 final Path tempPasswordFile = Files.createTempFile("pwd", "txt");
                 Files.copy(adminPasswordFile.toPath(), tempPasswordFile, StandardCopyOption.REPLACE_EXISTING);
                 String additionalContent = additionalPasswords.entrySet().stream()
-                        .map(entry -> entry.getKey() + "=" + entry.getValue())
-                        .collect(Collectors.joining("\n"));
+                    .map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.joining("\n"));
                 Files.writeString(tempPasswordFile, "\n" + additionalContent, StandardOpenOption.APPEND);
                 return tempPasswordFile.toFile();
+            } catch (IOException e) {
+                throw new IllegalStateException("Could not create the temporary password file.", e);
             }
-            return adminPasswordFile;
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not create the temporary password file.", e);
         }
-
+        return adminPasswordFile;
     }
 
     /**
@@ -224,8 +223,10 @@ public class Asadmin {
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
         command.add(adminUser);
-        command.add("--passwordfile");
-        command.add(getPasswordFile().getAbsolutePath());
+        if (getPasswordFile() != null) {
+            command.add("--passwordfile");
+            command.add(getPasswordFile().getAbsolutePath());
+        }
         if (detachedAndTerse) {
             command.add("--terse=true");
             command.add("--detach");

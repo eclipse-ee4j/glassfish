@@ -103,7 +103,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     @Override
-    public GlassFishRuntime build(BootstrapProperties bsOptions) throws GlassFishException {
+    public GlassFishRuntime build(BootstrapProperties bsOptions, ClassLoader classloader) throws GlassFishException {
         String uberJarURI = bsOptions.getProperty(UBER_JAR_URI);
         logger.log(Level.FINER, "UberJarOSGiGlassFishRuntimeBuilder.build, uberJarUri={0}", uberJarURI);
 
@@ -154,7 +154,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
                 "jar:" + jar.toString() + "!/modules/instanceroot-builder_jar/," +
                 "jar:" + jar.toString() + "!/modules/kernel_jar/";
 
-        if (isOSGiEnv()) {
+        if (isOSGiEnv(classloader)) {
             autoStartBundleLocation = autoStartBundleLocation +
                     ",jar:" + jar.toString() + "!/modules/osgi-modules-uninstaller_jar/";
         }
@@ -173,8 +173,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         logger.logp(Level.FINER, "UberJarOSGiGlassFishRuntimeBuilder", "build", "Building file system {0}", bsOptions);
 
         try {
-            if (!isOSGiEnv()) {
-                final OSGiFrameworkLauncher fwLauncher = new OSGiFrameworkLauncher(bsOptions.getProperties());
+            if (!isOSGiEnv(classloader)) {
+                final OSGiFrameworkLauncher fwLauncher = new OSGiFrameworkLauncher(bsOptions.getProperties(), classloader);
                 framework = fwLauncher.launchOSGiFrameWork();
                 return fwLauncher.getService(GlassFishRuntime.class);
             }
@@ -197,8 +197,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             .getAbsolutePath();
     }
 
-    private boolean isOSGiEnv() {
-        return (getClass().getClassLoader() instanceof BundleReference);
+    private boolean isOSGiEnv(ClassLoader classloader) {
+        return classloader instanceof BundleReference;
     }
 
     public <T> T getService(Class<T> type, BundleContext context) throws Exception {

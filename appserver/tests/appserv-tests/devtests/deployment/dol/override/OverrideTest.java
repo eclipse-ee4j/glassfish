@@ -51,18 +51,18 @@ public class OverrideTest {
         String ext = getExtension(fileName);
         String archiveType = ext.substring(1);
         if ("jar".equals(archiveType)) {
-          if (fileName.contains("car")) {
-            archiveType = "car";
-          } else {
-            archiveType = "ejb";
-          }
+            if (fileName.contains("car")) {
+                archiveType = "car";
+            } else {
+                archiveType = "ejb";
+            }
         }
 
         boolean expectException = false;
         if (args.length > 1) {
-          if ("true".equals(args[1])) {
-            expectException = true;
-          }
+            if ("true".equals(args[1])) {
+                expectException = true;
+            }
         }
 
         String outputFileName = fileName + "1" + ext;
@@ -79,70 +79,79 @@ public class OverrideTest {
         // first read/parse and write out the original valid archive
         try {
             File archiveFile = new File(fileName);
-            archive = archiveFactory.openArchive(
-                archiveFile);
-            ClassLoader classloader = new URLClassLoader(
-                new URL[] { new File(archiveFile, "WEB-INF/classes").toURL() });
+            archive = archiveFactory.openArchive(archiveFile);
+            ClassLoader classloader = new URLClassLoader(new URL[] { new File(archiveFile, "WEB-INF/classes").toURL() });
 
             archivist = archivistFactory.getArchivist(archiveType, classloader);
             archivist.setAnnotationProcessingRequested(true);
-            JndiNameEnvironment nameEnv = (JndiNameEnvironment)archivist.open(archiveFile);
+            JndiNameEnvironment nameEnv = (JndiNameEnvironment) archivist.open(archiveFile);
 
             Set<ResourceReferenceDescriptor> resRefDescs = nameEnv.getResourceReferenceDescriptors();
 
             for (ResourceReferenceDescriptor resRef : resRefDescs) {
+                
                 String refName = resRef.getName();
                 SimpleJndiName jndiName = resRef.getJndiName();
                 SimpleJndiName mappedName = resRef.getMappedName();
                 SimpleJndiName lookupName = resRef.getLookupName();
+                
                 String description = resRef.getDescription();
                 String auth = resRef.getAuthorization();
                 String scope = resRef.getSharingScope();
-                log ("Resource ref [" + refName + "] with JNDI name: " + jndiName + ", description: " + description + ", authorization: " + auth + ", sharing scope: " + scope + ", mappedName: " + mappedName + ", lookupName: " + lookupName);
-                if (refName.equals("myDS7") &&
-                    !description.equals(EXPECTED_RESOURCE_DESCRIPTION)) {
+                
+                log(
+                    "Resource ref [" + refName + 
+                    "] with JNDI name: " + jndiName + 
+                    ", description: " + description + 
+                    ", authorization: " + auth + 
+                    ", sharing scope: " + scope + 
+                    ", mappedName: " + mappedName + 
+                    ", lookupName: " + lookupName);
+                
+                if (refName.equals("myDS7") && !description.equals(EXPECTED_RESOURCE_DESCRIPTION)) {
                     log("Descriptor did not override the @Resource description attribute as expected");
+                    log("Expected description: " + EXPECTED_RESOURCE_DESCRIPTION);
                     fail();
                 } else if (refName.equals("myDS5and6")) {
                     Set<InjectionTarget> targets = resRef.getInjectionTargets();
                     for (InjectionTarget target : targets) {
-                       log("Target class name: " + target.getClassName());
-                       log("Target name: " + target.getTargetName());
+                        log("Target class name: " + target.getClassName());
+                        log("Target name: " + target.getTargetName());
                     }
+                    
                     if (targets.size() != 2) {
                         log("The additional injection target specified in the descriptor is not used as expected");
                         fail();
                     }
-                } else if (refName.equals("myDS8") &&
-                    !mappedName.equals(EXPECTED_RESOURCE_JNDI_NAME)) {
+                } else if (refName.equals("myDS8") && !mappedName.toString().equals(EXPECTED_RESOURCE_JNDI_NAME)) {
                     log("Descriptor did not override the @Resource mapped-name attribute as expected");
                     fail();
-                } else if (refName.equals("myDS7") &&
-                    !scope.equals(EXPECTED_RESOURCE_SHARING_SCOPE)) {
+                } else if (refName.equals("myDS7") && !scope.equals(EXPECTED_RESOURCE_SHARING_SCOPE)) {
                     log("Descriptor did not override the @Resource sharing scope attribute as expected");
                     fail();
-                } else if (refName.equals("myDS7") &&
-                    !auth.equals(EXPECTED_RESOURCE_AUTHORIZATION)) {
+                } else if (refName.equals("myDS7") && !auth.equals(EXPECTED_RESOURCE_AUTHORIZATION)) {
                     log("Descriptor did not override the @Resource authorization attribute as expected");
                     fail();
-                } else if (refName.equals("myDS7") &&
-                    !lookupName.equals(EXPECTED_RESOURCE_JNDI_NAME)) {
+                } else if (refName.equals("myDS7") && !lookupName.toString().equals(EXPECTED_RESOURCE_JNDI_NAME)) {
                     log("Descriptor did not override the @Resource lookup name attribute as expected");
+                    log("Expected lookup: \"" + EXPECTED_RESOURCE_JNDI_NAME + "\"");
+                    log("Actual lookup: \"" + lookupName + "\"");
                     fail();
                 }
+                
+                log("-----------------");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            log("Input archive: [" + fileName +
-                "] is not valid");
+            log("Input archive: [" + fileName + "] is not valid");
             fail();
         } finally {
             try {
                 if (archive != null) {
                     archive.close();
                 }
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
             }
         }
     }
@@ -168,15 +177,14 @@ public class OverrideTest {
     }
 
     private static void prepareServiceLocator() {
-        if ( (serviceLocator == null) ) {
+        if ((serviceLocator == null)) {
             // Bootstrap a hk2 environment.
             ModulesRegistry registry = new StaticModulesRegistry(Thread.currentThread().getContextClassLoader());
             serviceLocator = registry.createServiceLocator("default");
             StartupContext startupContext = new StartupContext();
 
             ServiceLocatorUtilities.addOneConstant(serviceLocator, startupContext);
-            ServiceLocatorUtilities.addOneConstant(serviceLocator,
-                new ProcessEnvironment(ProcessEnvironment.ProcessType.Other));
+            ServiceLocatorUtilities.addOneConstant(serviceLocator, new ProcessEnvironment(ProcessEnvironment.ProcessType.Other));
 
             Globals.setDefaultHabitat(serviceLocator);
         }

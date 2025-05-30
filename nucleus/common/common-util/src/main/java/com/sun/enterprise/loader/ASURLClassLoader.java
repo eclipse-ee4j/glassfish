@@ -84,6 +84,10 @@ import static java.util.logging.Level.INFO;
  */
 public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperAdapter, InstrumentableClassLoader, PreDestroy {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     /** logger for this class */
     private static final Logger _logger = CULoggerInfo.getLogger();
 
@@ -122,22 +126,14 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
 
     /**
      * Constructor.
-     */
-    public ASURLClassLoader() {
-        super(new URL[0]);
-        permissionsHolder = new PermsHolder();
-        _logger.log(Level.FINE, "ClassLoader: {0} is getting created.", this);
-    }
-
-
-    /**
-     * Constructor.
      *
+     * @param name
      * @param parent parent class loader
      */
-    public ASURLClassLoader(ClassLoader parent) {
-        super(new URL[0], parent);
+    public ASURLClassLoader(String name, ClassLoader parent) {
+        super(name, new URL[0], parent);
         permissionsHolder = new PermsHolder();
+        _logger.log(Level.FINE, "ClassLoader: {0} is getting created.", this);
     }
 
 
@@ -768,18 +764,13 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
     }
 
 
-    protected String getClassLoaderName() {
-        return "ASURLClassLoader";
-    }
-
-
     /**
      * Returns a string representation of this class loader
      */
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
-        buffer.append(getClassLoaderName()).append(" :\n");
+        buffer.append(getName()).append(" :\n");
         if (doneCalled) {
             buffer.append("doneCalled = true").append('\n');
             buffer.append("doneSnapshot = ").append(doneSnapshot);

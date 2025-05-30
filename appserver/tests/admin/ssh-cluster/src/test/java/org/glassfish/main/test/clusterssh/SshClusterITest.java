@@ -60,7 +60,7 @@ public class SshClusterITest {
 
     private static final String DOMAIN_NAME = "domain1";
 
-    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish7");
+    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish8");
     private static final Path PATH_DOCKER_GF_DOMAINS = PATH_DOCKER_GF_ROOT.resolve(Path.of("glassfish", "domains"));
     private static final Path PATH_DOCKER_GF_NODES = PATH_DOCKER_GF_ROOT.resolve(Path.of("glassfish", "nodes"));
     private static final Path PATH_DOCKER_GF_DOMAIN1_SERVER_LOG = PATH_DOCKER_GF_DOMAINS
@@ -160,9 +160,8 @@ public class SshClusterITest {
     @Order(2)
     public void createNode1() throws Exception {
         ExecResult result = AS_DOMAIN.execInContainer(UTF_8, PATH_DOCKER_ASADMIN, "--user", "admin",
-            "--passwordfile", "/password.txt", "create-node-ssh", "--nodehost", "node1", "--install", "true",
-            "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root",
-            "node1");
+            "--passwordfile", "/password.txt", "--interactive=false", "create-node-ssh", "--nodehost", "node1",
+            "--install=true", "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root", "node1");
         assertEquals(0, result.getExitCode(), result.getStdout() + result.getStderr());
     }
 
@@ -234,7 +233,7 @@ public class SshClusterITest {
         command.append(" && mkdir -p /root/.ssh");
         command.append(" && cat /adminkey.pub >> /root/.ssh/authorized_keys");
         command.append(getCommandCreatePrivateDir(PATH_SSH_USERDIR));
-        command.append(" && sshd -E " + PATH_SSHD_LOG);
+        command.append(" && /usr/sbin/sshd -E " + PATH_SSHD_LOG);
         command.append(" && sleep 1");
         command.append(" && ps -lAf");
         command.append(" && echo \"" + MSG_NODE_STARTED + "\"");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,6 +45,10 @@ import static java.util.Collections.unmodifiableList;
  */
 public class DelegatingClassLoader extends ClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     /**
      * This interface is an optimization.
      * <p>
@@ -55,7 +59,7 @@ public class DelegatingClassLoader extends ClassLoader {
     public interface ClassFinder {
 
         /**
-         * Returns the paren class loader.
+         * Returns the parent class loader.
          * <p>
          * The parent class loader used to check delegation hierarchy.
          *
@@ -215,6 +219,7 @@ public class DelegatingClassLoader extends ClassLoader {
         return new CompositeEnumeration(enumerators);
     }
 
+    @Override
     public String getName() {
         return name;
     }

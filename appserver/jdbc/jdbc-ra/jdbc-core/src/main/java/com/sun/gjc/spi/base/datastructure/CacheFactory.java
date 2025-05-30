@@ -22,8 +22,6 @@ import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -63,22 +61,15 @@ public class CacheFactory {
     }
 
     private static Cache initCustomCacheStructurePrivileged(final String className, final int cacheSize) throws ResourceException {
-        Object result = AccessController.doPrivileged(new PrivilegedAction<>() {
-            public Object run() {
-
-                Object result = null;
-                try {
-                    result = initializeCacheStructure(className, cacheSize);
-                } catch (Exception e) {
-                    _logger.log(WARNING,
-                            localStrings.getString("jdbc.statement-cache.datastructure.init.failure", className));
-                    _logger.log(WARNING,
-                            localStrings.getString("jdbc.statement-cache.datastructure.init.failure.exception", e));
-                }
-
-                return result;
-            }
-        });
+        Object result = null;
+        try {
+            result = initializeCacheStructure(className, cacheSize);
+        } catch (Exception e) {
+            _logger.log(WARNING,
+                    localStrings.getString("jdbc.statement-cache.datastructure.init.failure", className));
+            _logger.log(WARNING,
+                    localStrings.getString("jdbc.statement-cache.datastructure.init.failure.exception", e));
+        }
 
         if (result != null) {
             return (Cache) result;

@@ -1,26 +1,22 @@
 Manifest-Version: 1.0
-Created-By: Apache Maven Bundle Plugin 5.1.4
-Built-By: jenkins
-Build-Jdk: 17.0.7
-Automatic-Module-Name: org.hibernate.validator.cdi
+Created-By: Apache Maven Bundle Plugin 6.0.0
+Build-Jdk-Spec: 17
 Implementation-Title: hibernate-validator-cdi
-Implementation-URL: http://hibernate.org/validator/
+Implementation-URL: https://hibernate.org/validator/
 Implementation-Vendor: org.hibernate.validator
 Implementation-Vendor-Id: org.hibernate.validator
-Implementation-Version: 8.0.1.Final
-Specification-Title: Jakarta Bean Validation
-Specification-Version: 2.0
-Bnd-LastModified: 1687278852238
-Build-Jdk-Spec: 17
+Implementation-Version: 9.0.0.CR1
+Specification-Title: Jakarta Validation
+Specification-Version: 3.1
 Bundle-Description: Hibernate Validator CDI Portable Extension
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-ManifestVersion: 2
 Bundle-Name: Hibernate Validator Portable Extension
 Bundle-SymbolicName: org.hibernate.validator.cdi
-Bundle-Version: 8.0.1.Final
-Export-Package: org.hibernate.validator.cdi;version="8.0.1.Final";uses:=
- "jakarta.enterprise.event,jakarta.enterprise.inject.spi,jakarta.inject,
- jakarta.validation,jakarta.validation.executable"
+Bundle-Version: 9.0.0.CR1
+Export-Package: org.hibernate.validator.cdi;version="9.0.0.CR1";uses:="j
+ akarta.enterprise.event,jakarta.enterprise.inject.spi,jakarta.inject,ja
+ karta.validation,jakarta.validation.executable"
 Fragment-Host: org.hibernate.validator
 Import-Package: jakarta.validation;version="[3.0,4.0)",jakarta.validatio
  n.bootstrap;version="[3.0,4.0)",jakarta.validation.executable;version="
@@ -32,6 +28,6 @@ Import-Package: jakarta.validation;version="[3.0,4.0)",jakarta.validatio
  inject;version="[3.0,5.0)",jakarta.enterprise.inject.literal;version="[
  3.0,5.0)",jakarta.enterprise.inject.spi;version="[3.0,5.0)",jakarta.ent
  erprise.util;version="[3.0,5.0)",jakarta.inject;version="[2.0,3)"
-Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
-Tool: Bnd-5.1.1.202006162103
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
+Tool: Bnd-7.0.0.202310060912
 

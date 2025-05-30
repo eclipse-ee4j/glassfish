@@ -28,17 +28,13 @@ import java.io.Serializable;
 import java.io.StringBufferInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Execute the methods based on the parameters.
@@ -74,29 +70,19 @@ public class MethodExecutor implements Serializable {
             Object[] values = new Object[1];
             values[0] = convertType(parameters[0], value);
 
-            final ResourceException[] exception = new ResourceException[1];
-            AccessController.doPrivileged(new PrivilegedAction<>() {
-                @Override
-                public Object run() {
-                    try {
-                        method.setAccessible(true);
-                        method.invoke(obj, values);
-                    } catch (IllegalAccessException | InvocationTargetException | SecurityException iae) {
-                        _logger.log(Level.SEVERE, "jdbc.exc_jb_val", value);
-                        _logger.log(Level.SEVERE, "", iae);
-                        String msg = sm.getString("me.access_denied", method.getName());
-                        exception[0] = new ResourceException(msg);
-                    } catch (IllegalArgumentException ie) {
-                        _logger.log(Level.SEVERE, "jdbc.exc_jb_val", value);
-                        _logger.log(Level.SEVERE, "", ie);
-                        String msg = sm.getString("me.illegal_args", method.getName());
-                        exception[0] = new ResourceException(msg);
-                    }
-                    return null;
-                }
-            });
-            if (exception[0] != null) {
-                throw exception[0];
+            try {
+                method.setAccessible(true);
+                method.invoke(obj, values);
+            } catch (IllegalAccessException | InvocationTargetException | SecurityException iae) {
+                _logger.log(SEVERE, "jdbc.exc_jb_val", value);
+                _logger.log(SEVERE, "", iae);
+
+                throw new ResourceException(sm.getString("me.access_denied", method.getName()));
+            } catch (IllegalArgumentException ie) {
+                _logger.log(SEVERE, "jdbc.exc_jb_val", value);
+                _logger.log(SEVERE, "", ie);
+
+                throw new ResourceException(sm.getString("me.illegal_args", method.getName()));
             }
         }
     }
@@ -126,30 +112,19 @@ public class MethodExecutor implements Serializable {
             }
         }
 
-        final ResourceException[] exception = new ResourceException[1];
-        AccessController.doPrivileged(new PrivilegedAction<>() {
-            @Override
-            public Object run() {
-                try {
-                    method.setAccessible(true);
-                    method.invoke(obj, actualValues);
-                } catch (IllegalAccessException | InvocationTargetException | SecurityException iae) {
-                    _logger.log(Level.SEVERE, "jdbc.exc_jb_val", values);
-                    _logger.log(Level.SEVERE, "", iae);
-                    String msg = sm.getString("me.access_denied", method.getName());
-                    exception[0] = new ResourceException(msg);
-                } catch (IllegalArgumentException ie) {
-                    _logger.log(Level.SEVERE, "jdbc.exc_jb_val", values);
-                    _logger.log(Level.SEVERE, "", ie);
-                    String msg = sm.getString("me.illegal_args", method.getName());
-                    exception[0] = new ResourceException(msg);
-                }
-                return null;
-            }
-        });
+        try {
+            method.setAccessible(true);
+            method.invoke(obj, actualValues);
+        } catch (IllegalAccessException | InvocationTargetException | SecurityException iae) {
+            _logger.log(SEVERE, "jdbc.exc_jb_val", values);
+            _logger.log(SEVERE, "", iae);
 
-        if (exception[0] != null) {
-            throw exception[0];
+            throw new ResourceException(sm.getString("me.access_denied", method.getName()));
+        } catch (IllegalArgumentException ie) {
+            _logger.log(SEVERE, "jdbc.exc_jb_val", values);
+            _logger.log(SEVERE, "", ie);
+
+            throw new ResourceException(sm.getString("me.illegal_args", method.getName()));
         }
     }
 
@@ -213,7 +188,7 @@ public class MethodExecutor implements Serializable {
 
             return parameter;
         } catch (NumberFormatException nfe) {
-            _logger.log(Level.SEVERE, "jdbc.exc_nfe", parameter);
+            _logger.log(SEVERE, "jdbc.exc_nfe", parameter);
             String msg = sm.getString("me.invalid_param", parameter);
             throw new ResourceException(msg);
         }
@@ -221,28 +196,27 @@ public class MethodExecutor implements Serializable {
 
     public Object invokeMethod(Object object, String methodName, Class<?>[] valueTypes, Object... values) throws ResourceException {
         Object returnValue = null;
+
         Method actualMethod;
         try {
             actualMethod = object.getClass().getMethod(methodName, valueTypes);
-        } catch (NoSuchMethodException ex) {
-            throw new ResourceException(ex);
-        } catch (SecurityException ex) {
+        } catch (NoSuchMethodException | SecurityException ex) {
             throw new ResourceException(ex);
         }
+
         if (actualMethod != null) {
             try {
-                returnValue = AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
-                    actualMethod.setAccessible(true);
-                    return actualMethod.invoke(object, values);
-                });
-            } catch (PrivilegedActionException e) {
-                if (e.getException() != null) {
-                    throw new ResourceException(e.getException());
-                } else {
-                    throw new ResourceException(e);
+                actualMethod.setAccessible(true);
+                returnValue = actualMethod.invoke(object, values);
+            } catch (IllegalAccessError | ReflectiveOperationException e) {
+                if (e.getCause() != null) {
+                    throw new ResourceException(e.getCause());
                 }
+
+                throw new ResourceException(e);
             }
         }
+
         return returnValue;
     }
 

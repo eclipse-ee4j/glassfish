@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+# Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -16,21 +16,9 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-AS_INSTALL=`dirname "$0"`/..
-case "`uname`" in
-  CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
-esac
-AS_INSTALL_LIB="$AS_INSTALL/modules"
-. "${AS_INSTALL}/config/asenv.conf"
-JAVA=java
-#Depends upon Java from ../config/asenv.conf
-if [ ${AS_JAVA} ]; then
-    JAVA=${AS_JAVA}/bin/java
-fi
-
-start_as_main_process () {
+startAsMainProcess () {
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
-      exec java -jar "$ASADMIN_JAR" start-domain --help
+      exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --help
     fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
@@ -50,7 +38,7 @@ start_as_main_process () {
       else
         DRY_RUN_OUTPUT+=("$COM");
       fi
-    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
+    done < <("$JAVA" -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
     if [[ x"$DRY_RUN_OUTPUT" == x ]]
       then
         echo -n -e "${DRY_RUN_OUTPUT_BEFORE_DUMP}" >&2
@@ -65,8 +53,12 @@ start_as_main_process () {
 
 }
 
-ASADMIN_JAR="$AS_INSTALL_LIB/admin-cli.jar"
-start_as_main_process "$@"
+AS_CONFIG="$(dirname "$(realpath "$0")")/../config"
+AS_CONFIG_SH="${AS_CONFIG}/config.sh"
+source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
+
+ASADMIN_JAR="$AS_INSTALL/modules/admin-cli.jar"
+startAsMainProcess "$@"
 
 # Alternatively, run the following:
 # exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --verbose "$@"

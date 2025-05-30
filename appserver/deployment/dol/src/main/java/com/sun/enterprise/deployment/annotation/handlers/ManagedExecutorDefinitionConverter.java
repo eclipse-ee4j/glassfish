@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -75,7 +75,7 @@ class ManagedExecutorDefinitionConverter
         for (Class<?> clazz : annotation.qualifiers()) {
             data.addQualifier(clazz.getCanonicalName());
         }
-        data.setVirtual(annotation.virtual());
+        data.setUseVirtualThreads(annotation.virtual());
 
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungAfterSeconds(0);
@@ -101,8 +101,8 @@ class ManagedExecutorDefinitionConverter
 
         mergeQualifiers(annotation, descriptor);
 
-        if (!descriptor.isVirtual()) {
-            descriptor.setVirtual(annotation.isVirtual());
+        if (!descriptor.getUseVirtualThreads()) {
+            descriptor.setUseVirtualThreads(annotation.getUseVirtualThreads());
         }
         if (descriptor.getHungAfterSeconds() <= 0 && annotation.getHungAfterSeconds() != 0) {
             descriptor.setHungAfterSeconds(annotation.getHungAfterSeconds());

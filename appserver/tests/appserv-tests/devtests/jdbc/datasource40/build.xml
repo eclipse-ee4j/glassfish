@@ -3,6 +3,7 @@
 <!--
 
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,21 +63,21 @@
         <antcall target="deploy-jdbc-common">
             <param name="jdbc.conpool.name" value="ds-pool"/>
             <param name="jdbc.resource.name" value="jdbc/ds-resource"/>
-             <param name="db.class" value="org.apache.derby.jdbc.ClientDataSource40"/>
+             <param name="db.class" value="org.apache.derby.jdbc.ClientDataSource"/>
             <param name="jdbc.resource.type" value="javax.sql.DataSource"/>
 
         </antcall>
 
         <antcall target="deploy-jdbc-common">
             <param name="jdbc.conpool.name" value="xa-pool"/>
-            <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource40"/>
+            <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
             <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
             <param name="jdbc.resource.name" value="jdbc/xa-resource"/>
         </antcall>
 
         <antcall target="deploy-jdbc-common">
             <param name="jdbc.conpool.name" value="cp-pool"/>
-            <param name="db.class" value="org.apache.derby.jdbc.ClientConnectionPoolDataSource40"/>
+            <param name="db.class" value="org.apache.derby.jdbc.ClientConnectionPoolDataSource"/>
             <param name="jdbc.resource.type" value="javax.sql.ConnectionPoolDataSource"/>
             <param name="jdbc.resource.name" value="jdbc/cp-resource"/>
         </antcall>

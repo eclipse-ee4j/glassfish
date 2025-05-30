@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -43,7 +42,7 @@ public enum Option {
     PROPERTIES("properties", "--properties=FILE",
             "Load GlassFish properties from a file. This option can be repeated to load properties from multiple files."
             + " The propertes in the file can be any of the following:\n"
-            + " - Any properties supported by GlassFish Embedded.\n"
+            + " - Any properties supported by Embedded GlassFish. See SUPPORTED PROPERTIES\n"
             + " - Any command line options with the name of the option as the key,"
             + " without the initial hyphens, and the value of the option as the value.\n"
             + " - Keys that start with the \"" + Arguments.COMMAND_KEY_PREFIX
@@ -85,7 +84,7 @@ public enum Option {
             "Set the location of domain configuration file (i.e., domain.xml) using which GlassFish should run.") {
         @Override
         public void handle(String value, Arguments arguments) {
-            arguments.glassFishProperties.setConfigFileURI(new File(value).toURI().toString());
+            arguments.glassFishProperties.setConfigFile(new File(value).toURI());
         }
     },
     DOMAIN_DIR("domainDir", Set.of("instanceRoot"), "--domainDir=DIRECTORY, --instanceRoot=DIRECTORY",
@@ -104,7 +103,7 @@ public enum Option {
     },
     AUTO_DEPLOY_DIR("autoDeployDir", "--autoDeployDir=DIRECTORY",
             "Files and directories in this directory will be deployed as applications (in random order), as if they"
-            + " were specified on the command line.") {
+            + " were specified on the command line. The default directory name is 'autodeploy'.") {
         @Override
         public void handle(String value, Arguments arguments) {
             loadApplicationsFromDirectory(value, arguments);
@@ -141,13 +140,21 @@ public enum Option {
     SHUTDOWN("shutdown", Set.of("shut-down", "stop"), "--shut-down, --shutdown, --stop",
     "Shut down GlassFish and the whole JVM process after server is started and initialized."
             + " This is useful to start the server, perform some action during startup"
-            + " (e.g. during application dpeloyment), and shot down the application cleanly."
+            + " (e.g. during application deployment), and shut down the application cleanly."
             + " Also useful for Class Data Sharing and similar startup optimizations"
             + " - to start the server, get it to a ready state (applications deployed, etc.),"
             + " and then shut down cleanly, so that the JVM can store the cached data.") {
         @Override
         public void handle(String value, Arguments arguments) {
             arguments.shutdown = true;
+        }
+    },
+    PROMPT("prompt", "--prompt",
+    "Run interactive prompt that allows running admin commands. This is useful in development"
+    + " to manipulate a running GlassFish instance. After exiting the prompt, the server shuts down.") {
+        @Override
+        public void handle(String value, Arguments arguments) {
+            arguments.prompt = true;
         }
     },
     HELP("help", "--help", "Print this help") {
@@ -222,11 +229,11 @@ public enum Option {
 
     protected void loadPropertiesFromFile(String fileName, Arguments arguments) {
         try {
-            final Properties properties = new Properties();
+            final OrderedProperties properties = new OrderedProperties();
             properties.load(Files.newBufferedReader(Paths.get(fileName)));
-            properties.forEach((k, v) -> {
+            properties.forEachOrdered((key, value) -> {
                 try {
-                    arguments.setOption((String) k, (String) v);
+                    arguments.setOption(key, value);
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Invalid property '" + e.getKey() + "' in file " + fileName);
                 }

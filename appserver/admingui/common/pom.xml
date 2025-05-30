@@ -33,6 +33,10 @@
     <name>Admin Console Common</name>
     <description>This bundle contains common code that may be shared across plugins.</description>
 
+    <properties>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>

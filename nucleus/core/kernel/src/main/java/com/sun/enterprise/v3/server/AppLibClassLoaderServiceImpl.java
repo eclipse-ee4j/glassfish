@@ -219,12 +219,16 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      */
     private static class URLClassFinder extends GlassfishUrlClassLoader implements ClassFinder {
 
+        static {
+            registerAsParallelCapable();
+        }
+
         private static final URLStreamHandler urlStreamHandler = new NonCachingURLStreamHandler();
 
         private final Set<String> notFoundResources = ConcurrentHashMap.newKeySet();
 
         URLClassFinder(URL url, ClassLoader parent) {
-            super(new URL[] {url}, parent);
+            super("AppLib(" + url.getFile() + ")", new URL[] {url}, parent);
         }
 
         /**
@@ -352,6 +356,10 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      * that it uses to find resources and classes.
      */
     private static class DelegatingClassFinder extends DelegatingClassLoader implements ClassFinder {
+
+        static {
+            registerAsParallelCapable();
+        }
 
         DelegatingClassFinder(ClassLoader parent) {
             super(parent);

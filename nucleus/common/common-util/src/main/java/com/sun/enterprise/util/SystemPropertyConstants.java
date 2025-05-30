@@ -79,10 +79,15 @@ public class SystemPropertyConstants {
 
     public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.envPreferredToProperties";
 
-    public static final String TRUSTSTORE_FILENAME_DEFAULT = "cacerts.jks";
-    public static final String KEYSTORE_FILENAME_DEFAULT = "keystore.jks";
-    public static final String KEYSTORE_TYPE_DEFAULT = "JKS";
+    public static final String TRUSTSTORE_FILENAME_DEFAULT = "cacerts.p12";
+    public static final String KEYSTORE_FILENAME_DEFAULT = "keystore.p12";
+    public static final String KEYSTORE_TYPE_DEFAULT = "PKCS12";
     public static final String KEYSTORE_PASSWORD_DEFAULT = "changeit";
+
+    public static final String MASTER_PASSWORD_FILENAME = "master-password.p12";
+    public static final String MASTER_PASSWORD_PASSWORD = "master-password";
+    public static final String MASTER_PASSWORD_ALIAS = "master-password";
+
 
     /**
      * Returns the system specific file.separator delimited path to the asadmin script. Any changes to file layout should

@@ -71,7 +71,7 @@
                 Make the safe copy of any existing deployment.properties file.
             -->
             <property name="savedDeploymentPropertiesFilePath" value="${user.home}/deployment-saved.properties"/>
-            <property name="trustedCertsPath" value="${admin.domain.dir}/${admin.domain}/config/keystore.jks"/>
+            <property name="trustedCertsPath" value="${admin.domain.dir}/${admin.domain}/config/keystore.p12"/>
             <copy file="${originalDeploymentPropertiesFilePath}"
                   tofile="${savedDeploymentPropertiesFilePath}"
                   overwrite="false"

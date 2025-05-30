@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 
 
 /**
@@ -43,7 +44,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_
  * <li><strong>keystorePass</strong> - Password for the Key Store file to be
  *     loaded. ["changeit"]</li>
  * <li><strong>keystoreType</strong> - Type of the Key Store file to be
- *     loaded. ["JKS"]</li>
+ *     loaded.</li>
  * <li><strong>protocol</strong> - SSL protocol to use. [TLS]</li>
  * </ul>
  *
@@ -61,7 +62,7 @@ public class CoyoteServerSocketFactory
     private String randomFile;
     private String rootFile;
     private String keystorePass = KEYSTORE_PASSWORD_DEFAULT;
-    private String keystoreType = "JKS";
+    private String keystoreType = KEYSTORE_TYPE_DEFAULT;
     private String protocol = "TLS";
     private String protocols;
     private String sslImplementation;

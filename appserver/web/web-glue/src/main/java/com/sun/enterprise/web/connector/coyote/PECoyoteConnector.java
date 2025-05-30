@@ -60,15 +60,13 @@ import org.glassfish.web.LogFacade;
 import org.glassfish.web.admin.monitor.RequestProbeProvider;
 import org.glassfish.web.util.IntrospectionUtils;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
 public class PECoyoteConnector extends Connector {
-
-    private static final String DEFAULT_KEYSTORE_TYPE = "JKS";
-    private static final String DEFAULT_TRUSTSTORE_TYPE = "JKS";
 
     private static final String DUMMY_CONNECTOR_LAUNCHER = DummyConnectorLauncher.class.getName();
 
@@ -1334,14 +1332,14 @@ public class PECoyoteConnector extends Connector {
      */
     private void configureKeysAndCerts() {
         String prop = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
-        String keyStoreType = System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), DEFAULT_KEYSTORE_TYPE);
+        String keyStoreType = System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
         if (prop != null) {
             setKeystoreFile(prop);
             setKeystoreType(keyStoreType);
         }
 
         prop = System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName());
-        keyStoreType = System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), DEFAULT_TRUSTSTORE_TYPE);
+        keyStoreType = System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
         if (prop != null) {
             setTruststore(prop);
             setTruststoreType(keyStoreType);

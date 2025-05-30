@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +35,8 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 /**
  * The change-master-password command for a node.
@@ -133,7 +135,7 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
      */
     private boolean verifyInstancePassword(File instanceDir) {
 
-        File mp = new File(new File(instanceDir, "config"), "cacerts.jks");
+        File mp = new File(new File(instanceDir, "config"), TRUSTSTORE_FILENAME_DEFAULT);
         return loadAndVerifyKeystore(mp,oldPassword);
     }
 

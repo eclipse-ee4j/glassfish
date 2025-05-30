@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
@@ -83,11 +84,11 @@ public class JmacHttpsTest {
 
     @BeforeAll
     public static void prepareDeployment() throws Exception {
-        myKeyStore = new File(tempDir, "httpstest.jks");
+        myKeyStore = new File(tempDir, "httpstest.p12");
         myKeyStoreTool = new KeyTool(myKeyStore, MYKS_PASSWORD);
         myKeyStoreTool.generateKeyPair("httpstest", "CN=HTTPSTEST,OU=Eclipse GlassFish Tests", "RSA", 7);
 
-        File cacertsFile = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks")).toFile();
+        File cacertsFile = getDomain1Directory().resolve(Paths.get("config", TRUSTSTORE_FILENAME_DEFAULT)).toFile();
         myKeyStoreTool.copyCertificate("httpstest", cacertsFile, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
 
         // Default is false, required to set the client certificate to the context.

@@ -65,7 +65,8 @@ public class SecureWebAppTest {
 
     @BeforeAll
     public static void createKeyStore() throws Exception {
-        File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "keystore.jks")).toFile();
+        // The file is set also in system.properties file
+        File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "testkeystore.p12")).toFile();
         KeyTool keyTool = new KeyTool(keystore, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
         keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
     }

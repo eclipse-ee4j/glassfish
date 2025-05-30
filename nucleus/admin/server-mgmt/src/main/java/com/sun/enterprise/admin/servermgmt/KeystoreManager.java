@@ -32,8 +32,8 @@ import java.util.regex.Pattern;
 
 import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
-import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 /**
  * @author kebbs
@@ -102,8 +102,8 @@ public class KeystoreManager {
 
     protected void copyCertificatesToTrustStore(File configRoot, DomainConfig config, String masterPassword)
         throws DomainException {
-        final File keyStore = new File(configRoot, KEYSTORE_FILE);
-        final File trustStore = new File(configRoot, TRUSTSTORE_FILE);
+        final File keyStore = new File(configRoot, KEYSTORE_FILENAME_DEFAULT);
+        final File trustStore = new File(configRoot, TRUSTSTORE_FILENAME_DEFAULT);
         final KeyTool keyTool = new KeyTool(keyStore, masterPassword.toCharArray());
         try {
             keyTool.copyCertificate(CERTIFICATE_ALIAS, trustStore);

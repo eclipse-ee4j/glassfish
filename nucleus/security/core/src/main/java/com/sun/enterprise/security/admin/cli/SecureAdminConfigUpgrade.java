@@ -60,6 +60,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 import static com.sun.enterprise.config.serverbeans.SecureAdmin.DEFAULT_INSTANCE_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 /**
  * Upgrades older config to current.
@@ -283,7 +284,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         // To do so we run keytool commands to change the on-disk stores, then we
         // cause the in-memory copies to reload.
         final File keyStoreFile = serverEnv.getJKS();
-        final File trustStoreFile = new File(serverEnv.getConfigDirPath(), "cacerts.jks");
+        final File trustStoreFile = new File(serverEnv.getConfigDirPath(), TRUSTSTORE_FILENAME_DEFAULT);
         final String pw = masterPassword();
         final KeyTool keyTool = new KeyTool(keyStoreFile, pw.toCharArray());
         keyTool.generateKeyPair(DEFAULT_INSTANCE_ALIAS, getCertificateDN(), "RSA", 3650);

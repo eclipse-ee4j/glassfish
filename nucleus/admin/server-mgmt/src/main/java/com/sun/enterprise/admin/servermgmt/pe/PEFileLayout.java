@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.text.MessageFormat.format;
 
 public class PEFileLayout {
@@ -534,17 +536,12 @@ public class PEFileLayout {
         return new File(getConfigRoot(), WSSSERVERCONFIG);
     }
 
-    public static final String KEYSTORE = "keystore.jks";
-
     public File getKeyStore() {
-        return new File(getConfigRoot(), KEYSTORE);
+        return new File(getConfigRoot(), KEYSTORE_FILENAME_DEFAULT);
     }
 
-
-    public static final String TRUSTSTORE = "cacerts.jks";
-
     public File getTrustStore() {
-        return new File(getConfigRoot(), TRUSTSTORE);
+        return new File(getConfigRoot(), TRUSTSTORE_FILENAME_DEFAULT);
     }
 
     public static final String MASTERPASSWORD_FILE = "master-password";

@@ -27,8 +27,12 @@
 
     <artifactId>tsharness</artifactId>
     <packaging>pom</packaging>
-
     <name>TCK: Install Jakarta Authorization`s tsharness</name>
+
+    <properties>
+        <tck.artifactFile>${project.build.directory}/tsharness.jar</tck.artifactFile>
+        <tck.artifactFileType>jar</tck.artifactFileType>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -43,6 +47,16 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-tck</id>
+                        <phase>disabled</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -64,22 +78,12 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-tsharness</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.build.directory}/tsharness.jar</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
+                        <id>attach-tck</id>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.security.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -45,7 +45,7 @@ import org.jvnet.hk2.annotations.Service;
  * [--secure | -s] [--user admin_user] [--passwordfile file_name] aliasname
  *
  * Result of the command is that: The entry of the form: aliasname=<password-encrypted-with-masterpassword> in
- * <domain-dir>/<domain-name>/config/domain-passwords file is removed
+ * <domain-dir>/<domain-name>/config/domain-passwords.p12 file is removed
  *
  * domain.xml example entry is:
  * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type

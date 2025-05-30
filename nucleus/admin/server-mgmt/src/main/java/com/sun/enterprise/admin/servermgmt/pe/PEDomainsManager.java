@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,18 +62,6 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
         }
     }
 
-    /*
-    public void validateAdminUserAndPassword(DomainConfig domainConfig)
-        throws DomainException
-    {
-        try {
-            validateAdminUserAndPassword(domainConfig, getDomainUser(domainConfig),
-                getDomainPasswordClear(domainConfig));
-        } catch (RepositoryException ex) {
-            throw new DomainException(ex);
-        }
-    }
-    */
     @Override
     public void validateMasterPassword(DomainConfig domainConfig) throws DomainException {
         try {
@@ -92,9 +80,6 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
         }
     }
 
-    /**
-     * Lists all the domains.
-     */
     @Override
     public String[] listDomains(DomainConfig domainConfig) throws DomainException {
         try {
@@ -127,9 +112,6 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
             final File stopServTemplate = layout.getStopServTemplate();
             final File stopServ = layout.getStopServ();
             generateFromTemplate(tokens, stopServTemplate, stopServ);
-            //final File killServ = layout.getKillServTemplate();
-            //generateFromTemplate(new TokenValueSet(),
-            //layout.getKillServTemplate(), layout.getKillServ());
         } catch (Exception e) {
             throw new DomainException(strMgr.getString("stopServNotCreated"), e);
         }
@@ -153,7 +135,6 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
      * @param domainConfig that represents the domain configuration
      * @return String representing the domain user if the given map contains it, null otherwise
      */
-
     protected static String getDomainUser(DomainConfig domainConfig) {
         return ((String) domainConfig.get(DomainConfig.K_USER));
     }
@@ -164,7 +145,6 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
      * @param domainConfig that represents the domain configuration
      * @return String representing the domain user password if the given map contains it, null otherwise
      */
-
     protected static String getDomainPasswordClear(DomainConfig domainConfig) {
         return ((String) domainConfig.get(DomainConfig.K_PASSWORD));
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -113,20 +114,17 @@ public class WebSSLClient {
         SSLContext ctx = SSLContext.getInstance("TLS");
 
         // Keystore
-        KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = sslPassword.toCharArray();
-        ks.load(new FileInputStream(keyStorePath), passphrase);
+        KeyStore ks = KeyStore.getInstance(new File(keyStorePath), passphrase);
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         kmf.init(ks, passphrase);
 
         // Truststore
-        KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream(trustStorePath), null);
+        KeyStore trustStore = KeyStore.getInstance(new File(trustStorePath), passphrase);
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(trustStore);
 
         ctx.init(kmf.getKeyManagers(),tmf.getTrustManagers(), null);
-
         return ctx.getSocketFactory();
     }
 

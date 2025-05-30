@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,19 +18,14 @@
 package com.sun.enterprise.admin.servermgmt;
 
 /**
- * The KeyStoreManager implementation for a node. This is used by the change-master-password command which will change
- * the master password for a node
+ * The KeyStoreManager implementation for a node.
+ * This is used by the change-master-password command which will change the master password for a node
  *
  * @author Bhakti Mehta
  */
 public class NodeKeystoreManager extends KeystoreManager {
 
-    public NodeKeystoreManager() {
-
-    }
-
     public void encryptKeystore(RepositoryConfig config, String oldPassword, String newPassword) throws RepositoryException {
         super.changeSSLCertificateDatabasePassword(config, oldPassword, newPassword);
     }
-
 }

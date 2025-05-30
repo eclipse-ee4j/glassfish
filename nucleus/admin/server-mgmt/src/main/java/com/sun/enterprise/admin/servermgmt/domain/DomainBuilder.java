@@ -49,6 +49,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.DOMAIN_XML_FILE;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
 import static java.text.MessageFormat.format;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
@@ -137,7 +138,7 @@ public class DomainBuilder {
             _domainTempalte = new DomainTemplate(templateInfoHolder, stringSubstitutor, templateJarPath);
 
             // Loads default self signed certificate.
-            je = _templateJar.getJarEntry("config/" + DomainConstants.KEYSTORE_FILE);
+            je = _templateJar.getJarEntry("config/" + KEYSTORE_FILENAME_DEFAULT);
             if (je != null) {
                 _keystoreBytes = new byte[(int) je.getSize()];
                 InputStream in = null;

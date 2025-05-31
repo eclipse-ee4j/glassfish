@@ -266,12 +266,18 @@ public class ConcurrentRuntime {
 
     public ManagedThreadFactoryImpl createManagedThreadFactory(ManagedThreadFactoryCfg config, ContextServiceImpl contextService) {
         SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
-        if (config.getUseVirtualThreads() && System.getProperty("java.vm.specification.version").compareTo("17") > 0) {
-            ManagedThreadFactoryImpl virtFactory = new VirtualThreadsManagedThreadFactory(jndiName.toString(), contextService);
-            return virtFactory;
-        } else {
-            return new GlassFishManagedThreadFactory(jndiName, contextService, config.getThreadPriority());
+        ManagedThreadFactoryImpl virtFactory = null;
+        if (config.getUseVirtualThreads()) {
+            try {
+                virtFactory = new VirtualThreadsManagedThreadFactory(jndiName.toString(), contextService);
+            } catch (Exception e) {
+                LOG.severe(() -> "Unable to create VirtualThreadsManagedThreadFactory with virtual threads: " + e.getMessage() + ", using fallback");
+            }
         }
+        if (virtFactory == null) {
+            virtFactory = new GlassFishManagedThreadFactory(jndiName, contextService, config.getThreadPriority());
+        }
+        return virtFactory;
     }
 
 

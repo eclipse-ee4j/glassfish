@@ -1,5 +1,32 @@
 # Eclipse GlassFish 7.x Downloads
 
+## Eclipse GlassFish 7.0.25
+
+Eclipse GlassFish is an application server, implementing [Jakarta EE](https://jakarta.ee/about).
+This release is corresponding with the [Jakarta EE 10](https://jakarta.ee/specifications/platform/10) specification, which is a major feature release.
+
+GlassFish 7.0.25 is a final release, containing final Jakarta EE 10 APIs.
+It is tested with Java 11, 17 and 21, experimentally can be used also with newer or non LTS version.
+MicroProfile support requires JDK 17 or higher.
+
+This update emphasizes major cleanups, system optimizations, and prepares the codebase for easier future maintenance, notably in anticipation of the upcoming 7.1.0 release.
+
+Download:
+
+* [Eclipse GlassFish 7.0.25, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.25.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/7.0.25)
+* [Eclipse GlassFish 7.0.25, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.25.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/7.0.25)
+* [Eclipse GlassFish Embedded 7.0.25, Jakarta EE Platform, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/7.0.25/glassfish-embedded-all-7.0.25.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.25)
+* [Eclipse GlassFish Embedded 7.0.25, Jakarta EE Web Profile, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/7.0.25/glassfish-embedded-web-7.0.25.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.25)
+
+More details:
+
+* [Eclipse GlassFish 7.0.25 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.25)
+* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+
 ## Eclipse GlassFish 7.0.24
 
 Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the Jakarta EE 10 specification, which is a major new feature release. Jakarta EE 10 requires JDK 11 as a minimum, but also works on JDK 17 and JDK 21.

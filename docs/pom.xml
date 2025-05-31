@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <glassfish.version.5x>5.1.0</glassfish.version.5x>
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
-        <glassfish.version.7x>7.0.24</glassfish.version.7x>
+        <glassfish.version.7x>7.0.25</glassfish.version.7x>
         <glassfish.version.latest>${glassfish.version.7x}</glassfish.version.latest>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
     </properties>

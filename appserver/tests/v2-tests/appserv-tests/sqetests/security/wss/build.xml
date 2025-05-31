@@ -144,21 +144,21 @@
 
     <target name="create-sample-jks-cert" if="isEE">
         <antcall target="create-cert-jks-rsa">
-                <param name="keystore.file" value="clientcert.jks"/>
+                <param name="keystore.file" value="clientcert.p12"/>
                 <param name="keystore.pass" value="changeit"/>
                 <param name="key.pass" value="changeit"/>
                 <param name="key.alias" value="clientcert"/>
                 <param name="dname" value="EMAILADDRESS=jagadesh.munta@sun.com, CN=Jagadesh Munta, UID=munta, OU=Java Software, O=Sun Microsystems Inc, C=US"/>
         </antcall>
         <antcall target="list-cert-jks">
-                <param name="keystore.file" value="clientcert.jks"/>
+                <param name="keystore.file" value="clientcert.p12"/>
                 <param name="keystore.pass" value="changeit"/>
         </antcall>
     </target>
 
   <target name="est-cert-trust-ee" depends="init-common" if="isEE">
         <antcall target="export-cert-rfc-jks">
-                <param name="keystore.file" value="clientcert.jks"/>
+                <param name="keystore.file" value="clientcert.p12"/>
                 <param name="keystore.pass" value="changeit"/>
                 <param name="cert.alias" value="clientcert"/>
                 <param name="cert.file" value="clientcert_rfc.crt"/>
@@ -181,7 +181,7 @@
         </antcall>
         <antcall target="import-cert-jks">
           <param name="cert.alias" value="clientcert"/>
-          <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+          <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12"/>
           <param name="cert.file" value="clientcert_rfc.crt"/>
         </antcall>
 
@@ -194,8 +194,8 @@
 
     <target name="unsetup-client-cert-ee" if="isEE">
         <antcall target="remove-cert-trust-ee"/>
-        <delete file="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks" failonerror="false"/>
-        <delete file="clientcert.jks" failonerror="false"/>
+        <delete file="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12" failonerror="false"/>
+        <delete file="clientcert.p12" failonerror="false"/>
         <delete file="clientcert_rfc.crt" failonerror="false"/>
     </target>
 
@@ -235,23 +235,16 @@
         <param name="cert.pwd" value="${ssl.password}"/>
         <param name="cert.nickname" value="s1as"/>
     </antcall>
-    <antcall target="convert-pkcs12-to-jks">
-        <param name="pkcs12.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
-        <param name="pkcs12.pass" value="${ssl.password}"/>
-        <param name="jks.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.jks"/>
-        <param name="jks.pass" value="changeit"/>
-        </antcall>
     <antcall target="get-certdb-to-jks">
        <param name="cert.nickname" value="s1as"/>
     </antcall>
   </target>
 
   <target name="unsetup-client-cert-s1as-ee" depends="init-common" if="isEE">
-    <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/s1as.jks"/>
     <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
     <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/certpassfile"/>
     <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/passfile"/>
-    <delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+    <delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12"/>
     <delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
   </target>
 

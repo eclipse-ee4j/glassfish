@@ -64,7 +64,7 @@ public class AdminServiceTest extends BaseSeleniumTestClass {
     public void testSsl() {
         gotoDasPage();
         final String nickname = "nickname"+generateRandomString();
-        final String keystore = "keystore"+generateRandomString()+".jks";
+        final String keystore = "keystore"+generateRandomString()+".p12";
         final String maxCertLength = Integer.toString(generateRandomNumber(10));
 
         clickAndWait("treeForm:tree:configurations:server-config:adminService:adminService_link");

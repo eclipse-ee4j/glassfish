@@ -43,6 +43,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Start a local server instance.
@@ -164,8 +165,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
                 }
 
                 if (env.debug()) {
-                    System.setProperty(CLIConstants.WALL_CLOCK_START_PROP,
-                                        "" + System.currentTimeMillis());
+                    setProperty(CLIConstants.WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
                 }
                 getLauncher().relaunch();
             }

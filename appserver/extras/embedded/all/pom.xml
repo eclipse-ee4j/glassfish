@@ -1687,15 +1687,9 @@
         </dependency>
     </dependencies>
 
-   <build>
+    <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -1723,6 +1717,7 @@
                             <includeScope>runtime</includeScope>
                             <includeTypes>jar,glassfish-jar</includeTypes>
                             <includes>**/*.class</includes>
+                            <excludes>module-info.class</excludes>
                         </configuration>
                     </execution>
                     <execution>
@@ -1835,7 +1830,7 @@
         </plugins>
     </build>
 
-   <profiles>
+    <profiles>
         <profile>
             <!-- generate empty javadoc jar -->
             <id>oss-release</id>

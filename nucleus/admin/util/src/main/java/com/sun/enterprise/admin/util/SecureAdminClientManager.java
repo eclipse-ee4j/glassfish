@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,19 +23,18 @@ import com.sun.enterprise.security.store.AsadminSecurityUtil;
 import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
@@ -43,19 +42,23 @@ import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+
 /**
  * Encapsulates the implementation of secure admin.
  * <p>
- * A process that needs to send admin messages to another server and might not have a user-provided username and
- * password should inject this class and invoke {@link #initClientAuthentication(char[], boolean) } before it sends a
- * message to the admin listener. The code which actually prepares the message can then retrieve the initialized
- * information from this class in constructing the outbound admin message.
+ * A process that needs to send admin messages to another server and might not have a user-provided
+ * username and password should inject this class and invoke
+ * {@link #initClientAuthentication(char[], boolean, String, String, String, File)} before it sends
+ * a message to the admin listener. The code which actually prepares the message can then retrieve
+ * the initialized information from this class in constructing the outbound admin message.
  * <p>
- * The class offers static accessors to the important values so, for example, RemoteAdminCommand (which is not a service
- * and it therefore not subject to injection) can retrieve what it needs to build the outbound admin request.
+ * The class offers static accessors to the important values so, for example, RemoteAdminCommand
+ * (which is not a service and it therefore not subject to injection) can retrieve what it needs to
+ * build the outbound admin request.
  * <p>
- * This allows us to support CLI commands which need to connect to the DAS securely but will have neither a
- * user-provided master password nor a human who we could prompt for the master password.
+ * This allows us to support CLI commands which need to connect to the DAS securely but will have
+ * neither a user-provided master password nor a human who we could prompt for the master password.
  *
  * @author Tim Quinn
  */
@@ -66,7 +69,7 @@ public class SecureAdminClientManager {
     /**
      * the hk2-managed instance - used only by the static accessors
      */
-    private static SecureAdminClientManager instance = null;
+    private static SecureAdminClientManager instance;
 
     /**
      * is cert-based secure admin enabled?
@@ -76,23 +79,24 @@ public class SecureAdminClientManager {
     /**
      * suitable for passing to SSLContext.init
      */
-    private KeyManager[] keyManagers = null;
+    private KeyManager[] keyManagers;
 
     /**
      * suitable for setting as the value in an HTTP header to flag a message source as trusted to submit admin requests
      * (only in the non-secure case)
      */
-    private String configuredAdminIndicator = null;
+    private String configuredAdminIndicator;
 
     private Domain domain;
 
-    private SecureAdmin secureAdmin = null;
+    private SecureAdmin secureAdmin;
 
-    private String instanceAlias = null;
+    private String instanceAlias;
 
     /**
-     * Returns KeyManagers which access the SSL key store for use in performing client cert authentication. The returned
-     * KeyManagers will most likely be passed to {@link SSLContext.init }.
+     * Returns KeyManagers which access the SSL key store for use in performing client cert
+     * authentication. The returned KeyManagers will most likely be passed to
+     * {@link SSLContext#init(KeyManager[], javax.net.ssl.TrustManager[], java.security.SecureRandom)}.
      *
      * @return KeyManagers
      */
@@ -248,8 +252,7 @@ public class SecureAdminClientManager {
     }
 
     private KeyManager[] prepareKeyManagers(final char[] commandMasterPassword, final boolean isPromptable)
-            throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-
+        throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         /*
          * The configuration specifies what alias we should use for SSL client
          * authentication.  Because the keystore on disk contains multiple certs,
@@ -267,25 +270,26 @@ public class SecureAdminClientManager {
          */
 
         final KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-
         kmf.init(ks, new char[] {});
         return kmf.getKeyManagers();
     }
 
     private KeyStore instanceCertOnlyKS(final Certificate instanceCert) throws KeyStoreException {
-        final KeyStore ks = KeyStore.getInstance("JKS");
+        final KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE_DEFAULT);
         ks.setCertificateEntry(instanceAlias, instanceCert);
         return ks;
     }
 
+
     private Certificate getCertForConfiguredAlias(final char[] commandMasterPassword, final boolean isPromptable)
-            throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-        final KeyStore permanentKS = AsadminSecurityUtil.getInstance(commandMasterPassword, isPromptable).getAsadminKeystore();
+        throws KeyStoreException {
+        final KeyStore permanentKS = AsadminSecurityUtil.getInstance(commandMasterPassword, isPromptable)
+            .getAsadminKeystore();
         Certificate cert = permanentKS.getCertificate(instanceAlias);
-        if (cert != null) {
-            logger.log(Level.FINER, "Found matching cert in keystore for instance alias {0}", instanceAlias);
-        } else {
+        if (cert == null) {
             logger.log(Level.FINER, "Could not find matching cert in keystore for instance alias {0}", instanceAlias);
+        } else {
+            logger.log(Level.FINER, "Found matching cert in keystore for instance alias {0}", instanceAlias);
         }
         return cert;
     }

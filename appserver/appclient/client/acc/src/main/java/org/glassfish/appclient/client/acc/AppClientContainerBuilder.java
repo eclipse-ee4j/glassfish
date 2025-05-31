@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,6 +47,7 @@ import static java.util.logging.Level.CONFIG;
 import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
 import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
 import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Implements a builder for accumulating configuration information for the app client container and then starting the
@@ -239,7 +240,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
                         "Value for {0} expected but was not configured or assigned", new Object[] { propName }));
 
             }
-            System.setProperty(propName, newPropValue);
+            setProperty(propName, newPropValue, true);
         }
     }
 

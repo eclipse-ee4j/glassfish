@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>multiple-app-scoped-service-test-basic</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-JDK17-M12</version>
     <name>Multiple Application Scoped Database Services Basic PaaS Application</name>
     <packaging>war</packaging>
     <build>

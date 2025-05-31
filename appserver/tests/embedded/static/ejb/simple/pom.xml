@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.tests.embedded.static</groupId>
         <artifactId>ejb</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M12</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.glassfish.extras</groupId>
             <artifactId>glassfish-embedded-web</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>8.0.0-JDK17-M12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

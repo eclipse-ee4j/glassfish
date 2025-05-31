@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>securitymodule</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M12</version>
     </parent>
 
     <artifactId>appclient.security</artifactId>

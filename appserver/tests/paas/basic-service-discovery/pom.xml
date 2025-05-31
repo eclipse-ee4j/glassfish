@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>basic-sd</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-JDK17-M12</version>
     <name>Basic Service Discovery PaaS sample</name>
     <packaging>war</packaging>
     <build>

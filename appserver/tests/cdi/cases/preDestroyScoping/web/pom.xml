@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.tests.cdi.cases</groupId>
         <artifactId>preDestroyScoping</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-JDK17-M12</version>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.cases.preDestroyScoping</groupId>

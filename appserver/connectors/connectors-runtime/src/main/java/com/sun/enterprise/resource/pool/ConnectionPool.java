@@ -133,7 +133,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     protected boolean connectionValidationRequired;
 
     /**
-     * Represents the "prefer-validate-over-recreate property" configuration value.<br>
+     * Represents the "prefer-validate-over-recreate" property configuration value.<br>
      * Specifies that validating idle connections is preferable to closing them. This property has no effect on non-idle
      * connections. If set to true, idle connections are validated during pool resizing, and only those found to be invalid
      * are destroyed and recreated. If false, all idle connections are destroyed and recreated during pool resizing.<br>
@@ -232,11 +232,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     // NOTE: This resource allocator may not be the same as the allocator passed in to getResource()
     protected ResourceAllocator allocator;
 
-    // TODO: selfManaged_ does not seem to be set to true in glassfish code. Remove it from ResourcePool interface.
-    // Glassfish 2.1 had a management-rule / self-management part, but it no longer exists in domain.xml.
-    // See for example package "selfmanagement" and logger "SELF_MANAGEMENT_LOGGER" in the codeline.
-    private boolean selfManaged_;
-
     /**
      * Blocked state is true during connection pool recreation. Once blocked is set to true only resources from the pool can
      * be reused which are already part of the current transaction.
@@ -250,7 +245,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      */
     private final ReentrantLock getResourceFromPoolAndFreeResourceMethodsLock = new ReentrantLock(true);
 
-    public ConnectionPool(PoolInfo poolInfo, Hashtable env) throws PoolingException {
+    public ConnectionPool(PoolInfo poolInfo, Hashtable<?, ?> env) throws PoolingException {
         this.poolInfo = poolInfo;
         setPoolConfiguration(env);
         initializePoolDataStructure();
@@ -279,7 +274,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         // do nothing
     }
 
-    private void setPoolConfiguration(Hashtable env) throws PoolingException {
+    private void setPoolConfiguration(Hashtable<?, ?> env) throws PoolingException {
         ConnectorConnectionPool poolResource = getPoolConfigurationFromJndi(env);
 
         idletime = Integer.parseInt(poolResource.getIdleTimeoutInSeconds()) * 1000L;
@@ -311,7 +306,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         setAdvancedPoolConfiguration(poolResource);
     }
 
-    protected ConnectorConnectionPool getPoolConfigurationFromJndi(Hashtable env) throws PoolingException {
+    protected ConnectorConnectionPool getPoolConfigurationFromJndi(Hashtable<?, ?> env) throws PoolingException {
         try {
             return (ConnectorConnectionPool)
                 ConnectorRuntime.getRuntime()
@@ -379,7 +374,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     /**
-     * Add a resource to the pool with status busy and not enlisted.
+     * Add a resource to the pooled resources data structure.
      *
      * @param alloc the ResourceAllocator to be used
      * @throws PoolingException when unable to add a resource
@@ -456,7 +451,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             if (gateway.allowed()) {
                 // See comment #1 above
                 JavaEETransaction javaEETransaction = ((JavaEETransaction) transaction);
-                final Set resourcesSet = javaEETransaction == null ? null : javaEETransaction.getResources(poolInfo);
+                final Set<?> resourcesSet = javaEETransaction == null ? null : javaEETransaction.getResources(poolInfo);
 
                 // Allow when the pool is not blocked or at-least one resource is
                 // already obtained in the current transaction.
@@ -570,10 +565,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      *
      * @param spec the ResourceSpec used to locate the correct resource pool
      * @param alloc ResourceAllocator to create a resource
-     * @param tran Transaction
      * @return ResourceHandle resource from ThreadLocal
      */
-    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc, Transaction tran) {
+    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc) {
         return null;
     }
 
@@ -587,13 +581,13 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             return resourceHandle;
         }
 
-        resourceHandle = prefetch(resourceSpec, resourceAllocator, transaction);
+        resourceHandle = prefetch(resourceSpec, resourceAllocator);
         if (resourceHandle != null) {
             return resourceHandle;
         }
 
         // We didnt get a connection that is already enlisted in the current transaction (if any).
-        resourceHandle = getUnenlistedResource(resourceSpec, resourceAllocator, transaction);
+        resourceHandle = getUnenlistedResource(resourceSpec, resourceAllocator);
         if (resourceHandle != null) {
             if (maxConnectionUsage_ > 0) {
                 resourceHandle.incrementUsageCount();
@@ -627,9 +621,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 JavaEETransaction javaEETransaction = (JavaEETransaction) transaction;
 
                 // case 1. look for free and enlisted in same tx
-                Set set = javaEETransaction.getResources(poolInfo);
+                Set<?> set = javaEETransaction.getResources(poolInfo);
                 if (set != null) {
-                    Iterator iter = set.iterator();
+                    Iterator<?> iter = set.iterator();
                     while (iter.hasNext()) {
                         ResourceHandle resourceHandle = (ResourceHandle) iter.next();
                         if (resourceHandle.hasConnectionErrorOccurred()) {
@@ -708,12 +702,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      *
      * @param resourceSpec the ResourceSpec used to locate the correct resource pool, value is ignored
      * @param resourceAllocator ResourceAllocator the allocator that can create a resource
-     * @param transaction Transaction optional transaction, value is ignored
      * @return ResourceHandle resource from pool
      * @throws PoolingException Exception while getting resource from pool
      */
-    protected ResourceHandle getUnenlistedResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator, Transaction transaction) throws PoolingException {
-        return getResourceFromPool(resourceAllocator);
+    protected ResourceHandle getUnenlistedResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator) throws PoolingException {
+        return getUnenlistedResource(resourceAllocator);
     }
 
     /**
@@ -809,7 +802,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * @return ResourceHandle resource from pool, or null when no resource is available
      * @throws PoolingException if unable to create a new resource
      */
-    protected ResourceHandle getResourceFromPool(ResourceAllocator resourceAllocator) throws PoolingException {
+    private ResourceHandle getUnenlistedResource(ResourceAllocator resourceAllocator) throws PoolingException {
 
         // The order of serving a resource request
         // 1. free and enlisted in the same transaction
@@ -919,9 +912,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 makeSureResourceIsBusy(resourceHandle);
             }
 
-            // TODO: This method is called getResourceFromPool, but it is only called from getUnenlistedResource
-            // So this method must be renamed to getUnenlistedResourceFromPool, and it MUST FORCE that an unenlisted
-            // resource is returned, like this:
             if (resourceHandle != null) {
                 // Not expecting an enlisted resource to be returned from the pool
                 makeSureResourceIsNotEnlisted(resourceHandle);
@@ -1152,7 +1142,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      */
     private void createResources(ResourceAllocator alloc, int size) throws PoolingException {
         for (int i = 0; i < size; i++) {
-            createResourceAndAddToPool(alloc);
+            addResource(alloc);
         }
     }
 
@@ -1247,21 +1237,22 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         // compensate with a new resource only when the pool-size is less than steady-pool-size
         if (dataStructure.getResourcesSize() < steadyPoolSize) {
             try {
-                createResourceAndAddToPool(handle.getResourceAllocator());
+                addResource(handle.getResourceAllocator());
             } catch (Exception e) {
                 LOG.log(WARNING, "Unable to create a new resource.", e);
             }
         }
     }
 
+    /**
+     * Return the resource back to pool.
+     *
+     * @param resourceHandle the ResourceHandle to be returned
+     */
     protected void freeUnenlistedResource(ResourceHandle resourceHandle) {
         // TODO: There is no validation here at all that the resourceHandle.state is already set to unenlisted
-        // TODO: If this method is called "free unenlisted resource", why is freeResource not called freeUnenlistedResource?
-        freeResource(resourceHandle);
-    }
 
-    protected void freeResource(ResourceHandle resourceHandle) {
-        LOG.log(FINE, "freeResource handle: {0}", resourceHandle);
+        LOG.log(FINE, "freeUnenlistedResource handle: {0}", resourceHandle);
         try {
             getResourceFromPoolAndFreeResourceMethodsLock.lock();
             if (cleanupResource(resourceHandle)) {
@@ -1405,7 +1396,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         for (ResourceHandle resource : delistedResources) {
             // Application might not have closed the connection, free the resource only if it is not in use anymore.
             if (isResourceUnused(resource)) {
-                freeResource(resource);
+                freeUnenlistedResource(resource);
                 // Resource is now returned to the pool and another thread can use it, cannot log it anymore.
             } else {
                 // TODO: Why would the application not close a busy connection if the transaction completed and the resource handle is
@@ -1436,11 +1427,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public void createResourceAndAddToPool() throws PoolingException {
-        createResourceAndAddToPool(allocator);
+        addResource(allocator);
     }
 
     @Override
-    public Set<ManagedConnection> getInvalidConnections(Set connections) throws ResourceException {
+    public Set<ManagedConnection> getInvalidConnections(Set<ManagedConnection> connections) throws ResourceException {
         return allocator.getInvalidConnections(connections);
     }
 
@@ -1455,7 +1446,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     protected void notifyWaitingThreads() {
-        // notify the first thread in the waitqueue
+        // notify the first thread in the waitQueue
         Object waitMonitor = null;
         synchronized (waitQueue) {
             if (waitQueue.getQueueLength() > 0) {
@@ -1581,49 +1572,45 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         failAllConnections = poolResource.isFailAllConnections();
         setAdvancedPoolConfiguration(poolResource);
 
-        // Self managed quantities. These are ignored if self management
-        // is on
-        if (!isSelfManaged()) {
-            int _maxPoolSize = Integer.parseInt(poolResource.getMaxPoolSize());
-            int oldMaxPoolSize = maxPoolSize;
+        int _maxPoolSize = Integer.parseInt(poolResource.getMaxPoolSize());
+        int oldMaxPoolSize = maxPoolSize;
 
-            if (_maxPoolSize < steadyPoolSize) {
-                // should not happen, admin must throw exception when this condition happens.
-                // as a precaution set max pool size to steady pool size
-                maxPoolSize = steadyPoolSize;
-            } else {
-                maxPoolSize = _maxPoolSize;
-            }
-
-            if (oldMaxPoolSize != maxPoolSize) {
-                dataStructure.setMaxSize(maxPoolSize);
-            }
-            int _steadyPoolSize = Integer.parseInt(poolResource.getSteadyPoolSize());
-            int oldSteadyPoolSize = steadyPoolSize;
-
-            if (_steadyPoolSize > maxPoolSize) {
-                // should not happen, admin must throw exception when this condition happens.
-                // as a precaution set steady pool size to max pool size
-                steadyPoolSize = maxPoolSize;
-            } else {
-                steadyPoolSize = _steadyPoolSize;
-            }
-
-            if (poolInitialized) {
-                // In this case we need to kill extra connections in the pool
-                // For the case where the value is increased, we need not
-                // do anything
-                // num resources to kill is decided by the resources in the pool.
-                // if we have less than current maxPoolSize resources, we need to
-                // kill less.
-                int toKill = dataStructure.getResourcesSize() - maxPoolSize;
-
-                if (toKill > 0) {
-                    killExtraResources(toKill);
-                }
-            }
-            reconfigureSteadyPoolSize(oldSteadyPoolSize, _steadyPoolSize);
+        if (_maxPoolSize < steadyPoolSize) {
+            // should not happen, admin must throw exception when this condition happens.
+            // as a precaution set max pool size to steady pool size
+            maxPoolSize = steadyPoolSize;
+        } else {
+            maxPoolSize = _maxPoolSize;
         }
+
+        if (oldMaxPoolSize != maxPoolSize) {
+            dataStructure.setMaxSize(maxPoolSize);
+        }
+        int _steadyPoolSize = Integer.parseInt(poolResource.getSteadyPoolSize());
+        int oldSteadyPoolSize = steadyPoolSize;
+
+        if (_steadyPoolSize > maxPoolSize) {
+            // should not happen, admin must throw exception when this condition happens.
+            // as a precaution set steady pool size to max pool size
+            steadyPoolSize = maxPoolSize;
+        } else {
+            steadyPoolSize = _steadyPoolSize;
+        }
+
+        if (poolInitialized) {
+            // In this case we need to kill extra connections in the pool
+            // For the case where the value is increased, we need not
+            // do anything
+            // num resources to kill is decided by the resources in the pool.
+            // if we have less than current maxPoolSize resources, we need to
+            // kill less.
+            int toKill = dataStructure.getResourcesSize() - maxPoolSize;
+
+            if (toKill > 0) {
+                killExtraResources(toKill);
+            }
+        }
+        reconfigureSteadyPoolSize(oldSteadyPoolSize, _steadyPoolSize);
     }
 
     protected void reconfigureSteadyPoolSize(int oldSteadyPoolSize, int newSteadyPoolSize) throws PoolingException {
@@ -1692,14 +1679,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     private void increaseSteadyPoolSize(int newSteadyPoolSize) throws PoolingException {
         cancelResizerTask();
         for (int i = dataStructure.getResourcesSize(); i < newSteadyPoolSize; i++) {
-            createResourceAndAddToPool(allocator);
+            addResource(allocator);
         }
         scheduleResizerTask();
-    }
-
-    // TODO is this private method needed? Why not call addResource directly?
-    private void createResourceAndAddToPool(ResourceAllocator alloc) throws PoolingException {
-        addResource(alloc);
     }
 
     @Override
@@ -1724,7 +1706,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
     }
 
-    // Self management methods
     @Override
     public int getMaxPoolSize() {
         return maxPoolSize;
@@ -1771,18 +1752,6 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     @Override
     public void setSteadyPoolSize(int size) {
         steadyPoolSize = size;
-    }
-
-    @Override
-    public void setSelfManaged(boolean selfManaged) {
-        if (LOG.isLoggable(FINE)) {
-            LOG.log(FINE, "Setting selfManaged to: " + selfManaged + " in pool: " + poolInfo.getName());
-        }
-        selfManaged_ = selfManaged;
-    }
-
-    protected boolean isSelfManaged() {
-        return selfManaged_;
     }
 
     @Override

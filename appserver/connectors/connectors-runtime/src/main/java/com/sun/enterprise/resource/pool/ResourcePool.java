@@ -121,11 +121,8 @@ public interface ResourcePool {
 
     void emptyFreeConnectionsInPool();
 
-    // accessors for self mgmt
-
     /**
-     * Gets the max-pool-size attribute of this pool. Envisaged to be used by the Self management framework to query the
-     * pool size attribute for tweaking it using the setMaxPoolSize method
+     * Gets the max-pool-size attribute of this pool.
      *
      * @return max-pool-size value for this pool
      * @see setMaxPoolSize
@@ -133,18 +130,15 @@ public interface ResourcePool {
     int getMaxPoolSize();
 
     /**
-     * Gets the steady-pool-size attribute of this pool. Envisaged to be used by the Self management framework to query the
-     * pool size attribute for tweaking it using the setSteadyPoolSize method
+     * Gets the steady-pool-size attribute of this pool.
      *
      * @return steady-pool-size value for this pool
      * @see setSteadyPoolSize
      */
     int getSteadyPoolSize();
 
-    // mutators for self mgmt
     /**
-     * Sets the max-pool-size value for this pool. This attribute is expected to be set by the self-management framework for
-     * an optimum max-pool-size. The corresponding accessor gets this value.
+     * Sets the max-pool-size value for this pool.
      *
      * @param size - The new max-pool-size value
      * @see getMaxPoolSize
@@ -152,23 +146,12 @@ public interface ResourcePool {
     void setMaxPoolSize(int size);
 
     /**
-     * Sets the steady-pool-size value for this pool. This attribute is expected to be set by the self-management framework
-     * for an optimum steady-pool-size. The corresponding accessor gets this value.
+     * Sets the steady-pool-size value for this pool.
      *
      * @param size - The new steady-pool-size value
      * @see getSteadyPoolSize
      */
     void setSteadyPoolSize(int size);
-
-    /**
-     * Sets/Resets the flag indicating if this pool is self managed. This method would be typically called by the self
-     * management framework to indicate to the world (and this pool) that this pool is self managed. Its very important that
-     * the self mgmt framework properly sets this flag to control the dynamic reconfig behavior of this pool. If this flag
-     * is set to true, all dynamic reconfigs affecting the max/steady pool size of this pool will be ignored.
-     *
-     * @param selfManaged - true to switch on self management, false otherwise
-     */
-    void setSelfManaged(boolean selfManaged);
 
     /**
      * Set the pool life cycle listener

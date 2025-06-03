@@ -97,7 +97,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     }
 
     @Override
-    public void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pooltype, Hashtable env) throws PoolingException {
+    public void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pooltype, Hashtable<?, ?> env) throws PoolingException {
         // Create and initialise the connection pool
         createAndInitPool(poolInfo, pooltype, env);
 
@@ -128,7 +128,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      * @param env the jndi information to find the ConnectorConnectionPool configuration used to configure the pool
      * @throws PoolingException when unable to create/initialize pool
      */
-    void createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
+    void createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable<?, ?> env) throws PoolingException {
         ResourcePool pool = getPool(poolInfo);
         if (pool == null) {
             pool = ResourcePoolFactoryImpl.newInstance(poolInfo, poolType, env);

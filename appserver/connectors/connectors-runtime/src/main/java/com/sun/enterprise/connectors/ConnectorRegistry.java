@@ -55,7 +55,6 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
  *
  * @author Binod P.G and Srikanth P
  */
-
 public class ConnectorRegistry {
 
     static final Logger _logger = LogDomains.getLogger(ConnectorRegistry.class, LogDomains.RSR_LOGGER);
@@ -104,7 +103,6 @@ public class ConnectorRegistry {
         _logger.log(Level.FINE, "Initialized the connector registry");
     }
 
-
     /**
      * Adds the object implementing ActiveResourceAdapter
      * interface to the registry.
@@ -116,7 +114,6 @@ public class ConnectorRegistry {
         resourceAdapters.put(rarModuleName, rar);
         _logger.log(Level.FINE, "Added the active resource adapter {0} to connector registry", rarModuleName);
     }
-
 
     /**
      * get the version counter of  a resource info
@@ -258,7 +255,6 @@ public class ConnectorRegistry {
         return true;
     }
 
-
     /**
      * Retrieves the object implementing ActiveResourceAdapter interface
      * from the registry. Key is the rarName.
@@ -313,7 +309,6 @@ public class ConnectorRegistry {
             }
         }
     }
-
 
     /**
      * Adds the bean validator to the registry.
@@ -376,7 +371,6 @@ public class ConnectorRegistry {
         return factories.containsKey(poolInfo);
     }
 
-
     /**
      * Remove MCF instance pertaining to the poolName from the registry.
      *
@@ -404,7 +398,6 @@ public class ConnectorRegistry {
         factories.put(poolInfo, pmd);
         _logger.log(Level.FINE, "Added MCF to connector registry for {0}", poolInfo);
     }
-
 
     /**
      * Retrieve MCF instance pertaining to the poolName from the registry.
@@ -456,7 +449,6 @@ public class ConnectorRegistry {
         return ar.getDescriptor();
     }
 
-
     /**
      * Gets the runtime equivalent of policies enforced by the Security Maps
      * pertaining to a pool from the Pool's Meta Data.
@@ -503,7 +495,6 @@ public class ConnectorRegistry {
             resourceAdapterConfig.put(rarName, raConfig);
         }
     }
-
 
     /**
      * Remove the resource adapter config properties object from registry

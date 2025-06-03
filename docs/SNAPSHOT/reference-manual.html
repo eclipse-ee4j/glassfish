@@ -8528,7 +8528,7 @@ Platform Debugger Architecture (JPDA)
 [--maxconnectionusagecount=count]
 [--validateatmostonceperiod=interval]
 [--transactionsupport transactionsupport]
-[--descrip[tion description]
+[--description description]
 [--ping {false|true}]
 [--pooling {true|false}]
 [--property (name=value)[:name=value]*]
@@ -8752,26 +8752,6 @@ from 0 to <code>MAX_INTEGER</code>. Default value is 2.</p>
 <dt class="hdlist1"><code>--property</code></dt>
 <dd>
 <p>Optional attribute name/value pairs for configuring the pool.</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>LazyConnectionEnlistment</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent option. Default value is false.</p>
-</dd>
-<dt class="hdlist1"><code>LazyConnectionAssociation</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent option. Default value is false.</p>
-</dd>
-<dt class="hdlist1"><code>AssociateWithThread</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent option. Default value is false.</p>
-</dd>
-<dt class="hdlist1"><code>MatchConnections</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent option. Default value is false.</p>
-</dd>
-</dl>
-</div>
 </dd>
 <dt class="hdlist1"><code>--raname</code></dt>
 <dd>
@@ -13254,29 +13234,15 @@ timeout period, so as to complete the transaction. New connection
 requests will wait for the pool reconfiguration to complete and
 connections will be acquired using the modified pool configuration.</p>
 </dd>
-<dt class="hdlist1"><code>LazyConnectionEnlistment</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent attribute. The default value is
-false.</p>
-</dd>
-<dt class="hdlist1"><code>LazyConnectionAssociation</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent attribute. The default value is
-false.</p>
-</dd>
-<dt class="hdlist1"><code>AssociateWithThread</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent attribute. The default value is
-false.</p>
-</dd>
-<dt class="hdlist1"><code>MatchConnections</code></dt>
-<dd>
-<p>Deprecated. Use the equivalent attribute. The default value is true.</p>
-</dd>
-<dt class="hdlist1"><code>Prefer-Validate-Over-Recreate</code></dt>
+<dt class="hdlist1"><code>prefer-validate-over-recreate</code></dt>
 <dd>
 <p>Specifies whether pool resizer should validate idle connections
-before destroying and recreating them. The default value is true.</p>
+before destroying and recreating them. The default value is false.
+This property has no effect on non-idle connections. If set to <code>true</code>,
+idle connections are validated during pool resizing, and only those
+found to be invalid are destroyed and recreated. If <code>false</code>, all idle
+connections are destroyed and recreated during pool resizing. The
+default is <code>false</code>.</p>
 </dd>
 <dt class="hdlist1"><code>time-to-keep-queries-in-minutes</code></dt>
 <dd>
@@ -57704,7 +57670,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-06-02 16:52:16 UTC
+Last updated 2025-06-03 15:57:22 UTC
 </div>
 </div>
 </body>

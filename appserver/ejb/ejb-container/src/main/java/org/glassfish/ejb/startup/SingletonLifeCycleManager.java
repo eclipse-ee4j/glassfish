@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -111,7 +112,7 @@ public class SingletonLifeCycleManager {
             BundleDescriptor bundle = app.getRelativeBundle(sessionDesc.getEjbBundleDescriptor(),
                     relativeJarPath);
             if (bundle == null) {
-                throw new IllegalStateException("Invalid @DependOn value = " + origName +
+                throw new IllegalStateException("Invalid @DependsOn value = " + origName +
                         " for Singleton " + sessionDesc.getName());
             }
             normalizedName = bundle.getModuleDescriptor().getArchiveUri() + "#" + ejbName;

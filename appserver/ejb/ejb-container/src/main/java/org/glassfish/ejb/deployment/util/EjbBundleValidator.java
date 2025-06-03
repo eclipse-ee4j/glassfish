@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -482,7 +482,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                         if (bundle == null) {
                             throw new IllegalStateException(
-                                "Invalid @DependOn value = " + next + " for Singleton " + sessionDesc.getName());
+                                "Invalid @DependsOn value = " + next + " for Singleton " + sessionDesc.getName());
                         }
 
                         EjbBundleDescriptorImpl ejbBundle = bundle.getModuleType() == null

@@ -26,6 +26,7 @@
                     <exclude>META-INF/MANIFEST.MF</exclude>
                     <exclude>META-INF/hk2-locator/*</exclude>
                     <exclude>META-INF/loggerinfo/*</exclude>
+                    <exclude>META-INF/beans.xml</exclude>
                 </excludes>
             </unpackOptions>
             <includes>

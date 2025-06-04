@@ -1,0 +1,101 @@
+From jmk@cochin Thu Feb 12 14:06:32 1998 -0800
+Return-Path: <owner-mhtml@SEGATE.SUNET.SE>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA02058; Wed, 6 Aug 1997 12:16:30 -0700
+Received: from saturn.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id MAA05234; Wed, 6 Aug 1997 12:16:24 -0700
+Received: from SEGATE.SUNET.SE (segate.sunet.se [192.36.125.6]) by saturn.Sun.COM (SMI-8.6/mail.byaddr) with ESMTP id MAA29971; Wed, 6 Aug 1997 12:16:21 -0700
+Received: from segate.sunet.se by SEGATE.SUNET.SE (LSMTP for OpenVMS v1.1a) with SMTP id <5.7107A165@SEGATE.SUNET.SE>; Wed, 6 Aug 1997 21:16:17 +0100
+Received: from SEGATE.SUNET.SE by SEGATE.SUNET.SE (LISTSERV release 1.8c) with
+          NJE id 320973 for MHTML@SEGATE.SUNET.SE; Wed, 6 Aug 1997 21:16:16
+          +0200
+Received: from paris.ics.uci.edu by SEGATE.SUNET.SE (LSMTP for OpenVMS v1.1a)
+          with SMTP id <0.70032CC1@SEGATE.SUNET.SE>; Wed, 6 Aug 1997 21:16:15
+          +0100
+Received: from nma.com by paris.ics.uci.edu id aa26191; 6 Aug 97 12:11 PDT
+Received: from paris.ics.uci.edu by norn.nma.com id aa10294; 6 Aug 97 12:05 PDT
+To: mhtml@segate.sunet.se
+Subject: Re: from draft-ietf-http-negotiation-03.txt
+In-reply-to: Your message of "Tue, 05 Aug 1997 22:02:31 +0200." 
+             <v03007806b00d34e53252@[130.237.150.138]>
+Reply-to: mhtml@segate.sunet.se
+From: Einar Stefferud <Stef@nma.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <10290.870894303.1@nma.com>
+Date: Wed, 06 Aug 1997 12:05:04 -0700
+Message-ID: <10292.870894304@nma.com>
+Sender: owner-mhtml@segate.sunet.se
+Content-Length: 2638
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 10
+
+Thanks Jacob -- My concern is that we shoudl not summarily, without
+proper cause, discourage or disable future abilities of developers to
+deal with MHTML hyperlinks across separate messages.
+
+If we suggest, or alowe interpretation to conclude that it is not the
+right thing to enable, surely many developers will seriously disable
+any possible potential.
+
+So, if we see how to do it, then we need to identify the possibilities
+and state clearly that it is possible, is OK to do, and is in fact
+encouraged where ever possible.
+
+I think it might only be a matter of emphasis.
+Lets discuss this in Munich.
+
+Cheers...\Stef
+
+
+>From your message Tue, 5 Aug 1997 22:02:31 +0200:
+}
+}At 09:30 -0700 97-08-05, Einar Stefferud wrote:
+}> Thanks Jacob -- Looks to me that you have the topic well covered;-)...
+}>
+}> Now, have we thought much about how all this will work if two separate
+}> messages want to reference each others MIME parts?
+}>
+}> Suppose that I subscribe via EMail to a periodical of some kind that
+}> will include future references to MIME barts in past issues, by URL or
+}> by MID/CID references.
+}>
+}> Does our MHTML spec cover this situation, or does it just punt on this
+}> question?  Seems to me that this scenaaario is clearly in our future.
+}
+}RFC 2110 probably allows this, since it says that Content-ID can
+}be used to identify a body part, and MIME Content-ID-s are globally
+}unique according to RFC 2110.
+}
+}However, RFC 2110 says:
+}
+}   A body part, such as a text/HTML body part, may contain hyperlinks to
+}   objects which are included as other body parts in the same message
+}   and within the same multipart/related content.
+}
+}And this might of course be interpreted to mean that hyperlinks to
+}body parts in other messages are not allowed, but I do not think
+}that was the intention.
+}
+}RFC 2110 also says:
+}
+}   If a message contains one or more MIME body parts containing links
+}   and also contains as separate body parts, data, to which these links
+}   (as defined, for example, in RFC 1866 [HTML2]) refers, then this
+}   whole set of body parts (referring body parts and referred-to body
+}   parts) SHOULD be sent within a multipart/related body part as defined
+}   in [REL].
+}
+}This however only applies to body parts within the same message,
+}so this probably will not forbid references to body parts in other
+}messages.
+}
+}Anothing thing is that many implementations may have problems with
+}links between messages!
+}
+}------------------------------------------------------------------------
+}Jacob Palme <jpalme@dsv.su.se> (Stockholm University and KTH)
+}for more info see URL: http://www.dsv.su.se/~jpalme
+

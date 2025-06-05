@@ -125,7 +125,7 @@ public class StartServ {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeoutMsec(timeout);
+        processManager.setTimeout(timeout, false);
         processManager.setEcho(false);
         processManager.setTextToWaitFor(textToWaitFor);
         for (Entry<String, String> env : this.environment.entrySet()) {

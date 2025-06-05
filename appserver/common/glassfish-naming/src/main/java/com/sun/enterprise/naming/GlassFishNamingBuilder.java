@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,6 +63,8 @@ import static java.util.logging.Level.WARNING;
 @Service
 @RunLevel(value = InitRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, PostConstruct, PreDestroy {
+    private static final String FIELD_INITCTX_FACTORY_BUILDER = "initctx_factory_builder";
+
     @LogMessageInfo(message = "Failed to load {0} using CommonClassLoader")
     public static final String FAILED_TO_LOAD_CLASS = "AS-NAMING-00001";
 
@@ -183,11 +186,14 @@ public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, Pos
 
     private void resetInitialContextFactoryBuilder() {
         try {
-            Field initctxFactoryBuilderField = NamingManager.class.getDeclaredField("initctx_factory_builder");
+            Field initctxFactoryBuilderField = NamingManager.class.getDeclaredField(FIELD_INITCTX_FACTORY_BUILDER);
             initctxFactoryBuilderField.setAccessible(true);
             initctxFactoryBuilderField.set(null, null);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(
+                "Reflection to the field " + NamingManager.class.getName() + "," + FIELD_INITCTX_FACTORY_BUILDER
+                    + " is prohibited, you have to use --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED",
+                e);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.config.support;
 
 import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
@@ -37,7 +36,8 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigView;
 
 /**
- * View that translate configured attributes containing properties like ${foo.bar} into system properties values.
+ * View that translate configured attributes containing properties like
+ * ${foo.bar} into system properties values.
  *
  * @author Jerome Dochez
  */
@@ -46,12 +46,50 @@ public class TranslatedConfigView implements ConfigView {
     final static Pattern p = Pattern.compile("([^\\$]*)\\$\\{([^\\}]*)\\}([^\\$]*)");
 
     private static final String ALIAS_TOKEN = "ALIAS";
-    private static int MAX_SUBSTITUTION_DEPTH = 100;
+    private static final int MAX_SUBSTITUTION_DEPTH = 100;
+    private static final String DISABLE_ENV_VAR_EXPANSION_PROPERTY = "org.glassfish.variableexpansion.envvars.disabled";
+    private static final String ENV_VAR_EXPANSION_PREFERRED_PROPERTY = "org.glassfish.variableexpansion.envvars.preferred";
 
     public static String expandValue(String value) {
         return (String) getTranslatedValue(value);
     }
 
+    public static String getProperty(String propertyName) {
+        return expandValue("${" + propertyName + "}");
+    }
+
+    public static boolean isPropertyTrue(String propertyName) {
+        return Boolean.parseBoolean(expandValue("${" + propertyName + "}"));
+    }
+
+    /**
+     * Evaluates expression against aliases, system properties and environment
+     * variables. Variable references are enclosed in ${name}. Aliases are
+     * enclosed in ${ALIAS=name}.
+     * <p>
+     * Follows the MicroProfile Config convention - replaces variable references
+     * with the following values:
+     * <ol>
+     * <li>System property, if exists</li>
+     * <li>Environment variable with that name, if exists</li>
+     * <li>Environment variable with characters that are neither alphanumeric
+     * nor _ replaced by _, if exists</li>
+     * <li>Environment variable as in previous case but upper case, if
+     * exists</li>
+     * <li>null</li>
+     * </ol>
+     * Environment variables are not considered if the system property {@code "org.glassfish.propertyexpansion.envvars.disabled"}
+     * is set to {@code "true"}.
+     * <p>
+     * Environment variables take preference over system properties if the system property {@code "org.glassfish.variableexpansion.envvars.preferred"} is set to {@code "true"}.
+     * <p>
+     * Also replaces nested expressions in names of variable references. For
+     * example, for a variable "key" with value "name" and variable "servername" with value "GlassFish", the expression
+     * "${server${key}}" will expand to "GlassFish"
+     *
+     * @param variableName
+     * @return Value or null
+     */
     public static Object getTranslatedValue(Object value) {
         if (value != null && value instanceof String) {
             String stringValue = value.toString();
@@ -70,14 +108,20 @@ public class TranslatedConfigView implements ConfigView {
                 }
             }
 
-            // Perform system property substitution in the value
+            // Perform property substitution in the value
             // The loop limit is imposed to prevent infinite looping to values
             // such as a=${a} or a=foo ${b} and b=bar {$a}
             Matcher m = p.matcher(stringValue);
             String origValue = stringValue;
+            boolean useEnvVars = !Boolean.getBoolean(DISABLE_ENV_VAR_EXPANSION_PROPERTY);
+            boolean preferEnvVars = false;
+            if (useEnvVars) {
+                preferEnvVars = Boolean.getBoolean(ENV_VAR_EXPANSION_PREFERRED_PROPERTY);
+            }
             int i = 0;
             while (m.find() && i < MAX_SUBSTITUTION_DEPTH) {
-                String newValue = System.getProperty(m.group(2).trim());
+                final String variableName = m.group(2).trim();
+                String newValue = getPropertyValue(variableName, useEnvVars, preferEnvVars);
                 if (newValue != null) {
                     stringValue = m.replaceFirst(Matcher.quoteReplacement(m.group(1) + newValue + m.group(3)));
                     m.reset(stringValue);
@@ -88,6 +132,31 @@ public class TranslatedConfigView implements ConfigView {
                 Logger.getAnonymousLogger().severe(Strings.get("TranslatedConfigView.badprop", i, origValue));
             }
             return stringValue;
+        }
+        return value;
+    }
+
+    private static final Pattern INVALID_ENV_VAR_CHARS_PATTERN = Pattern.compile("[^a-zA-Z0-9_]");
+
+    private static String getPropertyValue(String variableName, boolean useEnvVars, boolean preferEnvVars) {
+        String value = null;
+        if (!preferEnvVars || !useEnvVars) {
+            value = System.getProperty(variableName);
+        }
+        if (value == null && useEnvVars) {
+            value = System.getenv(variableName);
+            if (value == null) {
+                variableName = INVALID_ENV_VAR_CHARS_PATTERN.matcher(variableName)
+                        .replaceAll("_");
+                value = System.getenv(variableName);
+                if (value == null) {
+                    variableName = variableName.toUpperCase();
+                    value = System.getenv(variableName);
+                }
+                if (value == null && preferEnvVars) {
+                    value = System.getProperty(variableName);
+                }
+            }
         }
         return value;
     }
@@ -121,7 +190,7 @@ public class TranslatedConfigView implements ConfigView {
 
     @Override
     public <T extends ConfigBeanProxy> T getProxy(Class<T> proxyType) {
-        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] { proxyType }, this));
+        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[]{proxyType}, this));
     }
 
     static ServiceLocator habitat;
@@ -143,8 +212,8 @@ public class TranslatedConfigView implements ConfigView {
     }
 
     /**
-     * check if a given property name matches AS alias pattern ${ALIAS=aliasname}. if so, return the aliasname, otherwise
-     * return null.
+     * check if a given property name matches AS alias pattern
+     * ${ALIAS=aliasname}. if so, return the aliasname, otherwise return null.
      *
      * @param propName The property name to resolve. ex. ${ALIAS=aliasname}.
      * @return The aliasname or null.

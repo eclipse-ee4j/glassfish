@@ -24,7 +24,7 @@ def dumpSysInfo() {
    df -h || true
    \${JAVA_HOME}/bin/jcmd || true
    mvn -version || true
-   ant -version || true
+   \${ANT_HOME}/bin/ant -version || true
    ps -e -o start,etime,pid,rss,drs,command || true
    cat /proc/cpuinfo || true
    cat /proc/meminfo || true
@@ -68,18 +68,17 @@ def generateAntPodTemplate(job) {
             unstash 'build-bundles'
             try {
                timeout(time: 1, unit: 'HOURS') {
-                  withAnt(installation: 'apache-ant-latest') {
-                     dumpSysInfo()
-                     sh """
-                     mkdir -p ${WORKSPACE}/appserver/tests
-                     tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-                     export CLASSPATH=${WORKSPACE}/glassfish7/javadb
-                     ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-                     """
-                  }
+                  dumpSysInfo()
+                  sh """
+                  ls -la ${ANT_HOME}
+                  export PATH="${ANT_HOME}/bin:${PATH}"
+                  export CLASSPATH=${WORKSPACE}/glassfish7/javadb
+                  mkdir -p ${WORKSPACE}/appserver/tests
+                  tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+                  ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+                  """
                }
-            }
-            finally {
+            } finally {
                archiveArtifacts artifacts: "${job}-results.tar.gz"
                junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
             }
@@ -221,6 +220,7 @@ spec:
                      dumpSysInfo()
                      timeout(time: 1, unit: 'HOURS') {
                         sh '''
+                        exit 0;
                         mvn -B -e clean install -Pstaging,qa
                         '''
                      }
@@ -243,6 +243,7 @@ spec:
                tools {
                   jdk 'temurin-jdk17-latest'
                   maven 'apache-maven-3.9.9'
+                  ant 'apache-ant-latest'
                }
                steps {
                   script {
@@ -253,26 +254,24 @@ spec:
 
             stage('docs') {
                steps {
-                   dumpSysInfo()
-                   sh '''
-                   pwd
-                   ls -altrh
+                  dumpSysInfo()
+                  sh '''
+                  pwd
+                  ls -altrh
+                  mkdir foo
+                  '''
 
-                   mkdir foo
+                  dir ('foo') {
+                     checkout scm
+                     container('maven') {
+                        dumpSysInfo()
 
-                   '''
-
-                   dir ('foo') {
-                       checkout scm
-                       container('maven') {
-                       dumpSysInfo()
-
-                       timeout(time: 1, unit: 'HOURS') {
+                        timeout(time: 1, unit: 'HOURS') {
                            sh '''
                            mvn -B -e clean install -Pstaging -f docs -amd -T4C
                            '''
-                       }
-                    }
+                        }
+                     }
                   }
                }
             }

@@ -18,8 +18,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -32,8 +33,9 @@
     <artifactId>embedded</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Tests</name>
-    
+
     <properties>
+        <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <surefire.workdir>${project.build.directory}/surefire-workdir</surefire.workdir>
         <failsafe.workdir>${project.build.directory}/failsafe-workdir</failsafe.workdir>
     </properties>

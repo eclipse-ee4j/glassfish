@@ -19,13 +19,10 @@ package com.sun.enterprise.naming;
 
 import com.sun.enterprise.naming.impl.SerialInitContextFactory;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
 
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Hashtable;
 
 import javax.naming.Context;
@@ -33,14 +30,12 @@ import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.InitialContextFactoryBuilder;
-import javax.naming.spi.NamingManager;
 
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.main.jdke.JavaApiGaps;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.naming.util.LogFacade.logger;
@@ -62,8 +57,7 @@ import static java.util.logging.Level.WARNING;
  */
 @Service
 @RunLevel(value = InitRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
-public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, PostConstruct, PreDestroy {
-    private static final String FIELD_INITCTX_FACTORY_BUILDER = "initctx_factory_builder";
+public class GlassFishNamingBuilder implements InitialContextFactoryBuilder {
 
     @LogMessageInfo(message = "Failed to load {0} using CommonClassLoader")
     public static final String FAILED_TO_LOAD_CLASS = "AS-NAMING-00001";
@@ -83,13 +77,27 @@ public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, Pos
     @Inject
     private ServerContext serverContext;
 
+
+    @PostConstruct
+    public void postConstruct() throws NamingException {
+        if (isUsingBuilder()) {
+            JavaApiGaps.setInitialContextFactoryBuilder(GlassFishNamingBuilder.this);
+        }
+    }
+
+    @PreDestroy
+    public void preDestroy() throws NamingException {
+        if (isUsingBuilder()) {
+            JavaApiGaps.unsetInitialContextFactoryBuilder();
+        }
+    }
+
     @Override
     public InitialContextFactory createInitialContextFactory(Hashtable<?, ?> environment) throws NamingException {
         if (environment != null) {
             // As per the documentation of Context.INITIAL_CONTEXT_FACTORY,
             // it represents a fully qualified class name.
             String className = (String) environment.get(Context.INITIAL_CONTEXT_FACTORY);
-
             if (className != null) {
                 try {
                     return (InitialContextFactory) (loadClass(className).getDeclaredConstructor().newInstance());
@@ -131,69 +139,6 @@ public class GlassFishNamingBuilder implements InitialContextFactoryBuilder, Pos
             }
 
             throw e;
-        }
-    }
-
-    @Override
-    public void postConstruct() {
-        try {
-            SecurityManager sm = System.getSecurityManager();
-            if (sm != null) {
-                try {
-                    AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-                        @Override
-                        public Void run() throws NamingException {
-                            if (isUsingBuilder()) {
-                                NamingManager.setInitialContextFactoryBuilder(GlassFishNamingBuilder.this);
-                            }
-                            return null; //Nothing to return
-                        }
-                    });
-                } catch (PrivilegedActionException e) {
-                    Object obj = e.getCause();
-                    if (obj instanceof NamingException) {
-                        throw (NamingException) obj;
-                    }
-                }
-            } else if (isUsingBuilder()) {
-                NamingManager.setInitialContextFactoryBuilder(this);
-            }
-
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void preDestroy() {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                @Override
-                public Void run() {
-                    if (isUsingBuilder()) {
-                        resetInitialContextFactoryBuilder();
-                    }
-                    return null;
-                }
-            });
-        } else {
-            if (isUsingBuilder()) {
-                resetInitialContextFactoryBuilder();
-            }
-        }
-    }
-
-    private void resetInitialContextFactoryBuilder() {
-        try {
-            Field initctxFactoryBuilderField = NamingManager.class.getDeclaredField(FIELD_INITCTX_FACTORY_BUILDER);
-            initctxFactoryBuilderField.setAccessible(true);
-            initctxFactoryBuilderField.set(null, null);
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException(
-                "Reflection to the field " + NamingManager.class.getName() + "," + FIELD_INITCTX_FACTORY_BUILDER
-                    + " is prohibited, you have to use --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED",
-                e);
         }
     }
 

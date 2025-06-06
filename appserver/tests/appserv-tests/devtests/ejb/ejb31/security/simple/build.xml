@@ -119,7 +119,7 @@
               classname="${se.client}">
            <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke" />
            <arg line="${jndiroot}"/>
            <arg line="anonymous"/>
         </java>

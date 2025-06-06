@@ -80,7 +80,7 @@
            <jvmarg value="--add-modules" />
            <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke" />
            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
            <arg line="${appname}"/>
         </java>

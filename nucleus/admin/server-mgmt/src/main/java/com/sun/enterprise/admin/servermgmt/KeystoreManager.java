@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -85,47 +85,43 @@ public class KeystoreManager {
         KEYTOOL_CMD = nonFinalKeyTool;
     }
 
-    protected static class KeytoolExecutor extends ProcessManager {
+    protected static final class KeytoolExecutor {
+
+        private ProcessManager process;
 
         public KeytoolExecutor(String[] args, int timeoutInSeconds) {
-            super(args);
-            setTimeoutMsec(timeoutInSeconds * 1000);
-            addKeytoolCommand();
+            this.process = createProcessManager(args);
+            process.setTimeout(timeoutInSeconds * 1000);
         }
 
         public KeytoolExecutor(String[] args, int timeoutInSeconds, String[] inputLines) {
-            super(args);
-            setTimeoutMsec(timeoutInSeconds * 1000);
-            setStdinLines(Arrays.asList(inputLines));
-            addKeytoolCommand();
+            this.process = createProcessManager(args);
+            process.setTimeout(timeoutInSeconds * 1000);
+            process.setStdinLines(Arrays.asList(inputLines));
         }
 
-        // We must override this message so that the stdout appears in the exec exception.
-        // Keytool seems to output errors to stdout.
-        protected String getExceptionMessage() {
-            return getStdout() + " " + getStderr();
-        }
-
-        private void addKeytoolCommand() {
-            String[] mCmdStrings = builder.command().toArray(new String[0]);
-            if (!mCmdStrings[0].equals(KEYTOOL_CMD)) {
-                String[] newArgs = new String[mCmdStrings.length + 1];
-                newArgs[0] = KEYTOOL_CMD;
-                System.arraycopy(mCmdStrings, 0, newArgs, 1, mCmdStrings.length);
-                mCmdStrings = newArgs;
-                builder.command(Arrays.asList(mCmdStrings));
+        private static ProcessManager createProcessManager(String[] args) {
+            final String[] command;
+            if (args[0].equals(KEYTOOL_CMD)) {
+                command = Arrays.copyOf(args, args.length);
+            } else {
+                command = new String[args.length + 1];
+                command[0] = KEYTOOL_CMD;
+                System.arraycopy(args, 0, command, 1, args.length);
             }
+            return new ProcessManager(command);
         }
 
         public void execute(String keystoreErrorMsg, File keystoreName) throws RepositoryException {
             try {
-                if (super.execute() != 0) {
-                    throw new RepositoryException(
-                            _strMgr.getString(keystoreErrorMsg, keystoreName) + getStderr() + " " + getStdout());
+                if (process.execute() != 0) {
+                    throw new RepositoryException(_strMgr.getString(keystoreErrorMsg, keystoreName)
+                        + process.getStderr() + " " + process.getStdout());
                 }
             } catch (ProcessManagerException ex) {
                 throw new RepositoryException(
-                        _strMgr.getString(keystoreErrorMsg, keystoreName) + getStderr() + " " + getStdout(), ex);
+                    _strMgr.getString(keystoreErrorMsg, keystoreName) + process.getStderr() + " " + process.getStdout(),
+                    ex);
             }
         }
     }

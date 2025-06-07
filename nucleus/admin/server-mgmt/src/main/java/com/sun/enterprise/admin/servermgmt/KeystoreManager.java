@@ -18,121 +18,44 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
-import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.security.Key;
 import java.security.KeyStore;
+import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * @author kebbs
  */
 public class KeystoreManager {
 
-    private static final String KEYTOOL_CMD;
-    private static final String KEYTOOL_EXE_NAME = OS.isWindows() ? "keytool.exe" : "keytool";
+    private static final Logger LOG = System.getLogger(KeystoreManager.class.getName());
     private static final String CERTIFICATE_DN_PREFIX = "CN=";
     private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation";
     public static final String CERTIFICATE_ALIAS = "s1as";
     public static final String INSTANCE_SECURE_ADMIN_ALIAS = "glassfish-instance";
     public static final String DEFAULT_MASTER_PASSWORD = "changeit";
-    private static final String SKID_EXTENSION_SYSTEM_PROPERTY = "-J-Dsun.security.internal.keytool.skid";
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
     private static final StringManager _strMgr = StringManager.getManager(KeystoreManager.class);
     private PEFileLayout fileLayout;
 
-
-    static {
-        // Byron Nevins, July 2011
-        String nonFinalKeyTool = KEYTOOL_EXE_NAME; // at the end we set the final
-        String javaroot = new ASenvPropertyReader().getProps().get(JAVA_ROOT.getPropertyName());
-        File keyToolBin = new File(new File(javaroot, "bin"), KEYTOOL_EXE_NAME);
-
-        if (keyToolBin.canExecute()) {
-            nonFinalKeyTool = SmartFile.sanitize(keyToolBin.getPath());
-        } else {
-            // Can't find it in a JDK. Maybe it is in the PATH?
-            keyToolBin = ProcessUtils.getExe(KEYTOOL_EXE_NAME);
-
-            if (keyToolBin != null && keyToolBin.canExecute()) {
-                nonFinalKeyTool = keyToolBin.getPath();
-            }
-        }
-
-        KEYTOOL_CMD = nonFinalKeyTool;
-    }
-
-    private static class KeytoolExecutor {
-
-        private ProcessManager process;
-
-        public KeytoolExecutor(String[] args, int timeoutInSeconds) {
-            this.process = createProcessManager(args);
-            process.setTimeout(timeoutInSeconds * 1000);
-        }
-
-        public KeytoolExecutor(String[] args, int timeoutInSeconds, String[] inputLines) {
-            this.process = createProcessManager(args);
-            process.setTimeout(timeoutInSeconds * 1000);
-            process.setStdinLines(Arrays.asList(inputLines));
-        }
-
-        private static ProcessManager createProcessManager(String[] args) {
-            final String[] command;
-            if (args[0].equals(KEYTOOL_CMD)) {
-                command = Arrays.copyOf(args, args.length);
-            } else {
-                command = new String[args.length + 1];
-                command[0] = KEYTOOL_CMD;
-                System.arraycopy(args, 0, command, 1, args.length);
-            }
-            return new ProcessManager(command);
-        }
-
-        public void execute(String keystoreErrorMsg, File keystoreName) throws RepositoryException {
-            try {
-                if (process.execute() != 0) {
-                    throw new RepositoryException(_strMgr.getString(keystoreErrorMsg, keystoreName)
-                        + process.getStderr() + " " + process.getStdout());
-                }
-            } catch (ProcessManagerException ex) {
-                throw new RepositoryException(
-                    _strMgr.getString(keystoreErrorMsg, keystoreName) + process.getStderr() + " " + process.getStdout(),
-                    ex);
-            }
-        }
-    }
-
-
-
-    /**
-     * Creates a new instance of RepositoryManager
-     */
-    public KeystoreManager() {
-    }
 
     protected static String getCertificateDN(RepositoryConfig cfg, final String CNSuffix) {
         String cn = getCNFromCfg(cfg);
@@ -158,18 +81,19 @@ public class KeystoreManager {
 
     /**
      * Create the default SSL key store using keytool to generate a self signed certificate.
+     * @param keyStore
      *
      * @param config
      * @param masterPassword
-     * @throws IOException
+     * @throws DomainException
      */
-    protected void createKeyStore(File keystore, RepositoryConfig config, String masterPassword) throws DomainException {
+    protected void createKeyStore(File keyStore, RepositoryConfig config, String masterPassword) throws DomainException {
         // Generate a new self signed certificate with s1as as the alias
         // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", dasCertDN));
         try {
-            final KeyTool keyTool = new KeyTool(keystore, masterPassword.toCharArray());
+            final KeyTool keyTool = new KeyTool(keyStore, masterPassword.toCharArray());
             keyTool.generateKeyPair(CERTIFICATE_ALIAS, dasCertDN, "RSA", 3650);
 
             // Generate a new self signed certificate with glassfish-instance as the alias
@@ -177,7 +101,7 @@ public class KeystoreManager {
             final String instanceCertDN = getInstanceCertDN(config);
             keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
         } catch (IOException e) {
-            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", e.getMessage()), e);
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", keyStore), e);
         }
     }
 
@@ -191,7 +115,7 @@ public class KeystoreManager {
             keyTool.copyCertificate(CERTIFICATE_ALIAS, trustStore);
             keyTool.copyCertificate(INSTANCE_SECURE_ADMIN_ALIAS, trustStore);
         } catch (IOException e) {
-            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", e.getMessage()), e);
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", keyStore), e);
         }
     }
 
@@ -200,18 +124,18 @@ public class KeystoreManager {
      *
      * @param oldPassword the old keystore password
      * @param newPassword the new keystore password
-     * @param keystore the keystore whose password is to be changed.
-     * @throws RepositoryException
+     * @param keyStore the keystore whose password is to be changed.
+     * @throws DomainException
      */
-    protected void changeKeystorePassword(String oldPassword, String newPassword, File keystore) throws RepositoryException {
-        if (!oldPassword.equals(newPassword)) {
-            // Change truststore password from the default
-            String[] keytoolCmd = {
-                    "-storepasswd",
-                    "-keystore", keystore.getAbsolutePath(), };
-
-            KeytoolExecutor keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] { oldPassword, newPassword, newPassword });
-            keytoolExecutor.execute("keyStorePasswordNotChanged", keystore);
+    protected void changeKeystorePassword(String oldPassword, String newPassword, File keyStore) throws DomainException {
+        if (oldPassword.equals(newPassword)) {
+            return;
+        }
+        try {
+            final KeyTool keyTool = new KeyTool(keyStore, oldPassword.toCharArray());
+            keyTool.changeKeyStorePassword(newPassword.toCharArray());
+        } catch (IOException e) {
+            throw new DomainException(_strMgr.getString("keyStorePasswordNotChanged", keyStore), e);
         }
     }
 
@@ -226,65 +150,39 @@ public class KeystoreManager {
      * @param storePassword the keystore password
      * @param oldKeyPassword the old password for the s1as alias
      * @param newKeyPassword the new password for the s1as alias
-     * @throws RepositoryException
+     * @throws DomainException
      */
-    protected void changeS1ASAliasPassword(RepositoryConfig config, String storePassword, String oldKeyPassword, String newKeyPassword) throws RepositoryException {
-        if (!storePassword.equals(oldKeyPassword) && !oldKeyPassword.equals(newKeyPassword)) {
-            final PEFileLayout layout = getFileLayout(config);
-            final File keystore = layout.getKeyStore();
-
-            // First see if the alias exists. The user could have deleted it. Any failure in the
-            // command indicates that the alias does not exist, so we return without error.
-            String keyStoreType = System.getProperty("javax.net.ssl.keyStoreType");
-            if (keyStoreType == null) {
-                keyStoreType = KeyStore.getDefaultType();
-            }
-
-            // Add code to change all the aliases that exist rather then change s1as only
-            List<String> aliases = new ArrayList<>();
-            FileInputStream is = null;
-            try {
-                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-                is = new FileInputStream(keystore);
-                keyStore.load(is, storePassword.toCharArray());
-                Enumeration<String> all = keyStore.aliases();
-                while (all.hasMoreElements()) {
-                    aliases.add(all.nextElement());
-                }
-            } catch (Exception e) {
-                aliases.add(CERTIFICATE_ALIAS);
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException ex) {
-                        getLogger().log(SEVERE, UNHANDLED_EXCEPTION, ex);
-                    }
-                }
-            }
-
-            String[] keytoolCmd = {
-                    "-list",
-                    "-keystore", keystore.getAbsolutePath(),
-                    "-alias", CERTIFICATE_ALIAS, };
-
-            KeytoolExecutor keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] { storePassword });
-            try {
-                keytoolExecutor.execute("s1asKeyPasswordNotChanged", keystore);
-            } catch (RepositoryException ex) {
-                return;
-            }
-
-            // Change truststore password from the default
+    protected void changeKeyPasswords(RepositoryConfig config, String storePassword, String oldKeyPassword,
+        String newKeyPassword) throws DomainException {
+        if (storePassword.equals(oldKeyPassword) || oldKeyPassword.equals(newKeyPassword)) {
+            return;
+        }
+        final PEFileLayout layout = getFileLayout(config);
+        final File keystore = layout.getKeyStore();
+        try {
+            KeyStore keyStore = KeyStore.getInstance(keystore, storePassword.toCharArray());
+            List<String> aliases = Collections.list(keyStore.aliases());
+            List<String> keyAliases = new ArrayList<>();
             for (String alias : aliases) {
-                keytoolCmd = new String[] {
-                        "-keypasswd",
-                        "-keystore", keystore.getAbsolutePath(),
-                        "-alias", alias, };
-
-                keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] { storePassword, oldKeyPassword, newKeyPassword, newKeyPassword });
-                keytoolExecutor.execute("s1asKeyPasswordNotChanged", keystore);
+                Key key;
+                try {
+                    key = keyStore.getKey(alias, oldKeyPassword.toCharArray());
+                } catch (UnrecoverableKeyException e) {
+                    LOG.log(WARNING,
+                        "Key entry with alias {0} in a key store {1} could not be recovered with provided key password.",
+                        alias, keystore);
+                    continue;
+                }
+                if (key != null) {
+                    keyAliases.add(alias);
+                }
             }
+            KeyTool keyTool = new KeyTool(keystore, storePassword.toCharArray());
+            for (String alias : keyAliases) {
+                keyTool.changeKeyPassword(alias, oldKeyPassword.toCharArray(), newKeyPassword.toCharArray());
+            }
+        } catch (Exception e) {
+            throw new DomainException(_strMgr.getString("s1asKeyPasswordNotChanged", keystore), e);
         }
     }
 
@@ -294,11 +192,10 @@ public class KeystoreManager {
      * own key/truststore
      *
      * @param config
-     * @param storePassword
-     * @param oldKeyPassword
-     * @param newKeyPassword
+     * @param oldPassword
+     * @param newPassword
      */
-    protected void changeSSLCertificateDatabasePassword(RepositoryConfig config, String oldPassword, String newPassword) throws RepositoryException {
+    protected void changeSSLCertificateDatabasePassword(RepositoryConfig config, String oldPassword, String newPassword) throws DomainException {
         final PEFileLayout layout = getFileLayout(config);
         File keystore = layout.getKeyStore();
         File truststore = layout.getTrustStore();
@@ -306,22 +203,7 @@ public class KeystoreManager {
         if (keystore.exists()) {
             // Change the password on the keystore
             changeKeystorePassword(oldPassword, newPassword, keystore);
-
-            // Change the s1as alias password in the keystore...
-            //
-            // The assumption here is that the keystore password is not the same as the key password.
-            // This is due to the fact that the keystore password should first be changed followed next
-            // by the key password. The end result is that the keystore and s1as key both have
-            // the same passwords. This function will tolerate deletion of the s1as alias, but
-            // it will not tolerate changing the s1as key from something other than the
-            // database password.
-            try {
-                changeS1ASAliasPassword(config, newPassword, oldPassword, newPassword);
-            } catch (Exception ex) {
-                // For now we eat all exceptions and dump to the log if the password
-                // alias could not be changed.
-                getLogger().log(SEVERE, UNHANDLED_EXCEPTION, ex);
-            }
+            changeKeyPasswords(config, newPassword, oldPassword, newPassword);
         }
 
         if (truststore.exists()) {
@@ -372,6 +254,10 @@ public class KeystoreManager {
         return value;
     }
 
+    private static String getCNFromOption(String option) {
+        return getValueFromOptionForName(option, "CN", true);
+    }
+
     /**
      * Returns CN if valid and non-blank. Returns null otherwise.
      *
@@ -396,9 +282,5 @@ public class KeystoreManager {
         }
 
         return null;
-    }
-
-    private static String getCNFromOption(String option) {
-        return getValueFromOptionForName(option, "CN", true);
     }
 }

@@ -17,14 +17,17 @@
 package org.glassfish.main.jdke.security;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.KeyStore;
+import java.security.UnrecoverableKeyException;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -32,17 +35,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class KeyToolTest {
 
+
     private static final char[] PASSWORD = "passwordpassword".toCharArray();;
+    private static final char[] PASSWORD2 = "123456".toCharArray();
 
     @TempDir
     private static File tmp;
     private static KeyTool keyTool;
+    private static File keyStoreFile;
 
-    @BeforeEach
-    void createKeyTool() throws Exception {
-        File file = File.createTempFile("keystore", "jks", tmp);
-        file.delete();
-        keyTool = new KeyTool(file, PASSWORD);
+    @BeforeAll
+    static void createKeyTool() throws Exception {
+        keyStoreFile = File.createTempFile("keystore", ".jks", tmp);
+        keyStoreFile.delete();
+        keyTool = new KeyTool(keyStoreFile, PASSWORD);
     }
 
     @Test
@@ -50,10 +56,22 @@ public class KeyToolTest {
         keyTool.generateKeyPair("keypair001", "CN=mymachine", "RSA", 1);
         File copyKeyStoreFile = new File(tmp, "copy.jks");
         keyTool.copyCertificate("keypair001", copyKeyStoreFile);
-        KeyStore keyStore = KeyStore.getInstance(copyKeyStoreFile, PASSWORD);
-        assertTrue(keyStore.containsAlias("keypair001"));
-        assertNull(keyStore.getKey("keypair001", PASSWORD));
-        assertNotNull(keyStore.getCertificate("keypair001"));
+        File copyKeyStoreFile2 = new File(tmp, "copy2.jks");
+        keyTool.copyCertificate("keypair001", copyKeyStoreFile2);
+        assertThrows(IOException.class, () -> keyTool.changeKeyStorePassword("short".toCharArray()));
+        keyTool.changeKeyStorePassword(PASSWORD2);
+        keyTool.changeKeyStorePassword(PASSWORD);
+        keyTool.changeKeyPassword("keypair001", PASSWORD, PASSWORD2);
+
+        KeyStore keyStore = KeyStore.getInstance(keyStoreFile, PASSWORD);
+        assertThrows(UnrecoverableKeyException.class, () -> keyStore.getKey("keypair001", "WrongPwd".toCharArray()));
+        assertNotNull(keyStore.getKey("keypair001", PASSWORD2));
+
+        KeyStore copy1 = KeyStore.getInstance(copyKeyStoreFile, PASSWORD);
+        assertTrue(copy1.containsAlias("keypair001"));
+        assertNull(copy1.getKey("keypair001", PASSWORD));
+        assertNotNull(copy1.getCertificate("keypair001"));
+
     }
 
 }

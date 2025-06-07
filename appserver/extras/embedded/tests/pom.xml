@@ -31,6 +31,10 @@
 
     <name>GlassFish Embedded Modules - Tests</name>
 
+    <properties>
+        <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.ejb</groupId>

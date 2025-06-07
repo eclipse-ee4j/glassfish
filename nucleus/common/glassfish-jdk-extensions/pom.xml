@@ -31,6 +31,10 @@
     <name>GlassFish JDK Extensions</name>
     <description>Things we would like to see in JDK</description>
 
+    <properties>
+        <maven.test.jvmoptions.add-opens>--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke</maven.test.jvmoptions.add-opens>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

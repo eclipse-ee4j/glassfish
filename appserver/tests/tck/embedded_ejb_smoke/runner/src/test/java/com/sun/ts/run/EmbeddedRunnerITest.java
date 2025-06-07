@@ -15,7 +15,6 @@
  */
 package com.sun.ts.run;
 
-import com.sun.javatest.Status;
 import com.sun.ts.lib.harness.ExecTSTestCmd;
 
 import java.io.IOException;

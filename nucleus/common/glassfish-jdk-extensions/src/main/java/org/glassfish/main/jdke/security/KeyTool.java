@@ -26,6 +26,9 @@ import java.lang.System.Logger;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -75,6 +78,21 @@ public class KeyTool {
 
 
     /**
+     * Loads the key store from the file.
+     *
+     * @return {@link KeyStore}
+     * @throws IOException
+     */
+    public KeyStore loadKeyStore() throws IOException {
+        try {
+            return KeyStore.getInstance(keyStore, password);
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+            throw new IOException("Could not load keystore: " + keyStore, e);
+        }
+    }
+
+
+    /**
      * Generates a key pair in a new keystore.
      *
      * @param alias certificate alias (self-signed certificate)
@@ -105,20 +123,34 @@ public class KeyTool {
     }
 
 
+    /**
+     * Copies a certificate from the key store to another key store.
+     * The destination key store will be created if it does not exist.
+     * The destination key store will use the same password as the source key store.
+     *
+     * @param alias the alias of the certificate to copy
+     * @param destKeyStore the destination key store file
+     * @throws IOException if an error occurs during the process
+     */
     public void copyCertificate(String alias, File destKeyStore) throws IOException {
+        copyCertificate(alias, destKeyStore, password);
+    }
+
+
+    /**
+     * Copies a certificate from the key store to another key store.
+     * The destination key store will be created if it does not exist.
+     *
+     * @param alias the alias of the certificate to copy
+     * @param destKeyStore the destination key store file
+     * @param destKeyStorePassword the password for the destination key store
+     * @throws IOException if an error occurs during the process
+     */
+    public void copyCertificate(String alias, File destKeyStore, char[] destKeyStorePassword) throws IOException {
         final File certFile = File.createTempFile(alias, ".cer");
         try {
             certFile.delete();
-            final List<String> exportCommand = List.of(
-                KEYTOOL,
-                "-J-Duser.language=en",
-                "-noprompt",
-                "-exportcert",
-                "-alias", alias,
-                "-keystore", keyStore.getAbsolutePath(),
-                "-file", certFile.getAbsolutePath()
-                );
-            execute(exportCommand, password);
+            exportCertificate(alias, certFile);
 
             if (!destKeyStore.exists()) {
                 createKeyStoreFile(destKeyStore);
@@ -133,12 +165,33 @@ public class KeyTool {
                 "-keystore", destKeyStore.getAbsolutePath(),
                 "-file", certFile.getAbsolutePath()
                 );
-            execute(importCommand, password);
+            execute(importCommand, destKeyStorePassword);
         } finally {
             if (certFile.exists() && !certFile.delete()) {
                 LOG.log(ERROR, "Failed to delete temporary certificate file: {0}", certFile);
             }
         }
+    }
+
+
+    /**
+     * Exports a certificate from the key store to a file.
+     *
+     * @param alias the alias of the certificate to export
+     * @param outputFile the file to write the certificate to. It must not exist yet.
+     * @throws IOException if an error occurs during the process
+     */
+    public void exportCertificate(String alias, final File outputFile) throws IOException {
+        final List<String> exportCommand = List.of(
+            KEYTOOL,
+            "-J-Duser.language=en",
+            "-noprompt",
+            "-exportcert",
+            "-alias", alias,
+            "-keystore", keyStore.getAbsolutePath(),
+            "-file", outputFile.getAbsolutePath()
+            );
+        execute(exportCommand, password);
     }
 
 
@@ -184,6 +237,24 @@ public class KeyTool {
 
 
     private void execute(final List<String> command, char[]... stdinLines) throws IOException {
+        execute(keyStore, command, stdinLines);
+    }
+
+
+    private void createKeyStoreFile(final File file) throws IOException {
+        try {
+            KeyStore cacerts = KeyStore.getInstance("JKS");
+            cacerts.load(null, password);
+            try (FileOutputStream output = new FileOutputStream(file)) {
+                cacerts.store(output, password);
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            throw new IOException("Could not create new keystore: " + file, e);
+        }
+    }
+
+
+    private static void execute(final File keyStore, final List<String> command, final char[]... stdinLines) throws IOException {
         LOG.log(INFO, () -> "Executing command: " + command.stream().collect(Collectors.joining(" ")));
         final ProcessBuilder builder = new ProcessBuilder(command).directory(keyStore.getParentFile());
         final Process process;
@@ -218,7 +289,7 @@ public class KeyTool {
     }
 
 
-    private void writeStdIn(char[][] stdinLines, Writer stdin) throws IOException {
+    private static void writeStdIn(char[][] stdinLines, Writer stdin) throws IOException {
         for (char[] line : stdinLines) {
             writeLine(line, stdin);
         }
@@ -230,22 +301,9 @@ public class KeyTool {
      * @param stdin target writer to write the line to
      * @throws IOException
      */
-    private void writeLine(char[] content, Writer stdin) throws IOException {
+    private static void writeLine(char[] content, Writer stdin) throws IOException {
         stdin.write(content);
         stdin.write(System.lineSeparator());
         stdin.flush();
-    }
-
-
-    private void createKeyStoreFile(final File file) throws IOException {
-        try {
-            KeyStore cacerts = KeyStore.getInstance("JKS");
-            cacerts.load(null, password);
-            try (FileOutputStream output = new FileOutputStream(file)) {
-                cacerts.store(output, password);
-            }
-        } catch (GeneralSecurityException | IOException e) {
-            throw new IOException("Could not create new keystore: " + file, e);
-        }
     }
 }

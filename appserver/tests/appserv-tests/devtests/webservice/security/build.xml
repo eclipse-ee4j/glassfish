@@ -50,7 +50,7 @@
 
 
     <target name="setup" depends="init-common, check-nss">
-        <echo message="Creating the valid certificate in kestore.jks"/>
+        <echo message="Creating the valid certificate in kestore"/>
         <exec executable="${java.home}/bin/keytool" failonerror="false"><!-- Could be already imported  -->
             <arg value="-genkey"/>
             <arg value="-keyalg" />
@@ -60,13 +60,13 @@
             <arg value="-keypass"/>
             <arg value="${ssl.password}"/>
             <arg value="-keystore"/>
-            <arg value="keystore.jks"/>
+            <arg value="keystore.p12"/>
             <arg value="-storepass"/>
             <arg value="${ssl.password}"/>
             <arg value="-dname"/>
             <arg value="cn=Duke Smith, ou=Purchasing, o=BlueSoft, c=US"/>
         </exec>
-        <echo message="Creating the invalid certificate in invalid_kestore.jks"/>
+        <echo message="Creating the invalid certificate in invalid_kestore.p12"/>
         <exec executable="${java.home}/bin/keytool" failonerror="false"><!-- Could be already imported  -->
             <arg value="-genkey"/>
             <arg value="-keyalg" />
@@ -76,7 +76,7 @@
             <arg value="-keypass"/>
             <arg value="${ssl.password}"/>
             <arg value="-keystore"/>
-            <arg value="invalid_keystore.jks"/>
+            <arg value="invalid_keystore.p12"/>
             <arg value="-storepass"/>
             <arg value="${ssl.password}"/>
             <arg value="-dname"/>
@@ -90,19 +90,19 @@
     <target name="setup-pe" depends="init-common" unless="use.certutil">
         <echo message="Exporting appserver public key from ${admin.domain}"/>
         <exec executable="${java.home}/bin/keytool" failonerror="true">
-            <arg line="-export -alias s1as -keystore ${env.S1AS_HOME}/domains/${admin.domain}/config/keystore.jks -storepass ${ssl.password} -file appserver.cer"/>
+            <arg line="-export -alias s1as -keystore ${env.S1AS_HOME}/domains/${admin.domain}/config/keystore.p12 -storepass ${ssl.password} -file appserver.cer"/>
         </exec>
         <echo message="Importing the Appserver certificate"/>
         <exec executable="${java.home}/bin/keytool" failonerror="false"><!-- Could be already imported  -->
-            <arg line="-import -noprompt -alias s1as -keystore cacerts.jks -storepass ${ssl.password} -file appserver.cer"/>
+            <arg line="-import -noprompt -alias s1as -keystore cacerts.p12 -storepass ${ssl.password} -file appserver.cer"/>
         </exec>
         <echo message="Extracting tester public key"/>
         <exec executable="${java.home}/bin/keytool" failonerror="true">
-            <arg line="-export -alias s1astester -keystore keystore.jks -storepass ${ssl.password} -file client.cer"/>
+            <arg line="-export -alias s1astester -keystore keystore.p12 -storepass ${ssl.password} -file client.cer"/>
         </exec>
         <echo message="Importing tester public key in appserver trusted certificates"/>
         <exec executable="${java.home}/bin/keytool" failonerror="false">
-            <arg line="-import -noprompt -alias s1astester -keystore ${env.S1AS_HOME}/domains/${admin.domain}/config/cacerts.jks -storepass ${ssl.password} -file client.cer"/>
+            <arg line="-import -noprompt -alias s1astester -keystore ${env.S1AS_HOME}/domains/${admin.domain}/config/cacerts.p12 -storepass ${ssl.password} -file client.cer"/>
         </exec>
         <antcall target="restart-pe-server"/>
     </target>
@@ -116,11 +116,11 @@
 
         <echo message="Importing the Appserver certificate on the client keystore"/>
         <exec executable="${java.home}/bin/keytool" failonerror="true">
-            <arg line="-import -noprompt -alias s1as -keystore cacerts.jks -storepass ${ssl.password} -file appserver.cer"/>
+            <arg line="-import -noprompt -alias s1as -keystore cacerts.p12 -storepass ${ssl.password} -file appserver.cer"/>
         </exec>
         <echo message="Extracting tester public key"/>
         <exec executable="${java.home}/bin/keytool" failonerror="true">
-            <arg line="-export -rfc -alias s1astester -keystore keystore.jks -storepass ${ssl.password} -file client.cer"/>
+            <arg line="-export -rfc -alias s1astester -keystore keystore.p12 -storepass ${ssl.password} -file client.cer"/>
         </exec>
         <echo message="Importing tester public key in appserver trusted certificates"/>
         <exec executable ="${env.S1AS_HOME}/lib/certutil" failonerror="true">
@@ -151,9 +151,9 @@
     </target>
 
     <target name="unsetup" depends="init-common, check-nss">
-        <delete file="cacerts.jks"/>
-        <delete file="invalid_keystore.jks"/>
-        <delete file="keystore.jks"/>
+        <delete file="cacerts.p12"/>
+        <delete file="invalid_keystore.p12"/>
+        <delete file="keystore.p12"/>
         <delete file="appserver.cer"/>
         <delete file="client.cer"/>
         <antcall target="unsetup-pe"/>
@@ -164,7 +164,7 @@
     <target name="unsetup-pe" depends="init-common" unless="use.certutil">
         <echo message="Removing tester public key from appserver trusted certificates"/>
         <exec executable="${java.home}/bin/keytool" failonerror="true">
-            <arg line="-delete -alias s1astester -keystore ${env.S1AS_HOME}/domains/${admin.domain}/config/cacerts.jks -storepass ${ssl.password}"/>
+            <arg line="-delete -alias s1astester -keystore ${env.S1AS_HOME}/domains/${admin.domain}/config/cacerts.p12 -storepass ${ssl.password}"/>
         </exec>
         <antcall target="restart-pe-server"/>
     </target>

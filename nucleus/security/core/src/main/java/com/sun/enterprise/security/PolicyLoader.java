@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,6 +56,7 @@ import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static javassist.Modifier.PUBLIC;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Loads the Default Policy File into the system.
@@ -113,10 +114,8 @@ public class PolicyLoader {
             javaPolicyClassName = authorizationModule.getPolicyProvider();
         }
 
-        if (System.getProperty("simple.jacc.provider.JACCRoleMapper.class") == null) {
-            System.setProperty("simple.jacc.provider.JACCRoleMapper.class",
-                "com.sun.enterprise.security.ee.web.integration.GlassfishRoleMapper");
-        }
+        setProperty("simple.jacc.provider.JACCRoleMapper.class",
+            "com.sun.enterprise.security.ee.web.integration.GlassfishRoleMapper", false);
 
         // Now install the policy provider if one was identified
         if (javaPolicyClassName != null) {
@@ -310,16 +309,14 @@ public class PolicyLoader {
         // Handle Jakarta Authorization-specified property for factory
         String factoryFromSystemProperty = System.getProperty(POLICY_CONF_FACTORY);
         if (factoryFromSystemProperty != null) {
-            // warn user of override
             LOGGER.log(WARNING, policyFactoryOverride, new String[] { POLICY_CONF_FACTORY, factoryFromSystemProperty });
-
         } else {
             // use domain.xml value by setting the property to it
             String factoryFromDomain = authorizationModule.getPolicyConfigurationFactoryProvider();
             if (factoryFromDomain == null) {
                 LOGGER.log(WARNING, policyConfigFactoryNotDefined);
             } else {
-                System.setProperty(POLICY_CONF_FACTORY, factoryFromDomain);
+                setProperty(POLICY_CONF_FACTORY, factoryFromDomain, true);
             }
         }
 
@@ -328,9 +325,7 @@ public class PolicyLoader {
         for (Property authorizationModuleProperty : authorizationModuleProperties) {
             String name = POLICY_PROP_PREFIX + authorizationModuleProperty.getName();
             String value = authorizationModuleProperty.getValue();
-            LOGGER.finest("PolicyLoader set [" + name + "] to [" + value + "]");
-
-            System.setProperty(name, value);
+            setProperty(name, value, true);
         }
     }
 }

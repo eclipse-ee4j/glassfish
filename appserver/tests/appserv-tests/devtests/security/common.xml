@@ -19,8 +19,8 @@
 <!-- common security tasks -->
 <property name="webtest.report.dir" value="${env.APS_HOME}/"/>
 <!-- this is for referencing generate key/trust stores in client -->
-<property name="mykeystore.db.file" value="${env.APS_HOME}/build/__keystore.jks"/>
-<property name="mytruststore.db.file" value="${env.APS_HOME}/build/__cacerts.jks"/>
+<property name="mykeystore.db.file" value="${env.APS_HOME}/build/__keystore.p12"/>
+<property name="mytruststore.db.file" value="${env.APS_HOME}/build/__cacerts.p12"/>
 <property name="appserver.config.name" value="server-config"/>
 
 <condition property="wsimport.VMARGS" value="${env.WSIMPORT_OPTS}" else="">
@@ -84,7 +84,7 @@
 </target>
 
 <target name="prepare-store-keytool-common" depends="init-common" unless="isNSS">
-    <copy file="${admin.domain.dir}/${admin.domain}/config/cacerts.jks" tofile="${mytruststore.db.file}"/>
+    <copy file="${admin.domain.dir}/${admin.domain}/config/cacerts.p12" tofile="${mytruststore.db.file}"/>
     <antcall target="generate-jks-key"/>
 
     <exec executable="${java.home}/bin/keytool" failonerror="true">
@@ -95,7 +95,7 @@
         <arg value="-file"/>
         <arg file="${keycert.rfc.file}"/>
         <arg value="-keystore"/>
-        <arg file="${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+        <arg file="${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
     </exec>
 </target>
 
@@ -128,7 +128,7 @@
     <exec executable="${java.home}/bin/keytool" failonerror="true">
         <arg line="-delete -alias ssltest -storepass '${ssl.password}'"/>
         <arg value="-keystore"/>
-        <arg file="${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+        <arg file="${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
     </exec>
 </target>
 
@@ -147,8 +147,8 @@
 </target>
 
 <target name="prepare-store-nickname-keytool-common" depends="init-common" unless="isNSS">
-    <copy file="${admin.domain.dir}/${admin.domain}/config/keystore.jks" tofile="${mykeystore.db.file}"/>
-    <copy file="${admin.domain.dir}/${admin.domain}/config/cacerts.jks" tofile="${mytruststore.db.file}"/>
+    <copy file="${admin.domain.dir}/${admin.domain}/config/keystore.p12" tofile="${mykeystore.db.file}"/>
+    <copy file="${admin.domain.dir}/${admin.domain}/config/cacerts.p12" tofile="${mytruststore.db.file}"/>
 </target>
 
 <target name="prepare-store-nickname-certutil-common" depends="init-common" if="isNSS">

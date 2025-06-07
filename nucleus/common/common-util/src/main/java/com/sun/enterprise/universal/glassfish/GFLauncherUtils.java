@@ -18,12 +18,10 @@
 package com.sun.enterprise.universal.glassfish;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -75,20 +73,6 @@ public final class GFLauncherUtils {
         }
 
         return false;
-    }
-
-    /**
-     * This method returns the fully qualified name of the host.  If
-     * the name can't be resolved (on windows if there isn't a domain specified), just
-     * host name is returned
-     *
-     * @deprecated
-     * @return
-     * @throws UnknownHostException so it can be handled on a case by case basis
-     */
-    @Deprecated
-    public static String getCanonicalHostName() throws UnknownHostException {
-        return NetUtils.getCanonicalHostName();
     }
 
     public static String replace(String s, String token, String replace) {

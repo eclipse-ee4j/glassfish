@@ -20,6 +20,8 @@ package org.glassfish.appclient.client.acc.agent;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -292,7 +294,7 @@ public class CLIBootstrap {
         command.append(' ').append("-D").append(INSTALL_ROOT.getSystemPropertyName()).append('=').append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
-        command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
+        command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().toExternalForm()));
     }
 
     /**
@@ -910,8 +912,12 @@ public class CLIBootstrap {
             return new File(libAppclient, "client.policy");
         }
 
-        File loginConfig() {
-            return new File(libAppclient, "appclientlogin.conf");
+        URL loginConfig() {
+            try {
+                return new File(libAppclient, "appclientlogin.conf").toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new IllegalStateException("Could not create URL for appclientlogin.conf", e);
+            }
         }
     }
 

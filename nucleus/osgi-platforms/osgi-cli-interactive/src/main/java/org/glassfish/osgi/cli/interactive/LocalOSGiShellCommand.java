@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,6 +54,7 @@ import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
@@ -166,7 +167,7 @@ public class LocalOSGiShellCommand extends CLICommand {
         // restore echo flag, saved in validate
         if (encoding != null) {
             // see Configuration.getEncoding()...
-            System.setProperty("input.encoding", encoding);
+            SystemProperties.setProperty("input.encoding", encoding, true);
         }
         final String[] args = enhanceForTarget(new String[] {REMOTE_COMMAND, "asadmin-osgi-shell"});
         logger.log(Level.FINEST, "executeCommand: args {0}", Arrays.toString(args));

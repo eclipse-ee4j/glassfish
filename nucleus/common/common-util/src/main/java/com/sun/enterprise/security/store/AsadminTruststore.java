@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,8 @@
 
 package com.sun.enterprise.security.store;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -29,71 +27,75 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PROPERTY;
+import org.glassfish.main.jdke.security.KeyTool;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 
 /**
- * This class implements an adapter for password manipulation a JCEKS.
+ * This class implements an adapter for password manipulation.
  * <p>
  * This class delegates the work of actually opening the trust store to AsadminSecurityUtil.
  *
  * @author Shing Wai Chan
  */
 public class AsadminTruststore {
-    private static final String ASADMIN_TRUSTSTORE = "truststore";
-    private KeyStore _keyStore;
-    private File _keyFile;
-    private char[] _password;
 
-    public static File getAsadminTruststore() {
-        String location = System.getProperty(CLIENT_TRUSTSTORE_PROPERTY);
-        if (location == null) {
-            return new File(AsadminSecurityUtil.GF_CLIENT_DIR, ASADMIN_TRUSTSTORE);
-        }
+    private static final String ASADMIN_TRUSTSTORE = "truststore.p12";
 
-        return new File(location);
+    private final File keyFile;
+    private final char[] password;
+    private final KeyStore keyStore;
+
+    public static AsadminTruststore newInstance()
+        throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
+        return AsadminSecurityUtil.getInstance(true).getAsadminTruststore();
     }
 
-    public static AsadminTruststore newInstance() throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        return AsadminSecurityUtil.getInstance(true /* isPromptable */).getAsadminTruststore();
-    }
 
     public static AsadminTruststore newInstance(final char[] password)
         throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        return AsadminSecurityUtil.getInstance(password, true /* isPromptable */).getAsadminTruststore();
+        return AsadminSecurityUtil.getInstance(password, true).getAsadminTruststore();
     }
 
-    AsadminTruststore(final char[] password) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        init(getAsadminTruststore(), password);
-    }
 
-    private void init(File keyfile, final char[] password)
+    AsadminTruststore(final char[] password)
         throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        _keyFile = keyfile;
-        _keyStore = KeyStore.getInstance("JKS");
-        _password = password;
-        if (!_keyFile.exists()) {
-            _keyStore.load(null, null);
-            return;
-        }
-        try (BufferedInputStream bInput = new BufferedInputStream(new FileInputStream(_keyFile))) {
-            //load must be called with null to initialize an empty keystore
-            _keyStore.load(bInput, _password);
+        this.keyFile = getAsadminTruststore();
+        this.password = password;
+        if (keyFile.exists()) {
+            keyStore = new KeyTool(keyFile, password).loadKeyStore();
+        } else {
+            keyStore = KeyStore.getInstance(KEYSTORE_TYPE_DEFAULT);
+            keyStore.load(null, password);
         }
     }
+
 
     public boolean certificateExists(Certificate cert) throws KeyStoreException {
-        return _keyStore.getCertificateAlias(cert) == null ? false : true;
+        return keyStore.getCertificateAlias(cert) != null;
     }
+
 
     public void addCertificate(String alias, Certificate cert)
         throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        _keyStore.setCertificateEntry(alias, cert);
+        keyStore.setCertificateEntry(alias, cert);
         writeStore();
     }
 
+
     public void writeStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        try (BufferedOutputStream boutput = new BufferedOutputStream(new FileOutputStream(_keyFile))) {
-            _keyStore.store(boutput, _password);
+        try (BufferedOutputStream boutput = new BufferedOutputStream(new FileOutputStream(keyFile))) {
+            keyStore.store(boutput, password);
         }
+    }
+
+
+    private static File getAsadminTruststore() {
+        String location = System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName());
+        if (location == null) {
+            return new File(AsadminSecurityUtil.GF_CLIENT_DIR, ASADMIN_TRUSTSTORE);
+        }
+        return new File(location);
     }
 }

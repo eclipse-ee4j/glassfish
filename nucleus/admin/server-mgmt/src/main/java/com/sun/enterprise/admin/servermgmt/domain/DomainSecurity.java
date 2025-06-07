@@ -27,8 +27,9 @@ import java.io.IOException;
 
 import org.glassfish.security.common.FileRealmHelper;
 
-import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
-import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 public class DomainSecurity extends MasterPasswordFileManager {
 
@@ -74,8 +75,8 @@ public class DomainSecurity extends MasterPasswordFileManager {
      * @throws RepositoryException if any error occurs during keystore creation.
      */
     void createSSLCertificateDatabase(File configDir, DomainConfig config, String masterPassword) throws RepositoryException {
-        createKeyStore(new File(configDir, KEYSTORE_FILE), config, masterPassword);
-        changeKeystorePassword(DEFAULT_MASTER_PASSWORD, masterPassword, new File(configDir, TRUSTSTORE_FILE));
+        createKeyStore(new File(configDir, KEYSTORE_FILENAME_DEFAULT), config, masterPassword);
+        changeKeystorePassword(KEYSTORE_PASSWORD_DEFAULT, masterPassword, new File(configDir, TRUSTSTORE_FILENAME_DEFAULT));
         copyCertificatesToTrustStore(configDir, config, masterPassword);
     }
 

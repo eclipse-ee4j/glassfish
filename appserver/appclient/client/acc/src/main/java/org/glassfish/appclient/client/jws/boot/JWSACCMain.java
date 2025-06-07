@@ -42,6 +42,8 @@ import javax.swing.SwingUtilities;
 import org.glassfish.appclient.client.acc.AppClientContainer;
 import org.glassfish.appclient.client.acc.JWSACCClassLoader;
 
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
+
 /**
  * Alternate main class for ACC, used when launched by Java Web Start.
  * <p>
@@ -180,7 +182,7 @@ public class JWSACCMain implements Runnable {
              *Set a property that the ACC will retrieve during a JWS launch
              *to locate the app client jar file.
              */
-            System.setProperty("com.sun.aas.downloaded.appclient.jar", downloadedAppclientJarFile.getAbsolutePath());
+            setProperty("com.sun.aas.downloaded.appclient.jar", downloadedAppclientJarFile.getAbsolutePath(), true);
 
             Thread.currentThread().setContextClassLoader(loader);
             System.err.println("XXXX: JWSACCMain.run set CL to thread: " + loader);

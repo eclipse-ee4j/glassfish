@@ -62,7 +62,7 @@
 
     <target name="runclient-local" depends="init-common">
         <exec executable="${APPCLIENT}">
-            <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks" />
+            <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12 -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12" />
             <arg value="-client" />
             <arg value="${assemble.dir}/${appname}AppClient.jar"/>
             <!-- dummy user added as appclient throwing login window -->
@@ -95,8 +95,8 @@
             <jvmarg value="ALL-MODULE-PATH" />
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}" />
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-            <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks"/>
-            <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+            <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12"/>
+            <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
             <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
             <arg value="${provider.url}"/>
             <arg value="${ctxfactory}"/>

@@ -41,13 +41,6 @@ abstract class LoggingPumpThread extends Thread {
         this.buffer = buffer;
     }
 
-
-    /**
-     * @return true if the pump should stop
-     */
-    protected abstract boolean isShutdownRequested();
-
-
     /**
      * @return count of records processed until the {@link #flushOutput()} is called.
      */
@@ -68,7 +61,7 @@ abstract class LoggingPumpThread extends Thread {
     @Override
     public final void run() {
         trace(GlassFishLogHandler.class, () -> "Logging pump for " + buffer + " started.");
-        while (!isShutdownRequested()) {
+        while (!isInterrupted()) {
             try {
                 publishBatchFromBuffer();
             } catch (final Exception e) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,9 +35,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -317,6 +319,9 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
             }
         }
         {
+            if (!trustStoreFile.exists()) {
+                createKeyStoreFile(trustStoreFile, pw);
+            }
             ProcessManager pm = new ProcessManager(new String[] {"keytool", "-importcert", "-noprompt", "-trustcacerts",
                 "-storepass", pw, "-keypass", pw, "-keystore", trustStoreFile.getAbsolutePath(), "-file",
                 tempCertFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS});
@@ -332,6 +337,16 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         // Reload the keystore and truststore from disk.
         reload(sslUtils().getKeyStore(), keyStoreFile, pw);
         reload(sslUtils().getTrustStore(), serverEnv.getTrustStore(), pw);
+    }
+
+    private void createKeyStoreFile(final File trustStoreFile, final String pw) {
+        try {
+            KeyStore cacerts = KeyStore.getInstance("JKS");
+            cacerts.load(null, pw.toCharArray());
+            cacerts.store(new FileOutputStream(trustStoreFile), pw.toCharArray());
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void reload(final KeyStore keystore, final File keystoreFile, final String pw)

@@ -402,6 +402,7 @@ Number of Tests with Errors = 0
 Job name: jakarta-signature-tck-glassfish
 
 ```
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 

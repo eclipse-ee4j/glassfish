@@ -130,12 +130,6 @@ public class SyslogHandler extends Handler {
 
 
         @Override
-        protected boolean isShutdownRequested() {
-            return pump == null;
-        }
-
-
-        @Override
         protected int getFlushFrequency() {
             return 1;
         }

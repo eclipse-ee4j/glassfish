@@ -492,13 +492,6 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
             super(threadName, buffer);
         }
 
-
-        @Override
-        protected boolean isShutdownRequested() {
-            return !configuration.isEnabled() || !isReady();
-        }
-
-
         @Override
         protected int getFlushFrequency() {
             return configuration.getFlushFrequency();

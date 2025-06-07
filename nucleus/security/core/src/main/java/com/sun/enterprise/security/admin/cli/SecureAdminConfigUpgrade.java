@@ -23,7 +23,6 @@ import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.security.SecurityUpgradeService;
-import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -289,32 +288,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         final String pw = masterPassword();
         final KeyTool keyTool = new KeyTool(keyStoreFile, pw.toCharArray());
         keyTool.generateKeyPair(DEFAULT_INSTANCE_ALIAS, getCertificateDN(), "RSA", 3650);
-        final File tempCertFile = new File(serverEnv.getConfigDirPath(), "temp.cer");
-        tempCertFile.deleteOnExit();
-        {
-            ProcessManager pm = new ProcessManager(new String[] {"keytool", "-exportcert", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS, "-keypass", pw,
-                "-storepass", pw, "-file", tempCertFile.getAbsolutePath()});
-            int exitValue = pm.execute();
-            if (exitValue != 0) {
-                throw new RuntimeException(pm.getStderr());
-            }
-        }
-        {
-            if (!trustStoreFile.exists()) {
-                createKeyStoreFile(trustStoreFile, pw);
-            }
-            ProcessManager pm = new ProcessManager(new String[] {"keytool", "-importcert", "-noprompt", "-trustcacerts",
-                "-storepass", pw, "-keypass", pw, "-keystore", trustStoreFile.getAbsolutePath(), "-file",
-                tempCertFile.getAbsolutePath(), "-alias", DEFAULT_INSTANCE_ALIAS});
-            int exitValue = pm.execute();
-            if (!tempCertFile.delete()) {
-                LOG.log(Level.FINE, "Unable to delete temp file {0}; continuing", tempCertFile.getAbsolutePath());
-            }
-            if (exitValue != 0) {
-                throw new RuntimeException(pm.getStderr());
-            }
-        }
+        keyTool.copyCertificate(DEFAULT_INSTANCE_ALIAS, trustStoreFile);
 
         // Reload the keystore and truststore from disk.
         reload(sslUtils().getKeyStore(), keyStoreFile, pw);

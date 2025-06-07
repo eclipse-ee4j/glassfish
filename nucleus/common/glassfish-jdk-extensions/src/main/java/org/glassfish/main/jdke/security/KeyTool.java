@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 
 /**
@@ -58,7 +59,7 @@ public class KeyTool {
     }
 
     private final File keyStore;
-    private final char[] password;
+    private char[] password;
 
     /**
      * Creates a new instance of KeyTool managing the repository.
@@ -86,6 +87,7 @@ public class KeyTool {
         final List<String> command = List.of(
             KEYTOOL,
             "-J-Duser.language=en",
+            "-noprompt",
             "-genkeypair",
             "-alias", alias,
             "-dname", dn,
@@ -110,6 +112,7 @@ public class KeyTool {
             final List<String> exportCommand = List.of(
                 KEYTOOL,
                 "-J-Duser.language=en",
+                "-noprompt",
                 "-exportcert",
                 "-alias", alias,
                 "-keystore", keyStore.getAbsolutePath(),
@@ -123,18 +126,60 @@ public class KeyTool {
             final List<String> importCommand = List.of(
                 KEYTOOL,
                 "-J-Duser.language=en",
+                "-noprompt",
                 "-importcert",
                 "-alias", alias,
                 "-trustcacerts",
                 "-keystore", destKeyStore.getAbsolutePath(),
                 "-file", certFile.getAbsolutePath()
                 );
-            execute(importCommand, password, "yes".toCharArray());
+            execute(importCommand, password);
         } finally {
             if (certFile.exists() && !certFile.delete()) {
-                LOG.log(INFO, "Failed to delete temporary certificate file: {0}", certFile);
+                LOG.log(ERROR, "Failed to delete temporary certificate file: {0}", certFile);
             }
         }
+    }
+
+
+    /**
+     * Changes the key store password and remembers it.
+     *
+     * @param newPassword the new key store password
+     * @throws IOException
+     */
+    public void changeKeyStorePassword(char[] newPassword) throws IOException {
+        List<String> command = List.of(
+            KEYTOOL,
+            "-J-Duser.language=en",
+            "-noprompt",
+            "-storepasswd",
+            "-keystore", this.keyStore.getAbsolutePath()
+        );
+        execute(command, password, newPassword, newPassword, newPassword);
+        this.password = newPassword;
+    }
+
+
+    /**
+     * Changes the key password
+     *
+     * @param alias the alias of the key whose password should be changed
+     * @param oldPassword the current key entry password
+     * @param newPassword the new key entry password
+     * @throws IOException
+     */
+    public void changeKeyPassword(String alias, char[] oldPassword, char[] newPassword) throws IOException {
+        List<String> command = List.of(
+            KEYTOOL,
+            "-J-Duser.language=en",
+            "-noprompt",
+            "-keypasswd",
+            "-alias", alias,
+            "-keystore", this.keyStore.getAbsolutePath()
+        );
+
+        execute(command, password, newPassword, newPassword);
     }
 
 
@@ -192,15 +237,15 @@ public class KeyTool {
     }
 
 
-    private void createKeyStoreFile(final File trustStoreFile) throws IOException {
+    private void createKeyStoreFile(final File file) throws IOException {
         try {
             KeyStore cacerts = KeyStore.getInstance("JKS");
             cacerts.load(null, password);
-            try (FileOutputStream output = new FileOutputStream(trustStoreFile)) {
+            try (FileOutputStream output = new FileOutputStream(file)) {
                 cacerts.store(output, password);
             }
         } catch (GeneralSecurityException | IOException e) {
-            throw new IOException("Could not create new keystore: " + trustStoreFile, e);
+            throw new IOException("Could not create new keystore: " + file, e);
         }
     }
 }

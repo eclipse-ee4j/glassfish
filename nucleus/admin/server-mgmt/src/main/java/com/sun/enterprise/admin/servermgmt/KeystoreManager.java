@@ -29,9 +29,7 @@ import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,13 +39,11 @@ import java.util.regex.Pattern;
 
 import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.BAD_DELETE_TEMP_CERT_FILE;
 import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
 import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
@@ -89,7 +85,7 @@ public class KeystoreManager {
         KEYTOOL_CMD = nonFinalKeyTool;
     }
 
-    protected static final class KeytoolExecutor {
+    private static class KeytoolExecutor {
 
         private ProcessManager process;
 
@@ -165,82 +161,37 @@ public class KeystoreManager {
      *
      * @param config
      * @param masterPassword
-     * @throws RepositoryException
+     * @throws IOException
      */
-    protected void createKeyStore(File keystore, RepositoryConfig config, String masterPassword) throws RepositoryException {
+    protected void createKeyStore(File keystore, RepositoryConfig config, String masterPassword) throws DomainException {
         // Generate a new self signed certificate with s1as as the alias
         // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", dasCertDN));
-
-        final KeyTool keyTool = new KeyTool(keystore, masterPassword.toCharArray());
-        keyTool.generateKeyPair(CERTIFICATE_ALIAS, dasCertDN, "RSA", 3650);
-
-        // Generate a new self signed certificate with glassfish-instance as the alias
-        // Create the default self-signed cert for instances to use for SSL auth.
-        final String instanceCertDN = getInstanceCertDN(config);
-        keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
-    }
-
-    protected void copyCertificatesToTrustStore(File configRoot, DomainConfig config, String masterPassword) throws DomainException {
         try {
-            copyCertificateFromKeyStoreToTrustStore(configRoot, CERTIFICATE_ALIAS, masterPassword);
-            copyCertificateFromKeyStoreToTrustStore(configRoot, INSTANCE_SECURE_ADMIN_ALIAS, masterPassword);
-        } catch (RepositoryException re) {
-            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", re.getMessage()));
+            final KeyTool keyTool = new KeyTool(keystore, masterPassword.toCharArray());
+            keyTool.generateKeyPair(CERTIFICATE_ALIAS, dasCertDN, "RSA", 3650);
+
+            // Generate a new self signed certificate with glassfish-instance as the alias
+            // Create the default self-signed cert for instances to use for SSL auth.
+            final String instanceCertDN = getInstanceCertDN(config);
+            keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
+        } catch (IOException e) {
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", e.getMessage()), e);
         }
     }
 
-    private void copyCertificateFromKeyStoreToTrustStore(final File configRoot, final String alias, final String masterPassword) throws RepositoryException {
-        File keystore = new File(configRoot, KEYSTORE_FILE);
-        File truststore = new File(configRoot, TRUSTSTORE_FILE);
-        if (!truststore.exists()) {
-            createKeyStoreFile(masterPassword, truststore);
-        }
-        File certFile = null;
-        String[] keytoolCmd = null;
-        KeytoolExecutor keytoolExecutor = null;
 
+    protected void copyCertificatesToTrustStore(File configRoot, DomainConfig config, String masterPassword)
+        throws DomainException {
+        final File keyStore = new File(configRoot, KEYSTORE_FILE);
+        final File trustStore = new File(configRoot, TRUSTSTORE_FILE);
+        final KeyTool keyTool = new KeyTool(keyStore, masterPassword.toCharArray());
         try {
-            // Export the newly created certificate from the keystore
-            certFile = new File(configRoot, alias + ".cer");
-            keytoolCmd = new String[] {
-                    "-export",
-                    "-keystore", keystore.getAbsolutePath(),
-                    "-alias", alias,
-                    "-file", certFile.getAbsolutePath(),
-                };
-
-            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] {masterPassword});
-            keytoolExecutor.execute("trustStoreNotCreated", truststore);
-
-            // Import the newly created certificate into the truststore
-            keytoolCmd = new String[] {
-                    "-import",
-                    "-keystore", truststore.getAbsolutePath(),
-                    "-alias", alias,
-                    "-file", certFile.getAbsolutePath(),
-                };
-
-            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] {masterPassword, "yes"});
-            keytoolExecutor.execute("trustStoreNotCreated", truststore);
-
-        } finally {
-            if (certFile != null) {
-                if (!certFile.delete()) {
-                    getLogger().log(WARNING, BAD_DELETE_TEMP_CERT_FILE, certFile.getAbsolutePath());
-                }
-            }
-        }
-    }
-
-    private void createKeyStoreFile(final String masterPassword, File truststore) throws RepositoryException {
-        try {
-            KeyStore cacerts = KeyStore.getInstance("JKS");
-            cacerts.load(null, masterPassword.toCharArray());
-            cacerts.store(new FileOutputStream(truststore), masterPassword.toCharArray());
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RepositoryException(_strMgr.getString("trustStoreNotCreated", truststore), e);
+            keyTool.copyCertificate(CERTIFICATE_ALIAS, trustStore);
+            keyTool.copyCertificate(INSTANCE_SECURE_ADMIN_ALIAS, trustStore);
+        } catch (IOException e) {
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", e.getMessage()), e);
         }
     }
 

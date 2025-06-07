@@ -63,9 +63,9 @@ public class EmbeddedAddHttpsListenerTest {
     static String contextRoot = "test";
 
     @BeforeAll
-    public static void setupServer() throws GlassFishException {
+    public static void setupServer() throws Exception {
 
-        File keystore = new File("keystore.jks");
+        File keystore = new File(tempDir, "keystore.jks");
         setProperty(GlassFishVariable.KEYSTORE_FILE.getSystemPropertyName(), keystore.getAbsolutePath(), true);
         KeyTool keyTool = new KeyTool(keystore, "changeit".toCharArray());
         keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);

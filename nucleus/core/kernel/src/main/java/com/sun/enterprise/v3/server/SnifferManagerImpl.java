@@ -143,37 +143,39 @@ public class SnifferManagerImpl implements SnifferManager {
         List<T> applicableSniffers = new ArrayList<>();
 
         for (T sniffer : sniffers) {
-            if (archiveType != null && !sniffer.supportsArchiveType(archiveType)) {
-                continue;
-            }
-
-            String[] annotationNames = sniffer.getAnnotationNames(context);
-            if (annotationNames == null) {
-                continue;
-            }
-
-            addSniffer:
-            for (String annotationName : annotationNames) {
-                Type type = types.getBy(annotationName);
-                if (type instanceof AnnotationType) {
-                    Collection<AnnotatedElement> elements = ((AnnotationType) type).allAnnotatedTypes();
-                    for (AnnotatedElement element : elements) {
-                        if (checkPath) {
-                            final Type t = getDeclaringType(element);
-                            if (t != null && t.wasDefinedIn(uris)) {
-                                applicableSniffers.add(sniffer);
-                                break addSniffer;
-                            }
-                        } else {
-                            applicableSniffers.add(sniffer);
-                            break addSniffer;
-                        }
-                    }
-                }
+            if (isSnifferApplicable(sniffer, archiveType, context, uris, types, checkPath)) {
+                applicableSniffers.add(sniffer);
             }
         }
 
         return applicableSniffers;
+    }
+
+    private <T extends Sniffer> boolean isSnifferApplicable(T sniffer, ArchiveType archiveType, DeploymentContext context, List<URI> uris, Types types, boolean checkPath) {
+        if (archiveType != null && !sniffer.supportsArchiveType(archiveType)) {
+            return false;
+        }
+        String[] annotationNames = sniffer.getAnnotationNames(context);
+        if (annotationNames == null) {
+            return false;
+        }
+        for (String annotationName : annotationNames) {
+            Type type = types.getBy(annotationName);
+            if (type instanceof AnnotationType) {
+                Collection<AnnotatedElement> elements = ((AnnotationType) type).allAnnotatedTypes();
+                for (AnnotatedElement element : elements) {
+                    if (checkPath) {
+                        final Type t = getDeclaringType(element);
+                        if (t != null && t.wasDefinedIn(uris)) {
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void validateSniffers(Collection<? extends Sniffer> sniffers, DeploymentContext context) {

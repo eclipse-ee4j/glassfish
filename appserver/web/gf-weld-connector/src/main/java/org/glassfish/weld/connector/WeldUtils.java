@@ -199,7 +199,7 @@ public class WeldUtils {
         Set<URI> implicitBeanArchivePaths = (Set<URI>)context.getTransientAppMetadata().get(METADATA_KEY);
 
         if (implicitBeanArchivePaths == null) {
-            implicitBeanArchivePaths = findImplicitBeanArchivePaths(implicitBeanArchivePaths, context);
+            implicitBeanArchivePaths = findImplicitBeanArchivePaths(context);
             context.addTransientAppMetaData(METADATA_KEY, implicitBeanArchivePaths);
         }
 
@@ -211,8 +211,8 @@ public class WeldUtils {
         return false;
     }
 
-    private static Set<URI> findImplicitBeanArchivePaths(Set<URI> pathsWithImplicitCDIBeans, DeploymentContext context) {
-        pathsWithImplicitCDIBeans = new HashSet<>();
+    private static Set<URI> findImplicitBeanArchivePaths(DeploymentContext context) {
+        Set<URI> pathsWithImplicitCDIBeans = new HashSet<>();
         Types types = getTypes(context);
         if (types != null) {
             for (Type type : types.getAllTypes()) {

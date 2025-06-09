@@ -65,7 +65,6 @@ public final class ProcessManager {
         builder = new ProcessBuilder(cmds);
     }
 
-
     /**
      * Creates a new ProcessManager with the specified command line.
      *
@@ -75,6 +74,10 @@ public final class ProcessManager {
         builder = new ProcessBuilder(cmdline);
     }
 
+    @Override
+    public String toString() {
+        return builder.command().toString();
+    }
 
     /**
      * Sets the timeout for the process execution or for the detected text in the output.
@@ -85,7 +88,6 @@ public final class ProcessManager {
     public void setTimeout(int millis) {
         setTimeout(millis, true);
     }
-
 
     /**
      * Sets the timeout for the process execution or for the detected text in the output.
@@ -102,7 +104,6 @@ public final class ProcessManager {
         this.forceExit = forceExit;
     }
 
-
     /**
      * Sets an environment variable for the process.
      *
@@ -113,7 +114,6 @@ public final class ProcessManager {
         builder.environment().put(name, value);
     }
 
-
     /**
      * Sets the working directory for the process.
      *
@@ -123,7 +123,6 @@ public final class ProcessManager {
         builder.directory(directory);
     }
 
-
     /**
      * Sets the input lines for the process.
      * The lines will be written to the process's standard input.
@@ -132,7 +131,9 @@ public final class ProcessManager {
      *            can be null or empty
      */
     public void setStdinLines(List<String> list) {
-        if (list != null && !list.isEmpty()) {
+        if (list == null || list.isEmpty()) {
+            stdinLines = null;
+        } else {
             stdinLines = list.toArray(String[]::new);
         }
     }
@@ -156,7 +157,6 @@ public final class ProcessManager {
         this.textToWaitFor = textToWaitFor;
     }
 
-
     /**
      * Returns the standard output of the process. If the textToWaitFor was set, the output
      * will contain all lines read from the process until the textToWaitFor was found.
@@ -166,7 +166,6 @@ public final class ProcessManager {
     public String getStdout() {
         return stdout;
     }
-
 
     /**
      * Returns the standard error output of the process. If the textToWaitFor was set, the output
@@ -178,7 +177,6 @@ public final class ProcessManager {
         return stderr;
     }
 
-
     /**
      * Executes the command and waits for it to finish while reading its output.
      *
@@ -189,40 +187,64 @@ public final class ProcessManager {
      */
     public int execute() throws ProcessManagerException {
         LOG.log(DEBUG, "Executing command:\n  command={0}  \nenv={1}", builder.command(), builder.environment());
-        final Process process;
+        final Process process = startProcess();
         try {
-            process = builder.start();
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not execute command: " + builder.command(), e);
-        }
-        final ReaderThread threadErr = new ReaderThread(process.getErrorStream(), echo, "stderr", textToWaitFor);
-        threadErr.start();
-        final ReaderThread threadOut = new ReaderThread(process.getInputStream(), echo, "stdout", textToWaitFor);
-        threadOut.start();
-        boolean readRemainingOutput = this.textToWaitFor == null;
-        try {
-            if (stdinLines != null && stdinLines.length > 0) {
-                writeStdin(process, stdinLines);
-            }
-            return waitForResult(process, timeout, threadOut, threadErr);
-        } catch (ProcessManagerTimeoutException e) {
-            // It would block until the process finishes.
-            readRemainingOutput = false;
-            throw e;
+            final boolean textDetected = listenProcess(process);
+            return evaluateResult(process, timeout, textDetected);
         } finally {
-            stderr = threadErr.finish(100L, readRemainingOutput);
-            stdout = threadOut.finish(100L, readRemainingOutput);
             if (process.isAlive() && this.forceExit) {
                 destroy(process);
             }
         }
     }
 
-    @Override
-    public String toString() {
-        return builder.command().toString();
+    private Process startProcess() throws ProcessManagerException {
+        try {
+            return builder.start();
+        } catch (IOException e) {
+            throw new ProcessManagerException("Could not execute command: " + builder.command(), e);
+        }
     }
 
+    private boolean listenProcess(final Process process) throws ProcessManagerException {
+        boolean isDead = false;
+        final ReaderThread threadErr = ReaderThread.start("stderr", process.getErrorStream(), echo, textToWaitFor);
+        final ReaderThread threadOut = ReaderThread.start("stdout", process.getInputStream(), echo, textToWaitFor);
+        try {
+            if (stdinLines != null && stdinLines.length > 0) {
+                writeStdin(process, stdinLines);
+            }
+            isDead = waitForDeath(process, timeout);
+        } finally {
+            stderr = threadErr.finish(100L, isDead);
+            stdout = threadOut.finish(100L, isDead);
+        }
+        return threadOut.isTextFound() || threadErr.isTextFound();
+    }
+
+    private int evaluateResult(Process process, int timeoutInMillis, boolean textDetected)
+        throws ProcessManagerException {
+        if (textToWaitFor == null) {
+            if (process.isAlive()) {
+                throw new ProcessManagerTimeoutException(
+                    "Process is still running, timeout " + timeoutInMillis + " ms exceeded.");
+            }
+            final int exitCode = process.exitValue();
+            LOG.log(DEBUG, "Process finished with exit code {0}", exitCode);
+            return exitCode;
+        }
+        if (textDetected) {
+            LOG.log(DEBUG, "The process produced the expected text in the output: {0}", textToWaitFor);
+            return 0;
+        }
+        if (process.isAlive()) {
+            throw new ProcessManagerTimeoutException("Process did not produce the expected output " + textToWaitFor
+                + ", timeout " + timeoutInMillis + " ms exceeded.");
+        }
+        final int exitCode = process.exitValue();
+        throw new ProcessManagerException(
+            "Process finished with exit code " + exitCode + ", but did not produce expected output: " + textToWaitFor);
+    }
 
     private static void writeStdin(Process process, String[] stdinLines) throws ProcessManagerException {
         try (OutputStreamWriter pipe = new OutputStreamWriter(process.getOutputStream(), Charset.defaultCharset())) {
@@ -242,35 +264,7 @@ public final class ProcessManager {
         }
     }
 
-
-    private int waitForResult(Process process, int timeoutInMillis, ReaderThread threadOut, ReaderThread threadErr)
-        throws ProcessManagerException {
-        final boolean isDead = waitForDeath(process, timeoutInMillis);
-        if (textToWaitFor == null) {
-            if (isDead) {
-                final int exitCode = process.exitValue();
-                LOG.log(DEBUG, "Process finished with exit code {0}", exitCode);
-                return exitCode;
-            }
-            throw new ProcessManagerTimeoutException(
-                "Process is still running, timeout " + timeoutInMillis + " ms exceeded.");
-        }
-        // Is not dead and textToWaitFor is not null.
-        if (threadOut.isTextFound() || threadErr.isTextFound()) {
-            LOG.log(DEBUG, "The process produced the expected text in the output: {0}", textToWaitFor);
-            return 0;
-        }
-        if (isDead) {
-            final int exitCode = process.exitValue();
-            throw new ProcessManagerException("Process finished with exit code " + exitCode
-                + ", but did not produce expected output: " + textToWaitFor);
-        }
-        throw new ProcessManagerTimeoutException("Process did not produce the expected output " + textToWaitFor
-            + ", timeout " + timeoutInMillis + " ms exceeded.");
-    }
-
-
-    private void destroy(Process process) {
+    private static void destroy(Process process) {
         process.destroy();
         final boolean terminated = waitForDeath(process, 10_000);
         if (!terminated) {
@@ -279,8 +273,7 @@ public final class ProcessManager {
         }
     }
 
-
-    private boolean waitForDeath(Process process, int timeoutInMillis) {
+    private static boolean waitForDeath(Process process, int timeoutInMillis) {
         try {
             if (timeoutInMillis > 0) {
                 LOG.log(TRACE, "Started waiting for process death with timeout {0} ms", timeoutInMillis);
@@ -305,8 +298,8 @@ public final class ProcessManager {
         private final String textToWaitFor;
         private volatile boolean textFound;
 
-        private ReaderThread(InputStream stream, boolean echo, String threadName, String textToWaitFor) {
-            setName(threadName);
+        private ReaderThread(String name, InputStream stream, boolean echo, String textToWaitFor) {
+            setName(name);
             this.reader = new BufferedReader(new InputStreamReader(stream, Charset.defaultCharset()));
             this.output = new StringBuilder();
             this.echo = echo;
@@ -314,10 +307,9 @@ public final class ProcessManager {
             this.threadWaitingForProcess = Thread.currentThread();
         }
 
-        public boolean isTextFound() {
+        boolean isTextFound() {
             return textFound;
         }
-
 
         @Override
         public void run() {
@@ -331,12 +323,9 @@ public final class ProcessManager {
                         Thread.onSpinWait();
                         continue;
                     }
-                    String line = reader.readLine();
-                    output.append(line).append('\n');
-                    if (echo) {
-                        System.out.println(line);
-                    }
-                    if (textToWaitFor != null && line.contains(textToWaitFor)) {
+                    final String line = reader.readLine();
+                    final boolean textDetected = processLine(line);
+                    if (textDetected) {
                         textFound = true;
                         threadWaitingForProcess.interrupt();
                         return;
@@ -349,25 +338,30 @@ public final class ProcessManager {
             }
         }
 
-
         /**
          * Asks the thread to finish it's job and waits until the thread dies.
          * <p>
          * @param timeoutInMillis The maximal time for the waiting.
-         * @param readOutput If true, reads the remaining output from the process.
          *
          * @return the final output of the process.
          */
-        public String finish(long timeoutInMillis, boolean readOutput) {
+        String finish(long timeoutInMillis, boolean isProcessDead) {
             interrupt();
             try {
                 join(timeoutInMillis);
             } catch (InterruptedException ex) {
-                LOG.log(WARNING, "Interrupted while waiting for " + getName() + " to finish", ex);
+                LOG.log(TRACE, "Interrupted while waiting for " + getName() + " to finish", ex);
             }
+            if (isProcessDead) {
+                readRemainingOutput();
+            }
+            return output.toString();
+        }
+
+        void readRemainingOutput() {
             try {
-                if (readOutput) {
-                    reader.lines().forEach(line -> output.append(line).append('\n'));
+                if (reader.lines().filter(this::processLine).findFirst().isPresent()) {
+                    textFound = true;
                 }
             } catch (UncheckedIOException e) {
                 LOG.log(ERROR, "Failed to read remaining output in " + getName(), e);
@@ -378,7 +372,20 @@ public final class ProcessManager {
                     throw new IllegalStateException("Failed to close reader in " + getName(), e);
                 }
             }
-            return output.toString();
+        }
+
+        private boolean processLine(String line) {
+            output.append(line).append('\n');
+            if (echo) {
+                System.out.println(line);
+            }
+            return textToWaitFor != null && line.contains(textToWaitFor);
+        }
+
+        static ReaderThread start(String name, InputStream errorStream, boolean echo, String textToWaitFor) {
+            ReaderThread thread = new ReaderThread(name, errorStream, echo, textToWaitFor);
+            thread.start();
+            return thread;
         }
     }
 }

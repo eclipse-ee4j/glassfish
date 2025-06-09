@@ -17,14 +17,13 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
 - [X] Specification Name, Version and download URL:
   [Jakarta EE Platform 11](https://jakarta.ee/specifications/platform/11) <br/><br/>
 - [X] TCK Version, digital SHA-256 fingerprint and download URL:
-  [Jakarta EE Platform TCK 11.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee11/staged/eftl/jakartaeetck-11.0.0-dist.zip)
+  [Jakarta EE Platform TCK 11.0.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee11/staged/eftl/jakartaeetck-11.0.1-dist.zip)
   SHA-256: `b2c0ad6db0514b75ff612dd7d855a3976c8ae9f240a3b690a684f61bf503bead` <br/><br/> 
 - [X] Public URL of TCK Results Summary:
   [Eclipse GlassFish Platform 8.0 M12 TCK Results](./TCK-Results-8.0.0-M12) <br/><br/>
 - [X] Any Additional Specification Certification Requirements:
 
      - [Jakarta Authentication 3.1 TCK](https://download.eclipse.org/jakartaee/authentication/3.1/jakarta-authentication-tck-3.1.1.zip)
-     - [Jakarta Authorization 3.0 TCK](https://download.eclipse.org/jakartaee/authorization/3.0/jakarta-authorization-tck-3.0.0.zip)
      - [Jakarta Contexts and Dependency Injection 4.1 TCK](https://download.eclipse.org/jakartaee/cdi/4.1/cdi-tck-4.1.0-dist.zip)
      - [Jakarta Concurrency 3.1 TCK](https://download.eclipse.org/jakartaee/concurrency/3.1/concurrency-tck-3.1.1.zip)
      - [Jakarta Data 1.0 TCK](https://download.eclipse.org/jakartaee/data/1.0/data-tck-1.0.1.zip)
@@ -40,7 +39,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
      - [Jakarta Validation 3.1 TCK](https://download.eclipse.org/jakartaee/bean-validation/3.1/validation-tck-dist-3.1.1.zip)
      - [Jakarta WebSocket 2.2 TCK](https://download.eclipse.org/jakartaee/websocket/2.2/jakarta-websocket-tck-2.2.0.zip)
      - [Jakarta Activation 2.1 TCK](https://download.eclipse.org/jakartaee/activation/2.1/jakarta-activation-tck-2.1.2.zip)
-     - [Jakarta Authorization 3.1 TCK](https://download.eclipse.org/jakartaee/authorization/3.0/jakarta-authorization-tck-3.0.0.zip)
+     - [Jakarta Authorization 3.0 TCK](https://download.eclipse.org/jakartaee/authorization/3.0/jakarta-authorization-tck-3.0.0.zip)
      - [Jakarta Batch 2.1 TCK](https://download.eclipse.org/jakartaee/batch/2.1/jakarta.batch.official.tck-2.1.5.zip)
      - [Jakarta Mail 2.1 TCK](https://download.eclipse.org/jakartaee/mail/2.1/jakarta-mail-tck-2.1.2.zip)
 

@@ -34,6 +34,7 @@
 <ul class="sectlevel3">
 <li><a href="#initial-configuration-tasks">Initial Configuration Tasks</a></li>
 <li><a href="#how-dotted-names-work-for-configuration">How Dotted Names Work for Configuration</a></li>
+<li><a href="#variable-references-in-configuration">Variable references in Configuration</a></li>
 <li><a href="#configuration-files">Configuration Files</a></li>
 <li><a href="#impact-of-configuration-changes">Impact of Configuration Changes</a></li>
 </ul>
@@ -1333,6 +1334,9 @@ configuration file.</p>
 <p><a href="#how-dotted-names-work-for-configuration">How Dotted Names Work for Configuration</a></p>
 </li>
 <li>
+<p><a href="#variable-references-in-configuration">Variable references in Configuration</a></p>
+</li>
+<li>
 <p><a href="#configuration-files">Configuration Files</a></p>
 </li>
 <li>
@@ -1586,6 +1590,134 @@ to true:</p>
 </li>
 </ol>
 </div>
+</div>
+<div class="sect3">
+<h4 id="variable-references-in-configuration"><a class="anchor" href="#variable-references-in-configuration"></a>Variable references in Configuration</h4>
+<div class="paragraph">
+<p>Instead of using hard-coded textual values in configuration files, you can use
+variable references. Variable references are used to refer to values that are either repeatedly used through the configuration (e.g. a path to a directory), or values that should be different for different instances that share the same configuration (e.g. a port number), or values that are not known at the time of configuration. Variable references cannot be used for properties that expect a number or another non-textual value.</p>
+</div>
+<div class="paragraph">
+<p>You can specify variable reference as <code>${variable}</code>, where <code>variable</code> is the name of the variable. The value of the variable can contain another variable reference, which is resolved recursively. Variable reference can be used together with other textual values or variable references, for example, <code>${variable}/path/to/${filename}</code>.</p>
+</div>
+<div class="paragraph">
+<p>Variables are resolved from the following sources, in the order of precedence:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>System properties. They can be specified either using a <code>-D</code> JVM option, or as a system property for a target using the <a href="reference-manual.html#create-jvm-options"><code>create-jvm-options</code></a> command. It&#8217;s also possible to reference any existing JVM system property, including standard Java properties like <code>java.home</code></p>
+</li>
+<li>
+<p>Environment variables. They can be either with the exact same name, or name with non-alphanumeric characters replaced with <code>_</code>, or additionally with alphanumeric characters in uppercase. For example, if the variable reference is ${my.variable}, it will be first resolved against <code>my.variable</code>, then against <code>my_variable</code>, then against <code>MY_VARIABLE</code>. This allows defining variables that are not valid environment variable identifiers, such as those containing a hyphen (<code>-</code>) or a dot (<code>.</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a variable reference is not resolved, the reference will not be replaced. So, if a variable <code>variable</code> is not defined, the value <code>${variable}</code> will simply remain <code>${variable}</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>System properties that adjust variable resolution:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.glassfish.variableexpansion.envvars.disabled</code> -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of Eclipse GlassFish</p>
+</li>
+<li>
+<p><code>org.glassfish.variableexpansion.envvars.preferred</code> - changes the priority - values are resolved first from environment variables and then from system properties</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following is a list of variables defined by Eclipse GlassFish that can be used in variable references:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 30%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.agentRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for (remote) nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/nodes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.configRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The config directory in the domain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/config</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.derbyRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for the Apache Derby database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/javadb</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.domainsRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for domains</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/domains</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.hostName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host name of the server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>192.168.0.1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.imqBin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The directory where the Message Queue binaries are located</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/mq/bin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.imqLib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The directory where the Message Queue libraries are located</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/mq/lib</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.installRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>glassfish</code> directory in the Eclipse GlassFish installation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.installRootURI</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI of the <code>glassfish</code> directory in the Eclipse GlassFish installation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file:/path/to/glassfish_installation/glassfish/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server instance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory of the domain configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/domains/domain1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceRootURI</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI of the domain configuration root</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file:/path/to/glassfish_installation/glassfish/domains/domain1/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.javaRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory of the Java installation used to run the current JVM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/java_installation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.productRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory of the Eclipse GlassFish installation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="configuration-files"><a class="anchor" href="#configuration-files"></a>Configuration Files</h4>
@@ -32626,7 +32758,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-06-10 18:31:37 UTC
+Last updated 2025-06-13 14:14:38 UTC
 </div>
 </div>
 </body>

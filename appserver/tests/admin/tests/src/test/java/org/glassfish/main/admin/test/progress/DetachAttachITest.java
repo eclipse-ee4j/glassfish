@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,7 +38,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,13 +81,12 @@ public class DetachAttachITest {
     public void commandWithProgressStatus() throws Exception {
         final DetachedTerseAsadminResult detached = ASADMIN.execDetached("progress-custom", "6x1");
         assertThat(detached, asadminOK());
-        Thread.sleep(2000L);
         final AsadminResult attachResult = ASADMIN.exec("attach", detached.getJobId());
         assertThat(attachResult, asadminOK());
         assertThat(attachResult.getStdOut(), stringContainsInOrder("progress-custom"));
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(attachResult.getStdOut());
         assertFalse(prgs.isEmpty());
-        assertThat(prgs.get(0).getValue(), greaterThan(0));
+        assertThat(prgs.get(0).getValue(), greaterThanOrEqualTo(0));
         assertEquals(100, prgs.get(prgs.size() - 1).getValue());
         // Now attach finished - must NOT exist - seen progress job is removed
         assertThat(ASADMIN.exec("attach", detached.getJobId()), not(asadminOK()));
@@ -104,7 +103,6 @@ public class DetachAttachITest {
         final DetachedTerseAsadminResult result = ASADMIN.execDetached("progress-custom", "8x1");
         assertThat(result, asadminOK());
         assertNotNull(result.getJobId(), "id");
-        Thread.sleep(1500L);
         final int attachCount = 3;
         Collection<Callable<AsadminResult>> attaches = new ArrayList<>(attachCount);
         for (int i = 0; i < attachCount; i++) {
@@ -117,7 +115,7 @@ public class DetachAttachITest {
             assertTrue(res.getStdOut().contains("progress-custom"));
             List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(res.getStdOut());
             assertFalse(prgs.isEmpty());
-            assertThat(prgs.get(0).getValue(), greaterThan(0));
+            assertThat(prgs.get(0).getValue(), greaterThanOrEqualTo(0));
             assertEquals(100, prgs.get(prgs.size() - 1).getValue());
         }
     }

@@ -83,13 +83,6 @@ public class SecurityLoggerInfo {
     public static final String secServiceStartupExit = LOGMSG_PREFIX + "-01011";
 
     @LogMessageInfo(
-            message = "Error obtaining keystore and truststore files for embedded server.",
-            cause = "Saving the keystore and/or truststore to the temporary directory.",
-            action = "Check if the user.home directory is writable.",
-            level = "SEVERE")
-    public static final String obtainingKeyAndTrustStoresError = LOGMSG_PREFIX + "-01012";
-
-    @LogMessageInfo(
             message = "An I/O error occurred while copying the security config files.",
             cause = "Copying security files to instanceRoot/config.",
             action = "Check the server logs and contact support.",

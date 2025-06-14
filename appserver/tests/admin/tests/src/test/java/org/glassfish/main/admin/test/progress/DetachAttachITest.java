@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -104,7 +104,7 @@ public class DetachAttachITest {
         final DetachedTerseAsadminResult result = ASADMIN.execDetached("progress-custom", "8x1");
         assertThat(result, asadminOK());
         assertNotNull(result.getJobId(), "id");
-        Thread.sleep(1500L);
+        Thread.sleep(1000L);
         final int attachCount = 3;
         Collection<Callable<AsadminResult>> attaches = new ArrayList<>(attachCount);
         for (int i = 0; i < attachCount; i++) {

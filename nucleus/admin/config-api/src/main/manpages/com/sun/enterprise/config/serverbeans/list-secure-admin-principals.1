@@ -44,8 +44,7 @@ OPERANDS
        name
            The distinguished name of the certificate, specified as a
            comma-separated list in quotes. For example:
-           "CN=system.amer.oracle.com,OU=GlassFish,O=Oracle
-           Corporation,L=Santa Clara,ST=California,C=US".
+           "CN=localhost,OU=GlassFish,O=Eclipse Foundation".
 
 EXAMPLES
        Example 1, Listing the Certificates
@@ -53,8 +52,8 @@ EXAMPLES
            accepts admin requests from clients.
 
                asadmin> list-secure-admin-principals
-               CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US
-               CN=localhost-instance,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US
+               CN=localhost,OU=GlassFish,O=Eclipse Foundation
+               CN=localhost-instance,OU=GlassFish,O=Eclipse Foundation
                Command list-secure-admin-principals executed successfully.
 
 EXIT STATUS

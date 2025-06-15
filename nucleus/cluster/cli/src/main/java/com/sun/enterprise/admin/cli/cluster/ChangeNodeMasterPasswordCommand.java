@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,6 +36,11 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+
 /**
  * The change-master-password command for a node.
  * It takes in a nodeDir and node name
@@ -55,7 +60,6 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
     @Param(name = "savemasterpassword", optional = true, defaultValue = "false")
     protected boolean savemp;
 
-    private static final String MASTER_PASSWORD_ALIAS="master-password";
 
     private static final LocalStringsImpl strings =
             new LocalStringsImpl(ChangeNodeMasterPasswordCommand.class);
@@ -133,7 +137,7 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
      */
     private boolean verifyInstancePassword(File instanceDir) {
 
-        File mp = new File(new File(instanceDir, "config"), "cacerts.jks");
+        File mp = new File(new File(instanceDir, "config"), TRUSTSTORE_FILENAME_DEFAULT);
         return loadAndVerifyKeystore(mp,oldPassword);
     }
 
@@ -154,10 +158,10 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
      * @throws CommandException
      */
     protected void createMasterPasswordFile() throws CommandException {
-        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_ALIAS);
+        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_FILENAME);
         try {
             PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(),
-                MASTER_PASSWORD_ALIAS.toCharArray());
+                MASTER_PASSWORD_PASSWORD.toCharArray());
             p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, newPassword.getBytes());
             pwdFile.setReadable(true);
             pwdFile.setWritable(true);

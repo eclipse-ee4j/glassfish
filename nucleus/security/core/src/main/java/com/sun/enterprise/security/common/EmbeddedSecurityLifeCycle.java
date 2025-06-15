@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.security.common;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.EmbeddedSecurity;
 import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
 import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
@@ -55,16 +54,11 @@ public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
 
     @Override
     public void creation(Server server) {
-
-        //If the instanceRoot is not set to a non-embedded GF install,
-        //copy the security config files from the security.jar to the instanceRoot/config dir
-
         EmbeddedFileSystem fileSystem = server.getFileSystem();
         File instanceRoot = fileSystem.instanceRoot;
         if (instanceRoot == null) {
             return;
         }
-
         try {
             //Get the keyfile names from the security service
             List<String> keyFileNames = embeddedSecurity.getKeyFileNames(securityService);
@@ -75,20 +69,7 @@ public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
             }
             //Copy the other security files to instanceRoot/config
             //Assuming that these files are present as config/filename in the embedded jar file and are to be extracted that way/
-            FileUtils.copyResourceToDirectory("login.conf", cfgDir);
             FileUtils.copyResourceToDirectory("server.policy", cfgDir);
-            FileUtils.copyResourceToDirectory("cacerts.jks", cfgDir);
-            FileUtils.copyResourceToDirectory("keystore.jks", cfgDir);
-            String keystoreFile = null;
-            String truststoreFile = null;
-            try {
-                keystoreFile = Util.writeConfigFileToTempDir("keystore.jks").getAbsolutePath();
-                truststoreFile = Util.writeConfigFileToTempDir("cacerts.jks").getAbsolutePath();
-            } catch (IOException ex) {
-                _logger.log(Level.SEVERE, SecurityLoggerInfo.obtainingKeyAndTrustStoresError, ex);
-            }
-            System.setProperty(SecuritySupport.KEY_STORE_PROP, keystoreFile);
-            System.setProperty(SecuritySupport.TRUST_STORE_PROP, truststoreFile);
         } catch (IOException ioEx) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.copyingSecurityConfigFilesIOError, ioEx);
         }
@@ -98,5 +79,4 @@ public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
     public void destruction(Server server) {
 
     }
-
 }

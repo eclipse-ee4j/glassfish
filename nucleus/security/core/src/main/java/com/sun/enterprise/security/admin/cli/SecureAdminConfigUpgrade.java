@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,11 +20,9 @@ package com.sun.enterprise.security.admin.cli;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.security.SecurityUpgradeService;
-import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -37,11 +35,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,18 +52,21 @@ import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Protocol;
-import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.main.jdke.security.KeyTool;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static com.sun.enterprise.config.serverbeans.SecureAdmin.DEFAULT_INSTANCE_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 /**
  * Upgrades older config to current.
  *
- * In 3.1.2 GlassFish uses SSL for DAS-to-instance traffic regardless of whether the user enables secure admin. This means that
- * the upgrade must always:
+ * GlassFish uses SSL for DAS-to-instance traffic regardless of whether the user enables secure admin.
+ * This means that the upgrade must always:
  * <ol>
  * <li>Create the secure-admin element.
  * <li>Add the glassfish-instance private key to the keystore and the corresponding self-signed cert to the truststore.
@@ -95,12 +94,13 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
 
     private final static String ASADMIN_VS_NAME = "__asadmin";
 
-    private static String CERTIFICATE_DN_PREFIX = "CN=";
-    private static String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse.org Foundation Inc,L=Ottawa,ST=Ontario,C=CA";
+    private static final String CERTIFICATE_DN_PREFIX = "CN=";
+    private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation";
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
     // Thanks to Jerome for suggesting this injection to make sure the
     // Grizzly migration runs before this migration
+    @SuppressWarnings("unused")
     @Inject
     private GrizzlyConfigSchemaMigrator grizzlyMigrator;
 
@@ -149,8 +149,9 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         }
     }
 
-    private void setupNewDefaultConfig() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException,
-        UnrecoverableKeyException, ProcessManagerException, TransactionFailure, RetryableException, PropertyVetoException {
+
+    private void setupNewDefaultConfig() throws IOException, NoSuchAlgorithmException, CertificateException,
+        KeyStoreException, ProcessManagerException, TransactionFailure {
         /*
          * In 3.1.2 the default config has a secure-admin element with child secure-admin-principal
          * elements for the s1as and glassfish-instance aliases.  The keystore
@@ -166,28 +167,18 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
          */
         ensureSecureAdminReady();
         prepareDASConfig();
-        //        prepareNonDASConfigs();
     }
 
     private boolean requiresSecureAdmin() {
         return isOriginalAdminSecured() || securityUpgradeService.requiresSecureAdmin();
     }
 
-    private void prepareDASConfig() throws TransactionFailure, PropertyVetoException {
+    private void prepareDASConfig() throws TransactionFailure {
         final Config dasConfig = writableConfig(configs.getConfigByName(DAS_CONFIG_NAME));
         final NetworkConfig nc = dasConfig.getNetworkConfig();
         final NetworkListener nl_w = transaction().enroll(nc.getNetworkListener(SecureAdminCommand.ADMIN_LISTENER_NAME));
         nl_w.setProtocol(SecureAdminCommand.ADMIN_LISTENER_NAME);
     }
-
-    //    private void prepareNonDASConfigs() throws TransactionFailure, PropertyVetoException {
-    //        for (Config c : configs.getConfig()) {
-    //            if (c.getName().equals(DAS_CONFIG_NAME)) {
-    //                continue;
-    //            }
-    //            ensureConfigReady(c, SecureAdminCommand.PORT_UNIF_PROTOCOL_NAME);
-    //        }
-    //    }
 
     private void ensureConfigReady(final Config c, final String adminListenerProtocol) throws TransactionFailure, PropertyVetoException {
         final NetworkConfig nc = c.getNetworkConfig();
@@ -261,7 +252,6 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         final Config serverConfig;
         final NetworkConfig nc;
         final Protocol p;
-        final Ssl ssl;
         if ((serverConfig = configs.getConfigByName(SecureAdminUpgradeHelper.DAS_CONFIG_NAME)) == null) {
             return false;
         }
@@ -274,60 +264,31 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
             return false;
         }
 
-        if ((ssl = p.getSsl()) == null) {
+        if (p.getSsl() == null) {
             return false;
         }
         return true;
     }
 
-    private void ensureKeyPairForInstanceAlias() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException,
-        UnrecoverableKeyException, ProcessManagerException {
+
+    private void ensureKeyPairForInstanceAlias()
+        throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, ProcessManagerException {
         // No need to add glassfish-instance to the keystore if it already exists.
         final KeyStore ks = sslUtils().getKeyStore();
-        if (ks.containsAlias(SecureAdmin.DEFAULT_INSTANCE_ALIAS)) {
+        if (ks.containsAlias(DEFAULT_INSTANCE_ALIAS)) {
             return;
         }
 
-        // This is ugly but effective.  We need to add a new private key to
-        // the keystore and a new self-signed cert to the truststore.  To do so
-        // we run keytool commands to change the on-disk stores, then we
+        // We need to add a new private key to
+        // the keystore and copy the new self-signed cert to the truststore.
+        // To do so we run keytool commands to change the on-disk stores, then we
         // cause the in-memory copies to reload.
         final File keyStoreFile = serverEnv.getJKS();
-        final File trustStoreFile = new File(serverEnv.getConfigDirPath(), "cacerts.jks");
+        final File trustStoreFile = new File(serverEnv.getConfigDirPath(), TRUSTSTORE_FILENAME_DEFAULT);
         final String pw = masterPassword();
-        {
-            ProcessManager pm = new ProcessManager(new String[] {"keytool", "-genkey", "-keyalg", "RSA", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS, "-dname",
-                getCertificateDN(), "-validity", "3650", "-keypass", pw, "-storepass", pw,});
-            int exitValue = pm.execute();
-            if (exitValue != 0) {
-                final String err = pm.getStdout();
-                throw new RuntimeException(err);
-            }
-        }
-        final File tempCertFile = new File(serverEnv.getConfigDirPath(), "temp.cer");
-        tempCertFile.deleteOnExit();
-        {
-            ProcessManager pm = new ProcessManager(new String[] {"keytool", "-exportcert", "-keystore",
-                keyStoreFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS, "-keypass", pw,
-                "-storepass", pw, "-file", tempCertFile.getAbsolutePath()});
-            int exitValue = pm.execute();
-            if (exitValue != 0) {
-                throw new RuntimeException(pm.getStderr());
-            }
-        }
-        {
-            ProcessManager pm = new ProcessManager(new String[] {"keytool", "-importcert", "-noprompt", "-trustcacerts",
-                "-storepass", pw, "-keypass", pw, "-keystore", trustStoreFile.getAbsolutePath(), "-file",
-                tempCertFile.getAbsolutePath(), "-alias", SecureAdmin.DEFAULT_INSTANCE_ALIAS});
-            int exitValue = pm.execute();
-            if (!tempCertFile.delete()) {
-                LOG.log(Level.FINE, "Unable to delete temp file {0}; continuing", tempCertFile.getAbsolutePath());
-            }
-            if (exitValue != 0) {
-                throw new RuntimeException(pm.getStderr());
-            }
-        }
+        final KeyTool keyTool = new KeyTool(keyStoreFile, pw.toCharArray());
+        keyTool.generateKeyPair(DEFAULT_INSTANCE_ALIAS, getCertificateDN(), "RSA", 3650);
+        keyTool.copyCertificate(DEFAULT_INSTANCE_ALIAS, trustStoreFile);
 
         // Reload the keystore and truststore from disk.
         reload(sslUtils().getKeyStore(), keyStoreFile, pw);
@@ -336,36 +297,20 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
 
     private void reload(final KeyStore keystore, final File keystoreFile, final String pw)
         throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException {
-
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(keystoreFile));
+        try (InputStream is = new BufferedInputStream(new FileInputStream(keystoreFile))) {
             keystore.load(is, pw.toCharArray());
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 
-    private String masterPassword()
-        throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        //        /*
-        //         * Crude way to get the master password of the keystore.
-        //         */
-        //        if (masterPassword == null) {
-        //            masterPassword = habitat.getService(MasterPassword.class);
-        //        }
-        //        return masterPassword.getMasterPasswordAdapter().getPasswordForAlias("s1as");
-        String masterPW = "changeit";
+    private String masterPassword() throws IOException {
         final String pwFileArg = startupArg("-passwordfile");
         if (pwFileArg != null) {
             final String masterPWFromPWFile = pwProps(pwFileArg).getProperty("AS_ADMIN_MASTERPASSWORD");
             if (masterPWFromPWFile != null) {
-                masterPW = masterPWFromPWFile;
+                return masterPWFromPWFile;
             }
         }
-        return masterPW;
+        return KEYSTORE_PASSWORD_DEFAULT;
     }
 
     private Properties pwProps(final String pwFilePath) throws IOException {
@@ -376,18 +321,14 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
         return result;
     }
 
-    private String getCertificateDN() throws UnknownHostException {
+    private String getCertificateDN() {
         String cn;
         try {
             cn = NetUtils.getCanonicalHostName();
         } catch (Exception e) {
             cn = "localhost";
         }
-        /*
-         * Use the suffix, if provided, in creating the DN (by augmenting
-         * the CN).
-         */
-        String x509DistinguishedName = CERTIFICATE_DN_PREFIX + cn + INSTANCE_CN_SUFFIX + CERTIFICATE_DN_SUFFIX;
-        return x509DistinguishedName; //must be of form "CN=..., OU=..."
+        // Use the suffix, if provided, in creating the DN (by augmenting the CN).
+        return CERTIFICATE_DN_PREFIX + cn + INSTANCE_CN_SUFFIX + CERTIFICATE_DN_SUFFIX;
     }
 }

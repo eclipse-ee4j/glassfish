@@ -64,7 +64,7 @@
 
     <target name="runclient-local" depends="prepare-truststore-common">
         <exec executable="${APPCLIENT}">
-            <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
+            <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.p12 -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
             <arg value="-client" />
             <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         </exec>
@@ -91,7 +91,7 @@
             <jvmarg value="ALL-MODULE-PATH" />
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-            <jvmarg value="-Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks"/>
+            <jvmarg value="-Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.p12"/>
             <jvmarg value="-Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
             <arg value="${provider.url}"/>
             <arg value="${ctxfactory}"/>

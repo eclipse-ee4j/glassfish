@@ -22,6 +22,6 @@
 <glassfish-web-app httpservlet-security-provider="httpsTestAuthModule">
     <security-role-mapping>
         <role-name>myrole</role-name>
-        <principal-name>CN=HTTPSTEST,OU=Eclipse GlassFish Tests,O=Eclipse Foundation,L=Brussels,ST=Belgium,C=Belgium</principal-name>
+        <principal-name>CN=HTTPSTEST,OU=Eclipse GlassFish Tests</principal-name>
     </security-role-mapping>
 </glassfish-web-app>

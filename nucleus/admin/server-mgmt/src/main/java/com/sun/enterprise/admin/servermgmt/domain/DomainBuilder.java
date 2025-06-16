@@ -48,8 +48,6 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.DOMAIN_XML_FILE;
 import static java.text.MessageFormat.format;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
@@ -261,20 +259,13 @@ public class DomainBuilder {
             domainSecurity.processAdminKeyFile(adminKeyFile, user, password, adminUserGroups);
             try {
                 domainSecurity.createSSLCertificateDatabase(configDir, _domainConfig, masterPassword);
-            } catch (Exception e) {
+            } catch (RepositoryException e) {
                 System.err.println("Domain creation process involves a step that creates primary key and"
                     + "\n self-signed server certificate. This step failed for the reason shown below."
                     + "\n This could be because JDK provided keytool program could not be found (e.g."
                     + "\n you are running with JRE) or for some other reason. No need to panic, as you"
-                    + "\n can always use JDK-keytool program to do the needful. A temporary JKS-keystore"
-                    + "\n will be created. You should replace it with proper keystore before using it for SSL."
-                    + "\n Refer to documentation for details. Actual error is:\n" + e.getMessage());
-                File keystoreFile = new File(configDir, DomainConstants.KEYSTORE_FILE);
-                try (FileOutputStream fos = new FileOutputStream(keystoreFile)) {
-                    fos.write(_keystoreBytes);
-                } catch (Exception ex) {
-                    getLogger().log(Level.SEVERE, UNHANDLED_EXCEPTION, ex);
-                }
+                    + "\n can always use JDK-keytool program to do the needful.");
+                throw e;
             }
             domainSecurity.changeMasterPasswordInMasterPasswordFile(
                 new File(domainDir, DomainConstants.MASTERPASSWORD_FILE), masterPassword, saveMasterPassword);

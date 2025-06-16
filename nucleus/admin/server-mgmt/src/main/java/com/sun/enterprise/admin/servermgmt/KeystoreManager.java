@@ -39,6 +39,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.glassfish.main.jdke.security.KeyTool;
+
 import static com.sun.enterprise.admin.servermgmt.SLogger.BAD_DELETE_TEMP_CERT_FILE;
 import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
 import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
@@ -145,11 +147,9 @@ public class KeystoreManager {
                 cn = "localhost";
             }
         }
-        /*
-         * Use the suffix, if provided, in creating the DN (by augmenting the CN).
-         */
-        String x509DistinguishedName = CERTIFICATE_DN_PREFIX + cn + (CNSuffix != null ? CNSuffix : "") + CERTIFICATE_DN_SUFFIX;
-        return x509DistinguishedName; // must be of form "CN=..., OU=..."
+        // Use the suffix, if provided, in creating the DN (by augmenting the CN).
+        // must be of form "CN=..., OU=..."
+        return CERTIFICATE_DN_PREFIX + cn + (CNSuffix != null ? CNSuffix : "") + CERTIFICATE_DN_SUFFIX;
     }
 
     protected PEFileLayout getFileLayout(RepositoryConfig config) {
@@ -172,29 +172,14 @@ public class KeystoreManager {
         // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", dasCertDN));
-        addSelfSignedCertToKeyStore(keystore, CERTIFICATE_ALIAS, masterPassword, dasCertDN);
+
+        final KeyTool keyTool = new KeyTool(keystore, masterPassword.toCharArray());
+        keyTool.generateKeyPair(CERTIFICATE_ALIAS, dasCertDN, "RSA", 3650);
 
         // Generate a new self signed certificate with glassfish-instance as the alias
         // Create the default self-signed cert for instances to use for SSL auth.
         final String instanceCertDN = getInstanceCertDN(config);
-        System.out.println(_strMgr.getString("CertificateDN", instanceCertDN));
-        addSelfSignedCertToKeyStore(keystore, INSTANCE_SECURE_ADMIN_ALIAS, masterPassword, instanceCertDN);
-    }
-
-    private void addSelfSignedCertToKeyStore(final File keystore, final String alias, final String masterPassword, final String dn) throws RepositoryException {
-        final String[] keytoolCmd = {
-                "-genkey",
-                "-keyalg", "RSA",
-                "-keystore", keystore.getAbsolutePath(),
-                "-alias", alias,
-                "-dname", dn,
-                "-validity", "3650",
-                "-keypass", masterPassword,
-                "-storepass", masterPassword,
-                "-storetype", "JKS",
-                SKID_EXTENSION_SYSTEM_PROPERTY };
-
-        new KeytoolExecutor(keytoolCmd, 60).execute("keystoreNotCreated", keystore);
+        keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
     }
 
     protected void copyCertificatesToTrustStore(File configRoot, DomainConfig config, String masterPassword) throws DomainException {

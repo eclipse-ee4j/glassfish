@@ -38,7 +38,6 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * Defines various global configuration for the running {@code GlassFish} instance.
- *
  * <p>
  * This primarily replaces all the system variables in V2.
  *
@@ -111,17 +110,17 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
     @PostConstruct
     public void postConstruct() {
 
-        // todo : dochez : this will need to be reworked...
         String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT.getPropertyName());
         if (installRoot == null) {
             // During unit testing, we find an empty StartupContext.
             // Let's first see if the installRoot system property is set in the client VM. If not
             // to be consistent with earlier code (i.e., code that relied on StartupContext.getRootDirectory()),
             // I am setting user.dir as installRoot.
-            if (System.getProperty(INSTALL_ROOT.getSystemPropertyName()) != null) {
-                installRoot = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
-            } else {
+            if (System.getProperty(INSTALL_ROOT.getSystemPropertyName()) == null) {
+                // current directory
                 installRoot = System.getProperty("user.dir");
+            } else {
+                installRoot = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
             }
         }
         asenv = new ASenvPropertyReader(new File(installRoot));
@@ -129,42 +128,27 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
         // Default
         if (this.root == null) {
             String envVar = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
-            if (envVar!=null) {
+            if (envVar != null) {
                 root = new File(envVar);
             } else {
                 String instanceRoot = startupContext.getArguments().getProperty(INSTANCE_ROOT.getPropertyName());
                 if (instanceRoot == null) {
-                    // In client container, instanceRoot is not set. It is a different question altogether as to why
-                    // an object called ServerEnvironmentImpl is at all active in client runtime. To be consistent
-                    // with earlier code, we use installRoot as instanceRoot.
+                    // In client container, instanceRoot is not set.
+                    // It is a different question altogether as to why
+                    // an object called ServerEnvironmentImpl is at all active in client runtime.
+                    // To be consistent with earlier code, we use installRoot as instanceRoot.
                     instanceRoot = installRoot;
                 }
                 root = new File(instanceRoot);
             }
         }
 
-        /*
-         * bnevins 12/12/11
-         * The following chunk of code sets things like hostname to be a file under instance root
-         * I.e. it's crazy.  It's 1 hour until SCF so I'll just fix the current problem which is a NPE
-         * if the value is null.
-         * At any rate the weird values that get set into System Properties get un-done at
-         * the line of code in bootstrap (see end of this comment).  It's easy to trace just step out of this method
-         * in a debugger
-         * createGlassFish(gfKernel, habitat, gfProps.getProperties())
-         */
         asenv.getProps().put(INSTANCE_ROOT.getPropertyName(), root.getAbsolutePath());
         for (Map.Entry<String, String> entry : asenv.getProps().entrySet()) {
-
-            if (entry.getValue() == null) { // don't NPE File ctor
+            if (entry.getValue() == null) {
                 continue;
             }
-
-            File location = new File(entry.getValue());
-            if (!location.isAbsolute()) {
-                location = new File(asenv.getProps().get(INSTANCE_ROOT.getPropertyName()), entry.getValue());
-            }
-            System.setProperty(entry.getKey(), location.getAbsolutePath());
+            System.setProperty(entry.getKey(), entry.getValue());
         }
 
         Properties args = startupContext.getArguments();

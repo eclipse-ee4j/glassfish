@@ -46,30 +46,24 @@ Run a specified group:
 mvn clean install -Dgroups=security
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-   <parent>
+    <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
         <version>7.1.0-SNAPSHOT</version>
     </parent>
 
-   <artifactId>glassfish-external-tck-rest</artifactId>
+    <artifactId>glassfish-external-tck-rest</artifactId>
 
-   <name>Jakarta REST TCK run on glassfish</name>
-   <description>This verifies the compliance of Eclipse Glassfish using the Jakarta REST standalone TCK</description>
+    <name>Jakarta REST TCK run on glassfish</name>
+    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta REST standalone TCK</description>
 
-   <properties>
-        <maven.compiler.release>11</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
+    <properties>
         <tck.version>3.1.5</tck.version>
-
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
     </properties>
 
     <dependencies>
@@ -79,30 +73,27 @@ mvn clean install -Dgroups=security
             <version>${tck.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- The Arquillian connector that starts GlassFish and deploys archives to it. -->
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>glassfish-client-ee10</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
-            <version>1.8.0.Final</version>
         </dependency>
-
-        <!-- Client libs for doing HTTP requests, specifically done via the REST Client -->
-        <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>glassfish-client-ee10</artifactId>
-            <version>1.4</version>
-        </dependency>
-
         <dependency>
             <groupId>org.netbeans.tools</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <version>1.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
 
         <dependency>
@@ -117,12 +108,12 @@ mvn clean install -Dgroups=security
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
-   <build>
+    <build>
         <plugins>
-            <!-- Download and installation of the GlassFish server used for testing  -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -148,7 +139,6 @@ mvn clean install -Dgroups=security
                 </executions>
             </plugin>
 
-            <!-- Configuring and running the TCK -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
@@ -162,18 +152,15 @@ mvn clean install -Dgroups=security
                             <excludes>
                                 <exclude>**/SeBootstrapIT.java</exclude>
                             </excludes>
-
                             <test>${run.test}</test>
-
                             <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
-
                             <systemPropertyVariables>
                                 <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                                 <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
 
                                 <glassfish.postBootCommands>
-                                    create-file-user --groups staff:mgr:DIRECTOR --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
-                                    create-file-user --groups guest:OTHERROLE --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
+                                    --passwordfile ${project.build.directory}/test-classes/j2ee.pass create-file-user --groups staff:mgr:DIRECTOR j2ee
+                                    --passwordfile ${project.build.directory}/test-classes/javajoe.pass create-file-user --groups guest:OTHERROLE javajoe
                                     set server-config.network-config.protocols.protocol.http-listener-1.http.trace-enabled=true
                                 </glassfish.postBootCommands>
 
@@ -187,11 +174,9 @@ mvn clean install -Dgroups=security
                                 <authuser>javajoe</authuser>
                                 <authpassword>javajoe</authpassword>
 
-
                                 <!-- Remnants from ancient TCK -->
                                 <webServerHost>localhost</webServerHost>
                                 <webServerPort>8080</webServerPort>
-
 
                                 <servlet_adaptor>org.glassfish.jersey.servlet.ServletContainer</servlet_adaptor>
                                 <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
@@ -206,7 +191,7 @@ mvn clean install -Dgroups=security
         </plugins>
     </build>
 
-   <profiles>
+    <profiles>
         <profile>
             <id>full</id>
             <activation>

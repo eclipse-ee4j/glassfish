@@ -17,7 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -28,8 +30,13 @@
 
     <artifactId>tck-download</artifactId>
     <packaging>pom</packaging>
-
     <name>TCK: Download and Install Dependencies not in Maven Repos</name>
+
+    <properties>
+        <tck.artifactFileType>zip</tck.artifactFileType>
+        <tck.artifactFileName>${project.artifactId}.${tck.artifactFileType}</tck.artifactFileName>
+        <tck.artifactFile>${project.build.directory}/${tck.artifactFileName}</tck.artifactFile>
+    </properties>
 
     <modules>
         <module>jakarta-platform-tck</module>
@@ -37,7 +44,6 @@
         <module>jakarta-rest-tck</module>
         <module>jakarta-faces-tck</module>
         <module>jakarta-connectors-tck</module>
-        <module>jakarta-connectors-full-tck</module>
         <module>jakarta-pages-tck</module>
         <module>jakarta-pages-tags-tck</module>
         <module>jakarta-pages-debugging-tck</module>
@@ -51,18 +57,136 @@
     </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <artifactId>download-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>download-tck</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>wget</goal>
+                            </goals>
+                            <configuration>
+                                <url>${tck.artifactUrl}</url>
+                                <unpack>false</unpack>
+                                <outputFileName>${tck.artifactFileName}</outputFileName>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-tck</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>attach-artifact</goal>
+                            </goals>
+                            <configuration>
+                                <artifacts>
+                                    <artifact>
+                                        <file>${tck.artifactFile}</file>
+                                        <type>${tck.artifactFileType}</type>
+                                    </artifact>
+                                </artifacts>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <!-- all artifacts under this module are duplicating other which are unavailable for
-                Maven at this moment, so we make them available locally at least -->
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>default-install</id>
-                        <phase>disabled</phase>
+                        <id>download-tck</id>
+                        <phase>skip-in-parent</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>attach-tck</id>
+                        <phase>skip-in-parent</phase>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>disable-deploy</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-deploy</id>
+                                <phase>disabled</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+<!--
+    As an alternative we can download all non-maven dependencies and
+    deploy them to some custom maven repository.
+    You can use "paired" profile in settings.xml for that.
+    <profile>
+        <id>local-deploy</id>
+        <properties>
+            <altDeploymentRepository>my-snapshots::default::http://mydocker:8888/repository/maven-snapshots</altDeploymentRepository>
+            <altSnapshotDeploymentRepository>my-snapshots::default::http://mydocker:8888/repository/maven-snapshots</altSnapshotDeploymentRepository>
+        </properties>
+        <repositories>
+            <repository>
+                <id>my-snapshots</id>
+                <name>my-snapshots</name>
+                <url>http://mydocker:8888/repository/cache</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        </repositories>
+    </profile>
+-->
+        <profile>
+            <id>local-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-deploy</id>
+                                <phase>deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

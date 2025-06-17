@@ -61,7 +61,7 @@ grant {
 grant {
     permission com.sun.corba.ee.impl.presentation.rmi.DynamicAccessPermission "access";
 
-	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
     permission java.lang.RuntimePermission "getProtectionDomain";
     permission java.lang.RuntimePermission  "loadLibrary.*";
     permission java.lang.RuntimePermission  "queuePrintJob";
@@ -70,7 +70,7 @@ grant {
     permission java.io.FilePermission "${com.sun.aas.instanceRoot}${/}lib${/}databases${/}-", "delete";
     permission java.io.FilePermission "${java.io.tmpdir}${/}-", "delete";
 
-	permission java.util.logging.LoggingPermission "control";
+    permission java.util.logging.LoggingPermission "control";
     permission java.util.PropertyPermission "*", "read,write";
 
     permission java.lang.RuntimePermission "closeClassLoader";

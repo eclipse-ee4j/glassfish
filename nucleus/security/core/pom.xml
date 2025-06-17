@@ -107,7 +107,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -149,12 +148,6 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/secure.seed</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/server.policy</include>
                 </includes>
             </resource>
             <resource>

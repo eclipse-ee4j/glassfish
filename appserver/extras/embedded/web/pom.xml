@@ -1376,12 +1376,6 @@
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>

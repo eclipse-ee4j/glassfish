@@ -101,6 +101,7 @@
             <directory>target/classes</directory>
             <includes>
                 <include>META-INF/hk2-locator/default</include>
+                <include>config/*</include>
             </includes>
             <outputDirectory></outputDirectory>
         </fileSet>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,7 +71,10 @@ import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.persistence.jpa.PersistenceUnitLoader;
 import org.jvnet.hk2.annotations.Service;
+import org.omg.CORBA.NO_PERMISSION;
 import org.xml.sax.SAXException;
+
+import static org.glassfish.appclient.client.acc.AppClientContainer.ClientMainClassSetting.getClientMainClass;
 
 /**
  * Embeddable Glassfish app client container (ACC).
@@ -201,8 +204,6 @@ public class AppClientContainer implements ApplicationClientContainer {
 
     private volatile State state;
 
-    private ClientMainClassSetting clientMainClassSetting;
-
     private TransformingClassLoader classLoader;
 
     private Launchable client;
@@ -240,7 +241,7 @@ public class AppClientContainer implements ApplicationClientContainer {
 
     void setClient(final Launchable client) throws ClassNotFoundException {
         this.client = client;
-        clientMainClassSetting = ClientMainClassSetting.set(client.getMainClass());
+        ClientMainClassSetting.setMainClass(client.getMainClass());
     }
 
     void processPermissions() throws IOException {
@@ -311,11 +312,12 @@ public class AppClientContainer implements ApplicationClientContainer {
         cleanup.setManagedBeanManager(managedBeanManager);
 
         // We don't really need the main method here but we do need the side-effects.
-        getMainMethod();
+        resolveMainMethod();
 
         state = State.PREPARED;
     }
 
+    @Override
     public void launch(String[] args) throws UserError {
 
         if (state != State.PREPARED) {
@@ -323,7 +325,7 @@ public class AppClientContainer implements ApplicationClientContainer {
         }
         Thread.currentThread().setContextClassLoader(classLoader);
         try {
-            Method mainMethod = getMainMethod();
+            Method mainMethod = resolveMainMethod();
             // build args to the main and call it
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE,
@@ -380,31 +382,29 @@ public class AppClientContainer implements ApplicationClientContainer {
     }
 
 
-    private Method getMainMethod()
-        throws UserError, ReflectiveOperationException, InjectionException, IOException, SAXException {
+    private Method resolveMainMethod()
+        throws UserError, ReflectiveOperationException, IOException, SAXException, InjectionException {
         // determine the main method using reflection
         // verify that it is public static void and takes
         // String[] as the only argument
-        Method result = null;
-
-        result = ClientMainClassSetting
-                .getClientMainClass(classLoader, injectionManager, invocationManager, componentId, this, client.getDescriptor(classLoader))
-                .getMethod("main", new Class[] { String[].class });
+        Class<?> mainClass = getClientMainClass(classLoader, injectionManager, invocationManager, componentId, this,
+            client.getDescriptor(classLoader));
+        Method mainMethod = mainClass.getMethod("main", new Class[] {String[].class});
 
         // check modifiers: public static
-        int modifiers = result.getModifiers();
+        int modifiers = mainMethod.getModifiers();
         if (!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers)) {
-            final String err = MessageFormat.format(logger.getResourceBundle().getString("appclient.notPublicOrNotStatic"),
-                    (Object[]) null);
+            final String err = MessageFormat
+                .format(logger.getResourceBundle().getString("appclient.notPublicOrNotStatic"), (Object[]) null);
             throw new NoSuchMethodException(err);
         }
 
         // check return type and exceptions
-        if (!result.getReturnType().equals(Void.TYPE)) {
+        if (!mainMethod.getReturnType().equals(Void.TYPE)) {
             final String err = MessageFormat.format(logger.getResourceBundle().getString("appclient.notVoid"), (Object[]) null);
             throw new NoSuchMethodException(err);
         }
-        return result;
+        return mainMethod;
     }
 
 
@@ -433,28 +433,30 @@ public class AppClientContainer implements ApplicationClientContainer {
     /**
      * Records how the main class has been set - by name or by class - and encapsulates the retrieval of the main class.
      */
-    enum ClientMainClassSetting {
-        BY_NAME, BY_CLASS;
+    static class ClientMainClassSetting {
 
-        static String clientMainClassName;
-        static volatile Class clientMainClass;
-        static boolean isInjected;
+        private static String clientMainClassName;
+        private static Class<?> clientMainClass;
+        private static boolean isInjected;
 
-        static ClientMainClassSetting set(final String name) {
+        static void setMainClassName(final String name) {
             clientMainClassName = name;
             clientMainClass = null;
-            return BY_NAME;
         }
 
-        static ClientMainClassSetting set(final Class cl) {
+        static void setMainClass(final Class<?> cl) {
             clientMainClass = cl;
             clientMainClassName = null;
-            return BY_CLASS;
         }
 
-        static Class getClientMainClass(final ClassLoader loader, InjectionManager injectionManager, InvocationManager invocationManager,
+        static Class<?> getClientMainClass(final ClassLoader loader, InjectionManager injectionManager, InvocationManager invocationManager,
                 String componentId, AppClientContainer container, ApplicationClientDescriptor acDesc)
-                throws ClassNotFoundException, InjectionException, UserError {
+                throws ClassNotFoundException, UserError, InjectionException {
+
+            if (isInjected) {
+                return clientMainClass;
+            }
+
             if (clientMainClass == null) {
                 if (clientMainClassName == null) {
                     throw new IllegalStateException("neither client main class nor its class name has been set");
@@ -462,52 +464,60 @@ public class AppClientContainer implements ApplicationClientContainer {
                 clientMainClass = Class.forName(clientMainClassName, true, loader);
                 logger.log(Level.FINE, "Loaded client main class {0}", clientMainClassName);
             }
-            ComponentInvocation ci = new ComponentInvocation(componentId,
+
+            final ComponentInvocation ci = new ComponentInvocation(componentId,
                 ComponentInvocation.ComponentInvocationType.APP_CLIENT_INVOCATION, container,
                 acDesc.getApplication().getAppName(), acDesc.getModuleName());
 
             invocationManager.preInvoke(ci);
-            InjectionException injExc = null;
-            if (!isInjected) {
-                int retriesLeft = Integer.getInteger("org.glassfish.appclient.acc.maxLoginRetries", 3);
-                while (retriesLeft > 0 && !isInjected) {
-                    injExc = null;
-                    try {
-                        injectionManager.injectClass(clientMainClass, acDesc);
-                        isInjected = true;
-                    } catch (InjectionException ie) {
-                        Throwable t = ie;
-                        boolean isAuthError = false;
-                        if (container.appClientContainerSecurityHelper.isLoginCancelled()) {
-                            throw new UserError(logger.getResourceBundle().getString("appclient.userCanceledAuth"));
-                        }
-                        while (t != null && !isAuthError) {
-                            isAuthError = t instanceof org.omg.CORBA.NO_PERMISSION;
-                            t = t.getCause();
-                        }
-                        if (isAuthError) {
-                            injExc = ie;
-                            container.appClientContainerSecurityHelper.clearClientSecurityContext();
-                            retriesLeft--;
-                        } else {
-                            throw ie;
-                        }
+            clientMainClass = injectMainClass(injectionManager, acDesc, container);
+            isInjected = true;
+            return clientMainClass;
+        }
+
+
+        private static Class<?> injectMainClass(InjectionManager injectionManager, ApplicationClientDescriptor acDesc,
+            AppClientContainer container) throws UserError, InjectionException {
+            int retriesLeft = Integer.getInteger("org.glassfish.appclient.acc.maxLoginRetries", 3);
+            while (true) {
+                try {
+                    injectionManager.injectClass(clientMainClass, acDesc);
+                    return clientMainClass;
+                } catch (final InjectionException e) {
+                    if (container.appClientContainerSecurityHelper.isLoginCancelled()) {
+                        throw new UserError(logger.getResourceBundle().getString("appclient.userCanceledAuth"));
                     }
-                }
-                if (injExc != null) {
-                    /*
-                     * Despite retries, the credentials were not accepted. Throw a user error which the ACC will display nicely.
-                     */
-                    Object obj = injExc.getCause();
-                    if (obj != null && obj instanceof NamingException) {
-                        final NamingException ne = (NamingException) obj;
-                        final String expl = ne.getExplanation();
-                        final String msg = MessageFormat.format(logger.getResourceBundle().getString("appclient.RemoteAuthError"), expl);
-                        throw new UserError(msg);
+                    if (isCausedByCorbaNoPermission(e)) {
+                        container.appClientContainerSecurityHelper.clearClientSecurityContext();
+                        if (retriesLeft == 0) {
+                            throw new UserError(logger.getResourceBundle().getString("appclient.noPermission"));
+                        }
+                        retriesLeft--;
+                    } else if (e.getCause() instanceof NamingException) {
+                        final String message = toMessage((NamingException) e.getCause());
+                        throw new UserError(message, e);
+                    } else {
+                        throw e;
                     }
                 }
             }
-            return clientMainClass;
+        }
+
+        private static String toMessage(final NamingException e) {
+            // Despite retries, the credentials were not accepted.
+            // Throw a user error which the ACC will display nicely.
+            final String expl = e.getExplanation();
+            return MessageFormat.format(logger.getResourceBundle().getString("appclient.RemoteAuthError"), expl);
+        }
+
+        private static boolean isCausedByCorbaNoPermission(Throwable t) {
+            while (t != null) {
+                if (t instanceof NO_PERMISSION) {
+                    return true;
+                }
+                t = t.getCause();
+            }
+            return false;
         }
     }
 
@@ -548,14 +558,13 @@ public class AppClientContainer implements ApplicationClientContainer {
      * the possibly several app client modules is the one to execute.
      *
      * @param clientMainClassName
-     * @return
      */
-    public void setClientMainClassName(final String clientMainClassName) throws ClassNotFoundException {
-        clientMainClassSetting = ClientMainClassSetting.set(clientMainClassName);
+    public void setClientMainClassName(final String clientMainClassName) {
+        ClientMainClassSetting.setMainClassName(clientMainClassName);
     }
 
-    void setClientMainClass(final Class clientMainClass) {
-        clientMainClassSetting = ClientMainClassSetting.set(clientMainClass);
+    public void setClientMainClass(final Class<?> clientMainClass) {
+        ClientMainClassSetting.setMainClass(clientMainClass);
     }
 
     /**

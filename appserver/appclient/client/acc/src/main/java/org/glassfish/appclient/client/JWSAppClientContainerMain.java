@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -134,11 +134,10 @@ public class JWSAppClientContainerMain {
                 AppClientContainerHolder.getInstance().launch(args);
                 logger.log(Level.FINE, "JWSAppClientContainer finished after {0} ms", (System.currentTimeMillis() - now));
             } catch (UserError ue) {
-                if (!isTestMode()) {
-                    ErrorDisplayDialog.showUserError(ue, rb);
-                } else {
+                if (isTestMode()) {
                     throw new RuntimeException(ue);
                 }
+                ErrorDisplayDialog.showUserError(ue, rb);
             } catch (Throwable thr) {
                 throw new RuntimeException(thr);
             }

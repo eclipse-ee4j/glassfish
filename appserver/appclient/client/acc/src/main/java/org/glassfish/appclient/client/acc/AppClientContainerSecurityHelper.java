@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +27,7 @@ import jakarta.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.Authenticator;
-import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -87,28 +87,21 @@ public class AppClientContainerSecurityHelper {
     }
 
     private void initLoginConfig() throws IOException {
-        /*
-         * During Java Web Start launches, the appclientlogin.conf content is passed as a property. Store that content (if
-         * present) into a local temporary file and use that during this app client launch.
-         */
+
+        // During Java Web Start launches, the appclientlogin.conf content is passed as a property.
+        // Store that content (if present) into a local temporary file and use that during this app client launch.
         final String appclientloginConfContent = System.getProperty("appclient.login.conf.content");
-        URI configURI;
+        final File configFile;
         if (appclientloginConfContent == null) {
-            configURI = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toURI()
-                .resolve("lib/appclient/appclientlogin.conf");
+            configFile = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toPath()
+                .resolve(Path.of("lib", "appclient", "appclientlogin.conf")).toFile();
         } else {
-            configURI = writeTextToTempFile(appclientloginConfContent, "appclientlogin", ".conf", false).toURI();
+            configFile = writeTextToTempFile(appclientloginConfContent, "appclientlogin", ".conf", false);
         }
 
-        final File configFile = new File(configURI);
-
-        /*
-         * Ugly, but necessary. The Java com.sun.security.auth.login.ConfigFile class expects the
-         * java.security.auth.login.config property value to be a URL, but one with NO encoding. That is, if the path to the
-         * config file contains a blank then ConfigFile class expects the URL to contain a blank, not %20 for example. So, we
-         * need to use the deprecated File.toURL() method to create such a URL.
-         */
-        System.setProperty("java.security.auth.login.config", configFile.toURI().toURL().toString());
+        // The Java com.sun.security.auth.login.ConfigFile class expects the
+        // java.security.auth.login.config property value to be a URL
+        System.setProperty("java.security.auth.login.config", configFile.toURI().toURL().toExternalForm());
     }
 
     /**

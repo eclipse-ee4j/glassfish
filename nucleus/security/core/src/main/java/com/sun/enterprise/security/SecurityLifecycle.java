@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,7 +92,7 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
             if (Util.isEmbeddedServer()) {
                 // If the user-defined login.conf/server.policy are set as system properties, then they are given priority
                 if (System.getProperty(SYS_PROP_LOGIN_CONF) == null) {
-                    System.setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").getAbsolutePath());
+                    System.setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").toURI().toURL().toExternalForm());
                 }
                 if (System.getProperty(SYS_PROP_JAVA_SEC_POLICY) == null) {
                     System.setProperty(SYS_PROP_JAVA_SEC_POLICY, writeConfigFileToTempDir("server.policy").getAbsolutePath());

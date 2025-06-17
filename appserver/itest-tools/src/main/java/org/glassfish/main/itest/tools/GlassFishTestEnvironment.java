@@ -55,6 +55,7 @@ import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
+import org.glassfish.main.jdke.security.KeyTool;
 
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
@@ -81,7 +82,6 @@ public class GlassFishTestEnvironment {
 
     private static final File ASADMIN = findAsadmin();
     private static final File STARTSERV = findStartServ();
-    private static final File KEYTOOL = findKeyTool();
     private static final File JARSIGNER = findJarSigner();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
@@ -150,11 +150,6 @@ public class GlassFishTestEnvironment {
     }
 
 
-    public static KeyTool getKeyTool() {
-        return new KeyTool(KEYTOOL);
-    }
-
-
     public static JarSigner getJarSigner() {
         return new JarSigner(JARSIGNER);
     }
@@ -177,13 +172,21 @@ public class GlassFishTestEnvironment {
 
     public static KeyStore getDomain1KeyStore() {
         Path keystore = getDomain1Directory().resolve(Paths.get("config", "keystore.jks"));
-        return KeyTool.loadKeyStore(keystore.toFile(), "changeit".toCharArray());
+        try {
+            return new KeyTool(keystore.toFile(), "changeit".toCharArray()).loadKeyStore();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 
     public static KeyStore getDomain1TrustStore() {
         Path cacerts = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"));
-        return KeyTool.loadKeyStore(cacerts.toFile(), "changeit".toCharArray());
+        try {
+            return new KeyTool(cacerts.toFile(), "changeit".toCharArray()).loadKeyStore();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 

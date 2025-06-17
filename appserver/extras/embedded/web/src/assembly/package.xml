@@ -1,6 +1,6 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 https://maven.apache.org/xsd/assembly-2.1.0.xsd"
 >
     <id>glassfish-embedded-web</id>
     <formats>
@@ -26,6 +26,8 @@
                     <exclude>META-INF/MANIFEST.MF</exclude>
                     <exclude>META-INF/hk2-locator/*</exclude>
                     <exclude>META-INF/loggerinfo/*</exclude>
+                    <exclude>module-info.class</exclude>
+                    <exclude>META-INF/versions/*/module-info.class</exclude>
                 </excludes>
             </unpackOptions>
             <includes>

@@ -63,11 +63,11 @@ public class KeyToolTest {
         keyTool.changeKeyStorePassword(PASSWORD);
         keyTool.changeKeyPassword("keypair001", PASSWORD, PASSWORD2);
 
-        KeyStore keyStore = KeyStore.getInstance(keyStoreFile, PASSWORD);
+        KeyStore keyStore = keyTool.loadKeyStore();
         assertThrows(UnrecoverableKeyException.class, () -> keyStore.getKey("keypair001", "WrongPwd".toCharArray()));
         assertNotNull(keyStore.getKey("keypair001", PASSWORD2));
 
-        KeyStore copy1 = KeyStore.getInstance(copyKeyStoreFile, PASSWORD);
+        KeyStore copy1 = new KeyTool(copyKeyStoreFile, PASSWORD).loadKeyStore();
         assertTrue(copy1.containsAlias("keypair001"));
         assertNull(copy1.getKey("keypair001", PASSWORD));
         assertNotNull(copy1.getCertificate("keypair001"));

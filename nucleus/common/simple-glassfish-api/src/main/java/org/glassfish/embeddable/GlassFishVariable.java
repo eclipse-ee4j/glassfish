@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,7 +52,30 @@ public enum GlassFishVariable {
     /** Node agents directory */
     NODES_ROOT("AS_DEF_NODES_PATH", "com.sun.aas.agentRoot"),
     /** Install root parent, resolved from {@link #INSTANCE_ROOT}. */
-    PRODUCT_ROOT(null, "com.sun.aas.productRoot")
+    PRODUCT_ROOT(null, "com.sun.aas.productRoot"),
+    /**
+     * File containing the private key and server certificates.
+     * This file must be perfectly protected and must not leave the server.
+     */
+    KEYSTORE_FILE("AS_KEYSTORE_FILE", "javax.net.ssl.keyStore"),
+    /** JKS/JCEKS/PKCS12/... */
+    KEYSTORE_TYPE("AS_KEYSTORE_TYPE", "javax.net.ssl.keyStoreType"),
+    /**
+     * Password for file containing the private key and server certificates.
+     * @deprecated It is not safe to set passwords as system properties.
+     */
+    @Deprecated(since = "7.1.0", forRemoval = true)
+    KEYSTORE_PASSWORD(null, "javax.net.ssl.keyStorePassword"),
+    /** File containing server certificate chains */
+    TRUSTSTORE_FILE("AS_TRUSTSTORE_FILE", "javax.net.ssl.trustStore"),
+    /** JKS/JCEKS/PKCS12/... */
+    TRUSTSTORE_TYPE("AS_TRUSTSTORE_TYPE", "javax.net.ssl.trustStoreType"),
+    /**
+     * Password for the file containing server certificate chains
+     * @deprecated It is not safe to set passwords as system properties.
+     */
+    @Deprecated(since = "7.1.0", forRemoval = true)
+    TRUSTSTORE_PASSWORD(null, "javax.net.ssl.trustStorePassword"),
     ;
 
     private final String envName;
@@ -102,6 +125,12 @@ public enum GlassFishVariable {
     }
 
 
+    /**
+     * The map contains pairs of {@link #getEnvName()} and {@link #getSystemPropertyName()}.
+     * When the {@link #getEnvName()} returns null, the mapping is not included.
+     *
+     * @return a mapping of environment variable names to system property names.
+     */
     public static Map<String, String> getEnvToSystemPropertyMapping() {
         return Arrays.stream(GlassFishVariable.values())
             .filter(m -> m.getEnvName() != null && m.getSystemPropertyName() != null)

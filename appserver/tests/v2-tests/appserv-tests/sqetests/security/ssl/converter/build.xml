@@ -67,7 +67,7 @@
     <target name="runclient-local-win" depends="init-common" unless="isEE">
     <echo message="Test is running on Platform Edition!"/>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/cacerts.jks&quot; -Djavax.net.ssl.trustStorePassword=${master.password}" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/cacerts.p12&quot; -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -91,7 +91,7 @@
        <antcall target="get-certdb-to-jks">
        </antcall>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks&quot;" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12&quot;" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -118,7 +118,7 @@
     <target name="runclient-local-unix" depends="init-common" unless="isEE">
       <echo message="Test is running on Platform Edition!"/>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks  -Djavax.net.ssl.trustStorePassword=${master.password}" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12  -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -143,7 +143,7 @@
         <antcall target="get-certdb-to-jks">
         </antcall>
         <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -181,8 +181,8 @@
         failonerror="true" fork="true">
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-        <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks"/>
-        <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+        <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12"/>
+        <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
         <jvmarg value="-Djavax.net.ssl.trustStorePassword=${master.password}"/>
         <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
         <arg value="${provider.url}"/>
@@ -205,7 +205,7 @@
       </exec>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${cert.nickname}"/>
-         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12"/>
          <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
       </antcall>
 </target>

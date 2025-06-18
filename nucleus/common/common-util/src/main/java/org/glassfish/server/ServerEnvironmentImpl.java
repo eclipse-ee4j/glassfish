@@ -31,8 +31,12 @@ import java.util.Properties;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
@@ -148,7 +152,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
             if (entry.getValue() == null) {
                 continue;
             }
-            System.setProperty(entry.getKey(), entry.getValue());
+            SystemProperties.setProperty(entry.getKey(), entry.getValue(), true);
         }
 
         Properties args = startupContext.getArguments();
@@ -165,15 +169,10 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
         domainName = s;
 
         s = args.getProperty("-instancename");
+        instanceName = isNotEmpty(s) ? s : "server";
 
-        if (!isNotEmpty(s)) {
-            instanceName = "server";
-        } else {
-            instanceName = s;
-        }
-        // bnevins IT 10209
         asenv.getProps().put(SystemPropertyConstants.SERVER_NAME, instanceName);
-        System.setProperty(SystemPropertyConstants.SERVER_NAME, instanceName);
+        SystemProperties.setProperty(SystemPropertyConstants.SERVER_NAME, instanceName, true);
 
         // bnevins Apr 2010 adding clustering support...
         String typeString = args.getProperty("-type");
@@ -318,17 +317,17 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
 
     @Override
     public File getMasterPasswordFile() {
-        return new File (getInstanceRoot(), "master-password");
+        return new File (getInstanceRoot(), MASTER_PASSWORD_FILENAME);
     }
 
     @Override
     public File getJKS() {
-        return new File (getConfigDirPath(), "keystore.jks");
+        return new File (getConfigDirPath(), KEYSTORE_FILENAME_DEFAULT);
     }
 
     @Override
     public File getTrustStore() {
-        return new File(getConfigDirPath(), "cacerts.jks");
+        return new File(getConfigDirPath(), TRUSTSTORE_FILENAME_DEFAULT);
     }
 
     @Override
@@ -340,6 +339,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
         this.status = status;
     }
 
+    @Override
     public boolean isEmbedded() {
         return serverType == RuntimeType.EMBEDDED;
     }

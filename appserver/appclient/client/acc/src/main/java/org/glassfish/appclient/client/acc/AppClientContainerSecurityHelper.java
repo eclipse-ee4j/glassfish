@@ -44,6 +44,7 @@ import static com.sun.enterprise.security.appclient.integration.AppClientSecurit
 import static java.util.Arrays.asList;
 import static org.glassfish.appclient.client.acc.Util.writeTextToTempFile;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  *
@@ -101,7 +102,7 @@ public class AppClientContainerSecurityHelper {
 
         // The Java com.sun.security.auth.login.ConfigFile class expects the
         // java.security.auth.login.config property value to be a URL
-        System.setProperty("java.security.auth.login.config", configFile.toURI().toURL().toExternalForm());
+        setProperty("java.security.auth.login.config", configFile.toURI().toURL().toExternalForm(), true);
     }
 
     /**

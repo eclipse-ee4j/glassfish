@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import org.glassfish.api.naming.NamingObjectsProvider;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ORBLocator;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
@@ -107,8 +108,7 @@ public class NamingClusterInfoImpl implements NamingClusterInfo {
         if (!lbList.isEmpty()) {
             final String first = lbList.remove(0);
             if (first.equals(IC_BASED) || first.equals(IC_BASED_WEIGHTED)) {
-                // XXX concurrency issue here:  possible race on global
-                System.setProperty(LOAD_BALANCING_PROPERTY, first );
+                SystemProperties.setProperty(LOAD_BALANCING_PROPERTY, first, true);
             }
         }
         list.addAll(lbList);

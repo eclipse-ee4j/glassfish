@@ -38,7 +38,6 @@
         <tck.debug>${maven.tck.debug}</tck.debug>
         <tck.home>${project.build.directory}/tck</tck.home>
         <glassfish.home>${tck.home}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
     </properties>
 
     <dependencies>
@@ -63,9 +62,7 @@
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

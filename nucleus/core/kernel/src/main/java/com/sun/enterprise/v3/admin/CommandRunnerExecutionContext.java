@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandEventBroker;
-import org.glassfish.api.admin.AdminCommandState;
+import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
 import org.glassfish.api.admin.CommandParameters;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.CommandSupport;
@@ -41,6 +41,9 @@ import org.glassfish.api.admin.ManagedJob;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.ProgressStatus;
+
+import static org.glassfish.api.admin.AdminCommandState.State.REVERTING;
+import static org.glassfish.api.admin.AdminCommandState.State.RUNNING_RETRYABLE;
 
 /*
  * Some private classes used in the implementation of CommandRunner.
@@ -67,9 +70,9 @@ class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
     private class NameListerPair {
 
         private final String nameRegexp;
-        private final AdminCommandEventBroker.AdminCommandListener listener;
+        private final AdminCommandListener listener;
 
-        public NameListerPair(String nameRegexp, AdminCommandEventBroker.AdminCommandListener listener) {
+        public NameListerPair(String nameRegexp, AdminCommandListener listener) {
             this.nameRegexp = nameRegexp;
             this.listener = listener;
         }
@@ -112,7 +115,7 @@ class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
     }
 
     @Override
-    public CommandRunner.CommandInvocation listener(String nameRegexp, AdminCommandEventBroker.AdminCommandListener listener) {
+    public CommandRunner.CommandInvocation listener(String nameRegexp, AdminCommandListener listener) {
         nameListerPairs.add(new NameListerPair(nameRegexp, listener));
         return this;
     }
@@ -183,7 +186,7 @@ class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
             eventBroker = job.getEventBroker() == null ? new AdminCommandEventBrokerImpl() : job.getEventBroker();
         }
         ((AdminCommandInstanceImpl) job).setEventBroker(eventBroker);
-        ((AdminCommandInstanceImpl) job).setState(revert ? AdminCommandState.State.REVERTING : AdminCommandState.State.RUNNING_RETRYABLE);
+        ((AdminCommandInstanceImpl) job).setState(revert ? REVERTING : RUNNING_RETRYABLE);
         JobManager jobManager = commandRunner.serviceLocator.getService(JobManagerService.class);
         jobManager.registerJob(job);
         //command
@@ -228,14 +231,12 @@ class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
         if (!isManagedJob) {
             isManagedJob = AnnotationUtil.presentTransitive(ManagedJob.class, command.getClass());
         }
-        JobCreator jobCreator = null;
-        JobManager jobManager = null;
-        jobCreator = commandRunner.serviceLocator.getService(JobCreator.class, scope + "job-creator");
-        jobManager = commandRunner.serviceLocator.getService(JobManagerService.class);
+        JobCreator jobCreator = commandRunner.serviceLocator.getService(JobCreator.class, scope + "job-creator");
+        JobManager jobManager = commandRunner.serviceLocator.getService(JobManagerService.class);
         if (jobCreator == null) {
             jobCreator = commandRunner.serviceLocator.getService(JobCreatorService.class);
         }
-        Job job = null;
+        final Job job;
         if (isManagedJob) {
             job = jobCreator.createJob(jobManager.getNewId(), scope(), name(), subject, isManagedJob, parameters());
         } else {
@@ -255,5 +256,4 @@ class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
         }
         CommandSupport.done(commandRunner.serviceLocator, command, job, isNotify);
     }
-
 }

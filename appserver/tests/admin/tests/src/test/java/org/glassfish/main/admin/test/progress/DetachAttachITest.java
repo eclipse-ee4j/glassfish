@@ -17,17 +17,17 @@
 
 package org.glassfish.main.admin.test.progress;
 
+import com.sun.enterprise.universal.process.ProcessManager;
+import com.sun.enterprise.util.OS;
+
+import java.lang.System.Logger;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -36,11 +36,15 @@ import org.glassfish.main.itest.tools.asadmin.DetachedTerseAsadminResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -51,7 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(JobTestExtension.class)
 public class DetachAttachITest {
-    private static final Logger LOG = Logger.getLogger(DetachAttachITest.class.getName());
+    private static final Logger LOG = System.getLogger(DetachAttachITest.class.getName());
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
 
 
@@ -59,7 +63,7 @@ public class DetachAttachITest {
     public void uptimePeriodically() throws Exception {
         Set<String> ids = new HashSet<>();
         for (int i = 0; i < 3; i++) {
-            LOG.log(Level.FINE, "detachAndAttachUptimePeriodically(): round " + i);
+            LOG.log(DEBUG, "detachAndAttachUptimePeriodically(): round " + i);
             final String id;
             {
                 DetachedTerseAsadminResult result = ASADMIN.execDetached("uptime");
@@ -79,7 +83,7 @@ public class DetachAttachITest {
 
     @Test
     public void commandWithProgressStatus() throws Exception {
-        final DetachedTerseAsadminResult detached = ASADMIN.execDetached("progress-custom", "6x1");
+        final DetachedTerseAsadminResult detached = ASADMIN.execDetached("progress-custom", "4x1");
         assertThat(detached, asadminOK());
         final AsadminResult attachResult = ASADMIN.exec("attach", detached.getJobId());
         assertThat(attachResult, asadminOK());
@@ -95,28 +99,57 @@ public class DetachAttachITest {
 
     @Test
     public void detachOnesAttachMulti() throws Exception {
-        ExecutorService pool = Executors.newCachedThreadPool(r -> {
-            Thread result = new Thread(r);
-            result.setDaemon(true);
-            return result;
-        });
-        final DetachedTerseAsadminResult result = ASADMIN.execDetached("progress-custom", "8x1");
-        assertThat(result, asadminOK());
-        assertNotNull(result.getJobId(), "id");
-        final int attachCount = 3;
-        Collection<Callable<AsadminResult>> attaches = new ArrayList<>(attachCount);
+        final int attachCount = 20;
+        final DetachedTerseAsadminResult jobIdResult = ASADMIN.execDetached("progress-custom", "6x1");
+        assertThat(jobIdResult, asadminOK());
+        assertNotNull(jobIdResult.getJobId(), "id");
+        final List<CompletableFuture<AsadminResult>> futureResults = new ArrayList<>(attachCount);
         for (int i = 0; i < attachCount; i++) {
-            attaches.add(() -> ASADMIN.exec("attach", result.getJobId()));
+            futureResults.add(CompletableFuture.supplyAsync(() -> ASADMIN.exec("attach", jobIdResult.getJobId())));
         }
-        List<Future<AsadminResult>> results = pool.invokeAll(attaches);
-        for (Future<AsadminResult> fRes : results) {
-            AsadminResult res = fRes.get();
-            assertThat(res, asadminOK());
-            assertTrue(res.getStdOut().contains("progress-custom"));
-            List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(res.getStdOut());
-            assertFalse(prgs.isEmpty());
-            assertThat(prgs.get(0).getValue(), greaterThanOrEqualTo(0));
-            assertEquals(100, prgs.get(prgs.size() - 1).getValue());
+        LOG.log(INFO, () -> "Started " + attachCount + " attaches to job id " + jobIdResult.getJobId());
+        Thread.sleep(1500L);
+        if (LOG.isLoggable(INFO)) {
+            try {
+            ProcessHandle.allProcesses()//.filter(ph -> ph.info().commandLine().orElse("").contains("java"))
+                .forEach(ph -> {
+                    try {
+                        LOG.log(INFO, () -> "Process " + ph.pid() + " command line and stacktrace: "
+                            + ph.info().commandLine().orElse(""));
+                        ProcessManager stack = new ProcessManager(
+                            Path.of(System.getProperty("java.home"))
+                                .resolve(Path.of("bin", "jcmd" + (OS.isWindows() ? ".exe" : ""))).toString(),
+                            String.valueOf(ph.pid()), "Thread.print");
+                        stack.execute();
+                        LOG.log(INFO, () -> "Stack stdout: \n" + stack.getStdout());
+                        LOG.log(INFO, () -> "Stack stderr: \n" + stack.getStderr());
+                        ProcessManager mem = new ProcessManager(
+                            Path.of(System.getProperty("java.home"))
+                                .resolve(Path.of("bin", "jcmd" + (OS.isWindows() ? ".exe" : ""))).toString(),
+                            String.valueOf(ph.pid()), "VM.info");
+                        mem.execute();
+                        LOG.log(INFO, () -> "VM.info stdout: \n" + mem.getStdout());
+                        LOG.log(INFO, () -> "VM.info stderr: \n" + mem.getStderr());
+                    } catch (Exception e) {
+                        LOG.log(ERROR,  () -> "Error while processing process " + ph.pid(), e);
+                    }
+                });
+        } catch (Exception e) {
+            LOG.log(ERROR, "Error while processing all processes", e);
+        }
+        }
+        for (Future<AsadminResult> futureResult : futureResults) {
+            final AsadminResult result = futureResult.get();
+            final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
+            assertAll(
+                () -> assertThat(result, asadminOK()),
+                () -> assertTrue(result.getStdOut().contains("progress-custom")),
+                () -> assertFalse(prgs.isEmpty(), "progress messages empty")
+            );
+            assertAll(
+                () -> assertThat(prgs.get(0).getValue(), greaterThanOrEqualTo(0)),
+                () -> assertEquals(100, prgs.get(prgs.size() - 1).getValue())
+            );
         }
     }
 }

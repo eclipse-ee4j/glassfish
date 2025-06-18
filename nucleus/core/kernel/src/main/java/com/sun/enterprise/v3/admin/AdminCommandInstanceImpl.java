@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,11 +19,12 @@ package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
 import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
+import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.Date;
+import java.lang.System.Logger;
 import java.util.List;
 
 import javax.security.auth.Subject;
@@ -36,19 +38,24 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobPersistence;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.services.common.SubjectUtil;
 
-/** Represents running (or finished) command instance.
- *
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+
+/**
+ * Represents running (or finished) command instance.
  *
  * @author Martin Mares
  * @author Bhakti Mehta
  */
-
 public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements Job {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = System.getLogger(AdminCommandInstanceImpl.class.getName());
 
     private CommandProgress commandProgress;
     private transient Payload.Outbound payload;
@@ -75,10 +82,10 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     protected AdminCommandInstanceImpl(String id, String name, String commandScope, Subject sub, boolean managedJob, ParameterMap parameters) {
         super(id);
         this.broker = new AdminCommandEventBrokerImpl();
-        this.executionDate = new Date().getTime();
+        this.executionDate = System.currentTimeMillis();
         this.commandName = name;
         this.scope= commandScope;
-        isManagedJob = managedJob;
+        this.isManagedJob = managedJob;
         this.subjectUsernames = SubjectUtil.getUsernamesFromSubject(sub);
         this.parameters = parameters;
     }
@@ -129,7 +136,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
 
     @Override
     protected void setState(State state) {
-        if (state != null && state != getState()) {
+        if (state != getState()) {
             super.setState(state);
             getEventBroker().fireEvent(EVENT_STATE_CHANGED, this);
         }
@@ -142,47 +149,43 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
 
     @Override
     public void complete(ActionReport report, Payload.Outbound outbound) {
-        if (commandProgress != null && report != null && report.getActionExitCode() == ExitCode.SUCCESS) {
-            commandProgress.complete();
-        }
-
-        super.actionReport = report;
+        LOG.log(DEBUG, "complete(report={0}, outbound={1})", report, outbound);
         this.payload = outbound;
         this.completionDate = System.currentTimeMillis();
-        if (isManagedJob) {
-            if (getState().equals(State.RUNNING_RETRYABLE) && failToRetryable) {
-                JobManagerService jobManager = Globals.getDefaultHabitat().getService(JobManagerService.class);
-                jobManager.getRetryableJobsInfo().put(id, CheckpointHelper.CheckpointFilename.createBasic(this));
-                jobManager.purgeJob(id);
-                setState(State.FAILED_RETRYABLE);
-            } else {
-                JobPersistence jobPersistenceService;
-                if (scope != null)   {
-                    jobPersistenceService = Globals.getDefaultHabitat().getService(JobPersistence.class,scope+"job-persistence");
-                }  else  {
-                    jobPersistenceService = Globals.getDefaultHabitat().getService(JobPersistenceService.class);
-                }
-                State finalState = State.COMPLETED;
-                if (getState().equals(State.REVERTING)) {
-                    finalState = State.REVERTED;
-                }
-                String user = null;
-                if(subjectUsernames.size() > 0){
-                    user = subjectUsernames.get(0);
-                }
-                jobPersistenceService.persist(new JobInfo(id,commandName,executionDate,report.getActionExitCode().name(),user,report.getMessage(),getJobsFile(),finalState.name(),completionDate));
-                if (getState().equals(State.RUNNING_RETRYABLE) || getState().equals(State.REVERTING)) {
-                    JobManagerService jobManager = Globals.getDefaultHabitat().getService(JobManagerService.class);
-                    File jobFile = getJobsFile();
-                    if (jobFile == null) {
-                        jobFile = jobManager.getJobsFile();
-                    }
-                    jobManager.deleteCheckpoint(jobFile.getParentFile(), getId());
-                }
-                setState(finalState);
+        if (!isManagedJob) {
+            setState(State.COMPLETED, report);
+            if (commandProgress != null && report.getActionExitCode() == ExitCode.SUCCESS) {
+                commandProgress.complete();
             }
-        } else {
-            setState(State.COMPLETED);
+            return;
+        }
+        final ServiceLocator serviceLocator = Globals.getDefaultHabitat();
+        final State originalState = getState();
+        final JobManagerService jobManager = serviceLocator.getService(JobManagerService.class);
+        if (originalState.equals(State.RUNNING_RETRYABLE) && failToRetryable) {
+            LOG.log(WARNING, "Failed to retry: {0}", this);
+            jobManager.getRetryableJobsInfo().put(getId(), CheckpointFilename.createBasic(this));
+            jobManager.purgeJob(getId());
+            setState(State.FAILED_RETRYABLE, report);
+            return;
+        }
+        final State finalState = originalState.equals(State.REVERTING) ? State.REVERTED : State.COMPLETED;
+        final String user = subjectUsernames.isEmpty() ? null : subjectUsernames.get(0);
+        final JobInfo jobInfo = new JobInfo(getId(), commandName, executionDate, report.getActionExitCode().name(),
+            user, report.getMessage(), getJobsFile(), finalState.name(), completionDate);
+        jobManager.addToCompletedJobs(jobInfo);
+        jobManager.purgeJob(jobInfo.jobId);
+        if (originalState.equals(State.RUNNING_RETRYABLE) || originalState.equals(State.REVERTING)) {
+            File jobFile = getJobsFile();
+            if (jobFile == null) {
+                jobFile = serviceLocator.getService(DefaultJobManagerFile.class).getFile();
+            }
+            jobManager.deleteCheckpoint(jobFile.getParentFile(), getId());
+        }
+        LOG.log(TRACE, "Completed: {0}", this);
+        setState(finalState, report);
+        if (commandProgress != null && report.getActionExitCode() == ExitCode.SUCCESS) {
+            commandProgress.complete();
         }
     }
 
@@ -224,8 +227,15 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
 
     private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException {
         in.defaultReadObject();
-        this.payload = null; //Lazy loaded
-        this.broker = null; //Lazy loaded
+        // Lazy loaded fields
+        this.payload = null;
+        this.broker = null;
     }
 
+    private JobPersistence getJobPersistenceService(final ServiceLocator serviceLocator) {
+        if (scope == null) {
+            return serviceLocator.getService(JobPersistenceService.class);
+        }
+        return serviceLocator.getService(JobPersistence.class, scope + "job-persistence");
+    }
 }

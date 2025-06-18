@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.enterprise.admin.remote;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandState;
@@ -30,40 +32,25 @@ public class AdminCommandStateImpl implements AdminCommandState, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    protected State state = State.PREPARED;
-    protected ActionReport actionReport;
-    private boolean payloadIsEmpty;
-    protected String id;
-
-    public AdminCommandStateImpl(final State state, final ActionReport actionReport, final boolean payloadIsEmpty, final String id) {
-        this.state = state;
-        this.actionReport = actionReport;
-        this.payloadIsEmpty = payloadIsEmpty;
-        this.id = id;
-    }
+    private final String id;
+    private final boolean payloadIsEmpty;
+    private ActionReport actionReport;
+    private volatile State state;
 
     public AdminCommandStateImpl(String id) {
         this(State.PREPARED, null, true, id);
     }
 
-    @Override
-    public State getState() {
-        return this.state;
-    }
-
-    @Override
-    public void complete(ActionReport actionReport) {
+    public AdminCommandStateImpl(final State state, final ActionReport actionReport, final boolean payloadIsEmpty, final String id) {
+        this.id = id;
+        this.payloadIsEmpty = payloadIsEmpty;
         this.actionReport = actionReport;
-        if (getState().equals(State.REVERTING)) {
-            setState(State.REVERTED);
-        } else {
-            setState(State.COMPLETED);
-        }
+        this.state = state;
     }
 
     @Override
-    public ActionReport getActionReport() {
-        return this.actionReport;
+    public final String getId() {
+        return this.id;
     }
 
     @Override
@@ -72,12 +59,39 @@ public class AdminCommandStateImpl implements AdminCommandState, Serializable {
     }
 
     @Override
-    public String getId() {
-        return this.id;
+    public final ActionReport getActionReport() {
+        return this.actionReport;
     }
 
+    @Override
+    public final State getState() {
+        return this.state;
+    }
+
+    /**
+     * Sets the state and the action report.
+     *
+     * @param state must not be null.
+     * @param report must not be null.
+     */
+    protected final void setState(State state, ActionReport report) {
+        // The order matters - setStatus is overridden by some children,
+        // following actions depend on the report!
+        this.actionReport = Objects.requireNonNull(report, "report");
+        setState(state);
+    }
+
+    /**
+     * Sets the state.
+     *
+     * @param state must not be null
+     */
     protected void setState(State state) {
-        this.state = state;
+        this.state = Objects.requireNonNull(state, "state");
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "[id=" + id + ", state=" + state + ", report=" + actionReport + "]";
+    }
 }

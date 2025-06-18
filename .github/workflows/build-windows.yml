@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-2025
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK
@@ -21,4 +19,4 @@ jobs:
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
-      run: mvn -B --no-transfer-progress -e clean install -Pstaging -Pqa '-Dcheckstyle.skip=true'
+      run: mvn -B --no-transfer-progress -e clean install -Pstaging -Pqa '-Dcheckstyle.skip=true' -T4C -Pfastest && mvn clean install -pl :admin-tests '-Dit.test=DetachAttachITest'

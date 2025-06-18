@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2025 Contributors to the Eclipse Foundation
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,30 +16,42 @@
 
 package com.sun.enterprise.v3.admin;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
-import org.glassfish.api.admin.JobLocator;
+import java.io.File;
+
+import org.glassfish.api.admin.ServerEnvironment;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This service will look for completed jobs from the jobs.xml files and load the information
- *
- * @author Bhakti Mehta
+ * Manages the default jobsFile.
+ * Jobs may have own files.
  */
-@Service(name = "job-locator")
-public class JobLocatorService implements JobLocator {
+@Service(name = "default-job-manager-file")
+@Singleton
+public class DefaultJobManagerFile {
 
-    private final Set<File> jobFiles = Collections.synchronizedSet(new HashSet<>());
+    private final String JOBS_FILE = "jobs.xml";
 
-    @Override
-    public Set<File> locateJobXmlFiles() {
-        return jobFiles;
+    @Inject
+    private ServerEnvironment serverEnvironment;
+
+    private File jobsFile;
+
+
+    @PostConstruct
+    private void postConstruct() {
+        this.jobsFile = new File(serverEnvironment.getConfigDirPath(), JOBS_FILE);
     }
 
-    public void addFile(File file) {
-        jobFiles.add(file);
+    /**
+     * This is used to get the jobs file for a job
+     *
+     * @return the location of the job file
+     */
+    public File getFile() {
+        return this.jobsFile;
     }
 }

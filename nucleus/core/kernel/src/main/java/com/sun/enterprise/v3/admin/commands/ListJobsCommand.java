@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,7 @@
 package com.sun.enterprise.v3.admin.commands;
 import com.sun.enterprise.admin.progress.ProgressStatusClient;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.enterprise.v3.admin.DefaultJobManagerFile;
 import com.sun.enterprise.v3.admin.JobAuthorizationAttributeProcessor;
 import com.sun.enterprise.v3.admin.JobManagerService;
 
@@ -43,7 +43,6 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
 import org.glassfish.api.admin.Job;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
 import org.glassfish.hk2.api.PerLookup;
@@ -76,7 +75,8 @@ public class ListJobsCommand implements AdminCommand, AdminCommandSecurity.Acces
     String jobID;
 
     @Inject
-    private ServerEnvironment serverEnvironment;
+    private DefaultJobManagerFile defaultJobManagerFile;
+
 
     protected static final String TITLE_NAME = "NAME";
     protected static final String TITLE_JOBID = "JOB ID";
@@ -95,14 +95,12 @@ public class ListJobsCommand implements AdminCommand, AdminCommandSecurity.Acces
     public static final String COMPLETION_DATE = "completionDate";
 
 
-    final private static StringManager localStrings = StringManager.getManager(ListJobsCommand.class);
-
     protected JobInfos getCompletedJobs() {
-        return jobManagerService.getCompletedJobs(jobManagerService.getJobsFile());
+        return jobManagerService.getCompletedJobs(defaultJobManagerFile.getFile());
     }
 
     protected JobInfo getCompletedJobForId(final String jobID) {
-        return jobManagerService.getCompletedJobForId(jobID);
+        return jobManagerService.getCompletedJobForId(jobID, defaultJobManagerFile.getFile());
     }
 
     protected boolean isSingleJobOK(final Job singleJob) {
@@ -137,9 +135,7 @@ public class ListJobsCommand implements AdminCommand, AdminCommandSecurity.Acces
                     userList.get(0), message, oneJob.getJobsFile(), oneJob.getState().name(), 0);
 
             }  else {
-                if (getCompletedJobs() != null) {
-                    info = getCompletedJobForId(jobID);
-                }
+                info = getCompletedJobForId(jobID);
             }
 
           if (info != null && !skipJob(info.jobName)) {
@@ -169,12 +165,9 @@ public class ListJobsCommand implements AdminCommand, AdminCommandSecurity.Acces
                 }
             }
 
-            JobInfos completedJobs = getCompletedJobs();
-            if (completedJobs != null ) {
-                for (JobInfo info : completedJobs.getJobInfoList()) {
-                    if (!skipJob(info.jobName)) {
-                        jobsToReport.add(info);
-                    }
+            for (JobInfo info : getCompletedJobs().getJobInfoList()) {
+                if (!skipJob(info.jobName)) {
+                    jobsToReport.add(info);
                 }
             }
         }

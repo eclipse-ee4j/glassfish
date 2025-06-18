@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -610,20 +610,4 @@ public class KernelLoggerInfo {
             level = "INFO")
     public static final String adminGuiInstallProblem = LOGMSG_PREFIX + "-00093";
 
-    @LogMessageInfo(
-            message = "Unable to load checkpoint",
-            cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact support.",
-            level = "WARNING")
-    public static final String exceptionLoadCheckpoint = LOGMSG_PREFIX + "-00094";
-
-    @LogMessageInfo(
-            message = "Resuming command {0} from its last checkpoint.",
-            level = "INFO")
-    public static final String checkpointAutoResumeStart = LOGMSG_PREFIX + "-00095";
-
-    @LogMessageInfo(
-            message = "Automatically resumed command {0} finished with exit code {1}. \nMessage: {2}",
-            level = "INFO")
-    public static final String checkpointAutoResumeDone = LOGMSG_PREFIX + "-00096";
 }

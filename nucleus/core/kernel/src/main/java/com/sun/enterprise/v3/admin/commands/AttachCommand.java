@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,13 @@
 
 package com.sun.enterprise.v3.admin.commands;
 
-import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.v3.admin.DefaultJobManagerFile;
 import com.sun.enterprise.v3.admin.JobManagerService;
 
 import jakarta.inject.Inject;
+
+import java.lang.System.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -39,11 +42,15 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.security.services.common.SubjectUtil;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
 import static org.glassfish.api.admin.AdminCommandState.State.COMPLETED;
 import static org.glassfish.api.admin.AdminCommandState.State.PREPARED;
 import static org.glassfish.api.admin.AdminCommandState.State.REVERTED;
 import static org.glassfish.api.admin.AdminCommandState.State.RUNNING;
 import static org.glassfish.api.admin.AdminCommandState.State.RUNNING_RETRYABLE;
+import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_STATE;
 
 
 /**
@@ -59,136 +66,122 @@ import static org.glassfish.api.admin.AdminCommandState.State.RUNNING_RETRYABLE;
 @ManagedJob
 @AccessRequired(resource="jobs/job/$jobID", action="attach")
 public class AttachCommand implements AdminCommand, AdminCommandListener {
-
-
+    /** Command name: attach */
+    // Must be public to be used in annotations
     public static final String COMMAND_NAME = "attach";
-    protected final static LocalStringManagerImpl strings = new LocalStringManagerImpl(AttachCommand.class);
-
-    protected AdminCommandEventBroker eventBroker;
-    protected Job attached;
+    private static final LocalStringManagerImpl strings = new LocalStringManagerImpl(AttachCommand.class);
+    private static final Logger LOG = System.getLogger(AttachCommand.class.getName());
 
     @Inject
-    JobManagerService registry;
+    private JobManagerService registry;
+    @Inject
+    private DefaultJobManagerFile defaultJobManagerFile;
 
-    @Param(primary=true, optional=false, multiple=false)
-    protected String jobID;
+    @Param(primary = true, optional = false, multiple = false)
+    private String jobID;
+
+    private AdminCommandEventBroker<?> eventBroker;
+    private Job job;
 
     @Override
     public void execute(AdminCommandContext context) {
         eventBroker = context.getEventBroker();
-
-        attached = registry.get(jobID);
-        JobInfo jobInfo = null;
-        String jobName = null;
-
-        if (attached == null) {
-            //try for completed jobs
-            if (registry.getCompletedJobs(registry.getJobsFile()) != null) {
-                jobInfo = (JobInfo) registry.getCompletedJobForId(jobID);
-            }
-            if (jobInfo != null) {
-                jobName = jobInfo.jobName;
-            }
-
+        job = registry.get(jobID);
+        final String attachedUser = SubjectUtil.getUsernamesFromSubject(context.getSubject()).get(0);
+        final ActionReport report = context.getActionReport();
+        if (job == null) {
+            LOG.log(TRACE, "Trying to find completed job id: {0}", jobID);
+            JobInfo jobInfo = registry.getCompletedJobForId(jobID, defaultJobManagerFile.getFile());
+            attachCompleted(jobInfo, attachedUser, report);
+        } else {
+            attachRunning(attachedUser, report);
         }
+    }
 
-        attach(attached,jobInfo,context,jobName);
+    private void attachCompleted(JobInfo jobInfo, String attachedUser, ActionReport report) {
+        if (jobInfo == null || isInvisibleJob(jobInfo.jobName)) {
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setMessage(
+                strings.getLocalString("attach.wrong.commandinstance.id", "Job with id {0} does not exist.", jobID));
+            return;
+        }
+        if (!jobInfo.user.equals(attachedUser)) {
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setMessage(strings.getLocalString("user.not.authorized",
+                "User {0} not authorized to attach to job {1}", attachedUser, jobID));
+            return;
+        }
+        if (jobInfo.state.equals(COMPLETED.toString()) || jobInfo.state.equals(REVERTED.toString())) {
+            // In most cases if the user who attaches to the command is the same
+            // as one who started it then purge the job once it is completed
+            report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+            report.appendMessage(strings.getLocalString("attach.finished", "Command {0} executed with status {1}",
+                jobInfo.jobName, jobInfo.exitCode));
+        }
+    }
 
+    private void attachRunning(String attachedUser, ActionReport report) {
+        if (job == null || isInvisibleJob(job.getName())) {
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setMessage(
+                strings.getLocalString("attach.wrong.commandinstance.id", "Job with id {0} does not exist.", jobID));
+            return;
+        }
+        final String jobInitiator = job.getSubjectUsernames().get(0);
+        if (!attachedUser.equals(jobInitiator)) {
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setMessage(strings.getLocalString("user.not.authorized",
+                "User {0} not authorized to attach to job {1}", attachedUser, jobID));
+            return;
+        }
+        AdminCommandEventBroker<?> attachedBroker = job.getEventBroker();
+        CommandProgress commandProgress = job.getCommandProgress();
+        onAdminCommandEvent(EVENT_STATE_CHANGED, job);
+        attachedBroker.registerListener(".*", this);
+        if (commandProgress != null) {
+            onAdminCommandEvent(EVENT_PROGRESSSTATUS_STATE, commandProgress);
+        }
+        LOG.log(TRACE, "Waiting until job {0} is finished.", job);
+        synchronized (job) {
+            while (PREPARED.equals(job.getState())
+                || RUNNING.equals(job.getState())
+                || RUNNING_RETRYABLE.equals(job.getState())) {
+                try {
+                    job.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            LOG.log(TRACE, "Finished waiting for job {0}", job);
+            if (COMPLETED.equals(job.getState()) || REVERTED.equals(job.getState())) {
+                report.setActionExitCode(job.getActionReport().getActionExitCode());
+                report.appendMessage(strings.getLocalString("attach.finished", "Command {0} executed with status {1}",
+                    job.getName(), job.getActionReport().getActionExitCode()));
+            }
+        }
     }
 
     @Override
     public void onAdminCommandEvent(String name, Object event) {
-        if (name == null || name.startsWith("client.")) { //Skip nonsence or own events
+        LOG.log(TRACE, "onAdminCommandEvent(name={0}, event={1})", name, event);
+        // Skip nonsense or own events
+        if (name == null || name.startsWith("client.")) {
             return;
         }
-        if (AdminCommandStateImpl.EVENT_STATE_CHANGED.equals(name) &&
-                (((Job) event).getState().equals(COMPLETED) || ((Job) event).getState().equals(REVERTED))) {
-            synchronized (attached) {
-                attached.notifyAll();
+        if (EVENT_STATE_CHANGED.equals(name)
+            && (((Job) event).getState().equals(COMPLETED) || ((Job) event).getState().equals(REVERTED))) {
+            synchronized (job) {
+                LOG.log(DEBUG, "Notifying attached: {0}", job);
+                job.notifyAll();
             }
         } else {
-            eventBroker.fireEvent(name, event); //Forward
+            // Forward
+            eventBroker.fireEvent(name, event);
         }
     }
 
 
-    protected void purgeJob(String jobid) {
-        try {
-            registry.purgeJob(jobid);
-            registry.purgeCompletedJobForId(jobid);
-        } catch (Exception ex) {
-        }
+    private boolean isInvisibleJob(String name) {
+        return name.startsWith("_") || COMMAND_NAME.equals(name);
     }
-
-    public void attach(Job attached, JobInfo jobInfo, AdminCommandContext context,String jobName) {
-        ActionReport ar = context.getActionReport();
-        String attachedUser = SubjectUtil.getUsernamesFromSubject(context.getSubject()).get(0);
-        if ((attached == null && jobInfo == null) || (attached != null && attached.getName().startsWith("_"))
-                || (attached != null && AttachCommand.COMMAND_NAME.equals(attached.getName()))) {
-            ar.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            ar.setMessage(strings.getLocalString("attach.wrong.commandinstance.id", "Job with id {0} does not exist.", jobID));
-            return;
-        }
-
-        if (attached != null) {
-            String jobInitiator = attached.getSubjectUsernames().get(0);
-            if (!attachedUser.equals( jobInitiator)) {
-                ar.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                ar.setMessage(strings.getLocalString("user.not.authorized",
-                        "User {0} not authorized to attach to job {1}", attachedUser, jobID));
-                return;
-            }
-        }
-        if (attached != null) {
-            //Very sensitive locking part
-            AdminCommandEventBroker attachedBroker = attached.getEventBroker();
-            CommandProgress commandProgress = attached.getCommandProgress();
-            if (commandProgress == null) {
-                synchronized (attachedBroker) {
-                    onAdminCommandEvent(AdminCommandStateImpl.EVENT_STATE_CHANGED, attached);
-                    attachedBroker.registerListener(".*", this);
-                }
-            } else {
-                synchronized (commandProgress) {
-                    onAdminCommandEvent(AdminCommandStateImpl.EVENT_STATE_CHANGED, attached);
-                    onAdminCommandEvent(CommandProgress.EVENT_PROGRESSSTATUS_STATE, attached.getCommandProgress());
-                    attachedBroker.registerListener(".*", this);
-                }
-            }
-            synchronized (attached) {
-                while(attached.getState().equals(PREPARED) ||
-                        attached.getState().equals(RUNNING) ||
-                        attached.getState().equals(RUNNING_RETRYABLE)) {
-                    try {
-                        attached.wait(1000*60*5); //5000L just to be sure
-                    } catch (InterruptedException ex) {}
-                }
-                if (attached.getState().equals(COMPLETED) || attached.getState().equals(REVERTED)) {
-                    String commandUser = attached.getSubjectUsernames().get(0);
-                    //In most cases if the user who attaches to the command is the same
-                    //as one who started it then purge the job once it is completed
-                    if ((commandUser != null && commandUser.equals(attachedUser)) && attached.isOutboundPayloadEmpty())  {
-                        purgeJob(attached.getId());
-
-                    }
-                    ar.setActionExitCode(attached.getActionReport().getActionExitCode());
-                    ar.appendMessage(strings.getLocalString("attach.finished", "Command {0} executed with status {1}",attached.getName(),attached.getActionReport().getActionExitCode()));
-                }
-            }
-        } else {
-
-            if (jobInfo != null && (jobInfo.state.equals(COMPLETED.toString()) || jobInfo.state.equals(REVERTED.toString()))) {
-
-                //In most cases if the user who attaches to the command is the same
-                //as one who started it then purge the job once it is completed
-                if (attachedUser!= null && attachedUser.equals( jobInfo.user)) {
-                    purgeJob(jobInfo.jobId);
-
-                }
-                ar.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-                ar.appendMessage(strings.getLocalString("attach.finished", "Command {0} executed{1}",jobName,jobInfo.exitCode));
-            }
-        }
-    }
-
 }

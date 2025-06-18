@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,14 +33,6 @@ public interface AdminCommandState {
     }
 
     State getState();
-
-    /**
-     * Completes whole progress and records result
-     *
-     * @param actionReport result message
-     *
-     */
-    void complete(ActionReport actionReport);
 
     ActionReport getActionReport();
 

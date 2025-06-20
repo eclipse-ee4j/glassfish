@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1052,6 +1052,20 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
 
+    public EjbDescriptor getEjbByName(String moduleName, String ejbName) {
+        for (EjbBundleDescriptor ejbd : getBundleDescriptors(EjbBundleDescriptor.class)) {
+            if (Objects.equals(moduleName, ejbd.getModuleDescriptor().getModuleName())) {
+                if (ejbd.hasEjbByName(ejbName)) {
+                    return ejbd.getEjbByName(ejbName);
+                }
+            }
+        }
+        throw new IllegalArgumentException(I18N.getLocalString("enterprise.deployment.exceptionapphasnobeannamed",
+                                                               "This application has no beans of name {0} in module {1}",
+                                                               ejbName,
+                                                               moduleName));
+    }
+
     /**
      * Return whether the application contains the given ejb by name..
      *
@@ -1062,6 +1076,17 @@ public class Application extends CommonResourceBundleDescriptor
         for (EjbBundleDescriptor ebd : getBundleDescriptors(EjbBundleDescriptor.class)) {
             if (ebd.hasEjbByName(ejbName)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasEjbByName(String moduleName, String ejbName) {
+        for (EjbBundleDescriptor ebd : getBundleDescriptors(EjbBundleDescriptor.class)) {
+            if (Objects.equals(moduleName, ebd.getModuleDescriptor().getModuleName())) {
+                if (ebd.hasEjbByName(ejbName)) {
+                    return true;
+                }
             }
         }
         return false;

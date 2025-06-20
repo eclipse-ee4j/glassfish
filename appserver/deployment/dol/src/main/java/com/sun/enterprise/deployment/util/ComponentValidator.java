@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -374,6 +375,14 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 ejbReferee = ebd.getEjbByName(linkName);
             } else if (app != null && app.hasEjbByName(linkName)) {
                 ejbReferee = app.getEjbByName(ejbRef.getLinkName());
+            } else if (app != null && linkName.matches("^[^/#]+/[^/#]+$")) {
+                // link has a form "ProductModule/ProductEJB"
+                String[] ejbLinkParts = linkName.split("/");
+                String moduleName = ejbLinkParts[0];
+                String ejbName = ejbLinkParts[1];
+                if (app.hasEjbByName(moduleName, ejbName)) {
+                    ejbReferee = app.getEjbByName(moduleName, ejbName);
+                }
             } else if (getEjbDescriptor() != null) {
                 try {
                     ejbReferee = getEjbDescriptor().getEjbBundleDescriptor().getEjbByName(ejbRef.getLinkName());

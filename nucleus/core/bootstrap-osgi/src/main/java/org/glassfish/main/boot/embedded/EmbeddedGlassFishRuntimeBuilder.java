@@ -40,6 +40,7 @@ import org.glassfish.main.boot.log.LogFacade;
 import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -75,7 +76,7 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private GlassFishRuntime build(BootstrapProperties bsProps, ClassLoader cl, String installRoot) {
         if (installRoot != null) {
-            System.setProperty("org.glassfish.embeddable.installRoot", installRoot);
+            setProperty("org.glassfish.embeddable.installRoot", installRoot, true);
         }
         SingleHK2Factory.initialize(cl);
         ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();

@@ -66,6 +66,7 @@ import static java.util.logging.Level.SEVERE;
 import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * The admin main program (nadmin).
@@ -92,7 +93,7 @@ public class AdminMain {
         for (String prop : SYS_PROPERTIES_TO_SET_FROM_ASENV) {
             String val = systemProps.get(prop);
             if (isNotEmpty(val)) {
-                System.setProperty(prop, val);
+                setProperty(prop, val, true);
             }
         }
     }
@@ -190,7 +191,7 @@ public class AdminMain {
             return ERROR;
         }
 
-        System.setProperty(WALL_CLOCK_START_PROP, Instant.now().toString());
+        setProperty(WALL_CLOCK_START_PROP, Instant.now().toString(), true);
         final LoggingProperties logging = new LoggingProperties();
         logging.setProperty("handlers", BlockingExternallyManagedLogHandler.class.getName());
         if (isClassAndMethodDetectionRequired()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,9 +50,11 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.util.logging.Level.INFO;
 import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Init run level service to take care of vm related tasks.
@@ -90,8 +92,9 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         setSystemPropertiesFromEnv();
         setSystemPropertiesFromDomainXml();
         resolveJavaConfig();
-        LOG.log(Level.FINE, "SystemTasks: loaded server named: {0}", server.getName());
+        LOG.log(INFO, "Loaded server named: {0}", server.getName());
     }
+
 
     @Override
     public void writePidFile() {
@@ -108,12 +111,12 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     }
 
     private void setVersion() {
-        System.setProperty("glassfish.version", Version.getProductIdInfo());
+        setProperty("glassfish.version", Version.getProductIdInfo(), true);
     }
 
     private void setSystemPropertiesFromEnv() {
         // adding our version of some system properties.
-        System.setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
+        setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()), true);
         String hostname = "localhost";
         try {
             // canonical name checks to make sure host is proper
@@ -122,7 +125,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
         }
         if (hostname != null) {
-            System.setProperty(HOST_NAME.getSystemPropertyName(), hostname);
+            setProperty(HOST_NAME.getSystemPropertyName(), hostname, false);
         }
     }
 
@@ -179,8 +182,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
                 if (m.matches()) {
                     String name = m.group(1);
                     String value = TranslatedConfigView.expandValue(m.group(2));
-                    LOG.log(Level.FINEST, "Setting {0}={1}", new Object[] {name, value});
-                    System.setProperty(name, value);
+                    setProperty(name, value, true);
                 }
             }
         }
@@ -192,7 +194,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             String value = sp.getValue();
 
             if (ok(name)) {
-                System.setProperty(name, value);
+                setProperty(name, value, true);
             }
         }
     }

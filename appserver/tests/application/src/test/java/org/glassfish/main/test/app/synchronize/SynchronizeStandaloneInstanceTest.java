@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023,2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -74,7 +74,8 @@ public class SynchronizeStandaloneInstanceTest {
 
     @Test
     public void testSynchronization() {
-        assertThat(ASADMIN.exec("start-instance", INSTANCE_NAME), asadminOK());
+        // Longer timeout for the synchronization
+        assertThat(ASADMIN.exec(120_000, "start-instance", INSTANCE_NAME), asadminOK());
     }
 
     private static File createDeployment() {

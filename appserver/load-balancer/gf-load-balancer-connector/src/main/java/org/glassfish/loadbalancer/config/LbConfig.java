@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.Param;
@@ -59,6 +58,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
+import static java.util.logging.Level.SEVERE;
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
@@ -297,14 +297,8 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
             transaction.commit();
         } catch (Exception ex) {
             transaction.rollback();
-            Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER);
-            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);
-            String msg = localStrings.getLocalString(
-                    "UnableToSetPropertyInLbconfig",
-                    "Unable to set property {0} in lbconfig with name {1}",
-                    propertyName, getName());
-            logger.log(Level.SEVERE, msg);
-            logger.log(Level.FINE, "Exception when trying to set property " + propertyName + " in lbconfig " + getName(), ex);
+            Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER, false);
+            logger.log(SEVERE, "Unable to set property " + propertyName + " in lbconfig with name " + getName(), ex);
             return false;
         }
         return true;

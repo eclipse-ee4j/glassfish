@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,6 @@ import javax.security.auth.Subject;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobCreator;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -35,11 +35,7 @@ import org.jvnet.hk2.annotations.Service;
 public class JobCreatorService implements JobCreator {
 
     @Inject
-    private ServerEnvironment serverEnvironment;
-
-    @Inject
-    JobManagerService jobManagerService;
-
+    private DefaultJobManagerFile defaultJobManagerFile;
 
     /**
      * This will create a new job with the name of command and a new unused id for the job
@@ -51,15 +47,11 @@ public class JobCreatorService implements JobCreator {
      */
     @Override
     public Job createJob(String id, String scope, String name, Subject subject, boolean isManagedJob, ParameterMap parameters) {
-        AdminCommandInstanceImpl job = null;
-        if (isManagedJob) {
-            job = new AdminCommandInstanceImpl(id, name, scope, subject, true, parameters);
-            job.setJobsFile(jobManagerService.jobsFile);
-        } else {
-            job = new AdminCommandInstanceImpl(name, scope, subject, false, parameters);
+        if (!isManagedJob) {
+            return new AdminCommandInstanceImpl(name, scope, subject, false, parameters);
         }
-
+        AdminCommandInstanceImpl job = new AdminCommandInstanceImpl(id, name, scope, subject, true, parameters);
+        job.setJobsFile(defaultJobManagerFile.getFile());
         return job;
     }
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,6 +52,9 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
     @Inject
     private JobManagerService jobManager;
 
+    @Inject
+    private DefaultJobManagerFile defaultJobFile;
+
     @Override
     public void describeAuthorization(Subject subject, String resourceName, String action, AdminCommand command,
             Map<String, Object> context, Map<String, String> subjectAttributes, Map<String, String> resourceAttributes,
@@ -65,23 +69,18 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
         }
         final String jobID = m.group(1);
         final Job job = jobManager.get(jobID);
-        String userID = null;
 
         /*
          * This logic might run before any validation in the command has run, in which case the job ID would be invalid and the
          * job manager and/or the completed jobs store might not know about the job.
          */
-        if (job != null && job.getSubjectUsernames().size() > 0) {
-            userID = job.getSubjectUsernames().get(0);
+        final String userID;
+        if (job == null || job.getSubjectUsernames().isEmpty()) {
+            final JobInfo jobInfo = jobManager.getCompletedJobForId(jobID, defaultJobFile.getFile());
+            userID = jobInfo == null ? null : jobInfo.user;
         } else {
-            if (jobManager.getCompletedJobs(jobManager.getJobsFile()) != null) {
-                final JobInfo jobInfo = jobManager.getCompletedJobForId(jobID);
-                if (jobInfo != null) {
-                    userID = jobInfo.user;
-                }
-            }
+            userID = job.getSubjectUsernames().get(0);
         }
-
         if (userID != null) {
             resourceAttributes.put(USER_ATTRIBUTE_NAME, userID);
         }

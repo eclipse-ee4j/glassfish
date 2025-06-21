@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.admin.rest.utils;
 
 import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.admin.JobManagerService;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 
@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.admin.rest.resources.admin.CommandResource;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandEventBroker;
+import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
 import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.CommandRunner.CommandInvocation;
@@ -37,12 +37,14 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
 
+import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
+
 /**
  * Provides bridge between CommandInvocation and ReST Response for SSE. Create it and call execute.
  *
  * @author martinmares
  */
-public class SseCommandHelper implements Runnable, AdminCommandEventBroker.AdminCommandListener {
+public class SseCommandHelper implements Runnable, AdminCommandListener {
 
     /**
      * If implementation of this interface is registered then it's process() method is used to convert ActionReport before
@@ -57,8 +59,6 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
         public ActionReport process(ActionReport report, EventOutput ec);
 
     }
-
-    private final static LocalStringManagerImpl strings = new LocalStringManagerImpl(CommandResource.class);
 
     private final CommandRunner.CommandInvocation commandInvocation;
     private final ActionReportProcessor processor;
@@ -80,7 +80,7 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
             actionReport.setFailureCause(thr);
             actionReport.setActionExitCode(ActionReport.ExitCode.FAILURE);
             AdminCommandState acs = new AdminCommandStateImpl(AdminCommandState.State.COMPLETED, actionReport, true, "unknown");
-            onAdminCommandEvent(AdminCommandStateImpl.EVENT_STATE_CHANGED, acs);
+            onAdminCommandEvent(EVENT_STATE_CHANGED, acs);
         } finally {
             try {
                 eventOuptut.close();
@@ -97,7 +97,7 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
     }
 
     private Object process(final String name, Object event) {
-        if (processor != null && AdminCommandStateImpl.EVENT_STATE_CHANGED.equals(name)) {
+        if (processor != null && EVENT_STATE_CHANGED.equals(name)) {
             AdminCommandState acs = (AdminCommandState) event;
             ActionReport report = processor.process(acs.getActionReport(), eventOuptut);
             event = new AdminCommandStateImpl(acs.getState(), report, acs.isOutboundPayloadEmpty(), acs.getId());
@@ -122,8 +122,8 @@ public class SseCommandHelper implements Runnable, AdminCommandEventBroker.Admin
             unregister();
             return;
         }
-        if ((event instanceof Number) || (event instanceof CharSequence) || (event instanceof Boolean)) {
-            event = String.valueOf(event);
+        if (event instanceof Number || event instanceof CharSequence || event instanceof Boolean) {
+            event = event.toString();
         }
         event = process(name, event);
         OutboundEvent outEvent = new OutboundEvent.Builder().name(name)

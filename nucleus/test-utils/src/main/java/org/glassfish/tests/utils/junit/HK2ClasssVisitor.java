@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -87,7 +87,7 @@ class HK2ClasssVisitor extends ClassVisitor {
         Class<?> implClass = null;
         try {
             implClass = Class.forName(implName, true, getClass().getClassLoader());
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOG.log(Level.WARNING, "Classloading failed for service {0}, skipped. Reason: {1}",
                 new Object[] {implName, e});
             return;

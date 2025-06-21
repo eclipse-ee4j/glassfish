@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
 import org.jvnet.hk2.annotations.Contract;
 
@@ -92,7 +94,7 @@ public interface JobManager {
      * This method is used to get a job by its id
      *
      * @param id The id to look up the job in the job registry
-     * @return the Job
+     * @return the Job or null
      */
     Job get(String id);
 
@@ -106,7 +108,7 @@ public interface JobManager {
     /**
      * This will get the list of jobs from the job registry which have completed
      *
-     * @return the details of all completed jobs using JobInfos
+     * @return the details of all completed jobs using JobInfos. Never null.
      */
     JobInfos getCompletedJobs(File jobs);
 
@@ -116,22 +118,15 @@ public interface JobManager {
      * @param id the completed Job whose id needs to be looked up
      * @return the completed Job
      */
-    Object getCompletedJobForId(String id);
+    JobInfo getCompletedJobForId(String id, File jobsFile);
 
     /**
-     * This is used to purge a completed job whose id is provided
+     * This is used to purge a completed job.
      *
-     * @param id the id of the Job which needs to be purged
+     * @param job the info about Job
      * @return the new list of completed jobs
      */
-    Object purgeCompletedJobForId(String id);
-
-    /**
-     * This is used to get the jobs file for a job
-     *
-     * @return the location of the job file
-     */
-    File getJobsFile();
+    JobInfos purgeCompletedJobForId(JobInfo job);
 
     /**
      * Stores current command state.

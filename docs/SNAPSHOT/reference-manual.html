@@ -78,6 +78,7 @@
 <li><a href="#examples-4">Examples</a>
 <ul class="sectlevel3">
 <li><a href="#CBHDFEGB">Example 1   Attaching to a Subcommand and Checking Its Status</a></li>
+<li><a href="#CBHDFEGC">Example 2   Usage in scripts</a></li>
 </ul>
 </li>
 <li><a href="#exit-status-4">Exit Status</a></li>
@@ -5363,6 +5364,34 @@ progress, the output displays the current status, for example,
 <pre class="CodeRay highlight"><code>asadmin&gt; attach 20
 Finished execution of deploy
 Command attach executed successfully.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CBHDFEGC"><a class="anchor" href="#CBHDFEGC"></a>Example 2   Usage in scripts</h4>
+<div class="paragraph">
+<p>This example deploys an ear file while we continue configuring the domain.
+Then attaches to the <code>deploy</code> subcommand and shows that the job is finished.
+As showing progress is not useful in scripts, we use <code>--terse</code> to wait
+for the result.</p>
+</div>
+<div class="paragraph">
+<p>Note: Don&#8217;t execute it on command line, failure would exit your active shell!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>#!/bin/bash
+set -e
+jobid=$(asadmin --terse --detach deploy ./application.ear)
+echo $jobid
+1
+# Here you can add other commands
+asadmin ...
+result=&quot;$(asadmin --terse attach ${jobid})&quot;
+if [[ $result =~ &quot;FAILURE&quot; ]]; then
+   echo &quot;${result}&quot;
+   exit 1;
+fi</code></pre>
 </div>
 </div>
 </div>
@@ -57670,7 +57699,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-06-22 21:44:01 UTC
+Last updated 2025-06-22 22:16:50 UTC
 </div>
 </div>
 </body>

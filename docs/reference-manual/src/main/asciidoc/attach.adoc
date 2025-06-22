@@ -70,6 +70,33 @@ Finished execution of deploy
 Command attach executed successfully.
 ----
 
+[[CBHDFEGC]]
+
+==== Example 2   Usage in scripts
+
+This example deploys an ear file while we continue configuring the domain.
+Then attaches to the `deploy` subcommand and shows that the job is finished.
+As showing progress is not useful in scripts, we use `--terse` to wait
+for the result.
+
+Note: Don't execute it on command line, failure would exit your active shell!
+
+[source]
+----
+#!/bin/bash
+set -e
+jobid=$(asadmin --terse --detach deploy ./application.ear)
+echo $jobid
+1
+# Here you can add other commands
+asadmin ...
+result="$(asadmin --terse attach ${jobid})"
+if [[ $result =~ "FAILURE" ]]; then
+   echo "${result}"
+   exit 1;
+fi
+----
+
 === Exit Status
 
 0::

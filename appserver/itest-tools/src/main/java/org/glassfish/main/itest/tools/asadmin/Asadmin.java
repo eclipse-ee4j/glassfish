@@ -21,6 +21,8 @@ import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -33,10 +35,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
@@ -49,7 +52,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class Asadmin {
 
-    private static final Logger LOG = Logger.getLogger(Asadmin.class.getName());
+    private static final Logger LOG = System.getLogger(Asadmin.class.getName());
 
     private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
     private static final Function<String, KeyAndValue<String>> KEYVAL_SPLITTER = s -> {
@@ -243,7 +246,7 @@ public class Asadmin {
         for (Entry<String, String> env : this.environment.entrySet()) {
             processManager.setEnvironment(env.getKey(), env.getValue());
         }
-        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(Level.FINEST)) {
+        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(TRACE)) {
             processManager.setEnvironment("AS_TRACE", "true");
         }
         // override any env property to what is used by tests
@@ -258,7 +261,7 @@ public class Asadmin {
             asadminErrorMessage = e.getMessage();
             exitCode = 1;
         } catch (final ProcessManagerException e) {
-            LOG.log(Level.SEVERE, "The execution failed.", e);
+            LOG.log(ERROR, "The execution failed.", e);
             asadminErrorMessage = e.getMessage();
             exitCode = 1;
         }
@@ -270,13 +273,12 @@ public class Asadmin {
         } else {
             result = new AsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
         }
-        if (!result.getStdOut().isEmpty()) {
-            System.out.println(result.getStdOut());
+        if (!result.getStdOut().isBlank()) {
+            LOG.log(INFO, () -> "STDOUT: \n" + result.getStdOut().strip());
         }
-        if (!result.getStdErr().isEmpty()) {
-            System.err.println(result.getStdErr());
+        if (!result.getStdErr().isBlank()) {
+            LOG.log(INFO, () -> "STDERR: \n" + result.getStdErr().strip());
         }
         return result;
     }
-
 }

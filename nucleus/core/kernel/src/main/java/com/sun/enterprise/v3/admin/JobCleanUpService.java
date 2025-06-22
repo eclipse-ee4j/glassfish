@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,21 +20,20 @@ package com.sun.enterprise.v3.admin;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ManagedJobConfig;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.progress.JobInfo;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
@@ -47,6 +47,8 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 
 /**
  *
@@ -56,20 +58,20 @@ import static java.util.logging.Level.FINE;
  */
 @Service(name = "job-cleanup")
 @RunLevel(value = StartupRunLevel.VAL)
-public class JobCleanUpService implements PostConstruct, ConfigListener {
+public class JobCleanUpService implements ConfigListener {
 
     private final static Logger logger = KernelLoggerInfo.getLogger();
 
     @Inject
-    JobManagerService jobManagerService;
+    private JobManagerService jobManagerService;
 
     @Inject
-    Domain domain;
+    private Domain domain;
 
     private ManagedJobConfig managedJobConfig;
     private ScheduledExecutorService scheduler;
 
-    @Override
+    @PostConstruct
     public void postConstruct() {
         logger.log(FINE, KernelLoggerInfo.initializingJobCleanup);
 
@@ -78,30 +80,50 @@ public class JobCleanUpService implements PostConstruct, ConfigListener {
         logger.fine(KernelLoggerInfo.initializingManagedConfigBean);
         bean.addListener(this);
 
-        scheduler = Executors.newScheduledThreadPool(10, new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread result = new Thread(r);
-                result.setDaemon(true);
-                return result;
-            }
-        });
-
         scheduleCleanUp();
+    }
+
+
+    @PreDestroy
+    public void preDestroy() {
+        logger.log(FINE, "Stopping job cleanup service.");
+        ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(managedJobConfig);
+        bean.removeListener(this);
+        scheduler.shutdownNow();
     }
 
     /**
      * This will schedule a cleanup of expired jobs based on configurable values
      */
     private void scheduleCleanUp() {
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+            try {
+                scheduler.awaitTermination(1, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         logger.fine(KernelLoggerInfo.schedulingCleanup);
+        long delayBetweenRuns = JobManagerService.convert(managedJobConfig.getPollInterval());
+        long initialDelay = JobManagerService.convert(managedJobConfig.getInitialDelay());
+        if (delayBetweenRuns <= 0) {
+            if (initialDelay == 0) {
+                // We will do that immediately, but then we will not schedule any further runs
+                new JobCleanUpTask().run();
+            }
+            logger.log(INFO, "No job cleanup will be scheduled as poll-interval is set to {0} ms", delayBetweenRuns);
+            return;
+        }
 
-        // default values to 20 minutes for delayBetweenRuns and initialDelay
-        long delayBetweenRuns = 1200000;
-        long initialDelay = 1200000;
-
-        delayBetweenRuns = jobManagerService.convert(managedJobConfig.getPollInterval());
-        initialDelay = jobManagerService.convert(managedJobConfig.getInitialDelay());
+        scheduler = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread result = new Thread(r, JobCleanUpTask.class.getSimpleName());
+                result.setDaemon(true);
+                return result;
+            }
+        });
 
         scheduler.scheduleAtFixedRate(new JobCleanUpTask(), initialDelay, delayBetweenRuns, MILLISECONDS);
     }
@@ -123,61 +145,34 @@ public class JobCleanUpService implements PostConstruct, ConfigListener {
         @Override
         public void run() {
             try {
-                // This can have data when server starts up initially or as jobs complete
-                ConcurrentHashMap<String, CompletedJob> completedJobsMap = jobManagerService.getCompletedJobsInfo();
-
-                for (CompletedJob completedJob : new HashSet<>(completedJobsMap.values())) {
-                    logger.log(FINE, KernelLoggerInfo.cleaningJob, new Object[] { completedJob.getId() });
-
-                    cleanUpExpiredJobs(completedJob.getJobsFile());
-                }
+                jobManagerService.getCompletedJobsInfo().values().stream().map(CompletedJob::getJobsFile).distinct()
+                    .forEach(this::cleanUpExpiredJobs);
             } catch (Exception e) {
-                throw new RuntimeException(KernelLoggerInfo.exceptionCleaningJobs, e);
+                logger.log(SEVERE, KernelLoggerInfo.exceptionCleaningJobs, e);
             }
-
         }
-    }
 
-    /**
-     * This will periodically purge expired jobs
-     */
-    private void cleanUpExpiredJobs(File file) {
-        ArrayList<JobInfo> expiredJobs = jobManagerService.getExpiredJobs(file);
-        if (expiredJobs.size() > 0) {
-            for (JobInfo job : expiredJobs) {
-                // remove from Job registy
+        private void cleanUpExpiredJobs(File file) {
+            for (JobInfo job : jobManagerService.getExpiredJobs(file)) {
                 jobManagerService.purgeJob(job.jobId);
-
-                // remove from jobs.xml file
-                jobManagerService.purgeCompletedJobForId(job.jobId, file);
-
-                // remove from local cache for completed jobs
-                jobManagerService.removeFromCompletedJobs(job.jobId);
-
-                logger.log(FINE, KernelLoggerInfo.cleaningJob, job.jobId);
+                jobManagerService.purgeCompletedJobForId(job);
+                logger.log(FINE, KernelLoggerInfo.cleaningJob, job);
             }
         }
-
     }
 
     class PropertyChangeHandler implements Changed {
 
         @Override
         public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
-            NotProcessed notProcessed = null;
-            switch (type) {
-            case CHANGE:
-                if (logger.isLoggable(FINE)) {
-
-                    logger.log(FINE, KernelLoggerInfo.changeManagedJobConfig,
-                            new Object[] { changedType.getName(), changedInstance.toString() });
-                }
-                notProcessed = handleChangeEvent(changedInstance);
-                break;
-            default:
+            if (type != TYPE.CHANGE) {
+                return null;
             }
-
-            return notProcessed;
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, KernelLoggerInfo.changeManagedJobConfig,
+                    new Object[] {changedType.getName(), changedInstance});
+            }
+            return handleChangeEvent(changedInstance);
         }
 
         private <T extends ConfigBeanProxy> NotProcessed handleChangeEvent(T instance) {

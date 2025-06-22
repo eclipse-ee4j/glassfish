@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,6 +52,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINER;
 import static org.glassfish.api.admin.RuntimeType.DAS;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * The start-domain command.
@@ -178,7 +179,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
                     }
 
                     if (env.debug()) {
-                        System.setProperty(WALL_CLOCK_START_PROP, "" + System.currentTimeMillis());
+                        setProperty(WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
                     }
 
                     glassFishLauncher.relaunch();

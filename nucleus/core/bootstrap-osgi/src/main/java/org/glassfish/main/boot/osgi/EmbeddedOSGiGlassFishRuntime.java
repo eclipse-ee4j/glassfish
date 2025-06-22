@@ -68,6 +68,7 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Implementation of GlassFishRuntime in an OSGi environment.
@@ -244,16 +245,16 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
             File installRoot = new File(installRootValue);
             new EnvToPropsConverter(installRoot.toPath()).convert(pairs).entrySet()
-                .forEach(e -> System.setProperty(e.getKey(), e.getValue().getPath()));
-            System.setProperty(INSTALL_ROOT.getSystemPropertyName(), installRootValue);
-            System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+                .forEach(e -> setProperty(e.getKey(), e.getValue().getPath(), true));
+            setProperty(INSTALL_ROOT.getSystemPropertyName(), installRootValue, true);
+            setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString(), true);
         }
 
         final String instanceRootValue = bootstrapProperties.getProperty(INSTANCE_ROOT.getPropertyName());
         if (instanceRootValue != null && !instanceRootValue.isEmpty()) {
             File instanceRoot = new File(instanceRootValue);
-            System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRootValue);
-            System.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
+            setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRootValue, true);
+            setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString(), true);
         }
     }
 

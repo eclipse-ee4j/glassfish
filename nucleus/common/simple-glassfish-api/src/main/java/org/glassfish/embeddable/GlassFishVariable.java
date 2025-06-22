@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -102,6 +102,12 @@ public enum GlassFishVariable {
     }
 
 
+    /**
+     * The map contains pairs of {@link #getEnvName()} and {@link #getSystemPropertyName()}.
+     * When the {@link #getEnvName()} returns null, the mapping is not included.
+     *
+     * @return a mapping of environment variable names to system property names.
+     */
     public static Map<String, String> getEnvToSystemPropertyMapping() {
         return Arrays.stream(GlassFishVariable.values())
             .filter(m -> m.getEnvName() != null && m.getSystemPropertyName() != null)

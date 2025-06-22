@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.main.boot.log.LogFacade;
+import org.glassfish.main.jdke.props.SystemProperties;
 
 import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
 
@@ -100,7 +101,7 @@ final class JarUtil {
     public static void setEnv(String installDir) {
         String location = getSystemModuleLocation(installDir, DEFAULT_JMS_ADAPTER);
         String imqLib = System.getProperty(IMQ_LIB.getSystemPropertyName(), location);
-        System.setProperty(IMQ_LIB.getSystemPropertyName(), imqLib);
+        SystemProperties.setProperty(IMQ_LIB.getSystemPropertyName(), imqLib, true);
     }
 
     private static boolean extractRar(String installDir, String rarName) {

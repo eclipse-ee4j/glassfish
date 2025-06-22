@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -27,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.catalina.LogFacade;
+import org.glassfish.main.jdke.props.SystemProperties;
 
 
 /**
@@ -141,18 +143,17 @@ public final class Tool {
                 usage();
                 System.exit(1);
             }
-            if ("-ant".equals(args[index]))
+            if ("-ant".equals(args[index])) {
                 ant = true;
-            else if ("-common".equals(args[index]))
+            } else if ("-common".equals(args[index])) {
                 common = true;
-            //else if ("-debug".equals(args[index]))
-            //    debug = true;
-            else if ("-server".equals(args[index]))
+            } else if ("-server".equals(args[index])) {
                 server = true;
-            else if ("-shared".equals(args[index]))
+            } else if ("-shared".equals(args[index])) {
                 shared = true;
-            else
+            } else {
                 break;
+            }
             index++;
         }
         if (index > args.length) {
@@ -161,8 +162,9 @@ public final class Tool {
         }
 
         // Set "ant.home" if requested
-        if (ant)
-            System.setProperty("ant.home", catalinaHome);
+        if (ant) {
+            SystemProperties.setProperty("ant.home", catalinaHome, true);
+        }
 
         // Construct the class loader we will be using
         ClassLoader classLoader = null;
@@ -208,8 +210,9 @@ public final class Tool {
         Class<?> clazz = null;
         String className = args[index++];
         try {
-            if (log.isLoggable(Level.FINE))
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Loading application class " + className);
+            }
             clazz = classLoader.loadClass(className);
         } catch (Throwable t) {
             String msg = MessageFormat.format(rb.getString(LogFacade.CREATING_INSTANCE_EXCEPTION),
@@ -223,8 +226,9 @@ public final class Tool {
         String params[] = new String[args.length - index];
         System.arraycopy(args, index, params, 0, params.length);
         try {
-            if (log.isLoggable(Level.FINE))
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Identifying main() method");
+            }
             String methodName = "main";
             Class paramTypes[] = new Class[1];
             paramTypes[0] = params.getClass();
@@ -236,8 +240,9 @@ public final class Tool {
 
         // Invoke the main method of the application class
         try {
-            if (log.isLoggable(Level.FINE))
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Calling main() method");
+            }
             Object paramValues[] = new Object[1];
             paramValues[0] = params;
             method.invoke(null, paramValues);

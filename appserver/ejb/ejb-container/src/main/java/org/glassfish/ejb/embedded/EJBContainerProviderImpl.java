@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,6 +56,7 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * GlassFish implementation of the EJBContainerProvider.
@@ -115,7 +116,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             boolean ok = false;
             Locations l = getLocations(properties);
             try {
-                System.setProperty(IS_EJB_CONTAINER, "true");
+                setProperty(IS_EJB_CONTAINER, "true", true);
                 createContainer(properties, l);
                 Set<DeploymentElement> modules = addModules(properties, l);
                 if (!DeploymentElement.hasEJBModule(modules)) {
@@ -139,7 +140,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                         _logger.info("[EJBContainerProviderImpl] Error cleaning up..." + t1);
                     }
                     container = null;
-                    System.clearProperty(IS_EJB_CONTAINER);
+                    setProperty(IS_EJB_CONTAINER, null, true);
                 }
             }
         }

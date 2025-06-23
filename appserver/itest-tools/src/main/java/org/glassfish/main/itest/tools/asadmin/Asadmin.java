@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -139,6 +139,15 @@ public class Asadmin {
         return asadmin.getName();
     }
 
+    /**
+     * Gets the value for a given key from the asadmin get command.
+     *
+     * @param <T> expected result type
+     * @param key the key to get the value for
+     * @param transformer a function to transform the string value to the expected type
+     * @return a single KeyAndValue instance if the key is concrete enough to get a single value,
+     * @throws IllegalArgumentException if the get command returns more than one value
+     */
     public <T> KeyAndValue<T> getValue(final String key, final Function<String, T> transformer) {
         List<KeyAndValue<T>> result = get(key, transformer);
         if (result.isEmpty()) {
@@ -150,6 +159,14 @@ public class Asadmin {
         return result.get(0);
     }
 
+    /**
+     * Gets values for a given key from the asadmin get command.
+     *
+     * @param <T> expected result type
+     * @param key the key to get the values for
+     * @param transformer a function to transform the string value to the expected type
+     * @return a list of KeyAndValue instances, never null, but can be empty
+     */
     public <T> List<KeyAndValue<T>> get(final String key, final Function<String, T> transformer) {
         AsadminResult result = exec("get", key);
         assertThat(result, asadminOK());
@@ -266,18 +283,19 @@ public class Asadmin {
             exitCode = 1;
         }
 
-        final String stdErr = processManager.getStderr() + '\n' + asadminErrorMessage;
+        final String stdOut = processManager.getStdout().strip();
+        final String stdErr = (processManager.getStderr() + '\n' + asadminErrorMessage).strip();
+        if (!stdOut.isEmpty()) {
+            LOG.log(INFO, () -> "STDOUT: \n" + stdOut);
+        }
+        if (!stdErr.isEmpty()) {
+            LOG.log(INFO, () -> "STDERR: \n" + stdErr);
+        }
         final AsadminResult result;
         if (detachedAndTerse) {
-            result = new DetachedTerseAsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
+            result = new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
         } else {
-            result = new AsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
-        }
-        if (!result.getStdOut().isBlank()) {
-            LOG.log(INFO, () -> "STDOUT: \n" + result.getStdOut().strip());
-        }
-        if (!result.getStdErr().isBlank()) {
-            LOG.log(INFO, () -> "STDERR: \n" + result.getStdErr().strip());
+            result = new AsadminResult(args[0], exitCode, stdOut, stdErr);
         }
         return result;
     }

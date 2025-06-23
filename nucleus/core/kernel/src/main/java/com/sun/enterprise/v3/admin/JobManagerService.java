@@ -275,8 +275,8 @@ public class JobManagerService implements JobManager, EventListener {
         }
     }
 
-    public ExecutorService getThreadPool() {
-        return pool;
+    public void startAsyncListener(RunnableAdminCommandListener listener) {
+        pool.execute(listener);
     }
 
     @Override

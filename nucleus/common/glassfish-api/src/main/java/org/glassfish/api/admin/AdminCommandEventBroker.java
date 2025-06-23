@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,7 +58,7 @@ public interface AdminCommandEventBroker<T> {
      *
      * @param listener Listener to remove
      */
-    void unregisterListener(AdminCommandListener listener);
+    void unregisterListener(AdminCommandListener<T> listener);
 
     /**
      * Returns true if exist exists registered listener for given eventName

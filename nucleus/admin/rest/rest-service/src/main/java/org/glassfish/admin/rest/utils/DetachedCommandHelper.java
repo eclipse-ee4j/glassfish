@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,84 +17,56 @@
 
 package org.glassfish.admin.rest.utils;
 
-import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.v3.admin.JobManagerService;
+import com.sun.enterprise.v3.admin.RunnableAdminCommandListener;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-
-import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.api.admin.AdminCommandEventBroker;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandState;
-import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.internal.api.Globals;
+
+import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
 
 /**
  *
  * @author jdlee
  */
-public class DetachedCommandHelper implements Runnable, AdminCommandEventBroker.AdminCommandListener {
+public class DetachedCommandHelper extends RunnableAdminCommandListener {
 
-    private final CommandRunner.CommandInvocation commandInvocation;
-    private CountDownLatch latch;
-    private String jobId;
-    private AdminCommandEventBroker broker;
+    private volatile String jobId;
+    private volatile ActionReport report;
 
-    private DetachedCommandHelper(final CommandRunner.CommandInvocation commandInvocation, CountDownLatch latch) {
-        this.commandInvocation = commandInvocation;
-        this.latch = latch;
+    private DetachedCommandHelper(final CommandInvocation commandInvocation) {
+        super(commandInvocation);
     }
 
     @Override
-    public void run() {
-        commandInvocation.execute();
+    public void processCommandEvent(final String name, Object event) {
+        if (!EVENT_STATE_CHANGED.equals(name)) {
+            return;
+        }
+        AdminCommandState acs = (AdminCommandState) event;
+        jobId = acs.getId();
+        report = acs.getActionReport();
     }
 
-    public static String invokeAsync(CommandRunner.CommandInvocation commandInvocation) {
+    @Override
+    protected void finalizeRun() {
+        // Nothing to do here.
+    }
+
+    public static String invokeAsync(CommandInvocation commandInvocation) {
         if (commandInvocation == null) {
             throw new IllegalArgumentException("commandInvocation");
         }
-        CountDownLatch latch = new CountDownLatch(1);
-        DetachedCommandHelper helper = new DetachedCommandHelper(commandInvocation, latch);
-        commandInvocation.listener(".*", helper);
+        DetachedCommandHelper helper = new DetachedCommandHelper(commandInvocation);
         JobManagerService jobManagerService = Globals.getDefaultHabitat().getService(JobManagerService.class);
-        jobManagerService.getThreadPool().execute(helper);
-        try {
-            if (!latch.await(10, TimeUnit.SECONDS)) {
-                RestLogging.restLogger.log(Level.FINE, "latch.await() returned false");
-            }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
+        jobManagerService.startAsyncListener(helper);
+        helper.awaitFinish();
+        if (helper.report == null) {
+            return helper.jobId;
         }
-        return helper.jobId;
-    }
-
-    @Override
-    public void onAdminCommandEvent(final String name, Object event) {
-        if (name == null || event == null) {
-            return;
-        }
-        if (AdminCommandEventBroker.BrokerListenerRegEvent.EVENT_NAME_LISTENER_REG.equals(name)) {
-            AdminCommandEventBroker.BrokerListenerRegEvent blre = (AdminCommandEventBroker.BrokerListenerRegEvent) event;
-            broker = blre.getBroker();
-            return;
-        }
-        if (name.startsWith(AdminCommandEventBroker.LOCAL_EVENT_PREFIX)) {
-            return; //Prevent events from client to be send back to client
-        }
-
-        if (AdminCommandStateImpl.EVENT_STATE_CHANGED.equals(name)) {
-            unregister();
-            AdminCommandState acs = (AdminCommandState) event;
-            jobId = acs.getId();
-            latch.countDown();
-        }
-    }
-
-    private void unregister() {
-        if (broker != null) {
-            broker.unregisterListener(this);
-        }
+        throw new IllegalStateException("Failed to schedule detached job: " + helper.report.getMessage(),
+            helper.report.getFailureCause());
     }
 }

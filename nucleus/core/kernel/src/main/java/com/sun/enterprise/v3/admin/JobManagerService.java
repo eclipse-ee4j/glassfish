@@ -290,7 +290,8 @@ public class JobManagerService implements JobManager, EventListener {
         return jobPersistence.remove(job);
     }
 
-    public void addToCompletedJobs(JobInfo job) {
+    public void moveToCompletedJobs(JobInfo job) {
+        purgeJob(job.jobId);
         completedJobsInfo.put(job.jobId, new CompletedJob(job.jobId, job.commandCompletionDate, job.getJobsFile()));
         jobPersistence.add(job);
     }

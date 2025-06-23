@@ -173,8 +173,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
         final String user = subjectUsernames.isEmpty() ? null : subjectUsernames.get(0);
         final JobInfo jobInfo = new JobInfo(getId(), commandName, executionDate, report.getActionExitCode().name(),
             user, report.getMessage(), getJobsFile(), finalState.name(), completionDate);
-        jobManager.addToCompletedJobs(jobInfo);
-        jobManager.purgeJob(jobInfo.jobId);
+        jobManager.moveToCompletedJobs(jobInfo);
         if (originalState.equals(State.RUNNING_RETRYABLE) || originalState.equals(State.REVERTING)) {
             File jobFile = getJobsFile();
             if (jobFile == null) {

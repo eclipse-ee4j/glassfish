@@ -371,10 +371,6 @@ public class GlassFishTestEnvironment {
         return new File(GF_ROOT, isWindows() ? prefix + "bin/startserv.bat" : prefix + "bin/startserv");
     }
 
-    private static File findKeyTool() {
-        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/keytool.exe" : "bin/keytool");
-    }
-
     private static File findJarSigner() {
         return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
     }

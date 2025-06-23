@@ -179,8 +179,6 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             String[] configFiles = new String[] {
                 "config/keyfile",
                 "config/server.policy",
-                "config/cacerts.jks",
-                "config/keystore.jks",
                 "config/login.conf",
                 "config/admin-keyfile",
                 "org/glassfish/web/embed/default-web.xml",

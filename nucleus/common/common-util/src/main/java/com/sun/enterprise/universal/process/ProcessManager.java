@@ -226,8 +226,10 @@ public final class ProcessManager {
         throws ProcessManagerException {
         if (textToWaitFor == null) {
             if (process.isAlive()) {
-                throw new ProcessManagerTimeoutException(
-                    "Process is still running, timeout " + timeoutInMillis + " ms exceeded.");
+                // Process.info().command() doesn't return too much on Windows and we know the command.
+                throw new ProcessManagerTimeoutException("Process with pid " + process.pid()
+                    + " is still running, timeout " + timeoutInMillis + " ms exceeded: "
+                    + process.info().commandLine().orElse(process.info().command().orElse("<unknown>")));
             }
             final int exitCode = process.exitValue();
             LOG.log(DEBUG, "Process finished with exit code {0}", exitCode);

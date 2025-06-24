@@ -22,7 +22,6 @@ import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -239,8 +238,7 @@ public class Asadmin {
      */
     private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = Arrays.asList(args);
-        LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})",
-                new Object[]{timeout, detachedAndTerse, parameters});
+        LOG.log(INFO, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
@@ -258,14 +256,26 @@ public class Asadmin {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeout(timeout);
-        processManager.setEcho(false);
-        for (Entry<String, String> env : this.environment.entrySet()) {
-            processManager.setEnvironment(env.getKey(), env.getValue());
+        // In such cases the asadmin command manages its own timeouts.
+        // Then we will wait without timeout for the asadmin to finish.
+        final String asadminCommand = parameters.get(0);
+        if (asadminCommand.equals("start-domain") || asadminCommand.equals("start-local-instance")
+            || asadminCommand.equals("start-instance")) {
+            processManager.setEnvironment("AS_START_TIMEOUT", Integer.toString(timeout));
+        } else if (asadminCommand.equals("stop-domain") || asadminCommand.equals("stop-local-instance")
+            || asadminCommand.equals("stop-instance")) {
+            processManager.setEnvironment("AS_STOP_TIMEOUT", Integer.toString(timeout));
+        } else {
+            processManager.setTimeout(timeout);
         }
+        processManager.setEcho(false);
         if (System.getenv("AS_TRACE") == null && LOG.isLoggable(TRACE)) {
             processManager.setEnvironment("AS_TRACE", "true");
         }
+        for (Entry<String, String> env : this.environment.entrySet()) {
+            processManager.setEnvironment(env.getKey(), env.getValue());
+        }
+
         // override any env property to what is used by tests
         processManager.setEnvironment(JAVA_HOME.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
         processManager.setEnvironment(JAVA_ROOT.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
@@ -276,7 +286,7 @@ public class Asadmin {
             exitCode = processManager.execute();
         } catch (final ProcessManagerTimeoutException e) {
             asadminErrorMessage = e.getMessage();
-            exitCode = 1;
+            exitCode = 2;
         } catch (final ProcessManagerException e) {
             LOG.log(ERROR, "The execution failed.", e);
             asadminErrorMessage = e.getMessage();
@@ -291,12 +301,9 @@ public class Asadmin {
         if (!stdErr.isEmpty()) {
             LOG.log(INFO, () -> "STDERR: \n" + stdErr);
         }
-        final AsadminResult result;
         if (detachedAndTerse) {
-            result = new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
-        } else {
-            result = new AsadminResult(args[0], exitCode, stdOut, stdErr);
+            return new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
         }
-        return result;
+        return new AsadminResult(args[0], exitCode, stdOut, stdErr);
     }
 }

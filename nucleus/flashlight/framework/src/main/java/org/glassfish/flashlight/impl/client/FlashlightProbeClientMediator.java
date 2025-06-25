@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -135,8 +136,8 @@ public class FlashlightProbeClientMediator
             ProbeClientMethodHandleImpl hi = new ProbeClientMethodHandleImpl(invoker.getId(), invoker, probe);
             pcms.add(hi);
 
-            if (probe.addInvoker(invoker))
-                probesRequiringClassTransformation.add(probe);
+            probe.addInvoker(invoker);
+            probesRequiringClassTransformation.add(probe);
         }
     }
 
@@ -155,8 +156,8 @@ public class FlashlightProbeClientMediator
             ProbeClientMethodHandleImpl hi = new ProbeClientMethodHandleImpl(invoker.getId(), invoker, probe);
             pcms.add(hi);
 
-            if (probe.addInvoker(invoker))
-                probesRequiringClassTransformation.add(probe);
+            probe.addInvoker(invoker);
+            probesRequiringClassTransformation.add(probe);
 
             if (listener == null)
                 listener = probe.getDTraceProviderImpl();    // all the probes in propro have the same "listener"

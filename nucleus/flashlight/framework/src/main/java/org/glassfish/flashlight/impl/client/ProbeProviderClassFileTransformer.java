@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -132,10 +132,12 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
 
     synchronized void addProbe(FlashlightProbe probe) throws NoSuchMethodException {
         Method m = getMethod(probe);
-        probes.put(probe.getProviderJavaMethodName() + "::" + Type.getMethodDescriptor(m), probe);
+        FlashlightProbe existingProbe = probes.put(probe.getProviderJavaMethodName() + "::" + Type.getMethodDescriptor(m), probe);
 
         // probes can be added piecemeal after the initial transformation is done, flagging when probes are added to detect that
-        allProbesTransformed = false;
+        if (existingProbe == null || existingProbe != probe) {
+            allProbesTransformed = false;
+        }
     }
 
     final synchronized void transform() {

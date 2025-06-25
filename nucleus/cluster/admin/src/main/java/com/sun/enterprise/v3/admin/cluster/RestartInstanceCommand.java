@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,16 +19,14 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.admin.remote.ServerRemoteRestAdminCommand;
-import com.sun.enterprise.admin.util.InstanceStateService;
 import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
-import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +49,8 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.v3.admin.cluster.StartInstanceCommand.getTimeout;
+
 /**
  *
  * @author bnevins
@@ -69,10 +70,33 @@ import org.jvnet.hk2.annotations.Service;
         path="restart-instance",
         description="restart-instance",
         params={
-            @RestParam(name="id", value="$parent")
+            @RestParam(name="id", value="$parent"),
         })
 })
 public class RestartInstanceCommand implements AdminCommand {
+
+    @Inject
+    private ServiceLocator habitat;
+    @Inject
+    private ServerEnvironment env;
+    @Param(optional = false, primary = true)
+    private String instanceName;
+    // no default value!  We use the Boolean as a tri-state.
+    @Param(name = "debug", optional = true)
+    private String debug;
+    @Param(optional = true)
+    private Integer timeout;
+
+    private Logger logger;
+    private RemoteInstanceCommandHelper helper;
+    private ActionReport report;
+    private Server instance;
+    private String host;
+    private int port;
+    private String oldPid;
+    private AdminCommandContext ctx;
+
+
     @Override
     public void execute(AdminCommandContext context) {
         try {
@@ -86,34 +110,33 @@ public class RestartInstanceCommand implements AdminCommand {
             // This is just to avoid a ton of error-checking in this top-level method
             // i.e. it's for readability.
 
-            if (!env.isDas())
+            if (!env.isDas()) {
                 setError(Strings.get("restart.instance.notDas", env.getRuntimeType().toString()));
+            }
 
             prepare();
             setOldPid();
-            if (logger.isLoggable(Level.FINE))
-                logger.fine("Restart-instance old-pid = " + oldPid);
+            logger.log(Level.FINE, () -> "Restart-instance old-pid = " + oldPid);
             callInstance();
-            waitForRestart();
-
+            if (!isError() && !waitForRestart()) {
+                setError(Strings.get("restart.instance.timeout", instanceName));
+            }
             if (!isError()) {
                 String msg = Strings.get("restart.instance.success", instanceName);
                 logger.info(msg);
                 report.setMessage(msg);
             }
-        }
-        catch (InstanceNotRunningException inre) {
+        } catch (InstanceNotRunningException inre) {
             start();
-        }
-        catch (CommandException ce) {
-            setError(Strings.get("restart.instance.racError", instanceName,
-                    ce.getLocalizedMessage()));
+        } catch (CommandException ce) {
+            setError(Strings.get("restart.instance.racError", instanceName, ce.getLocalizedMessage()));
         }
     }
 
     private void prepare() throws InstanceNotRunningException {
-        if (isError())
+        if (isError()) {
             return;
+        }
 
         if (!StringUtils.ok(instanceName)) {
             setError(Strings.get("stop.instance.noInstanceName"));
@@ -140,11 +163,13 @@ public class RestartInstanceCommand implements AdminCommand {
             return;
         }
 
-        if (!isInstanceRestartable())
+        if (!isInstanceRestartable()) {
             setError(Strings.get("restart.notRestartable", instanceName));
+        }
 
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer(ObjectAnalyzer.toString(this));
+        }
     }
 
     /**
@@ -152,24 +177,25 @@ public class RestartInstanceCommand implements AdminCommand {
      *
      */
     private void callInstance() throws CommandException {
-        if (isError())
+        if (isError()) {
             return;
+        }
 
-        String cmdName = "_restart-instance";
-
-        RemoteRestAdminCommand rac = createRac(cmdName);
+        RemoteRestAdminCommand rac = createRac("_restart-instance");
         // notice how we do NOT send in the instance's name as an operand!!
         ParameterMap map = new ParameterMap();
 
-        if (debug != null)
+        if (debug != null) {
             map.add("debug", debug);
+        }
 
         rac.executeCommand(map);
     }
 
     private boolean isInstanceRestartable() throws InstanceNotRunningException {
-        if (isError())
+        if (isError()) {
             return false;
+        }
 
         String cmdName = "_get-runtime-info";
 
@@ -191,28 +217,19 @@ public class RestartInstanceCommand implements AdminCommand {
         return true;
     }
 
-    private void waitForRestart() {
-        if (isError())
-            return;
-
-        long deadline = System.currentTimeMillis() + WAIT_TIME_MS;
-
-        while (System.currentTimeMillis() < deadline) {
+    private boolean waitForRestart() {
+        return ProcessUtils.waitFor(() -> {
             try {
                 String newpid = getPid();
-
-                // when the next statement is true -- the server has restarted.
-                if (StringUtils.ok(newpid) && !newpid.equals(oldPid)) {
-                    if (logger.isLoggable(Level.FINE))
-                        logger.fine("Restarted instance pid = " + newpid);
-                    return;
+                if (newpid != null && !newpid.equals(oldPid)) {
+                    logger.log(Level.INFO, "Restarted instance pid = {0}", newpid);
+                    return true;
                 }
+            } catch (CommandException e) {
+                // ignore
             }
-            catch (Exception e) {
-                // ignore.  This is normal!
-            }
-        }
-        setError(Strings.get("restart.instance.timeout", instanceName));
+            return false;
+        }, getTimeout(timeout), false);
     }
 
     private RemoteRestAdminCommand createRac(String cmdName) throws CommandException {
@@ -237,13 +254,15 @@ public class RestartInstanceCommand implements AdminCommand {
     }
 
     private void setOldPid() throws CommandException {
-        if (isError())
+        if (isError()) {
             return;
+        }
 
         oldPid = getPid();
 
-        if (!StringUtils.ok(oldPid))
+        if (!StringUtils.ok(oldPid)) {
             setError(Strings.get("restart.instance.nopid", instanceName));
+        }
     }
 
     private String getPid() throws CommandException {
@@ -260,21 +279,11 @@ public class RestartInstanceCommand implements AdminCommand {
      * See issue 16322 for more details
      */
     private void start() {
-        // be VERY careful -- we are being called from within a catch block...
-        Exception exception = null;
-
         try {
-            StartInstanceCommand sic =
-                    new StartInstanceCommand(habitat, instanceName,
-                    Boolean.parseBoolean(debug), env);
+            StartInstanceCommand sic = new StartInstanceCommand(habitat, instanceName, Boolean.parseBoolean(debug),
+                timeout, env);
             sic.execute(ctx);
-        }
-        catch (Exception e) {
-            // this is NOT normal!  start-instance communicates errors via the
-            // reporter.  This catch should never happen.  It is here for robustness.
-            // and especially for programmer/regression errors.
-            exception = e;
-
+        } catch (Exception e) {
             // Perhaps a NPE or something **after** the report was set to success???
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
@@ -290,27 +299,6 @@ public class RestartInstanceCommand implements AdminCommand {
     }
 
     private static class InstanceNotRunningException extends Exception {
+        private static final long serialVersionUID = 1957218902901618942L;
     }
-    @Inject
-    InstanceStateService stateSvc;
-    @Inject
-    private ServiceLocator habitat;
-    @Inject
-    private ServerEnvironment env;
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    Config dasConfig;
-    @Param(optional = false, primary = true)
-    private String instanceName;
-    // no default value!  We use the Boolean as a tri-state.
-    @Param(name = "debug", optional = true)
-    private String debug;
-    private Logger logger;
-    private RemoteInstanceCommandHelper helper;
-    private ActionReport report;
-    private final static long WAIT_TIME_MS = 600000; // 10 minutes
-    private Server instance;
-    private String host;
-    private int port;
-    private String oldPid;
-    private AdminCommandContext ctx;
 }

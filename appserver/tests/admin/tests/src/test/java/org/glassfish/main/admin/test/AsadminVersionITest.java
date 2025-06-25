@@ -42,7 +42,7 @@ public class AsadminVersionITest {
 
     @AfterAll
     public static void startDomainAgain() {
-        assertThat(ASADMIN.exec(60_000, "start-domain"), asadminOK());
+        assertThat(ASADMIN.exec("start-domain"), asadminOK());
     }
 
 

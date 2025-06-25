@@ -55,7 +55,7 @@ public class LoggingRestITest extends RestTestBase {
     public static void fillUpLog() {
         // The server log may become empty due to log rotation.
         // Restart domain to fill it up.
-        AsadminResult result = getAsadmin().exec(60_000, "restart-domain");
+        AsadminResult result = getAsadmin().exec("restart-domain", "--timeout", "60");
         assertThat(result, asadminOK());
     }
 

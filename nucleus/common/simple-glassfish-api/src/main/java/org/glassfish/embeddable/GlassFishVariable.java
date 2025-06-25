@@ -52,7 +52,11 @@ public enum GlassFishVariable {
     /** Node agents directory */
     NODES_ROOT("AS_DEF_NODES_PATH", "com.sun.aas.agentRoot"),
     /** Install root parent, resolved from {@link #INSTANCE_ROOT}. */
-    PRODUCT_ROOT(null, "com.sun.aas.productRoot")
+    PRODUCT_ROOT(null, "com.sun.aas.productRoot"),
+    /** Default start server timeout in seconds */
+    TIMEOUT_START_SERVER("AS_START_TIMEOUT", null),
+    /** Default stop server timeout in seconds */
+    TIMEOUT_STOP_SERVER("AS_STOP_TIMEOUT", null),
     ;
 
     private final String envName;

@@ -43,7 +43,6 @@ import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
@@ -332,14 +331,14 @@ public abstract class LocalServerCommand extends CLICommand {
      * @param oldPid
      * @param oldAdminAddress
      * @param newAdminAddress new admin endpoint - usually same as old, but it could change with restart.
+     * @param timeout can be null
      * @throws CommandException if we time out.
      */
     protected final void waitForRestart(final Long oldPid, final HostAndPort oldAdminAddress,
-        final HostAndPort newAdminAddress) throws CommandException {
-        logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2})",
-            new Object[] {oldPid, oldAdminAddress, newAdminAddress});
+        final HostAndPort newAdminAddress, Duration timeout) throws CommandException {
+        logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2}, timeout={3})",
+            new Object[] {oldPid, oldAdminAddress, newAdminAddress, timeout});
 
-        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final boolean printDots = !programOpts.isTerse();
         final boolean stopped = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
         if (!stopped) {
@@ -367,7 +366,7 @@ public abstract class LocalServerCommand extends CLICommand {
             logger.log(Level.FINEST, "The server pid is {0}", newPid);
             return ProcessUtils.isAlive(newPid);
         };
-        if (!ProcessUtils.waitFor(signStart, Duration.ofMillis(CLIConstants.WAIT_FOR_DAS_TIME_MS), printDots)) {
+        if (!ProcessUtils.waitFor(signStart, timeout, printDots)) {
             throw new CommandException(I18N.get("restartDomain.noGFStart"));
         }
     }

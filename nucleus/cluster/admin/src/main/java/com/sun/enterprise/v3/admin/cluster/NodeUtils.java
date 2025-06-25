@@ -411,7 +411,7 @@ public class NodeUtils {
             int status = nr.runAdminCommandOnNode(node, output, command, context);
             if (status == 0) {
                 failure = false;
-                LOG.log(INFO, output.toString().trim());
+                LOG.log(INFO, "Output from the command execution on the node {0}:\n{1}", node.getName(), output);
             } else {
                 // Command ran, but didn't succeed. Log full information
                 msg2 = Strings.get("node.command.failed", nodeName, nodeHost, output.toString().trim(),

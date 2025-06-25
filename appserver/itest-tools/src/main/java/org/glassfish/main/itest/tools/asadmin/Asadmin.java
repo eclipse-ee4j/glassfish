@@ -53,7 +53,6 @@ public class Asadmin {
 
     private static final Logger LOG = System.getLogger(Asadmin.class.getName());
 
-    private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
     private static final Function<String, KeyAndValue<String>> KEYVAL_SPLITTER = s -> {
         int equalSignPos = s.indexOf('=');
         if (equalSignPos <= 0 || equalSignPos == s.length() - 1) {
@@ -176,27 +175,26 @@ public class Asadmin {
 
 
     /**
-     * Executes the command with arguments asynchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms
-     * timeout. The command can be attached by the attach command. You should find the job id in
+     * Executes the command with arguments asynchronously without timeout.
+     * The command can be attached by the attach command. You should find the job id in
      * the {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
      *
      * @param args
      * @return {@link AsadminResult} never null.
      */
     public DetachedTerseAsadminResult execDetached(final String... args) {
-        return (DetachedTerseAsadminResult) exec(DEFAULT_TIMEOUT_MSEC, true, args);
+        return (DetachedTerseAsadminResult) exec(null, true, args);
     }
 
 
     /**
-     * Executes the command with arguments synchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms
-     * timeout.
+     * Executes the command with arguments synchronously without timeout.
      *
      * @param args
      * @return {@link AsadminResult} never null.
      */
     public AsadminResult exec(final String... args) {
-        return exec(DEFAULT_TIMEOUT_MSEC, false, args);
+        return exec(null, false, args);
     }
 
     /**
@@ -236,9 +234,9 @@ public class Asadmin {
      * @param args command and arguments.
      * @return {@link AsadminResult} never null.
      */
-    private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
+    private AsadminResult exec(final Integer timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = Arrays.asList(args);
-        LOG.log(INFO, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
+        LOG.log(TRACE, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
@@ -256,16 +254,7 @@ public class Asadmin {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        // In such cases the asadmin command manages its own timeouts.
-        // Then we will wait without timeout for the asadmin to finish.
-        final String asadminCommand = parameters.get(0);
-        if (asadminCommand.equals("start-domain") || asadminCommand.equals("start-local-instance")
-            || asadminCommand.equals("start-instance")) {
-            processManager.setEnvironment("AS_START_TIMEOUT", Integer.toString(timeout));
-        } else if (asadminCommand.equals("stop-domain") || asadminCommand.equals("stop-local-instance")
-            || asadminCommand.equals("stop-instance")) {
-            processManager.setEnvironment("AS_STOP_TIMEOUT", Integer.toString(timeout));
-        } else {
+        if (timeout != null) {
             processManager.setTimeout(timeout);
         }
         processManager.setEcho(false);

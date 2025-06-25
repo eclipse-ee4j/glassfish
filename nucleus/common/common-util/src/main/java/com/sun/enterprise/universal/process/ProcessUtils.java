@@ -232,7 +232,7 @@ public final class ProcessUtils {
 
     /**
      * @param sign logic defining what we are waiting for.
-     * @param timeout
+     * @param timeout can be null to wait indefinitely.
      * @param printDots print dot each second and new line in the end.
      * @return true if the sign returned true before timeout.
      */
@@ -241,8 +241,8 @@ public final class ProcessUtils {
         final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
         final Instant start = Instant.now();
         try {
-            final Instant deadline = start.plus(timeout);
-            while (Instant.now().isBefore(deadline)) {
+            final Instant deadline = timeout == null ? null : start.plus(timeout);
+            while (deadline == null || Instant.now().isBefore(deadline)) {
                 if (sign.get()) {
                     return true;
                 }

@@ -23,6 +23,7 @@ import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
+import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 
 /**
  * THe restart-domain command. The local portion of this command is only used to block until:
@@ -51,13 +55,13 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "restart-domain")
 @PerLookup
 public class RestartDomainCommand extends StopDomainCommand {
+    private static final LocalStringsImpl strings = new LocalStringsImpl(RestartDomainCommand.class);
 
     @Param(name = "debug", optional = true)
     private Boolean debug;
 
     @Inject
     private ServiceLocator habitat;
-    private static final LocalStringsImpl strings = new LocalStringsImpl(RestartDomainCommand.class);
 
     /**
      * Execute the restart-domain command.
@@ -73,14 +77,14 @@ public class RestartDomainCommand extends StopDomainCommand {
         final Long oldPid = getServerPid();
         final HostAndPort oldAdminAddress = getAdminAddress();
         final HostAndPort newAdminEndpoint = getAdminAddress("server");
-        RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
+        final RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
         if (debug == null) {
             cmd.executeAndReturnOutput("restart-domain");
         } else {
             cmd.executeAndReturnOutput("restart-domain", "--debug", debug.toString());
         }
 
-        waitForRestart(oldPid, oldAdminAddress, newAdminEndpoint);
+        waitForRestart(oldPid, oldAdminAddress, newAdminEndpoint, getRestartTimeout());
         logger.info(strings.get("restartDomain.success"));
     }
 
@@ -118,10 +122,31 @@ public class RestartDomainCommand extends StopDomainCommand {
             opts.add("--domaindir");
             opts.add(domainDirParam);
         }
+        opts.add("--timeout");
+        opts.add(Long.toString(getStartTimeout().toSeconds()));
         if (getDomainName() != null) {
             opts.add(getDomainName());
         }
 
         return cmd.execute(opts.toArray(String[]::new));
+    }
+
+    /**
+     * @return timeout for the start-domain command.
+     */
+    protected Duration getStartTimeout() {
+        final Duration parameter = getTimeout();
+        return parameter == null ? WAIT_FOR_DAS_TIME_MS : parameter;
+    }
+
+    /**
+     * @return timeout set as a parameter
+     */
+    private Duration getRestartTimeout() {
+        final Duration paramTimeout = getTimeout();
+        if (paramTimeout != null) {
+            return paramTimeout;
+        }
+        return WAIT_FOR_DAS_TIME_MS.plus(DEATH_TIMEOUT_MS).plusSeconds(5);
     }
 }

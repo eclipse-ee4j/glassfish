@@ -228,7 +228,7 @@ public class GMSCallBack implements CallBack {
     private boolean isInstanceRunning(String instance) {
         for (Server server : servers.getServer()) {
             if (instance.equals(server.getName())) {
-                return server.isRunning();
+                return server.isListeningOnAdminPort();
             }
         }
 

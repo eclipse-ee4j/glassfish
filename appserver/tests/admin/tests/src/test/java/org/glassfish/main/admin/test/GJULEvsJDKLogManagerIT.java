@@ -46,9 +46,9 @@ public class GJULEvsJDKLogManagerIT {
 
     @BeforeAll
     static void setAndBackup() {
-        assertThat(ASADMIN.exec(60000, "stop-domain"), asadminOK());
+        assertThat(ASADMIN.exec("stop-domain", "--timeout", "10"), asadminOK());
         assertThat(ASADMIN.exec(60000, "backup-domain"), asadminOK());
-        assertThat(ASADMIN.exec(60000, "start-domain"), asadminOK());
+        assertThat(ASADMIN.exec("start-domain", "--timeout", "60"), asadminOK());
     }
 
 
@@ -58,13 +58,13 @@ public class GJULEvsJDKLogManagerIT {
         final String sysOptGcLog = OS.isWindows() ? SYSOPT_GC_LOG.replaceAll(":", "\\:") : SYSOPT_GC_LOG;
         assertThat(ASADMIN.exec(10000, "create-jvm-options", sysOptErrLog), asadminOK());
         assertThat(ASADMIN.exec(10000, "create-jvm-options", sysOptGcLog), asadminOK());
-        assertThat(ASADMIN.exec(60000, "restart-domain"), asadminOK());
+        assertThat(ASADMIN.exec("restart-domain", "--timeout", "60"), asadminOK());
     }
 
     @AfterAll
     static void revert() {
-        assertThat(ASADMIN.exec(60000, "stop-domain"), asadminOK());
+        assertThat(ASADMIN.exec(60000, "stop-domain", "--timeout", "10"), asadminOK());
         assertThat(ASADMIN.exec(60000, "restore-domain", "domain1"), asadminOK());
-        assertThat(ASADMIN.exec(60000, "start-domain"), asadminOK());
+        assertThat(ASADMIN.exec(60000, "start-domain", "--timeout", "60"), asadminOK());
     }
 }

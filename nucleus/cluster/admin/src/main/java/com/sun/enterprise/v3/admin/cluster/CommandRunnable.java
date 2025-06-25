@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,7 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandRunner.CommandInvocation;
@@ -32,53 +33,38 @@ import org.glassfish.api.admin.CommandRunner.CommandInvocation;
  *
  * @author dipol
  */
-public class CommandRunnable implements Runnable {
+final class CommandRunnable implements Runnable {
 
-    BlockingQueue<CommandRunnable> responseQueue = null;
-    String name = "";
-    CommandInvocation ci = null;
-    ActionReport report = null;
-
-    private CommandRunnable() {
-    }
+    private String name;
+    private CommandInvocation ci;
+    private ActionReport report;
+    private ArrayBlockingQueue<CommandRunnable> responseQueue;
 
     /**
      * Construct a CommandRunnable. This class wraps a CommandInvocation
      * so that it can be executed via a thread pool.
      *
-     * @param ci        A CommandInvocation containing the command you want
-     *                  to run.
-     * @param report    The ActionReport you used with the CommandInvocation
-     * @param q         A blocking queue that this class will add itself to
-     *                  when its run method has completed.
-     *
-     * After dispatching this class to a thread pool the caller can block
-     * on the response queue where it will dequeue CommandRunnables and then
-     * use the getActionReport() method to retrieve the results.
+     * @param name used for toString()
+     * @param ci A CommandInvocation containing the command you want to run.
+     * @param report The ActionReport you used with the CommandInvocation
+     * @param responseQueue A blocking queue that this class will add itself to
+     *            when its run method has completed.
+     *            After dispatching this class to a thread pool the caller can block
+     *            on the response queue where it will dequeue CommandRunnables and then
+     *            use the getActionReport() method to retrieve the results.
      */
-    public CommandRunnable(CommandInvocation ci, ActionReport report,
-            BlockingQueue<CommandRunnable> q) {
-        this.responseQueue = q;
+    public CommandRunnable(String name, CommandInvocation ci, ActionReport report,
+        ArrayBlockingQueue<CommandRunnable> responseQueue) {
+        this.name = name;
         this.report = report;
         this.ci = ci;
+        this.responseQueue = responseQueue;
     }
 
     @Override
     public void run() {
         ci.execute();
-        if (responseQueue != null) {
-            responseQueue.add(this);
-        }
-    }
-
-    /**
-     * Set a name on the runnable. The name is not interpreted to mean
-     * anything so the caller can use it for whatever it likes.
-     *
-     * @param s The name
-     */
-    public void setName(String s) {
-        this.name = s;
+        responseQueue.add(this);
     }
 
     /**
@@ -88,15 +74,6 @@ public class CommandRunnable implements Runnable {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Returns the CommandInvocation that was passed on the constructor
-     *
-     * @return  The CommandInvocation that was passed on the constructor
-     */
-    public CommandInvocation getCommandInvocation() {
-        return ci;
     }
 
     /**
@@ -110,10 +87,6 @@ public class CommandRunnable implements Runnable {
 
     @Override
     public String toString() {
-        if (name == null) {
-            return "null";
-        } else {
-            return name;
-        }
+        return name;
     }
 }

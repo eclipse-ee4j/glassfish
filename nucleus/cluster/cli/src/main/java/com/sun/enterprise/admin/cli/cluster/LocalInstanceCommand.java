@@ -42,6 +42,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
@@ -665,7 +666,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             return null;
         }
 
-        File mp = new File(new File(nodeDirChild,"agent"), "master-password");
+        File mp = new File(new File(nodeDirChild,"agent"), MASTER_PASSWORD_FILENAME);
         if (!mp.canRead()) {
             return null;
         }

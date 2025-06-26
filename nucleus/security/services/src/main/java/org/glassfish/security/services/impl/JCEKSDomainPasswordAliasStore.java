@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,20 +31,22 @@ import org.glassfish.security.services.common.Secure;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
- * Exposes as a service the JCEKS implementation of the
- * domain-scoped password alias store.
+ * Exposes as a service the PKCS12 implementation of the domain-scoped password alias store.
+ *
+ * @deprecated JCEKS is obsoleted, so internally we use PKCS12.
+ *
  * @author tjquinn
  */
 @Service
 @Named("JCEKS")
 @PerLookup
 @Secure(accessPermissionName = "security/service/credential/provider/jceks")
+@Deprecated
 public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore implements DomainScopedPasswordAliasStore  {
-
-    private static final String PASSWORD_ALIAS_KEYSTORE = "domain-passwords";
 
     @Inject @Optional
     private IdentityManagement idm;

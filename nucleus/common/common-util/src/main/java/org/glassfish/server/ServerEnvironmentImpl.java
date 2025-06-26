@@ -35,6 +35,7 @@ import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
@@ -316,7 +317,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
 
     @Override
     public File getMasterPasswordFile() {
-        return new File (getInstanceRoot(), "master-password");
+        return new File (getInstanceRoot(), MASTER_PASSWORD_FILENAME);
     }
 
     @Override

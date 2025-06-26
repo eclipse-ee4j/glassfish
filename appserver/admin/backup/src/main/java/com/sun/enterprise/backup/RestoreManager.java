@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.backup;
 
 import com.sun.enterprise.backup.util.BackupUtils;
@@ -22,6 +22,8 @@ import com.sun.enterprise.util.zip.ZipFile;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 
 /**
  *
@@ -48,8 +50,9 @@ public class RestoreManager extends BackupRestoreManager {
 
             // If we are restoring the whole domain then we need to preserve
             // the backups directory.
-            if (!isConfigBackup)
+            if (!isConfigBackup) {
                 copyBackups();
+            }
             atomicSwap(request.domainDir, request.domainName, isConfigBackup);
             setPermissions();
             String mesg = readAndDeletePropsFile(isConfigBackup);
@@ -69,10 +72,11 @@ public class RestoreManager extends BackupRestoreManager {
     void init() throws BackupException {
         super.init();
 
-        if(request.backupFile == null)
+        if(request.backupFile == null) {
             initWithNoSpecifiedBackupFile();
-        else
+        } else {
             initWithSpecifiedBackupFile();
+        }
 
         tempRestoreDir = new File(request.domainsDir, request.domainName +
             "_" + System.currentTimeMillis());
@@ -81,9 +85,10 @@ public class RestoreManager extends BackupRestoreManager {
     //////////////////////////////////////////////////////////////////////////
 
     private void initWithSpecifiedBackupFile() throws BackupException {
-        if(request.backupFile.length() <= 0)
+        if(request.backupFile.length() <= 0) {
             throw new BackupException("backup-res.CorruptBackupFile",
                                       request.backupFile);
+        }
 
         if (request.domainName == null) {
 
@@ -98,18 +103,21 @@ public class RestoreManager extends BackupRestoreManager {
             request.domainDir = new File(request.domainsDir, request.domainName);
         }
 
-        if(!FileUtils.safeIsDirectory(request.domainDir))
-            if (!request.domainDir.mkdirs())
+        if(!FileUtils.safeIsDirectory(request.domainDir)) {
+            if (!request.domainDir.mkdirs()) {
                 throw new BackupException("backup-res.CantCreateDomainDir",
                                           request.domainDir);
+            }
+        }
 
         backupDir = new File(request.domainDir, Constants.BACKUP_DIR);
 
         // It's NOT an error to not exist.  The domain may not exist
         // currently and, besides, they are specifying the backup-file
         // from anywhere potentially...
-        if(!FileUtils.safeIsDirectory(backupDir))
+        if(!FileUtils.safeIsDirectory(backupDir)) {
             backupDir = null;
+        }
 
         //throw new BackupException("NOT YET IMPLEMENTED");
 
@@ -121,15 +129,17 @@ public class RestoreManager extends BackupRestoreManager {
         // if they did NOT specify a backupFile, then we *must* have a
         // pre-existing backups directory in a pre-existing domain directory.
 
-        if(!FileUtils.safeIsDirectory(request.domainDir))
+        if(!FileUtils.safeIsDirectory(request.domainDir)) {
             throw new BackupException("backup-res.NoDomainDir",
                                       request.domainDir);
+        }
 
         backupDir = getBackupDirectory(request);
 
         // It's an error to not exist...
-        if(!FileUtils.safeIsDirectory(backupDir))
+        if(!FileUtils.safeIsDirectory(backupDir)) {
             throw new BackupException("backup-res.NoBackupDir", backupDir);
+        }
 
         BackupFilenameManager bfmgr = new BackupFilenameManager(backupDir,
             request.domainName);
@@ -184,8 +194,9 @@ public class RestoreManager extends BackupRestoreManager {
          * If an existing backup directory does not exist then there
          * is nothing to copy.
          */
-        if(!FileUtils.safeIsDirectory(domainBackupDir))
+        if(!FileUtils.safeIsDirectory(domainBackupDir)) {
             return;
+        }
 
         File tempRestoreDirBackups = new File(tempRestoreDir,
                                                   Constants.BACKUP_DIR);
@@ -235,16 +246,18 @@ public class RestoreManager extends BackupRestoreManager {
         if (configOnly) {
             if(!tempRestoreDir.renameTo(configDir)) {
                 FileUtils.whack(tempRestoreDir);
-                if (!oldDir.renameTo(configDir))
+                if (!oldDir.renameTo(configDir)) {
                     throw new BackupException("backup-res.CantRevertOldDomain",
                                                configDir);
+                }
                 throw new BackupException("backup-res.CantRenameRestoredDomain");
             }
         } else if(!tempRestoreDir.renameTo(domainDir)) {
             FileUtils.whack(tempRestoreDir);
-            if (!oldDir.renameTo(domainDir))
+            if (!oldDir.renameTo(domainDir)) {
                 throw new BackupException("backup-res.CantRevertOldDomain",
                                            domainDir);
+            }
             throw new BackupException("backup-res.CantRenameRestoredDomain");
         }
 
@@ -261,11 +274,12 @@ public class RestoreManager extends BackupRestoreManager {
 
         // If this is a config only restore the prop file will be in
         // the config directory.
-        if (isConfigBackup)
+        if (isConfigBackup) {
             propsFile = new File (request.domainDir, Constants.CONFIG_DIR +
                                   "/" + Constants.PROPS_FILENAME);
-        else
+        } else {
             propsFile = new File(request.domainDir, Constants.PROPS_FILENAME);
+        }
 
         if (request.verbose == true || request.terse != true) {
             if (isConfigBackup) {
@@ -282,8 +296,9 @@ public class RestoreManager extends BackupRestoreManager {
             mesg += "\n" + status.read(propsFile, false);
         }
 
-        if (!propsFile.delete())
+        if (!propsFile.delete()) {
             propsFile.deleteOnExit();
+        }
 
         return mesg;
     }
@@ -296,7 +311,7 @@ public class RestoreManager extends BackupRestoreManager {
         File bin            = new File(request.domainDir, "bin");
         File config         = new File(request.domainDir, "config");
         File webtmp         = new File(request.domainDir, "generated/tmp");
-        File masterPassword = new File(request.domainDir, "master-password");
+        File masterPassword = new File(request.domainDir, MASTER_PASSWORD_FILENAME);
 
         // note that makeExecutable(File f) will make all the files under f
         // executable if f happens to be a directory.

@@ -18,6 +18,7 @@
 package org.glassfish.grizzly.config;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,8 +28,11 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
+import org.glassfish.main.jdke.security.KeyTool;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,6 +47,21 @@ public class PUGrizzlyConfigTest {
     private static final GrizzlyConfigTestHelper helper = new GrizzlyConfigTestHelper(PUGrizzlyConfigTest.class);
 
     private static int count;
+
+    /**
+     * Generates keystores and copies the certificate to the truststore.
+     * Files are defined in "redirect" xml configuration files in test resources
+     *
+     * @throws Exception
+     */
+    @BeforeAll
+    static void initKeyStores() throws Exception {
+        KeyTool keyTool = new KeyTool(new File("target/test-classes/keystore-PU.p12"),
+            KEYSTORE_PASSWORD_DEFAULT.toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+        keyTool.copyCertificate("s1as", new File("target/test-classes/cacerts-PU.p12"));
+    }
+
 
     @Test
     public void puConfig() throws Exception {

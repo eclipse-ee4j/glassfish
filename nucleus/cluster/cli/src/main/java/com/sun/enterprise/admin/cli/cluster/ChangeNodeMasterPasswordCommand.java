@@ -36,6 +36,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 /**
@@ -57,7 +60,6 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
     @Param(name = "savemasterpassword", optional = true, defaultValue = "false")
     protected boolean savemp;
 
-    private static final String MASTER_PASSWORD_ALIAS="master-password";
 
     private static final LocalStringsImpl strings =
             new LocalStringsImpl(ChangeNodeMasterPasswordCommand.class);
@@ -156,10 +158,10 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
      * @throws CommandException
      */
     protected void createMasterPasswordFile() throws CommandException {
-        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_ALIAS);
+        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_FILENAME);
         try {
             PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(),
-                MASTER_PASSWORD_ALIAS.toCharArray());
+                MASTER_PASSWORD_PASSWORD.toCharArray());
             p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, newPassword.getBytes());
             pwdFile.setReadable(true);
             pwdFile.setWritable(true);

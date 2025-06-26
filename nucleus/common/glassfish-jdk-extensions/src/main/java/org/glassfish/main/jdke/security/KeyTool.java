@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
 
@@ -163,32 +162,37 @@ public class KeyTool {
      * The destination key store of the same type will be created if it does not exist.
      *
      * @param alias the alias of the certificate to copy
-     * @param destKeyStore the destination key store file
+     * @param destKeyStoreFile the destination key store file
      * @param destKeyStorePassword the password for the destination key store
      * @throws IOException if an error occurs during the process
      */
-    public void copyCertificate(String alias, File destKeyStore, char[] destKeyStorePassword) throws IOException {
-        final File certFile = File.createTempFile(alias, ".cer");
+    public void copyCertificate(String alias, File destKeyStoreFile, char[] destKeyStorePassword) throws IOException {
+        final KeyStore ks = loadKeyStore();
+        final Certificate certificate;
         try {
-            certFile.delete();
-            exportCertificate(alias, certFile);
-            final List<String> importCommand = List.of(
-                KEYTOOL,
-                "-J-Duser.language=en",
-                "-noprompt",
-                "-importcert",
-                "-alias", alias,
-                "-trustcacerts",
-                "-keystore", destKeyStore.getAbsolutePath(),
-                "-file", certFile.getAbsolutePath()
-                );
-            // 3 times - once for key store, once for key password, once more for confirmation
-            // 1 times if the key store does not exist.
-            execute(importCommand, destKeyStorePassword, destKeyStorePassword, destKeyStorePassword);
-        } finally {
-            if (certFile.exists() && !certFile.delete()) {
-                LOG.log(ERROR, "Failed to delete temporary certificate file: {0}", certFile);
+            certificate = ks.getCertificate(alias);
+        } catch (KeyStoreException e) {
+            throw new IOException(
+                "Failed to get the certificate under alias " + alias + " from the keystore " + keyStore);
+        }
+        if (certificate == null) {
+            throw new IOException("Alias " + alias + " not found in the key store: " + keyStore);
+        }
+        try {
+            final KeyTool destKeyStoreTool;
+            if (destKeyStoreFile.exists()) {
+                destKeyStoreTool = new KeyTool(destKeyStoreFile, destKeyStorePassword);
+            } else {
+                destKeyStoreTool = createEmptyKeyStore(destKeyStoreFile, destKeyStorePassword);
             }
+            final KeyStore destKeyStore = destKeyStoreTool.loadKeyStore();
+            destKeyStore.setCertificateEntry(alias, certificate);
+            try (FileOutputStream output = new FileOutputStream(destKeyStoreFile)) {
+                destKeyStore.store(output, destKeyStorePassword);
+            }
+        } catch (GeneralSecurityException e) {
+            throw new IOException(
+                "Could not copy certificate with alias: " + alias + " to key store: " + destKeyStoreFile, e);
         }
     }
 
@@ -222,22 +226,10 @@ public class KeyTool {
      * @throws IOException
      */
     public void changeKeyStorePassword(char[] newPassword) throws IOException {
-        List<String> command = List.of(
-            KEYTOOL,
-            "-J-Duser.language=en",
-            "-noprompt",
-            "-storepasswd",
-            "-keystore", this.keyStore.getAbsolutePath()
-        );
-        execute(command, password, newPassword, newPassword, newPassword);
+        // We grab the current key store, so everything is done in memory until the end.
+        final KeyStore ks = loadKeyStore();
         final char[] oldPassword = password;
         this.password = newPassword;
-        if ("PKCS12".equals(this.keyStoreType)) {
-            // PKCS12 key store type changes passwords of keys together with the key store password
-            // JKS and JCEKS key store types require changing passwords of keys separately
-            return;
-        }
-        KeyStore ks = loadKeyStore();
         final List<String> aliases;
         try {
             aliases = Collections.list(ks.aliases());

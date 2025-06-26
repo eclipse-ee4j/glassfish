@@ -45,7 +45,7 @@ import org.jvnet.hk2.annotations.Service;
  * Usage: list-password-aliases [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849]
  * [--secure | -s] [--user admin_user] [--passwordfile file_name]
  *
- * Result of the command is that: <domain-dir>/<domain-name>/config/domain-passwords file gets appended with the entry of the
+ * Result of the command is that: <domain-dir>/<domain-name>/config/domain-passwords.p12 file gets appended with the entry of the
  * form: aliasname=<password encrypted with masterpassword>
  *
  * A user can use this aliased password now in setting passwords in domin.xml. Benefit is it is in NON-CLEAR-TEXT

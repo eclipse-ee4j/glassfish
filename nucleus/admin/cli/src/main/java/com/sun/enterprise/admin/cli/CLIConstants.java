@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,12 @@
 package com.sun.enterprise.admin.cli;
 
 import java.lang.System.Logger.Level;
+import java.time.Duration;
+
+import org.glassfish.embeddable.GlassFishVariable;
+
+import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_START_SERVER;
+import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
 
 /**
  * Constants for use in this package and "sub" packages
@@ -29,7 +35,7 @@ public final class CLIConstants {
     public static final String DEFAULT_HOSTNAME = "localhost";
     public static final String EOL = System.lineSeparator();
 
-    public static final long WAIT_FOR_DAS_TIME_MS = getEnv("AS_START_TIMEOUT", 60_000L);
+    public static final Duration WAIT_FOR_DAS_TIME_MS = getEnv(TIMEOUT_START_SERVER, 60L);
     public static final int RESTART_NORMAL = 10;
     public static final int RESTART_DEBUG_ON = 11;
     public static final int RESTART_DEBUG_OFF = 12;
@@ -38,7 +44,7 @@ public final class CLIConstants {
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
     public static final int WARNING = 4;
-    public static final long DEATH_TIMEOUT_MS = getEnv("AS_STOP_TIMEOUT", 60_000);
+    public static final Duration DEATH_TIMEOUT_MS = getEnv(TIMEOUT_STOP_SERVER, 60L);
 
     public static final String K_ADMIN_PORT = "agent.adminPort";
     public static final String K_ADMIN_HOST = "agent.adminHost";
@@ -59,7 +65,7 @@ public final class CLIConstants {
     public static final String AGENT_DAS_IS_SECURE = "isDASSecure";
 
     public static final String NODEAGENT_DEFAULT_DAS_IS_SECURE = "false";
-    public static final String NODEAGENT_DEFAULT_DAS_PORT = String.valueOf(CLIConstants.DEFAULT_ADMIN_PORT);
+    public static final String NODEAGENT_DEFAULT_DAS_PORT = String.valueOf(DEFAULT_ADMIN_PORT);
     public static final String NODEAGENT_DEFAULT_HOST_ADDRESS = "0.0.0.0";
     public static final String NODEAGENT_JMX_DEFAULT_PROTOCOL = "rmi_jrmp";
     public static final int RESTART_CHECK_INTERVAL_MSEC = 10;
@@ -68,21 +74,24 @@ public final class CLIConstants {
         // no instances allowed!
     }
 
-    private static long getEnv(String name, long defaultValue) {
+    private static Duration getEnv(GlassFishVariable variable, long defaultValue) {
+        String name = variable.getEnvName();
         String value = System.getenv(name);
         if (value == null) {
-            return defaultValue;
+            return Duration.ofSeconds(defaultValue);
         }
         try {
-            long parsedValue = Long.parseLong(value);
+            int parsedValue = Integer.parseInt(value);
             if (parsedValue > 0L) {
-                return parsedValue;
+                return Duration.ofSeconds(parsedValue);
             }
-            System.getLogger(CLIConstants.class.getName()).log(Level.WARNING, "The value of the environment property {0} must be positive.", name);
-            return defaultValue;
+            System.getLogger(CLIConstants.class.getName()).log(Level.WARNING,
+                "The value of the environment property {0} must be positive.", name);
+            return Duration.ofSeconds(defaultValue);
         } catch (NumberFormatException e) {
-            System.getLogger(CLIConstants.class.getName()).log(Level.WARNING, "Environment property {0} is set to a value {1} which cannot be parsed to long.", name, value);
-            return defaultValue;
+            System.getLogger(CLIConstants.class.getName()).log(Level.WARNING,
+                "Environment property {0} is set to a value {1} which cannot be parsed to duration.", name, value);
+            return Duration.ofSeconds(defaultValue);
         }
     }
 }

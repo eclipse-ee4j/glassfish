@@ -87,7 +87,9 @@ public class GlassFishTestEnvironment {
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
     private static final int ASADMIN_START_DOMAIN_TIMEOUT = 30_000;
-    private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 300_000;
+    /** 1 day. Useful for debugging */
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 1000 * 60 * 60 * 24;
+
     private static HttpClient client = null;
 
     static {
@@ -98,17 +100,11 @@ public class GlassFishTestEnvironment {
             getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
         });
         Runtime.getRuntime().addShutdownHook(hook);
-        Asadmin asadmin = getAsadmin().withEnv(ADMIN_USER, ADMIN_PASSWORD);
-        if (System.getenv("AS_START_TIMEOUT") == null) {
-            // AS_START_TIMEOUT for the detection that "the server is running!"
-            // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
-            asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
-        }
         final int timeout = isStartDomainSuspendEnabled()
                 ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
         // This is the absolutely first start - if it fails, all other starts will fail too.
         // Note: --suspend implicitly enables --debug
-        assertThat(asadmin.exec(timeout,"start-domain",
+        assertThat(getAsadmin().exec(timeout,"start-domain",
                 isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
     }
 

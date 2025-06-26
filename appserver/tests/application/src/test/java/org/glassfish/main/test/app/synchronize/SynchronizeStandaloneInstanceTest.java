@@ -75,7 +75,7 @@ public class SynchronizeStandaloneInstanceTest {
     @Test
     public void testSynchronization() {
         // Longer timeout for the synchronization
-        assertThat(ASADMIN.exec(120_000, "start-instance", INSTANCE_NAME), asadminOK());
+        assertThat(ASADMIN.exec("start-instance", "--timeout", "120", INSTANCE_NAME), asadminOK());
     }
 
     private static File createDeployment() {

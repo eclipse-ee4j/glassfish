@@ -79,6 +79,8 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
 
     @Param(primary = true, optional = false, multiple = false)
     private String jobID;
+    @Param(optional = true)
+    private Integer timeout;
 
     private AdminCommandEventBroker<?> eventBroker;
     private Job job;
@@ -143,11 +145,21 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
         }
         LOG.log(TRACE, "Waiting until job {0} is finished.", job);
         synchronized (job) {
-            while (PREPARED.equals(job.getState())
-                || RUNNING.equals(job.getState())
-                || RUNNING_RETRYABLE.equals(job.getState())) {
+            while (isJobStillActive()) {
                 try {
-                    job.wait();
+                    if (timeout == null) {
+                        job.wait();
+                    } else {
+                        job.wait(timeout * 1000L);
+                        if (isJobStillActive()) {
+                            LOG.log(DEBUG, "Job {0} is still in state {1} after timeout {1} seconds.",
+                                job.getName(), job.getState(), timeout);
+                            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                            report.setMessage(strings.getLocalString("attach.timeout",
+                                "Waiting for job {0} timed out after {1} seconds.", job.getName(), timeout));
+                            return;
+                        }
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -159,6 +171,12 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
                     job.getName(), job.getActionReport().getActionExitCode()));
             }
         }
+    }
+
+    private boolean isJobStillActive() {
+        return PREPARED.equals(job.getState())
+            || RUNNING.equals(job.getState())
+            || RUNNING_RETRYABLE.equals(job.getState());
     }
 
     @Override

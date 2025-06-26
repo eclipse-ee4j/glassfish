@@ -113,7 +113,7 @@ public class DeleteInstanceCommand implements AdminCommand {
         instanceHost = instance.getAdminHost();
 
         // make sure instance is not running.
-        if (instance.isRunning()){
+        if (instance.isListeningOnAdminPort()){
             msg = Strings.get("instance.shutdown", instanceName);
             logger.warning(msg);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -235,7 +235,7 @@ public class DeleteInstanceCommand implements AdminCommand {
         StringBuilder fullCommand = new StringBuilder();
 
         fullCommand.append("lib");
-        fullCommand.append(System.getProperty("file.separator"));
+        fullCommand.append(System.lineSeparator());
         fullCommand.append("nadmin ");
 
         for (String s : command) {

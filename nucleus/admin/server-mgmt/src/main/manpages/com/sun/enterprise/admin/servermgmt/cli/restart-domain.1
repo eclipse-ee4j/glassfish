@@ -4,10 +4,14 @@ NAME
        restart-domain - restarts the DAS of the specified domain
 
 SYNOPSIS
-           restart-domain [--help] [--debug ={true|false}]
-           [--domaindir domaindir]
-           [--force={true|false}] [--kill={false|true}]
-           [domain-name]
+        restart-domain
+        [--debug[=<debug(default:false)>]]
+        [--domaindir <domaindir>]
+        [--force[=<force(default:true)>]]
+        [--help|-?]
+        [--kill[=<kill(default:false)>]]
+        [--timeout <timeout>]
+        [domain_name]
 
 DESCRIPTION
        The restart-domain subcommand stops and then restarts the domain
@@ -28,9 +32,6 @@ DESCRIPTION
        server.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
        --debug
            Specifies whether the domain is restarted with Java Platform
            Debugger Architecture (JPDA)
@@ -70,6 +71,9 @@ OPTIONS
                The subcommand waits until all threads that are associated with
                the domain are exited before stopping the domain.
 
+       --help, -?
+           Displays the help text for the subcommand.
+
        --kill
            Specifies whether the domain is killed before it is restarted by
            using functionality of the operating system to terminate the domain
@@ -84,6 +88,12 @@ OPTIONS
            true
                The domain is killed. The subcommand uses functionality of the
                operating system to terminate the domain process.
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The domain status is unknown
+            in such case.
 
 OPERANDS
        domain-name
@@ -113,4 +123,4 @@ SEE ALSO
        Java Platform Debugger Architecture (JPDA)
        (https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
 
-Jakarta EE 10                         21 Aug 2017                restart-domain(1)
+Jakarta EE 10                         26 Jun 2025                restart-domain(1)

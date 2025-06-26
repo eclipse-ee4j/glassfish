@@ -4,9 +4,12 @@ NAME
        start-cluster - starts a cluster
 
 SYNOPSIS
-           start-cluster [--help] 
-           [--debug={false|true}] [--autohadboverride={true|false}]
-           [--verbose={false|true}] cluster-name
+        start-cluster
+        [--debug[=<debug(default:false)>]]
+        [--help|-?]
+        [--timeout <timeout>]
+        [--verbose[=<verbose(default:false)>]]
+        clustername
 
 DESCRIPTION
        The start-cluster subcommand starts a cluster by starting all GlassFish
@@ -37,9 +40,6 @@ DESCRIPTION
        This subcommand is supported in remote mode only.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-       
        --debug
            Specifies whether each instance in the cluster is started with Java Platform
            Debugger Architecture (JPDA)
@@ -57,12 +57,14 @@ OPTIONS
            false
                Each instance is started with JPDA debugging disabled (default).
 
-       --autohadboverride
-           Do not specify this option. This option is retained for
-           compatibility with earlier releases. If you specify this option, a
-           syntax error does not occur. Instead, the subcommand runs
-           successfully and displays a warning message that the option is
-           ignored.
+       --help, -?
+           Displays the help text for the subcommand.
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The status of instances is
+            unknown in such case.
 
        --verbose
            Specifies whether additional status information is displayed when
@@ -108,4 +110,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         8 Dec 2011                  start-cluster(1)
+Jakarta EE 10                        26 Jun 2025                  start-cluster(1)

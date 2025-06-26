@@ -348,18 +348,10 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     }
 
     /**
-     * This is NOT a reliable test. It just checks if ANYTHING has setup shop on the host and port.
-     * I wanted to run RemoteAdminCommand but that is (inexplicably) in admin/util -- and we would
-     * have a circular dependency.
+     * @return true if this server instance is listening on the admin port, false otherwise.
      */
-    default boolean isRunning() {
-        try {
-            ServerHelper helper = new ServerHelper(this, getConfig());
-            return helper.isRunning();
-        } catch (Exception e) {
-            // drop through...
-        }
-        return false;
+    default boolean isListeningOnAdminPort() {
+        return new ServerHelper(this, getConfig()).isListeningOnAdminPort();
     }
 
     @Service

@@ -22,6 +22,7 @@ import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.v3.admin.StopServer;
 
@@ -30,6 +31,7 @@ import jakarta.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -61,13 +63,13 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
 
-/**
- * AdminCommand to stop the instance
- * server.
- * Shutdown of an instance.
- * This command only runs on DAS.  It calls the instance and asks it to
- * kill itself
+import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
 
+/**
+ * AdminCommand to stop the instance server.
+ * Shutdown of an instance.
+ * This command only runs on DAS. It calls the instance and asks it to kill itself
+ *
  * @author Byron Nevins
  */
 @Service(name = "stop-instance")
@@ -102,6 +104,8 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
     private Boolean kill = false;
     @Param(optional = false, primary = true)
     private String instanceName;
+    @Param(optional = true)
+    private Integer timeout;
     private Logger logger;
     private RemoteInstanceCommandHelper helper;
     private ActionReport report;
@@ -124,8 +128,10 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
             errorMessage = Strings.get("stop.instance.notDas", env.getRuntimeType().toString());
         }
 
-        if(errorMessage == null && !kill) {
-            errorMessage = pollForDeath();
+        if (errorMessage == null && !kill) {
+            if (!pollForDeath()) {
+                errorMessage = Strings.get("stop.instance.timeout", instanceName);
+            }
         }
 
         if (errorMessage != null) {
@@ -161,26 +167,39 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
         if (node.isLocal()) {
             final File pidFile = pidFilePath.toFile();
             if (pidFile.exists()) {
-                // server still not down completely, do we poll?
-                errorMessage = pollForRealDeath(pidFile::exists);
+                if (!pollForRealDeath(pidFile::exists)) {
+                    errorMessage = Strings.get("stop.instance.timeout.completely", instanceName);
+                }
             }
         } else if (node.getType().equals("SSH")) {
-            //use SFTPClient to see if file exists.
             SSHLauncher launcher = new SSHLauncher(node);
+            SFTPPath sftpPath = SFTPPath.of(pidFilePath);
             try (SSHSession session = launcher.openSession(); SFTPClient ftpClient = session.createSFTPClient()) {
-                if (ftpClient.exists(SFTPPath.of(pidFilePath))){
-                    // server still not down, do we poll?
+                if (ftpClient.exists(sftpPath)) {
                     Supplier<Boolean> check = () -> {
                         try {
-                            return ftpClient.exists(SFTPPath.of(pidFilePath));
+                            if (!ftpClient.exists(sftpPath)) {
+                                return true;
+                            }
+                            try {
+                                // sleep for a second before checking again
+                                // SFTP is expensive so don't check too often
+                                Thread.sleep(1000L);
+                            } catch (Exception e) {
+                                Thread.currentThread().interrupt();
+                            }
+                            return false;
                         } catch (SSHException e) {
                             return false;
                         }
                     };
-                    errorMessage = pollForRealDeath(check);
+                    if (!pollForRealDeath(check)) {
+                        errorMessage = Strings.get("stop.instance.timeout.completely", instanceName);
+                    }
                 }
-            } catch (SSHException ex) {
-                //could not get to other host
+            } catch (SSHException e) {
+                logger.log(Level.SEVERE, "Could not use SFTP to check if the pid file " + sftpPath + " was removed!", e);
+                errorMessage = e.getMessage();
             }
         }
         if (errorMessage != null) {
@@ -230,7 +249,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
             return Strings.get("stop.instance.noPort", instanceName);
         }
 
-        if(!instance.isRunning()) {
+        if(!instance.isListeningOnAdminPort()) {
             return null;
         }
 
@@ -269,16 +288,11 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
         command.add("--kill");
         command.add(instanceName);
         String humanCommand = makeCommandHuman(command);
-        String firstErrorMessage = Strings.get("stop.local.instance.kill",
-                instanceName, nodeName, humanCommand);
+        String firstErrorMessage = Strings.get("stop.local.instance.kill", instanceName, nodeName, humanCommand);
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("stop-instance: running " + humanCommand +
-                        " on " + nodeName);
-        }
+        logger.fine(() -> "stop-instance: running " + humanCommand + " on " + nodeName);
 
-        nodeUtils.runAdminCommandOnNode(node, command, context,
-                                        firstErrorMessage, humanCommand, null);
+        nodeUtils.runAdminCommandOnNode(node, command, context, firstErrorMessage, humanCommand, null);
 
         ActionReport killreport = context.getActionReport();
         if (killreport.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
@@ -288,43 +302,14 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
     }
 
 
-    // return null means A-OK
-    private String pollForDeath() {
-        int counter = 0;  // 120 seconds
-
-        while (++counter < 240) {
-            if (!instance.isRunning()) {
-                return null;
-            }
-
-            try {
-                Thread.sleep(500L);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        return Strings.get("stop.instance.timeout", instanceName);
+    private boolean pollForDeath() {
+        Supplier<Boolean> supplier = () -> !instance.isListeningOnAdminPort();
+        return ProcessUtils.waitFor(supplier, getTimeout(timeout), false);
     }
 
 
-    private String pollForRealDeath(Supplier<Boolean> pidFileExists) {
-        int counter = 0; // 30 seconds
-
-        // 24 * 5 = 120 seconds
-        while (++counter < 24) {
-            try {
-                if (!pidFileExists.get()) {
-                    return null;
-                }
-                // Fairly long interval between tries because checking over
-                // SSH is expensive.
-                Thread.sleep(5000L);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        return Strings.get("stop.instance.timeout.completely", instanceName);
-
+    private boolean pollForRealDeath(Supplier<Boolean> supplier) {
+        return ProcessUtils.waitFor(supplier, getTimeout(timeout), false);
     }
 
     private String makeCommandHuman(List<String> command) {
@@ -335,5 +320,16 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
             fullCommand.append(s);
         }
         return fullCommand.toString().trim();
+    }
+
+    static Duration getTimeout(Integer timeout) {
+        if (timeout == null) {
+            String envValue = System.getenv(TIMEOUT_STOP_SERVER.getEnvName());
+            if (envValue == null) {
+                return Duration.ofSeconds(60);
+            }
+            return Duration.ofSeconds(Long.parseLong(envValue));
+        }
+        return Duration.ofSeconds(timeout);
     }
 }

@@ -22,7 +22,6 @@ import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -54,7 +53,6 @@ public class Asadmin {
 
     private static final Logger LOG = System.getLogger(Asadmin.class.getName());
 
-    private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
     private static final Function<String, KeyAndValue<String>> KEYVAL_SPLITTER = s -> {
         int equalSignPos = s.indexOf('=');
         if (equalSignPos <= 0 || equalSignPos == s.length() - 1) {
@@ -177,27 +175,26 @@ public class Asadmin {
 
 
     /**
-     * Executes the command with arguments asynchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms
-     * timeout. The command can be attached by the attach command. You should find the job id in
+     * Executes the command with arguments asynchronously without timeout.
+     * The command can be attached by the attach command. You should find the job id in
      * the {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
      *
      * @param args
      * @return {@link AsadminResult} never null.
      */
     public DetachedTerseAsadminResult execDetached(final String... args) {
-        return (DetachedTerseAsadminResult) exec(DEFAULT_TIMEOUT_MSEC, true, args);
+        return (DetachedTerseAsadminResult) exec(null, true, args);
     }
 
 
     /**
-     * Executes the command with arguments synchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms
-     * timeout.
+     * Executes the command with arguments synchronously without timeout.
      *
      * @param args
      * @return {@link AsadminResult} never null.
      */
     public AsadminResult exec(final String... args) {
-        return exec(DEFAULT_TIMEOUT_MSEC, false, args);
+        return exec(null, false, args);
     }
 
     /**
@@ -237,10 +234,9 @@ public class Asadmin {
      * @param args command and arguments.
      * @return {@link AsadminResult} never null.
      */
-    private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
+    private AsadminResult exec(final Integer timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = Arrays.asList(args);
-        LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})",
-                new Object[]{timeout, detachedAndTerse, parameters});
+        LOG.log(TRACE, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
@@ -258,14 +254,17 @@ public class Asadmin {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeout(timeout);
-        processManager.setEcho(false);
-        for (Entry<String, String> env : this.environment.entrySet()) {
-            processManager.setEnvironment(env.getKey(), env.getValue());
+        if (timeout != null) {
+            processManager.setTimeout(timeout);
         }
+        processManager.setEcho(false);
         if (System.getenv("AS_TRACE") == null && LOG.isLoggable(TRACE)) {
             processManager.setEnvironment("AS_TRACE", "true");
         }
+        for (Entry<String, String> env : this.environment.entrySet()) {
+            processManager.setEnvironment(env.getKey(), env.getValue());
+        }
+
         // override any env property to what is used by tests
         processManager.setEnvironment(JAVA_HOME.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
         processManager.setEnvironment(JAVA_ROOT.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
@@ -276,7 +275,7 @@ public class Asadmin {
             exitCode = processManager.execute();
         } catch (final ProcessManagerTimeoutException e) {
             asadminErrorMessage = e.getMessage();
-            exitCode = 1;
+            exitCode = 2;
         } catch (final ProcessManagerException e) {
             LOG.log(ERROR, "The execution failed.", e);
             asadminErrorMessage = e.getMessage();
@@ -291,12 +290,9 @@ public class Asadmin {
         if (!stdErr.isEmpty()) {
             LOG.log(INFO, () -> "STDERR: \n" + stdErr);
         }
-        final AsadminResult result;
         if (detachedAndTerse) {
-            result = new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
-        } else {
-            result = new AsadminResult(args[0], exitCode, stdOut, stdErr);
+            return new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
         }
-        return result;
+        return new AsadminResult(args[0], exitCode, stdOut, stdErr);
     }
 }

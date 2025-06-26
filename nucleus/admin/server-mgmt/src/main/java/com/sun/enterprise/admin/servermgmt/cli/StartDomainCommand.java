@@ -29,6 +29,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINER;
 import static org.glassfish.api.admin.RuntimeType.DAS;
@@ -93,6 +95,9 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     @Param(name = "dry-run", shortName = "n", optional = true, defaultValue = "false")
     private boolean dry_run;
 
+    @Param(optional = true)
+    private Integer timeout;
+
     @Param(name = "drop-interrupted-commands", optional = true, defaultValue = "false")
     private boolean drop_interrupted_commands;
 
@@ -111,6 +116,14 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         return DAS;
     }
 
+    /**
+     * @return timeout for the command
+     */
+    @Override
+    public Duration getTimeout() {
+        return timeout == null ? WAIT_FOR_DAS_TIME_MS : Duration.ofSeconds(timeout);
+    }
+
     @Override
     protected void validate() throws CommandException, CommandValidationException {
         setDomainName(domainName0);
@@ -124,7 +137,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             createLauncher();
             String masterPassword = getMasterPassword();
 
-            startServerHelper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), glassFishLauncher, masterPassword);
+            startServerHelper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), glassFishLauncher, masterPassword, getTimeout());
 
             if (!startServerHelper.prepareForLaunch()) {
                 return ERROR;
@@ -239,12 +252,8 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             args.add(getDomainName()); // the operand
         }
 
-        if (logger.isLoggable(FINER)) {
-            logger.log(FINER, "Respawn args: {0}", args.toString());
-        }
-        String[] a = new String[args.size()];
-        args.toArray(a);
-        return a;
+        logger.log(FINER, "Respawn args: {0}", args);
+        return args.toArray(String[]::new);
     }
 
     /**
@@ -265,7 +274,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         try {
             exitCode = glassFishProcess.waitFor();
         } catch (InterruptedException ex) {
-            // should never happen
+            Thread.currentThread().interrupt();
         }
 
         if (exitCode != SUCCESS) {
@@ -273,9 +282,8 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             String output = psd.getOutErrString();
             if (ok(output)) {
                 throw new CommandException(strings.get("upgradeFailedOutput", launchParameters.getDomainName(), exitCode, output));
-            } else {
-                throw new CommandException(strings.get("upgradeFailed", launchParameters.getDomainName(), exitCode));
             }
+            throw new CommandException(strings.get("upgradeFailed", launchParameters.getDomainName(), exitCode));
         }
         logger.info(strings.get("upgradeSuccessful"));
 

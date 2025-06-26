@@ -4,9 +4,12 @@ NAME
        stop-instance - stops a running GlassFish Server instance
 
 SYNOPSIS
-           stop-instance [--help]
-           [--force={false|true}] [--kill={false|true}]
-           instance-name
+        stop-instance
+        [--force[=<force(default:true)>]]
+        [--help|-?]
+        [--kill[=<kill(default:false)>]]
+        [--timeout <timeout>]
+        instancename
 
 DESCRIPTION
        The stop-instance subcommand stops a running GlassFish Server instance.
@@ -19,9 +22,6 @@ DESCRIPTION
        This command is supported in remote mode only.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
        --force
            Specifies whether the instance is forcibly stopped immediately.
 
@@ -33,6 +33,9 @@ OPTIONS
            false
                The subcommand waits until all threads that are associated with
                the instance are exited before stopping the instance.
+
+       --help, -?
+           Displays the help text for the subcommand.
 
        --kill
            Specifies whether the instance is killed by using functionality of
@@ -48,6 +51,12 @@ OPTIONS
            true
                The instance is killed. The subcommand uses functionality of
                the operating system to terminate the instance process.
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The instance status is unknown
+            in such case.
 
 OPERANDS
        instance-name
@@ -77,4 +86,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         16 Dec 2010                 stop-instance(1)
+Jakarta EE 10                         26 Jun 2025                 stop-instance(1)

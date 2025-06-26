@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,7 @@ import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
  *
  * @author Byron Nevins
  */
-public class ServerHelper {
+public final class ServerHelper {
 
     private final Server server;
     private final Config config;
@@ -114,13 +114,12 @@ public class ServerHelper {
     }
 
     // very simple generic check
-    public final boolean isRunning() {
+    public final boolean isListeningOnAdminPort() {
         try {
             return NetUtils.isRunning(getAdminHost(), getAdminPort());
         } catch (Exception e) {
-            // fall through
+            return false;
         }
-        return false;
     }
 
     public static NetworkListener getAdminListener(Config config) {

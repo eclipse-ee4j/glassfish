@@ -72,7 +72,7 @@ public class AsadminLoggingITest {
     @BeforeAll
     public static void fillUpServerLog() {
         // Fill up the server log.
-        AsadminResult result = ASADMIN.exec(60_000, "restart-domain");
+        AsadminResult result = ASADMIN.exec("restart-domain", "--timeout", "60");
         assertThat(result, asadminOK());
     }
 

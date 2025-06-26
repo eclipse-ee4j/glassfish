@@ -18,7 +18,9 @@ that contain progress information
 
 [source]
 ----
-asadmin [asadmin-options] attach [--help]
+asadmin attach
+[--help|-?]
+[--timeout <timeout>]
 job_id
 ----
 
@@ -46,6 +48,11 @@ asadmin-options::
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The job status is unknown
+  in such case.
 
 === Operands
 

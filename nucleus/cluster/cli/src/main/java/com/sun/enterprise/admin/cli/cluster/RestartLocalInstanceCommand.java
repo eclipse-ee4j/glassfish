@@ -23,6 +23,7 @@ import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,9 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
+import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 
 /**
  * @author Byron Nevins
@@ -47,7 +51,6 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
 
     @Override
     protected final void doCommand() throws CommandException {
-        // see StopLocalInstance for comments.  These 2 lines can be refactored.
         setLocalPassword();
         programOpts.setInteractive(false);
 
@@ -66,7 +69,8 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
             cmd.executeAndReturnOutput("_restart-instance", "--debug", debug.toString());
         }
 
-        waitForRestart(oldPid, adminAddress, adminAddress);
+        // Timeouts are set in commands we use, so we will wait for the result without timeout.
+        waitForRestart(oldPid, adminAddress, adminAddress, getRestartTimeout());
         logger.info("Successfully restarted the instance.");
     }
 
@@ -105,7 +109,28 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         if (instanceName != null) {
             opts.add(instanceName);
         }
+        opts.add("--timeout");
+        opts.add(Long.toString(getStartTimeout().toSeconds()));
 
-        return cmd.execute(opts.toArray(new String[opts.size()]));
+        return cmd.execute(opts.toArray(String[]::new));
+    }
+
+    /**
+     * @return timeout for the start-local-instance command.
+     */
+    private Duration getStartTimeout() {
+        final Duration parameter = getTimeout();
+        return parameter == null ? WAIT_FOR_DAS_TIME_MS : parameter;
+    }
+
+    /**
+     * @return timeout set as a parameter
+     */
+    private Duration getRestartTimeout() {
+        final Duration paramTimeout = getTimeout();
+        if (paramTimeout != null) {
+            return paramTimeout;
+        }
+        return WAIT_FOR_DAS_TIME_MS.plus(DEATH_TIMEOUT_MS).plusSeconds(5);
     }
 }

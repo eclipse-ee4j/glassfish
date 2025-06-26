@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,7 +51,7 @@ public class StopServer {
             // show up in the ServiceLocator.
             GlassFish gfKernel = serviceLocator.getService(GlassFish.class);
             while (gfKernel == null) {
-                Thread.yield();
+                Thread.onSpinWait();
                 gfKernel = serviceLocator.getService(GlassFish.class);
             }
 

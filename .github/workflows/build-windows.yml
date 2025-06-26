@@ -20,6 +20,7 @@ jobs:
       run: mvn -B -e -ntp install -Pstaging -Pqa '-Dcheckstyle.skip=true'
     - name: Upload server logs
       uses: actions/upload-artifact@v4
+      if: failure()
       with:
         name: server-logs
         path: '**/server.log*'

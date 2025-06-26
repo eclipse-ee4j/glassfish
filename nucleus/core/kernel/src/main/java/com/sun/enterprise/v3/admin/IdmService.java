@@ -44,6 +44,8 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ARG_SEP;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_ARGS;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 
 /**
  * An implementation of the @link {IdentityManagement} that manages the password needs of the server. This
@@ -54,7 +56,6 @@ import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_
 @Service(name = "jks-based")
 public class IdmService implements PostConstruct, IdentityManagement {
 
-    private static final String FIXED_KEY = "master-password"; // the fixed key for master-password file
     private static final String PASSWORDFILE_OPTION_TO_ASMAIN = "-passwordfile"; // note single hyphen, in line with other args to ASMain!
     private static final String STDIN_OPTION_TO_ASMAIN = "-read-stdin"; // note single hyphen, in line with other args to ASMain!
 
@@ -98,13 +99,13 @@ public class IdmService implements PostConstruct, IdentityManagement {
         try {
             File mp = env.getMasterPasswordFile();
             if (!mp.isFile()) {
-                logger.fine("The JCEKS file: " + mp.getAbsolutePath()
+                logger.fine("The keystore file: " + mp.getAbsolutePath()
                         + " does not exist, master password was not saved on disk during domain creation");
                 return false;
             }
             final PasswordAliasStore masterPasswordAliasStore = JCEKSPasswordAliasStore.newInstance(mp.getAbsolutePath(),
-                    FIXED_KEY.toCharArray());
-            char[] mpChars = masterPasswordAliasStore.get(FIXED_KEY);
+                MASTER_PASSWORD_PASSWORD.toCharArray());
+            char[] mpChars = masterPasswordAliasStore.get(MASTER_PASSWORD_ALIAS);
             if (mpChars == null) {
                 return false;
             }

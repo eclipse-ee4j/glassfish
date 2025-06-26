@@ -44,6 +44,9 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 
 
 /**
@@ -91,7 +94,6 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
     private boolean _rendezvousOccurred;
     private String _node;
     private ParamModelData masterPasswordOption;
-    private static final String MASTER_PASSWORD_ALIAS="master-password";
 
     /**
      */
@@ -287,10 +289,10 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
      * @throws CommandException
      */
     protected void createMasterPasswordFile(String masterPassword) throws CommandException {
-        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_ALIAS);
+        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_FILENAME);
         try {
             PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(),
-                MASTER_PASSWORD_ALIAS.toCharArray());
+                MASTER_PASSWORD_PASSWORD.toCharArray());
             p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, masterPassword.getBytes());
             chmod("600", pwdFile);
         } catch (Exception ex) {

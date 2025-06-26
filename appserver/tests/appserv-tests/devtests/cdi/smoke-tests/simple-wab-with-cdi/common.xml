@@ -1739,7 +1739,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <target name="prepare-truststore-common" depends="init-common">
-    <property name="truststore.db.file" location="${build.base.dir}/cacerts.jks"/>
+    <property name="truststore.db.file" location="${build.base.dir}/cacerts.p12"/>
     <property name="cert.rfc.file" location="${build.base.dir}/${cert.nickname}.rfc"/>
 
     <delete quiet="true" file="${truststore.db.file}"/>
@@ -1787,14 +1787,14 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 
 
 <target name="prepare-truststore-keytool-common" depends="init-common" unless="use.certutil">
-    <copy file="${admin.domain.dir}/${admin.domain}/config/cacerts.jks" tofile="${truststore.db.file}"/>
+    <copy file="${admin.domain.dir}/${admin.domain}/config/cacerts.p12" tofile="${truststore.db.file}"/>
 </target>
 
 
 <target name="prepare-keystore-common" depends="init-common">
-    <property name="keystore.db.file" location="${build.base.dir}/keystore.jks"/>
+    <property name="keystore.db.file" location="${build.base.dir}/keystore.p12"/>
     <delete quiet="true" file="${keystore.db.file}"/>
-    <copy file="${admin.domain.dir}/${admin.domain}/config/keystore.jks" tofile="${keystore.db.file}" failonerror="false"/>
+    <copy file="${admin.domain.dir}/${admin.domain}/config/keystore.p12" tofile="${keystore.db.file}" failonerror="false"/>
 </target>
 
 <target name="get-version-common" depends="init-common">

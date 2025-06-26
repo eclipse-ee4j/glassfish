@@ -46,9 +46,13 @@ import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 
 /**
  * A class that's supposed to capture all the behavior common to operation on a "local" server.
@@ -189,19 +193,18 @@ public abstract class LocalServerCommand extends CLICommand {
      * Checks if the create-domain was created using --savemasterpassword flag which obtains security by obfuscation!
      * Returns null in case of failure of any kind.
      *
-     * @return String representing the password from the JCEKS store named master-password in domain folder
+     * @return String representing the password from the key store
      */
     protected final String readFromMasterPasswordFile() {
         File mpf = getMasterPasswordFile();
-        if (mpf == null)
-         {
-            return null; // no master password  saved
+        if (mpf == null) {
+            return null; // no master password saved
         }
         try {
-            PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), "master-password".toCharArray()); // fixed key
-            return pw.getPasswordForAlias("master-password");
+            PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), MASTER_PASSWORD_PASSWORD.toCharArray());
+            return pw.getPasswordForAlias(MASTER_PASSWORD_ALIAS);
         } catch (Exception e) {
-            logger.log(FINER, "master password file reading error: {0}", e.getMessage());
+            logger.log(Level.WARNING, "A master password file reading error: " + e.toString(), e);
             return null;
         }
     }
@@ -211,6 +214,10 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     protected boolean loadAndVerifyKeystore(File jks, String mpv) {
+        logger.log(FINEST, "loading keystore: " + jks);
+        if (jks == null || mpv == null) {
+            return false;
+        }
         try {
             new KeyTool(jks, mpv.toCharArray()).loadKeyStore();
             return true;
@@ -315,7 +322,7 @@ public abstract class LocalServerCommand extends CLICommand {
      * @throws CommandException if we time out.
      */
     protected final void waitForRestart(final Long oldPid, final HostAndPort oldAdminAddress,
-        final HostAndPort newAdminAddress, Duration timeout) throws CommandException {
+        final HostAndPort newAdminAddress, final Duration timeout) throws CommandException {
         logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2}, timeout={3})",
             new Object[] {oldPid, oldAdminAddress, newAdminAddress, timeout});
 
@@ -336,14 +343,14 @@ public abstract class LocalServerCommand extends CLICommand {
                 resetServerDirs();
                 setLocalPassword();
             } catch (Exception e) {
-                logger.log(Level.FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
+                logger.log(FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
                 return false;
             }
             Long newPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
             if (newPid == null) {
                 return false;
             }
-            logger.log(Level.FINEST, "The server pid is {0}", newPid);
+            logger.log(FINEST, "The server pid is {0}", newPid);
             return ProcessUtils.isAlive(newPid);
         };
         if (!ProcessUtils.waitFor(signStart, timeout, printDots)) {
@@ -407,12 +414,12 @@ public abstract class LocalServerCommand extends CLICommand {
         if (serverDirs == null) {
             return null;
         }
-
         File mp = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
-        if (!mp.canRead()) {
-            return null;
+        if (mp.canRead()) {
+            return mp;
         }
-        return mp;
+        logger.log(FINEST, "File does not exist or is not readable: {0}", mp);
+        return null;
     }
 
     protected File getMasterPasswordFile() {
@@ -421,7 +428,7 @@ public abstract class LocalServerCommand extends CLICommand {
             return null;
         }
 
-        File mp = new File(serverDirs.getServerDir(), "master-password");
+        File mp = new File(serverDirs.getServerDir(), MASTER_PASSWORD_FILENAME);
         if (!mp.canRead()) {
             return null;
         }

@@ -171,7 +171,7 @@ author: jagadesh munta
       </concat>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${cert.nickname}"/>
-         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12"/>
          <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
       </antcall>
 </target>
@@ -186,7 +186,7 @@ author: jagadesh munta
       </concat>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${token.name}:${cert.nickname}"/>
-         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12"/>
          <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
       </antcall>
 </target>

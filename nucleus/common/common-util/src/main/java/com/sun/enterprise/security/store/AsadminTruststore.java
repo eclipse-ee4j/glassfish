@@ -33,7 +33,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFA
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 
 /**
- * This class implements an adapter for password manipulation a JCEKS.
+ * This class implements an adapter for password manipulation.
  * <p>
  * This class delegates the work of actually opening the trust store to AsadminSecurityUtil.
  *
@@ -41,7 +41,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
  */
 public class AsadminTruststore {
 
-    private static final String ASADMIN_TRUSTSTORE = "truststore";
+    private static final String ASADMIN_TRUSTSTORE = "truststore.p12";
 
     private final File keyFile;
     private final char[] password;

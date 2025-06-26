@@ -36,9 +36,9 @@
                 <file-cache enabled="false"/>
             </http>
             <ssl ssl3-enabled="false"
-                 trust-store="target/test-classes/cacerts.jks"
+                 trust-store="target/test-classes/cacerts-redirect.p12"
                  trust-store-password="changeit"
-                 key-store="target/test-classes/keystore.jks"
+                 key-store="target/test-classes/keystore-redirect.p12"
                  key-store-password="changeit"/>
         </protocol>
 

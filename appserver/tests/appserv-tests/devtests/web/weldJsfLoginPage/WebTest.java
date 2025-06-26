@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -108,27 +109,22 @@ public class WebTest {
         }
     }
 
-    private SSLSocketFactory getSSLSocketFactory(String keyStorePath,
-            String trustStorePath) throws Exception {
+
+    private SSLSocketFactory getSSLSocketFactory(String keyStorePath, String trustStorePath) throws Exception {
         SSLContext ctx = SSLContext.getInstance("TLS");
 
         // Keystore
-        KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = "changeit".toCharArray();
-        ks.load(new FileInputStream(keyStorePath), passphrase);
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance(
-                KeyManagerFactory.getDefaultAlgorithm());
+        KeyStore ks = KeyStore.getInstance(new File(keyStorePath), passphrase);
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(ks, passphrase);
 
         // Truststore
-        KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream(trustStorePath), null);
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(
-                TrustManagerFactory.getDefaultAlgorithm());
+        KeyStore trustStore = KeyStore.getInstance(new File(trustStorePath), passphrase);
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(trustStore);
 
         ctx.init(kmf.getKeyManagers(),tmf.getTrustManagers(), null);
-
         return ctx.getSocketFactory();
     }
 

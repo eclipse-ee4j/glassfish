@@ -34,14 +34,8 @@ public final class DomainConstants {
     /** The file name stores the basic domain information. */
     public static final String DOMAIN_INFO_XML = "domain-info.xml";
 
-    /** Domain password file name. */
-    public static final String DOMAIN_PASSWORD_FILE = "domain-passwords";
-
     /** Name of directory stores the domain information. */
     public static final String INFO_DIRECTORY = "init-info";
-
-    /** Master password file name stores the password for secure key store. */
-    public static final String MASTERPASSWORD_FILE = "master-password";
 
     /** Filename contains most of the domain configuration. */
     public static final String DOMAIN_XML_FILE = "domain.xml";

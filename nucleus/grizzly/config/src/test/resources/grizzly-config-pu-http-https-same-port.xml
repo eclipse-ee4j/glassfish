@@ -35,9 +35,9 @@
         <protocol name="https" security-enabled="true">
             <http/>
             <ssl ssl3-enabled="false"
-                 trust-store="target/test-classes/cacerts.jks"
+                 trust-store="target/test-classes/cacerts-PU.p12"
                  trust-store-password="changeit"
-                 key-store="target/test-classes/keystore.jks"
+                 key-store="target/test-classes/keystore-PU.p12"
                  key-store-password="changeit"/>
         </protocol>
 

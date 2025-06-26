@@ -96,7 +96,7 @@
          <sysproperty key="ADMIN_USER" value="${admin.user}" />
        <!--
             <sysproperty key="IS_EE" value="pe" />
-         <sysproperty key="javax.net.ssl.trustStore" value="./certdb.jks" />
+         <sysproperty key="javax.net.ssl.trustStore" value="./certdb.p12" />
          <sysproperty key="javax.net.ssl.trustStorePassword" value="${ssl.password}" />
      -->
          <classpath>
@@ -141,7 +141,7 @@
       </concat>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${cert.nickname}"/>
-         <param name="keystore.file" value="./certdb.jks"/>
+         <param name="keystore.file" value="./certdb.p12"/>
          <param name="cert.file" value="./certdb.rfc"/>
       </antcall>
 </target>

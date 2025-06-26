@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -142,19 +143,10 @@ public class WrongTransportSSL extends BaseDevTest {
     }
 
     private TrustManager[] getTrustManagers(String path) throws Exception {
-        TrustManager[] tms = null;
-        InputStream stream = new FileInputStream(path);
-        try {
-            KeyStore trustStore = KeyStore.getInstance("JKS");
-            trustStore.load(stream, null);
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
-                    TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init(trustStore);
-            tms = tmf.getTrustManagers();
-        } finally {
-            stream.close();
-        }
-        return tms;
+        KeyStore trustStore = KeyStore.getInstance(new File(path), passphrase);
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(trustStore);
+        return tmf.getTrustManagers();
     }
 
     private void parseResponse(HttpURLConnection connection) throws Exception {

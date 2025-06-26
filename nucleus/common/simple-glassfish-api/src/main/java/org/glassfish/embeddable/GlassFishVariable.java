@@ -53,6 +53,13 @@ public enum GlassFishVariable {
     NODES_ROOT("AS_DEF_NODES_PATH", "com.sun.aas.agentRoot"),
     /** Install root parent, resolved from {@link #INSTANCE_ROOT}. */
     PRODUCT_ROOT(null, "com.sun.aas.productRoot"),
+    /**
+     * File containing the private key and server certificates.
+     * This file must be perfectly protected and must not leave the server.
+     */
+    KEYSTORE_FILE("AS_KEYSTORE_FILE", "javax.net.ssl.keyStore"),
+    /** File containing server certificate chains */
+    TRUSTSTORE_FILE("AS_TRUSTSTORE_FILE", "javax.net.ssl.trustStore"),
     /** Default start server timeout in seconds */
     TIMEOUT_START_SERVER("AS_START_TIMEOUT", null),
     /** Default stop server timeout in seconds */

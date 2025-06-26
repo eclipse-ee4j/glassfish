@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.servermgmt.pe;
 
 import com.sun.enterprise.admin.servermgmt.RepositoryConfig;
 import com.sun.enterprise.admin.servermgmt.RepositoryException;
-import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
@@ -30,7 +29,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.text.MessageFormat.format;
 
@@ -544,16 +545,9 @@ public class PEFileLayout {
         return new File(getConfigRoot(), TRUSTSTORE_FILENAME_DEFAULT);
     }
 
-    public static final String MASTERPASSWORD_FILE = "master-password";
-
-    /**
-     * @return {@value #MASTERPASSWORD_FILE}
-     */
     public File getMasterPasswordFile() {
-        return new File(getRepositoryDir(), MASTERPASSWORD_FILE);
+        return new File(getRepositoryDir(), MASTER_PASSWORD_FILENAME);
     }
-
-    public static final String PASSWORD_ALIAS_KEYSTORE = PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
 
     public File getPasswordAliasKeystore() {
         return new File(getConfigRoot(), PASSWORD_ALIAS_KEYSTORE);

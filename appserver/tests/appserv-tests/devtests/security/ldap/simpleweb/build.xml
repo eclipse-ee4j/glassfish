@@ -217,13 +217,13 @@
     <antcall target="import-cert-jks">
         <param name="cert.alias" value="ldapServerCert"/>
         <param name="cert.file" value="../whirlTestCert.rfc"/>
-        <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+        <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
     </antcall>
     <!--<antcall target="restart-server-instance-common"/>-->
 </target>
 <target name="delete-ldap-server-cert-pe" unless="isNSS">
     <exec executable="${java.home}/bin/keytool" failonerror="true">
-        <arg line="-delete -alias ldapServerCert -storepass ${ssl.password} -keystore ${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+        <arg line="-delete -alias ldapServerCert -storepass ${ssl.password} -keystore ${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
     </exec>
     <!--<antcall target="restart-server-instance-common"/>-->
 </target>

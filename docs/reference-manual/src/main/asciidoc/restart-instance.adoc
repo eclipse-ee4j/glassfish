@@ -17,8 +17,10 @@ Restarts a running {productName} instance
 
 [source]
 ----
-asadmin [asadmin-options] restart-instance [--help]
-[--debug={false|true}] instance-name
+asadmin restart-instance
+[--debug <debug>]
+[--timeout <timeout>]
+instancename
 ----
 
 === Description
@@ -90,6 +92,12 @@ asadmin-options::
 +
 The default is the current setting of this option for the instance
   that is being restarted.
+
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The instance status is unknown
+  in such case.
 
 === Operands
 

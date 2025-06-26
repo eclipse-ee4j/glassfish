@@ -17,11 +17,11 @@ Stops a {productName} cluster
 
 [source]
 ----
-asadmin [asadmin-options] stop-cluster [--help]
-[--verbose={false|true}]
-[--kill={false|true}]
-[--autohadboverride={true|false}]
-cluster-name
+asadmin stop-cluster
+[--help|-?]
+[--kill[=<kill(default:false)>]]
+[--timeout <timeout>]
+clustername
 ----
 
 === Description
@@ -64,11 +64,11 @@ asadmin-options::
     Each instance is killed. The subcommand uses functionality of the
     operating system to terminate each instance process.
 
-`--autohadboverride`::
-  Do not specify this option. This option is retained for compatibility
-  with earlier releases. If you specify this option, a syntax error does
-  not occur. Instead, the subcommand runs successfully and displays a
-  warning message that the option is ignored.
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The status of instances is
+  unknown in such case.
 
 === Operands
 

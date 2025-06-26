@@ -19,6 +19,10 @@ package org.glassfish.admin.mbeanserver.ssl;
 
 import java.io.File;
 
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+
 /**
  * This class is a config holder for configuring SSL Sockets.
  * It comes with set of defaults as defined below
@@ -111,7 +115,9 @@ public class SSLParams {
     }
 
     String getTrustMaxCertLength() {
-        if( trustMaxCertLength == null) return "5";
+        if( trustMaxCertLength == null) {
+            return "5";
+        }
         return trustMaxCertLength;
     }
 
@@ -211,7 +217,7 @@ public class SSLParams {
 
     public String getKeyStoreType() {
         if(keyStoreType == null) {
-            keyStoreType = System.getProperty("javax.net.ssl.keyStoreType", "JKS");
+            keyStoreType = System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), "JKS");
         }
         return keyStoreType;
     }
@@ -222,7 +228,9 @@ public class SSLParams {
 
 
     public String getKeyStorePassword() {
-        return keyStorePassword == null? System.getProperty("javax.net.ssl.keyStorePassword"):keyStorePassword;
+        return keyStorePassword == null
+            ? System.getProperty(KEYSTORE_PASSWORD.getSystemPropertyName())
+            : keyStorePassword;
     }
 
     public void setKeyStorePassword(String password) {
@@ -230,7 +238,11 @@ public class SSLParams {
     }
 
     public File getKeyStore() {
-        return keyStore == null ? new File(System.getProperty("javax.net.ssl.keyStore")) : keyStore ;
+        if (keyStore != null) {
+            return keyStore;
+        }
+        String path = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
+        return path == null ? null : new File(path);
     }
 
     public void setKeyStore(String location) {

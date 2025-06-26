@@ -5296,7 +5296,9 @@ that contain progress information</p>
 <h3 id="synopsis-4"><a class="anchor" href="#synopsis-4"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] attach [--help]
+<pre class="CodeRay highlight"><code>asadmin attach
+[--help|-?]
+[--timeout &lt;timeout&gt;]
 job_id</code></pre>
 </div>
 </div>
@@ -5334,6 +5336,13 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dt class="hdlist1"><code>-?</code></dt>
 <dd>
 <p>Displays the help text for the subcommand.</p>
+</dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The job status is unknown
+in such case.</p>
 </dd>
 </dl>
 </div>
@@ -46922,11 +46931,14 @@ Command remove-library executed successfully.</code></pre>
 <h3 id="synopsis-241"><a class="anchor" href="#synopsis-241"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] restart-domain [--help]
-[--debug ={true|false}]
-[--domaindir domaindir]
-[--force={true|false}] [--kill={false|true}]
-[domain-name]</code></pre>
+<pre class="CodeRay highlight"><code>asadmin restart-domain
+[--debug[=&lt;debug(default:false)&gt;]]
+[--domaindir &lt;domaindir&gt;]
+[--force[=&lt;force(default:true)&gt;]]
+[--help|-?]
+[--kill[=&lt;kill(default:false)&gt;]]
+[--timeout &lt;timeout&gt;]
+[domain_name]</code></pre>
 </div>
 </div>
 </div>
@@ -47037,6 +47049,13 @@ operating system to terminate the domain process.</p>
 </dl>
 </div>
 </dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The domain status is unknown
+in such case.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -47111,8 +47130,10 @@ Command restart-domain executed successfully.</code></pre>
 <h3 id="synopsis-242"><a class="anchor" href="#synopsis-242"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] restart-instance [--help]
-[--debug={false|true}] instance-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin restart-instance
+[--debug &lt;debug&gt;]
+[--timeout &lt;timeout&gt;]
+instancename</code></pre>
 </div>
 </div>
 </div>
@@ -47231,6 +47252,13 @@ number for JPDA debugging is displayed.</p>
   that is being restarted.</p>
 </div>
 </dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The instance status is unknown
+in such case.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -47314,11 +47342,15 @@ subcommand is run</p>
 <h3 id="synopsis-243"><a class="anchor" href="#synopsis-243"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] restart-local-instance [--help]
-[--nodedir nodedir] [--node node]
-[--debug={false|true}]
-[--force={true|false}] [--kill={false|true}]
-[instance-name]</code></pre>
+<pre class="CodeRay highlight"><code>asadmin restart-local-instance
+[--debug[=&lt;debug(default:false)&gt;]]
+[--force[=&lt;force(default:true)&gt;]]
+[--help|-?]
+[--kill[=&lt;kill(default:false)&gt;]]
+[--node &lt;node&gt;]
+[--nodedir &lt;nodedir&gt;]
+[--timeout &lt;timeout&gt;]
+[instance_name]</code></pre>
 </div>
 </div>
 </div>
@@ -47401,18 +47433,6 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dd>
 <p>Displays the help text for the subcommand.</p>
 </dd>
-<dt class="hdlist1"><code>--nodedir</code></dt>
-<dd>
-<p>Specifies the directory that contains the instance&#8217;s node directory.
-The instance&#8217;s files are stored in the instance&#8217;s node directory. The
-default is as-install<code>/nodes</code>.</p>
-</dd>
-<dt class="hdlist1"><code>--node</code></dt>
-<dd>
-<p>Specifies the node on which the instance resides. This option may be
-omitted only if the directory that the <code>--nodedir</code> option specifies
-contains only one node directory. Otherwise, this option is required.</p>
-</dd>
 <dt class="hdlist1"><code>--debug</code></dt>
 <dd>
 <p>Specifies whether the instance is restarted with
@@ -47476,6 +47496,25 @@ operating system to terminate the instance process.</p>
 </dd>
 </dl>
 </div>
+</dd>
+<dt class="hdlist1"><code>--node</code></dt>
+<dd>
+<p>Specifies the node on which the instance resides. This option may be
+omitted only if the directory that the <code>--nodedir</code> option specifies
+contains only one node directory. Otherwise, this option is required.</p>
+</dd>
+<dt class="hdlist1"><code>--nodedir</code></dt>
+<dd>
+<p>Specifies the directory that contains the instance&#8217;s node directory.
+The instance&#8217;s files are stored in the instance&#8217;s node directory. The
+default is as-install<code>/nodes</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The instance status is unknown
+in such case.</p>
 </dd>
 </dl>
 </div>
@@ -49831,9 +49870,12 @@ Guide</a></p>
 <h3 id="synopsis-257"><a class="anchor" href="#synopsis-257"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] start-cluster [--help]
-[--autohadboverride={true|false}]
-[--verbose={false|true}] cluster-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin start-cluster
+[--debug[=&lt;debug(default:false)&gt;]]
+[--help|-?]
+[--timeout &lt;timeout&gt;]
+[--verbose[=&lt;verbose(default:false)&gt;]]
+clustername</code></pre>
 </div>
 </div>
 </div>
@@ -49887,12 +49929,35 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dd>
 <p>Displays the help text for the subcommand.</p>
 </dd>
-<dt class="hdlist1"><code>--autohadboverride</code></dt>
+<dt class="hdlist1"><code>--debug</code></dt>
+<dt class="hdlist1"><code>-d</code></dt>
 <dd>
-<p>Do not specify this option. This option is retained for compatibility
-with earlier releases. If you specify this option, a syntax error does
-not occur. Instead, the subcommand runs successfully and displays a
-warning message that the option is ignored.</p>
+<p>Specifies whether the domain is started with
+<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
+Platform Debugger Architecture (JPDA)</a>
+(<a href="https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html" class="bare">https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html</a>)
+debugging enabled. With debugging enabled extra exceptions can be printed.
+Possible values are as follows:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>true</code></dt>
+<dd>
+<p>The instance is started with JPDA debugging enabled and the port
+number for JPDA debugging is displayed.</p>
+</dd>
+<dt class="hdlist1"><code>false</code></dt>
+<dd>
+<p>The instance is started with JPDA debugging disabled (default).</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The status of instances is
+unknown in such case.</p>
 </dd>
 <dt class="hdlist1"><code>--verbose</code></dt>
 <dd>
@@ -50272,11 +50337,18 @@ reference page for the operating system that you are using:</p>
 <h3 id="synopsis-259"><a class="anchor" href="#synopsis-259"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] start-domain [--help]
-[--debug={true|false}] [--suspend={true|false}] [--domaindir domain-dir]
-[--dry-run={true|false}] [--upgrade={true|false}]
-[--verbose={true|false}] [--watchdog={true|false}]
-[domain-name]</code></pre>
+<pre class="CodeRay highlight"><code>asadmin start-domain
+[--debug|-d[=&lt;debug(default:false)&gt;]]
+[--domaindir &lt;domaindir&gt;]
+[--drop-interrupted-commands[=&lt;drop-interrupted-commands(default:false)&gt;]]
+[--dry-run|-n[=&lt;dry-run(default:false)&gt;]]
+[--help|-?]
+[--suspend|-s[=&lt;suspend(default:false)&gt;]]
+[--timeout &lt;timeout&gt;]
+[--upgrade[=&lt;upgrade(default:false)&gt;]]
+[--verbose|-v[=&lt;verbose(default:false)&gt;]]
+[--watchdog|-w[=&lt;watchdog(default:false)&gt;]]
+[domain_name]</code></pre>
 </div>
 </div>
 </div>
@@ -50368,6 +50440,27 @@ number for JPDA debugging is displayed.</p>
 </dl>
 </div>
 </dd>
+<dt class="hdlist1"><code>--domaindir</code></dt>
+<dd>
+<p>The domain root directory, which contains the directory of the domain
+that is to be restarted. If specified, the path must be accessible in
+the file system. The default location of the domain root directory is
+as-install<code>/domains</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--drop-interrupted-commands</code></dt>
+<dd>
+<p>If you used --detach with commands supporting checkpoints, this
+option specifies whether to drop the commands that were interrupted.</p>
+</dd>
+<dt class="hdlist1"><code>--dry-run</code></dt>
+<dt class="hdlist1"><code>-n</code></dt>
+<dd>
+<p>Suppresses actual starting of the domain. Instead, <code>start-domain</code>
+displays the full java command that would be used to start the domain,
+including all options. Reviewing this command can be useful to confirm
+JVM options and when troubleshooting startup issues.<br>
+The default value is <code>false</code>.</p>
+</dd>
 <dt class="hdlist1"><code>--suspend</code></dt>
 <dt class="hdlist1"><code>-s</code></dt>
 <dd>
@@ -50393,21 +50486,12 @@ The port number for JPDA debugging is displayed.</p>
 </dl>
 </div>
 </dd>
-<dt class="hdlist1"><code>--dry-run</code></dt>
-<dt class="hdlist1"><code>-n</code></dt>
+<dt class="hdlist1"><code>--timeout</code></dt>
 <dd>
-<p>Suppresses actual starting of the domain. Instead, <code>start-domain</code>
-displays the full java command that would be used to start the domain,
-including all options. Reviewing this command can be useful to confirm
-JVM options and when troubleshooting startup issues.<br>
-The default value is <code>false</code>.</p>
-</dd>
-<dt class="hdlist1"><code>--domaindir</code></dt>
-<dd>
-<p>The domain root directory, which contains the directory of the domain
-that is to be restarted. If specified, the path must be accessible in
-the file system. The default location of the domain root directory is
-as-install<code>/domains</code>.</p>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The domain status is unknown
+in such case.</p>
 </dd>
 <dt class="hdlist1"><code>--upgrade</code></dt>
 <dd>
@@ -50573,9 +50657,12 @@ Command start-domain executed successfully.</code></pre>
 <h3 id="synopsis-260"><a class="anchor" href="#synopsis-260"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] start-instance [--help]
-[--debug={false|true}] [--sync={normal|full|none}]
-instance-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin start-instance
+[--debug[=&lt;debug(default:false)&gt;]]
+[--help|-?]
+[--sync &lt;sync(default:normal)&gt;]
+[--timeout &lt;timeout&gt;]
+instance_name</code></pre>
 </div>
 </div>
 </div>
@@ -50708,6 +50795,13 @@ instance&#8217;s directories.</p>
 </dl>
 </div>
 </dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The instance status is unknown
+in such case.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -50820,12 +50914,17 @@ Command start-instance executed successfully.</code></pre>
 <h3 id="synopsis-261"><a class="anchor" href="#synopsis-261"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] start-local-instance [--help]
-[--nodedir node-dir] [--node node]
-[--debug={false|true}] [--dry-run={true|false}]
-[--sync={normal|full|none}]
-[--verbose={false|true}] [--watchdog={true|false}]
-[instance-name]</code></pre>
+<pre class="CodeRay highlight"><code>asadmin start-local-instance
+[--debug|-d[=&lt;debug(default:false)&gt;]]
+[--dry-run|-n[=&lt;dry-run(default:false)&gt;]]
+[--help|-?]
+[--node &lt;node&gt;]
+[--nodedir &lt;nodedir&gt;]
+[--sync &lt;sync(default:normal)&gt;]
+[--timeout &lt;timeout&gt;]
+[--verbose|-v[=&lt;verbose(default:false)&gt;]]
+[--watchdog|-w[=&lt;watchdog(default:false)&gt;]]
+[instance_name]</code></pre>
 </div>
 </div>
 </div>
@@ -50872,18 +50971,6 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dd>
 <p>Displays the help text for the subcommand.</p>
 </dd>
-<dt class="hdlist1"><code>--nodedir</code></dt>
-<dd>
-<p>Specifies the directory that contains the instance&#8217;s node directory.
-The instance&#8217;s files are stored in the instance&#8217;s node directory. The
-default is as-install<code>/nodes</code>.</p>
-</dd>
-<dt class="hdlist1"><code>--node</code></dt>
-<dd>
-<p>Specifies the node on which the instance resides. This option may be
-omitted only if the directory that the <code>--nodedir</code> option specifies
-contains only one node directory. Otherwise, this option is required.</p>
-</dd>
 <dt class="hdlist1"><code>--debug</code></dt>
 <dt class="hdlist1"><code>-d</code></dt>
 <dd>
@@ -50917,6 +51004,18 @@ number for JPDA debugging is displayed.</p>
 start the instance, including all options. Reviewing this command can
 be useful when troubleshooting startup issues.<br>
 The default value is <code>false</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--node</code></dt>
+<dd>
+<p>Specifies the node on which the instance resides. This option may be
+omitted only if the directory that the <code>--nodedir</code> option specifies
+contains only one node directory. Otherwise, this option is required.</p>
+</dd>
+<dt class="hdlist1"><code>--nodedir</code></dt>
+<dd>
+<p>Specifies the directory that contains the instance&#8217;s node directory.
+The instance&#8217;s files are stored in the instance&#8217;s node directory. The
+default is as-install<code>/nodes</code>.</p>
 </dd>
 <dt class="hdlist1"><code>--sync</code></dt>
 <dd>
@@ -50990,6 +51089,13 @@ until it is resynchronized with the DAS.</p>
 </dd>
 </dl>
 </div>
+</dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The instance status is unknown
+in such case.</p>
 </dd>
 <dt class="hdlist1"><code>--verbose</code></dt>
 <dt class="hdlist1"><code>-v</code></dt>
@@ -51140,11 +51246,11 @@ Command start-local-instance executed successfully.</code></pre>
 <h3 id="synopsis-262"><a class="anchor" href="#synopsis-262"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] stop-cluster [--help]
-[--verbose={false|true}]
-[--kill={false|true}]
-[--autohadboverride={true|false}]
-cluster-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin stop-cluster
+[--help|-?]
+[--kill[=&lt;kill(default:false)&gt;]]
+[--timeout &lt;timeout&gt;]
+clustername</code></pre>
 </div>
 </div>
 </div>
@@ -51213,12 +51319,12 @@ operating system to terminate each instance process.</p>
 </dl>
 </div>
 </dd>
-<dt class="hdlist1"><code>--autohadboverride</code></dt>
+<dt class="hdlist1"><code>--timeout</code></dt>
 <dd>
-<p>Do not specify this option. This option is retained for compatibility
-with earlier releases. If you specify this option, a syntax error does
-not occur. Instead, the subcommand runs successfully and displays a
-warning message that the option is ignored.</p>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The status of instances is
+unknown in such case.</p>
 </dd>
 </dl>
 </div>
@@ -51415,10 +51521,13 @@ as-install<code>/javadb</code>.</p>
 <h3 id="synopsis-264"><a class="anchor" href="#synopsis-264"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] stop-domain [--help]
-[--domaindir domaindir]
-[--force={true|false}] [--kill={false|true}]
-[domain-name]</code></pre>
+<pre class="CodeRay highlight"><code>asadmin stop-domain
+[--domaindir &lt;domaindir&gt;]
+[--force[=&lt;force(default:true)&gt;]]
+[--help|-?]
+[--kill[=&lt;kill(default:false)&gt;]]
+[--timeout &lt;timeout&gt;]
+[domain_name]</code></pre>
 </div>
 </div>
 </div>
@@ -51498,6 +51607,13 @@ operating system to terminate the domain process.</p>
 </dl>
 </div>
 </dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The domain status is unknown
+in such case.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -51569,9 +51685,12 @@ Command stop-domain executed successfully.</code></pre>
 <h3 id="synopsis-265"><a class="anchor" href="#synopsis-265"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] stop-instance [--help]
-[--force={false|true}] [--kill={false|true}]
-instance-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin stop-instance
+[--force[=&lt;force(default:true)&gt;]]
+[--help|-?]
+[--kill[=&lt;kill(default:false)&gt;]]
+[--timeout &lt;timeout&gt;]
+instancename</code></pre>
 </div>
 </div>
 </div>
@@ -51641,6 +51760,13 @@ operating system to terminate the instance process.</p>
 </dd>
 </dl>
 </div>
+</dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The instance status is unknown
+in such case.</p>
 </dd>
 </dl>
 </div>
@@ -51717,10 +51843,14 @@ Command stop-instance executed successfully.</code></pre>
 <h3 id="synopsis-266"><a class="anchor" href="#synopsis-266"></a>Synopsis</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin [asadmin-options] stop-local-instance [--help]
-[--nodedir node-dir] [--node node]
-[--force={true|false}] [--kill={false|true}]
-[instance-name]</code></pre>
+<pre class="CodeRay highlight"><code>asadmin stop-local-instance
+[--force[=&lt;force(default:true)&gt;]]
+[--help|-?]
+[--kill[=&lt;kill(default:false)&gt;]]
+[--node &lt;node&gt;]
+[--nodedir &lt;nodedir&gt;]
+[--timeout &lt;timeout&gt;]
+[instance_name]</code></pre>
 </div>
 </div>
 </div>
@@ -51763,18 +51893,6 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dd>
 <p>Displays the help text for the subcommand.</p>
 </dd>
-<dt class="hdlist1"><code>--nodedir</code></dt>
-<dd>
-<p>Specifies the directory that contains the instance&#8217;s node directory.
-The instance&#8217;s files are stored in the instance&#8217;s node directory. The
-default is as-install<code>/nodes</code>.</p>
-</dd>
-<dt class="hdlist1"><code>--node</code></dt>
-<dd>
-<p>Specifies the node on which the instance resides. This option may be
-omitted only if the directory that the <code>--nodedir</code> option specifies
-contains only one node directory. Otherwise, this option is required.</p>
-</dd>
 <dt class="hdlist1"><code>--force</code></dt>
 <dd>
 <p>Specifies whether the instance is forcibly stopped immediately.<br>
@@ -51812,6 +51930,25 @@ operating system to terminate the instance process.</p>
 </dd>
 </dl>
 </div>
+</dd>
+<dt class="hdlist1"><code>--node</code></dt>
+<dd>
+<p>Specifies the node on which the instance resides. This option may be
+omitted only if the directory that the <code>--nodedir</code> option specifies
+contains only one node directory. Otherwise, this option is required.</p>
+</dd>
+<dt class="hdlist1"><code>--nodedir</code></dt>
+<dd>
+<p>Specifies the directory that contains the instance&#8217;s node directory.
+The instance&#8217;s files are stored in the instance&#8217;s node directory. The
+default is as-install<code>/nodes</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--timeout</code></dt>
+<dd>
+<p>Specifies timeout in seconds to evaluate the expected result.
+If the timeout is exceeded, the command fails - however it does
+not mean it did not make any changes. The instance status is unknown
+in such case.</p>
 </dd>
 </dl>
 </div>
@@ -57699,7 +57836,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-06-26 05:51:30 UTC
+Last updated 2025-06-26 22:15:36 UTC
 </div>
 </div>
 </body>

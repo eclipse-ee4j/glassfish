@@ -21,7 +21,6 @@ import java.io.File;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
-// FIXME: Visit GlassFishVariable and replace duplicit constants here
 public class SystemPropertyConstants {
 
     /**
@@ -33,35 +32,12 @@ public class SystemPropertyConstants {
     /**
      * Field
      */
-    public static final String UNIX_ASENV_FILENAME = "asenv.conf";
-
-    /**
-     * Field
-     */
-    public static final String WINDOWS_ASENV_FILENAME = "asenv.bat";
-
-    /**
-     * Field
-     */
-    public static final String DEFAULT_LOCALE_PROPERTY = "com.sun.aas.defaultLocale";
-
-    /**
-     * Field
-     */
     public static final String DEBUG_MODE_PROPERTY = "com.sun.aas.debugMode";
 
     /**
      * The certificate nick name specified in the System-Jmx-Conenctor of the DAS with which a Node Agent synchronizes
      */
     public static final String AGENT_CERT_NICKNAME = "com.sun.aas.agentCertNickname";
-
-    public static final String AGENT_NAME_PROPERTY = "com.sun.aas.agentName";
-
-    /**
-     * Field
-     */
-    public static final String WEBCONSOLE_LIB_PROPERTY = "com.sun.aas.webconsoleLib";
-    public static final String WEBCONSOLE_APP_PROPERTY = "com.sun.aas.webconsoleApp";
 
     public static final String ANT_ROOT_PROPERTY = "com.sun.aas.antRoot";
 
@@ -85,54 +61,12 @@ public class SystemPropertyConstants {
     public static final String NATIVE_LAUNCHER = "com.sun.aas.nativeLauncher";
     public static final String NATIVE_LAUNCHER_LIB_PREFIX = "com.sun.aas.nativeLauncherLibPrefix";
 
-    public static final String KEYSTORE_PROPERTY = "javax.net.ssl.keyStore";
-    public static final String JKS_KEYSTORE = System.getProperty("file.separator") + "config" + System.getProperty("file.separator") + "keystore.jks";
-
-    public static final String TRUSTSTORE_PROPERTY = "javax.net.ssl.trustStore";
-    public static final String JKS_TRUSTSTORE = System.getProperty("file.separator") + "config" + System.getProperty("file.separator") + "cacerts.jks";
-
-    public static final String ADMIN_REALM = "admin-realm";
-    public static final String NSS_DB_PROPERTY = "com.sun.appserv.nss.db";
-
-    public static final String NSS_DB_PASSWORD_PROPERTY = "com.sun.appserv.nss.db.password";
-
-    public static final String CLIENT_TRUSTSTORE_PROPERTY = TRUSTSTORE_PROPERTY;
-    // "com.sun.appserv.client.truststore";
-
-    public static final String CLIENT_TRUSTSTORE_PASSWORD_PROPERTY = "javax.net.ssl.trustStorePassword";
-    // "com.sun.appserv.client.truststore.password";
-
-    public static final String PID_FILE = ".__com_sun_appserv_pid";
-    public static final String REF_TS_FILE = "admsn";
-
-    public static final String KILLSERV_SCRIPT = "killserv";
-
-    public static final String KILL_SERV_UNIX = "killserv";
-    public static final String KILL_SERV_WIN = "killserv.bat";
-    public static final String KILL_SERV_OS = OS.isWindows() ? KILL_SERV_WIN : KILL_SERV_UNIX;
-
     public static final String DAS_SERVER_NAME = "server";
     @Deprecated
     public static final String DEFAULT_SERVER_INSTANCE_NAME = DAS_SERVER_NAME;
 
     public static final String DAS_SERVER_CONFIG = "server-config";
 
-    public static final String JDMK_HOME_PROPERTY = "com.sun.aas.jdmkHome";
-
-    /** Java ES Monitoring Framework install directory */
-    public static final String MFWK_HOME_PROPERTY = "com.sun.aas.mfwkHome";
-
-    /*
-     * An implementation note: This variable should be defined at one place. I have chosen this location because most of the
-     * other modules depend on appserv-commons for compilation.
-     */
-    /** name of the domain key */
-    public static final String DOMAIN_NAME = "domain.name";
-    public static final String CONFIG_NAME_PROPERTY = "com.sun.aas.configName";
-    public static final String DOCROOT_PROPERTY = "docroot";
-    public static final String ACCESSLOG_PROPERTY = "accesslog";
-    public static final String DEFAULT_SERVER_SOCKET_ADDRESS = "0.0.0.0";
-    public static final String CLUSTER_AWARE_FEATURE_FACTORY_CLASS = "com.sun.enterprise.ee.server.pluggable.EEPluggableFeatureImpl";
     public static final String DROP_INTERRUPTED_COMMANDS = "org.glassfish.job-manager.drop-interrupted-commands";
 
     /** Name of the default config that determines the configuration for the instances */
@@ -169,7 +103,7 @@ public class SystemPropertyConstants {
         StringBuilder sb = new StringBuilder();
         String ext = OS.isWindows() ? OS.WINDOWS_BATCH_FILE_EXTENSION : "";
         String ASADMIN = "nadmin";
-        String suffix = new StringBuilder("lib").append(System.getProperty("file.separator")).append(ASADMIN).append(ext).toString();
+        String suffix = new StringBuilder("lib").append(File.separator).append(ASADMIN).append(ext).toString();
 
         sb.append(installRoot);
         final String fs = System.getProperty("file.separator");

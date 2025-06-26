@@ -53,6 +53,29 @@ public enum GlassFishVariable {
     NODES_ROOT("AS_DEF_NODES_PATH", "com.sun.aas.agentRoot"),
     /** Install root parent, resolved from {@link #INSTANCE_ROOT}. */
     PRODUCT_ROOT(null, "com.sun.aas.productRoot"),
+    /**
+     * File containing the private key and server certificates.
+     * This file must be perfectly protected and must not leave the server.
+     */
+    KEYSTORE_FILE("AS_KEYSTORE_FILE", "javax.net.ssl.keyStore"),
+    /** JKS/JCEKS/PKCS12/... */
+    KEYSTORE_TYPE("AS_KEYSTORE_TYPE", "javax.net.ssl.keyStoreType"),
+    /**
+     * Password for file containing the private key and server certificates.
+     * @deprecated It is not safe to set passwords as system properties.
+     */
+    @Deprecated(since = "7.1.0", forRemoval = true)
+    KEYSTORE_PASSWORD(null, "javax.net.ssl.keyStorePassword"),
+    /** File containing server certificate chains */
+    TRUSTSTORE_FILE("AS_TRUSTSTORE_FILE", "javax.net.ssl.trustStore"),
+    /** JKS/JCEKS/PKCS12/... */
+    TRUSTSTORE_TYPE("AS_TRUSTSTORE_TYPE", "javax.net.ssl.trustStoreType"),
+    /**
+     * Password for the file containing server certificate chains
+     * @deprecated It is not safe to set passwords as system properties.
+     */
+    @Deprecated(since = "7.1.0", forRemoval = true)
+    TRUSTSTORE_PASSWORD(null, "javax.net.ssl.trustStorePassword"),
     /** Default start server timeout in seconds */
     TIMEOUT_START_SERVER("AS_START_TIMEOUT", null),
     /** Default stop server timeout in seconds */

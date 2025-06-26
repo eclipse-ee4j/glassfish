@@ -49,6 +49,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.DOMAIN_XML_FILE;
+import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static java.text.MessageFormat.format;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
@@ -137,7 +140,7 @@ public class DomainBuilder {
             _domainTempalte = new DomainTemplate(templateInfoHolder, stringSubstitutor, templateJarPath);
 
             // Loads default self signed certificate.
-            je = _templateJar.getJarEntry("config/" + DomainConstants.KEYSTORE_FILE);
+            je = _templateJar.getJarEntry("config/" + KEYSTORE_FILENAME_DEFAULT);
             if (je != null) {
                 _keystoreBytes = new byte[(int) je.getSize()];
                 InputStream in = null;
@@ -268,9 +271,8 @@ public class DomainBuilder {
                 throw e;
             }
             domainSecurity.changeMasterPasswordInMasterPasswordFile(
-                new File(domainDir, DomainConstants.MASTERPASSWORD_FILE), masterPassword, saveMasterPassword);
-            domainSecurity.createPasswordAliasKeystore(new File(configDir, DomainConstants.DOMAIN_PASSWORD_FILE),
-                masterPassword);
+                new File(domainDir, MASTER_PASSWORD_FILENAME), masterPassword, saveMasterPassword);
+            domainSecurity.createPasswordAliasKeystore(new File(configDir, PASSWORD_ALIAS_KEYSTORE), masterPassword);
 
             // Add customized tokens in domain.xml.
             CustomTokenClient tokenClient = new CustomTokenClient(_domainConfig);

@@ -45,6 +45,12 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
 /**
  * @author oleksiys
@@ -147,17 +153,17 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             }
 
             // Key store settings
-            setAttribute(sslContextFactory, "keystore", ssl != null ? ssl.getKeyStore() : null, "javax.net.ssl.keyStore", null);
-            setAttribute(sslContextFactory, "keystoreType", ssl != null ? ssl.getKeyStoreType() : null, "javax.net.ssl.keyStoreType", "JKS");
-            setAttribute(sslContextFactory, "keystorePass", ssl != null ? getKeyStorePassword(ssl) : null, "javax.net.ssl.keyStorePassword", "changeit");
+            setAttribute(sslContextFactory, "keystore", ssl == null ? null : ssl.getKeyStore(), KEYSTORE_FILE.getSystemPropertyName(), null);
+            setAttribute(sslContextFactory, "keystoreType", ssl == null ? null : ssl.getKeyStoreType(), KEYSTORE_TYPE.getSystemPropertyName(), "JKS");
+            setAttribute(sslContextFactory, "keystorePass", ssl == null ? null : getKeyStorePassword(ssl), KEYSTORE_PASSWORD.getSystemPropertyName(), "changeit");
 
             // Trust store settings
-            setAttribute(sslContextFactory, "truststore", ssl != null ? ssl.getTrustStore() : null, "javax.net.ssl.trustStore", null);
-            setAttribute(sslContextFactory, "truststoreType", ssl != null ? ssl.getTrustStoreType() : null, "javax.net.ssl.trustStoreType", "JKS");
-            setAttribute(sslContextFactory, "truststorePass", ssl != null ? getTrustStorePassword(ssl) : null, "javax.net.ssl.trustStorePassword", "changeit");
+            setAttribute(sslContextFactory, "truststore", ssl == null ? null : ssl.getTrustStore(), TRUSTSTORE_FILE.getSystemPropertyName(), null);
+            setAttribute(sslContextFactory, "truststoreType", ssl == null ? null : ssl.getTrustStoreType(), TRUSTSTORE_TYPE.getSystemPropertyName(), "JKS");
+            setAttribute(sslContextFactory, "truststorePass", ssl == null ? null : getTrustStorePassword(ssl), TRUSTSTORE_PASSWORD.getSystemPropertyName(), "changeit");
 
             // Cert nick name
-            sslContextFactory.setAttribute("keyAlias", ssl != null ? ssl.getCertNickname() : null);
+            sslContextFactory.setAttribute("keyAlias", ssl == null ? null : ssl.getCertNickname());
             SSLContext newSslContext = sslContextFactory.create();
             CipherInfo.updateCiphers(newSslContext);
             return newSslContext;

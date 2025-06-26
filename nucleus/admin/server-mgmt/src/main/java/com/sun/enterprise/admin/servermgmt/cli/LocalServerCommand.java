@@ -30,9 +30,7 @@ import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.KeyStore;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Supplier;
@@ -42,6 +40,7 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.security.KeyTool;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
@@ -50,11 +49,7 @@ import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINER;
 
 /**
- * A class that's supposed to capture all the behavior common to operation on a "local" server. It's getting fairly
- * complicated thus the "section headers" comments. This class plays two roles,
- * <UL>
- * <LI>a place for putting common code - which are final methods. A parent class that is communicating with its own
- * unknown sub-classes. These are non-final methods
+ * A class that's supposed to capture all the behavior common to operation on a "local" server.
  *
  * @author Byron Nevins
  */
@@ -210,62 +205,45 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     protected final boolean verifyMasterPassword(String mpv) {
-        //issue : 14971, should ideally use javax.net.ssl.keyStore and
-        //javax.net.ssl.keyStoreType system props here but they are
-        //unavailable to asadmin start-domain hence falling back to
-        //cacerts.jks instead of keystore.jks. Since the truststore
-        //is less-likely to be Non-JKS
-
         return loadAndVerifyKeystore(getJKS(), mpv);
     }
 
     protected boolean loadAndVerifyKeystore(File jks, String mpv) {
-        FileInputStream fis = null;
         try {
-            fis = new FileInputStream(jks);
-            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            ks.load(fis, mpv.toCharArray());
+            new KeyTool(jks, mpv.toCharArray()).loadKeyStore();
             return true;
         } catch (Exception e) {
-            if (logger.isLoggable(FINER)) {
-                logger.finer(e.getMessage());
-            }
+            logger.log(FINER, e.getMessage(), e);
             return false;
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ioe) {
-                // ignore, I know ...
-            }
         }
     }
 
     /**
-     * Get the master password, either from a password file or by asking the user.
+     * @return the master password, either from a password file or by asking the user.
      */
     protected final String getMasterPassword() throws CommandException {
         // Sets the password into the launcher info.
         // Yes, returning master password as a string is not right ...
-        final int RETRIES = 3;
-        long t0 = now();
+        final int countOfRetries = 3;
+        final long start = System.currentTimeMillis();
         String mpv = passwords.get(CLIConstants.MASTER_PASSWORD);
-        if (mpv == null) { //not specified in the password file
-            mpv = "changeit"; //optimization for the default case -- see 9592
+        if (mpv == null) {
+            // not specified in the password file
+            // optimization for the default case
+            mpv = "changeit";
             if (!verifyMasterPassword(mpv)) {
                 mpv = readFromMasterPasswordFile();
                 if (!verifyMasterPassword(mpv)) {
-                    mpv = retry(RETRIES);
+                    mpv = retry(countOfRetries);
                 }
             }
-        } else { // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
+        } else {
+            // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
             if (!verifyMasterPassword(mpv)) {
-                mpv = retry(RETRIES);
+                mpv = retry(countOfRetries);
             }
         }
-        long t1 = now();
-        logger.log(FINER, "Time spent in master password extraction: {0} msec", (t1 - t0)); //TODO
+        logger.log(FINER, "Time spent in master password extraction: {0} ms", (System.currentTimeMillis() - start));
         return mpv;
     }
 
@@ -480,10 +458,5 @@ public abstract class LocalServerCommand extends CLICommand {
             f = SmartFile.sanitize(f);
         }
         return f;
-    }
-
-    private long now() {
-        // it's just *so* ugly to call this directly!
-        return System.currentTimeMillis();
     }
 }

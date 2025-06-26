@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,6 +57,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.glassfish.admin.mbeanserver.Util;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 
 /**
  * This class is a utility class that would configure a client socket factory using
@@ -159,8 +161,7 @@ public class SSLClientConfigurator {
 
        // Initialize the SSLContext
         try {
-            sslContext.init(getKeyManagers(algorithm, keyAlias),
-                    getTrustManagers(trustAlgorithm), new SecureRandom());
+            sslContext.init(getKeyManagers(algorithm, keyAlias), getTrustManagers(trustAlgorithm), new SecureRandom());
         } catch (Exception ex) {
             _logger.log(Level.SEVERE, errorPreparingSSL, ex);
         }
@@ -218,28 +219,19 @@ public class SSLClientConfigurator {
     /**
      * Gets the initialized key managers.
      */
-    protected KeyManager[] getKeyManagers(String algorithm,
-                                          String keyAlias)
-                throws Exception {
-
-        // hack
-
-        if(System.getProperty("javax.net.ssl.keyStore") == null) {
+    protected KeyManager[] getKeyManagers(String algorithm, String keyAlias) throws Exception {
+        if(System.getProperty(KEYSTORE_FILE.getSystemPropertyName()) == null) {
             _logger.log(Level.WARNING, noKeyStores);
             return null;
         }
-        _logger.log(Level.FINE, "Algorithm ::{0}", algorithm);
-        _logger.log(Level.FINE, "Key Alias ::{0}", keyAlias);
-        _logger.log(Level.FINE, "KeyStore Type ::{0}", sslParams.getKeyStoreType());
+        _logger.log(Level.FINE, "Algorithm: {0}", algorithm);
+        _logger.log(Level.FINE, "Key Alias: {0}", keyAlias);
+        _logger.log(Level.FINE, "KeyStore Type: {0}", sslParams.getKeyStoreType());
 
         String keystorePass = sslParams.getKeyStorePassword();
-
-        KeyStore ks = getStore(sslParams.getKeyStoreType(),
-                    sslParams.getKeyStore().getPath(), keystorePass);
+        KeyStore ks = getStore(sslParams.getKeyStoreType(), sslParams.getKeyStore().getPath(), keystorePass);
         if (keyAlias != null && !ks.isKeyEntry(keyAlias)) {
-
             _logger.log(Level.WARNING, noKeyEntry, keyAlias);
-            //throw new IOException( "jsse.alias_no_key_entry for "+keyAlias);
             return null;
         }
 
@@ -249,41 +241,33 @@ public class SSLClientConfigurator {
         return kmf.getKeyManagers();
     }
 
-    /**
-     * Gets the intialized trust managers.
-     */
-    protected TrustManager[] getTrustManagers(String algorithm)
-                throws Exception {
 
+    /**
+     * @return the intialized trust managers or null
+     */
+    protected TrustManager[] getTrustManagers(String algorithm) throws Exception {
         String crlf = sslParams.getCrlFile();
 
-        TrustManager[] tms = null;
         _logger.log(Level.FINE, "in getTrustManagers TrustManager type = {0} path = {1} password = {2}",
                 new Object[]{sslParams.getTrustStoreType(),
                     sslParams.getTrustStore().getPath(),
                     sslParams.getTrustStorePassword()});
 
-        KeyStore trustStore = getStore(sslParams.getTrustStoreType(),
-                    sslParams.getTrustStore().getPath(), sslParams.getTrustStorePassword());
-        if (trustStore != null) {
-            if (crlf == null) {
-                TrustManagerFactory tmf =
-                    TrustManagerFactory.getInstance(algorithm);
-                tmf.init(trustStore);
-                tms = tmf.getTrustManagers();
-            } else {
-                TrustManagerFactory tmf =
-                    TrustManagerFactory.getInstance(algorithm);
-                CertPathParameters params = getParameters(algorithm, crlf,
-                                                          trustStore);
-                ManagerFactoryParameters mfp =
-                    new CertPathTrustManagerParameters(params);
-                tmf.init(mfp);
-                tms = tmf.getTrustManagers();
-            }
+        KeyStore trustStore = getStore(sslParams.getTrustStoreType(), sslParams.getTrustStore().getPath(),
+            sslParams.getTrustStorePassword());
+        if (trustStore == null) {
+            return null;
         }
-
-        return tms;
+        if (crlf == null) {
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(algorithm);
+            tmf.init(trustStore);
+            return tmf.getTrustManagers();
+        }
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(algorithm);
+        CertPathParameters params = getParameters(algorithm, crlf, trustStore);
+        ManagerFactoryParameters mfp = new CertPathTrustManagerParameters(params);
+        tmf.init(mfp);
+        return tmf.getTrustManagers();
     }
 
 

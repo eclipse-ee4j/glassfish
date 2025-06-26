@@ -68,6 +68,12 @@ import org.jvnet.hk2.annotations.Service;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
 
 /**
@@ -78,15 +84,6 @@ import static java.util.logging.Level.WARNING;
 @Service
 @Singleton
 public class SecuritySupport {
-
-    public static final String KEY_STORE_PROP = "javax.net.ssl.keyStore";
-    public static final String KEYSTORE_PASS_PROP = "javax.net.ssl.keyStorePassword";
-    public static final String KEYSTORE_TYPE_PROP = "javax.net.ssl.keyStoreType";
-
-    public static final String TRUST_STORE_PROP = "javax.net.ssl.trustStore";
-    public static final String TRUSTSTORE_PASS_PROP = "javax.net.ssl.trustStorePassword";
-    public static final String TRUSTSTORE_TYPE_PROP = "javax.net.ssl.trustStoreType";
-
 
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "com.sun.enterprise.server.pluggable.LogMessages";
@@ -122,8 +119,8 @@ public class SecuritySupport {
 
     @PostConstruct
     private void init() {
-        String keyStoreFileName = System.getProperty(KEY_STORE_PROP);
-        String trustStoreFileName = System.getProperty(TRUST_STORE_PROP);
+        String keyStoreFileName = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
+        String trustStoreFileName = System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName());
         char[] keyStorePass = masterPassword.getMasterPassword();
         char[] trustStorePass = keyStorePass;
 
@@ -133,12 +130,14 @@ public class SecuritySupport {
         // Always do so for the app client case whether the passwords have been
         // found from master password helper or not.
         if (keyStorePass == null || isAcc) {
-            final String keyStorePassOverride = System.getProperty(KEYSTORE_PASS_PROP, DEFAULT_KEYSTORE_PASS);
+            final String keyStorePassOverride = System.getProperty(KEYSTORE_PASSWORD.getSystemPropertyName(),
+                DEFAULT_KEYSTORE_PASS);
             if (keyStorePassOverride != null) {
                 keyStorePass = keyStorePassOverride.toCharArray();
             }
 
-            final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASS_PROP, DEFAULT_TRUSTSTORE_PASS);
+            final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(),
+                DEFAULT_TRUSTSTORE_PASS);
             if (trustStorePassOverride != null) {
                 trustStorePass = trustStorePassOverride.toCharArray();
             }
@@ -147,9 +146,9 @@ public class SecuritySupport {
         loadStores(
             null, null,
             keyStoreFileName, keyStorePass,
-            System.getProperty(KEYSTORE_TYPE_PROP, KeyStore.getDefaultType()),
+            System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KeyStore.getDefaultType()),
             trustStoreFileName, trustStorePass,
-            System.getProperty(TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType()));
+            System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KeyStore.getDefaultType()));
         Arrays.fill(keyStorePass, ' ');
         Arrays.fill(trustStorePass, ' ');
     }
@@ -286,7 +285,7 @@ public class SecuritySupport {
      */
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         if (Runtime.version().feature() < 24 && processEnvironment.getProcessType().isStandaloneServer()) {
-            checkPermission(KEYSTORE_PASS_PROP);
+            checkPermission(KEYSTORE_PASSWORD.getSystemPropertyName());
         }
 
         Key key = keyStores.get(keystoreIndex).getKey(alias, keyStorePasswords.get(keystoreIndex));
@@ -379,8 +378,7 @@ public class SecuritySupport {
         final KeyStore keyStore = createKeyStore(keyStoreType, provider);
         try (FileInputStream istream = new FileInputStream(keyStoreFile);
             BufferedInputStream bstream = new BufferedInputStream(istream)) {
-            LOG.log(FINE, "Loading keystoreFile = {0}, keystorePass is null = {1}",
-                new Object[] {keyStoreFile, keyStorePass == null});
+            LOG.log(FINE, "Loading keystoreFile = {0}", keyStoreFile);
             keyStore.load(bstream, keyStorePass);
         }
         return keyStore;

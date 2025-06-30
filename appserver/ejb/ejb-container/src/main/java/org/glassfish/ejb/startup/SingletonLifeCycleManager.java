@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package org.glassfish.ejb.startup;
 import com.sun.ejb.containers.AbstractSingletonContainer;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -86,7 +88,7 @@ public class SingletonLifeCycleManager {
 
         StringBuilder sb = new StringBuilder("Partial order of dependent(s). "  + src + " => {");
         for(int i=0; i < depends.length; i++) {
-            newDepends[i] = normalizeSingletonName(depends[i], sdesc);
+            newDepends[i] = resolveSingleton(depends[i], sdesc);
             sb.append(newDepends[i] + " ");
         }
         sb.append("}");
@@ -99,26 +101,51 @@ public class SingletonLifeCycleManager {
         name2EjbApp.put(src, ejbApp);
     }
 
-    private String normalizeSingletonName(String origName, EjbSessionDescriptor sessionDesc) {
-        String normalizedName;
-        boolean fullyQualified = origName.contains("#");
+    private String normalizeSingletonName(String name, EjbSessionDescriptor sessionDesc) {
+        return sessionDesc.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri() + "#" + name;
+    }
 
-        Application app = sessionDesc.getEjbBundleDescriptor().getApplication();
+    private String resolveSingleton(String name, EjbSessionDescriptor sessionDesc) {
+        String normalizedName = null;
+
+        EjbBundleDescriptor ejbBundle = sessionDesc.getEjbBundleDescriptor();
+        Application app = ejbBundle.getApplication();
+
+        boolean fullyQualified = name.contains("#");
+
         if (fullyQualified) {
-            int indexOfHash = origName.indexOf("#");
-            String ejbName = origName.substring(indexOfHash + 1);
-            String relativeJarPath = origName.substring(0, indexOfHash);
+            int index = name.indexOf("#");
+            String ejbName = name.substring(index + 1);
+            String relativeJarPath = name.substring(0, index);
 
-            BundleDescriptor bundle = app.getRelativeBundle(sessionDesc.getEjbBundleDescriptor(),
-                    relativeJarPath);
-            if (bundle == null) {
-                throw new IllegalStateException("Invalid @DependsOn value = " + origName +
-                        " for Singleton " + sessionDesc.getName());
+            BundleDescriptor bundle = app.getRelativeBundle(ejbBundle, relativeJarPath);
+            if (bundle != null) {
+                normalizedName = bundle.getModuleDescriptor().getArchiveUri() + "#" + ejbName;
             }
-            normalizedName = bundle.getModuleDescriptor().getArchiveUri() + "#" + ejbName;
         } else {
-            normalizedName = sessionDesc.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri() +
-                    "#" + origName;
+            if (ejbBundle.hasEjbByName(name)) {
+                normalizedName = ejbBundle.getModuleDescriptor().getArchiveUri() + "#" + name;
+            } else {
+                if (name.matches("^[^/]+/[^/]+$")) {
+                    int index = name.indexOf("/");
+                    String ejbName = name.substring(index + 1);
+                    String moduleName = name.substring(0, index);
+
+                    for (EjbBundleDescriptor bundle : app.getBundleDescriptors(EjbBundleDescriptor.class)) {
+                        if (Objects.equals(moduleName, bundle.getModuleDescriptor().getModuleName())) {
+                            if (bundle.hasEjbByName(ejbName)) {
+                                normalizedName = bundle.getModuleDescriptor().getArchiveUri() + "#" + ejbName;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (normalizedName == null) {
+            throw new IllegalStateException(
+                "Invalid @DependsOn value = " + name + " for Singleton " + sessionDesc.getName());
         }
 
         return normalizedName;

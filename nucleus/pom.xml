@@ -93,6 +93,20 @@
         <glassfish.generate-injectors.skip>false</glassfish.generate-injectors.skip>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${project.build.outputDirectory}</glassfishbuild-maven-plugin.assemblyInputDirectory>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>sonatype-oss-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -107,7 +121,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

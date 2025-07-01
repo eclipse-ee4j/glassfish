@@ -33,10 +33,6 @@
     <name>admin-monitoring</name>
     <description>Glassfish Appserver Admin Monitoring Infrastructure</description>
 
-    <properties>
-        <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-    </properties>
-
     <developers>
         <developer>
             <id>bnevins</id>
@@ -48,6 +44,10 @@
             </roles>
         </developer>
     </developers>
+
+    <properties>
+        <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
+    </properties>
 
     <dependencies>
         <dependency>

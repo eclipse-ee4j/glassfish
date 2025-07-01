@@ -36,6 +36,7 @@
         <module>common</module>
         <module>oracle-jdbc-driver-packages</module>
         <module>gf-jpa-connector</module>
+        <module>jnosql-integration</module>
         <module>jpa-container</module>
         <module>eclipselink-wrapper</module>
         <module>cmp</module>

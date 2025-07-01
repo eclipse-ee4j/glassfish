@@ -68,6 +68,7 @@
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
+
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>6.0.1</jakarta.el-api.version>
@@ -689,13 +690,13 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
                     </exclusion>
                 </exclusions>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
@@ -1559,8 +1560,7 @@
                     </plugins>
                 </pluginManagement>
                 <plugins>
-                    <plugin>
-                        <!-- Generates @argLine for surefire and failsafe plugins -->
+                    <plugin><!-- Generates @argLine for surefire and failsafe plugins -->
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <executions>

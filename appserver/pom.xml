@@ -108,13 +108,15 @@
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
         <openmq.version>6.6.0</openmq.version>
+        
+        <!-- Jakarta Data / NoSQL -->
+        <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
+        <jakarta.nosql-api.version>1.0.0</jakarta.nosql-api.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
         <eclipselink.version>5.0.0-B07</eclipselink.version>
         <eclipselink.asm.version>9.8.0</eclipselink.asm.version>
-        
-        <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -326,6 +328,13 @@
                 <groupId>jakarta.data</groupId>
                 <artifactId>jakarta.data-api</artifactId>
                 <version>${jakarta.data-api.version}</version>
+            </dependency>
+            
+            <!-- Jakarta NoSQL-->
+            <dependency>
+                <groupId>jakarta.nosql</groupId>
+                <artifactId>jakarta.nosql-api</artifactId>
+                <version>${jakarta.nosql-api.version}</version>
             </dependency>
 
             <!-- Jakarta Persistence -->

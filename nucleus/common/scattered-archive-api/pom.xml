@@ -32,6 +32,7 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Scattered Archive APIs of Glassfish</name>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -46,7 +47,7 @@
             <artifactId>hamcrest</artifactId>
         </dependency>        
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>

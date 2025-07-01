@@ -41,8 +41,20 @@
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
-        
-        
+
+
+        <dependency>
+            <groupId>org.eclipse.jnosql.mapping</groupId>
+             <artifactId>jnosql-jakarta-persistence</artifactId>
+            <version>1.1.8-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Jakarta Faces -->
        <dependency>
            <groupId>org.glassfish</groupId>
@@ -54,9 +66,9 @@
                 </exclusion>
             </exclusions>
        </dependency>
-       
-       
-       <!-- Jakarta WebSocket -->
+
+
+        <!-- Jakarta WebSocket -->
        <dependency>
             <groupId>jakarta.websocket</groupId>
             <artifactId>jakarta.websocket-api</artifactId>
@@ -157,8 +169,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        
+
+
         <!-- Jakarta Concurrency -->
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
@@ -200,8 +212,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-       
-       
+
+
         <!-- Jakarta Security -->
         <dependency>
             <groupId>jakarta.security.enterprise</groupId>
@@ -419,7 +431,7 @@
           </dependency>
 
         <!-- Jersey -->
-       
+
         <!-- Since MOXy has been removed from GlassFish,
              the Jersey-MOXy integration module should not be there.
              See https://github.com/eclipse-ee4j/glassfish/issues/24749
@@ -464,7 +476,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- See https://github.com/jakartaee/cdi-tck/issues/474
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
@@ -836,7 +848,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Jakarta Connectors-->
         <dependency>
             <groupId>jakarta.resource</groupId>
@@ -961,7 +973,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
 
         <!-- Jakarta Mail -->
         <dependency>
@@ -1004,7 +1016,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Jakarta CDI -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -1110,7 +1122,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Jakarta Enterprise Beans -->
         <dependency>
             <groupId>jakarta.ejb</groupId>
@@ -1122,7 +1134,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-       
+
         <!-- Jakarta Transaction -->
         <dependency>
             <groupId>jakarta.transaction</groupId>
@@ -1246,7 +1258,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Jakarta Servlet -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -1357,7 +1369,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Jakarta Pages and Jakarta Pages Standard Tags -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
@@ -1411,7 +1423,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Jakarta Data-->
         <dependency>
             <groupId>jakarta.data</groupId>
@@ -1422,6 +1434,36 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        
+        <!-- Jakarta NoSQL -->
+        <dependency>
+            <groupId>jakarta.nosql</groupId>
+            <artifactId>jakarta.nosql-api</artifactId>
+             <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+      
+        <dependency>
+            <groupId>org.glassfish.main.persistence</groupId>
+            <artifactId>jnosql-jakarta-persistence-scanner</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+       </dependency>
+       <!-- TMP -->
+       <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.179</version>
         </dependency>
 
         <!-- Jakarta Persistence -->
@@ -1602,9 +1644,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
 
-        
 
         <!-- glassfish-ejb-lite -->
         <dependency>
@@ -1663,7 +1703,6 @@
             </exclusions>
         </dependency>
 
-        
 
         <!-- json -->
         <dependency>
@@ -1875,7 +1914,7 @@
                 </exclusion>
             </exclusions>
        </dependency>
-       
+
         <!-- glassfish-ha -->
           <dependency>
              <groupId>org.glassfish.main.ha</groupId>

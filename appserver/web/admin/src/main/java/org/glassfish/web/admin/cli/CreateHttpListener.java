@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -116,6 +117,7 @@ public class CreateHttpListener implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         if(!validateInputs(report)) {
@@ -174,6 +176,7 @@ public class CreateHttpListener implements AdminCommand {
     private void updateVirtualServer(VirtualServer vs) throws TransactionFailure {
         //now change the associated virtual server
         ConfigSupport.apply(new SingleConfigCode<VirtualServer>() {
+            @Override
             public Object run(VirtualServer avs) throws PropertyVetoException {
                 String DELIM = ",";
                 String lss = avs.getNetworkListeners();
@@ -199,6 +202,7 @@ public class CreateHttpListener implements AdminCommand {
     private boolean createNetworkListener(NetworkConfig networkConfig, final boolean newTransport,
         final ThreadPool threadPool) throws TransactionFailure {
         ConfigSupport.apply(new SingleConfigCode<NetworkListeners>() {
+            @Override
             public Object run(NetworkListeners listenersParam)
                 throws TransactionFailure {
                 final NetworkListener newListener = listenersParam.createChild(NetworkListener.class);
@@ -299,7 +303,7 @@ public class CreateHttpListener implements AdminCommand {
         }
         if (newTransport) {
             final CreateTransport command = (CreateTransport) runner
-                .getCommand("create-transport", context.getActionReport(), context.getLogger());
+                .getCommand("create-transport", context.getActionReport());
             command.transportName = listenerId;
             command.acceptorThreads = acceptorThreads;
             command.target = target;
@@ -312,7 +316,7 @@ public class CreateHttpListener implements AdminCommand {
 
     private boolean createProtocol(final AdminCommandContext context) throws TransactionFailure {
         final CreateProtocol command = (CreateProtocol) runner
-            .getCommand("create-protocol", context.getActionReport(), context.getLogger());
+            .getCommand("create-protocol", context.getActionReport());
         command.protocolName = listenerId;
         command.securityEnabled = securityEnabled;
         command.target = target;
@@ -323,7 +327,7 @@ public class CreateHttpListener implements AdminCommand {
 
     private boolean createHttp(final AdminCommandContext context) throws TransactionFailure {
         final CreateHttp command = (CreateHttp) runner
-            .getCommand("create-http", context.getActionReport(), context.getLogger());
+            .getCommand("create-http", context.getActionReport());
         command.protocolName = listenerId;
         command.defaultVirtualServer = defaultVirtualServer;
         command.xPoweredBy = xPoweredBy;
@@ -342,7 +346,7 @@ public class CreateHttpListener implements AdminCommand {
 
     private boolean deleteProtocol(final AdminCommandContext context) {
         final DeleteProtocol command = (DeleteProtocol) runner
-            .getCommand("delete-protocol", context.getActionReport(), context.getLogger());
+            .getCommand("delete-protocol", context.getActionReport());
         command.protocolName = listenerId;
         command.target = target;
         command.execute(context);
@@ -351,7 +355,7 @@ public class CreateHttpListener implements AdminCommand {
 
     private boolean deleteTransport(final AdminCommandContext context) {
         final DeleteTransport command = (DeleteTransport) runner
-            .getCommand("delete-transport", context.getActionReport(), context.getLogger());
+            .getCommand("delete-transport", context.getActionReport());
         command.transportName = listenerId;
         command.target = target;
         command.execute(context);
@@ -360,7 +364,7 @@ public class CreateHttpListener implements AdminCommand {
 
     private boolean deleteListener(final AdminCommandContext context) {
         final DeleteNetworkListener command = (DeleteNetworkListener) runner
-            .getCommand("delete-network-listener", context.getActionReport(), context.getLogger());
+            .getCommand("delete-network-listener", context.getActionReport());
         command.networkListenerName = listenerId;
         command.target = target;
         command.execute(context);

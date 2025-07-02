@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -218,7 +219,7 @@ public final class CreateHTTPLoadBalancerCommand extends LBCommandsBase
 
             if (target != null) {
                 final CreateHTTPLBRefCommand command = (CreateHTTPLBRefCommand)runner
-                        .getCommand("create-http-lb-ref", report, context.getLogger());
+                        .getCommand("create-http-lb-ref", report);
                 command.target = target;
                 //command.lbname = load_balancer_name;
                 command.config = lbConfigName;
@@ -245,7 +246,7 @@ public final class CreateHTTPLoadBalancerCommand extends LBCommandsBase
         if (isCluster && lbweight != null) {
             try {
                 final ConfigureLBWeightCommand command = (ConfigureLBWeightCommand)runner
-                        .getCommand("configure-lb-weight", report, context.getLogger());
+                        .getCommand("configure-lb-weight", report);
                 command.weights=lbweight;
                 command.cluster=target;
                 command.execute(context);

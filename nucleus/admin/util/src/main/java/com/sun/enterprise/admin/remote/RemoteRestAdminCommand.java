@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -506,9 +506,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * Run the command using the specified arguments. Return the output of the command.
      */
     public String executeCommand(ParameterMap opts) throws CommandException {
-        if (logger.isLoggable(FINER)) {
-            logger.log(FINER, "RemoteRestAdminCommand.executeCommand() - name: {0}", this.name);
-        }
+        logger.log(FINER, "RemoteRestAdminCommand.executeCommand() - name: {0}", this.name);
         //Just to be sure. Cover get help
         if (opts != null && opts.size() == 1 && opts.containsKey("help")) {
             return getManPage();

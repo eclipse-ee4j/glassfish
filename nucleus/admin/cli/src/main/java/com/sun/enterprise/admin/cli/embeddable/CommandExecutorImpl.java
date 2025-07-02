@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -78,7 +78,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
     }
 
     ParameterMap getParameters(String command, String[] args) throws CommandException {
-        CommandModel commandModel = commandRunner.getModel(command, logger);
+        CommandModel commandModel = commandRunner.getModel(command);
         if (commandModel == null) {
             throw new CommandException("Command lookup failed for command " + command);
         }

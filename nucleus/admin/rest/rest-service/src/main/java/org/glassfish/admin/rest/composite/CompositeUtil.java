@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,14 +68,12 @@ import org.glassfish.admin.rest.composite.metadata.DefaultBeanReference;
 import org.glassfish.admin.rest.composite.metadata.HelpText;
 import org.glassfish.admin.rest.utils.JsonUtil;
 import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.utils.SseCommandHelper;
 import org.glassfish.admin.rest.utils.StringUtil;
 import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.jersey.media.sse.EventOutput;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.MessageInterpolatorImpl;
 import org.objectweb.asm.AnnotationVisitor;
@@ -495,21 +493,6 @@ public class CompositeUtil {
             }
         }
         return ar;
-    }
-
-    /**
-     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
-     */
-    public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters) {
-        return executeSseCommand(subject, command, parameters, null);
-    }
-
-    /**
-     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
-     */
-    public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters,
-            SseCommandHelper.ActionReportProcessor processor) {
-        return ResourceUtil.runCommandWithSse(command, parameters, subject, processor);
     }
 
     public Locale getLocale(HttpHeaders requestHeaders) {

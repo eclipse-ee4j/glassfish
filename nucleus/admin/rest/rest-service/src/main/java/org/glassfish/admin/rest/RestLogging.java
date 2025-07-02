@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,8 +48,6 @@ public class RestLogging {
     public static final String VALUE_DOES_NOT_MATCH_TYPE = "NCLS-REST-00006";
     @LogMessageInfo(message = "Cannot marshal", cause = "The system is unable to generate XML for the given object", action = "Check the logs for more details", level = "SEVERE")
     public static final String CANNOT_MARSHAL = "NCLS-REST-00007";
-    @LogMessageInfo(message = "Unexpected exception during command execution.", level = "WARNING")
-    public static final String UNEXPECTED_EXCEPTION = "NCLS-REST-00008";
     @LogMessageInfo(message = "Unable to delete directory {0}.  Will attempt deletion again upon JVM exit.", level = "WARNING")
     public static final String UNABLE_DELETE_DIRECTORY = "NCLS-REST-00009";
     @LogMessageInfo(message = "Unable to delete file %s.  Will attempt deletion again upon JVM exit.", level = "WARNING")
@@ -63,6 +62,6 @@ public class RestLogging {
     public static final String DIR_CREATION_FAILED = "NCLS-REST-00014";
     @LogMessageInfo(message = "Unexpected exception during initilization.", cause = "The system is unable to init ReST interface", action = "Check the logs for more details", level = "SEVERE")
     public static final String INIT_FAILED = "NCLS-REST-00015";
-    @LogMessageInfo(message = "I/O exception: {0}", cause = "See server log for details", action = "See server log for details.", level = "SEVERE")
+    @LogMessageInfo(message = "I/O exception", cause = "See server log for details", action = "See server log for details.", level = "SEVERE")
     public static final String IO_EXCEPTION = "NCLS-REST-00016";
 }

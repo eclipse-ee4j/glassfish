@@ -1,0 +1,2277 @@
+From tester@makai Mon Oct 14 18:15:25 1996
+Return-Path: <tester@makai>
+Received: from makai.Eng.Sun.COM by homey.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id SAA02189; Mon, 14 Oct 1996 18:15:22 -0700
+Received: by makai.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA07597; Mon, 14 Oct 1996 18:14:22 -0700
+Date: Mon, 14 Oct 1996 18:14:22 -0700
+From: tester@makai (Tester Tester)
+Message-Id: <9610150114.AA07597@makai.Eng.Sun.COM>
+To: tester@homey
+Subject: read this before you start
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="3551_4569-6da5_7555-384e_60f4"
+X-Lines: 2258
+Content-Length: 92901
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 138
+
+--3551_4569-6da5_7555-384e_60f4
+Content-Type: text
+Content-MD5: 9WMwUDj8HB1x8H7xUM4cYQ==
+X-Sun-Content-Length: 125
+
+Be sure you go through the attached file before you start
+rewiring your machine.  Especially the part about the power
+supply.
+--3551_4569-6da5_7555-384e_60f4
+Content-Type: application/octet-stream
+Content-Description: Hardware.info
+Content-MD5: Z6E7cRoaT5z2LPH9GbxQDA==
+X-Sun-Content-Length: 92451
+
+Xxxxxxx: xxxx.xxxxxxx.x.xxxxxxxxxx Xxxxxxxxxx Xxxxx Xxxxxxxxx (XXX)
+Xxxxxxxxxx: xxxx.xxxxxxx.x.xxxxxxxxxx,xxxx.xxxxxxx.x,xxxx.xxxxxxx,xxxx.xxxxxxx
+Xxxxxxxx-Xx: xxxx.xxxxxxx.x.xxxxxxxxxx
+Xxxxx-Xx: xxxx@xxx.xxxx-xxxxx.xxx
+Xxxxxxx: Xxxxxxx xxxxx xxx X11 Xxxxxx Xxxxxx xxxxxxx xxx Xx Xxxxxxxxxx xxxxxxx
+Xxxxxxxx: xxxx-xxxxxxx-xxxxxxx@XXX.Xxx
+
+Xxxxxxx-xxxx: Xx-XXX
+Xxxxxxx: $Xx: XXX-Xx,x 1.38 1994/04/08 17:01:28 xxxx Xxx $
+
+		    Xxx X Xxxxxxx Xxxxxxxxxx X.X.X
+			  X xxxxxxx xxxxxxx
+
+
+Xxxx xxxxxxx xxxxxxxx xxx xxxxxxx xx xxxx Xxxxxxxxxx Xxxxx Xxxxxxxxx
+(XXX) xxxx xxxx.xxxxxxx.x xxxxx xxx X Xxxxxxx Xxxxxxxxxx.  Xx xxxxxx
+xxxxxxxxx (xxxxxxxxxx xxxx xx xxxxxx) xxxx xxxxx xx:
+	xxxx@xxx.xxxx-xxxxx.xxx
+
+Xxxx XXX xx xxxxxxxxx xx xxx xxxxxxx xxxx xxxx.xxx.xxx xx xxx xxxxxxxxx:
+
+	xxx/xxxxxx/xxxx.xxxxxxx
+
+Xxx xxxx xxxxx xxxxx x XXX xx xxxxxxxx xxxxxxx xx xxx Xxxxxxx-xxxx
+xxxx xx xxx xxx xx xxx xxxxxxx.  Xxxx XXX xx xxxxxxxx xx Xx-XXX.
+
+Xxx xxxx xxxxxxxxx xxx xxxxxx xxxxxx.  
+
+			       Xxxxxxxx
+
+0.  Xx Xxxxxxxx
+1.  Xxxxxxxx Xxxxxxxx
+2.  Xxxxxxx XXX'x
+3.  Xxx xxxx xx xxx xxxx xxxx xxxx X xxx xxxxxxx/xxxxxx/xxxxxxxx?
+4.  Xxx xx X xxx x xxxxxxxxx xxxxxx xxxx xxx xxxxxxx?
+5.  Xxxxx xxxxxx xxxxxx xx xxxxxxxxxxx xxx?
+6.  Xxx xx xxxx Xxxxx xxxxxxx xxxx x Xxxxxx?
+7.  Xxxxx xxxxxx, xxxxx xxx xxxxxxxx xx Xxxxxx xxxxxxx?
+8.  X'xx xxxx xxx xxx xxxxx xxx X xxxxx xxx x XxxXxxxx xxxxx.  Xxx?
+9.  Xxx xxxxx'x xx xxxxxx xxx xxxxxxxxx xxxx X xxxx XxXxxxxxxXxxxxx()?
+10. Xxx xx X xxxx xxx xxxxx xxxxxxx xxx XxxxxxxXxxxxxxxx?
+11. Xxx xx X xxxxxx x Xxxxx xxxxxx?
+12. Xxx xxx'x XxXxxXxxXxxxx() xxxxxx xxxxx?
+13. Xxxx xxxx xxxxx xxx xxxxxxxxx xxx xxxxx xx Xx?
+14. Xxxx Xxxxxxx xxx xxxxxxxxx?
+15. Xxxx xxxxxxxxxxxx xx xxx Xxxxxxxxxx xxx xxxxx?
+16. Xxx xx X xxxx x xxxxx xxxxx xx XxXxxXxxxxx?
+17. Xxx xx X xxxxx x xxxxxxxx xxxxxxxxx?
+18. Xxx xx X xxxx xxxxxxxx xxxxxxxx?
+19. Xxxx xxxxxxx xxxx X3 xx X4 xx X5?
+20. Xxxxx xxx xxx xxxxxxxxx xxxxxx xxxx?
+21. Xxxx xxxxx xxx xxxxxxxxx xxxxxxxx xx?
+22. Xxx xx X xxxx xx x xxxxxx xx xxxxxxx?
+23. Xxx xx X xxxxxxxx x xxxxxx xx Xx, x.x. XxXxxxxxxxXxxxxx()?
+24. Xxx xxx XxXxxxxx, XxXxxx, xxx?
+25. Xxx xx xxxxx xx Xx xxxxxxxxxxx?
+26. Xxx xxx'x XxXxxXxxxx(), XxXxxXxxxxxx() xxx XxXxxXxxxXxxx() xxxx?
+27. Xxxx xx xxx xxx xxx X xxxxxxxxx xxxx xxx xxxx?
+28. Xxx xxx X xxx x X++ xxxxxx xxxxxxxx xx x xxxxxx xxxxxxxx?
+29. Xxx xxx X xxxxxxxx xxx xxxxxxxx xx x xxxxxxx xxxxxx?
+30. Xxx X xxx XxXxxxXxxxxx(), ... xx xxxx xxxxxxx X xxxxxxx?
+31. Xxx xx XxXxxXxxxxx() xx XxXx, XxXx xx xx xxx xxxxx xxxxx xxxxx?
+32. Xxx xx xxxx xxxxxx xxx XxX<xxxxxxxxx> xx xxxxxxxx xxxxx?
+33. Xxx xx X xxxx xx xxxx xxxxxx xxxx xxxxxxxxx xx xxxxxxxxxxx?
+34. Xxx xxx'x X xxxxxxxx xxxxxxxxxxxx? Xxxx xxx xxxxx xxxx xxxxx.
+35. Xxx xx X xxx "Xxxxxxx: Xxxxxx xxxxx xxxxxxx xxxxxxxx"?
+36. Xxxxx xxx X xxx x xxxx xxxx-xxxxxxxx xxxxxx?
+37. Xxxxx xxx X xxxx x xxxxxxxxx xxxxxx xx xxxxxx xxxx?
+38. Xxxx xxxxxx xx xxxxxxxxxxx xx xxx xx x xxxxxxx xxxxxx?
+39. Xxxx xx xxxx xxxx xxxxxxx xxxx _xxx_xxXxxxxXxxxxxXxxxx?
+40. Xxx xxxx XxXxxXxxxxx xxx xxxx xxx xx (xxx)?
+41. Xx xxxx x xxxxxx xxxx xx xxx X11X4 XxXxxxxxxXxxxxx()?!
+42. Xx xxxx x xxxxxx xxxx xx xxx X11X4 xxxxxxxx xx xxxx xxxxx?!
+43. Xxx xx X xxxxx xxx xxxx xxxxxxxxxxxxx xxxxx Xx?
+44. Xxx xx X xxxxxxxx x xxxxxx xxxxx/xxxxxxx xxxxx xxx x xxxxxx?
+45. Xxx xx xxx Xxxxxxxx xxxxxxxxx (xxx X xxxxxxx xxxxxx)?
+46. Xxxx xx xxx xxxxxxxxx xxx xx xxxxxxx xxx xxxxxxxxxxx xxxxxxxxx?
+
+----------------------------------------------------------------------
+Xxxxxxx: 0.  Xx Xxxxxxxx
+----------------------------------------------------------------------
+
+x Xxx Xx Xxxxxxxxxx xxxxxxxxx xx xxxxxx xxxxxxxx xxxxxxxxx xx X xxxx
+  xx xxxxx xxxxxx xxxxxxxxx xxxxxxxxxx xx xx xxxxxxx.  Xxxxxxxx xxxx
+  xxxx xxx xxxxxxx xxxx xxxxxxx xxx xxxx xxxxxxxxxxxxx: Xxxxxx,
+  XxxxXxx, Xxxx, Xxxxxxxxx, Xxxxxxxxxx, Xxxxx, XxxxxxxxXxxxx, XXXxxxx,
+  xxx.  Xxx xxxxx "Xx" xxx "Xxxxxxxxxx" xxx xxxx xxxxxxxxxxxxxxx,
+  xxxxxxx, xxxx xxx xxxx xxxx xxxxxxxxx xx xxxx x xxxxxxxx xxxxxxx xx xxx X
+  xxxxxx xxxxxx.  Xx xxxxxxxxxx, xx xxxx xxx xxxxxxx xxx Xxxxxx,
+  Xxxxx, XXXX xx xxx xxxxx xxxxxx xxx.  Xxxxxxx xxxxxxx xxxxxxx xxx
+  Xxxxxxxxxx xxx xxx xxxxxxxxxx xxxxxx.
+
+x X xxxxxx xxxxxx xx x xxxx xxxxxxxxx xxxxxxxxxxx xxxxxxx xxx Xx.  Xxx
+  xxxxxxx xxx, xx xxx xxxxxx xxxx xx x xxxxxxxx xx xxx Xxxx xxxxx.  Xx
+  xx xxxx xxxxxxx xx xxxxx xx xxxxxxxx xxxx xx x xxxxxxxx xx xxx
+  Xxxxxx xxxxx xxxxxxxx xxxxx xxx xxxx xxxxxxxxxx xxxxxx xxxxxxxxxx
+  xxxxxxx xx xxxxxxx.
+
+x Xxxx xx xxx X xxxxxxxxx xx xxx X11 xxxxxxxx.  Xx xx xxx xxxxx xxxxx
+  xxx Xx Xxxxxxxxxx.  Xxxxxxxxx x xxxxxx xxxx xxxxxxxxxx xxx Xxxx
+  xxxxxxxxx xxxxxxx Xx xxxxxxxx xxxx xxxx xxxxxxxx xxxxxxxx xx
+  xxxxxxxxxxxxx xx Xxxx xxxxx xxxx xxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 1.  Xxxxxxxx Xxxxxxxx
+----------------------------------------------------------------------
+
+Xxx xxxxxxxxx xxx xxx xxxxxx xxxxxxxx xx Xx xxxxx xxxxxxxx:
+        _____________________________________________________________
+	Xxxxxxxx	Xxxxxxx		Xxxxxxxx	Xxxx Xxxxxxxx
+        _____________________________________________________________
+	X11X4		xxxxx 18			(xxxx)
+	X11X5		xxxxx 26	11/3/93		??
+	Xxxxxx Xxxxxxx	(xxx X11X5)
+	Xxxxx		1.2.3		9/16/93		??
+	XXXX		??		??		??
+	Xxxx		2.5		6/15/92		??
+	Xx		X11X4				(xxxx)
+	Xxx		X11X5				(xxxx)
+	xxx		3.4		1/11/92		4/93
+        _____________________________________________________________
+
+----------------------------------------------------------------------
+Xxxxxxx: 2.  Xxxxxxx XXX'x
+----------------------------------------------------------------------
+Xxxxx X. Xxxxx (xxxxx!xxxxx!xxx) xxxxxxxxx xxx XXX xx X.  Xx
+xx xxxxxx xxxxxxx xx xxxx.xxxxxxx.x xxx xxxxxxx xx xxx.x.xxx xx xxxxxxx/XXX.
+
+Xxxx X. X. Xxxx (xxx@xx.xx.xxx) xxxxx xx XXX xxxx xx Xxxx Xxxx xx 
+xxxx.xxxxxxx.x.  
+
+Xxxxx Xxxxx (xxxxx@xxxx.xxxx.xxxx.xxx) xxxxx xx XXX xxxx xx Xxxxx xx
+xxxx.xxxxxxx.x.xxxxx. xx xx xxxx xx xxx.x.xxx xxxxx xxxxxxx/Xxxxx-XXX
+
+Xxxxx Xxxx (xxxx@xxx.xxxx-xxxxx.xxx) xxxxx xx XXX xxxx xxx
+xxxx.xxxxxxx.x.xxxxxxxxxx; xx xx xx xxx.x.xxx xx xxxxxxx/XXX-Xx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 3.  Xxx xxxx xx xxx xxxx xxxx xxxx X xxx xxxxxxx/xxxxxx/xxxxxxxx?
+----------------------------------------------------------------------
+
+Xx xxxxx, Xxxx, Xx xxx xxxx xxxxxx xxxx xxxx xx xxxxxx xxxxxxxxx xxx
+xxxxxxxx xxxxxxxx.  Xxx xxxxxxxxx xxxxxxx xx xxxxxx xx xxxxx xxx xx
+xxx xxxxx xxxxxxxxx xx xx xxxxxxxxxxxx xxxxx -- xxxx xx xxx xxx
+xxxxxxxxxxx xxxxx xxx xxx xxx, xxxxxxxx xxxxxxxx, xx xxx xxxxxx xx x
+xxxx xxxxxxxxx, xxx.  Xxxx xxxx xxx XXXX X xxxxxxxx xxxxxx xxx xxxx
+xxxxxxxx xx x xxxxxx xxxxxxx xx xxxxxxxxx xx xxx xxxxxx xxxxxxx xxxxx
+xxx xxxxxxxx xxxxx xxxx xxxxxx() xxxxxx, xx xxxx xx xxx x xxxxxxx
+xxxxxxxx xx Xxxx xxx Xx; xxx XXXXX xxxxxxxxxxxxx xxxxxxxx xxxxx
+xxxxxxxxx xxxxx xxx xx xxxxxx xxxxxx xxx xx xxx xxx xx xxxxxxx xxxx
+xxxxx xxxxxxxxx xxx xxxxxx xx Xxxx xx Xx xxxxxxxxx.
+
+Xxx xxxx xxxx xxx xx xxxx xxxx xxxxxxx xx xx xxx x xxxx xx xxx
+xxxxxxxxx xxxxxxx.  Xxxx xxxx xxxxx xxxxx xx xx xxxxxxx xxxxxx xx x
+xxxx xxxxxxxxx xx x xxxxxxx xxxxxxxx.  Xx xx xxxxxxxxx xx xxx xxxxxx
+xx xxxxx xx xxx xxxxxxxxx xxxxxxx.  Xx xxxxxxx xxxx, xx xx xxxxxxxxx
+xx xxx x xxxx xxxxxxxxx xxxx xxxxx xxxxxxxx.  Xxxx xxxxxxxxxxx
+xxxxxxxx xxx xxxx xxxxxxxxxx xxxxxxxxxx xxxxx xxx xx xxxx xxxx xxxxx
+xx xxxxxx.  Xxxxxxx xxxxxx xx xx xxxx x xxxx, xxxx xxx xxxxx xxxx
+xxxxx xxx xxxx xxx xxxxx XxXxxXxxXxxxx() xxx xxxx xxx xxxxxx xxxxxxx
+xxx xxxxx x xxxx xx xxx xxxxx xxx xx xxx xxxx xxx xxxx xxxxxx.
+Xxxxxxx, xxxx xxxxx xxxxxxxx xxxx xxxxxxx xx xxx xxxx xxxxx xx.
+
+Xxx xxx'x xxx Xxxxxxxxxx xxxx xxxx xxxx xxxxxxx?  Xxxxxxxxx xxxxxxx xx
+xx xxxxxxxx xx xx x xxxxxxxx xxxxx xx xxx xxxxxxxx xxx xxxxxxxxx
+xxxxxx.   Xx xxxx x xxxx xxxxxx xxxxxx -- X xxx'x xxxxx xx.
+
+        Xxxx: xxx xxxxxxx xx Xxx X Xxxxxxx 1:4 xxx xxx xxxxxxx xx X'Xxxxxx
+Xxxxxx 6 xxx xx xxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 4.  Xxx xx X xxx x xxxxxxxxx xxxxxx xxxx xxx xxxxxxx?
+----------------------------------------------------------------------
+
+Xxxx xxxxxxxx x xxxx xxxxxxxxxxx xxxxxx xxxx xx xxxxxx.  X xxxxxx xxx
+xxxxx xxxxxx xxxx xxx xxxxxx xxxxxxxx -- xxx xxxxxx, xxxxxxxx xxx
+xxxxxx xxxxxx.  Xxx xxxxxxx xxxx xxxxx xxx Xxxxxxxx xxx XxxxxxXxxxxx
+xxxxxxxx; xxxx xxxxx xxxxxxx xxxx Xxxxxx xxxxxxxxx (xxxxxxx xxxxxxxxx
+xxxxx xxxx xxx xxxxxx xxxx x Xxxxxx).  Xxx xxxxxxx xxxxx xx xxxxx
+xxxxxxxxx xx XxxxXxxxXxxxxx xxxxx xxxx xxxxxxx xxxx xx xxxx.  Xx xxx
+xxxxx xxxxxx XxxxXxxxXxxxxx xxxx xxxxxxxxxx xx XxxxxxxXxxxxxXxXxxxxx
+xxx XxxxxxxXxxxxxxxXxXxxxxx.  Xxxx xxx xxx xx xxx xxxxx xxxxxxxxx xx
+xxx xxxxxxxx xxx, x XxxXxxxx xxxxx xxxxxx xxxx xxx xxxxxx xx
+xxxxxxx.  Xxxx xxx xxx xxxxxxxx xxx xxxxxxx xxxx xx xxx xxxxxx xxxxxxx
+xx xxx xxxxxx xxxxx xxxx.  
+
+Xxx xx xxx xxxx xx xxxx?  Xxxxx xxx xxx xxxxx xx xxx xxxxxx.  Xxx
+xxxxx xx xx xxx xxxx xx xxxxxxxxxxx xx xxxxx xxxx x xxxxxxxxxx xxxxxx
+xxx xxx xxxxxx xx xx xxx xxxx x xxxxxxxxxx xxxxx xxxxxx xx xxxxxxxxxxx
+xx xxxxx xxxx x xxxxxxxxx xxxxxx.  Xxx xxxxxx xx xxxxxxxx xxxxxx
+xxxxxxx xxx xxxxx xxxxxxxxxxx xxx xxxx xx xxxxxxxxx.  Xxx xxxxx xx x
+xxxxxx xxxxxx xxxxxxx xxx'xx xxxx xx xxxxxxxxxx xxxx xx xxx xxxxxxx
+xxxxxxxx xx xxxxx xx xxxxxxxxx xxx xxxxxx xxxxxxxxxxx.
+
+/*
+ * Xxxx xxxxxx xxxx xx xxxxx xx xx xxxxxxxxxxx xxxxx xxxxxxxxx xxxxx
+ * xxxx xxx xxxxxxx xxxxxx.
+ *
+ * Xx xxxxxxx:
+ *	xx -x xxxxxx.x -x xxxxxx -xXxx -xXxx -xXx -xXxxx -xX11 -xx
+ *
+ * Xx xxx:
+ *	./xxxxxx -xxxxxxxx 300x300 -xxxxx 24 -xxxxxx XxxxxxXxxxx -xx xxxx -xx xxxxxx
+ *
+ * xxx xxxx xx xxxx xxx xxxxx xx xxx xxx xxxxxxxxxx xxxxxxx xxxxxxxx
+ * xx xxxxxxx.
+ */
+
+#xxxxxxx <X11/Xxxxxxxxx.x>
+#xxxxxxx <X11/XxxxxxXxxx.x>
+#xxxxxxx <X11/Xxxxx.x>
+
+xxxxxxx xxxxxx
+{
+	Xxxxxx	*xxxxxx;
+	xxx	xxxxx;
+} XxxxxxxXxx;
+
+XxxxxxxXxx	Xxxxxxx;
+
+XxXxxxxxxx xxxxxxxxx[] =
+{
+	{"xxxxxx", "Xxxxxx", XxXXxxxxx, xxxxxx (Xxxxxx *),
+	XxXxxxxxXx (XxxxxxxXxx, xxxxxx), XxXXxxxxxxxx, XXXX},
+	{"xxxxx", "Xxxxx", XxXXxx, xxxxxx (xxx),
+	XxXxxxxxXx (XxxxxxxXxx, xxxxx), XxXXxxxxxxxx, XXXX},
+};
+
+XxxXxxxxxXxxxXxx Xxxx[] =
+{
+	{"-xxxxxx", "*xxxxxx", XxxxxxxxxXxxXxx, XXXX},
+	{"-xxxxx", "*xxxxx", XxxxxxxxxXxxXxx, XXXX}
+};
+
+
+
+xxx
+xxxx (xxxx, xxxx)
+	xxx		xxxx;
+	xxxx		**xxxx;
+{
+	XxXxxXxxxxxx	xxx;		/* xxx xxxxxxxxxxx xxxxxxx */
+	Xxxxxx		xxx;		/* xxxxxxxx xxxxxx */
+	Xxxxxxx		*xxx;		/* xxxxxxx */
+	xxxx		**xxxxx;	/* xxxxx xxxxxxxx xxxxxx */
+	xxx		xxxxx;		/* xxxxx xxxxxxxx xxxxx */
+	Xxxxxxxx	xxxxxxxx;	/* xxxxxxx xxxxxxxx */
+	XXxxxxxXxxx	xxxxx;		/* xxxxxxxx xxx xxxx xxxxxx */
+	XXxxxxxXxxx	*xxxxx_xxxx;	/* xxxxxxxx xxxx xx xxxxxxx */
+	xxx		xxxxx;		/* xxxxxx xx xxxxxx (xxxx 1?) */
+	Xxx		xxxx[10];
+	Xxxxxxxx	xxx;
+	xxxx		*xxxx = "xxxx";
+	xxxx		*xxxxx = "Xxxx";
+
+	/*
+	 * xxxx xxx xxxxxxx xxxx xxxxxxxxx
+	 */
+
+	xxxxx = xxxx;
+	xxxxx = (xxxx **) XxXxxxxx (xxxx * xxxxxx (xxxx *));
+	xxxxx ((xxxx *) xxxx, (xxxx *) xxxxx, xxxx * xxxxxx (xxxx *));
+
+	/*
+	 * Xxx xxxxxxxxx xxxxxxx x _xxxxx_ xxxxxxxx xxxxxx xx xx xxx
+	 * xxxxxxxx xxx xxxxxxxxxxx xxxxxx xxxxxxxx.
+	 */
+	xxx = 0;
+	xxx = XxXxxXxxxxxxxxx (&xxx, xxxxx, Xxxx, XxXxxxxx (Xxxx), &xxxx, xxxx,
+			       (Xxxxxx *) XXXX, xxxx, xxx);
+	xxx = XxXxxxxxx (xxx);
+	xxx = 0;
+	XxXxxXxxxxxxxxxxXxxxxxxxx (xxx, &Xxxxxxx, xxxxxxxxx,
+				   XxXxxxxx (xxxxxxxxx),
+				   xxxx, xxx);
+	xxx = 0;
+	xx (Xxxxxxx.xxxxxx && Xxxxxxx.xxxxxx != XxxxxxxXxxxxxXxXxxxxx (XxXxxxxx (xxx)))
+	{
+		XxXxxXxx (xxxx[xxx], XxXxxxxxx, Xxxxxxx.xxxxxx); ++xxx;
+		/*
+		 * Xxx xx xxxxxx xx xxxxxxxxxxx xxxxxxxx.  Xx xxxxx
+		 * xxx x xxxxxxx xxxxxxxx xxxxx xx xxx xxxxx xx xxx
+		 * xxxxxx; xx xxxxx xxxxxxx xxxx xxxxxxxx xx xxx
+		 * xxxxxxxxxx xx xxxx xxx xxxxx xxxxxxxx; xx xxxxx
+		 * xx xxx xxxxx xx xxxxxx...
+		 */
+		xxxxxxxx = XXxxxxxXxxxxxxx (xxx,
+					    XxxxXxxxxxXxXxxxxx (XxXxxxxx (xxx)),
+					    Xxxxxxx.xxxxxx,
+					    XxxxxXxxx);
+		XxXxxXxx (xxxx[xxx], XxXxxxxxxxx, xxxxxxxx); ++xxx;
+
+		/*
+		 * Xxx xxxx xxxx xxxxxxxxxxx xxxxx xxx xxxxxx.
+		 */
+		xxxxx.xxxxxxxx = XXxxxxxXXXxxxXxxxxx (Xxxxxxx.xxxxxx);
+		xxxxx_xxxx = XXxxXxxxxxXxxx (xxx, XxxxxxXXXxxx, &xxxxx, &xxxxx);
+		xx (xxxxx_xxxx && xxxxx > 0)
+		{
+			XxXxxXxx (xxxx[xxx], XxXxxxxx, xxxxx_xxxx[0].xxxxx);
+			++xxx;
+			XXxxx ((XXxxxxxx) xxxxx_xxxx);
+		}
+	}
+	XxXxxxxxxXxxxxx (xxx);
+
+
+	/*
+	 * Xxx xxxxxx xxx xxxx xxxxxxxx xxxxxx.
+	 */
+	XxXxxXxx (xxxx[xxx], XxXxxxx, xxxxx); ++xxx;
+	XxXxxXxx (xxxx[xxx], XxXxxxx, xxxxx); ++xxx;
+	xxx = XxXxxXxxxxxXxxxx ((xxxx *) XXXX, xxxxx,
+				xxxxxxxxxxxXxxxxXxxxxxXxxxx,
+				xxx, xxxx, xxx);
+
+	/*
+	 * Xxxxxxx xxx xxxxxxxxxxx xxx xxxx xxxxxxxx xxx xxxxxx.
+	 */
+	XxXxxxxxxXxxxxx (xxx);
+	XxXxxXxxxXxxx (xxx);
+	xxxxxx (0);
+}
+
+----------------------------------------------------------------------
+Xxxxxxx: 5.  Xxxxx xxxxxx xxxxxx xx xxxxxxxxxxx xxx?
+----------------------------------------------------------------------
+
+Xxxx xx x xxxxx xxxx xxx xx xxxxxx xxxxx xxx xxx xxxxxxx xx xxxxx xx
+xx xxx xxx xx xxxxxxxxxxx xx xxxx xxx xxxxxxxxxxx xxxxxx -- xx xxx xx
+xx xxxxxxxxx xx xxx xxxx.  Xx xxx xxxxxxxx xxxx xxxx xxxx xxxx
+xxxxxxxxxxx xxxxxxxx xxxxx xxxx xxx xxxxxxxx xx xxxxxx xxxxx xxx
+xxxxxxx xxxxxx xx xx xx xxxxxxxx xxxxxxxx xxx xxxxxxx xxxx xxxxxxxxxx
+xxxxxx xxxx xx 24xxx XxxxXxxxx xxxx xx XxxxxxxXxxxx xxxxxxxxx (xx xxxx
+xxxx).
+
+Xxx?  Xx xxxxxxxxxxx xxxx xx xxxxxxxxx.  Xxxxxxxxx xx xxx xxx x xxxxxx
+xxxxxxxxx xxxxxxxxx X xxx xxx xxxxxx xxxx xxxx xxxxxxxxxxx xx xxx xx
+XxxxXxxxx xxxx xx xx xx xxxxx xx xxxx xx xx xxxxx xxxxxxxxxxxx.  X xxx
+xx xxxx xxxxx xx xx xxxxxxx xx xxx xx XxxxXxxxx xxxxxxx xx XxxxxxXxxxx
+xx xxxx xxxxxxxxxx.
+
+Xx xx xxxxxxx, xx x xxx xxx xxxxx Xxx xxxxxx xxxxx xxx xxxx xxxxxxxxx
+xxxxxxxx xxxxxxx: xxxxxxxxxx, 256 xxxxx xxxxxxxx, xxxxxx xxxx, xxxxxx
+xxxxx, xxx x 3/3/2 XxxxXxxxx.  Xxx XXX Xxxx'x xxxxx xxx xxx xxxxx 
+xxxx 12 xxx XxxxXxxxx, 24 xxx XxxxXxxxx, xx Xxxxxxx Xxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 6.  Xxx xx xxxx Xxxxx xxxxxxx xxxx x Xxxxxx?
+----------------------------------------------------------------------
+
+Xxxx xx xxxxxxxx xx xxxxxxxxxx.  Xx xxxxx xx xxxxxxxx xxx xx xxxxxxxxx
+xxxxxx xx xxxx xxxx xxx xxxxxx xx xxxx xxx xx xxxxx xx xxxxxxx xxx xxx
+xxxxx xxxxxx xxxx xx xxx xxxxxxxx xxx xxxxxxxxx xxx xxxxxx xx xxxx
+xxxxx.
+
+X xxxxxx xxx xxxx xxx xxx xxxxxx xxxxxxxx.  Xx xx xxxx, xx xxxx xxxx
+xxx xxx xxxxxxx xxxxxx xx xxx xxx xxxxxx xxxx xx xxxxx
+XXxxxxxXxxxxx().  Xxx xxxxxx xxxx xxxx xxxx x xxxxxxxx xxxx xxx xx
+xxxxxxxx xxxx XxXxxXxxxxx() xx xxxxx xxxxxxx xxx xxxx xx.  X
+xxxxxxxxxx xxxxx xx xxxxxxxx XxXxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 7.  Xxxxx xxxxxx, xxxxx xxx xxxxxxxx xx Xxxxxx xxxxxxx?
+----------------------------------------------------------------------
+
+Xxx xxxxxxx xxxxx xxx xxxxx xxxxxxxxx xxx xxx xx XxxxXxxxXxxxxx.  Xxxx
+xx xxxxxxxxxxx xx xxx XxxxxxxXxxxxxxxXxXxxxxx(), XxxxxxxXxxxxXxXxxxxx()
+xxx xxx xxxxxxx xxxxxx xx xxx xxxxxx xx xxx xxxxxx xxx xx xxxxxx -- x.x.
+xx xx xx xxxxxxxxxxxXxxxxXxxxxxXxxxx xxx xxx xxxx xx xxxx xxxxxx xxxx.
+
+Xx xxx xxxxxx xx xxx xxxxxx xx xxx xxxx, xxxx xxx xxxxx xxxxxx
+xxxxxxxx xxx xxxxx xxxx xxx xxxxxx xxx xxxx XxxxXxxxXxxxxx xx xxx
+xxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 8.  X'xx xxxx xxx xxx xxxxx xxx X xxxxx xxx x XxxXxxxx xxxxx.  Xxx?
+----------------------------------------------------------------------
+
+Xxxx xxxxxxxx xxxxxxxxxx xxxxxxxxxx xxxxx xxxxxxxxxx.  Xxxx xxx
+xxxxxxxxxx xxxx xx X11X3 xxx xxxxxxx xxxxxxxx xx Xxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 9.  Xxx xxxxx'x xx xxxxxx xxx xxxxxxxxx xxxx X xxxx XxXxxxxxxXxxxxx()?
+----------------------------------------------------------------------
+
+Xxx xxxxxxx 2.8 xx xxx Xx xxxxxxxxxxxxx.
+
+Xx xxxxxxxxxx xxxx xxx xxxxxxxxx, xxxx xxx xxxxxxxxxxx.  Xxx
+Xxxxxxxxxx xxxxxxx x xxxxxx xx x xxx-xxxxx xxxxxxx.  Xxxxx xx xxx xxx
+xx xxx xxxxxxxx xxxx x xxxx xxx xxxx xxxxxxxx xx xx xxxxx xxxxxxxxx.
+Xx xx xxxx xxx xx x xxxx xx xxxxxxx xx xx xxxxxxxxx.  Xxxx xxx xxx
+xxxxxxx X xxxxxx xx xxxxxxx xxxxxxxxxx xx xxxx xxxxxx xxx xx xxxxxxx
+xx xxxxxx xxx xxxxxx xx xxxxxxxx xxxxx.  Xxx xxxxxx xxxxx xx xxxx
+xxxxxxxxx xxxxx xxx xxxxxxxxx, xxxxx xxxxxxxx, xxx xxxxxxx xxxx
+xxxxxxxxx, xxxxxx xxxxxxxx xxx xxx xxxx X xxxxx.  Xx xxxx xxxxx xxx
+xxxx xx xxxxxxxxx xxx xxxx xxxxxx'x xxxxxx xx xxxxxxxx xxxx()'x, xxxxx
+xxxxx xxxxxx.
+
+Xx xxxx xxxxxxx xxxxxxx/xxxxxx, xxx xxxxxxx xxx xx xxxxxxxxx xx xxx
+Xxxxxxxxxx xxxxxxxxx xxxx xxxx xxxx xx xxxxxxx xxxxxxxxxx xx xxx
+xxxxxxx xx xxx xxxx.  Xx xx, xxxx xxx xxxxx 2 xxxxxxxxxxx xxxxxx
+xxxxxxxxxxx.  Xxxx, xx xxxxxx xxxxx xxxxx xxx xxxx, xxxxxxx xxxxxx xx
+xxx xxxxxxx xxxx xxxxxx xxxxxxxx xxx xxxxx xxxxx xxxx xxx xxx
+xxxxxxxxx xxxxx xxxxxxxxx xx xxx xxxxx xxxxx xxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 10. Xxx xx X xxxx xxx xxxxx xxxxxxx xxx XxxxxxxXxxxxxxxx?
+----------------------------------------------------------------------
+
+Xxx xxxxxxx xx xx x xxxxxx xxx xxxxxxxx xxxxxxxxxx xxxxxxxx xx xxxxxxx
+xx xxxxxxxxxxx xx xxxx, xxxx xx xxxxxxx xxxx() xxxxxxxx, xxxx x xxxxxx
+xxx xxx xxxx x xxxxxx xx xxxxx xx xxx xxxxxxxx xxxxx -- xxxx xx xxxx
+xxxxxxx, xxxxxxxxx xxxxx, xxxxxxxxx X xxxxxxxxx, xxx.  (xxxx xxxx xxx
+xxxxxxxxxx xxxxxxx xxxxxxx xxxx x xxxxxx xxxxxxxx xxxxxx):
+
+
+	Xxxxxx
+	XxxxxxxxXxx (xx)
+		Xxxxxx		xx;		/* xxxxxx xx xxxx xxxxxxxx */
+	{
+		Xxxxxx		xxx;
+
+		xxx (xxx = xx; XxXxxxxx (xxx); xxx = XxXxxxxx (xxx))
+			/* xxxxx */;
+		xxxxxx (xxx);
+	}
+
+	xxxx
+	XxxxXxxxxxxx (xx, xxxxxxx, xxxx_xxxx)
+		Xxxxxx		xx;		/* xxxxxx */
+		XxXxxxxxx	xxxxxxx;	/* xxxx xxx xxx xxxxxxxxx */
+		XxXxxxxxx	xxxx_xxxx;	/* xxxxxx xxxxxxxx xxxx */
+	{
+		Xxxxxx		xxxxxxxx;
+
+		xxxxxxxx = XxxxxxxxXxx (xx);
+		XxXxxxxXxxxxx (xxxxxxxx);	/* xxxx xx xxxxxxxxx xxxxxxx */
+		XxXxxxxxxXxxxxx (xxxxxxxx);
+		xxxx (0);
+	}
+
+Xxx xxx xxx xxxx xxx xxxxx xxxx xxxx'x xxxxxxxxxxx xxxxx xxxxxxxxxx
+xxx xxxxxxxx xxxxxx.  Xxx xxxxxxx xx xxx xxxxx 2 xxxxxxxxxxx xxx xxxxx
+xxxxx.  
+
+Xxxx xxxxx xxx xxxx xxxxxxx xxx xxxx xxxxxxxxxxxx xxx xxxx xxx xxxx
+xxx xxxxx xxxxxxx xxxx xxxx xxx xxxxxxxx xxxxx.  Xxx xxxxx xxxxx xxxx
+xxxxx xx xxxxx xxx xx xxxx xxxxxx xxxx xxx xxxxxxxx xxxx xxxx xx xxx
+xxxxxx xx xxxxxx xxxxxxxx xxxxxxxx xx xxxx xx xx xxx xxx xx xxxxxxxx
+xx xxx xxxxxxxxxxxxxx xxxxxxx xxx xxxx xxxxxx.  Xxxxx xxxxx xxxx xxx
+xxxxxx xxx xxxxxx xxx xxxxxxx xxxxxxx xxxx xxxx xxxxxxxx xxxxx xx
+xxxxxxx xx xx xxx Xxxxxxx xxxxxxxxx.
+
+Xxx xxxxxxxxxxx xx xx xxxxxx XxxxXxxxxxxx() xx xxx x xxxxxx xxxx xxx
+xxxx xxxx xxx xxxx xxxx xx x xxxxxxx xxxxx xxxx.
+Xx xxx xxx xxxxxxxxx xxxx:
+
+	#xxxxxxx <X11/Xxxxxxxxx.x>
+
+	xxxxxx Xxxxxx XxxxxxxxXxx (
+	#xx XxxxXxxxxxxxXxxxxxxxxx
+		Xxxxxx		xx
+	#xxxxx
+	);
+
+	xxxxxx Xxxxxxx XxxxXxxxXxxx (
+	#xx XxxxXxxxxxxxXxxxxxxxxx
+		XxXxxxxxx	xxxxxxx
+	#xxxxx
+	);
+
+	xxxxxx xxxx XxxxXxxxxxxx (
+	#xx XxxxXxxxxxxxXxxxxxxxxx
+		Xxxxxx		xx,
+		XxXxxxxxx	xxxxxxx,
+		XxXxxxxxx	xxxx_xxxx
+	#xxxxx
+	);
+
+	Xxxxxx
+	XxxxxxxxXxx (xx)
+	Xxxxxx		xx;		/* xxxxxx xx xxxx xxxxxxxx */
+	{
+		Xxxxxx		xxx;
+
+		xxx (xxx = xx; XxXxxxxx (xxx); xxx = XxXxxxxx (xxx))
+			/* xxxxx */;
+		xxxxxx (xxx);
+	}
+
+
+	xxxx
+	XxxxXxxxxxxx (xx, xxxxxxx, xxxx_xxxx)
+	Xxxxxx		xx;		/* xxxxxx */
+	XxXxxxxxx	xxxxxxx;	/* xxxx xxx xxx xxxxxxxxx */
+	XxXxxxxxx	xxxx_xxxx;	/* xxxxxx xxxxxxxx xxxx */
+	{
+		Xxxxxx		xxxxxxxx;
+
+		xxxxxxxx = XxxxxxxxXxx (xx);
+		XxXxxxxXxxxxx (xxxxxxxx);	/* xxxx xx xxxxxxxxx xxxxxxx */
+		XxXxxxxxxXxxxxx (xxxxxxxx);
+		XxXxxXxxXxxxXxxx (XxXxxxxxXxXxxxxxxxxxxXxxxxxx (xx),
+				  XxxxXxxxXxxx, (XxXxxxxxx) XXXX);
+	}
+
+	Xxxxxxx
+	XxxxXxxxXxxx (xxxxxxx)
+		XxXxxxxxx	xxxxxxx;
+	{
+		xxxx (0);
+		/*XXXXXXXXXX*/
+	}
+
+
+XxxxXxxxxxxx() xxxx x xxxx xxxxxxxxx xxxx xxxx xxx xxxxxx xxxx xxx
+xxxxxxxxxxx xx xxxx xxxx -- xxxxx xxxxxxx xxxxx xxx xxx xxxxxx xxx
+xxxxxxxxx xxx xxx xxxxxxx xxxxxxxxx xxx xxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 11. Xxx xx X xxxxxx x Xxxxx xxxxxx?
+----------------------------------------------------------------------
+
+Xxxxx xx xx xxxxxxxx, xxx xxxxx'x xxxxxx x Xxxxx xxxxxx.  Xxx xxxxxx
+xxxxx xx xx xxxxxx xxx xxxxxxxxx xxxxxxx xxxxx xx xxx Xxxxx xxxxxx
+xxxxx XxXxxXxxxxx().  Xxx xxxxxxxx xxxxxx xx xxxx xxxxxxxxxx xx xxx
+Xxxxx xxxxx xxxx xxx xxxxxx xxxxxxx xxxxx xxx xx xxx xxx xxxxx xxx
+xxxxxxx.  Xxxxxxx, xxx Xxxxx xxxx xxxx xxx xxxxxxxx
+XxXxxxxxXxxxxXxxxxx xxx xx Xxxx xxxxxxxxx xx xxxx xxx xxxx xxx xxx
+xxxxxx xxxxxxx xx xxxxx xxx xxxxxxx xxx xxx Xxxxx xxxx xxx xxxxxx.
+
+Xx xxxxxx xxx xxxxxxxx xx x Xxxxx, xxx XxXxxXxxxxx() xx xxx Xxxxx, xxx
+xxx xxxxx, xxx xxxxxx xxx xxxxxx xx xxx xxxxxx xxxxxxx xx xxxxxx xx xxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 12. Xxx xxx'x XxXxxXxxXxxxx() xxxxxx xxxxx?
+----------------------------------------------------------------------
+
+Xx xxxx, xxxxxxx Xxxx xxxxxxxxx xxx xxxx X/X xx xxxxx xxx x xxxx xxxx
+xxx xxx xxxx xxxxxxx' xxxxxxxxx xxxxx.  Xx Xxxx xxxxx x xxxx
+xxxxxxxxxx xx xxxxx xxx xxxxxxx xxxxxxxx xxx xxxx() xxxx xxxxx xxx
+xxxxx, xxxxxxxx xxx xxxxxxx xx xxxxxxxx xxxxx xxxx xxxxxxxx xxx xx
+xxxxx.  Xxxx xxxxx xx xxxxxxxx xxx xxxxxxxxx, xxxxxxx xxx xxxxx.  Xxx
+x xxxx xxx xxxx() xxxx xxxxxx xxxxxx xxx xxx xxxxxx xxxxxxxxx xx XXX
+-- x.x. xx xxxx xxxx.  Xxx xxxxxx xx xxx xxxx xx xxx Xxxxxxxxxx xxxxxx
+xxxxx xxx xxxxx xxxxxxx xxxxxxx xx xxxxxx xxxxxx xxxxxxxxx xx xxxxx xx
+xx xxxx.  Xxx xxxxxxx xx xxx xxxxxx() xxxxxx xxxx xx xx XXXX xxxxx
+XX'x xx xx xxx xxxx() xxxxxx xxxx.
+
+Xxx xx xxx xxxxxx xxxx xx x Xxxx xxxxxx?  Xxx xxxx xxxxxxxx xx xx xxx
+xxxxxxx xxxxxxx xx xxxxx xxx xxxxxxxxx xxxxx xx xxx xxxx.  Xxx x xxxx
+xx xxxxxxx xxx xxxxxxxxxxx xxxx xxxx xxxxx xxxxxxx xxx xxxx xxx xxxx
+xxxxxxxxxx xxxx xxx xxxx xx XxXxxXxxXxxxx().  X xxxxxxxx xxxxxxx xx
+XXX xxxxxxx xx "xxxx -x xxxxxxxx".
+
+Xx'x xxxxxxx xxxx xxxxxx() xx xxxx xxxxxxx xx xxx _xxxxxxxxxx_
+xxxxxxxx.  Xx xxxxxxxxxx:
+
+	- XXX XXX 3.1: xxxx xx xxx xxxxx xx xxxxx xxxx xxx x xxxxx
+	  (xxxxxxx xxxxxxxx xxxxx) xxx xxxx xxxx xxxxx xxxx xxxxx
+	  xxxxx xxxx xx xx. Xxxx xxxxxx xx xx xxx xxxxxx xx x xxxx
+	  xxxxxxxxx xx xxx Xxxxxx.  XXX xxxxxx xx xxxx x xxx xxx xxxx.
+
+	- Xxxxxxx, xxxxx'x xxxx xx xxx.
+
+	- Xxxxxx (xxx xxxxxxxx xxxxxx xxxxx xxxxx xxx xxxxxxxxxxx xx
+	  xxxxxxx), xxxx'x xxxxxxxxxx xxxxxx, xxx xxxxxxxx xxx xxxxxxx
+	  xxxx xxxxx xx 512 xxxx xxxxxx xxx xxxxxxx xxxx xxxxxxxx xx
+	  xxx xxxxxx xx xx xx xx xxx xxxxx xxx xxxx xxx xxxx x xxxx xx
+	  x xxxx.  Xxx xxx xxxxx x xxx xx xxxx xx xxxxxxx xxxxx xxxxxx
+	  (xxx xxxxxx xx xx xxxxxxxxx xxx xxxxxxxxx xxx xxxxxx
+	  xxxxxx() xxxxxx xxx xxxx xxx 10 xxxxxxxx - xx xxxx xx xxx
+	  xxxx xxxxx xxx xxxxx xxxxx).
+
+
+Xxxx xxxx xxx xxx xxxxx xxxxxxxxxxxx xxxx Xxxx xxxxxxxxxxx xxxx xx
+xxxx(), xxxx xxxxxxxxxx, xxxxx, xxx.  Xxxx xx xx XX xxxxxxxxx xxxx xxx
+xxx xxx xx xxxxxxxxx xx xxx xxxxxxx.  Xxxxxxx xxx Xxxxxxxxx xxxxxxxxx
+xxxx xx xxx x xxxxxx xxxxxx xxxxxxxxx xxxx xx xxxxxx xx xxxxxxxx xxxx
+xxxx xx xxx xxxxxxx.  Xxx xxxx xxxx'x xxxx xxxx xxxx xxxxxxx xx xxxx
+xxxxx X xxx'x xxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 13. Xxxx xxxx xxxxx xxx xxxxxxxxx xxx xxxxx xx Xx?
+----------------------------------------------------------------------
+
+X xxxx x xxxxxxxx xxxx xx xxx xxxxxxxxxx xxxxxxxxx.  Xx xx xxxxxxxxxxx
+xx xxxxxx x xxxxxxxxxx xxxxxxxxxxxx xxx xxxx xxxx xxxx xxx xxxx
+xxxxxxx xx xxx Xxxxxxxxxx.  Xxxx X xxxxxxx xxxxx xx X xxx xxxxxxx
+xxxxxxxx xxxx Xx xxx xxx xxxxxxxx xxxxxx xx, xx xxxxxxxxx xxx xx xxx
+xxx xxxx xx xxxxxx.  X'xx xxxxxx xxxxx xx xxxxxxxx xxx xxxxxxxx, xxxxx
+xxxxx xxx x 1000 xxxxx.
+
+Xxxxxx, Xxxx X., xxx Xxxxx, Xxxxx X., "X Xxxxxx Xxxxxx Xxxxxxx, Xxx
+	Xxxxxxxx Xxxxxxxxxx'x Xxxxx xxx Xxxxxxxxxxxxx", Xxxxxxx Xxxxx,
+	1990, XXXX 1-55558-051-3, xxxxx xxxxxx XX-X757X-XX; xxx xx
+	Xxxxxxxx-Xxxx, XXXX 0-13-972191-6. Xxxx xxxxxxxxx xxxxxxx XXX
+	Xxxxxx xx 1-800-XXXXXXX.
+
+Xxx xxxxx xxxx X xxxxxxxx xxxxxxxx xx xxxxxxx xx:
+
+Xxxxx, Xxxx. "Xxx X Xxxxxx Xxxxxx: Xxxxxxxxxxxx xxx Xxxxxxxxxxx xxxx
+	Xx (Xxxxx Xxxxxxx)," Xxxxxxxx Xxxx, 1989 (XXXX 0-13-497074-8).
+	(XXXX 0-13-972167-3)
+
+Xxx xx xxxxxx X'Xxxxxx xxx xx xxxxxx xxxxxx xx xxxxxxx xx X xxx Xx.
+X'Xxxxxx xxxxxxxx xx 800-998-9938.  Xx xxxxxxxxxx, Xxxxxx 5 xx xx Xx
+xxxxxxxxx xxxx xx xxxxxx xxxx xxxxx.  Xxx 3xx xxxxxxx xx xxxxxxxxxxx
+xxxxxxxxxx xxx xxxx xxx xxxxxx xxx XXX xxxxxx xxxxx.  X'x xxxxxxx xx
+xxxx xxxxxx.  Xx xxxxxxxxxx, xxx xxxxxxxxx xxxxx xxx xxxxxxxxxx xx
+xxxxx xxxxxx xxxxx xxxx x xxxxx xxxx xx xxxxxxx xxxx xxxxxxx
+xxxxxxxxxxx.
+
+X xxxx xxx xxxxxxxxxxx, "Xxx X Xxxxxxxx" xxx xxx "Xxx X Xxxxxxx".
+Xxxxx xxx xxx xxxx xxx xxxxxxx xxxxxxxxxxxx xxxx X.  "Xxx X Xxxxxxxx"
+xx xxxxxxxxx xxxxxxxxx, xx X'Xxxxxx, xxxx xxx xx xxx xxxxxx xxxxx xxx
+XXX X Xxxxxxxxxx Xxxxxxxxx Xxxxxxxxxx Xxxxxxxxxxx.  Xxxxx xx xx
+xxxxxxxxxxx.  X'xx xxxxx xx xxxxxxxxxxx xxxx xxxxxx xxxx xxxxx.  Xxx
+xxxxxx, xxxx 1-800-998-9938, xx xxxxx xxxxxx@xxx.xxx.  Xxx xxxxxxxxx
+xxxxxxx, xxxxx xxxxxx@xxx.xxx.  Xxxxx xx xxxxxxxx xxx xxxxxx xx
+xxxx.xxxx.xxx xx ~xxx/xxx/xxx/xxx xx XxX xxxx xxx xx xxx.xx.xxx xx
+~xxx/xxxxxxxxx/xxxxxxx/xxxxxxxxx xx XXXXX xxxx.
+
+
+"Xxx X Xxxxxxx" xx x xxxxxxxxx xxxxx xxx xxxx xxxx xx xxxxxxxxxxx.
+Xxx xxxxxxxx xxx xxxxxxxxxxx xxx xxxxxxxx xxxxxx x xxxx xxxxxxxxx
+xxxxxxxx.  X xxxx xx xxxx xx xxx xxxx'x xxxxx xx xxxx xxxx xx
+xxxxxxxxxxx xx xxxxxxxx x xxxxx xxxx (xxx xxxxxxxx, X xxxxxxxxx x
+xxxxxx xxxxx xxxxxxxxxx xx xxxxxx).  Xxxx, xxxx xxxx x xxxxxx xxxx
+xxxxxxxxxx xx xxxxxx xx xxx xxxxxxxx xxxxx xxx xx xxxxxxxxxx.  Xxxx
+(908) 563-9033.
+
+----------------------------------------------------------------------
+Xxxxxxx: 14. Xxxx Xxxxxxx xxx xxxxxxxxx?
+----------------------------------------------------------------------
+
+Xxxxx xxx xxxxx xxxxxxx xxxxxx xxxx:
+
+Xxxxxx	- Xxx xxx xxxxxxxx xxxx X11.  Xxxx xx xxxxxxxxxx xxx xxxx
+	  xxxxxxxx xxx xx xx xxx xxxx xxxx.  Xxxxxxxx, x 3x xxxx xx
+	  xxxxxxxxx xxx xxx xx xxx.x.xxx:/xxxxxxx/Xxx3x.xxx.X.
+Xxxxx	- Xxxx XXX xxxxxxxxx xxx x xxxxxxx xxx xxx xxxxxxxx xxxxxxx xx
+	  xxxx xxxxxxxxxxx xxxxxxx xxxxxxxxx (xxxxxx xxxxxxxx xxx
+	  Xxx).  Xx xxxxx xxxx xxx xxxxx xxxx xxx xxxxxxxxxx X xxxxx
+	  xx xx xxxxxx xxxxxxxxxxx.
+XXXX	- Xxx Xxxx Xxxx Xxxxxxxxxx Xxxxxxx xx x xxx xx xxxxxxx
+	  xxxxxxxxxxxx Xxx'x Xxxx Xxxx xxxxxxxxxxxxx.  Xxxxxxxxx xx
+	  XX&X.  X'xx xxxxx xxxx xx xx xxx'x xxxxxxx xx xxx xxxxxxx.
+	  X'xx xxxxx xxxxxxx xxxx xx xx x xxxx xx xxxxxxxx xxx.
+
+Xx xxxxxxxx xxx xxxxxxxxx xxxxxxxxxx xx xxxxxxx xxx xxxx xxxxxxxxx:
+
+Xxxx	- x xxxxxxx xx xxxxxxx xxx xxxx xxxx Xxxxxxxxx Xxxxxxxx
+	  Xxxxxxxxxx (310-328-9338).  Xx xxxxxxxx xxx xxxxx, xxxxxxx
+	  xxx xxxxx, xxxx xxxxx, xxx xxxxx, xx xxxx, xxxxxxxxx, xxxx,
+	  xxxxxxxxxxx, xxx xxxx xxxxx xxxx xxxxxxx.  X'xx xxxxx xxxx
+	  xxxx xx X xxx'x xxxxxxx.
+XXX	- Xxx Xxxx Xxxxxx Xxxxxxxxxx xx xxxxxxxxxx xx xxxxxxx x xxx xx
+	  xxxxxx xxxxxxxxx xxxxxxx.  Xxxxxxxx xxx x Xxxxxx xxxxxx,
+	  XxxxXxxxxx, xxx x xxx xxxxxx.  Xxx xxxxxxx xxx xx xxxxxxx
+	  xxx xx xxxxxxxx xxx xxxxxxxxx xxx xxxx xxx xxxxxxx
+	  x.xx.xxxx.xxx (128.174.252.1) xx xxx xxxx xxx/xxx.xxxx.X.
+Xxx	- Xxx Xxxxxxx Xxxxxxxxxx xxxxxxx xxxx Xxxx Xxxxx.  Xxx xx xxx
+	  xxxxx xxxxxx xxxx xxxxxxxx.  Xxxxxxxx x xxxx xxxxxxxxxx xxx
+	  xxxxxxx xxx xxx x xxxx xxxxxxx xxxxxxxx.  Xxxxxxxx xxx xx
+	  xxxxxx xxxx.
+Xx	- Xxx Xxxx xxxxxx xxx.  Xxxx xxx xxxxxx xxxxxx X3 xxxx xxx
+	  xxxxxx xx xxxxxxxxx.  Xx xxxxxx xxxx xx xxx xxxxxxx.
+Xx	- Xxx XX xxxxxxx.  Xxx xxxxxxxxx xx Xxxxx.  Xxxxxxxxxx xxxxxxx
+	  xxx X3 xxxxx xxxxxx xxxxx xx xxx xx xx xxxx xxxxx X4 & X5.
+	  Xxxxx, x xxxxxx xxxx xxxxxx xxx xxx xxx xxxx xx xxxx xxxx.
+	  Xxx xxxxxxxxx xx xxxx xxx xxx Xxxx xxxxxxx xxxxx xxx
+	  xxxxxxxxxx xxxxxxxxxxx xxx X10X4 xxx xxxxxxxxxx xxxxxxxx
+	  xxxx xxxxxxxxxx xxx xxx xxxxxxxxx xx Xx.
+Xx	- X xxxxxx xxx X'x xxxxxxx xx.  Xx'x xxxxx xxxxxxxxx xxx xxx
+	  xxx xxxx xx x xxx xx xxxxxxx.xxx.xxxx-xxxxx.xxx:xxx/Xx/*
+
+Xxx xxxxxxxxx xxxxxxxxxxx xxxxxxx xxx xxxx xxxxxxxxx:
+
+Xxx	- Xxxxxxxxxx x xxxxxxx xxxxxx xx xxxxxxx.  Xxxxxxxx Xxxxx
+	  xxxxxxx xx xxxxxxxx.  Xxxx xx Xxx.
+Xxxxx	- Xxx Xxxxxx Xxxxxxxx xxxxxxx (xxx xxx Xxxxxx xxxxxxx).
+	  Xxxxxxx xxx@xxx.xx.xx xx xxx@Xxxxxx.XXX.XXX.
+
+----------------------------------------------------------------------
+Xxxxxxx: 15. Xxxx xxxxxxxxxxxx xx xxx Xxxxxxxxxx xxx xxxxx?
+----------------------------------------------------------------------
+
+	__________________________________________
+	Xxxx		Xxxxxxxx	Xxxxxx
+	__________________________________________
+	Xxxxx		X		Xxx
+	XX		X++		XxxxXxxxx
+	Xxxxxxxxxx	X++		Xxxxxxxx
+	Xxx/xx		X		xxx.xx.xxxxxxxx.xxx
+	__________________________________________
+
+
+Xxxxxxx xxxx X xxxx X xxx xxxxxx xxx xxxxx xx xxxx xxxxxxxxx xxx
+xxxxxxxxxxxx xxx Xxxxxxxxxx, xxxxxxxxx xxxx xxxxxxxxxxx xxxx xxxxxxx
+xx xxx xxxx 3-5 xxxxx xxxx xxxx xx xxxxxx xxxxxxxx xxxxxxxx.  Xxxx
+xxxx xxxx xxxx xxx xxxxxx xxxx xxxxxx xxxxx xxx xxxx xxxx x xxxxxxxx
+xxxxx xxxx X _xxxxxx_ xxxxxxx xxxxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 16. Xxx xx X xxxx x xxxxx xxxxx xx XxXxxXxxxxx?
+----------------------------------------------------------------------
+
+Xxxxx, xxxx xx xxxxx xxxxx xx xxx xxxxxxxxx xxx xx Xxx xx (xxxxxxxxxxx)
+	xxxxxx xxxxxx
+	{	
+	    Xxxxxx	xxxx;
+	    xxxx	xxxxx;
+	} Xxx;
+
+xxx xxx xxxx:
+	Xxx	xxx;
+
+	XxXxxXxx (xxx, "xxxx", 3.2)
+
+xxxxxxx xx
+	Xxx	xxx;
+
+	xxx.xxxx = "xxxx";
+	xxx.xxxxx = 3.2;
+
+xxx xxx xxx xxxx xxxx xxxxxx X xxxx xxxxxxxxxxx, xxx xxx.xxxxx
+xxxx xxx xxxxxxx "3" xxxxxxx xx xxx xxxxxxxx xxxxx xxxxx "3.2".  Xxxx
+xxx xxxxx xx xxxxxx xxxx xxx xxxxxx xxxxxxxx, xxx xxx xxxxxxx xx
+xxxxxx xxxxxxxxx xxxx xxxx xxxxxxxx xxx x xxxxxxxx xxxxx xxxxx.  Xx,
+xxx xx xxx xxxxxx xxxx?
+
+Xxx xxxxxxxxx xxxxx xx xxxx xxx Xxxxxx xxxxxxx xxxxxxxx xxx X xx xxx
+xxxxxxxxxxx xx xxxx xxx xxxxxxxx xxxxxxxxxxx.
+
+#xxxxxx XxXxxXxxxxXxx(xxx, x, x) \
+    xx (xxxxxx(xxxxx) > xxxxxx(XxXxxXxx)) { \
+        XxXxxXxx(xxx, x, &(x)); \
+    } xxxx { \
+        XxXxxXxx *xx = (XxXxxXxx *)&(x); \
+        XxXxxXxx(xxx, x, *xx); \
+    }
+
+
+----------------------------------------------------------------------
+Xxxxxxx: 17. Xxx xx X xxxxx x xxxxxxxx xxxxxxxxx?
+----------------------------------------------------------------------
+
+Xxxxxxxx xx Xxxx Xxxxxxx (xxxxxxxx@xxx.xx.xxx):
+
+Xxx xxxxxxxxx xxxxxxxxxx xx xxxxxxxx xxxxxxxxxx xxxxxxx X4 (xx X5)
+Xxxxxxxxxx.  Xxxxxxxx xxxxxxxxxx xxxxxxx xxxxxxx X3 xxx X4 xx xxxxx
+xxx xxxxxxxxxxx xxx xxxxxxx xx xxxxxxxxx xxxxxx.
+
+Xxxxx xxx xxxxxxx xxxx xxxxx xx xxxxxxxx xxxxxxxxxx:
+
+    xxxxxx xx xxxx xxxx
+    xxxx xxxx xx xxxxxx
+    xxxx xxxx xx xxxx xxxx
+
+x) xxxxxx xx xxxx xxxx
+    Xxxxxxx x xxxxxx xx xxxx xxxx xxxxxxxxx xxx x xxxxx xxx xx xxxxxxx
+    xxxx xxxx xx xxxxxxxxx xx xxxx xxxx xxxxxx.  Xxxx xx xxxx xxxxx
+    xxxx xx xxx xxxxxxxxxx xxxxx xx xxxxxxxxxx xxxxxx:
+
+	Xxxx		Xxxxx
+	"Xxxx"		1
+	"Xxxxx"		0
+
+    Xx xxxx xxxx, xxx xxxxxx xx xxxx xxxx xxxxxxxxx xxxxx xx xxxxxxx
+    xxx xxxxxxxx xxxxx xx xxx xxxx xx xxxxx xxxxxxx.  Xxxx xx xxxx
+    xxxxxxx xxxxxxxxxxxx xx xxx xxx xx xxx "xxxxx" xxxxxxxxx xx xxx
+    xxxxxxxx xxxxxxx.  Xxx xxxxxxxx xxxxx xx xxxxxx xxxx x xxxxx,
+    xxxxx xx x xxxxxx xxxxxxxxxxxxxx xx xxx xxxxxx xxxx xxxx xxxx x
+    xxxxxx xxxx.  Xxxx xxx xxxxxxxx xxxxx xx xxxxxxxx xxxxxxx xxx
+    xxxxxx xxx xxx xxxxx xxxxxxx xxxxxxxxxxxx xxx xxxxxxxxxx xxxxxx.
+
+    Xx xxxxx xxx xxxx xxxxxxxxxx xxxxxxx xx xxx xxxxxxxxx (xx xxxx
+    xxxxxxxxxx, xxxx xxxx x xxxxx xxxxxx xx xxxxxxxxxxx xxxxxxx), xxxx
+    x xxxxxx xxxxxxxxxxxxxx xxxxxxx xxxxx xx xxxx xx xxxx xxx xxx
+    xxxxxxxx xxxxxxx xxxx xxxxxx.  Xxxx xxx, xxx xxxxx xxxx xxx xx
+    xxxxx xxxxxxxxxx xx xxxx, xxx xxxxxxx xxxx xx xxxxxx xxxx xxxxxx
+    xxx xxxx xx xxxxxx xxxxxxxxx xxx xxx xx xxx xxxx xxxxxxxxxx xx xxx
+    xx xxx xxxxxxxxxx.
+
+xx) xxxx xxxx xx xxxxxx
+    Xxxx xxxx xx xxxxxxxxx xx xxxxxxxx xxxxxx xxxx xxx xxxxxx xx xxxx
+    xxxx xxxxxxxxxx xxxxx xxx xxx xx xxxxxx xxx'x xxxxxxxxx.  Xxxxxxx,
+    xxx xxxx xxxx xxxxx xx xxxxxx xxxxxxxxx xx x xxxxxx xxxxx,
+    xxxxxxxx xx xxx xxx xx xxxxxxx.
+
+    Xxxx xxxx xx xxxxxx xxxxxxxxxx xxx xxxxxx xxx xxxxxxxxxxxx xxxx
+    xxxx xx xxxxxxx xx xxxxxxxx xxxx xxxx xxxxx xxxx x xxxxxx xx xxxx
+    xxxx xxx xxxxx xxx x xxxxx xxxxxxxx xxxxxxxxxxxxx xx x xxxx.  Xxxx
+    xxxxxxxxx xxx xx xxxx xx xxxxxxx x "xxxxxxxx" xx xxxxxxxxxxx xxxxx
+    xxxx x xxxx.  Xxxx xxxxxxxx xxx xx xxxx xx xxxxxxx xxx xxxxxxx xx
+    x xxxxx xxxxx xxx xxx xxxxx X xxxxxxxx xxxxxxxx xxxxxxxxxx.
+
+    Xx xxx xxx xxxxxx xxx xxxxxxx xx xxxxx x xxxxxx xx xxxx xxxx
+    xxxxxxxxx, xx xxx'x xxxx xxxxx xxxxxx xx xxxxx xxx xxxx xxxx xx
+    xxxxxx xxxxxxxxx.  Xxxxxxx xxxx xx xxx xxxx xxxx xxxxx xx xxxxxx
+    xxxx xxxx xxx xxxxxxxxxx.
+
+xxx) xxxx xxxx xx xxxx xxxx
+    Xxxx xxxx xx xxxxxxxxx xx xxxx xx xxxxxxx xx xxxxxxxx xxxx xxxx
+    xxxxx xx xxxxxxx xxxx xxxx.  Xxx xxxxxxxx, xx X xxxxx xxxxx xxx xx
+    xxxxxxxxx xx xx XXX xxxx xxxx xxxx xxxxxxxx xxxxxxxx xxxxxx xxx
+    xxx, xxxxx xxx xxxx.
+
+
+Xxx xxxx xxxxxxxxx xxx x xxxxxxxx xxxxxxxxx xx xx xxxxxxx:
+
+xxxxxxx Xxxxxxx (*XxXxxxXxxxxxxxx)(Xxxxxxx *, XxxXxxxxXxx, Xxxxxxxx *,
+	XxxXxxxxXxx, XxxXxxxxXxx, XxXxxxxxx *);
+    Xxxxxxx *xxx;
+    XxxXxxxxXxx xxxx;
+    Xxxxxxxx *xxx_xxxx;
+    XxxXxxxxXxx xxxxXxx;
+    XxxXxxxxXxx xxXxx;
+    XxXxxxxxx *xxxxxxxxx_xxxx;
+
+Xxxx xxx xxxxxxxxx xx xxxxxxx, xxx "xxxxXxx" xxxxxxxx xxxxxx xx xxx xxxxxx
+X xxxxxxxx xxxxxxx xxxxx xxx xxx "xxXxx" xxxxxxxx xxxxxx xx xxx
+xxxxxxxxxxx X xxxxxxxx xxxxxxx xxxxx.  Xxx "xxxxxxxxx_xxxx" xxxxxxxx
+xx xx xxxxxx xxxxxxx xx xxxx xxxxxxxxx-xxxxxxxx xxxx xxxx xx xxxxxxxxx
+xxxx xxx xxxxxxxxx xx xxxxxxxxxx.  Xxx "xxxx" xxx "xxx_xxxx" xxxxxxxxx
+xxxxx xxxxx xxxxxxxxxxx xx xx xxxxxx xx xxx xxxxxxxxx xxxx xx xx
+xxxxxxx.  Xxx xxxxxxxx, xxx Xxxxx xx XXX xxxxxxxxx xxxxxxxxx xxxxxxxxx
+xxxxx xxxxx xxxx xxxxxxxx xxx xxxxxx xxxxxxxxx xx xxxxx xx xxxxxx xxx
+Xxxxx xx xxxxxx xxx XXX xxxxxx xxxxxxxxxxxxx xx xxxx xxxxx.
+
+Xxxx xxxx xx xxxxx xxxx xxx "xxXxx" xxxxxxxx.  Xx XxxXxxxx xxx xxx
+xxxxxxxxx xxxx xxxxxxxxxx xxx xxxxxxxxx x xxxx xxx xxxxxxxx xxx x
+xxxxxxxxx xxxxx:
+
+xxxxxxx xxxxxx {
+    xxxxxxxx xxx    xxxx;
+    xxxxx_x         xxxx;
+} XxxXxxxx, *XxxXxxxxXxx;
+
+Xxxx xxx xxxxxxxxx xx xxxxxxx, xxx xxxxxxx xxx xxxxx xx x xxxxxxxx xx
+xxx xxxxx xxxx xxx xxx xxxxxxxxx xxxxx xx xxx xxxxxxxx xxx xx XXXX.
+Xx xxx xxxxxx xxxx, xxx xxxxxxxxx xxxxxx xxxxxx xxxx xxx xxxx xx xxx
+xxxxxxxxxxx xxxx xx xxxxx xxxxxx xx xxxxxx xxx xxxxxxxxx xxxxx.  Xx
+xxx xxxxxxxxxxx xxxx xx xxx xxxxx xxxxxx, xxxx xxx xxxxxxxxx xxxxxx
+xxx xxx xxxx xx xxx xxxxxx xx xxxxx xxxxxx xxx xxxxxx Xxxxx.  Xxx
+xxxxxx xxx xxxx xxxxxx xxxx xxxxxx xxxxx xx xxxxxxxxx xxx xxxxxxxx xxx
+xxxxxxxxx.  Xx xxx xxxx xx xxxxx xxxxxx, xxxx xxx xxxxxxxxx xxx xxxxxx
+xxxx xxx xxxxxxxxx xxxxx xxxx xxx xxxxx xxxxx xxx xxxxxx Xxxx.
+
+Xx xxx xxxxxxxx xx XXXX, xxxx xxx xxxxxxxxx xxx xxxxxx xxx xxxxxxxx xx
+xxx xxxxxxx xx x xxxxxx xxxxxxxx xxxxxxxxxx xxx xxxxxxxxx xxxxx xxx
+xxxxxx Xxxx.
+
+Xxxx xxxxxxx x xxxxx xx xxxxxxxxxx, xxxx xxxx xx xxxxx xxxxxxxx xxx xx
+xxxxxxx xxxxxxxxxx xx xxxxxx x xxxxx:
+
+    #xxxxxx XXXX(xxx, xxxx) \
+      xx (xxXxx->xxxx) \
+	{ \
+	  xx (xxXxx->xxxx < xxxxxx(xxxx)) \
+	    { \
+	      xxXxx->xxxx = xxxxxx(xxxx); \
+	      xxxxxx Xxxxx; \
+	    } \
+	  xxxx \
+	    *((xxxx *) xxXxx->xxxx) = xxx; \
+	} \
+      xxxx \
+	xxXxx->xxxx = (xxxxx_x) &xxx; \
+      xxXxx->xxxx = xxxxxx(xxxx); \
+      xxxxxx Xxxx;
+
+    #xxxxxx XXXXXXX(xxx) \
+      xx (xxXxx->xxxx && xxXxx->xxxx < xxxxxx(Xxxxxx)) \
+	{ \
+	  xxXxx->xxxx = xxxxxx(Xxxxxx); \
+	  xxxxxx Xxxxx; \
+	} \
+      xxxx \
+	xxXxx->xxxx = (xxxxx_x) xxx; \
+      xxXxx->xxxx = xxxxxx(Xxxxxx); \
+      xxxxxx Xxxx;
+
+Xxxxxx xxx xxxxxxxxx, xx xx x xxxx xxxx xx xxxxxxx x xxxxxx xxxxxx
+xxxxxxxx xx xxx "xxx_xxxx" xxx "xxxx" xxxxxxxxx xx xxxxxx xxxx xxxx
+xxxxxxxxx xx xxxxx xxxxxx xxxxxxxx.
+
+Xxxx xxx xxxx xxxxxxx xxxx xxxxxxxxx, xxx xxxx xx xxxxxxxx xx xxxx xxx
+Xxxxxxxxxx.  Xxx Xxxxxxxxxx xxxxxxx xxxxxxxx xxxxxxxxxx xxxx xxxxxxxx
+xxxxxxx xxx xxxxxxxx xxxxx xxxxxxxx xxxxxx xxxx xxx xxxxxxxx xxxxxxxx.
+
+Xx xxxxxxxx x xxxxxxxxx xxxx x xxxxxx xxxxxxxxxxx xxxxxxx, xxx
+XxXxxXxxXxxxXxxxxxxxx:
+
+xxxx XxXxxXxxXxxxXxxxxxxxx(xxxxxxx, xxxx, xx, xxxxxxxxx, xxxx, xxx_xxxx,
+	xxxxx, xxxxxxxxxx)
+    XxXxxXxxxxxx xxxxxxx;
+    Xxxxxx xxxx;
+    Xxxxxx xx;
+    XxXxxxXxxxxxxxx xxxxxxxxx;
+    XxXxxxxxxXxxXxxx xxxx;
+    Xxxxxxxx xxx_xxxx;
+    XxXxxxxXxxx xxxxx;
+    XxXxxxxxxxxx xxxxxxxxxx;
+
+Xx xxxxxxxx x xxxxxxxxx xxxx xxx xxxxxxxxxxx xxxxxxxx, xxx
+XxXxxXxxxXxxxxxxxx:
+
+xxxx XxXxxXxxxXxxxxxxxx(xxxx, xx, xxxxxxxxx, xxxx, xxx_xxxx,
+	xxxxx, xxxxxxxxxx)
+    Xxxxxx xxxx;
+    Xxxxxx xx;
+    XxXxxxXxxxxxxxx xxxxxxxxx;
+    XxXxxxxxxXxxXxxx xxxx;
+    Xxxxxxxx xxx_xxxx;
+    XxXxxxxXxxx xxxxx;
+    XxXxxxxxxxxx xxxxxxxxxx;
+
+Xx xxx X3 Xxxxxxxxxx, xxxxx xxxx xxx xxxxxxxx XxXxxXxxXxxxxxxxx xxx
+XxXxxXxxxxxxxx; xxxxx xxxx xxxx xxxxxxxxxx xx XxXxxXxxXxxxXxxxxxxxx
+xxx XxXxxXxxxXxxxxxxxx.  Xxxxxxxx xxxxxxxx, xxx xxxxx xxxxxxxx xxxxxx xx
+xxxx.
+
+Xxxx x xxxxxxxxx xx xxxxxxxxxx xxxx xxx Xxxxxxxxxx, x "xxxxx" xxxxxxxx
+xxxxxxxxx xxx xxxxxxxxx xxxxxxxx xxxxxx xxx xx xx xxxxxx:
+
+    XxXxxxxXxxx		Xxx'x xxxxx xxx xxxxxxxxx xxxxxx
+    XxXxxxxXxx		Xxxxx xxx xxxxxxxxx xxxxxx
+    XxXxxxxXxXxxxxxx	Xxxxx xxxxxxxxx xxxxxx xx x xxx xxxxxxx xxxxx
+
+Xxxxxxx xxxxxxxxx xxxxxx xxxx xxxxxxx x xxxxx-xxxx xx xxx xxxxxx xx x
+xxxx xxxx (xxx xxxxxxxx xxxxxx xx Xxxxx xxxxxxxxxxx).
+
+Xxx "xxxxxxxxxx" xxxxxxxx xx x xxxxxxx xxxx xx xxxxxxx xxxx xxx
+xxxxxxxx xx xxxxxxxxx, xxxxxx xxxxxxx xxx xxxxxx xxxxxxxxx xxxxx xxx
+xxxx xxxxxxxxxxx xx xxxx xx xxxxxxx xxx xxxxxx xxxxxx xxx xxxxx xx
+xxxxx xxxxxxxxx.  XxXxxxxxxxxx xxx xxx xxxxxxxxx xxxx xxxxxxxxxx:
+
+xxxxxxx xxxx (*XxXxxxxxxxxx)(XxXxxXxxxxxx, XxxXxxxxXxx, XxXxxxxxx,
+	XxxXxxxxXxx, Xxxxxxxx *);
+    XxXxxXxxxxxx xxxxxxx;
+    XxxXxxxxXxx xx;
+    XxXxxxxxx xxxxxxxxx_xxxx;
+    XxxXxxxxXxx xxxx;
+    Xxxxxxxx *xxx_xxxx;
+
+Xxx xxxxxxxxxx xx xxxxxxx xx xxxx xxx xxxxxxxxx xxxxxxx xxxxxxxxxx
+xxxx xxx "xx" xxxxxxxx, xxx xxxx xxx xxxxxxxx xxxx xxx xxxxxxx xxxxxxx
+xx xx xxx "xx" xxxxxxxx xxxxxx (xx->xxxx).  Xxx xxxxxxxxxx xx xxxxxx
+xxx xxxxx xxxxxxxxx xxxx xxxx xxxxxx xx xxx xxxxxxxxx xxxx xxx
+xxxxxxxxxx xxx xxxxxxxxx (xxx xxxxxxxx, xxxxxxxx xxx xxxxxx xxxxxxxxx
+xxx xxx xxxxxx xx Xxxxx xxxxxxxxx xxxxx xxx xxxxxxxxxx xxxxx xxxx xx
+xxxx xxx xxxxxxxxx Xxxxx xxxx xxx xxxxxxxx) xx xxxx xx xxx xxxxxxx
+xxxx xxxxxx xx xxxx xxx xxxxxxxxx xxx xxxxxxxxxx.
+
+Xxxxxx xxxxxxxxx xxxx xxx xx xxxxx xx xxx xxxxxxxxx xxxxx xx xxx XXX
+X5 xxxxxxxxxxxx:
+
+    xxx/xxx/Xx/Xxxxxxxxxx.x
+    xxxxxxx/xxx/XXXx/Xxxxxxxxxx.x
+    xxxxxxx/xxx/XXXx/Xxxxxxxxxx.x
+
+----------------------------------------------------------------------
+Xxxxxxx: 18. Xxx xx X xxxx xxxxxxxx xxxxxxxx?
+----------------------------------------------------------------------
+
+Xxx "Xxxxx-xxxx Xxxxxxxxxxx Xxxxxxxx Xxxxx Xx", Xxx X Xxxxxxxx, Xxxxx 3,
+(Xxxxxx 1992) xx Xxxxxx Xxxxx xxx x xxxxxxxx xxxxxxxx xx xxx xxxxxx
+xxxxxxxx.  Xxxx xx xxxx xxxxxx xx xxxxx xx xxxx xxxxxxx.  Xx x
+xxxxxxxx, xxx xxxx XxXxxxXxxxxxx() xx xxx xxxx xxxxxxx xx x _xxxxxx_
+xxxxxxxxxxx xxxxxxx xxx xxxx XxXxxxxXxxxxxx() xx xxxxxxxx xxxx xxxxxxx
+xxx xxxxxx xx xxxx xxx xxxxxxxxxxx xxxxxxx.
+
+Xxx xxxx xxxxxxxx xxxxx xxxx xxxxxx xx xxxxx xxxx x xxxxxxx.  Xxxx xxx
+xxxxxx 3 xxxx:
+	1. Xxxx xxxxxxx x "xxxx" xxxxxx xx xxx xx xxx xxxxxxxx,
+	2. Xxxx xxx xxxxxx xxxxxxx xxxx x XX_XXXXXX_XXXXXX xxxxxxx,
+	3. Xxxxxx xxxxxxxxxx -- xxxxxxxx xxxx x XxxxXxxxxx xxxxxxx,
+	   xxxxxx xxxxxxxx/xxxxx, xx xxxxxxx xxxxxxx.
+
+X'xx xxxxxx xxx xxx xxxx xxxxxxxxxx xxxx 1 & 2 xxxxx xx xx _xxxxxx_ x
+xxxxxxx xx xxxxxxxxxxx x Xxxxxx xx x xxxxxxx xxx xxxxxxxx xxxx
+xxxxxxx.  Xx xxx, xxxx xxxx xxx Xxxxxx Xxxxx xxxxxxx.
+
+Xxx xxxxx xxx xx xxxxxxxxx xx xxxxxx.  Xxx xxxxxxxxx xx xxxxx xx xxx
+Xxxxxx Xxxxx xxxxxxx xxx X xxxxxxx xx xxxx xxxxxxx xx xx x xxxxxxxxx
+xxxxxxx.
+
+Xxx xxxxxxxxxx xxxxxx xxxxxxx xxx Xxxx xxxxxx xxxxxxxx xxxx xx X/X
+xxxxx xx xxxxxx xxxxxxxxxxxxx xxx xx xxxxx.  Xxxx xx xxxxxxxxxxx xxxx
+xxx x xxxxxx xxxxxxx X xxxxx xxxxxxxxxxx, xxx xxx xxxx xxx x
+xxxxxxxx xxxxxxx xxxxxxx xx xx xxxxxxxxxxx xxxx xxxx xxxxxx xxxxx xxxx
+xxxxxxx xxxxxxxxxxx xx xx X xxxxxx.  Xxxx xx X X/X xxxxx xxxxxx xxx
+X/X xxxxx xxxxxxx xx xxxxxx xxx _xx_ xx xxxxxxx xxxx xx xxxx()
+xxxxxxx.  Xxx xxxx xxx xxxxxx xxxx xx xx xxx xxxxxx/xxxxxxx xx xxxxx
+xxxxxxxxx xx xxx X/X xxxxx xxxxxxx.  Xxx xxxxxxxxx xxxx xxxxxxxx
+xxxxxxxxxxxx xxxx:
+
+#xxxxxxx <xxxxxx.x>
+xxx_xxx XXXxxxxxxx;
+
+xxxx
+XXXXxxxxxx (xxx)
+	Xxxxxxx		*xxx;
+{
+	xxxxxxxXxxxxxx (xxx);
+	xxxxxxx (XXXxxxxxxx, 1);
+}
+
+xxxx ()
+{
+	...
+	xx (xxxxxx (XXXxxxxxxx) == 0)
+		XXxxXXXxxxxXxxxxxx (XXXXxxxxxx);
+	XxXxxXxxxXxxx (xxx_xxxxxxx);
+}
+
+Xxx xxxxxxxXxxxxxx() xx xxxxxxxxx xxxx xxxxx x Xxxxxxx xxxxxxx xxx xx
+xxxx xx xxx xxxxxxxxxxx xxxxxxxx xxxx xxx xxxxxxx xxx xxxxxxxxx
+xxxxxxx.  Xx xxxxxx xxxx xxxx XxXxxxxXxxxxxx().
+
+Xxx xxxxx xx xxx xxxxxxxxxx xxxx xxxxxx/xxxxxxx, xxxx xxxxxx() xx
+xxxxx xxxxxx xx xxxxxxx x 0 xxx xxxx'x xxxxxx xxxxxxxxxxx xx xxx
+xxx_xxx xxxx x xxxxxx xxxxxxxxx xx xxxxxxx() xxx xxxxxx xxx xxxxxxx xx
+xxx xxxx xxxxx xx xx xxx xxxxxx() xxx xxxx xxxxxxxx.  Xxx xxxxxx xxxxx
+xx xxxx xxxxxx xxxxxx() xx xxx xxxxx xx xxx xxxxxx xxxxxxxx xx
+xxxxxxx().  Xxxxx xxx xxxxxxx xxxxxxx xxxxx xxxxx xxxxx xxx xxx xxxx
+xxxxxxx xx xx xxxxxxxx.
+
+Xxxx xxxxx xxxxxxxx xxx xxxxx xxx xxxx xxx xxxxxxxx xxxxxxxxxx xxxx
+xxxxxxxxxx xxxxx xxxxxxxxx.  Xxx xxxx xxxxxx xxxxxxxx xxx Xxxx xxxxxx
+xxxx xx XxxXxxxx, XxxXxxx, xx XxxXxxx.  Xxxxx xxx xx xxxxxxxx xxxx xxx
+xxxxx xxxxxx xx xxxxxxxx xxx xxx xxxx xxxxx xxxxxxxxx xxxx x xxxxxxx
+xxxxxx xx xxxx xxxxxxxxxxx xxx xxxxxxxxx xxxx 32 xxxxx x xxxxxxx
+xxxxx.  Xxx xxx xxxx xxx xxxx xxxxxxxxxxxxx xxxxxxxx xxxx xxxxxx xx
+xxxxxxx xx x xxxxxxx.
+
+Xxxxx xxx xxxx xxxxxxxxxx xx xxxx.xxxxxxx.x xxxxx xxxx xxxxx xx
+Xxxxxxxx xx 91.  Xxxxxx Xxxxxxxxx xxxxxx xx xxxxxxx xxxxx xxxxxxxxx
+xxxx xxxx xx xxx xxx xx xxxx xx xxx Xxxx xxxx xxx xxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 19. Xxxx xxxxxxx xxxx X3 xx X4 xx X5?
+----------------------------------------------------------------------
+
+Xxxx xxxxxxxxx xxxx xxxxxxx xx xxx Xxxxxxxxxx.  Xxxxx, xxx xxxxxxx
+xxxxxxx xxx xxxx xxxxxxx xxx xxxxxxxxx.  Xxxx x, xxxxxxxxx xxxxxxxxxx,
+xxxx xx xxx xxxxxxxxx xxxxx xxx xxxxxx xxxx xxx xxx xxxxxxxxxx xxx
+xxxxxx.  Xxxxxxx xx x xxxxxxx xxxx.
+
+Xxxx xx xxx xxxxxxxxx xxxxxxxxxxx xx xxxxxxxxx xxxx Xxxxxxx 13 xx xxx XXX
+Xx Xxxxxxxxxx Xxxxxx xxx xxxx X'Xxxxxx Xxxxxx 5, 3xx xxxxxxx.
+
+Xxxx X3 xx X4
+- Xxxxxxxx xx xxxxxxx (xxxxxxxxxx xxxxxxx)
+- Xxx xxxxxxxx xxxx xxxxxxxxx xxxxxxxxx xx xxxxxx xxxxxxxx xxx
+  xxxxxxxxxx  xxxx.
+- Xxxxxxxx xxxxxxxx xxxx xxxxxxxxx.
+- #xxxxxx XxXxxxxxxxxxxxxXxxxxxx 4  (xxxxx xxxx xxxx xxxxxxx)
+- XXXxxxxXxxx, XxxXxxxxXxxxxXxxx & XxxxxxxxxXxxxxXxxx xxxxxxx
+  xxxxxxxxxxxx.
+- xxxx.xxxxxxxxxx, xxxx.xxx_xxxxxx xxxxx XxxXxxx xxx xxxxx xxxxxxxxxx
+- xxxxx xxxxxxxx xxx xxxxxxxx_xx_xxxxxxxx xxxxxxxxx xxxxx
+- xxxx.xxx_xxxxxx_xxxxxx xxxxxxxxxxxxx xxxxxxx.
+- xxxx.xxxxxxxx_xxxxxxxx xxxxxxx xx xx xxxxxxxxxx xxxx xxxx xxxx Xxxxxxx
+- xxxx.xxxxx_xxxxxx xxxxxxx xx xxxxxxxxxx xxxx xxxx xxxx Xxxxxxx
+- xxxxxxxxxx.xxx_xxxxxx_xxxx xxxxx xx xxxxxxxxx xxxxxx
+- xxxx.xxxxxxxxxx_xxxx xxxxxxxx xx xxxx xx xxxxxx xx xxxx.xxxxxxxxxx
+- xxxxx.xxxx_xxxxxxxx_xxxxxxx xxxxx xx xxxxxxxxx xxxxxx
+- xxxx.xxx_xxxxxx_xxxx xxxxxxxx xx xxxx xx xxxxxx xx xxxx.xxx_xxxxxx
+- Xxxxxxx XxXxxxxXxxxxxxx() xxxx xxxxx xxxxxxxx xxxxxxxx.
+- Xxxxx XxxxxxxxxXxxxxxxx.
+- XxXxxxxxxxxXxxxxx() xxxxxxxx xxxxx xxxxx X4.
+
+Xxxx X4 xx X5:
+- Xxxxxx xxxxxxxx xxxxXxxxxxxxxxx xxxxx.
+- Xxxxxxxxx xxx xxx-xxxxxxx, xxx xxxxx xxxxx, xxxx xxxx xxxxxxxx
+- xxxxxxxxxxxxx xxxxxxxx xxxxx.
+- Xxx-xxxxxx xxxxxxxx xxxxxxxx.
+- Xxxxxxx xxxxxxxxxxx xxxxxxxxx xxxxxxx.
+- Xxxxxxxxxx xxxxxxxxx xxxxxxx xxxxxxxx xxx xxxxxxx xxxxx xxxxxx.
+- Xxx xxxx xxxxxxxx xx XxXxxXxxxxxxxxx, XxXxXxxXxxxxxxxxx,
+  XxXxxxXxxxxxx, XxXxxxxxxXxxxxxxxxx, xxx XxXxxxxxxxxx xxxx xxxxxxx
+  xxxx Xxxxxxxx* xx xxx*
+- Xxxx xxxxxxxxxxx xxxxxxxxxxxx (xxxx xx xxxxxxxxxx xxxx xxx xxxxxxx
+  "Xx Xxxxxxxxxxx Xxxxxxxxxxxx xx Xxxxxxx 5" xx Xxxx Xxxxx-Xxx xx "Xxx
+  X Xxxxxxxx", Xxxxx 3):
+	- XxxXxxxxxXxXxxxx() xxxxxxxxx xxxx XxxXxxxXxxxxxXxXxxxx() xx
+	  xxxxx xxxxxx xxxxxx.  Xxxxxxx xxxxxx xx xxx xxxxx xxxxxx xxx
+	  xxxxxxxxx xx xxxxxxx xxxxxxxxx xxxxxxx.
+	- Xxxxx xx xxxxx xx Xxxxxxx xxx xxxxxxxxx
+	- Xxxxxxxx xxxxx xxxxxxxxxx xx xxx xxxx xxxxxx
+	- Xxxxxxxxxxx xxxxxxx xxxxxxxxxx xxx xxxxxxxxx xx xx xxxxx
+	  xxxx xxxxxx, xxxxxxxxxxx xxxxxx xxxxxx xxx xxxxxx, xxxxx xx
+	  xxxxxx xxxxxxxx
+	- Xxxxxxx xx Xxxxxxx xxx xxxxxx.
+	- Xxxxxx xxxxxxx xx XX'x xxxx xxxxxxxxxx xxxxxx
+	- Xxxxxx xx Xxxxxx xxxxxxxxxxx xxxx xxxx xxxxx xxx xxxxxx
+	- Xxxx xxx xxxxxx xxxxx xxx xxxxxx xxxx xxxxx xxxxx xx xxxxxxxxx
+	- Xxxxxx xxxxx xx xxxxxxxxx xx xxxxxxx xxx xxxxxxxxxxx
+	- Xxxx xxxxxxx xxxxxxx xxxxxxxx, xxxxx x 26% xxxxxxxxx xx
+	  xxxxxx xxxxx.
+
+Xxxxxxxxx xxx xxxx X5:
+----------------------
+XxXxxxxxxxXX()		- xxxxxxxx XX xxxx xxxxxxxxxx xxxxxx  
+XxXxxXxxxxxXxxx()	- xxx xxx xxxxxx xxxxx xx x xxxxx
+XxXxxxxxXxxxxxxx()	- xxxxxx xxxxxxxx xxxxxxxx xxx x xxxxxx
+XxXxxXxxxxxxxXxxx()	- xxxxxxxx xxxxxxxx xxxxxxxxx xxxxxx xx xxx xxxxxx
+
+
+Xxxxxxxxx xxx xxxx X4:
+----------------------
+XxXxxXxxXxxxxxXxxx()	- xxxxxxxxx xx xxxx xxxxxx _xxxxx_ xxxxxx.
+XxXxxXxxxxxxxxx()	- xxxx xx xxxxxxxxxxxxxx xxxx.
+XxXxxXxxxxxxXxxxxXxxx()	- xxxxxxxxx xxxxx xxxxxxxxx xxxxx xxx xxxxxxxxx
+XxXxxXxxXxxxxxxxXxxxxxxxx() - xxxxxxx xxxxxxx xxxxxxxxx
+XxXxxXxxXxxxXxxxxxxxx()	- xxxxxxxx x xxx xxxxx xxxxxxxxx
+XxXxxxXxxxxxxxXxxx()	- xxxxxxxx xxxxxxx x xxxxxxxx xxxx
+XxXxxxXxxxxxxxx	()	- xxxxxx x xxx xxxxx xxxxxxxxx
+XxXxxxxxxxXxxxxxxXxxxxXxx() - xxxxxxx x xxxxxx xxxxxxxx xxxxx
+XxXxxxxxxxXxxxxxxXxxxxXxxXxxx() - xxxxxxx x xxxx xx xxxxxx xxxxxxxx xxxxxx
+XxXxxxxxxXxxXxxxx()	- xxxx xxx xxxx x xxxxxxxx xxxxxxxxx
+XxXxxxxxXxxxxxx()	- Xxxxxx xxx-xxxxx xxxxxxxxx
+XxXxxxxxxXxXxxxxx()	- Xxxxxx xxx xxxxxxx
+XxXxxxxxxXxxxxxXxxxxxxxxxXxxxxxx() - xxxxx x xxxxxxx xxxxx xxxxxxxxxx
+XxXxxxXxxx()		- Xxxx x xxxx
+XxXxxXxxxxxXxxxxx()	- Xxxxxxxx xxxxxx & xxxxxxxx xxx xxxx xxxxxx
+XxXxxXxxxxxxxxxxXxxxXxxXxxxx() - xxxxxx xxxx xxx xxxxx
+XxXxxXxxxxxxxxxXxxxxxxxXxxx() - xxx xxxxxxxxxxx xxx x xxxxxx
+XxXxxXxxxxxXxxxx()	- xxxxxx xxxxxxx-xx-xxxxxx xxxxxxx xxxxx
+XxXxxXxxxxXxxxxXxxx()	- xxxx xxx xxxxx-xxxxx xxxx
+XxXxxXxxxxxxxxXxxxxxx()	- xxxxxxxx xxx XxxxxxxxxXxxxxxx xxxxx
+XxXxxXxxxxxxxxXxxxxXxxxxxxxxxx() - xxxxxx xxx xxxxxxxxx xxxxx xxxxxxxxxxxxx
+XxXxxXxxxxxxxxXxxxxxXxxxxxxxxxx() - xxxxxx xxx xxxxxxxxx xxxxx xxxxxxxxxxxxx
+XxXxxxxxxxxxXxxxxxXxxxx() - xxxxxxxxxx x xxxxxx xxxxx xxxxxxxx
+XxXxxxxxXxxxxXxxxxxx()	- xxxxxxxx xxxxx xxxxxxx xxxxxx/xxxxx xxxxxx
+XxXxxxxxXxxXxxxxXxxxxxx() - xxxxxxxx xxxxx xxxxxxx xxxxxxx xxxxxx xxxxx xxxx
+XxXxXxxxxx()		- xxxx xx xxxxxxxx xx Xxxxxx
+XxXxXxxxXxx()		- xxxx xx xxxxxxxx xx XxxxXxx
+XxXxxxxxXxXxxXxxxXxxx()	- xxxxxx xxxx xx xxxxxxxx
+XxXxxxXxxxxxxxxXxxxxxxxx() - xxxxxxxx xxxx xxxxxx xxxxx xxxx
+XxXxxxXxxxxxx		- Xxxxxx xxx xxxxxxx xxxx x xxxxxx
+XxXxxxXxxxx		- Xxxxxx xxx xxxxxxx xx x xxxxxx
+XxXxxxxxXx		- xxxxx xxx xxxxxxxxx xxxxxxx
+XxXxxXxxxxxxxxXxxxxxxxxxx() - xxxx xxxxxxxxx xxxx xxxxxxxx xxxxxxxxxxxxx
+XxXxxxXxxxxxXxxxxx()	- xxx x xxxxxx-xxxxxx xxxxx
+XxXxxxxxxxXxxxXxxxxx()	- xxxxxxxx xxxxxx xxxxxxxxx xxxxx x xxxxxxx xxxx
+XxXxxxxxXxxxxxXxxx()	- xxxxxx xxxxxxxx xxxxxx xxxxx xxxxx xxxxxx
+XxXxxxxxxXxxxxxxx()	- xxxx x xxxx
+XxXxxxxxXxXxxxxx()	- xxxxxx xxxxxx xx xxxxxx.
+XxXxxXxxxxXxxxxXxxx()	- xxx xxx xxxxx-xxxxx xxxx
+XxXxxXXXxxxxxxxXxxxxxx() - xxx XX_XXXXXXXX_XXXXXXX xxx xxxxxx xxxxxxxxx
+XxXxxxxxXxxxxx()	- xxxxxx x xxxxxxx xxxxxx xxxx
+XxXxxxxxXxx()		- xxxxxx x xxxxxxx xxx xxxx
+XxXxxxxxXxxxxxx()	- xxxxxxx xx xxxxxx xxxxxxxx xxxx
+XxXxxxxxXxxxxxx()	- xxxxxxx xx xxxxxx xxxxxxx xxxx
+XxXx*()			- xxxxxx xxxxxxxxxx xx x xxxxx xx xxxxxxxxx
+XxXxxxxxXxXxxxxx()	- xxxxxx Xxxxxx xx xxxxxxx xxxxxx xxxxxxxx
+
+
+Xxxxxxxxxx		Xxxxxxxxxxx			Xxxx
+----------------------------------------------------------------------
+XxXxxXxxxxxx()		XxXxxXxxXxxxxxx()		X3
+XxXxxXxxxxxxxx()	XxXxxXxxXxxxxxxxx()		X3
+XxXxxXxxxx()		XxXxxXxxXxxxx ()		X3
+XxXxxXxxxxxx()		XxXxxXxxXxxxxxx()		X3
+XxXxxXxxxXxxx()		XxXxxXxxXxxxXxxx()		X3
+XxXxxxxxx()		XxXxxxxxxXxxXxxxx()		X4
+XxXxxxxxXxxxxxxxxxxXxxxx XxXxxXxxxxxXxxxx()		X3
+XxXxxxxxxXX()		XxXxxxxxxXX()			X3
+XxXxxxx()		XxXxxXxxxx()			X3
+XxXxxXxxxxXxxxxxxx()	XxXxxXxxXxxxxXxxxxxxx		X3
+XxXxxXxxxxXxxxxxxxXxxx() XxXxxXxxXxxxxXxxxxxxxXxxx	X3
+XxXxxXxxxxxxxxXxxxxxx()	XxXxxXxxXxxxxxxxxXxxxxxx	X3
+XxXxxxxxxxxx()		XxXxxXxxxxxxxxx()		X3
+XxXxxxXxxx()		XxXxxXxxxXxxx()			X3
+XxxxXxxxxxx(xxxxxx)	XxXxxxXxxxxxx(xxxxxx)		X4
+XxxxXxxxx(xxxxxx)	XxXxxxXxxxx(xxxxxx)		X4
+XxXxxxXxxxx()		XxXxxXxxxXxxxx()		X3
+XxXxxxXxxxx()		XxXxxXxxxXxxxx()		X3
+XxXxxxxxx()		XxXxxXxxxxxx()			X3
+XxXxxXxxxxXxxxxxx()	XxXxxXxxXxxxxXxxxxxx()		X3
+XxXxxXxxxxXxxXxxxxxx	XxXxxXxxXxxxxXxxXxxxxxx()	X3
+XxXxxXxxxxxxxxXxxxxxx()	XxXxxXxxXxxxxxxxxXxxxxxx()	X3
+XxXxxXxxxxxxXxxxxxx()	XxXxxXxxXxxxxxxXxxxxxx()	X3
+XxXxxXxxxxxxXxxXxxxxxx() XxXxxXxxXxxxxxxXxxXxxxxxx()	X3
+XxXxxxxxx()		XxXxxXxxxxxx()			X3
+XxXxxxxxxXxx()		XxXxxXxxxxxxXxx()		X3
+
+----------------------------------------------------------------------
+Xxxxxxx: 20. Xxxxx xxx xxx xxxxxxxxx xxxxxx xxxx?
+----------------------------------------------------------------------
+
+Xxx xxxxxxxxx xx x xxxxxx xxx xxxxxx xx xxxx xxx xxxxxxxxx xxxxxx
+(xxxx xxxxxxx xxxxxxxx xx xxxxxx xxxxxxxx):
+
+	1. Xxxx xxxxxx xx xxxxxxxx xxxx.
+	2. Xxxxxxx xxxx xxxxxxxxx.
+	3. Xxxx'x xxx xxxx xxxxxxxx xxxx
+	4. Xxxx'x xxxxxxxx xxxx.
+	5. Xxxx'x xxx xxxxxxxxxxx xxxxxxx xxxx.
+	6. Xxxxxx xxxx xxx xxxxxxxxxxx xxxxxxx xxxx.
+
+Xxxx xxxx 2-6 xxx xxxx xxxx xxxx xx xxxxxxxxxxx xxxxxxx.  Xxx xxxxxx
+xx xxxxx 3-6 xx x xxxxxx xxxxxxxx xxxxxxxx xxxx xxx xxxxxxx xxxxxxx.
+
+Xxx xxx xxxx xxxxxxxx xxxx xxxxxxxx xxxxxxxxxxxxxx xxx xxx
+xxxxxxxxxxxx xxxxxxxxx xx x xxxxxxxx xxxxxxxx.  Xxxx xxxx xx xxxxxx
+xxxxxxxxx xxxx xxx XXXXXXXXXXXX xxxxxxxxxxx xxxxxxxx xx xx xxxx xx xxx
+xxx xxxx xxx xxxx $XXXX/.Xxxxxxxxx-<xxxx> xx xxxx.
+
+Xxx xxxx xxxxxxxx xxxx xx xxxxxx xxxxxxxx xxxx xxx XXXXXXXX_XXXXXXX
+xxxxxxxx xx xxx xxxx xxxxxx xx xxx xxxxxxx xx xx xxxx xx xxx xxx xxxx
+xxx xxxx $XXXX/.Xxxxxxxxx xx xxxx.  Xxxxxxxxx, xxx xxxxxxx "xxxx" xx
+xxxx xx xxx xxx XXXXXXXX_XXXXXXX xxxxxxxx.  Xxxxxx xxxx xxxx xxxx
+xxxxxx xx xxxx xxxxxxxxxx xxxxx xx xxxx xxxxxx xxxx xxxxxxxx xx xxx
+xxxxxxx xxxx xxxxxxxx xxx xxxxxxxx.  X xxxx xx xxxxxx 1-3XXxxx xx
+xxxxxxxxxx.  Xxxx xxxxxxxx xxx xxxxx xxxxxxx xx xxx XXXXXXXX_XXXXXXX
+xxx xxxx xx xxx.
+
+X xxxx xxx xxxx xxxx xxx xxxxxxxxxxx xxxxxxx xxxxx xxxxxxxxxx
+xxxxxxxxxxxxxx xxxxxxxx xx xxxx xxxxxxxxxxx.  Xxx xxxxxxxxxx xxx xxxxx
+xxxxxxxx xx xxx xxxx xxxx xx xxxxx.  Xxxx xxx xxxx xxxx xxxx xxxxxxxxx
+xxx xxxxxxx xxxxxxxxxxx xxxxxxxxx xxx xxx xxxx xxxxxx xxxxx xxxx xxxx
+xx xxxxx.
+
+Xxx xxxxxx xxxx xxx xxxxxxxxxxx xxxxxxx xxxxx xxx xxxxxxxxx xxxxx xx
+/xxx/xxx/X11/xxx-xxxxxxxx.  Xx xxxx x xxxx xx xxx xxxxx xxxx xxx
+xxxxxxxx xxxxxxxxx xxx xxxx.  Xxx xxxxxxxxxx xxx xxxxx xxxxxxxx xx xxx
+xxxx xxxx xx xxxxx.  Xxxx xxx xxxx xxxx xxxx xxxxxxxxx xxx xxxxxxx
+xxxxxxxxxxx xxxxxxxxx xxx xxx xxxx xxxxxx xxxxx xxxx xxxx xx xxxxx.
+
+[Xxxxxx xx Xxxxxx Xxxxx (xx@xxxxxx.xxx) xxx xxx xxxxxxxxx, 6/92]
+
+Xxx xxx xxx xxxxxxx xxxxxxxxxxx xxxxxxxxx xx xxxxxxx xxx xxxxxxxxx xxx
+xxxxxx xxx xxxx Xx-xxxxx xxxxxxxx -- XXXXXXXXXXXXXXX,
+XXXXXXXXXXXXXXXXXXX, xxx XXXXXXXXXXX.  Xxxxx xxxxxxxxxxx xxxxxxxxx
+xxxxxxx xxxxx Xx xxxxx xxx xxxxxxxxxxx-xxxxxxxx xxxxx xx xx
+xxxxxxxxxxx xx xxxxxxxxxxxx.  Xx xxxxx xx xxxx xxx xxx-xxxxxxxx xxxx
+xxxx xxx xxxx xxxxxxx xx XXXXXXXXXXXXXXX xxx xxxxxxx xxxx xxx xxxx
+xxxxxxx xx XXXXXXXXXXXXXXXXXXX.
+
+Xxx XXXXXXXXXXXXXXX xx xxxxxxxx xx xxxxxxxxx xx xxxx xxxxxx xx xxxx x
+xxx xxxx xxx-xxxxxxxx xxxxx xxxxxx xx xxxxxxx xxxxxxxxx xxxxxxxxx
+xxxxxxxxxxx.  Xxxxxxx, xxx xxxxxxx, xxxx xxx xxx xxxxxxx Xxx'x Xxxx
+Xxxxxxx, xxx xxx xxxx xxxx xxxx X4 X xxxxxxxxxxxx xxxxxxxxx xx
+/xxx/xxx/X11/xxx-xxxxxxxx. Xxx xxxxx xxx x xxxxx xxxx xxxx xxx
+XXXXXXXXXXXXXXX, xxx xx xxxxx xxxxx Xx xx xxxx xx xxx-xxxxxxxx xxxxx
+xx xxxx /xxx/xxx/X11 xxx /xxx/xxxxxxx/xxx (xx xxxxxxxx xxxx
+XXXXXXXXXXX xx xxxxxxx):
+
+	xxxxxx XXXXXXXXXXXXXXX /xxx/xxx/X11/%X/%X:$XXXXXXXXXXX/xxx/%X/%X
+
+Xxx xxxxx xx xxxx xxxxxxxxxxx xxxxxxxx xx x xxxxx-xxxxxxxxx xxxx xx
+xxxxxxxxx.  Xxx xxxxxxxxx xxxxxxx xxxxxxxxxxx xxxxxxxxxx xx xxxxxxx
+(xxx XxXxxxxxxXxxxxxxx()):
+
+	%X	Xxx xxxxx xx xxx xxxxxxxx xxxxxxxxx, xx xxx
+		xxxxxxxxxxx'x xxxxx xxxx.
+	%X	Xxx xxxxx xx xxx xxxx "xxxx".  Xx xxxx xxxx, xxx
+		xxxxxxx xxxxxx "xxx-xxxxxxxx"
+	%X	xxxxxxxxxxxxx xxxxxxxx (X5 xxxx)
+	%X	Xxxxxx.  Xxxx xxx xxx-xxxxxxxx.
+	%X	Xxxxxxxx, xxxxxx, xxx xxxxxxx (x.x. "xx_XX.XXX")
+	%x	Xxxxxxxx xxxx xx %X  (x.x. "xx")
+	%x	Xxx xxxxxxxxx xxxx xx xxx xxxxxxx'x xxxxxxxx xxxxxx
+	%x	Xxx xxxxxxx xxxx xx xxx xxxxxxx'x xxxxxxxx xxxxxx
+
+Xxx'x xxxx xxxxx xxx xxxxxxx.  Xxxxxxx xxx xxxxxxxxxxx'x xxxxx xxxx xx
+"Xxxxxx". Xxxx, xxxxxxx Xxxx Xxxxxxx xx xxxxxxxxx xx /xxx/xxxxxxx.
+(Xxxxxx xxx xxxxxxx xxxxx xxxxxx-xxxxxxxx xxxxxx.)
+
+	/xxx/xxx/X11/%X/%X        xxxxx /xxx/xxx/X11/xxx-xxxxxxxx/Xxxxxx
+	$XXXXXXXXXXX/xxx/%X/%X    xxxxx /xxx/xxxxxxx/xxx/xxx-xxxxxxxx/Xxxxxx
+
+Xx xxx xxxxxxxxxxx xxxxxxxxxxx, Xx xxxxx xx xxxx xxxx xx xxx xxxxx
+xxx-xxxxxxxx xxxxx, xx xxx xxxxx xxxxx.  Xx xxxx xx xx xxxxx xxx, xx
+xxxxx xx xxx xxxx xx, xxx xxxxx xxxxxxx xxx xxxxxx.  Xxx xxxxxx xx
+xxxx xxxx xx xx xxxxxx xxxxx xx /xxx/xxx/X11, xxxx xx /xxx/xxxxxxx.
+
+Xxx'x xxxxxxxx xxxxxxx xxxxxxx. Xxxx xxxx, xxx'x xxx
+XXXXXXXXXXXXXXXXXXX xx xx xxxxx xxx xxx xxxx Xxxxxx.xx xx xxx xxxxxxx
+xxxxxxx xxxxxxxxx, xxxx xxx Xxxxxx xx xxx xxxxxxxxx ~/xxx-xxxxxxxx.
+
+	xxxxxx XXXXXXXXXXXXXXXXXXX ./%X.xx:$XXXX/xxx-xxxxxxxx/%X
+
+Xxx xxxxx xxxx xx xxx xxxx xxxxxxx xx ./Xxxxxx.xx.  Xxx xxxxxx xxxxxxx
+xx $XXXX/xxx-xxxxxxxx/Xxxxxx.  Xxxx xx x xxxxxxxxxx xxxxxxx xxx
+xxxxxxxxx xxxxxxx xx xxxxxxx xxx Xxxxx xxxxxxxxxx xx xxxxxx xxx
+xxx-xxxxxxxx xxxx Xxxxxx.xx xx xxx xxxxxxxxxxx'x xxxxxx xxxxxxxxx, xx
+xxx xxx xxx xxx xxxxxxxxxxx xxxx xxx xxxxxxxxx xx xxxxx xxx xxx
+xxxxxxx xxx xxxxx xxxx xxx xxxxxxxxx xxxxxx xxxxxxxx.
+
+XXXX: xxxx xxxxxxx xxx xxx-xxxxxxx xxxxx xxxx XXXXXXXXXXXXXXXXXXX,
+      xxx xxxx  xxxxxxx xxxxxx, xxxxxxx xxx xxxx xxx xxxx xxxxxx xx
+      xxxxxxx xx %X xxx %X xxx xxxxxxx.
+
+Xxxx X5, xxxxx'x xxxxxxx xxxxx.  Xxx xxx xxxxxxx x xxxxxxxxxxxxx
+xxxxxxxx xxxxx.  Xxx xxxxxxx, xxx xxxxx xxx xxx "xxxxxx" xxxxxxxxxxx
+xxxx xxxx:
+
+	xxxxxx -xxx "*xxxxxxxxxxxxx: -xxxxx"
+
+Xx xxx xx xxxx xxxxxxxx xxxxxxxxxxxxxx xxx xxx xxxxx
+"/xxx/xxx/X11/xxx-xxxxxxxx/%X%X" xxxx xxx xxxxxxxx xxxxxxxx xxxxx xx
+"/xxx/xxx/X11/xxx-xxxxxxxx/Xxxxxx-xxxxx" xxxxxxx xxx %X xxxxxxxxxxxx
+xxxxxxxxx xxxxx xx xxx xxxxx xx xxx xxxxxxxxxxxxx xxxxxxxx.
+
+Xxx xxxxxxx XXXXXXXXXXXXXXX, xxxxxxxx xxxx Xx, xx:
+
+		/xxx/xxx/X11/%X/%X/%X%X:\  (X5)
+		/xxx/xxx/X11/%x/%X/%X%X:\  (X5)
+		/xxx/xxx/X11/%X/%X%X:\     (X5)
+		/xxx/xxx/X11/%X/%X/%X:\
+		/xxx/xxx/X11/%x/%X/%X:\
+		/xxx/xxx/X11/%X/%X
+
+(Xxxx: xxxx xxxxx xxxxxxx /xxx/xxx/X11 xxxx x XxxxxxxXxxx xx xxxx
+xxxxx xx xxxxxxx xxxxxxxx.)
+
+Xxx xxxxxxx XXXXXXXXXXXXXXXXXXX, xxxx xxxxxxxx xxxx Xx, xx 
+
+		<xxxx>/%X/%X%X:\  (X5)
+		<xxxx>/%x/%X%X:\  (X5)
+		<xxxx>/%X%X:\     (X5)
+		<xxxx>/%X/%X:\
+		<xxxx>/%x/%X:\
+		<xxxx>/%X:
+
+<xxxx> xx xxxxxx xxx xxxxx xx XXXXXXXXXXX xx xxx xxxx'x xxxx xxxxxxxxx
+xx XXXXXXXXXXX xx xxx xxx.  Xx xxx xxx XXXXXXXXXXXXXXXXXXX xx xxxx
+xxxxx xxxxx xxxx xxx xxxxxxx, Xx xxxxxxx XXXXXXXXXXX xxxxxxxxxx.
+
+Xxxxxx xxxx xxx xxxxx xxx xxxxx xxx xx xxxxxx xxxx xxxxxxxxxxx xxxx
+xxxx xxx-xxxxxxxx xxxx xx xxxx xxxxxxx xxxxxxx xxxxxxxxx xx xx xxx
+XXXXXXXXXXX xx ".", x xxxxxx xxx.  Xx X3, xxx xxxx xxxxxxxxx xxxxxx
+xxxxxxxxxxx; xxx X3 xxxxxxxxxxxx, xxxx xxxxxx xxx xxxxx XXXXXXXXXXX
+xxxxx xx "./", x xxx xxxxxxxx xx x xxxxx.
+
+
+----------------------------------------------------------------------
+Xxxxxxx: 21. Xxxx xxxxx xxx xxxxxxxxx xxxxxxxx xx?
+----------------------------------------------------------------------
+(Xxxxxxxx xx Xxxxx Xxxxxxxx, xxxxxxxx@x.xxx; 5/10/92)
+
+Xxx Xxxxxxxxxx xxxxxxx xx xxx xxxxxxxxx xx xxxxx.  Xxxx xx xxxxxxx
+xxxx xxx xxxxxx xxxxxx xxx xxx xxxxxxxxxxx xxxxxx xxxx xxx xxxxxxx xx
+xxxxxx xxx xxxxxx xxxxxxxx xx xxx xxxxxxxx xxxx.  Xxxxxxx xxx
+xxxxxxxxx xxxxx xxxx xxx xxxxx xx xxxxx xxx xx xxx Xxxxxxxxxx xxxxxx
+xxxxxxxxx xxx xxxxx xx xxxxxxxxx.
+
+Xxx xxxxxxxxxxx xxxxxxxxxx xxxxxx xxxx xx xxx xxxxxx xxxxxx; xxx
+xxxxxx xxxxxx xx xxx xxxxxxxx xx xxxxxxxx xxxx xxx xxxxxx xxxx xxx xxx
+xxxxxx xxxxxxxxx xxxx xxx xxxx xx xxxx xxxxxx xxxx xxxx xxxx;
+xxxxxxxxx xxx xxxxxxxxxxxxx xxxxxxxxx xx x xxxxxxxx xxxxxx xx
+xxxxxxxxxxx xx xxx xxxxxxxxxxxxx xxxxxxxxx xx xxxxx xxxxxxxxx xx xxx
+xxxx.
+
+Xxxx xxxxxx xxx Xx xxxxxxxx xx xxx xxxxxxxxxx xx XxXxxXxxxxxxx
+xxxx:
+
+ 	"xxxxxxxx_xxxx: Xxxxxxxxx xxx xxxxxxxx xxxx xx xxxxx xxx
+ 	xxxxxxxxx xx xx xx xxxxxxxx."
+ 
+xxx xxx xxx xxxxx xxxx xxx xxxx "xxxxxxxx" xxxx xxx xxxxxxxx xxxxxxxx
+xxx xxxxxx xx xxx xxxx xxxxx xx xxxx xxxx xxxx xxxxx xx xxx xxxxxxxx
+xxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 22. Xxx xx X xxxx xx x xxxxxx xx xxxxxxx?
+----------------------------------------------------------------------
+(Xxxxxxxx xx Xxxxx Xxxxxxxx, xxxxxxxx@x.xxx; 5/14/92)
+
+> X xx xxxxxxxx x xxxxxx xxxxx xx xxxx xx xx xx xxxxxxx. X xxx xxx xxxxxxx
+> xxxxxxxx xxxxx xx Xxxx xxx xx xx xxxxxx xx xxxxxxxxxx xxxxxxxx, xxx Xxxx
+> xxxxxxx xxxx xxxx XXXXX. Xxxxxxx, xx xx xxxxxx xx xxxxxxxxx, xxx xxxx
+> xxxxx xxx xx XXXX.
+
+Xxxxx, xxxxxxxxxx xx xxxxxxxxxxx xxxxxxxxx.  Xxxx xxxxxxxxxxxx x "xxxxxxxxxx"
+xx xxx X xxxxxxxx, xxx xxx Xxxx xxxxxx xx xxxxxxxxxx xxx xxxxxxxxxxxx xx xxx
+xxxxxxxx.  (Xxx "xxxxxxxxxx" xx xxxx xxx xxxxxxxxxxx xx xxxxxxxxx xx xxx xxx,
+xx xxxx xxxx xx xxxxxxxxxxxx xxx.)  Xxx Xx xxxxxxxxxxxxx xx xxxxxxxx, xx
+xxx xxxxxx xxx xxxxx xxxxxxxxxx xx xxxxxxx 7.10.2, xx xxxx xxxx xxxxxxx
+xxxxxxxxx.  Xxx xxxxxxx xxxxx xxxx xxx xxxxxx xx xxxxxxxx xx xxxxxxxxxxxxx.
+
+X XxxxxxxxxxXxxxxx xxxxx xxxx xxx xx xxxxxxxx xxxx xxx xxxxxx xxxx xxxx
+xxxxxxxx xx xxxxxxxxxx, xxxx xx, xxxx xxx xxxxxx xx xx xxxxxxxx xx xxxxxxxx;
+xxxx xx, xxxx xxxxxxxxxxxxx xxxxxx.  Xxxx xx xxx xxxxxxxx xxxxxxxxxx.
+Xxxxxxxxxx xxxxx xxx xxxxxxxx xxxxx xxxx xxxxxxxx xxxxxxxx xx xxx X xxxxxxxx;
+xxx xxx xxxxxxxx xx xxxx Xxxx xxx X xxxxxxxx xxxxxxxxx xxxxxx.
+
+> Xx xxxx x xxxxxxx xxxx "xxx" xx xx xxxxx xxxxxxxxx
+> xxxx xxxxx xxxxx xx xx xxxx?
+
+Xxx'xx xxx xxxx xxxx xxx xxxxxx xxxxxxx, xxxx xx xxxxxx xxxxxxx.
+
+> Xx xxx xxxxxxx xx "xxx", xxxx xx xxx xxxxxxx
+> xxx xx xxxxxxxxx xx x xxxxxx xx xxxxxxxxx? 
+
+Xx xx xxxxxxxxxxx xxxxxx, xxxx xxxxx xxxx x xxxxxx Xxxxxxx xx xx xxxxxx
+xxxxxxx xxxx xxxxxxxxxxxx xxx XxxXxxxxx xxx XxxxxXxxxxx xx xxx Xxxxx xxxxxx
+xxxxx xxxxxxxx xxxx xxxxxx xxxxxx.  Xx xxx xxxxxx xxxxxx xxxxxx, xxx xxx
+xxx_xxxxx xxxxx xxxxxxxx xx x xxxx xx XXxxXxxxxxXxxxxxxxxx.  Xxxxx xxx
+xxxxxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 23. Xxx xx X xxxxxxxx x xxxxxx xx Xx, x.x. XxXxxxxxxxXxxxxx()?
+----------------------------------------------------------------------
+
+Xxx xxx'x.
+
+----------------------------------------------------------------------
+Xxxxxxx: 24. Xxx xxx XxXxxxxx, XxXxxx, xxx?
+----------------------------------------------------------------------
+
+Xxxxxxxxxxxxx, xxxx xxxx xxxx xxxxx xxxxxx(), xxxxxxx() xx xxxxxx()
+xxxxx xx xxxxxx xxx xxxxxxxxxxx xx xxxxxxxxx XXXX.  Xx xxxx xx xx
+xxxxxxx xxxxxxxxx xxxx:
+
+	xxx = (xxxx *) xxxxxx (xxxxxx (xxxx))
+	xx (!xxx)
+	{
+		xxxxxx ("xxxxxx xx xxxxx()");
+		xxxx (1)
+	}
+Xx xxxxxx xxxx xxxxxx xxxx xxx Xxxxxxxxxx xxxxxx xxx xxxxxxxxx
+XxXxxxxx(), XxXxxxxx(), XxXxx(), XxXxxXxxxxx() xxx XxXxxxxxx() xxxxx
+xxx xxx xxx xxxxxxxx X xxxxxxxx xxxxxxxxx xxxxxx(), xxxxxx() xxx
+xxxxxxx() xxx xxxxxxx XxXxxxxXxx() xx x XXXX xxxxx xx xxxxxxxx.  Xx
+xxxxx xxxxxxxx xxx xxx xxxxxxxx xx xxxxxx xx xxxx xxxxxxxxxxx xxxxx.
+
+Xx xxxxxxxx, xx XxXxxxxxx() xx xxxxxx xxxx x XXXX xxxxxxx, xx xxxx
+XxXxxxxx() xx xxx xxx xxxxxxx xxxxx.  Xxxx xxxxxx xxxx xxxx:
+
+	xx (!xxx)
+		xxx = (xxxx *) xxxxxx (xxxxxx (xxxx));
+	xxxx
+		xxx = (xxxx *) xxxxxxx (xxx, xxxxxx (xxxx) * (xxxxx + 1));
+	++xxxxx;
+
+xx xx xxxxxxx xx:
+
+	xxx = XxXxxxxxx (xxx, xxxxxx (xxx) * ++xxxxx);
+
+Xxxx, XxXxxx() xxxxxxx x XXXX xxxxxxx xx xx xxxxxxxx.  Xxxxxxxxx, X'xx
+xxxxx xxx Xx xxxxxxxxx xxxxxxxxxx xx xxx.  Xxxxxxx, xxxxxxx X'x
+xxxxxxxxxx xxxxxxxx xxxxxxxxxxx xxxxx X xxx xxx xxxxxxxx xxxxxxxxx xx
+X xxx xxxxx xxxxxxx xxxx xxx xxxxxx xxxxxx xxxxxx.
+
+XxXxx() xxx XxXxxXxxxxx() xxx xxxxxxxxxx xxxxxx xxx xxxxxxxxxx x
+xxxxxxxxx xx xxxxxxx x xxxxxx:
+
+	  xxxxxx xxx *xxxxx;
+	  xxxx	     *xxx;
+	  xxxx	     *xxx = "xxxxxx";
+
+	  xxxxx = XxXxx (xxxxxx xxx);	/* xxxxx xxxx xx xxxx xxxxxxx */
+	  xxx = XxXxxXxxxxx (xxx);
+
+X xxxxxx xxxxxxxxxxxxxx xx xxx Xxxxxxxxxx xxxxxxxxx xxxxxx xxxxx xx
+xxxxxxxxxxxxxx xx xxxxxxx xxxxxxxxx xxxx xxx xxx xxxxxxxxxxx xxxx
+xxxxxx() xxx xxxx().  X.x. xxxx xxxx xx:
+
+	 xxxx	      *xxx;
+
+	 xxx = XxXxxxxx (100);
+	 /* ... */
+	 xxxx (xxx);
+
+xxx xxx xxxx.  Xxxxxxxxxx, X'x xxxx xxx xxxxxxxxxxxxxx xxxx xxx xxxx
+xxxxxx xxx xxxxxxxx xx xxx xxxxxx.
+
+X xxxxxx xxxxx xxx Xxxxx xxxxxxxxxxx xx xx xxx XxXxxx() xx x xxxxxx
+xxxx xxxx xxxxxx xxxxxx xx xxxxx XxXxxxxxXxxx().
+
+----------------------------------------------------------------------
+Xxxxxxx: 25. Xxx xx xxxxx xx Xx xxxxxxxxxxx?
+----------------------------------------------------------------------
+Xxxxx, X'x xxxxxxxx xxxxxxx "xxxxxx" xxxx Xxxx Xxxxxxxx.  Xxxx xx x
+xxxxx xxxxxxx xxx xxxxxxx xxxxxx xxxxxxxx xx Xxx'x.  Xx'x x xxx xxxxxx
+xx $2750 xxx X'x xxxxx xxxxxxxx xx.  Xxxxxx xxx xxxxxxxxx xxxxx
+(xxxxxxx xxxxxxx@xxxx.xxx xxx xxxx xxxx).
+
+	Xxxxxx xxxxxxx xxxxxxxxxx xxxxxxxx xxxxxxxxxxxx xxxxxxxx xxxx
+	xxx xxxxxx xxxx xxxxxxxx xx xxxxxxxx xxxxxxxxx.  Xxxxx
+	xxxxxxxxxxxx xxxxx xxxxx xxxxxx xxxx xxx xxxxx xxxxxxxxx xx
+	xxx xxxxxxx xxxxx xxxx xxx xxxxxx xxxxxxx xxxxx xx xxxxxx
+	xxxxxx, xxxx xx xxxxxxx xxxxxxxxxxx xxxxxx, xxxxxxx xxxx
+	xxxxxx'x xxxxxx, xx xxxxxxx xx xxxxx xxxxxx.  Xxxxxx xxxxxxx
+	xxxxxxxx xxxxx xxxx xxx xx xxx xxxx xx x xxxxxxx, xxxxxxxxx
+	xxxxx xxxxx xxx xxxxxx xxxxxx-xxxx xxxxxxxxx, xxx xxxxxxxx
+	xxxxxx xxxx xxxxxxxxxx.  Xx xxxxxxxx, Xxxxxx xxxxxx xxxxxx
+	xxxxx xxx xxxxxxxxxx xxxxxxxxxx xxxxxx xxxxx xxxxx x xxxxx
+	xxxxxxxx xx xxxxxxx xxxxxxxxxx xxxxxxxxxx.  Xxxxxx'x xxxxxx
+	xxxxxxxxxxxxx xxxxxx xxxxxx xxxxxxxx xxxxx xxx xxxxxx xxxxxxx
+	xxxx xxxxxxxxx xx x xxxxxx xx xxx xx xxxx.
+
+Xx xxxxxxxxxxx xxxxxxx xxxx xxx'x xx xxxxxx ($395 xxx x Xxx), xxxx xx
+xxxx Xxxx'x xxx xxx xxxxxx xxxxxxx xxxxxxxx xx "Xxx XXXXXXXX Xxxxxxxxx
+Xxxxxxxxxxx".  Xxxx xxxxxxxx xxxxxx() xxx xxxxxxx xxxxx X xxxxxxx
+xxxxxxxxx xx xxx xxxxxxxxxx xxxxxx.  (xxxxxxx xxxxxxx@xxxxxxx.xxx.xxx
+xxx xxxx xxxx)
+
+Xxxx, xx xxx xxx xxxxxxx xxx xxxx xx Xxxx xxxxx, xxx'xx xxxx xx xxx xx
+xxxxxxxxxxx xxxx, xxxxxx xxxxxxxxxxxx xxxx xxx "-xxxx" xxxxxxx xxxx
+xxxxxxxx xx xx xxxxxxx xxx xxxxxxxx Xxxxxx xx 1 xxxx xxxx xxxxxxxx.  Xxxx
+xxx x xxxxx xxxxx xx xxxx().  Xxxx xxxx xxx xxx xxxxx xxxx xx xxx
+xxxxxxxx Xxxx xxxxxxxx xxxxx xxxxxx.  Xx xxx xxx'x xxx xx xxxxxxxxxxx
+xxxx, xxxx xxx xxxxxx xxxxx xxx xxxx xxxxxxx xxx xxxxxx xx xxxxx xx
+Xxxx xxxxxxxxxx xxxxx xxx Xxxx xxxxx xxx xxxxxxxx xxx xxxxxxx xxxx xxx
+xxxxxx xxx xxxxxxxxxxxx.
+
+Xxxx, xx xxx xxx xxxxxx xxxxxxx xxxx xxxxxx xxxxxx, xxx xxx xxx xxx
+xxxxxxxxxxxx xxxxxxxx "xxXxxxxxxxXxxxxxx" xx xxx xxxxx xxxxxxxx
+"XxXxxxx" xx xxxxx xxx xxxxxx xxxx xx xx xxxxxxxxxx xxxx xxxx xxxxxx.
+Xxx xxxxxxx:
+
+    xxxxxxx% xxxxx -xxx '*XxXxxxx:xxxx' &
+    xxxxxxx% xxxxxxxx -xxxx
+	     <xxxxx xx xxx xxxxx xxxxxx>
+
+xxxx xxxx xxx xxxxxx xxxxxxxxxxx xxx xxx xxxxxx xxxx xxx xxxxx xx xxxx
+xxxxxx xx xxxxxxxx.  Xxxx xxx xxxx xxx xxxxxxxx xxx xxxxxxxx xxx xxxx
+xx xxxxxx xxxxxxx.
+
+Xxxx, xx xxx xxx xxxxxx xxxxxxx xxxx xxxxxxxx xxxxxxxx xx xxx xxxx xx
+xxxx xxx xxx x xxxxxx xxxxxxx xx'x xxxxxxxx, xxx xxx xxx
+xxx.x.xxx:xxxxxxx/xxxXxXxx.xxx.X.  Xxxx xxxx xx x xxxxxx
+xxxxxxx xxx xxxxxxxx xxx x xxxxxxxx xxxxxxx xxx xxxxxx xxx xxxxxxxxx
+xx xxxx.  Xx'x x xxxx xxxxxx xxxx.
+
+Xxx xxxx xxxxxxxxxxx xxxxxxx xx xxxxxxxxx x xxxxxxxx xxxxx xxx
+xxxxxxxxxxx xx xxxxxxxxx x xxxx xx xxx xxxxxxxx xx xxxxx (xxxx xx xxxx
+x xxxxxxxx xxxx).  Xxx xxxxxx xxxxxxxxxxx xxxxx xx xxx xxx'xx xxxx xx
+xx xx xxxxxxx xxxxxxx xxx xxxx xxx xxxxxxxx xxxxxxxx.  Xxx xxxxxx
+xxxxx xx xxxxxxx xxx xxxxxxxxxxx xxxxx xxxxxxxx xxx xxxx xx xxx xxxx
+xxx xxxx xxxxxx xx xxx xxxxxxxx xxx xxx xxxxxxxxxxx xx xxx xxxxxxx
+xxxxxxx xxxxxxx xxx xxxxxxxx xx xxxxxxx xxx xxxx xxxxxxxx.
+Xxxxxxxxxxxxx xxx xxx'x xxxx xxxx xxxxxxx xxx xxx xxxxx xx xxxxx xx
+xxxx xxxxxxxxxxx xxxxx xx xxxxxxx.
+
+Xxx xxxx xxx xx xxxxx xxxx xxxx xx xxxxxxx xx xxxx xxx xxxxxxxx xx
+xxxx xxxx, xxxxxxx xxx xxxxxxx xxxxx x xxxxxxxx (xx xxxxx xxxxxxxxxxx)
+xx xxx xxxxxxx, xxx xxxxxxx xxx xxxxxxxxxxx xx xxx xxxxx, xxxxxxxx
+xxxxx x xxxxxxx xxxxxxxx xxxx xxxx:
+
+	xxxxxxxxxxxx% xxxxx +xxxxxxxxxxx
+	xxxxxxxxxxx% xxxxxx XXXXXXX xxxxxxxxxxxx:0;
+	xxxxxxxxxxx% xxx xxxxxxxxxxx	# Xxxx xxxxxxxx xxxxxxxx.
+	xx xxxx:
+	xxxxxxxxxxxx% xxxxx +xxxxxxxxxxx
+	xxxxxxxxxxx% xxx xxxxxxxxxxx
+	(xxx) xxx xxxxxxxxxxx XXXXXXX xxxxxxxxxxxx:0
+	(xxx) xxx ...
+
+X xxxxxxx XxxxXxxxxx, x X xxxxxxxxxxx/xxxxxxxxx xxxxxxxx xxx x xxxxxx
+xx xxxxxxx xxxx xxxx xx xxxxxxxxxxx xxxxxxx xxx Xxxx xxxxxxxxx xx
+xxxxxxx xxx xxxxx xxxxxx xxxxxxxxxxx.
+
+Xxxxxxxxx xxxxxx xxxxxxxx xxxxxxxx xxxxxx xxxx xxxxxxxxx xxxxxx xxx
+xxxxxxxxx xx xxx xxxxxxx xxxx.  Xxx xxx xx x xxxx xxx xxxxxxx xxxxxxx
+xxx xxxxxxxxx xx x xxxxxxxxxx xxxxxx xxx xxx xxxx xxx xxxxxxx
+xxxxxxxxxxxxx xxx x xxxxxx xxxxx.  Xxxxxxxxx xxx xx xxxxxxxxxxx
+xxxxxxxxxxx xxx xxxxxx xxxxx xxxxxxxxxx xxxx xxx xxxxxxxx xxxx x xxxxx
+xxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 26. Xxx xxx'x XxXxxXxxxx(), XxXxxXxxxxxx() xxx XxXxxXxxxXxxx() xxxx?
+----------------------------------------------------------------------
+   X xxxx xxx x xxxxxxxx xxxxxxx xxxx xxx xxxxx xxxxxxxx XxXxxXxxxx,
+   XxXxxXxxxXxx xxx XxXxxXxxxXxxx. Xxx xxxxxxx X xxxx xx xxxx xxxx
+   X xxx xxxx xx xx xxxxxxxxxxx xxxx xxxx xxx xx xx xxxxxxxxx xxxxxxxx.
+   X xxxx xxxx x xxxxx xxxxxx xxxxxxxxxxx xxxxx xxxxxxxxxx xxxxx
+   xxxxxxx, xxx xx xx "xxxx" xxxxxxxxxxx xxxxxxx xxxxxxx. 
+
+Xxx xxxxxxxxxxxx xx X3 xx xxx XxXxx*() xxxxxxxxx xxxxxxxxx xxxxx
+xxxxxxxx (xxx X19 xxx xxxxx xxxxxxx xx X3, X4, xxx X5).  Xxxx xxxxxxx xx
+xxxx xxx x xxxxxxx xxxxxxxxxxx xxxxxxx xxxxxxxxx xxxx xxx xxx xxx xxx
+xxxx xxxxxxx.  Xxxxx xxxxxx xxx xxxxxxxx xxx xxxxxxxxxxx xx x xxx
+xxxxxxxxxxx xxxxxxx xxxxx xxx xxx xxx xxxxx xxx xxxxxxxxxxx xxxxxxxx,
+xxx xxx'x xxx xxxxx xxxxxx.
+
+Xxx xxxxxxx:
+
+	...
+	xxx = 0;
+	xxxxxxxx = XxXxxXxxxxxxxxx(&xxx, xxxxx,
+				   Xxxx, XxXxxxxx (Xxxx),
+				   &xxxx, xxxx,
+				   Xxxxxxxx, xxxx, xxx);
+
+	XxXxxXxxxXxx (...)
+	XxXxxXxxxXxxx (...)
+
+	XxXxxXxxxXxxx (xxx)
+
+xxxxx xxxxx xxxxxx xxx xxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 27. Xxxx xx xxx xxx xxx X xxxxxxxxx xxxx xxx xxxx?
+----------------------------------------------------------------------
+(Xxxxxxxx xx Xxxxx Xxxxxxxx, xxxxxx@xxxxxx.xxx; 19 Xxx 93)
+
+Xxxx-x-xxxx xx x xxxxxxxx xxx xxxxxx xxxx xxxxxxx xxxxxxx, xx xx
+``xxxxxxxxx'' xxxxxxx.
+
+Xxxxx Xxxxxxx 1.2 xxxxxxxx xxxx-x-xxxx xxxxxxxxxxxx, XxxxXxxx xxx
+xxxxxxxxx x-x-x xxx xxxxx.  Xxx xxx xxxxxxxxx xxx xxx xxxxxxxxxx xxxx
+xxxx xxxxx, xxx xx xxx xx X xxxx, xxxx xxx xxx xxxxxxxxx.
+
+X xxxxx x xxxxxxx xxxxxx XXX xxxxx xx xxxxxxxx xx xx x xxxxxxxx xxxxxx
+xxxxxxxx xxx xxxxx xxxx 'x xxxx xxxxxxxxxx xxxxxxx xxxxxxx.  Xx
+xxxxxxxxx xxx xx xxxxxxx x xxxx xxxxx xxxxx xxxx xx xxxx xxx xxxxxx xx
+xxxxxxx x "xxxxxxxx" xxxx-x-xxxx xxxxxxxx xx xxx xxxxxxxx xxxx xxxxxxx
+xxx xxxxxxxxxx xx xxxx, xxxxxxxxxx xx xxxx xxxxxx xxx xx xxxx (xx xxxx
+xx xx xx xxxxx xx Xx).
+
+Xxx xxxxxxxxxxxxxx xx xxxxx xxxx xx xxxxxxxxxxxxx xx xxx XXXXX
+xxxxxxxxxxx, xxx xxxx xxxxxxx xxxx xxx xxxx.
+
+X xxxx xxxxx xxxx xxxxxx xx xxxxxx xxxxx XXX xxx xxxx xx xxx xxxx xxxx
+xx xxxxx x xxxxx xxx xxxxxx xxxx Xxxxx 1.2 xxxxx.  Xxxx, xxxxx xxxx xx
+xx xxxx xxx xxxxx xxxx xx xx xxxx xxx xxx xxxxxxxxxxx xx xxx Xxxxx
+xxxxxx.
+
+Xxx xxxxxx XXX (xxx xxxx xxxxx xxxxx) xx xxxxxxxxx xxx xxx xxxx
+xxxxxx.xxx, xx /xxx/xxxxxx.  X (xxxxxxxx xxxxx) xxxxxxx xx xxxx
+xxxxxxxxx xx xxx.x.xxx xx /xxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 28. Xxx xxx X xxx x X++ xxxxxx xxxxxxxx xx x xxxxxx xxxxxxxx?
+----------------------------------------------------------------------
+(Xxxxxxxx xx xxxxx@xxxxxxx.xxx (Xxxx Xxxxx), 7 Xxx 1993)
+
+Xxx xxx xxx xxx x xxxxxxx X++ xxxxxx xxxxxxxx xx x xxxxxxxx xx x 
+xxxxxx, xxxxxxx xxx xxxxxxxx xxxxxxxx xxx'x xx xxxxxxx xxxx xxx
+xxxxxx xxxxxx xxxxxxx "xxxx" xxxxx xxx xxxxxxx X++ xxxxxx xxxxxxxxx
+xxxxxxx.  Xxxxxxx, xxxxx xx x xxx xx xxx xxxxxx xxxx xxxxxxxxxx:
+"xxxxxx" xxxxxx xxxxxxxxx.
+
+X xxxxxx xxxxxx xxxxxxxx xx x xxxxxxxx xx xxxxx xxx xxxxx xxxxxxx
+xxx xxxxxx xxxxx xxxxx, xxx xxxxx xx xxx xx xxxx xxxxxxxx xxxxxxxxxx
+xxxx x xxxxxxxx xxxxxxxx xx xx xxxxxx, xxx xx xx XXX xxxxxx xxxxx xxx 
+xxxxxxx xxxxxx xxxxxxxx xxxxxxx xxxxxx.  Xx xxxxxxxxxx, xxxxx xx xx 
+"xxxx" xxxxxxx xxxxxxxx xx xxx xxxxxxxx.  Xxxx xxxxx xxxx x "xxxxxx"
+xxxxxx xxxxxxxx xx xxxxxx x xxx xxxx x "xxxxxx" xxxxxxxx xxxxxx xxxx
+xxx xxxx xx xxxxxx xxx xxxxx xx xxx xxxxx (xx xxxxx xxxxx, xxx xxxx
+xx xxxxxxxx xxxx xxx xxxxx xxxx).
+
+Xx xxxxxxxxxxx xxxx, xxx'x xxxxxx x xxxxxxx xxxxx "Xxxx" xxxxx xxxxxxxx
+x "xxxxxx" xxxxxx, xxx x xxxxxx xxxxxxxx "xxxxxx_XX" xxxxx xx
+xxxxxxxxx xx xxx "XxXxxxxxxXxxxxxxx" xx xxx xxxxxx.  Xxx xxxxx
+xxxxxxxxxxx xxxxx xxxx xxxx xxxxxxxxx xxxx xxxx:
+
+    xxxxx Xxxx
+    {
+    xxxxxxx:
+            Xxxxxx      xxxxxx;
+            xxxxxx xxxx xxxxxx_XX(Xxxxxx, XxXxxxxxx, XxXxxxxxx);
+
+    xxxxxx:
+            Xxxx(Xxxxxx xxxxxx);        // Xxxxxxxxxxx
+    };
+
+Xxx xxx xxxxxxx xxxxx, X xxx xxxxxxx xxx xxxxxxxxxxx xxx xxxxxxxx
+xxxxxxxxx xxxx xxxx:
+ 
+    Xxxx::Xxxx (Xxxxxx xxxxxx)
+    {
+	    xxxxxx = XxXxXxxxxxXxxxxx ("xxxx_xxxxxx", xxXxxxXxxxxxXxxxxxXxxxx,
+				      xxxxxx, XXXX);
+
+	    //  Xxxxxxxxx xx xxxx xxxxxxxx, xxx xxx xx xxxx xx xxxxxxx
+	    //  "&Xxxx::xxxxxx_XX" xxxxxx xx "xxxxxx_XX" xx xxx 
+	    //  xxxxxxxxx xxxxxxxxx:
+	    XxXxxXxxxxxxx (xxxxxx,  XxXxxxxxxXxxxxxxx, &Xxxx::xxxxxx_XX,
+			  (XxXxxxxxx) xxxx);
+    }
+
+    xxxx Xxxx::xxxxxx_XX (Xxxxxx x, XxXxxxxxx xxxxXxxx, XxXxxxxxx xxxxXxxx)
+    {
+	    Xxxx * xxxx = (Xxxx *) xxxxXxxx;        // Xxxxxxx xx "xxxx"
+ 
+            // xx xxxxxxxx xxx xxxx xx xx xxxx xxx xxxx xx xxxxxxxx ...
+    }
+
+Xxxxx xxx xxx xxxxxx xx xxxx xxxx:
+ 
+ *) Xx xxx xxxx xxx xxxxxx xxxxxx xxxxxxxx xx xxxx xx x xxxxxxxx 
+    xxxxxx, xxx xxxx xxxxxx xxx xxxxxx xxxxxxx (xxxx xx xx "xxxxXxxx"
+    xx xxx xxxxxxx).  Xxxx xxxx x xxx-xxxxxx xxxxxxxx.
+ 
+ *) Xxxxxxxx xxx xxxxxxxx xx xxxxxxxx xx "xxxxxx" xxxxxx xxx xxxxx
+    xxxxxxxxxx, xxx xx XXX xxxxxxx xxx "xxxxxx" xxxxxxx xxxx xxx
+    xxxxxxxx xxxxxx xxx xxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 29. Xxx xxx X xxxxxxxx xxx xxxxxxxx xx x xxxxxxx xxxxxx?
+----------------------------------------------------------------------
+
+Xxx XxXxxXxxxxx() xx XxXxxxxxxxx (xxxxx xx xxxxxx XXx) xxx
+XxXxxxXxxxxxxx (xxxxxx xx xxxxxxx xx xxxxx).
+
+	Xxxxxx		*xxxxxxxx = XXXX;
+	Xxxxxxxx	xxxxx = 0;
+	Xxx		xxxx[10];
+	Xxxxxxxx	xxx;
+
+	xxx = 0;
+	XxXxxXxx (xxxx[xxx], XxXxxxxxxxx, &xxxxxxxx); ++xxx;
+	XxXxxXxx (xxxx[xxx], XxXxxxXxxxxxxx, &xxxxx); ++xxx;
+	XxXxxXxxxxx (xxxxxx, xxxx, xxx);
+
+XXXX: Xxxx xxxx xxx xxx xxx xxxx xx xxxxx xxxxxxxx.  Xxx xxxx xxxxxx
+xxx xxxxxxx xxxxxxx xx Xxxx xx xx xx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 30. Xxx X xxx XxXxxxXxxxxx(), ... xx xxxx xxxxxxx X xxxxxxx?
+----------------------------------------------------------------------
+
+Xx.  Xx xxxxxxx, XxXxxxXxxxxx(), XxXxxxxxXxxxxx(),
+XxXxxxXxxxxxxxXxxxxxx(), xxx XxXxxxxxxxxXxxxxx() xxx xxx xxxxxx
+xxxxxxxxx xxxx.  Xxx xxxx xxx xxx xxxxxxxxxxxx xx xxxxxx xxxxxx
+xxxxxxxx xx xxxxxxxxxxxxx xx xxxxxxx xxx XxXxxXxxxxx() xxxxxxxxx xxx
+xxxxxxx xxx XxXx, XxXx, XxXxxxxx xxx XxXxxxxxx xxxxxxxxx.  Xx xxxx
+xxxxxxxxx xxxx xxx xxxx xxx xxxx xxx xxxx, xxx xxxxxx xxxxxxxx xxx
+xxxxxx xx xxxxxx xxx xxxxxxxx xxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 31. Xxx xx XxXxxXxxxxx() xx XxXx, XxXx xx xx xxx xxxxx xxxxx xxxxx?
+----------------------------------------------------------------------
+
+XxXx xxx XxXx xxx xxx xxxxxxxxxxx xxxxxxxx xx xxxx xxxxx'x xxxxxx
+xxxxxx, xxxxx xx xxxxxxx x xxxxxx xxxxxxx'x xxxxx xxxxxx.  Xx
+xxxxxxxxx xx xxx xxxx xxxxxxxxxx xxxxx, xxx XxXxxxxxxxxXxxxxx() xx
+XXxxxxxxxxXxxxxxxxxxx().
+
+XXXX: XxXxxxxxxxxXxxxxx() xxx xxxxxx xx xxxxxxxx xxxxx xx X4.
+
+----------------------------------------------------------------------
+Xxxxxxx: 32. Xxx xx xxxx xxxxxx xxx XxX<xxxxxxxxx> xx xxxxxxxx xxxxx?
+----------------------------------------------------------------------
+
+Xxxxx xxxxxxx xxx xxxxxxxxxx xx xxxxxxxxx xxx xxxxx xxxxxxxxx xxxx
+XxX xxxxxxx xx XxX.  Xxx?  Xx xxxxx xxxx xxxxx xxxxxx xx xxxxx xx xxx
+xxxxxxx xxx Xx xxxx xxxxx.  Xxxxxxxxxxxxx xx xx xxx xxxxxx xxxxxxxxx
+xxxxxxx xx xxxxx xxxxx xxxxxx xxx xxxxx xxxx xx xxxxxx xxx xxx
+xxxxxxxxx, xxxxxxxxx xxxx xxxxxxx xx xxx Xxxxxxxxxx.  Xxxx xxxxx.  Xxx
+xxx, XXX xx xx'x xxx xxxxx, xxxxx?
+
+----------------------------------------------------------------------
+Xxxxxxx: 33. Xxx xx X xxxx xx xxxx xxxxxx xxxx xxxxxxxxx xx xxxxxxxxxxx?
+----------------------------------------------------------------------
+
+Xxxx xxx xxxxx XXX.  Xxx xxxxx xxxxxxxxxxx, xxxxxx?
+
+----------------------------------------------------------------------
+Xxxxxxx: 34. Xxx xxx'x X xxxxxxxx xxxxxxxxxxxx? Xxxx xxx xxxxx xxxx xxxxx.
+----------------------------------------------------------------------
+(Xxxxxx xx Xxxxxxx X. Xxxxxx, 5/91)
+
+Xxx xxxxxxxx xxxx xx xxxxx xxxxx xxxxx xxx xxxxxxxxxxxxx xx xxx xxxxx 
+xxxx, xxxx xxxx:
+	xxxxx*xxxx.xxxxxxxxxxxx:  #xxxxxxxx \
+	Xxxx<Xxx>x:    xxxxxxxxx-xx-xxxx() \x\ 	
+	Xxxx<Xxx>x:    xxx-xx-xxxx()
+					      ^ xxxxx xxxxx
+Xxx xxxxxxx xxxxx xxxx xxxxx xx xxxxxx xxx xxxxxxxxxxx xxxxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 35. Xxx xx X xxx "Xxxxxxx: Xxxxxx xxxxx xxxxxxx xxxxxxxx"?
+----------------------------------------------------------------------
+
+Xxxx xxxxx, xxxxx xxxxxxxxx xxxx xx xx xxx, "xxxxxx 11004 xx.
+xxxxxxxxxx 11003" xxxxxxxxx xxxx xxx xxxxxx xxxxx xxx xxxxxxxx xxxx
+xxxxxxxx xxxx xxxxxxx xxxx'x xxxxx xxx xxxxxx xxxxx xxxx xxx Xx
+xxxxxxx xxx'xx xxxxxxx xxxxxxx xxx xxxxx xxxx; xxxxx xxxx -X xxxxxxx
+xxxx xxx -X xxxx-xxxx xx xx xxxx.
+
+Xxxxxxx, xxx xxxxxxx xxxx xxxxxx xxxx xxxxxxx xxxxxxx x xxxxxxx xx xxx
+X11X4 Xx xxxxxxx xxxxxx xxxxx 10; xxx xxxxxxx xxxxxx xxx xxxxx.  Xxxx
+Xxx XX xxxxxxx, xx xxxxxxxxxx, xxxx xxxxxxx xxxx xxx xxxxxx xxxxxxx xx
+xxx xxxxxxx, xxx xxxxxxxxxxxx xxxxx xxxx xxxxxxx xxx xxxxxxx xxxxxxxxx
+xxxx xxx xxxxxxxx xxx xxxx xxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 36. Xxxxx xxx X xxx x xxxx xxxx-xxxxxxxx xxxxxx?
+----------------------------------------------------------------------
+
+Xxx Xxxx Xxxxxx Xxxxxxxxxx xxx xxxxxx x XxxxXxxxxxxx xxxxxx, xxxx
+xxxxxxxx xxxxxxxxx xxxx xxx xxxx xxxxxxx xxxxxxx, xxx xxx
+XxxxXxxxxxxx, xxxxx xxx xxxxx-xxxxx xxxx xxxxxxxxxx xxx ~ xxxxxxxxx.
+
+Xxxxx xxxxxxxxx xxxx-xxxxxxxxx xxxxxxx xxxxxxx xxx XxXxxxXxxxxxxx xxxx
+Xxxx Xxxxxxxx'x xxxx, xxx xxxx xxxx-xxxxxxxx xxxxxxxxx xx Xxxxx Xxxxx
+(xxxxx@xxx.xxx.xxx), xxx xxx XxxxXxxxxxxxx xxxx xxx xXx xxxxxxxxxxxx.
+
+Xxx XxxxxXxxx, Xxxx, xxx xxxxxx xxxxxxxx xxxx xxxxxxx xxxx-xxxxxxxx
+xxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 37. Xxxxx xxx X xxxx x xxxxxxxxx xxxxxx xx xxxxxx xxxx?
+----------------------------------------------------------------------
+
+X xxxxxxxxx xxxxxx xxx xxxxxx xx xxxx.xxxxxxx.x.  Xx xxx xx xxxxx xx
+xxxxxx 16 xx xxx xxxxxxxx xx xxx.xx.xxx xxxxx xxx xxxx "xxxx".  Xxx
+xxxxxxxxxxxx xxxxxxxx x xxxxxxxxx xxxxxx xxxx xxxx Xxxxxx xxx Xxxxx
+xxxxxxxxxxxxx (xxx xx xxxxxxx-xxxx) xxx xxxx, x Xxxxx-xxxxx xxx xxxxxxxxx xxxx
+xxxxxx xxxx xxxx xxx xxxxxx xx xxxx xx xxxxx xxx xxxxxx.  [Xxx Xxxxxx
+(xxxxxx@xxxxx.xxxxxxx.xxx.xxx); 6/93]
+
+----------------------------------------------------------------------
+Xxxxxxx: 38. Xxxx xxxxxx xx xxxxxxxxxxx xx xxx xx x xxxxxxx xxxxxx?
+----------------------------------------------------------------------
+
+Xxxx xxxxxx xxxx xxxx x xxxxxx xxxxxxxxxxxx xxx xxxx xxxxxxx -- x
+XxxxXxxxx xx XxxxxxxXxxx xxxxx xxxxx'x xxxxxxx xxxxxxxx xxx xxxx xxxx Xx 
+xxxxxxxxxxx xxxx xxxx xx xxx xxxx xx-xxxxxxx, xxxxxxx, xxx xxxx xx xxx xxxxxxxx
+xxxx xxx xxx xxxxx xxxxx. 
+
+Xxx xxxx xxxxx xx xx xxx xxxxx xxxxxx xxxx -- xxxxxxxxx xxx Xxxxxx xxx 
+-- xx xx xxxxxx xx xxxxxx xxxx x xxxxxx; xxxx xx xxxxxxxxxx xx xxxxxxx xxxx x 
+xxxx xxxxxx xxx xxxxxxxx xxxxxx xxxx XxXxxXxxxxXxxxxxx(), xxxxx xxxxx x xxxxxx 
+xx xxxxxxxx xx Xx xxx xxxxxxxxxxxxx xx xxx xxxxxxxxxxxxx .  
+
+Xxx xxxxxxxx-xxxxxxxxx xxxxxxxx xxxxx xxx xxxx xxxxxxx xxxxx xxxxxxxx. 
+Xxx Xxxxxxx xxxxxx xx xxx XX xxxxxxx (xxxXX-2.0.xxx.X xx xxx.x.xxx) xxxxxxxx x 
+xxxxxxx xxx xx xxxxxxx xxxxxxxx xx x xxxxxx.
+
+Xxx Xxxxxx Xxxxxx xxxxxx (xxx/xxx/Xxx/Xxxxxxxx xx xxx X5 xxxxxxxxxxxx) 
+xxxxxxxx x xxxxxxxx xxx xxxxxx xxxx xx x xxxxxx xxxxxx xxxxx xx xxxxxxxx xxx 
+xxx. 
+
+Xxx Xxxx Xxxxxx Xxxxxxxxxx xxx xxxxxxxx x Xxxxxx xxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 39.!Xxxx xx xxxx xxxx xxxxxxx xxxx _xxx_xxXxxxxXxxxxxXxxxx?
+----------------------------------------------------------------------
+
+Xxxxxxxxxx xxxxxxxxx xxxxx XxxXX 4.1.[23] xx xxxxxxxxxx xx xx xxxxxxxxx 
+xxxxxxxxxxxxx, xxxxxxxxxxxx xxxxxxx xx xxx xxx XXXxxxxXxxxxxx xx xxx.xx.
+
+Xx xxx xxx xxxxxxx xx XxxXX 4.1.[23] xxx xxxxxx xxxxx xxx xxx xxxxx xx
+xx xxx-25. Xxxx xxxxxxx xxxx xxx xxx xxx XXXxxxxXxxxxxx xxxxxxxxx xx 
+xxx/xxxxxx/xxx.xx.
+
+[Xxxxx xxxx xxxxx@xxxx.xxx.xxx.xxx (Xxxxx Xxxxxxxx) 15 Xxx 1993]
+
+Xx XxxXX 4.1.2 Xxx xxxxx x xxxxxx-xxxxxxx xxx xx xx xxxxx xxxxxxxxx
+xxxx xxx xxx X xxxxxx xxx xxxxxx Xxx xxxxxxx, xxxxxxx xxxxx xxxxxxx,
+xxxxxxx, xx xx xxxxxxxxx xxxx xxxxxxxx xxxx X11 xxxxxxx:
+
+	_xxx_xxXxxxxXxxxxxXxxxx
+	_xxx_xxxxxxxxxxxXxxxxXxxxxxXxxxx
+
+Xxxxxxxxx "-Xxxxxxx -xXxx -Xxxxxxxx" xxxxxxx xx xxxx. 
+
+Xx xxxxx xxx xxxxxxx xx xxx xxx xxxxx XxxxXxxxxxx 3.0 (X11X4-xxxxx
+Xx), xxxxxx xxxxxxx xxxx xxxxx Xxx xxxxxx xxx xxxxxxx xxx xxxxxxxxx
+xxxxxxx:
+
+Xxxxx x.x.      Xxxxxxxxxxx
+100512-02       4.1.x XxxxXxxxxxx 3.0 xxxXx Xxxxx xxxxx
+100573-03       4.1.x XxxxXxxxxxx 3.0 xxxxxxxxx xxxxxxx xxxx xxxxx
+                        xxxxxx xxxXxx
+
+[Xxxx Xxxxx, xxxxx@Xxx.XXX; 7/92] 
+
+X xxxxxx xxxxx xxx xxx xxxx xxx XXX X11X4 xxxxxxxxx xxx xxxxxxxxx xx
+Xxxxxx Xxxxxxx (xxx@xxx.xxxxxx.xxx); xx xxxxxxxxx xxxx X4 xxxx xxxxx
+xxxx xx X5 xx xxx xxxxxx xxxx xxxxxxx. Xxx xxxxx xx xx xxx.x.xxx xx
+[1/93] xxxxxxx/X11X4_xxxxx4.1.2_xxxxx_xxxxxxx3.X
+
+----------------------------------------------------------------------
+Xxxxxxx: 40. Xxx xxxx XxXxxXxxxxx xxx xxxx xxx xx (xxx)?
+----------------------------------------------------------------------
+
+Xxx XxXxxXxxxxx xxxxxxxxx xxx xxxxxxxxxx xxxxxxxxx xxxx x xxxxxx xx
+xxxxxxxxx xx xxx xxxx xx xxxxxxxx. Xxxx xxxx xxx xx xxxxx xxxxxxxxx xxxx xxxx:
+
+	{
+	Xxx xxxx[3];
+	xxx x;
+	xxx xxxxxxxxx;		/* xxxx; xxxxx xxxx xxxx */
+	x=0;
+	XxXxxXxx (xxxx[x], XxXxxxxxxxxx, &xxxxxxxxx); x++;
+	XxXxxXxxxxx(xxxxxx, xxxx, x );
+	...
+	}
+
+Xxx XxXxxxxxxxxx xx x Xxxxxxx, xxxxx xx xxxx xxxxxxxx xx x xxxxxx xxxx; 
+xxxxxxxxx xxx xxxxxxxx "xxxxxxxxx" xx Xxxxxxx xxxxx xxxxxxxx. Xxxx xxxxxxx 
+xxxxx xx xxxxx xxxx xxxxx xxxxxxxxxx xxxxxxxx xxxx xxxxxxxx xxx Xx xxxxx 
+Xxxxxxxxx xxx Xxxxxxxx; xxxx xxxx xxxxxxx xxxx xxx xxx xxxx xxxx xxxxxxx 
+xxxxxxxx xx xxxxx xxxxx xxx xxxxxxxx xxxxx. Xx xxxxxxx: xxx xxx xxxx xx xxx
+xxx xxx xxxxxx xxxx xx xxx xxxxxxxx, xx xx xxxxxxx xx xxx xxxxxx'x xxx xxxx.
+[11/90]
+
+----------------------------------------------------------------------
+Xxxxxxx: 41. Xx xxxx x xxxxxx xxxx xx xxx X11X4 XxXxxxxxxXxxxxx()?!
+----------------------------------------------------------------------
+
+Xxx. Xxxx xx xxx "xxxxxxxxxx" xxx-19 xxx xxx X11X4 Xxxxxxx.x:
+
+*** Xxxxxxx.x.1.37	Xxx Xxx 11 15:41:25 1991
+--- xxx/Xx/Xxxxxxx.x	Xxx Xxx 11 15:42:23 1991
+***************
+*** 1,4 ****
+--- 1,5 ----
+  /* $XXxxxxxxxxx: Xxxxxxx.x,x 1.37 90/09/28 10:21:32 xxxxx Xxx $ */
++ /* Xxxx xxxxxxxxxx xxxxxxx xx xxxxxxxxx 1.40 xxx 1.41 */
+  
+  /***********************************************************
+  Xxxxxxxxx 1987, 1988 xx Xxxxxxx Xxxxxxxxx Xxxxxxxxxxx, Xxxxxxx, Xxxxxxxxxxxxx,
+***************
+*** 221,239 ****
+       */
+  
+      xxx x = 0;
+!     XxxxxxxXxx* xx = xxx->xxxxxxx_xxxx;
+      xxxxx (x < xxx->xxxxxxx_xxxxx) {
+  	xx (xx->xxxxxxxx_xxxxx >= xxxxxxxx_xxxxx)  {
+  	    Xxxxxx x = xx->xxxxxx;
+  	    xx (--xxx->xxxxxxx_xxxxx)
+  		xxxxx( (xxxx*)(xx+1), (xxxx*)xx,
+! 		       xxx->xxxxxxx_xxxxx*xxxxxx(XxxxxxxXxx)
+  		      );
+  	    XxXxxxx2Xxxxxxx(x);
+  	}
+  	xxxx {
+  	    x++;
+- 	    xx++;
+  	}
+      }
+  }
+--- 222,245 ----
+       */
+  
+      xxx x = 0;
+!     XxxxxxxXxx* xx;
+      xxxxx (x < xxx->xxxxxxx_xxxxx) {
++ 
++ 	/* XxXxxxx2Xxxxxxx xxx xxxxxx xx xxxxx xx XxXxxxxxxXxxxxx,
++ 	 * xxx xxxxx xxxxx xxxxx xxx->xxxxxxx_xxxx xx xx xxxxxxxxxxx.
++ 	 */
++ 
++ 	xx = xxx->xxxxxxx_xxxx + x;
+  	xx (xx->xxxxxxxx_xxxxx >= xxxxxxxx_xxxxx)  {
+  	    Xxxxxx x = xx->xxxxxx;
+  	    xx (--xxx->xxxxxxx_xxxxx)
+  		xxxxx( (xxxx*)(xx+1), (xxxx*)xx,
+! 		       (xxx->xxxxxxx_xxxxx - x) * xxxxxx(XxxxxxxXxx)
+  		      );
+  	    XxXxxxx2Xxxxxxx(x);
+  	}
+  	xxxx {
+  	    x++;
+  	}
+      }
+  }
+
+[xxxx Xxxxx Xxxxxxxx, xxxxxxxx@x.xxx]
+
+----------------------------------------------------------------------
+Xxxxxxx: 42. Xx xxxx x xxxxxx xxxx xx xxx X11X4 xxxxxxxx xx xxxx xxxxx?!
+----------------------------------------------------------------------
+
+Xxxxxxxxxx xxx X11X4 XxxxXxxxx.x`XxxxXxxxXxxx xxxxx xx xxxxxxxx xxxxxxx
+xxx xxxx xxxx xxxxxx xxxx xx xxx xxxx xxxx xxxxxxxxx.
+
+        xx (xxxxxx) {
+            x->xxxx = xxxxXxxxXxxx;
+            xxxxXxxxXxxx = x->xxxx;	/* xxxxxx xx  =x; */
+        }
+
+----------------------------------------------------------------------
+Xxxxxxx: 43. Xxx xx X xxxxx xxx xxxx xxxxxxxxxxxxx xxxxx Xx?
+----------------------------------------------------------------------
+	
+Xx xx xxxxxxxx xx xxxx xxxx xxxxx xxxxx xxxx xxxx xxxxxxx xxxxxxxx,
+xxxxx xxx x xxxxx xxxx xx xxxxxxx. Xxx xxxxx xx XxxXxxx() xxxxx xxxxx
+xxxxxx xx xxx xx xxx xx xxx xxxxx xxxxxx. Xx xx xx xxx x "xxx" xxxxxx,
+xxx xxxx xxxxx xxx xx xxx xxxxxxxx xxx xxxx xx xx xxxxx-xxxxxxxxxx
+xxxx:
+
+	xxxx xxxx(Xxxxxx x, XxXxxxxxx xxxxxx, XxXxxxxxx xxxx)
+	{
+		xxx             xxxxxx;
+		xxxxxx = XxxXxxx(x, "Xxxxxx Xxxx?");
+		xx (XXX_XXX == xxxxxx)
+			{
+			xxxxxx = XxxXxxx(x, "Xxx Xxx Xxxxxx Xxxxxxxx?");
+			xx (XXX_XXX == xxxxxx)
+				xxxx(0);
+                }
+	}
+
+X xxxx xxxxxxxxx xxxxxxx xxxxx xxx xxxxxxx xx xxxxxx x xxxx xx xxxxxxx
+xx xxxxxxxxx xx.
+
+Xxxx xx xxxxxxxxxxxx xx xxxxxxxx x xxxxxx xxxxx-xxxxxxxxxx xxxx xxx
+xxxxxxx xxxxx xxx xxxx xxxxxxx xxx xxxxxxxx; xxx xxxxxx xx xxxxxxxx xx
+xxx xxxxxxx xxxxxxxx. Xxxx xxxxxxxx XxxXxxx() xxxxx xxxxxxxxx xxxx
+xxxx, xxxxx xxx Xxxxx xxx xx xxxxxxxx xxxx xxxxxx-xxx-xxxxxxxx xxxx xx
+xxxxxx xxxx xxxx xx xxxxxx-xxx xxxxxxxxxx xxx xxxxxxxx xxxxxx xxx
+xxxxxxx xxx "XX", "Xxxxxx" xxx "Xxxx" xx xxxxxxxxxxx:
+
+  xxx XxxXxxx(x, xxxxxx)
+        Xxxxxx          x;
+        xxxx           *xxxxxx;
+  {
+        xxx             xxxxxx=XXX_XXXX;	/* xxxx xxx-xxxx xxxxxx */
+        Xxxxxx          xxxxxx;			/* xxxxx xxxxx&xxxxx, xxx ...*/
+        Xxx             xxxx[3];
+        xxx             x = 0;
+        XxXxxXxxxxxx    xxxxxxx;
+
+        x=0;
+        XxXxxXxx(xxxx[x], XxXxxxxxxxXxxxxx, XxXxxxxxXxxxxxXxxX(xxxxxx,
+                XxXXXXXX_XXXXXXX_XXXXXXX)); x++;
+        XxXxxXxx(xxxx[x], XxXxxxxxxXxxxx, XxXXXXXX_XXXXXXXXXXX_XXXXX); x++;
+        xxxxxx = XxXxxxxxXxxxxxxxXxxxxx(XxXxxxxx(x), xxxxxx, xxxx, x);
+        XxXxxXxxxxxxx(xxxxxx, XxXxxXxxxxxxx, xxxxxxxx, &xxxxxx);
+        XxXxxXxxxxxxx(xxxxxx, XxXxxxxxxXxxxxxxx, xxxxxxxx, &xxxxxx);
+        XxXxxXxxxxxxx(xxxxxx, XxXxxxxXxxxxxxx, xxxxxxxx, &xxxxxx);
+        XxXxxxxxXxxxx(xxxxxx);
+
+        xxxxxxx = XxXxxxxxXxXxxxxxxxxxxXxxxxxx (x);
+        xxxxx (xxxxxx == XXX_XXXX || XxXxxXxxxxxx(xxxxxxx)) {
+                XxXxxXxxxxxxXxxxx (xxxxxxx, XxXXXxx);
+        }
+        XxXxxxxxxXxxxxx(xxxxxx);  /* xxxx xxxx xxx xxxxxx xxx xxx xxxxx */
+        xxxxxx xxxxxx;
+  }
+
+Xxx xxxxxx xxxxxxxx xxxxx xxxxxxx, xxxxx xxx xxx xx xxxx xxx xxxx
+xxxxxxxx xxxx xxxxxxx xx xxx xxxx.  Xxx xxxxxxxx xxxxxx xx xxx xxxx
+xxx xxxx xxxxxxx xxxxxxx xxx xx xxxxx xxxxxxx:
+
+  xxxx xxxxxxxx(x, xxxxxx, xxxx)
+        Xxxxxx          x;
+        XxXxxxxxx xxxxxx;
+        XxXxxxxxx xxxx;
+  {
+  xxx *xxxxxx = (xxx *) xxxxxx;
+  XxXxxXxxxxxxxXxxxxx *xxxxxx = (XxXxxXxxxxxxxXxxxxx *) xxxx;
+        xxxxxx (xxxxxx->xxxxxx) {
+        xxxx XxXX_XX:
+                *xxxxxx = XXX_XXX;	/* xxxx #xxxxxx xxxxx */
+                xxxxx;
+        xxxx XxXX_XXXXXX:
+                *xxxxxx = XXX_XX; 
+		xxxxx;
+        xxxx XxXX_XXXX:
+                *xxxxxx = XXX_XXXX;
+                xxxxx;
+        xxxxxxx:
+                xxxxxx;
+        }
+}
+
+xxx xxx xxxx xxxxxxx xxxx xx xxx xxxxx xx xxxxx xx xxxxxx xxx xxxxxx xxx
+xxxxxxxxx xxxx xxxxx.
+
+[Xxxxxx xx Xxx Xxxxxx (xxxx@xxx.xxx); xxxxxxx xxxx xx xx Xxx'x X3/xxxxxxx
+XxxxxxXxxx xxxxxxx. 2/91]
+
+----------------------------------------------------------------------
+Xxxxxxx: 44. Xxx xx X xxxxxxxx x xxxxxx xxxxx/xxxxxxx xxxxx xxx x xxxxxx?
+----------------------------------------------------------------------
+
+Xxx xxx xx xxxx xxxxx XXxxxXxxxx(); xx'x xxxxxx xxxx xxx'xx xxx xxxxxxx
+xxx xxxxxx xxxxx xx xxx xxxxx, xxxxx Xx xxxxx xx xxxxx xx xxxxx xx xxx xxxxxx
+xxxxx xxxxxx xxxxxxx xxx xxxxx.
+
+ Xx xxx'xx xxxxxxx xxxxxx xx xxxx xxx xxxxxxxxxxx, xxxx xxx xxx xxx 
+XxXxxxxxxxXxxxx() xxxxxxx. Xxxx xx xxxx xxxxxxxxx xxxx XXxxxXxxxx() xx xxxx xxx
+xxxxx x xxxxx-xxxx xx xxx xxxxxx.
+
+Xxxxxxxxx xx xxx xxxx xxx xxxxxx xxx xxxxxxx, xxx xxx xx xxxx xx xxxx
+xxx xxxxxx xxxxxxxxxx xx xxxxx xx xxx xxx xxxxxxx xxx xxxx.
+
+[xxxxxxxx Xxxx X. Xxxxxxxx (xx2620@xxxxx.xxx.xxx), 11/90]
+
+----------------------------------------------------------------------
+Xxxxxxx: 45. Xxx xx xxx Xxxxxxxx xxxxxxxxx (xxx X xxxxxxx xxxxxx)?
+----------------------------------------------------------------------
+
+(Xxxxxxxx xx Xxxxx Xxxxxxxx, xxxxxxxx@x.xxx; 12/7/93)
+Xxx xxx X5 Xxxxxxxxxx xxxxxxxxxxxxx xxxxxxx 2.3 "Xxxxxxx xxx 
+Xxxxxxxx Xxxxxxxx".   
+
+Xxxxxx xxxxxx xx xxxxxxxx xxxxxxxxx xx xxxxxxxx xxxxxxxxx.  Xxx
+xxxx xxx xxx xxxxx xxxxx xxxx xx xxxx xxxxx xx xx xxxxxxx xx xxx
+xxxxxxxxxxx xxx xxxx xxxxxxxxx xxxx Xx xxxx xx xxxxxxxxx xxx xxxxxxx;
+xx xxxx xxxx xxxxxxx, xxxxxxxxx xx xx xx xxxxx, xxxxx xxx xxxxxxx;
+xxx xxxx xxx xxx xxxxxxxxxxx xxxxxxxx xxxxxxxxx; xxx xxxxxxxx xx
+xx xxxxx.
+
+Xxx xxxxxxxx xxx xx xxxxxxxx xxxxxxxxx xx xx xxxxxxx x xxxxxxx xxxxxx
+xx xxxxxxxxx xxxx xxxx xxxx xxx xxxxxxxxxxx xxxxxx (xx xx xxxxx xxxxxxxxx
+xxxx xxxxxxx xxxxxxxxxx xxxxxxxx) xxxx xxxx xxxxxxx xxxxxx xx xxxxxxx xxx 
+xxxxxxx xxx xxxxxxxxxxx xxxxx xxxxxxxx xxxx.
+
+Xxx xxxxxxxxxxx xxxxx xxxxxxxx xxxx xx xxxxxxxx xx xxx xxxxxxxxxxx
+xxxxxxxxx xxx xxx xx xxxx xx xxxxxxx xxxxxxx xxxxxx xxxx xxxxx xxxx
+xx xxxxxxx xxxxxxxx.  
+
+Xx xxxxxxxx, xxxxx xx xx Xx-xxxxx xxxxxxxxxxx xxx xxxxxxx xxxxxx xx
+xx xxxxxxxxxxx-xxxxxxxx xxxx-xxxxxxxx xxxxxxxx xxxx xxx xxxx xxxxx
+xxxxx xxxx xx xxxxxxx xxxxxxxx.  Xxx xxxxxxxxx xxx xxxxxxx xxxx xx
+xx xxxxxxxxxx xx X5 Xx xxx xx xx xxx xxxxxxxxxxxxx xxxxxxxx xxx xxxx
+xx xxxxx xx xxx Xx xxxxxxxxxxxxx xxxxxxx 13.3.3.  Xxxx xxxx xxxxxxx,
+xxxx xxxxxxx 2.3, xxx xxxx xx xxxx xxxxxx xxxxxxx xxx xx xxxxxxxxxxx
+xxxxx xxxxx xxxx xx "Xxx".  (Xxxxx xxxxx'x x xxxxxxxx xxxxx xxxx
+xx xxx xx xxx X'Xxxxxx xxxxx?  Xxxxx X xxxxxx xxxxx x xxxx?)
+
+Xxx xxx-xxxx xxxx xxx xxx xxxxxxxxxxxxx xxxxxxxx, xx xxx xxxxx
+xxxxxxx xxxx xxxx xxx Xxxxxxxxxx xxxx xx xxxx xxx xxx xxxxxxxxxxx
+xxxxxxxx xxxxx.
+
+#xxxxx XXXXX
+Xxx.xxxxxxxxxxxxx: -xxxxx
+#xxxxx
+
+Xxx xxxxxxxxxxx xxxxxxxxxx xxxxxxxx xxx xxxxxxxxxxx xxxxx xxxxxxxx
+xxxxx, xxx xxx xxx xxx xxxxxx "-xxxxx" xxxxxxxx xx xxx xxxxxxxxxxx
+xxxxx xxxx xx xxx xxxx xx xxx xxxx.  Xxxx xxxx xxxxxxxx xxx xxxxx
+xxxx, xxx xx xxxx xxxxx xxxxxxxxx xxxxxxxx xx xxxxx xxxxxxxx.  Xxx
+xxxxx xxxx xxxxx xxxxxxxxx xxxx xxxxxxxxx xxxxx.  
+
+Xx xxx xxxxxxxxxxx xxxxx xxxxxxxx xxxx xxxxx "Xxx-xxxxx", xx xxxxx xxx:
+
+#xxxxxxx "Xxx"
+xxx*xxxxxxXxxxx: Xxx
+xxx*xxxxxxxxxx:	 Xxxxx
+
+xxx xx xx.  Xx xxx xxxxxxxxxxx xxxxx xxxxxxxx xxxx xxxxx "Xxx"
+xx xxxxx xxx:
+
+! XxxXxxxxxxxXxxxxxx xxxxxx xxxx xx xxxxxxx xx xxx xxxx-xxxx xxxx
+Xxx.XxxXxxxxxxxXxxxxxx:		1
+Xxx.Xxxxxxxx:			508x750
+Xxx.XxxxxXxxxxxXxxxxx:		xxx
+Xxx.XxxxXxxxxXxxxx:		2000
+
+xxx xx xx.  Xxx xxxxx xxxx xx x xxxxxxx, xxx xxxxxxxxxx xxxxxxx 
+xxxxxxxxxxx xxxxxxxxx xxxx xxxxxxxxxxxx xxx xxxxxxxx xxxxxxxxx 
+xxx xx xxxxxx xx xxxxxxxx xxxx xxx xxxxxxxxxxx xxxxx xxxxxxxx xxxx
+xx xxxxxxxxx.  Xx xxxx xxx xxx xxxxxxxx xxxxxxxxx xxxx xx xxx
+xxxxxxxxxxx xxxxx (xxxx-xxxx) xxxxxxxx xxxx xx xxx xxxxx.  Xxx
+xxxxxxxxxxx xxxxxx, xx xxxx xxxx xxx, xxxxxx xxx xxxxx xx xxxxxxxxxxx
+xxxxxxxx XxxXxxxxxxxXxxxxxx xxx xx xx xx xxx xxxxxxx xxxxx, xx xx x
+xxxxxxxx xxxxxxx xxxx xxx xxxxxxxxxxx xxxxxxx, xx xxx xxxxxxxxx
+xxxx xxx xxxxxxx xxxxxxx xxxxxxxxx xxx xxx xxxxxxxxx xxx xxxxxx xx xx 
+xxxxxxx xx x xxxxxx xxx xxxx x xxxxxxx xx xxx xxxx xxx xxxxxxxxxx
+xxxx xxxxx xx xx xxxx xx xxx xxxxx xxxxxxx xxxxxxxxx.
+
+Xxx xxxxxxxxxxx xxxxx xxxxxxx xxxxx xxxx xxxxxxxx xx xx xxxxxxxxxx xx
+x xxxx xxxxxxxxxxxxx -- xx xxx xxx xx xxxxx xxx xxx xxxxxxx xxxxxxxxx
+xxxx xxx xxxxxxxx xxxxxxxxx xxx xxxx xxxx xxx xxx xxxx xxx xxxxx xx xxx
+xxxxxxxxxxxxx xxxxxxxx xxx xxx xxxxx xxxx xxxx xx xxxx xxxxxx xx xxxx
+xxx xxxxxx xx xxxxxx xxx xxxxxxx xxxxxxxxx -- xxxxx xx x xxxxxxxxxxxx.
+
+----------------------------------------------------------------------
+Xxxxxxx: 46. Xxxx xx xxx xxxxxxxxx xxx xx xxxxxxx xxx xxxxxxxxxxx xxxxxxxxx?
+----------------------------------------------------------------------
+
+(Xxxxxxxx xx Xxxxx Xxxxxxxx, xxxxxxxx@x.xxx; 1/8/94)
+X xxxxxx xxxxx x xxxx-xxxx xxxxxxxxxxx xxxxxxx xxxx.
+
+Xxxxxxxxxx xx xxxxx xx xxxxxxxxxxx xxxxxxx xxxx:
+
++ Xxx xxxx xxxxxxxxxxxxx xxx xxxxxxxxx xxxx xxxxxxxxxxx xxx xxx xxxxx
+  xx xxx xxxx.
+
++ Xxx xxx xxxxxxxx xx xxx xxxxxxxxxxx-xxxxxxxx xxxx xxxxx xxxxxxxxx
+  xxx xx xxxxxxx xxx xxx xxxxxx xx xxxxxxxx xxxx xx xxxxxxxxxx.
+
++ Xxx xx xxxxxxxxxx xxxx xx xxxxxxxxxxxxx xxx xxxxx xxxxx xx xxxx xxx.
+  Xxxx xxxxx xxxxxx xx xxxxxxxxxxx-xxxxxxxx xxxxxxxx xxxx xx xxxxx xxx.
+  Xxxxx xxx xx xxxxxxx xxxx xxx xxxx-xxxx xxxxxxxxxxx xxxxxxxx xxxx
+  xx xxxxx xx xxx xxxx'x xxxxx xx.  Xx xxxxx xxxx-xxxxxxxxx xxxxxxxx
+  xx xxxx xxxxxxxxxx xxxx xxxx-xxxx xxxxxxxx, xxxxxxxxxxx xxxxxxxxxx
+  xxxxxx xxxxxx xxxx xxx xxxxxxx xxxxxxxx xxxxxxx xxx xxx xxxxx xxxxx
+  xxxxxx xxxx xxxxxxxx xxxxx xxxxx xxxxxxxx, xx xxx xxxx-xxxx xxxxxxxx xxxx.
+
++ Xxx xxx xxxxxx xxxxxxxx xxxxxxxx, xxxx xxxxxxxxxxxx xxxxxxxxx xxxxxx,
+  xxxxxxxxx, xxxxxxxxxxxx xxxxxxxxxxxx, xxxxxxx, xxxxxx, xxxxxxxxxxxxx
+  xxx xxxxxxxxx xxx xxxxxxxxxxxx xx xxxx xxxxxxxxxxx xx xxxxxx xxx xxxx
+  xxxxxxxx xxx xxxxx xx xxxxx xxxxxxxxxxxxx xxxxxxxx xxx xxxx xxxxxxxxxxx.
+  Xxxxxxxxxxx xxxxxxx xxxxx xxx xxxxxxx xxxxx xxxxxxxxxxx xxxxxxx xxxxx,
+  xxxxxx xx xxxxxxxx xx xxxxxxxx xxxxx xxxxxxxxxxxxx xxxx xxxxxxxx
+  xxxxxxxxxxxxx, xxxx xxxxxxxxxx xxxxxxxxxxxxx, xxx xxxxxxx.
+
+
+Xxxxxxxxxxxxx xx xxxxx xxxxxxxx xxxxxxxxx xxx xxx xxxxxxx xxxxxxxxx xx
+xxx xxxxxxxxxxx:
+
+- Xxxxxxxx xxxxxxxxx xxxx xxx xxxxxxxx xxxx xxxx xxxxxxx xx xxxx.
+
+- Xxxx xxxxx.
+
+- Xxxxx xxx xxxx xxxxxxxxxxxxxx xxxx xx xxxxxxx xx xxxx xxxx xxxxxx
+  xx xxxxx xx xxxxxx xxx xxxx xxxxxxxxx xxx xxxx xxx xxx xx xxxx xxxxx
+  xxx xxxxxxx, xxxxxx xxxxxx xxxxx xxx xxxxxxxxx xxx xxxx xxxx xx
+  xxxxx xxxx xx xxxxxx xxxxx xxxxxxx.
+
+- Xxxxxx xxx xxxxxxxx xxx xx xxxx xxxxxxx xxxxxxxxx xx xxxxxxxxx xxxxx
+  xxx xxxxxxxxxxx xxxxxxx xxxx, xxxxx xxxxxxxxxxxx xxxxxxxx xxxx xxx.
+
+- Xxx'xx xxx xxxxxx xxxxxxxxx xx xxx xx xxx xxxx xxxxxxxx xxxxxxxx xx
+  xxx X xxxxxxx -- xx'x xxxxxxxxx xxx xxx-xxxxx xx xxxxxxxxx xxxxxxxxxxxx.
+
+
+> X xxxx xxxxx xxxxxxxx
+> xxxxxxxxx xxxxxx xx x xxxxxxx xx xxx xxx xxxxxxxxxxx xxxxxxx xx xx
+> xxxxxxx xx xxxxx xx xxx xxxxxxxxxxx xxxxxxxx xxxxxx xx xxxxxx.  Xxx
+> xxxx xxxx x "xxxxxxx" xx :-) ?
+
+Xxx X Xxxxxxxxxx'x xxxx xxxxxxxxxxx, xxx, xxx xx xxxxxxxxxxx xxxxxxxx
+xxxx xxxxx xxxxx Xxx.  Xx xxx xxxxxx xxxx xxxx, xx'x xxxxxxxx xxxxxxxxx
+xxx xxxx.  Xx xxxx xxxx xx xxxx xx x xxxxxx xxx xxxxxxx xxx xxxx xxx
+xxxxxxxxxxx xxxxxxxxxxxxx xxxx xxxxxxxx xxx xxxx xxxxxxx xxx xxxxxxxxxxx
+xxxxxxxx xxxx xx xxxxxxx.  Xxxx xxxx xxxxxx xxx xx xxxx xx x xxxxxxxxxx
+xxxxx xx xxx xxxxxxxxxxx xxxxxxxx xxxx, xxxx xxx xx xxxx, xxx xxx xxxxxxxxxx
+xxxx xx xxxx -- xx xxx xxx xxxxxx xxxx xxxxxxxxxxx xxx xxx xxx-xxxxxxxx
+xxxx xxx xxxxxxxxx x xxxxxxxxxx xxxxx, xxx xxxxxx xx xxxx xxx xxxx
+xxxxxxxxxxxxx xxxxxx xx xxxxxxx xxxx xxxxxxxxxxx xxxxxxxxx.
+
+Xxx, xxx xxxxx xxx X Xxxxxxxxxx'x xxxxxxxxxx xxxxxxxxxxx, xxxxx, xxxxxxx
+xxx xxxxxxxxxxx xxxxxxxx xxxx.  Xxxxxxx xxxxx xx xxx, xxx, xx xxxxx'x xxx
+xxx, xx xxx xxxxxxxxxxx xx xxxxxxxxx xxx xxxxxxxxxxxxxxx xxxxxxx xxx
+xxxxxxxxxxx xxxxxxxx xxxx.
+
+Xx x xxxxxxx xx xx xxxxxx xxxx xxx xxxxxxxxxxx xxxxxxxx xxxx xx xxxxxxx,
+xx, xx xxx xxxx x xxxxxx xxxxxxxxxxx, xx xxxx xxx xxxxxxx xxxxxxxxxxxxx
+xx xxxxx xxxx xx xxxxxxxxxx xxxxxxxxx xxx.
+--3551_4569-6da5_7555-384e_60f4--
+

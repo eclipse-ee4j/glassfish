@@ -1,0 +1,31 @@
+From demo@labyrinth.Eng.Sun.COM Wed Oct 16 14:55:55 1996
+Return-Path: <demo@labyrinth.Eng.Sun.COM>
+Received: from makai.Eng.Sun.COM by homey.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id OAA03144; Wed, 16 Oct 1996 14:55:54 -0700
+Received: from makai (localhost) by makai.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA17080; Wed, 16 Oct 1996 14:54:55 -0700
+Sender: tester@labyrinth.Eng.Sun.COM
+Message-Id: <326559AF.5693@labyrinth.eng.sun.com>
+Date: Wed, 16 Oct 1996 14:54:55 -0700
+From: Demo Account <demo@labyrinth.Eng.Sun.COM>
+Organization: Sun Microsystems
+X-Mailer: Mozilla 3.0b6Gold (X11; I; SunOS 5.4 sun4m)
+Mime-Version: 1.0
+To: tester@homey
+Subject: press release
+Content-Transfer-Encoding: 7bit
+X-Lines: 6
+Content-Type: text/plain; charset="us-ascii"
+Content-Length: 234
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 132
+
+The press release on the Netra product is up on my
+local Web server.  Look at 
+http://labyrinth/demomail/netra-nfs/pr.netra-nfs.html
+
+Please read it and let me know what you think.  Once I
+get your feedback we can push it externally.
+

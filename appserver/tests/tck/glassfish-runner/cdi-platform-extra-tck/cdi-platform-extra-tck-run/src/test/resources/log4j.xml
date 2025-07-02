@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <!-- The default pattern: Date Priority [Category] Message\n -->
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{2}] %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.StringMatchFilter">
+        	<param name="AcceptOnMatch" value="false" />
+        	<param name="StringToMatch" value="Failure while notifying an observer of event [a]" />
+        </filter>
+        <filter class="org.apache.log4j.varia.StringMatchFilter">
+        	<param name="AcceptOnMatch" value="false" />
+        	<param name="StringToMatch" value="Error destroying org.jboss.weld.bean-test-ManagedBean-class org.jboss.jsr299.tck.tests.implementation.simple.lifecycle.Cod" />
+        </filter>
+    </appender>
+
+    <!-- ############### Embedded EJB3 #################  -->
+    <category name="org.jboss">
+        <priority value="ERROR"/>
+    </category>
+    
+    <category name="org.jboss.test">
+        <priority value="ERROR"/>
+    </category>
+    
+    <category name="com.arjuna">
+        <priority value="ERROR"/>
+    </category>
+
+    <!-- ############### Hibernate logging ################# -->
+
+    <category name="org.hibernate">
+        <priority value="ERROR"/>
+    </category>
+
+
+    <!-- ############### Weld logging ################### -->
+
+    <category name="org.jboss.weld">
+        <priority value="WARN"/>
+    </category>
+    
+    <category name="org.jboss.weld.tck">
+        <priority value="INFO"/>
+    </category>
+    
+    <category name="org.jboss.testharness">
+        <priority value="INFO"/>
+    </category>
+    
+    <root>
+        <priority value="INFO"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</log4j:configuration>

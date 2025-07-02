@@ -1,0 +1,394 @@
+From jmk@cochin Thu Feb 12 14:06:32 1998 -0800
+Return-Path: <owner-java-internal@java-aces>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA22050; Wed, 6 Aug 1997 17:27:09 -0700
+Received: from java-aces.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id RAA24869; Wed, 6 Aug 1997 17:26:58 -0700
+Received: by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id TAA20815; Wed, 6 Aug 1997 19:15:30 -0500
+Received: from Eng.Sun.COM by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id TAA20810; Wed, 6 Aug 1997 19:15:28 -0500
+Received: from shadows.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id RAA03385; Wed, 6 Aug 1997 17:21:28 -0700
+Received: from Eng.Sun.COM by shadows.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA26663; Wed, 6 Aug 1997 17:21:25 -0700
+Received: from taller.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id RAA03350; Wed, 6 Aug 1997 17:21:22 -0700
+Received: from czrider.eng.sun.com by taller.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA06977; Wed, 6 Aug 1997 17:21:25 -0700
+Received: from czrider by czrider.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id RAA11792; Wed, 6 Aug 1997 17:21:05 -0700
+Date: Wed, 6 Aug 1997 17:21:05 -0700 (PDT)
+From: Cynthia Zwerling <zwerling@taller>
+Reply-To: Cynthia Zwerling <zwerling@taller>
+Subject: The JavaBeansTM Advisor: Issue #7
+To: frameworks.amb@Sun, aces.java@fullspeed, java-internal@taller, pc.amb@Sun,
+        commercial.amb@Sun, os.amb@taller, mtstaff@corqual, javasoft@taller
+Message-ID: <libSDtMail.9708061721.1934.zwerling@taller>
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: WooCnyaVzV2dMaC08r5XYg==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1 SunOS 5.5.1 sun4u sparc 
+Sender: owner-java-internal@qwerty.eng.sun.com
+Precedence: bulk
+Content-Length: 11314
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 9
+
+
+----------------------------------------------------------------------
+
+                          The JavaBeansTM Advisor
+
+	 	    Hot news and advice from the source!
+
+                        Issue #7 - August 5, 1997
+
+The JavaBeans Advisor provides the latest news and advice to assist
+JavaBeans developers in creating, using and reusing portable,
+platform-independent JavaBeans components.
+
+Past issues of the JavaBeans Advisor are available at:
+
+	http://java.sun.com/beans/Advisor.html
+
+----------------------------------------------------------------------
+
+In this issue
+
+   * beans.hot.news
+      o Register your Beans! Be part of Sun's JavaBeans Component Directory
+      o JavaBeans Migration Assistant for ActiveX available for download
+      o InfoBus specification available for download and public comment
+      o JFC Developer Release public download now available 
+      o JavaBeans Bridge for ActiveX beta 5 available for download
+  * beans.developer.notes
+      o Correction to last month's note
+   * beans.events  
+      o Java Internet Business Expo (JIBE), NY
+  * beans.tools 
+      o Another tool to help with your JavaBeans development
+  * beans.learning
+      o New JavaBeans books and titles
+  * beans.in.the.news
+      o JavaWorld's new JavaBeans column, IBM's JavaBeans support and more
+  * beans.misc
+      o We want your feedback!
+  * beans.resources
+      o JavaBeans developer resources on the web
+      o Java marketing and support programs
+  * beans.keep.in.touch 
+
+----------------------------------------------------------------------
+
+[beans.hot.news]
+
+
+Register your Beans! Be part of Sun's JavaBeans Component Directory 
+
+  Don't miss this opportunity to be included in Sun's new directory of
+  JavaBeans components.  We've extended the registration deadline, so there's
+  still time to enroll. Register your Beans today!  For more
+  information, or to register, see:
+
+	http://java.sun.com/beans/form.html
+
+
+JavaBeans Migration Assistant for ActiveX Available for Download
+
+  The JavaBeans Migration Assistant for ActiveX is a tool that
+  generates JavaBeans code from an ActiveX control.  This tool
+  analyzes an ActiveX control's properties and creates a 100% Pure
+  Java container that takes on the features of the ActiveX control and
+  then implements the component functions.  If you are an ActiveX
+  developer, and you want to participate in the growing JavaBeans
+  market, this is the fastest way to leverage your existing investment
+  to gain an early foothold in this new market.
+
+  The free JavaBeans Migration Assistant for ActiveX is available for
+  download at:
+
+	http://java.sun.com/beans/assistant/
+
+
+InfoBus Specification Available for Download and Public Comment 
+
+  At JavaOne, Sun and Lotus Development announced that they were
+  working together to develop Lotus's InfoBus dynamic data interchange
+  architecture into a Java standard for use by JavaBeans developers.
+  The first draft technical specifications for InfoBus are now
+  available for download at:
+
+	http://java.sun.com/beans/infobus/
+
+
+JFC Developer Release Public Download Now Available 
+
+  Sun and Netscape have announced the availability of the first
+  developer release of the Java Foundation Classes (JFC) for public
+  download through the Java Developer Connection.  All of the JFC
+  components are JavaBeans components, so developers can easily bring
+  in other JavaBeans GUI components to enhance their applications.
+  For more information, see the JFC web site at:
+
+	http://java.sun.com/products/jfc
+
+
+JavaBeans Bridge for ActiveX Beta 5 Available Wednesday, August 6
+
+  The Beta 5 release of the JavaBeans Bridge for ActiveX will be 
+  available for download at:
+
+	http://java.sun.com/beans/bridge/
+  This release includes administrative enhancements, better 
+  Internet Explorer support, bug fixes, and an improved runtime version.
+  See the Readme file that comes with the JavaBeans Bridge for ActiveX 
+  for more details. 
+
+  The JavaBeans Bridge for ActiveX allows any JavaBeans component to
+  be hosted by any legacy COM/OLE/ActiveX container.  With the
+  JavaBeans Bridge for ActiveX, developers can migrate their
+  development efforts easily to JavaBeans today, while preserving
+  their investment in - and adding value to - any previous work based
+  on ActiveX.
+
+
+----------------------------------------------------------------------
+
+[beans.developer.notes]
+
+
+Correction to Last Month's Note
+
+  There was an error in last month's "New Beans from Old Beans" note.
+  In the section "Use BeanInfo to modify the features", it should have
+  read...
+
+    Now, though we can modified the features through a BeanInfo class,
+    which in this case is using the support class
+    java.beans.SimpleBeanInfo.  For example, in the code fragment
+    shown below we define an icon for the Bean, and we give it a
+    customizer class.
+
+     package sunw.demo.buttons;
+     public class ExplicitButtonBeanInfo extends java.beans.SimpleBeanInfo {
+       ...
+       public java.awt.Image getIcon(int iconKind) {
+       ...
+       }
+       private final static Class customizerClass = OurButtonCustomizer.class;
+     }
+
+    BeanInfo is a powerful mechanism that will help you in creating
+    new Beans from old Beans.
+
+  We apologize for any inconvenience that this may have caused.
+
+
+----------------------------------------------------------------------
+
+[beans.events]
+
+
+Java Internet Business Expo (JIBE)
+
+  Java Internet Business Expo is the first-ever forum for the
+  Java-based business community.  It will be held on August 25 - 28,
+  1997 at the Jacob K.  Javits Convention Center in New York City.
+  Register now for early bird rates!  See:
+
+	http://www.javaexpo.sbforums.com/root.html
+  
+  
+----------------------------------------------------------------------
+
+[beans.tools]
+
+
+  Another tool to help with your JavaBeans development:
+
+  o  RadJa by Applicom Software, LTD
+
+  Note:  The tools displayed above, and on the JavaBeans web site are
+  listed purely as a convenience to JavaBeans developers.  Their
+  mention in no way confers an endorsement by Sun Microsystems, Inc.
+
+
+----------------------------------------------------------------------
+
+[beans.learning]
+
+
+New JavaBeans Books and Titles
+
+  Three new JavaBeans titles have been released to aid your
+  JavaBeans development efforts.  New additions include:
+
+  o  How to Program JavaBeans
+     by Peter Coffee, et. al. Published by Ziff Davis Press.
+     
+  o  Inside JavaBeans
+     by MindQ Publishing. Published by MindQ Publishing, Inc.
+
+  o  JavaBeans Developer's Resource
+     by Prashant Sridharan. Published by Prentice Hall Computer Books.
+     
+  For a more complete listing of JavaBeans titles in print, see:
+
+	http://java.sun.com/beans/resources.html
+
+  Note:  The books and titles referenced below are listed purely as a
+  convenience to JavaBeans developers.  Their mention here in no way
+  confers an endorsement by Sun Microsystems, Inc., nor any comment on
+  their accuracy or completeness.
+
+
+----------------------------------------------------------------------
+
+[beans.in.the.news]
+
+
+  o  JavaWorld
+     A Walking Tour of JavaBeans
+     http://www.javaworld.com/javaworld/jw-08-1997/jw-08-beans.html
+
+  o  JavaWorld
+     Building a Bevy of Beans
+     http://www.javaworld.com/javaworld/jw-08-1997/jw-08-step.html
+
+  o  c|net
+     IBM Brews New Java Tools
+     http://www.news.com/News/Item/0,4,12212,00.html
+
+  o  Parts (LanTimes)
+     ShopTalk:  An excerpt from Michael Morrison's Presenting JavaBeans
+     http://www.ltparts.com/ltparts/connect/shoptalk.htm
+
+
+----------------------------------------------------------------------
+
+[beans.misc]
+
+
+We Want Your Feedback
+
+  The JavaBeans Advisor is a free resource provided by Sun to the
+  JavaBeans developer community.  We would like to know how the
+  Advisor is, or is not meeting your needs.  Is the content relevant
+  to your development efforts?  Why, or why not?  What information
+  would you like to see added?  Please let us know.  Send your ideas
+  and comments to webmaster@wombat.eng.sun.com.
+
+
+----------------------------------------------------------------------
+
+[beans.resources]
+
+  
+JavaBeans Developer Resources
+
+  If you are developing or deploying JavaBeans components, your
+  one-stop shop for JavaBeans information, tools and resources is the
+  JavaBeans Developer Resources page at:
+
+	http://java.sun.com/beans/resources.html
+
+  You'll find pointers to JavaBeans books, technical training,
+  tutorials, whitepapers, newsletters, FAQs, and other valuable
+  information here.
+
+
+JavaSelect
+
+  The Java Select Program is an exclusive information resource
+  designed to provides developers with a set of marketing and
+  technical services that can accelerate product development, focus
+  your marketing efforts, and expose your products and services to the
+  right audience, at the right time.
+
+  As a Java Select member, you leverage expertise that can help you
+  add value to the Java platform and reinforce the Java message of
+  ubiquity and "write once, run anywhere".  At the same time, your
+  company can take advantage of the close association with Sun to
+  build recognition in the growing worldwide market for Java products
+  and services.
+
+  Full membership in the Java Select Program is U.S.  $4,995 annually.
+  Associate membership is $2,995 annually, and includes no technical
+  support incidents.
+
+  For more information and to join, see:
+
+	http://java.sun.com/marketing/javaselect/
+
+
+Java Developer Connection
+
+  Membership in the Java Developer Connection is free and provides
+  valuable information on Java, including JavaBeans.  Services
+  include:  technical support information through a searchable
+  database, discussion forums, training and special events, product
+  discounts, and convenient access to Java documentation.  For more
+  information and to join, see:
+
+	  http://java.sun.com/jdc/ 
+ 
+ 
+----------------------------------------------------------------------
+
+[beans.keep.in.touch]
+
+
+comp.lang.java.beans
+
+  comp.lang.java.beans is a public newsgroup that is a replacement for
+  the beans-users list.  We encourage developers to start using the
+  comp.lang.java.beans group for new topics instead of beans-users.
+
+
+Frequently Asked Questions (FAQ)
+  
+  The JavaBeans FAQ is updated on a regular basis with new
+  information, technical tips, etc.  See
+
+  	http://java.sun.com/beans/FAQ.html
+
+
+beans-info
+  
+  We maintain a low-volume mailing list for regular information about
+  JavaBeans updates and events.  To subscribe, send email to 
+  LISTERV@JAVASOFT.COM
+   	      
+  In the body of the message, type:
+  SUBSCRIBE BEANS-INFO
+  
+
+beans-business
+
+  For any specific JavaBeans business issues, questions or comments,
+  send e-mail to beans-business@wombat.eng.sun.com.
+
+
+JavaBeans Comments and Feedback
+
+  If you have comments or feedback on the JavaBeans architecture
+  please send them to java-beans@java.sun.com.  Unfortunately because
+  of the volume of interest in JavaBeans we can't respond individually
+  to reviewer comments, but we do carefully read and consider all the
+  input we receive.
+
+
+Reporting Bugs
+
+  Use our Bug Report page to report JavaBeans or BDK bugs at:
+
+	http://java.sun.com/beans/BugReport.html
+
+
+----------------------------------------------------------------------
+
+
+

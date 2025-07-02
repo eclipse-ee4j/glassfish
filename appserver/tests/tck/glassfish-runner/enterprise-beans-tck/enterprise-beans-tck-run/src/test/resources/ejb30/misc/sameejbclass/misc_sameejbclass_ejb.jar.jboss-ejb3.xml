@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><jboss:jboss xmlns:jboss="http://www.jboss.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss_5_0.xsd http://java.sun.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss-ejb3-spec-2_0.xsd urn:security jboss-ejb-security_1_0.xsd urn:security-role jboss-ejb-security-role_1_0.xsd"
+    version="3.1" impl-version="2.0">
+    <jboss:enterprise-beans>
+        <jboss:ejb>
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean1</ejb-name>
+            <activation-config xmlns="http://java.sun.com/xml/ns/javaee">
+                <activation-config-property>
+                    <activation-config-property-name>destination</activation-config-property-name>
+                    <activation-config-property-value>java:/misc_sameejbclass_SameEJBClassBean1</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+        </jboss:ejb>
+        <jboss:ejb>
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean2</ejb-name>
+            <activation-config xmlns="http://java.sun.com/xml/ns/javaee">
+                <activation-config-property>
+                    <activation-config-property-name>destination</activation-config-property-name>
+                    <activation-config-property-value>java:/misc_sameejbclass_SameEJBClassBean2</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+        </jboss:ejb>
+        <jboss:ejb>
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean3</ejb-name>
+            <activation-config xmlns="http://java.sun.com/xml/ns/javaee">
+                <activation-config-property>
+                    <activation-config-property-name>destination</activation-config-property-name>
+                    <activation-config-property-value>java:/misc_sameejbclass_SameEJBClassBean3</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+        </jboss:ejb>
+        <jboss:ejb>
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean4</ejb-name>
+            <activation-config xmlns="http://java.sun.com/xml/ns/javaee">
+                <activation-config-property>
+                    <activation-config-property-name>destination</activation-config-property-name>
+                    <activation-config-property-value>java:/misc_sameejbclass_SameEJBClassBean4</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+        </jboss:ejb>
+    </jboss:enterprise-beans>
+    <assembly-descriptor xmlns="http://java.sun.com/xml/ns/javaee">
+        <iiop xmlns:xalan="http://xml.apache.org/xalan" xmlns:sr="urn:security-role" xmlns:s="urn:security:1.1" xmlns:ext="xalan://org.jboss.ts.lib.porting.EjbJarHandler" xmlns="urn:iiop">
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean1</ejb-name>
+            <binding-name>misc_sameejbclass_SameEJBClassBean1</binding-name>
+        </iiop>
+        <iiop xmlns:xalan="http://xml.apache.org/xalan" xmlns:sr="urn:security-role" xmlns:s="urn:security:1.1" xmlns:ext="xalan://org.jboss.ts.lib.porting.EjbJarHandler" xmlns="urn:iiop">
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean2</ejb-name>
+            <binding-name>misc_sameejbclass_SameEJBClassBean2</binding-name>
+        </iiop>
+        <iiop xmlns:xalan="http://xml.apache.org/xalan" xmlns:sr="urn:security-role" xmlns:s="urn:security:1.1" xmlns:ext="xalan://org.jboss.ts.lib.porting.EjbJarHandler" xmlns="urn:iiop">
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean3</ejb-name>
+            <binding-name>misc_sameejbclass_SameEJBClassBean3</binding-name>
+        </iiop>
+        <iiop xmlns:xalan="http://xml.apache.org/xalan" xmlns:sr="urn:security-role" xmlns:s="urn:security:1.1" xmlns:ext="xalan://org.jboss.ts.lib.porting.EjbJarHandler" xmlns="urn:iiop">
+            <ejb-name xmlns="http://java.sun.com/xml/ns/javaee">SameEJBClassBean4</ejb-name>
+            <binding-name>misc_sameejbclass_SameEJBClassBean4</binding-name>
+        </iiop>
+    </assembly-descriptor>
+</jboss:jboss>

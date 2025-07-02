@@ -24,6 +24,7 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.Result;
+import com.sun.enterprise.v3.admin.AdminCommandJob;
 import com.sun.enterprise.v3.common.DoNothingActionReporter;
 
 import jakarta.inject.Inject;
@@ -134,7 +135,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     RunLevelController runLevelController;
 
     @Inject
-    Provider<CommandRunner> commandRunnerProvider;
+    Provider<CommandRunner<AdminCommandJob>> commandRunnerProvider;
 
     @Inject
     private AppInstanceListener appInstanceListener;
@@ -406,7 +407,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
     // TODO(Sahoo): Revisit this method after discussing with Jerome.
     private void shutdown() {
-        CommandRunner runner = commandRunnerProvider.get();
+        CommandRunner<AdminCommandJob> runner = commandRunnerProvider.get();
 
         if (runner != null) {
             final ParameterMap params = new ParameterMap();

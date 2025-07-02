@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,7 @@
 
 package org.glassfish.api.admin.progress;
 
+import org.glassfish.api.admin.ProgressEvent;
 import org.glassfish.api.admin.ProgressStatus;
 
 /**
@@ -24,8 +26,9 @@ import org.glassfish.api.admin.ProgressStatus;
  * @author mmares
  */
 //TODO: Move to AdminUtil if possible. It is now in API only because ProgressStatusImpl is here, too
-public abstract class ProgressStatusEvent {
+public abstract class ProgressStatusEvent implements ProgressEvent {
 
+    private static final long serialVersionUID = 1L;
     private final String sourceId;
 
     public ProgressStatusEvent(String sourceId) {

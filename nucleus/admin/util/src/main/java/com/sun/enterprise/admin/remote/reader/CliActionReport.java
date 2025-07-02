@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,15 +37,10 @@ public class CliActionReport extends ActionReport {
 
     private static final String EOL = System.getProperty("line.separator");
 
-    protected Throwable exception = null;
-    protected String actionDescription = null;
+    protected Throwable exception;
+    protected String actionDescription;
     protected List<CliActionReport> subActions = new ArrayList<>();
     protected ExitCode exitCode = ExitCode.SUCCESS;
-    protected MessagePart topMessage = new MessagePart();
-
-    /** Creates a new instance of HTMLActionReporter */
-    public CliActionReport() {
-    }
 
     public void setFailure() {
         setActionExitCode(ExitCode.FAILURE);
@@ -91,11 +86,6 @@ public class CliActionReport extends ActionReport {
     }
 
     @Override
-    public MessagePart getTopMessagePart() {
-        return topMessage;
-    }
-
-    @Override
     public ActionReport addSubActionsReport() {
         CliActionReport subAction = new CliActionReport();
         subActions.add(subAction);
@@ -115,21 +105,6 @@ public class CliActionReport extends ActionReport {
     @Override
     public ExitCode getActionExitCode() {
         return exitCode;
-    }
-
-    @Override
-    public void setMessage(String message) {
-        topMessage.setMessage(message);
-    }
-
-    @Override
-    public void appendMessage(String message) {
-        topMessage.appendMessage(message);
-    }
-
-    @Override
-    public String getMessage() {
-        return topMessage.getMessage();
     }
 
     @Override

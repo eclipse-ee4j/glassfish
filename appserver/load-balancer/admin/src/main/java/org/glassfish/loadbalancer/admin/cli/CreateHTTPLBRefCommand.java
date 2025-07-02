@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -239,7 +240,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
             try {
                 final CreateHTTPHealthCheckerCommand command =
                         (CreateHTTPHealthCheckerCommand) runner
-                        .getCommand("create-http-health-checker", report, context.getLogger());
+                        .getCommand("create-http-health-checker", report);
                 command.url = healthcheckerurl;
                 command.interval=healthcheckerinterval;
                 command.timeout=healthcheckertimeout;
@@ -259,7 +260,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
         if(Boolean.parseBoolean(lbenableallinstances)) {
             try {
                 final EnableHTTPLBServerCommand command = (EnableHTTPLBServerCommand)runner
-                        .getCommand("enable-http-lb-server", report, context.getLogger());
+                        .getCommand("enable-http-lb-server", report);
                 command.target = target;
                 command.execute(context);
                 checkCommandStatus(context);
@@ -395,7 +396,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
         try {
             final EnableHTTPLBApplicationCommand command =
                     (EnableHTTPLBApplicationCommand) runner
-                    .getCommand("enable-http-lb-application", report, context.getLogger());
+                    .getCommand("enable-http-lb-application", report);
             command.target = target;
             command.name=appName;
             command.execute(context);

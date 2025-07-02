@@ -249,6 +249,7 @@ public class ProgramOptions {
         putEnv(env, PASSWORDFILE);
         putEnv(env, AUTHTOKEN);
         putEnv(env, AUXINPUT);
+        putEnv(env, DETACH);
         // XXX - HELP?
     }
 

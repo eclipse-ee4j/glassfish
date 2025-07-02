@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,14 +68,11 @@ import org.glassfish.admin.rest.composite.metadata.DefaultBeanReference;
 import org.glassfish.admin.rest.composite.metadata.HelpText;
 import org.glassfish.admin.rest.utils.JsonUtil;
 import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.utils.SseCommandHelper;
 import org.glassfish.admin.rest.utils.StringUtil;
-import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.jersey.media.sse.EventOutput;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.MessageInterpolatorImpl;
 import org.objectweb.asm.AnnotationVisitor;
@@ -191,38 +188,6 @@ public class CompositeUtil {
         }
 
         return void.class;
-    }
-
-    public ParameterMap addToParameterMap(ParameterMap parameters, String basePath, Class<?> configBean, Object source, Subject subject) {
-        String name;
-        Map<String, String> currentValues = Util.getCurrentValues(basePath, Globals.getDefaultHabitat(), subject);
-        for (Method cbMethod : configBean.getMethods()) {
-            name = cbMethod.getName();
-            if (name.startsWith("set")/* && (cbMethod.getAnnotation(Attribute.class) !=null)*/) {
-                String getterName = "get" + name.substring(3, 4).toUpperCase(Locale.getDefault()) + name.substring(4);
-                try {
-                    Method getter = source.getClass().getMethod(getterName);
-                    final String key = ResourceUtil.convertToXMLName(name.substring(3));
-                    Object value = null;
-                    try {
-                        value = getter.invoke(source);
-                    } catch (Exception ex) {
-                        RestLogging.restLogger.log(Level.SEVERE, null, ex);
-                    }
-                    if (value != null) {
-                        String currentValue = currentValues.get(basePath + key);
-
-                        if (currentValue == null || "".equals(value) || !currentValue.equals(value)) {
-                            parameters.add("DEFAULT", basePath + "." + key + "=" + value);
-                        }
-                    }
-                } catch (NoSuchMethodException ex) {
-                    RestLogging.restLogger.log(Level.FINE, null, ex);
-                }
-            }
-        }
-
-        return parameters;
     }
 
     /**
@@ -344,9 +309,8 @@ public class CompositeUtil {
 
         Set<ConstraintViolation<T>> constraintViolations = beanValidator.validate(model);
         if (constraintViolations == null || constraintViolations.isEmpty()) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
-
         return constraintViolations;
     }
 
@@ -364,124 +328,18 @@ public class CompositeUtil {
         return msg.toString();
     }
 
-    /**
-     * Apply changes to domain.xml
-     *
-     * @param changes
-     * @param basePath
-     */
-    public void applyChanges(Map<String, String> changes, String basePath, Subject subject) {
-        RestActionReporter ar = Util.applyChanges(changes, basePath, subject);
-        if (!ar.getActionExitCode().equals(ExitCode.SUCCESS)) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ar.getCombinedMessage()).build());
-        }
-    }
-
-    /**
-     * Execute a delete <code>AdminCommand</code> with no parameters.
-     *
-     * @param subject
-     * @param command
-     * @return
-     */
-    public ActionReporter executeDeleteCommand(Subject subject, String command) {
-        return executeDeleteCommand(subject, command, new ParameterMap());
-    }
-
-    /**
-     * Execute a delete <code>AdminCommand</code> with the specified parameters.
-     *
-     * @param subject
-     * @param command
-     * @param parameters
-     * @return
-     */
-    public ActionReporter executeDeleteCommand(Subject subject, String command, ParameterMap parameters) {
-        return executeCommand(subject, command, parameters, Status.BAD_REQUEST, true, true, false);
-    }
-
-    /**
-     * Execute a delete <code>AdminCommand</code> with the specified parameters.
-     *
-     * @param subject
-     * @param command
-     * @param parameters
-     * @return
-     */
-    public ActionReporter executeDeleteCommandManaged(Subject subject, String command, ParameterMap parameters) {
-        return executeCommand(subject, command, parameters, Status.BAD_REQUEST, true, true, true);
-    }
-
-    /**
-     * Execute a writing <code>AdminCommand</code> with no parameters.
-     *
-     * @param subject
-     * @param command
-     * @return
-     */
-    public ActionReporter executeWriteCommand(Subject subject, String command) {
-        return executeWriteCommand(subject, command, new ParameterMap());
-    }
-
-    /**
-     * Execute a writing <code>AdminCommand</code> with the specified parameters.
-     *
-     * @param subject
-     * @param command
-     * @param parameters
-     * @return
-     */
-    public ActionReporter executeWriteCommand(Subject subject, String command, ParameterMap parameters) {
-        return executeCommand(subject, command, parameters, Status.BAD_REQUEST, true, true, false);
-    }
-
-    /**
-     * Execute a writing <code>AdminCommand</code> with the specified parameters as managed job.
-     *
-     * @param subject
-     * @param command
-     * @param parameters
-     * @return
-     */
-    public ActionReporter executeWriteCommandManaged(Subject subject, String command, ParameterMap parameters) {
-        return executeCommand(subject, command, parameters, Status.BAD_REQUEST, true, true, true);
-    }
-
-    /**
-     * Execute a read-only <code>AdminCommand</code> with the specified parameters.
-     *
-     * @param subject
-     * @param command
-     * @return
-     */
-    public ActionReporter executeReadCommand(Subject subject, String command) {
-        return executeReadCommand(subject, command, new ParameterMap());
-    }
-
-    /**
-     * Execute a read-only <code>AdminCommand</code> with no parameters.
-     *
-     * @param subject
-     * @param command
-     * @param parameters
-     * @return
-     */
-    public ActionReporter executeReadCommand(Subject subject, String command, ParameterMap parameters) {
-        return executeCommand(subject, command, parameters, Status.NOT_FOUND, true, true, false);
-    }
 
     /**
      * Execute an <code>AdminCommand</code> with the specified parameters.
      *
      * @param command
      * @param parameters
-     * @param throwBadRequest (vs. NOT_FOUND)
      * @param throwOnWarning (vs.ignore warning)
      * @return
      */
     public ActionReporter executeCommand(Subject subject, String command, ParameterMap parameters, Status status,
-            boolean includeFailureMessage, boolean throwOnWarning, boolean managed) {
-        RestActionReporter ar = ResourceUtil.runCommand(command, parameters, subject, managed);
+            boolean includeFailureMessage, boolean throwOnWarning) {
+        RestActionReporter ar = ResourceUtil.runCommand(command, parameters, subject);
         ExitCode code = ar.getActionExitCode();
         if (code.equals(ExitCode.FAILURE) || (code.equals(ExitCode.WARNING) && throwOnWarning)) {
             Throwable t = ar.getFailureCause();
@@ -490,26 +348,10 @@ public class CompositeUtil {
             }
             if (includeFailureMessage) {
                 throw new WebApplicationException(Response.status(status).entity(ar.getCombinedMessage()).build());
-            } else {
-                throw new WebApplicationException(status);
             }
+            throw new WebApplicationException(status);
         }
         return ar;
-    }
-
-    /**
-     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
-     */
-    public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters) {
-        return executeSseCommand(subject, command, parameters, null);
-    }
-
-    /**
-     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
-     */
-    public EventOutput executeSseCommand(Subject subject, String command, ParameterMap parameters,
-            SseCommandHelper.ActionReportProcessor processor) {
-        return ResourceUtil.runCommandWithSse(command, parameters, subject, processor);
     }
 
     public Locale getLocale(HttpHeaders requestHeaders) {

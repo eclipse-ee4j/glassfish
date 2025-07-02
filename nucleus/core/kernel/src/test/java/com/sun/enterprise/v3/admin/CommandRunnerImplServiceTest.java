@@ -21,7 +21,7 @@ import jakarta.inject.Inject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.main.core.kernel.test.KernelJUnitExtension;

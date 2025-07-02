@@ -23,6 +23,7 @@ import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.v3.admin.AdminCommandJob;
 import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
 
 import java.lang.System.Logger;
@@ -41,8 +42,8 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.embeddable.GlassFishVariable;
@@ -68,7 +69,7 @@ class ClusterCommandHelper {
     private static final String NL = System.lineSeparator();
 
     private Domain domain;
-    private CommandRunner runner;
+    private CommandRunner<AdminCommandJob> runner;
     private ProgressStatus progress;
 
     /**
@@ -77,7 +78,7 @@ class ClusterCommandHelper {
      * @param domain The Domain we are running in
      * @param runner A CommandRunner to use for running commands
      */
-    ClusterCommandHelper(Domain domain, CommandRunner runner) {
+    ClusterCommandHelper(Domain domain, CommandRunner<AdminCommandJob> runner) {
         this.domain = domain;
         this.runner = runner;
     }
@@ -187,7 +188,7 @@ class ClusterCommandHelper {
 
             ActionReport instanceReport = runner.getActionReport("plain");
             instanceReport.setActionExitCode(ExitCode.SUCCESS);
-            CommandInvocation invocation = runner.getCommandInvocation(command, instanceReport, context.getSubject());
+            CommandInvocation<AdminCommandJob> invocation = runner.getCommandInvocation(command, instanceReport, context.getSubject());
             invocation.parameters(instanceParameterMap);
 
             String msg = command + " " + iname;

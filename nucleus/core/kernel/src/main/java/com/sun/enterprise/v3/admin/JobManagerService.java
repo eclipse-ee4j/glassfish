@@ -17,14 +17,12 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
 import com.sun.enterprise.admin.remote.RestPayloadImpl;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ManagedJobConfig;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
-import com.sun.enterprise.v3.server.ExecutorServiceFactory;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -41,16 +39,20 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.AdminCommandState.State;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobLocator;
 import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
@@ -81,7 +83,7 @@ import static java.lang.System.Logger.Level.WARNING;
  */
 @Service(name = "job-manager")
 @Singleton
-public class JobManagerService implements JobManager, EventListener {
+public class JobManagerService implements JobManager<AdminCommandJob>, EventListener {
 
     private static final Logger LOG = System.getLogger(JobManagerService.class.getName());
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(JobManagerService.class);
@@ -89,7 +91,7 @@ public class JobManagerService implements JobManager, EventListener {
     private static final int MAX_SIZE = 65535;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
-    private final ConcurrentHashMap<String, Job> jobRegistry = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, AdminCommandJob> jobRegistry = new ConcurrentHashMap<>();
     private final AtomicInteger lastId = new AtomicInteger(0);
 
     // This will store the data related to completed jobs so that unique ids
@@ -103,9 +105,6 @@ public class JobManagerService implements JobManager, EventListener {
     private Domain domain;
 
     @Inject
-    private ExecutorServiceFactory executorFactory;
-
-    @Inject
     private ServiceLocator serviceLocator;
 
     @Inject
@@ -113,9 +112,6 @@ public class JobManagerService implements JobManager, EventListener {
 
     @Inject
     private CheckpointHelper checkpointHelper;
-
-    @Inject
-    private CommandRunnerImpl commandRunner;
 
     @Inject
     private DefaultJobManagerFile defaultJobsFile;
@@ -127,7 +123,13 @@ public class JobManagerService implements JobManager, EventListener {
 
     @PostConstruct
     public void postConstruct() {
-        pool = executorFactory.provide();
+        ThreadFactory threadFactory = r -> {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            t.setName("managed-job-" + t.getId());
+            return t;
+        };
+        pool = Executors.newCachedThreadPool(threadFactory);
         Set<File> persistedJobFiles = locateJobFiles(defaultJobsFile.getFile(), serviceLocator);
 
         // Check if there are jobs.xml files which have completed jobs so that
@@ -146,6 +148,17 @@ public class JobManagerService implements JobManager, EventListener {
             }
         }
         events.register(this);
+    }
+
+    @Override
+    public AdminCommandJob createJob(String scope, String name, Subject subject, boolean isManagedJob,
+        ParameterMap parameters, ActionReport report) {
+        if (!isManagedJob) {
+            return new AdminCommandJob(name, scope, subject, false, parameters, report);
+        }
+        AdminCommandJob job = new AdminCommandJob(getNewId(), name, scope, subject, true, parameters, report);
+        job.setJobsFile(defaultJobsFile.getFile());
+        return job;
     }
 
     @Override
@@ -192,7 +205,7 @@ public class JobManagerService implements JobManager, EventListener {
      * @throws IllegalArgumentException
      */
     @Override
-    public synchronized void registerJob(Job job) throws IllegalArgumentException {
+    public synchronized void registerJob(AdminCommandJob job) throws IllegalArgumentException {
         if (job == null) {
             throw new IllegalArgumentException(I18N.getLocalString("job.cannot.be.null", "Job cannot be null"));
         }
@@ -202,10 +215,6 @@ public class JobManagerService implements JobManager, EventListener {
 
         retryableJobsInfo.remove(job.getId());
         jobRegistry.put(job.getId(), job);
-
-        if (job.getState() == State.PREPARED && (job instanceof AdminCommandInstanceImpl)) {
-            ((AdminCommandInstanceImpl) job).setState(AdminCommandState.State.RUNNING);
-        }
     }
 
     /**
@@ -214,12 +223,12 @@ public class JobManagerService implements JobManager, EventListener {
      * @return The iterator of jobs
      */
     @Override
-    public Iterator<Job> getJobs() {
+    public Iterator<AdminCommandJob> getJobs() {
         return jobRegistry.values().iterator();
     }
 
     @Override
-    public Job get(String id) {
+    public AdminCommandJob get(String id) {
         return jobRegistry.get(id);
     }
 
@@ -232,18 +241,17 @@ public class JobManagerService implements JobManager, EventListener {
         final ArrayList<JobInfo> expiredJobs = new ArrayList<>();
         final long currentTime = System.currentTimeMillis();
         final ManagedJobConfig managedJobConfig = domain.getExtensionByType(ManagedJobConfig.class);
-        final long jobsRetentionPeriod = convert(managedJobConfig.getJobRetentionPeriod());
+        final long jobsRetentionPeriod = parseJobRetentionPeriodToMillis(managedJobConfig.getJobRetentionPeriod());
         for (JobInfo job : getCompletedJobs(jobsFile).getJobInfoList()) {
             if (currentTime - job.commandExecutionDate > jobsRetentionPeriod
-                && (job.state.equals(AdminCommandState.State.COMPLETED.name())
-                    || job.state.equals(AdminCommandState.State.REVERTED.name()))) {
+                && (job.state.equals(State.COMPLETED.name()) || job.state.equals(State.REVERTED.name()))) {
                 expiredJobs.add(job);
             }
         }
         return expiredJobs;
     }
 
-    public static long convert(String input) {
+    public static long parseJobRetentionPeriodToMillis(String input) {
         String period = input.substring(0, input.length() - 1);
         long timeInterval = Long.parseLong(period);
         char unit = Character.toLowerCase(input.charAt(input.length() - 1));
@@ -275,8 +283,10 @@ public class JobManagerService implements JobManager, EventListener {
         }
     }
 
-    public void startAsyncListener(RunnableAdminCommandListener listener) {
-        pool.execute(listener);
+    @Override
+    public void start(AsyncAdminCommandExecution command) {
+        pool.execute(command);
+        LOG.log(DEBUG, "Job {0} was submitted to pool {1}", command, pool);
     }
 
     @Override
@@ -321,31 +331,33 @@ public class JobManagerService implements JobManager, EventListener {
         if (!StringUtils.ok(context.getJobId())) {
             throw new IllegalArgumentException("Command is not managed");
         }
-        Job job = get(context.getJobId());
-        Checkpoint chkp = new Checkpoint(job, command, context);
+        AdminCommandJob job = get(context.getJobId());
+        Checkpoint<AdminCommandJob> chkp = new Checkpoint(job, command, context);
         checkpointHelper.save(chkp);
-        if (job instanceof AdminCommandInstanceImpl) {
-            ((AdminCommandInstanceImpl) job).setState(AdminCommandState.State.RUNNING_RETRYABLE);
-        }
+        job.setState(State.RUNNING_RETRYABLE);
     }
 
     public void checkpointAttachement(String jobId, String attachId, Serializable data) throws IOException {
-        Job job = get(jobId);
+        AdminCommandJob job = get(jobId);
         checkpointHelper.saveAttachment(data, job, attachId);
     }
 
-    public <T extends Serializable> T loadCheckpointAttachement(String jobId, String attachId) throws IOException, ClassNotFoundException {
-        Job job = get(jobId);
+
+    public <T extends Serializable> T loadCheckpointAttachement(String jobId, String attachId)
+        throws IOException, ClassNotFoundException {
+        AdminCommandJob job = get(jobId);
         return checkpointHelper.loadAttachment(job, attachId);
     }
 
     @Override
-    public Serializable loadCheckpointData(String jobId) throws IOException, ClassNotFoundException {
+    public AdminCommandJob loadCheckpointData(String jobId) throws IOException, ClassNotFoundException {
         return loadCheckpointAttachement(jobId, CHECKPOINT_MAINDATA);
     }
 
-    public Checkpoint loadCheckpoint(String jobId, Payload.Outbound outbound) throws IOException, ClassNotFoundException {
-        Job job = get(jobId);
+
+    public Checkpoint<AdminCommandJob> loadCheckpoint(String jobId, Payload.Outbound outbound)
+        throws IOException, ClassNotFoundException {
+        AdminCommandJob job = get(jobId);
         CheckpointFilename cf = null;
         if (job == null) {
             cf = getRetryableJobsInfo().get(jobId);
@@ -358,15 +370,18 @@ public class JobManagerService implements JobManager, EventListener {
         return loadCheckpoint(cf, outbound);
     }
 
-    private Checkpoint loadCheckpoint(CheckpointFilename cf, Payload.Outbound outbound) throws IOException, ClassNotFoundException {
-        Checkpoint result = checkpointHelper.load(cf, outbound);
-        if (result != null) {
-            serviceLocator.inject(result.getJob());
-            serviceLocator.postConstruct(result.getJob());
-            if (result.getCommand() != null) {
-                serviceLocator.inject(result.getCommand());
-                serviceLocator.postConstruct(result.getCommand());
-            }
+
+    private Checkpoint<AdminCommandJob> loadCheckpoint(CheckpointFilename cf, Payload.Outbound outbound)
+        throws IOException, ClassNotFoundException {
+        Checkpoint<AdminCommandJob> result = checkpointHelper.load(cf, outbound);
+        if (result == null) {
+            return null;
+        }
+        serviceLocator.inject(result.getJob());
+        serviceLocator.postConstruct(result.getJob());
+        if (result.getCommand() != null) {
+            serviceLocator.inject(result.getCommand());
+            serviceLocator.postConstruct(result.getCommand());
         }
         return result;
     }
@@ -395,7 +410,7 @@ public class JobManagerService implements JobManager, EventListener {
                         reexecuteJobFromCheckpoint(cf);
                     }
                 };
-                new Thread(runnable).start();
+                pool.submit(runnable);
             } else {
                 LOG.log(DEBUG, "No retryable job found");
             }
@@ -404,7 +419,7 @@ public class JobManagerService implements JobManager, EventListener {
 
 
     private void reexecuteJobFromCheckpoint(CheckpointFilename cf) {
-        Checkpoint checkpoint = null;
+        Checkpoint<AdminCommandJob> checkpoint = null;
         try {
             RestPayloadImpl.Outbound outbound = new RestPayloadImpl.Outbound(true);
             checkpoint = loadCheckpoint(cf, outbound);
@@ -412,9 +427,13 @@ public class JobManagerService implements JobManager, EventListener {
             LOG.log(WARNING, "Unable to load checkpoint", ex);
         }
         if (checkpoint != null) {
-            LOG.log(INFO, "Resuming command {0} from its last checkpoint.", checkpoint.getJob().getName());
-            commandRunner.executeFromCheckpoint(checkpoint, false, new AdminCommandEventBrokerImpl());
-            ActionReport report = checkpoint.getContext().getActionReport();
+            final AdminCommandJob job = checkpoint.getJob();
+            final AdminCommandContext context = checkpoint.getContext();
+            final ActionReport report = context.getActionReport();
+            LOG.log(INFO, "Resuming command {0} from its last checkpoint.", job);
+            CommandRunnerExecutionContext ec = new CommandRunnerExecutionContext(job.getScope(), job.getName(),
+                report, context.getSubject(), false, false, serviceLocator.getService(CommandRunnerImpl.class));
+            ec.executeFromCheckpoint(checkpoint, false);
             LOG.log(INFO, "Automatically resumed command {0} finished with exit code {1}. \nMessage: {2}",
                 checkpoint.getJob().getName(), report.getActionExitCode(), report.getTopMessagePart());
         }

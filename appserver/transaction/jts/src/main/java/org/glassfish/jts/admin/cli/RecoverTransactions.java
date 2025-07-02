@@ -28,6 +28,7 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
@@ -85,7 +86,7 @@ public class RecoverTransactions extends RecoverTransactionsBase implements Admi
 
         try {
             boolean result;
-            CommandRunner.CommandInvocation inv = runner.getCommandInvocation(
+            CommandInvocation inv = runner.getCommandInvocation(
                     "_recover-transactions-internal", report, context.getSubject());
 
             final ParameterMap parameters = new ParameterMap();

@@ -15,28 +15,21 @@
  */
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
 import com.sun.enterprise.util.AnnotationUtil;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.Objects;
 
 import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.AdminCommandEventBroker;
-import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
+import org.glassfish.api.admin.AdminCommandState.State;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandParameters;
-import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandSupport;
-import org.glassfish.api.admin.Job;
-import org.glassfish.api.admin.JobCreator;
-import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.JobManager.Checkpoint;
 import org.glassfish.api.admin.ManagedJob;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
@@ -53,104 +46,77 @@ import static org.glassfish.api.admin.AdminCommandState.State.RUNNING_RETRYABLE;
  * defines a command excecution context like the requested
  * name of the command to execute, the parameters of the command, etc.
  */
-class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
+final class CommandRunnerExecutionContext implements CommandInvocation<AdminCommandJob> {
 
     private final CommandRunnerImpl commandRunner;
-    private static final Logger LOGGER = Logger.getLogger(CommandRunnerExecutionContext.class.getName());
 
-    CommandRunnerExecutionContext(String scope, String name, ActionReport report, Subject subject, boolean isNotify, final CommandRunnerImpl commandRunner) {
-        this.commandRunner = commandRunner;
+    private final String scope;
+    private final String name;
+    private final ActionReport report;
+    private final Subject subject;
+    private final boolean notify;
+    private final boolean detach;
+
+    private ParameterMap params;
+    private CommandParameters paramObject;
+    private Payload.Inbound inbound;
+    private Payload.Outbound outbound;
+    private ProgressStatus progressStatus;
+
+    CommandRunnerExecutionContext(String scope, String name, ActionReport report, Subject subject, boolean notify,
+        boolean detach, final CommandRunnerImpl commandRunner) {
         this.scope = scope;
         this.name = name;
         this.report = report;
-        this.subject = subject;
-        this.isNotify = isNotify;
+        this.subject = evaluateSubject(subject);
+        this.notify = notify;
+        this.detach = detach;
+        this.commandRunner = commandRunner;
     }
-
-    private class NameListerPair {
-
-        private final String nameRegexp;
-        private final AdminCommandListener listener;
-
-        public NameListerPair(String nameRegexp, AdminCommandListener listener) {
-            this.nameRegexp = nameRegexp;
-            this.listener = listener;
-        }
-    }
-    protected String scope;
-    protected String name;
-    protected ActionReport report;
-    protected ParameterMap params;
-    protected CommandParameters paramObject;
-    protected Payload.Inbound inbound;
-    protected Payload.Outbound outbound;
-    protected Subject subject;
-    protected ProgressStatus progressStatusChild;
-    protected boolean isManagedJob;
-    protected boolean isNotify;
-    private final List<NameListerPair> nameListerPairs = new ArrayList<>();
 
     @Override
-    public CommandRunner.CommandInvocation parameters(CommandParameters paramObject) {
+    public CommandInvocation<AdminCommandJob> parameters(CommandParameters paramObject) {
         this.paramObject = paramObject;
         return this;
     }
 
     @Override
-    public CommandRunner.CommandInvocation parameters(ParameterMap params) {
+    public CommandInvocation<AdminCommandJob> parameters(ParameterMap params) {
         this.params = params;
         return this;
     }
 
     @Override
-    public CommandRunner.CommandInvocation inbound(Payload.Inbound inbound) {
+    public CommandInvocation<AdminCommandJob> inbound(Payload.Inbound inbound) {
         this.inbound = inbound;
         return this;
     }
 
     @Override
-    public CommandRunner.CommandInvocation outbound(Payload.Outbound outbound) {
+    public CommandInvocation<AdminCommandJob> outbound(Payload.Outbound outbound) {
         this.outbound = outbound;
         return this;
     }
 
     @Override
-    public CommandRunner.CommandInvocation listener(String nameRegexp, AdminCommandListener listener) {
-        nameListerPairs.add(new NameListerPair(nameRegexp, listener));
+    public CommandInvocation<AdminCommandJob> progressStatus(ProgressStatus ps) {
+        this.progressStatus = ps;
         return this;
     }
 
     @Override
-    public CommandRunner.CommandInvocation progressStatusChild(ProgressStatus ps) {
-        this.progressStatusChild = ps;
-        return this;
+    public ParameterMap parameters() {
+        return params == null ? new ParameterMap() : params;
     }
 
     @Override
-    public CommandRunner.CommandInvocation managedJob() {
-        this.isManagedJob = true;
-        return this;
-    }
-
-    @Override
-    public void execute() {
-        execute(null);
-    }
-
-    ParameterMap parameters() {
-        return params;
-    }
-
-    CommandParameters typedParams() {
+    public CommandParameters typedParams() {
         return paramObject;
     }
 
-    String name() {
+    @Override
+    public String getCommandName() {
         return name;
-    }
-
-    private String scope() {
-        return scope;
     }
 
     @Override
@@ -158,102 +124,110 @@ class CommandRunnerExecutionContext implements CommandRunner.CommandInvocation {
         return report;
     }
 
-    void setReport(ActionReport ar) {
-        report = ar;
-    }
-
-    Payload.Inbound inboundPayload() {
+    @Override
+    public Payload.Inbound inboundPayload() {
         return inbound;
     }
 
-    Payload.Outbound outboundPayload() {
+    @Override
+    public Payload.Outbound outboundPayload() {
         return outbound;
     }
 
-    void executeFromCheckpoint(JobManager.Checkpoint checkpoint, boolean revert, AdminCommandEventBroker eventBroker) {
-        Job job = checkpoint.getJob();
-        if (subject == null) {
-            subject = checkpoint.getContext().getSubject();
-        }
-        parameters(job.getParameters());
-        AdminCommandContext context = checkpoint.getContext();
-        this.report = context.getActionReport();
-        this.inbound = context.getInboundPayload();
-        this.outbound = context.getOutboundPayload();
-        this.scope = job.getScope();
-        this.name = job.getName();
-        if (eventBroker == null) {
-            eventBroker = job.getEventBroker() == null ? new AdminCommandEventBrokerImpl() : job.getEventBroker();
-        }
-        ((AdminCommandInstanceImpl) job).setEventBroker(eventBroker);
-        ((AdminCommandInstanceImpl) job).setState(revert ? REVERTING : RUNNING_RETRYABLE);
-        JobManager jobManager = commandRunner.serviceLocator.getService(JobManagerService.class);
-        jobManager.registerJob(job);
-        //command
-        AdminCommand command = checkpoint.getCommand();
-        if (command == null) {
-            command = commandRunner.getCommand(job.getScope(), job.getName(), report(), LOGGER);
-            if (command == null) {
-                return;
-            }
-        }
-        //execute
-        commandRunner.doCommand(this, command, subject, job);
-        job.complete(report(), outboundPayload());
-        if (progressStatusChild != null) {
-            progressStatusChild.complete();
-        }
-        CommandSupport.done(commandRunner.serviceLocator, command, job);
+    @Override
+    public ProgressStatus progressStatus() {
+        return progressStatus;
     }
 
     @Override
-    public void execute(AdminCommand command) {
+    public boolean isDetached() {
+        return detach;
+    }
+
+    @Override
+    public void start(AdminCommand command, AdminCommandJob job) {
+        commandRunner.getJobManager().start(() -> execute(command, job));
+    }
+
+    @Override
+    public AdminCommandJob execute() {
+        AdminCommand command = evaluateCommand();
         if (command == null) {
-            command = commandRunner.getCommand(scope(), name(), report(), LOGGER);
+            // No need to throw an exception, the actionReport contains a user error message.
+            return null;
+        }
+        return execute(command);
+    }
+
+    @Override
+    public AdminCommandJob execute(AdminCommand command) {
+        Objects.requireNonNull(command, "AdminCommand");
+        final AdminCommandJob job = createJob(command);
+        execute(command, job);
+        return job;
+    }
+
+    @Override
+    public AdminCommandJob createJob(AdminCommand command) {
+        final boolean managedJob = detach || AnnotationUtil.presentTransitive(ManagedJob.class, command.getClass());
+        return commandRunner.getJobManager().createJob(scope, name, subject, managedJob, params, report);
+    }
+
+    @Override
+    public AdminCommand evaluateCommand() {
+        return commandRunner.getCommand(scope, name, report);
+    }
+
+    @Override
+    public void execute(final AdminCommand command, final AdminCommandJob job) {
+        job.setState(State.RUNNING);
+        if (job.isManaged()) {
+            commandRunner.getJobManager().registerJob(job);
+        }
+        commandRunner.doCommand(this, command, subject, job);
+        job.complete(report, outboundPayload());
+        if (progressStatus != null) {
+            progressStatus.complete();
+        }
+        commandRunner.done(command, job, notify);
+    }
+
+    public void executeFromCheckpoint(Checkpoint<AdminCommandJob> checkpoint, boolean revert) {
+        AdminCommandJob job = checkpoint.getJob();
+        parameters(job.getParameters());
+        final AdminCommandContext context = checkpoint.getContext();
+        this.inbound = context.getInboundPayload();
+        this.outbound = context.getOutboundPayload();
+        job.setState(revert ? REVERTING : RUNNING_RETRYABLE);
+        commandRunner.getJobManager().registerJob(job);
+
+        AdminCommand command = checkpoint.getCommand();
+        if (command == null) {
+            command = commandRunner.getCommand(job.getScope(), job.getName(), report);
             if (command == null) {
                 return;
             }
         }
-        /*
-         * The caller should have set the subject explicitly.  In case
-         * it didn't, try setting it from the current access controller context
-         * since the command framework will have set that before invoking
-         * the original command's execute method.
-         */
-        if (subject == null) {
-            subject = AccessController.doPrivileged(new PrivilegedAction<Subject>() {
-                @Override
-                public Subject run() {
-                    return Subject.getSubject(AccessController.getContext());
-                }
-            });
-        }
-        if (!isManagedJob) {
-            isManagedJob = AnnotationUtil.presentTransitive(ManagedJob.class, command.getClass());
-        }
-        JobCreator jobCreator = commandRunner.serviceLocator.getService(JobCreator.class, scope + "job-creator");
-        JobManager jobManager = commandRunner.serviceLocator.getService(JobManagerService.class);
-        if (jobCreator == null) {
-            jobCreator = commandRunner.serviceLocator.getService(JobCreatorService.class);
-        }
-        final Job job;
-        if (isManagedJob) {
-            job = jobCreator.createJob(jobManager.getNewId(), scope(), name(), subject, isManagedJob, parameters());
-        } else {
-            job = jobCreator.createJob(null, scope(), name(), subject, isManagedJob, parameters());
-        }
-        //Register the brokers  else the detach functionality will not work
-        for (NameListerPair nameListerPair : nameListerPairs) {
-            job.getEventBroker().registerListener(nameListerPair.nameRegexp, nameListerPair.listener);
-        }
-        if (isManagedJob) {
-            jobManager.registerJob(job);
-        }
+
         commandRunner.doCommand(this, command, subject, job);
-        job.complete(report(), outboundPayload());
-        if (progressStatusChild != null) {
-            progressStatusChild.complete();
+        job.complete(report, outboundPayload());
+        if (progressStatus != null) {
+            progressStatus.complete();
         }
-        CommandSupport.done(commandRunner.serviceLocator, command, job, isNotify);
+        commandRunner.done(command, job, false);
+    }
+
+    /**
+     * The caller should have set the subject explicitly.
+     * In case it didn't, try setting it from the current access controller context
+     * since the command framework will have set that before invoking
+     * the original command's execute method.
+     */
+    private static Subject evaluateSubject(Subject subject) {
+        if (subject != null) {
+            return subject;
+        }
+        PrivilegedAction<Subject> action = () -> Subject.getSubject(AccessController.getContext());
+        return AccessController.doPrivileged(action);
     }
 }

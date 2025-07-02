@@ -226,7 +226,8 @@ public class UpgradeStartup implements ModuleStartup {
         try {
             Thread.sleep(3000);
             if (runner!=null) {
-                runner.getCommandInvocation("stop-domain", new DoNothingActionReporter(), kernelIdentity.getSubject()).execute();
+                runner.getCommandInvocation("stop-domain", new DoNothingActionReporter(), kernelIdentity.getSubject())
+                    .execute();
             }
 
         } catch (InterruptedException e) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,8 +48,8 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestEndpoint;
@@ -85,7 +85,7 @@ import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 public class CreateInstanceCommand implements AdminCommand {
     private static final String NL = System.getProperty("line.separator");
     @Inject
-    private CommandRunner cr;
+    private CommandRunner<?> cr;
     @Inject
     ServiceLocator habitat;
     @Inject
@@ -169,7 +169,7 @@ public class CreateInstanceCommand implements AdminCommand {
         }
 
         // First, update domain.xml by calling _register-instance
-        CommandInvocation ci = cr.getCommandInvocation("_register-instance", report, context.getSubject());
+        CommandInvocation<?> ci = cr.getCommandInvocation("_register-instance", report, context.getSubject());
         ParameterMap map = new ParameterMap();
         map.add("node", node);
         map.add("config", configRef);
@@ -226,7 +226,7 @@ public class CreateInstanceCommand implements AdminCommand {
     }
 
     private void validateInstanceDirUnique(ActionReport report, AdminCommandContext context) {
-        CommandInvocation listInstances = cr.getCommandInvocation("list-instances", report, context.getSubject());
+        CommandInvocation<?> listInstances = cr.getCommandInvocation("list-instances", report, context.getSubject());
         ParameterMap map = new ParameterMap();
         map.add("whichTarget", theNode.getName());
         listInstances.parameters(map);

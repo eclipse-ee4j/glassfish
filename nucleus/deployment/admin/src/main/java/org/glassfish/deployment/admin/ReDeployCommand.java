@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,6 +32,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
@@ -59,16 +61,16 @@ import org.jvnet.hk2.annotations.Service;
 public class ReDeployCommand extends DeployCommandParameters implements AdminCommand {
 
     @Inject
-    CommandRunner commandRunner;
+    private CommandRunner<?> commandRunner;
 
     @Inject
-    Deployment deployment;
+    private Deployment deployment;
 
-    @Param(optional=false)
-    String name;
+    @Param(optional = false)
+    private String name;
 
-    @Param(primary=true, optional=true)
-    File path = null;
+    @Param(primary = true, optional = true)
+    private File path = null;
 
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
@@ -87,6 +89,7 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         if (!validateParameters(name, report)) {
@@ -104,7 +107,7 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
 
         paramMap.set("force", String.valueOf(true));
 
-        CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("deploy", report, context.getSubject());
+        CommandInvocation<?> inv = commandRunner.getCommandInvocation("deploy", report, context.getSubject());
         inv.parameters(paramMap).inbound(context.getInboundPayload()).outbound(context.getOutboundPayload()).execute();
     }
 
@@ -124,8 +127,7 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
             report.setMessage(localStrings.getLocalString("application.notreg","Application {0} not registered", name));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
-        }
-        else if (path == null) {
+        } else if (path == null) {
             /**
              * If path is not specified on the command line but the application
              * is not directory deployed then throw an exception since we don't
@@ -139,20 +141,19 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
         }
 
         //if path not specified on the command line then get it from domain.xml
-        super.path = (path==null)?new File(configBeansUtilities.getLocation(name)):path;
-        if (!super.path.exists()) {
-                //if unable to get path from domain.xml then return error.
-            report.setMessage(localStrings.getLocalString("redeploy.command.invalid.path", "Cannot determine the path of application."));
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;
+        super.path = path == null ? new File(configBeansUtilities.getLocation(name)) : path;
+        if (super.path.exists()) {
+            return true;
         }
-        return true;
+        // if unable to get path from domain.xml then return error.
+        report.setMessage(localStrings.getLocalString("redeploy.command.invalid.path", "Cannot determine the path of application."));
+        report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+        return false;
     }
 
     private Collection<String> initExcludedDeployCommandParamNames() {
-        final Collection<String> result = new ArrayList<String>();
+        final Collection<String> result = new ArrayList<>();
         result.add("force");
         return result;
     }
-
 }

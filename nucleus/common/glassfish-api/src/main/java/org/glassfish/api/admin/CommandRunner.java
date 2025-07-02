@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.api.admin;
 
 import java.io.BufferedReader;
-import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
@@ -44,20 +44,18 @@ public interface CommandRunner {
      * Returns the command model for a command name for the null scope
      *
      * @param name command name
-     * @param logger logger to log any error messages
      * @return model for this command (list of parameters,etc...), null if command is not found
      */
-    CommandModel getModel(String name, Logger logger);
+    CommandModel getModel(String name);
 
     /**
      * Returns the command model for a command name
      *
      * @param scope the scope (or namespace) for the command
      * @param name command name
-     * @param logger logger to log any error messages
      * @return model for this command (list of parameters,etc...), null if command is not found
      */
-    CommandModel getModel(String scope, String name, Logger logger);
+    CommandModel getModel(String scope, String name);
 
     /**
      * Returns manpage for the command.
@@ -91,7 +89,7 @@ public interface CommandRunner {
      * @param logger logger to log
      * @return command registered under commandName or null if not found.
      */
-    AdminCommand getCommand(String commandName, ActionReport report, Logger logger);
+    AdminCommand getCommand(String commandName, ActionReport report);
 
     /**
      * Obtain and return the command implementation defined by the passed commandName
@@ -102,7 +100,7 @@ public interface CommandRunner {
      * @param logger logger to log
      * @return command registered under commandName or null if not found.
      */
-    AdminCommand getCommand(String scope, String commandName, ActionReport report, Logger logger);
+    AdminCommand getCommand(String scope, String commandName, ActionReport report);
 
     /**
      * Obtain a new command invocation object for the null scope. Command invocations can be configured and used to trigger

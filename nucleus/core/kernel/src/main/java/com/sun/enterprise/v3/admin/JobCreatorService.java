@@ -48,9 +48,9 @@ public class JobCreatorService implements JobCreator {
     @Override
     public Job createJob(String id, String scope, String name, Subject subject, boolean isManagedJob, ParameterMap parameters) {
         if (!isManagedJob) {
-            return new AdminCommandInstanceImpl(name, scope, subject, false, parameters);
+            return new AdminCommandJob(name, scope, subject, false, parameters);
         }
-        AdminCommandInstanceImpl job = new AdminCommandInstanceImpl(id, name, scope, subject, true, parameters);
+        AdminCommandJob job = new AdminCommandJob(id, name, scope, subject, true, parameters);
         job.setJobsFile(defaultJobManagerFile.getFile());
         return job;
     }

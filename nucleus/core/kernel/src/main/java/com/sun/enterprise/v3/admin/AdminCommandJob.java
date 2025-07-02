@@ -18,14 +18,15 @@
 package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
-import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.lang.System.Logger;
 import java.util.List;
+import java.util.Objects;
 
 import javax.security.auth.Subject;
 
@@ -37,13 +38,12 @@ import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.progress.JobInfo;
-import org.glassfish.api.admin.progress.JobPersistence;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.services.common.SubjectUtil;
 
 import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
@@ -52,35 +52,38 @@ import static java.lang.System.Logger.Level.WARNING;
  * @author Martin Mares
  * @author Bhakti Mehta
  */
-public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements Job {
+public final class AdminCommandJob implements Job, Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = System.getLogger(AdminCommandInstanceImpl.class.getName());
+    private static final Logger LOG = System.getLogger(AdminCommandJob.class.getName());
 
     private CommandProgress commandProgress;
+
+    private final String id;
+    private ActionReport actionReport;
+    private volatile State state;
+
+    private final long executionDate;
+    private final String commandName;
+    private List<String> subjectUsernames;
+    private final String scope;
+    private boolean isManagedJob;
+    private File jobsFile;
+    private long completionDate;
+    private ParameterMap parameters;
+    private boolean failToRetryable;
+
     private transient Payload.Outbound payload;
     private transient AdminCommandEventBroker broker;
 
-    private final long executionDate;
+    protected AdminCommandJob(String name, String scope, Subject sub, boolean managedJob, ParameterMap parameters) {
+        this(null, name, scope, sub, managedJob, parameters);
+    }
 
-    private final String commandName;
-
-    private List<String> subjectUsernames;
-
-    private final String scope;
-
-    private boolean isManagedJob;
-
-    private File jobsFile;
-
-    private long completionDate;
-
-    private ParameterMap parameters;
-
-    private boolean failToRetryable;
-
-    protected AdminCommandInstanceImpl(String id, String name, String commandScope, Subject sub, boolean managedJob, ParameterMap parameters) {
-        super(id);
+    protected AdminCommandJob(String id, String name, String commandScope, Subject sub, boolean managedJob, ParameterMap parameters) {
+        this.id = id;
+        this.actionReport = null;
+        this.state = State.PREPARED;
         this.broker = new AdminCommandEventBrokerImpl();
         this.executionDate = System.currentTimeMillis();
         this.commandName = name;
@@ -90,8 +93,19 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
         this.parameters = parameters;
     }
 
-    protected AdminCommandInstanceImpl(String name, String scope, Subject sub, boolean managedJob, ParameterMap parameters) {
-        this(null, name, scope, sub, managedJob, parameters);
+    @Override
+    public final String getId() {
+        return this.id;
+    }
+
+    @Override
+    public final ActionReport getActionReport() {
+        return this.actionReport;
+    }
+
+    @Override
+    public final State getState() {
+        return this.state;
     }
 
     @Override
@@ -102,15 +116,15 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     @Override
     public void setCommandProgress(CommandProgress commandProgress) {
         this.commandProgress = commandProgress;
-        commandProgress.setEventBroker(broker);
+        this.commandProgress.setEventBroker(broker);
     }
 
     @Override
-    public AdminCommandEventBroker getEventBroker() {
+    public final AdminCommandEventBroker getEventBroker() {
         return this.broker;
     }
 
-    public void setEventBroker(AdminCommandEventBroker eventBroker) {
+    public final void setEventBroker(AdminCommandEventBroker eventBroker) {
         this.broker = eventBroker;
     }
 
@@ -134,12 +148,33 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
         return commandName;
     }
 
+    /**
+     * Sets the state and the action report and runs listeners.
+     *
+     * @param state must not be null.
+     * @param report must not be null.
+     */
+    private void setState(State state, ActionReport report) {
+        LOG.log(DEBUG, "Setting action report from {0} to {1}", this.actionReport, report);
+        // The order matters - state listeners depend on the report!
+        this.actionReport = Objects.requireNonNull(report, "report");
+        setState(state);
+    }
+
+    /**
+     * Sets the state and fires the event - state change which runs listeners.
+     *
+     * @param state must not be null.
+     */
     @Override
-    protected void setState(State state) {
-        if (state != getState()) {
-            super.setState(state);
-            getEventBroker().fireEvent(EVENT_STATE_CHANGED, this);
+    public final void setState(State state) {
+        Objects.requireNonNull(state, "state");
+        if (!State.isAllowedTransition(this.state, state)) {
+            throw new IllegalStateException("Illegal state transition: " + this.state + " -> " + state);
         }
+        LOG.log(DEBUG, "Job state changed: {0} -> {1}, original this: {2}", this.state, state, this);
+        this.state = state;
+        getEventBroker().fireEvent(EVENT_STATE_CHANGED, this);
     }
 
     @Override
@@ -181,11 +216,11 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
             }
             jobManager.deleteCheckpoint(jobFile.getParentFile(), getId());
         }
-        LOG.log(TRACE, "Completed: {0}", this);
         setState(finalState, report);
         if (commandProgress != null && report.getActionExitCode() == ExitCode.SUCCESS) {
             commandProgress.complete();
         }
+        LOG.log(INFO, "Completed: {0}", this);
     }
 
     @Override
@@ -224,17 +259,18 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
         return parameters;
     }
 
-    private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException {
+
+    @Override
+    public String toString() {
+        return super.toString() + "[id=" + id + ", name=" + commandName + ", state=" + state + ", report="
+            + actionReport + "]";
+    }
+
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         // Lazy loaded fields
         this.payload = null;
         this.broker = null;
-    }
-
-    private JobPersistence getJobPersistenceService(final ServiceLocator serviceLocator) {
-        if (scope == null) {
-            return serviceLocator.getService(JobPersistenceService.class);
-        }
-        return serviceLocator.getService(JobPersistence.class, scope + "job-persistence");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.admin.remote.reader;
 
-import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -31,7 +30,9 @@ import java.util.logging.Logger;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandState;
+import org.glassfish.api.admin.AdminCommandState.State;
 
 /**
  *
@@ -70,18 +71,60 @@ public final class AdminCommandStateJsonProprietaryReader implements Proprietary
         }
     }
 
-    public static AdminCommandStateImpl readAdminCommandState(JSONObject json) throws JSONException {
-        String strState = json.optString("state");
-        AdminCommandState.State state = (strState == null) ? null : AdminCommandState.State.valueOf(strState);
-        boolean emptyPayload = json.optBoolean("empty-payload", true);
-        CliActionReport ar = null;
-        JSONObject jsonReport = json.optJSONObject("action-report");
-        if (jsonReport != null) {
-            ar = new CliActionReport();
-            ActionReportJsonProprietaryReader.fillActionReport(ar, jsonReport);
+    public static AdminCommandState readAdminCommandState(JSONObject json) throws JSONException {
+        final String strState = json.optString("state");
+        final State state = strState == null ? null : State.valueOf(strState);
+        final boolean emptyPayload = json.optBoolean("empty-payload", true);
+        final CliActionReport report;
+        final JSONObject jsonReport = json.optJSONObject("action-report");
+        if (jsonReport == null) {
+            report = null;
+        } else {
+            report = new CliActionReport();
+            ActionReportJsonProprietaryReader.fillActionReport(report, jsonReport);
         }
-        String id = json.optString("id");
-        return new AdminCommandStateImpl(state, ar, emptyPayload, id);
+        final String id = json.optString("id");
+        return new AsadminCommandState(id, state, report, emptyPayload);
     }
 
+
+    private static final class AsadminCommandState implements AdminCommandState {
+
+        private final String id;
+        private final State state;
+        private final ActionReport actionReport;
+        private final boolean emptyPayload;
+
+        AsadminCommandState(String id, State state, ActionReport actionReport, boolean emptyPayload) {
+            this.id = id;
+            this.state = state;
+            this.actionReport = actionReport;
+            this.emptyPayload = emptyPayload;
+        }
+
+        @Override
+        public State getState() {
+            return state;
+        }
+
+        @Override
+        public ActionReport getActionReport() {
+            return actionReport;
+        }
+
+        @Override
+        public boolean isOutboundPayloadEmpty() {
+            return emptyPayload;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
 }

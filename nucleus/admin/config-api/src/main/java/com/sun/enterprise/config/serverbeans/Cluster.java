@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -520,10 +520,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Cluster.class);
             Transaction tx = Transaction.getTransaction(instance);
             //check if cluster software is installed else fail , see issue 12023
-            final CopyConfig command = (CopyConfig) runner.getCommand(
-                    "copy-config",
-                    context.getActionReport(),
-                    context.getLogger());
+            final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport());
             if (command == null) {
                 throw new TransactionFailure(
                         localStrings.getLocalString("cannot.execute.command", "Cluster software is not installed"));
@@ -742,7 +739,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             final ActionReport report = context.getActionReport();
 
             // check to see if the clustering software is installed
-            AdminCommand command = runner.getCommand("copy-config", report, context.getLogger());
+            AdminCommand command = runner.getCommand("copy-config", report);
             if (command == null) {
                 String msg = localStrings.getLocalString("cannot.execute.command", "Cluster software is not installed");
                 throw new TransactionFailure(msg);

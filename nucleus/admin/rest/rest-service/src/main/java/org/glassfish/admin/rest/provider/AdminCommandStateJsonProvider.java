@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +37,7 @@ import org.glassfish.api.admin.AdminCommandState;
 @Produces({ MediaType.APPLICATION_JSON, "application/x-javascript" })
 public class AdminCommandStateJsonProvider extends BaseProvider<AdminCommandState> {
 
-    private static final ActionReportJson2Provider actionReportJsonProvider = new ActionReportJson2Provider();
+    private static final ActionReportJson2Provider ACTION_REPORT_TO_JSON = new ActionReportJson2Provider();
 
     public AdminCommandStateJsonProvider() {
         super(AdminCommandState.class, MediaType.APPLICATION_JSON_TYPE, new MediaType("application", "x-javascript"));
@@ -56,20 +57,19 @@ public class AdminCommandStateJsonProvider extends BaseProvider<AdminCommandStat
         }
     }
 
-    public JSONObject processState(AdminCommandState state) throws JSONException {
+    private JSONObject processState(AdminCommandState state) throws JSONException {
         JSONObject result = new JSONObject();
         result.put("state", state.getState().name());
         result.put("id", state.getId());
         result.put("empty-payload", state.isOutboundPayloadEmpty());
         ActionReporter ar = (ActionReporter) state.getActionReport();
-        addActionReporter(ar, result);
+        if (ar != null) {
+            addActionReporter(ar, result);
+        }
         return result;
     }
 
     protected void addActionReporter(ActionReporter ar, JSONObject json) throws JSONException {
-        if (ar != null) {
-            json.put("action-report", actionReportJsonProvider.processReport(ar));
-        }
+        json.put("action-report", ACTION_REPORT_TO_JSON.processReport(ar));
     }
-
 }

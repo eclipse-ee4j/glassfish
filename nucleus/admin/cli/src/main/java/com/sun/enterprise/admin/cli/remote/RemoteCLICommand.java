@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,9 +60,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
-import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandProgress;
@@ -75,6 +73,7 @@ import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.component.MultiMap;
 
+import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
@@ -131,7 +130,7 @@ public class RemoteCLICommand extends CLICommand {
             if (!programOpts.isTerse()) {
                 super.registerListener(CommandProgress.EVENT_PROGRESSSTATUS_CHANGE, statusPrinter);
                 super.registerListener(CommandProgress.EVENT_PROGRESSSTATUS_STATE, statusPrinter);
-                super.registerListener(AdminCommandEventBroker.EventBrokerUtils.USER_MESSAGE_NAME, statusPrinter);
+                super.registerListener(ProgressStatusPrinter.USER_MESSAGE_NAME, statusPrinter);
             }
             //Readtimeout
             String stimeout = env.getStringOption("READTIMEOUT");
@@ -714,7 +713,7 @@ public class RemoteCLICommand extends CLICommand {
             rac.statusPrinter.reset();
             options.set("DEFAULT", operands);
             if (programOpts.isDetachedCommand()) {
-                rac.registerListener(AdminCommandState.EVENT_STATE_CHANGED, new DetachListener(logger, rac, programOpts.isTerse()));
+                rac.registerListener(EVENT_STATE_CHANGED, new DetachListener(rac, programOpts.isTerse()));
             }
 
             /*if (programOpts.isNotifyCommand()) {

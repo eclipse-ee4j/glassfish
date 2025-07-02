@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +56,7 @@ public class InserverCommandRunnerHelper {
 
     public ActionReport runCommand(final String command, final ParameterMap parameters, final ActionReport report, final Subject subject) {
         try {
-            final AdminCommand adminCommand = commandRunner.getCommand(command, report, logger);
+            final AdminCommand adminCommand = commandRunner.getCommand(command, report);
             if (adminCommand == null) {
                 // maybe commandRunner already reported the failure?
                 if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE) {

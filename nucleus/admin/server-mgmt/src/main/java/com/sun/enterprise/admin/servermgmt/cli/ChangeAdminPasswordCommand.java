@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,10 +93,11 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             if (cons != null && programOpts.isInteractive()) {
                 cons.printf("%s", strings.get("AdminUserDefaultPrompt", SystemPropertyConstants.DEFAULT_ADMIN_USER));
                 String val = cons.readLine();
-                if (ok(val))
+                if (ok(val)) {
                     programOpts.setUser(val);
-                else
+                } else {
                     programOpts.setUser(SystemPropertyConstants.DEFAULT_ADMIN_USER);
+                }
             } else {
                 //logger.info(strings.get("AdminUserRequired"));
                 throw new CommandValidationException(strings.get("AdminUserRequired"));
@@ -145,27 +147,23 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             String domainName = (ok(userArgDomainName)) ? userArgDomainName : getDomainName();
             return changeAdminPasswordLocally(domainDir, domainName);
 
-        } else {
-            try {
-                RemoteRestAdminCommand rac = new RemoteRestAdminCommand(name, programOpts.getHost(), programOpts.getPort(),
-                        programOpts.isSecure(), programOpts.getUser(), programOpts.getPassword(), logger, false);
-                rac.executeCommand(params);
-                return SUCCESS;
-            } catch (CommandException ce) {
-                if (ce.getCause() instanceof ConnectException) {
-                    //Remote change failure - change password with default values of
-                    // domaindir and domain name,if the --host option is not provided.
-                    if (!isLocalHost(programOpts.getHost())) {
-                        throw ce;
-                    }
-                    return changeAdminPasswordLocally(getDomainsDir().getPath(), getDomainName());
-
-                } else {
+        }
+        try {
+            RemoteRestAdminCommand rac = new RemoteRestAdminCommand(name, programOpts.getHost(), programOpts.getPort(),
+                    programOpts.isSecure(), programOpts.getUser(), programOpts.getPassword(), logger, false, false);
+            rac.executeCommand(params);
+            return SUCCESS;
+        } catch (CommandException ce) {
+            if (ce.getCause() instanceof ConnectException) {
+                //Remote change failure - change password with default values of
+                // domaindir and domain name,if the --host option is not provided.
+                if (!isLocalHost(programOpts.getHost())) {
                     throw ce;
                 }
+                return changeAdminPasswordLocally(getDomainsDir().getPath(), getDomainName());
             }
+            throw ce;
         }
-
     }
 
     private int changeAdminPasswordLocally(String domainDir, String domainName) throws CommandException {

@@ -43,6 +43,7 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
@@ -229,7 +230,7 @@ public class ListSubComponentsCommand implements AdminCommand {
                 Module module = application.getModule(subComponent.getKey());
                 if (module != null) {
                     ActionReport subReport = report.addSubActionsReport();
-                    CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("_list-resources", subReport, context.getSubject());
+                    CommandInvocation inv = commandRunner.getCommandInvocation("_list-resources", subReport, context.getSubject());
                     final ParameterMap parameters = new ParameterMap();
                     parameters.add("appname", application.getName());
                     parameters.add("modulename", module.getName());

@@ -20,15 +20,19 @@ package org.glassfish.api;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jvnet.hk2.annotations.Contract;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * An action report is an abstract class allowing any type of server side action like a service execution, a command
@@ -41,16 +45,12 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public abstract class ActionReport implements Serializable {
-
+    private static final Logger LOG = System.getLogger(ActionReport.class.getName());
     private static final long serialVersionUID = -238144192513668688L;
 
-    public enum ExitCode {
-        SUCCESS, WARNING, FAILURE;
-
-        public boolean isWorse(final ExitCode other) {
-            return compareTo(other) > 0;
-        }
-    }
+    private final AtomicBoolean locked = new AtomicBoolean(false);
+    private Properties extraProperties;
+    private MessagePart topMessage = new MessagePart(locked);
 
     public abstract void setActionDescription(String message);
 
@@ -58,19 +58,11 @@ public abstract class ActionReport implements Serializable {
 
     public abstract Throwable getFailureCause();
 
-    public abstract void setMessage(String message);
-
-    public abstract void appendMessage(String message);
-
     /**
      * @param os output stream in UTF-8 encoding if required.
      * @throws IOException
      */
     public abstract void writeReport(OutputStream os) throws IOException;
-
-    public abstract String getMessage();
-
-    public abstract MessagePart getTopMessagePart();
 
     public abstract ActionReport addSubActionsReport();
 
@@ -82,30 +74,55 @@ public abstract class ActionReport implements Serializable {
 
     public abstract List<? extends ActionReport> getSubActionsReport();
 
-    /**
-     * Report a failure to the logger and {@link ActionReport}.
-     *
-     * This is more of a convenience to the caller.
-     */
-    public final void failure(Logger logger, String message, Throwable e) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, message, e);
-        }
-        logger.log(Level.SEVERE, message);
-        if (e != null) {
-            setMessage(message + " : " + e.toString());
-            setFailureCause(e);
-        } else {
-            setMessage(message);
-        }
-        setActionExitCode(ActionReport.ExitCode.FAILURE);
+
+    public final void lock() {
+        LOG.log(DEBUG, "lock()");
+        this.locked.set(true);
+    }
+
+    public final void unlock() {
+        LOG.log(DEBUG, "unlock()");
+        this.locked.set(false);
+    }
+
+    public MessagePart getTopMessagePart() {
+        return topMessage;
+    }
+
+    public void setMessage(String message) {
+        topMessage.setMessage(message);
+    }
+
+    public void appendMessage(String message) {
+        topMessage.appendMessage(message);
+    }
+
+    public String getMessage() {
+        return topMessage.getMessage();
     }
 
     /**
      * Short for {@code failure(logger,message,null)}
      */
-    public final void failure(Logger logger, String message) {
+    public final void failure(java.util.logging.Logger logger, String message) {
         failure(logger, message, null);
+    }
+
+    /**
+     * Report a failure to the logger and {@link ActionReport}.
+     *
+     * This is more of a convenience to the caller.
+     */
+    public final void failure(java.util.logging.Logger logger, String message, Throwable e) {
+        logger.log(FINE, message, e);
+        logger.log(SEVERE, message);
+        if (e == null) {
+            setMessage(message);
+        } else {
+            setMessage(message + " : " + e.toString());
+            setFailureCause(e);
+        }
+        setActionExitCode(ActionReport.ExitCode.FAILURE);
     }
 
     /**
@@ -122,115 +139,6 @@ public abstract class ActionReport implements Serializable {
      * return true if the action report or a subaction report has ExitCode.FAILURE.
      */
     public abstract boolean hasFailures();
-
-    public static class MessagePart implements Serializable {
-
-        private static final long serialVersionUID = -8708934987452414280L;
-
-        Properties props = new Properties();
-        StringBuilder message;
-        String childrenType;
-
-        List<MessagePart> children = new ArrayList<>();
-
-        public MessagePart addChild() {
-            MessagePart newPart = new MessagePart();
-            children.add(newPart);
-            return newPart;
-        }
-
-        public void setChildrenType(String type) {
-            this.childrenType = type;
-        }
-
-        public void setMessage(String message) {
-            this.message = new StringBuilder(message);
-        }
-
-        public void appendMessage(String message) {
-            if (this.message == null) {
-                this.message = new StringBuilder(message);
-            } else {
-                this.message.append(message);
-            }
-        }
-
-        public void addProperty(String key, String value) {
-            props.put(key, value);
-        }
-
-        public Properties getProps() {
-            return props;
-        }
-
-        public String getMessage() {
-            return message == null ? null : message.toString();
-        }
-
-        public String getChildrenType() {
-            return childrenType;
-        }
-
-        public List<MessagePart> getChildren() {
-            return children;
-        }
-
-        protected String findPropertyImpl(final String key) {
-            String value = props.getProperty(key);
-            if (value != null) {
-                return value;
-            }
-            for (MessagePart child : children) {
-                value = child.findProperty(key);
-                if (value != null) {
-                    return value;
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Search in message parts properties then in extra properties and then in sub reports. Returns first occurrence of the
-         * key.
-         */
-        public String findProperty(String key) {
-            if (key == null) {
-                return null;
-            }
-            if (key.endsWith("_value")) {
-                key = key.substring(0, key.length() - 6); // Because of back compatibility
-            }
-            return findPropertyImpl(key);
-        }
-
-        protected String toString(int indent) {
-            StringBuilder result = new StringBuilder();
-            if (message != null && message.length() > 0) {
-                for (int i = 0; i < indent; i++) {
-                    result.append(' ');
-                }
-                result.append(message);
-            }
-            for (MessagePart child : children) {
-                String msg = child.toString(indent + 4);
-                if (msg != null && !msg.isEmpty()) {
-                    if (result.length() > 0) {
-                        result.append('\n');
-                    }
-                    result.append(msg);
-                }
-            }
-            return result.toString();
-        }
-
-        @Override
-        public String toString() {
-            return toString(0);
-        }
-
-    }
-
-    Properties extraProperties;
 
     public final Properties getExtraProperties() {
         return extraProperties;
@@ -295,9 +203,146 @@ public abstract class ActionReport implements Serializable {
         return null;
     }
 
-
     @Override
     public String toString() {
         return super.toString() + "[exitCode=" + getActionExitCode() + ", message=" + getMessage() + "]";
+    }
+
+    public static final class MessagePart implements Serializable {
+
+        private static final long serialVersionUID = -8708934987452414280L;
+
+        Properties props = new Properties();
+        StringBuilder message;
+        String childrenType;
+
+        List<MessagePart> children = new ArrayList<>();
+
+        private final AtomicBoolean locked;
+
+        private MessagePart(AtomicBoolean locked) {
+            this.childrenType = "default";
+            this.locked = locked;
+        }
+
+        public MessagePart addChild() {
+            waitForUnlock();
+            MessagePart newPart = new MessagePart(locked);
+            children.add(newPart);
+            return newPart;
+        }
+
+        public void setChildrenType(String type) {
+            waitForUnlock();
+            this.childrenType = type;
+        }
+
+        public void setMessage(String message) {
+            waitForUnlock();
+            if (this.message != null) {
+                LOG.log(DEBUG, () -> "Overwriting message '" + this.message + "' with '" + message + "'",
+                    new RuntimeException());
+            }
+            synchronized (this) {
+                this.message = new StringBuilder(message);
+            }
+        }
+
+        public synchronized void appendMessage(String message) {
+            waitForUnlock();
+            if (this.message == null) {
+                this.message = new StringBuilder(message);
+            } else {
+                this.message.append(message);
+            }
+        }
+
+        public void addProperty(String key, String value) {
+            waitForUnlock();
+            props.put(key, value);
+        }
+
+        public Properties getProps() {
+            return props;
+        }
+
+        public synchronized String getMessage() {
+            return message == null ? null : message.toString();
+        }
+
+        public String getChildrenType() {
+            return childrenType;
+        }
+
+        public List<MessagePart> getChildren() {
+            return children;
+        }
+
+        protected String findPropertyImpl(final String key) {
+            String value = props.getProperty(key);
+            if (value != null) {
+                return value;
+            }
+            for (MessagePart child : children) {
+                value = child.findProperty(key);
+                if (value != null) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Search in message parts properties then in extra properties and then in sub reports. Returns first occurrence of the
+         * key.
+         */
+        public String findProperty(String key) {
+            if (key == null) {
+                return null;
+            }
+            if (key.endsWith("_value")) {
+                key = key.substring(0, key.length() - 6); // Because of back compatibility
+            }
+            return findPropertyImpl(key);
+        }
+
+        protected String toString(int indent) {
+            StringBuilder result = new StringBuilder();
+            if (message != null && message.length() > 0) {
+                for (int i = 0; i < indent; i++) {
+                    result.append(' ');
+                }
+                result.append(message);
+            }
+            for (MessagePart child : children) {
+                String msg = child.toString(indent + 4);
+                if (msg != null && !msg.isEmpty()) {
+                    if (result.length() > 0) {
+                        result.append('\n');
+                    }
+                    result.append(msg);
+                }
+            }
+            return result.toString();
+        }
+
+        private void waitForUnlock() {
+            while (locked.get()) {
+                Thread.onSpinWait();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return toString(0);
+        }
+    }
+
+    public enum ExitCode {
+        SUCCESS, WARNING, FAILURE;
+
+        public boolean isWorse(final ExitCode other) {
+            return compareTo(other) > 0;
+        }
     }
 }

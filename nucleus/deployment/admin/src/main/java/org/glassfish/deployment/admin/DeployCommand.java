@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +50,7 @@ import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
@@ -124,7 +125,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
     ServiceLocator habitat;
 
     @Inject
-    CommandRunner commandRunner;
+    CommandRunner<?> commandRunner;
 
     @Inject
     Deployment deployment;
@@ -613,32 +614,26 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
         safeCopyOfRuntimeAltDD = renameUploadedFileOrCopyInPlaceFile(finalAltDDDir, runtimealtdd, applicationsDir);
     }
 
-    private void recordFileLocations(
-            final Properties appProps) throws URISyntaxException {
+    private void recordFileLocations(final Properties appProps) throws URISyntaxException {
         /*
          * Setting the properties in the appProps now will cause them to be stored in the domain.xml elements along with other
          * properties when the entire config is saved.
          */
         if (safeCopyOfApp != null) {
             appProps.setProperty(Application.APP_LOCATION_PROP_NAME,
-                    DeploymentUtils.relativizeWithinDomainIfPossible(
-                            safeCopyOfApp.toURI()));
+                DeploymentUtils.relativizeWithinDomainIfPossible(safeCopyOfApp.toURI()));
         }
         if (safeCopyOfDeploymentPlan != null) {
             appProps.setProperty(Application.DEPLOYMENT_PLAN_LOCATION_PROP_NAME,
-                    DeploymentUtils.relativizeWithinDomainIfPossible(
-                            safeCopyOfDeploymentPlan.toURI()));
+                DeploymentUtils.relativizeWithinDomainIfPossible(safeCopyOfDeploymentPlan.toURI()));
         }
         if (safeCopyOfAltDD != null) {
             appProps.setProperty(Application.ALT_DD_LOCATION_PROP_NAME,
-                    DeploymentUtils.relativizeWithinDomainIfPossible(
-                            safeCopyOfAltDD.toURI()));
+                DeploymentUtils.relativizeWithinDomainIfPossible(safeCopyOfAltDD.toURI()));
         }
         if (safeCopyOfRuntimeAltDD != null) {
-            appProps.setProperty(
-                    Application.RUNTIME_ALT_DD_LOCATION_PROP_NAME,
-                    DeploymentUtils.relativizeWithinDomainIfPossible(
-                            safeCopyOfRuntimeAltDD.toURI()));
+            appProps.setProperty(Application.RUNTIME_ALT_DD_LOCATION_PROP_NAME,
+                DeploymentUtils.relativizeWithinDomainIfPossible(safeCopyOfRuntimeAltDD.toURI()));
         }
     }
 
@@ -691,7 +686,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             propertyNames.add(DeploymentProperties.PRESERVE_APP_SCOPED_RESOURCES);
             populatePropertiesToParameterMap(parameters, propertyNames);
 
-            CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("undeploy", subReport,
+            CommandInvocation inv = commandRunner.getCommandInvocation("undeploy", subReport,
                     context.getSubject());
 
             inv.parameters(parameters).execute();
@@ -817,10 +812,11 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
         }
     }
 
-    private static void handleRetrieveException(final Exception e,
-            final AdminCommandContext context, final boolean reportErrorsInTopReport) {
-        final String errorMsg = localStrings.getLocalString(
-                "download.errDownloading", "Error while downloading generated files");
+
+    private static void handleRetrieveException(final Exception e, final AdminCommandContext context,
+        final boolean reportErrorsInTopReport) {
+        final String errorMsg = localStrings.getLocalString("download.errDownloading",
+            "Error while downloading generated files");
         final Logger logger = context.getLogger();
         logger.log(Level.SEVERE, errorMsg, e);
         ActionReport report = context.getActionReport();
@@ -843,60 +839,58 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
      */
     private void settingsFromDomainXML(Application app) {
         // if name is null then cannot get the application's setting from domain.xml
-        if (name != null) {
-            if (contextroot == null) {
-                if (app.getContextRoot() != null) {
-                    this.previousContextRoot = app.getContextRoot();
-                }
+        if (name == null) {
+            return;
+        }
+        if (contextroot == null) {
+            if (app.getContextRoot() != null) {
+                this.previousContextRoot = app.getContextRoot();
             }
-            if (libraries == null) {
-                libraries = app.getLibraries();
-            }
+        }
+        if (libraries == null) {
+            libraries = app.getLibraries();
+        }
 
-            previousTargets = domain.getAllReferencedTargetsForApplication(name);
-            if (virtualservers == null) {
-                if (DeploymentUtils.isDomainTarget(target)) {
-                    for (String tgt : previousTargets) {
-                        String vs = domain.getVirtualServersForApplication(tgt, name);
-                        if (vs != null) {
-                            previousVirtualServers.put(tgt, vs);
-                        }
+        previousTargets = domain.getAllReferencedTargetsForApplication(name);
+        if (virtualservers == null) {
+            if (DeploymentUtils.isDomainTarget(target)) {
+                for (String tgt : previousTargets) {
+                    String vs = domain.getVirtualServersForApplication(tgt, name);
+                    if (vs != null) {
+                        previousVirtualServers.put(tgt, vs);
                     }
-                } else {
-                    virtualservers = domain.getVirtualServersForApplication(
-                            target, name);
                 }
+            } else {
+                virtualservers = domain.getVirtualServersForApplication(target, name);
             }
+        }
 
-            if (enabled == null) {
-                if (DeploymentUtils.isDomainTarget(target)) {
-                    // save the enable attributes of the application-ref
-                    for (String tgt : previousTargets) {
-                        previousEnabledAttributes.put(tgt, domain.getEnabledForApplication(tgt, name));
-                    }
-                    // save the enable attribute of the application
-                    previousEnabledAttributes.put(DeploymentUtils.DOMAIN_TARGET_NAME, app.getEnabled());
-                    // set the enable command param for DAS
-                    enabled = deployment.isAppEnabled(app);
-                } else {
-                    enabled = Boolean.valueOf(domain.getEnabledForApplication(
-                            target, name));
+        if (enabled == null) {
+            if (DeploymentUtils.isDomainTarget(target)) {
+                // save the enable attributes of the application-ref
+                for (String tgt : previousTargets) {
+                    previousEnabledAttributes.put(tgt, domain.getEnabledForApplication(tgt, name));
                 }
+                // save the enable attribute of the application
+                previousEnabledAttributes.put(DeploymentUtils.DOMAIN_TARGET_NAME, app.getEnabled());
+                // set the enable command param for DAS
+                enabled = deployment.isAppEnabled(app);
+            } else {
+                enabled = Boolean.valueOf(domain.getEnabledForApplication(
+                        target, name));
             }
+        }
 
-            String compatProp = app.getDeployProperties().getProperty(
-                    DeploymentProperties.COMPATIBILITY);
-            if (compatProp != null) {
-                if (properties == null) {
-                    properties = new Properties();
-                }
-                // if user does not specify the compatibility flag
-                // explictly in this deployment, set it to the old value
-                if (properties.getProperty(DeploymentProperties.COMPATIBILITY) == null) {
-                    properties.setProperty(DeploymentProperties.COMPATIBILITY, compatProp);
-                }
+        String compatProp = app.getDeployProperties().getProperty(DeploymentProperties.COMPATIBILITY);
+        if (compatProp != null) {
+            if (properties == null) {
+                properties = new Properties();
             }
-
+            // if user does not specify the compatibility flag
+            // explictly in this deployment, set it to the old value
+            if (properties.getProperty(DeploymentProperties.COMPATIBILITY) == null) {
+                properties.setProperty(DeploymentProperties.COMPATIBILITY, compatProp);
+            }
         }
     }
 
@@ -917,10 +911,9 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
         }
     }
 
-    private void validateDeploymentProperties(Properties properties,
-            DeploymentContext context) {
-        String compatProp = properties.getProperty(
-                DeploymentProperties.COMPATIBILITY);
+
+    private void validateDeploymentProperties(Properties properties, DeploymentContext context) {
+        String compatProp = properties.getProperty(DeploymentProperties.COMPATIBILITY);
         if (compatProp != null && !compatProp.equals("v2")) {
             // this only allowed value for property compatibility is v2
             String warningMsg = localStrings.getLocalString("compat.value.not.supported", "{0} is not a supported value for compatibility property.",

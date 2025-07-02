@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,7 +39,6 @@ import org.glassfish.hk2.api.ServiceLocator;
  *
  * @author Tim Quinn
  */
-//TODO: Remove it
 public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
 
     private final static String SSL_SOCKET_PROTOCOL = "TLS";
@@ -54,9 +53,9 @@ public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
 
     private DomainScopedPasswordAliasStore domainPasswordAliasStore = null;
 
-    public ServerRemoteRestAdminCommand(ServiceLocator habitat, String name, String host, int port, boolean secure, String user,
-            String password, Logger logger) throws CommandException {
-        super(name, host, port, secure, "admin", "".toCharArray(), logger, false);
+    public ServerRemoteRestAdminCommand(ServiceLocator habitat, String name, String host, int port, boolean secure,
+        String user, String password, Logger logger) throws CommandException {
+        super(name, host, port, secure, "admin", new char[0], logger, false, false);
         completeInit(habitat);
     }
 

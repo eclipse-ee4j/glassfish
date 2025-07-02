@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
@@ -55,20 +56,20 @@ public class DetachAttachITest {
 
     @Test
     public void uptimePeriodically() throws Exception {
-        Set<String> ids = new HashSet<>();
-        for (int i = 0; i < 3; i++) {
+        final Set<String> ids = new HashSet<>();
+        for (int i = 0; i < 20; i++) {
             LOG.log(INFO, "detachAndAttachUptimePeriodically: round {0}", i);
             final String id;
             {
                 DetachedTerseAsadminResult result = ASADMIN.execDetached("uptime");
                 assertThat(result, asadminOK());
                 id = result.getJobId();
-                assertTrue(ids.add(id));
+                assertTrue(ids.add(id), () -> "Job id unique: " + id);
             }
             {
                 AsadminResult result = GlassFishTestEnvironment.getAsadmin(true).exec("attach", id);
                 assertThat(result, asadminOK());
-                assertTrue(result.getStdOut().contains("uptime"));
+                assertThat(result.getStdOut(), containsString("uptime"));
             }
         }
     }
@@ -82,7 +83,7 @@ public class DetachAttachITest {
         assertThat(attachResult, asadminOK());
         assertThat(attachResult.getStdOut(), stringContainsInOrder("progress-custom"));
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(attachResult.getStdOut());
-        assertFalse(prgs.isEmpty());
+        assertFalse(prgs.isEmpty(), "ProgressMessages.isEmpty()");
         assertThat(prgs.get(0).getValue(), greaterThanOrEqualTo(0));
         assertEquals(100, prgs.get(prgs.size() - 1).getValue());
 
@@ -111,7 +112,7 @@ public class DetachAttachITest {
             final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
             assertAll(
                 () -> assertThat(result, asadminOK()),
-                () -> assertTrue(result.getStdOut().contains("progress-custom"))
+                () -> assertThat(result.getStdOut(), containsString("progress-custom"))
             );
             if (prgs.isEmpty()) {
                 // We were late to watch the progress, however soon enough to get the result.

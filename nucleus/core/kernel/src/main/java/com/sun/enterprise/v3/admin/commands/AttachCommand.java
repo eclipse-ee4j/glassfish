@@ -44,12 +44,10 @@ import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
 import static org.glassfish.api.admin.AdminCommandState.State.COMPLETED;
-import static org.glassfish.api.admin.AdminCommandState.State.PREPARED;
 import static org.glassfish.api.admin.AdminCommandState.State.REVERTED;
-import static org.glassfish.api.admin.AdminCommandState.State.RUNNING;
-import static org.glassfish.api.admin.AdminCommandState.State.RUNNING_RETRYABLE;
 import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_STATE;
 
 
@@ -64,8 +62,8 @@ import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_STATE
 @CommandLock(CommandLock.LockType.NONE)
 @I18n(AttachCommand.COMMAND_NAME)
 @ManagedJob
-@AccessRequired(resource="jobs/job/$jobID", action="attach")
-public class AttachCommand implements AdminCommand, AdminCommandListener {
+@AccessRequired(resource = "jobs/job/$jobID", action = "attach")
+public class AttachCommand implements AdminCommand, AdminCommandListener<Object> {
     /** Command name: attach */
     // Must be public to be used in annotations
     public static final String COMMAND_NAME = "attach";
@@ -73,7 +71,7 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
     private static final Logger LOG = System.getLogger(AttachCommand.class.getName());
 
     @Inject
-    private JobManagerService registry;
+    private JobManagerService jobManagerService;
     @Inject
     private DefaultJobManagerFile defaultJobManagerFile;
 
@@ -83,24 +81,42 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
     private Integer timeout;
 
     private AdminCommandEventBroker<?> eventBroker;
-    private Job job;
+    private Job detachedJob;
 
     @Override
     public void execute(AdminCommandContext context) {
         eventBroker = context.getEventBroker();
-        job = registry.get(jobID);
+        detachedJob = jobManagerService.get(jobID);
         final String attachedUser = SubjectUtil.getUsernamesFromSubject(context.getSubject()).get(0);
         final ActionReport report = context.getActionReport();
-        if (job == null) {
+        if (detachedJob == null) {
             LOG.log(TRACE, "Trying to find completed job id: {0}", jobID);
-            JobInfo jobInfo = registry.getCompletedJobForId(jobID, defaultJobManagerFile.getFile());
+            JobInfo jobInfo = jobManagerService.getCompletedJobForId(jobID, defaultJobManagerFile.getFile());
             attachCompleted(jobInfo, attachedUser, report);
         } else {
             attachRunning(attachedUser, report);
         }
     }
 
+    @Override
+    public void onAdminCommandEvent(String eventName, Object event) {
+        LOG.log(TRACE, "onAdminCommandEvent(eventName={0}, event={1})", eventName, event);
+        // Skip nonsense or own events
+        if (eventName == null || eventName.startsWith("client.")) {
+            return;
+        }
+        // Distribute to listeners of the attach job too.
+        eventBroker.fireEvent(eventName, event);
+        // on any update check the state of the detached job.
+        if (!detachedJob.isJobStillActive()) {
+            synchronized (detachedJob) {
+                detachedJob.notifyAll();
+            }
+        }
+    }
+
     private void attachCompleted(JobInfo jobInfo, String attachedUser, ActionReport report) {
+        LOG.log(DEBUG, "attachCompleted(jobInfo={0}, attachedUser={1}, report={2})", jobInfo, attachedUser, report);
         if (jobInfo == null || isInvisibleJob(jobInfo.jobName)) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(
@@ -123,40 +139,42 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
     }
 
     private void attachRunning(String attachedUser, ActionReport report) {
-        if (job == null || isInvisibleJob(job.getName())) {
+        LOG.log(DEBUG, "attachRunning(attachedUser={0}, report={1})", attachedUser, report);
+        if (detachedJob == null || isInvisibleJob(detachedJob.getName())) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(
                 strings.getLocalString("attach.wrong.commandinstance.id", "Job with id {0} does not exist.", jobID));
             return;
         }
-        final String jobInitiator = job.getSubjectUsernames().get(0);
+        final String jobInitiator = detachedJob.getSubjectUsernames().get(0);
         if (!attachedUser.equals(jobInitiator)) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(strings.getLocalString("user.not.authorized",
                 "User {0} not authorized to attach to job {1}", attachedUser, jobID));
             return;
         }
-        AdminCommandEventBroker<?> attachedBroker = job.getEventBroker();
-        CommandProgress commandProgress = job.getCommandProgress();
-        onAdminCommandEvent(EVENT_STATE_CHANGED, job);
-        attachedBroker.registerListener(".*", this);
+        // Send current state of the job
+        eventBroker.fireEvent(EVENT_STATE_CHANGED, detachedJob);
+        final CommandProgress commandProgress = detachedJob.getCommandProgress();
         if (commandProgress != null) {
-            onAdminCommandEvent(EVENT_PROGRESSSTATUS_STATE, commandProgress);
+            eventBroker.fireEvent(EVENT_PROGRESSSTATUS_STATE, commandProgress);
         }
-        LOG.log(TRACE, "Waiting until job {0} is finished.", job);
-        synchronized (job) {
-            while (isJobStillActive()) {
+        // Tell job's broker that we are watching it
+        detachedJob.getEventBroker().registerListener(".*", this);
+        LOG.log(TRACE, "Waiting until job {0} is finished.", detachedJob);
+        synchronized (detachedJob) {
+            if (detachedJob.isJobStillActive()) {
                 try {
                     if (timeout == null) {
-                        job.wait();
+                        detachedJob.wait();
                     } else {
-                        job.wait(timeout * 1000L);
-                        if (isJobStillActive()) {
-                            LOG.log(DEBUG, "Job {0} is still in state {1} after timeout {1} seconds.",
-                                job.getName(), job.getState(), timeout);
+                        detachedJob.wait(timeout * 1000L);
+                        if (detachedJob.isJobStillActive()) {
+                            LOG.log(WARNING, "Job {0} is still in state {1} after timeout {1} seconds.",
+                                detachedJob.getName(), detachedJob.getState(), timeout);
                             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                             report.setMessage(strings.getLocalString("attach.timeout",
-                                "Waiting for job {0} timed out after {1} seconds.", job.getName(), timeout));
+                                "Waiting for job {0} timed out after {1} seconds.", detachedJob.getName(), timeout));
                             return;
                         }
                     }
@@ -164,40 +182,14 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
                     Thread.currentThread().interrupt();
                 }
             }
-            LOG.log(TRACE, "Finished waiting for job {0}", job);
-            if (COMPLETED.equals(job.getState()) || REVERTED.equals(job.getState())) {
-                report.setActionExitCode(job.getActionReport().getActionExitCode());
+            LOG.log(DEBUG, "Finished waiting for job {0}", detachedJob);
+            if (COMPLETED.equals(detachedJob.getState()) || REVERTED.equals(detachedJob.getState())) {
+                report.setActionExitCode(detachedJob.getActionReport().getActionExitCode());
                 report.appendMessage(strings.getLocalString("attach.finished", "Command {0} executed with status {1}",
-                    job.getName(), job.getActionReport().getActionExitCode()));
+                    detachedJob.getName(), detachedJob.getActionReport().getActionExitCode()));
             }
         }
     }
-
-    private boolean isJobStillActive() {
-        return PREPARED.equals(job.getState())
-            || RUNNING.equals(job.getState())
-            || RUNNING_RETRYABLE.equals(job.getState());
-    }
-
-    @Override
-    public void onAdminCommandEvent(String name, Object event) {
-        LOG.log(TRACE, "onAdminCommandEvent(name={0}, event={1})", name, event);
-        // Skip nonsense or own events
-        if (name == null || name.startsWith("client.")) {
-            return;
-        }
-        if (EVENT_STATE_CHANGED.equals(name)
-            && (((Job) event).getState().equals(COMPLETED) || ((Job) event).getState().equals(REVERTED))) {
-            synchronized (job) {
-                LOG.log(DEBUG, "Notifying attached: {0}", job);
-                job.notifyAll();
-            }
-        } else {
-            // Forward
-            eventBroker.fireEvent(name, event);
-        }
-    }
-
 
     private boolean isInvisibleJob(String name) {
         return name.startsWith("_") || COMMAND_NAME.equals(name);

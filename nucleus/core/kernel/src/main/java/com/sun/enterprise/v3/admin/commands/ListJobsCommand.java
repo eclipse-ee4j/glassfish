@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package com.sun.enterprise.v3.admin.commands;
 import com.sun.enterprise.admin.progress.ProgressStatusClient;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.v3.admin.AdminCommandJob;
 import com.sun.enterprise.v3.admin.DefaultJobManagerFile;
 import com.sun.enterprise.v3.admin.JobAuthorizationAttributeProcessor;
 import com.sun.enterprise.v3.admin.JobManagerService;
@@ -144,7 +145,7 @@ public class ListJobsCommand implements AdminCommand, AdminCommandSecurity.Acces
 
         }  else {
 
-            for (Iterator<Job> iterator = jobManagerService.getJobs(); iterator.hasNext(); ) {
+            for (Iterator<AdminCommandJob> iterator = jobManagerService.getJobs(); iterator.hasNext(); ) {
                 Job job = iterator.next();
                 if (isJobEligible(job)) {
                     List<String> userList =  job.getSubjectUsernames();

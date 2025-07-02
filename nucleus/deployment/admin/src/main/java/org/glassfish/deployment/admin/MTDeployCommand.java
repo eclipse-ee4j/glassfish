@@ -25,6 +25,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
@@ -54,7 +55,7 @@ public class MTDeployCommand implements AdminCommand {
         // invoke the deploy command with domain target to submit the
         // application to domain
 
-        CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("deploy", report, context.getSubject());
+        CommandInvocation inv = commandRunner.getCommandInvocation("deploy", report, context.getSubject());
 
         final ParameterMap parameters = new ParameterMap();
 

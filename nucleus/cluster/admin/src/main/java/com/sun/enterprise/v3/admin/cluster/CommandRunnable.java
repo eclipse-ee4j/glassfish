@@ -20,7 +20,7 @@ package com.sun.enterprise.v3.admin.cluster;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
+import org.glassfish.api.admin.CommandInvocation;
 
 /**
  * This class wraps a CommandInvocation so that it can be run via a

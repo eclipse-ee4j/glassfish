@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,12 +25,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
 import org.glassfish.api.admin.CommandProgress;
 import org.glassfish.api.admin.progress.ProgressStatusDTO;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_CHANGE;
+import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_STATE;
 
 /**
  * Prints ProgressStatus changes to given logger
@@ -41,7 +45,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
     private class Ticker extends Thread {
 
         private final long pause;
-        private volatile boolean stop = false;
+        private volatile boolean stop;
 
         public Ticker(long pause) {
             this.pause = pause;
@@ -66,6 +70,9 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
         }
 
     }
+
+    /** Event name for printing user messages */
+    public static final String USER_MESSAGE_NAME = "usermessage";
 
     private static final String CONTENT_TYPE = "application/json";
 
@@ -127,7 +134,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
     @Override
     public synchronized void onAdminCommandEvent(String name, GfSseInboundEvent event) {
         try {
-            if (CommandProgress.EVENT_PROGRESSSTATUS_STATE.equals(name)) {
+            if (EVENT_PROGRESSSTATUS_STATE.equals(name)) {
                 ProgressStatusDTO dto = event.getData(ProgressStatusDTO.class, CONTENT_TYPE);
                 client.mirror(dto);
                 commandProgress = (CommandProgress) client.getProgressStatus();
@@ -135,15 +142,15 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
                     commandProgress.progress(strings.getString("progressstatus.message.starting", "Starting"));
                 }
                 printCommandProgress();
-            } else if (CommandProgress.EVENT_PROGRESSSTATUS_CHANGE.equals(name)) {
+            } else if (EVENT_PROGRESSSTATUS_CHANGE.equals(name)) {
                 if (commandProgress == null) {
-                    logger.log(Level.WARNING, strings.get("progressstatus.event.applyerror", "Inapplicable progress status event"));
+                    logger.log(WARNING, strings.get("progressstatus.event.applyerror", "Inapplicable progress status event"));
                     return;
                 }
                 ProgressStatusEvent pse = event.getData(ProgressStatusEvent.class, CONTENT_TYPE);
                 client.mirror(pse);
                 printCommandProgress();
-            } else if (AdminCommandEventBroker.EventBrokerUtils.USER_MESSAGE_NAME.equals(name)) {
+            } else if (USER_MESSAGE_NAME.equals(name)) {
                 String msg = event.getData();
                 printUserMessage(msg);
             }

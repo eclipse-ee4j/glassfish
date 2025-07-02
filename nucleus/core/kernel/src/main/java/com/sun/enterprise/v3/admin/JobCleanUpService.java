@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,6 +45,7 @@ import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import static com.sun.enterprise.v3.admin.JobManagerService.parseJobRetentionPeriodToMillis;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
@@ -105,8 +106,8 @@ public class JobCleanUpService implements ConfigListener {
             }
         }
         logger.fine(KernelLoggerInfo.schedulingCleanup);
-        long delayBetweenRuns = JobManagerService.convert(managedJobConfig.getPollInterval());
-        long initialDelay = JobManagerService.convert(managedJobConfig.getInitialDelay());
+        long delayBetweenRuns = parseJobRetentionPeriodToMillis(managedJobConfig.getPollInterval());
+        long initialDelay = parseJobRetentionPeriodToMillis(managedJobConfig.getInitialDelay());
         if (delayBetweenRuns <= 0) {
             if (initialDelay == 0) {
                 // We will do that immediately, but then we will not schedule any further runs

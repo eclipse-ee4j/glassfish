@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,20 +43,20 @@ public class HTMLActionReporter extends ActionReporter {
         PrintWriter writer = new PrintWriter(os);
         writer.print("<html><head/>");
         writer.println("<body>" +
-                "<h1>GlassFish " + actionDescription + " command report</h1>" +
+                "<h1>GlassFish " + getActionDescription() + " command report</h1>" +
                 "<br><br>");
-        writer.println("Exit Code : " + this.exitCode);
+        writer.println("Exit Code: " + getActionExitCode());
         writer.println("<hr>");
-        write(2, topMessage, writer);
+        write(2, getTopMessagePart(), writer);
         writer.println("<hr>");
-        if (exception!=null) {
+        if (getFailureCause() != null) {
             writer.println("Exception raised during operation : <br>");
             writer.println("<pre>");
-           exception.printStackTrace(writer);
+            getFailureCause().printStackTrace(writer);
             writer.println("</pre>");
         }
-        if (!subActions.isEmpty()) {
-            writer.println("There are " + subActions.size() + " sub operations");
+        if (!getSubActionsReport().isEmpty()) {
+            writer.println("There are " + getSubActionsReport().size() + " sub operations");
         }
         writer.print("</body></html>");
         writer.flush();

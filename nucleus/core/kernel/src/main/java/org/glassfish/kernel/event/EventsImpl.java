@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +17,13 @@
 
 package org.glassfish.kernel.event;
 
-import jakarta.inject.Inject;
-
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +34,7 @@ import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.event.RestrictTo;
 import org.glassfish.deployment.common.DeploymentException;
+import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 
 /**
@@ -41,7 +42,7 @@ import org.glassfish.kernel.KernelLoggerInfo;
  *
  * @author Jerome Dochez
  */
-public class EventsImpl implements Events {
+public class EventsImpl implements Events, PostConstruct {
 
     private final static Logger LOG = KernelLoggerInfo.getLogger();
 
@@ -52,8 +53,19 @@ public class EventsImpl implements Events {
      */
     final Map<Listener, EventMatcher> listeners = new ConcurrentSkipListMap<>();
 
-    @Inject
     private ExecutorService executor;
+
+
+    @Override
+    public void postConstruct() {
+        ThreadFactory threadFactory = r -> {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            t.setName("events-" + t.getId());
+            return t;
+        };
+        executor = Executors.newCachedThreadPool(threadFactory);
+    }
 
     @Override
     public void register(EventListener listener) {

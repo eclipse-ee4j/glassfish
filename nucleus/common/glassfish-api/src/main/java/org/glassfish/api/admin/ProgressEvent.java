@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,18 +16,11 @@
 
 package org.glassfish.api.admin;
 
-import javax.security.auth.Subject;
-
-import org.jvnet.hk2.annotations.Contract;
+import java.io.Serializable;
 
 /**
- * This is the contract responsible for creating Job
- *
- * @author Bhakti Mehta
+ * Used to notify about progress of a command.
  */
-@Contract
-public interface JobCreator {
-
-    Job createJob(String id, String scope, String name, Subject subject, boolean isManagedJob, ParameterMap parameters);
+public interface ProgressEvent extends Serializable {
 
 }

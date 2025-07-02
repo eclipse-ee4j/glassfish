@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -545,7 +545,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 }
                 final String configName = instance.getName() + "-config";
                 instance.setConfigRef(configName);
-                final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport(), context.getLogger());
+                final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport());
 
                 Configs configs = domain.getConfigs();
                 Configs writableConfigs = tx.enroll(configs);

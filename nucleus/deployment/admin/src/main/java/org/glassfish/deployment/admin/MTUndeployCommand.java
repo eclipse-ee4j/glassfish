@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +36,7 @@ import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
@@ -54,7 +56,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
     public String name;
 
     @Inject
-    CommandRunner commandRunner;
+    CommandRunner<?> commandRunner;
 
     @Inject
     Applications applications;
@@ -78,6 +80,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
         return accessChecks;
     }
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -89,7 +92,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
         // invoke the undeploy command with domain target to undeploy the
         // application from domain
 
-        CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("undeploy", report, context.getSubject());
+        CommandInvocation<?> inv = commandRunner.getCommandInvocation("undeploy", report, context.getSubject());
 
         final ParameterMap parameters = new ParameterMap();
 
@@ -107,7 +110,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
 
         for (AppTenant tenant : appTenants) {
             ActionReport subReport = report.addSubActionsReport();
-            CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("_mt-unprovision", subReport, subject);
+            CommandInvocation<?> inv = commandRunner.getCommandInvocation("_mt-unprovision", subReport, subject);
             ParameterMap parameters = new ParameterMap();
             parameters.add("DEFAULT", appName);
             parameters.add("tenant", tenant.getTenant());

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,8 @@
 package org.glassfish.api.admin;
 
 /**
- * Represents command wrapped with {@link CommandWrapperImpl}. It should be enough to wrap command without an overhead.
+ * Represents command wrapped with {@link CommandWrapperImpl}.
+ * It should be enough to wrap command without an overhead.
  * E.g.: <code>
  * new WrappedAdminCommand(command) {
  *     public void execute(...
@@ -44,7 +46,7 @@ public abstract class WrappedAdminCommand implements AdminCommand {
      *
      * @return unwrapped command.
      */
-    protected AdminCommand getWrappedCommand() {
+    public AdminCommand getWrappedCommand() {
         return wrappedCommand;
     }
 

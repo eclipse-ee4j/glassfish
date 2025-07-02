@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,10 +14,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package com.sun.enterprise.v3.admin.commands;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.v3.admin.AdminCommandJob;
 
 import jakarta.inject.Inject;
 
@@ -48,10 +49,10 @@ public class GetPayloadCommand implements AdminCommand {
     private final static LocalStringManagerImpl strings = new LocalStringManagerImpl(GetPayloadCommand.class);
 
     @Inject
-    JobManager registry;
+    private JobManager<AdminCommandJob> registry;
 
-    @Param(primary=true, optional=false, multiple=false)
-    String jobID;
+    @Param(primary = true, optional = false, multiple = false)
+    private String jobID;
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -76,8 +77,5 @@ public class GetPayloadCommand implements AdminCommand {
             ar.setActionExitCode(ActionReport.ExitCode.FAILURE);
             ar.setMessage(strings.getLocalString("getPayload.unsupported", "Payload type is not supported. Can not download data."));
         }
-
     }
-
-
 }

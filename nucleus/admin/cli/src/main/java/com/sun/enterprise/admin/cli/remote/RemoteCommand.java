@@ -564,6 +564,9 @@ public class RemoteCommand extends CLICommand {
             if (programOpts.isNotifyCommand()) {
                 commandModel.add(new ParamModelData("notify", boolean.class, true, "false"));
             }
+            if (programOpts.isDetachedCommand()) {
+                commandModel.add(new ParamModelData("detach", boolean.class, true, "false"));
+            }
         } catch (CommandException e) {
             logger.log(Level.SEVERE, "RemoteCommand.prepare throws exception.", e);
             throw e;

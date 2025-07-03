@@ -18,7 +18,7 @@
 run_test() {
     local testid=${1}
     local found=false
-    
+
     for runtest in `find . -name run_test\.sh`; do
         for id in `${runtest} list_test_ids`; do
             if [[ "${id}" = "${testid}" ]]; then
@@ -34,7 +34,7 @@ run_test() {
             break
         fi
     done
-    
+
     if [[ "${found}" = false ]]; then
         echo Invalid Test Id.
         exit 1
@@ -65,6 +65,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   export MVN_EXTRA="${MVN_EXTRA:=''}";
   export MVN_REPOSITORY="${MVN_REPOSITORY:=${HOME}/.m2/repository}"
   export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
+  export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom"
 
   echo "Preparing dependencies ..."
   mvn clean package -f ${APS_HOME}/lib/pom.xml -Pstaging

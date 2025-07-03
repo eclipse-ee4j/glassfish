@@ -50,7 +50,7 @@ import static java.lang.System.Logger.Level.WARNING;
 public class KeyTool {
 
     private static final Logger LOG = System.getLogger(KeyTool.class.getName());
-    private static final long EXEC_TIMEOUT = 10;
+    private static final long EXEC_TIMEOUT = Integer.getInteger("org.glassfish.main.keytool.timeout", 60);
     private static final String KEYTOOL;
 
     static {
@@ -378,23 +378,27 @@ public class KeyTool {
             }
 
             if (!process.waitFor(EXEC_TIMEOUT, TimeUnit.SECONDS)) {
-                throw new IOException("KeyTool command timed out after " + EXEC_TIMEOUT + " seconds");
+                throw new IOException(
+                    "KeyTool command timed out after " + EXEC_TIMEOUT + " seconds. Output: " + getOutput(process));
             }
             final int exitCode = process.exitValue();
-            final ByteArrayOutputStream output = new ByteArrayOutputStream();
-            process.getInputStream().transferTo(output);
-            process.getErrorStream().transferTo(output);
-            LOG.log(DEBUG, () -> "Command output: " + output.toString(Charset.defaultCharset()));
+            final String output = getOutput(process);
+            LOG.log(DEBUG, () -> "Command output: " + output);
             if (exitCode != 0) {
-                throw new IOException("KeyTool command failed with exit code: " + exitCode + " and output:"
-                    + output.toString(Charset.defaultCharset()));
+                throw new IOException("KeyTool command failed with exit code: " + exitCode + " and output: " + output);
             }
-        } catch (IOException e) {
-            throw new IOException("Failed to initialize keystore " + keyStore, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Interrupted", e);
         }
+    }
+
+
+    private static String getOutput(final Process process) throws IOException {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        process.getInputStream().transferTo(output);
+        process.getErrorStream().transferTo(output);
+        return output.toString(Charset.defaultCharset());
     }
 
 

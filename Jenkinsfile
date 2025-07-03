@@ -28,6 +28,7 @@ def dumpSysInfo() {
    ps -e -o start,etime,pid,rss,drs,command || true
    cat /proc/cpuinfo || true
    cat /proc/meminfo || true
+   cat /proc/sys/kernel/random/entropy_avail || true
    """
 }
 

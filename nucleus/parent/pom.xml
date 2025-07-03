@@ -788,11 +788,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>osgiversion-maven-plugin</artifactId>
-                    <version>${hk2.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
                     <artifactId>consolidatedbundle-maven-plugin</artifactId>
                     <version>${hk2.plugin.version}</version>
                 </plugin>
@@ -2044,26 +2039,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.glassfish.hk2</groupId>
-                <artifactId>osgiversion-maven-plugin</artifactId>
-                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the
-                following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier
-                and then use that property in osgi.bundle while exporting. -->
-                <configuration>
-                    <dropVersionComponent>qualifier</dropVersionComponent>
-                    <versionPropertyName>project.osgi.version</versionPropertyName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-osgi-version-property</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>compute-osgi-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>

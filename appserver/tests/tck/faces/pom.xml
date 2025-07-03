@@ -147,7 +147,7 @@
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="version" value="1.0.7" replacement="${project.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="1.4" replacement="2.0.0-SNAPSHOT" />
+                                    element="version" value="1.4" replacement="2.0.0-M1" />
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="version" value="4.0.3" replacement="${project.parent.version}" />
                                 <replace file="${tck.parentPomFile}">
@@ -166,6 +166,11 @@
                                     <exclude name="pom.xml"/>
                                     <replacetoken><![CDATA[<version>4.0.3</version>]]></replacetoken>
                                     <replacevalue><![CDATA[<version>${project.version}</version>]]></replacevalue>
+                                </replace>
+                                <replace dir="${tck.root}/faces-tck-4.0.3/tck">
+                                    <include name="**/pom.xml"/>
+                                    <replacetoken><![CDATA[<groupId>org.omnifaces.arquillian</groupId>]]></replacetoken>
+                                    <replacevalue><![CDATA[<groupId>ee.omnifish.arquillian</groupId>]]></replacevalue>
                                 </replace>
                             </target>
                         </configuration>

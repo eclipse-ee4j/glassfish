@@ -62,7 +62,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
         </dependency>
         <dependency>

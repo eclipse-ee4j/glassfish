@@ -74,11 +74,11 @@ mvn clean install -Dgroups=security
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>glassfish-client-ee10</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
         </dependency>
         <dependency>
@@ -89,6 +89,12 @@ mvn clean install -Dgroups=security
             <groupId>org.netbeans.tools</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <version>1.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -103,12 +109,6 @@ mvn clean install -Dgroups=security
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

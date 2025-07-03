@@ -46,7 +46,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
         </dependency>
         <dependency>
@@ -144,7 +144,7 @@
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
-                        <org.omnifaces.arquillian.prependDeploySequence>true</org.omnifaces.arquillian.prependDeploySequence>
+                        <ee.omnifish.arquillian.prependDeploySequence>true</ee.omnifish.arquillian.prependDeploySequence>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

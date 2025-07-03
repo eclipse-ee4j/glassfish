@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import java.util.UUID;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.JarSigner;
-import org.glassfish.main.itest.tools.KeyTool;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.jdke.security.KeyTool;
 import org.glassfish.main.test.app.signedear.api.ExampleRemote;
 import org.glassfish.main.test.app.signedear.impl.ExampleBean;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -41,8 +41,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Integration test for deployment EAR application that contains signed
  * shared libraries and modules.
- *
- * <p>This integration test checks the correctness of the classloading
+ * <p>
+ * This integration test checks the correctness of the classloading
  * of generated classes.
  */
 public class SignedEarDeploymentTest {
@@ -54,7 +54,6 @@ public class SignedEarDeploymentTest {
     private static final String KEYSTORE_PASSWORD = UUID.randomUUID().toString();
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
-    private static final KeyTool KEYTOOL = GlassFishTestEnvironment.getKeyTool();
     private static final JarSigner JARSIGNER = GlassFishTestEnvironment.getJarSigner();
 
     @TempDir
@@ -62,14 +61,9 @@ public class SignedEarDeploymentTest {
     private static File earFile;
 
     @BeforeAll
-    public static void prepareDeployment() {
+    public static void prepareDeployment() throws Exception {
         File keyStore = new File(tempDir, "signtest.jks");
-
-        // Generate a key pair (a public key and associated private key).
-        KEYTOOL.exec("-genkeypair", "-alias", "signtest", "-keyalg", "RSA", "-dname",
-            "CN=SIGNTEST, OU=Eclipse Glassfish Tests, O=Eclipse Foundation, L=Brussels, ST=Belgium, C=Belgium",
-            "-validity", "7", "-keypass", KEYSTORE_PASSWORD, "-keystore", keyStore.getAbsolutePath(),
-            "-storepass", KEYSTORE_PASSWORD);
+        new KeyTool(keyStore, KEYSTORE_PASSWORD.toCharArray()).generateKeyPair("signtest", "CN=SIGNTEST", "RSA", 7);
 
         // Create shared library.
         JavaArchive apiArchive = ShrinkWrap.create(JavaArchive.class)
@@ -83,8 +77,7 @@ public class SignedEarDeploymentTest {
             "-keypass", KEYSTORE_PASSWORD, apiFile.getAbsolutePath(), "signtest");
 
         // Create EAR EJB module.
-        JavaArchive implArchive = ShrinkWrap.create(JavaArchive.class)
-            .addClass(ExampleBean.class);
+        JavaArchive implArchive = ShrinkWrap.create(JavaArchive.class).addClass(ExampleBean.class);
         File implFile = new File(tempDir, "impl.jar");
         implArchive.as(ZipExporter.class).exportTo(implFile);
         LOG.log(Level.INFO, implArchive.toString(true));

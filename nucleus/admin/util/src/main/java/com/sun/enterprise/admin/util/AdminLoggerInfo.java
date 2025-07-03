@@ -151,11 +151,4 @@ public class AdminLoggerInfo {
             action = "Check the server logs.",
             level = "WARNING")
     public final static String mAdminUserSearchError = LOGMSG_PREFIX + "-00015";
-
-    @LogMessageInfo(
-            message = "Unexpected exception from command event listener.",
-            cause = "An error occurred while calling registered listener.",
-            action = "Check the server logs.",
-            level = "WARNING")
-    public final static String mExceptionFromEventListener = LOGMSG_PREFIX + "-00018";
 }

@@ -134,57 +134,9 @@ OPTIONS
                    SHA-256. You can use any algorithm supported in the JDK, or
                    none.
 
-                       Note
-                       +------------------------------------------------------------------------------------------------------+
-                       |In versions of GlassFish Server prior                                                                 |
-                       |to 4.0, the default algorithm was MD5.                                                                |
-                       |If you have applications that depend on                                                               |
-                       |the MD5 algorithm, you can override the                                                               |
-                       |default SHA-25 algorithm by using the                                                                 |
-                       |asadmin set subcommand:                                                                               |
-                       |                           asadmin> set server.security-service.property.default-digest-algorithm=MD5 |
-                       |                                                                                                      |
-                       |                       You can use the                                                                |
-                       |                       asadmin get                                                                    |
-                       |                       subcommand to                                                                  |
-                       |                       determine what                                                                 |
-                       |                       algorithm is                                                                   |
-                       |                       currently being                                                                |
-                       |                       used:                                                                          |
-                       |                           asadmin> get server.security-service.property.default-digest-algorithm     |
-                       |                                                                                                      |
-                       |                       Also note that,                                                                |
-                       |                       to maintain                                                                    |
-                       |                       backward                                                                       |
-                       |                       compatibility,                                                                 |
-                       |                       if an upgrade is                                                               |
-                       |                       performed from                                                                 |
-                       |                       GlassFish Server                                                               |
-                       |                       v2.x or v3.0.x                                                                 |
-                       |                       to GlassFish                                                                   |
-                       |                       Server 4.0, the                                                                |
-                       |                       default                                                                        |
-                       |                       algorithm is                                                                   |
-                       |                       automatically                                                                  |
-                       |                       set to MD5 in                                                                  |
-                       |                       cases where the                                                                |
-                       |                       digest algorithm                                                               |
-                       |                       had not been                                                                   |
-                       |                       explicitly set                                                                 |
-                       |                       in the older                                                                   |
-                       |                       GlassFish Server                                                               |
-                       |                       version.                                                                       |
-                       +------------------------------------------------------------------------------------------------------+
-
                digestrealm-password-enc-algorithm
                    (Optional) Specifies the algorithm for encrypting passwords
                    stored in the database.
-
-                       Note
-                       +---------------------------------------+
-                       |It is a security risk not to specify a |
-                       |password encryption algorithm.         |
-                       +---------------------------------------+
 
                encoding
                    (Optional) Specifies the encoding. Allowed values are Hex
@@ -263,4 +215,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         20 Sep 2010             create-auth-realm(1)
+Jakarta EE 10                         23 May 2025             create-auth-realm(1)

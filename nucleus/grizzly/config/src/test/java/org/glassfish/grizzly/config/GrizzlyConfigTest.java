@@ -38,9 +38,18 @@ import org.glassfish.grizzly.memory.MemoryManager;
 import org.glassfish.grizzly.nio.NIOTransport;
 import org.glassfish.grizzly.strategies.SameThreadIOStrategy;
 import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
+import org.glassfish.main.jdke.security.KeyTool;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -57,6 +66,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GrizzlyConfigTest {
 
     private static final GrizzlyConfigTestHelper helper = new GrizzlyConfigTestHelper(GrizzlyConfigTest.class);
+    @TempDir
+    private static File tempDir;
 
     @Test
     public void processConfig() throws IOException, InstantiationException {
@@ -250,12 +261,19 @@ public class GrizzlyConfigTest {
         }
     }
 
-    private void configure() throws URISyntaxException {
-        ClassLoader cl = getClass().getClassLoader();
-        setProperty("javax.net.ssl.trustStore", new File(cl.getResource("cacerts.jks").toURI()).getAbsolutePath(), true);
-        setProperty("javax.net.ssl.trustStorePassword", "changeit", true);
-        setProperty("javax.net.ssl.keyStore", new File(cl.getResource("keystore.jks").toURI()).getAbsolutePath(), true);
-        setProperty("javax.net.ssl.keyStorePassword", "changeit", true);
+    private void configure() throws IOException {
+        File keyStoreFile = new File(tempDir, KEYSTORE_FILENAME_DEFAULT);
+        if (keyStoreFile.exists()) {
+            return;
+        }
+        File trustStoreFile = new File(tempDir, TRUSTSTORE_FILENAME_DEFAULT);
+        KeyTool keyTool = new KeyTool(keyStoreFile, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+        keyTool.copyCertificate("s1as", trustStoreFile);
+        setProperty(TRUSTSTORE_FILE.getSystemPropertyName(), trustStoreFile.getAbsolutePath(), true);
+        setProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT, true);
+        setProperty(KEYSTORE_FILE.getSystemPropertyName(), keyStoreFile.getAbsolutePath(), true);
+        setProperty(KEYSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT, true);
     }
 
     @Test

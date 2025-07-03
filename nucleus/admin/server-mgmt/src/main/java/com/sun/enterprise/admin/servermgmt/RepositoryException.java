@@ -60,11 +60,7 @@ public class RepositoryException extends Exception {
     private String format(String msg, String causeMsg, Throwable cause) {
         if (cause != null) {
             if (msg == null) {
-                if (causeMsg != null) {
-                    msg = causeMsg;
-                } else {
-                    msg = cause.toString();
-                }
+                msg = causeMsg == null ? cause.toString() : causeMsg;
             } else if (causeMsg != null && !causeMsg.equals(msg)) {
                 msg += PREFIX + causeMsg + POSTFIX;
             } else {

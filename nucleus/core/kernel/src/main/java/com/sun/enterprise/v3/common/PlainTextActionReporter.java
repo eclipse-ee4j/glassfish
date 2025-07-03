@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,23 +39,23 @@ import static com.sun.enterprise.util.StringUtils.ok;
 @PerLookup
 public class PlainTextActionReporter extends ActionReporter {
 
-    public static final String MAGIC = "PlainTextActionReporter";
+    private transient PrintWriter writer;
+    private static final String INDENT = "    ";
+    private final StringBuilder message = new StringBuilder();
 
     @Override
     public void writeReport(OutputStream os) throws IOException {
         // The caller will read MAGIC and the next characters for success/failure
         // everything after the HEADER_END is good data
         writer = new PrintWriter(os);
-        writer.print(MAGIC);
+        writer.print("PlainTextActionReporter");
         if (isFailure()) {
             writer.print("FAILURE");
-            Throwable t = getFailureCause();
-
-            if (t != null) {
-                writer.print(t);
+            Throwable failureCause = getFailureCause();
+            if (failureCause != null) {
+                writer.print(failureCause);
             }
-        }
-        else {
+        } else {
             writer.print("SUCCESS");
         }
 
@@ -86,7 +87,7 @@ public class PlainTextActionReporter extends ActionReporter {
      */
     @Override
     final public void appendMessage(String s) {
-        sb.append(s);
+        message.append(s);
     }
 
     /**
@@ -94,19 +95,19 @@ public class PlainTextActionReporter extends ActionReporter {
      * @param s the string to append
      */
     final public void appendMessageln(String s) {
-        sb.append(s).append('\n');
+        message.append(s).append('\n');
     }
 
     @Override
     public void setMessage(String message) {
         super.setMessage(message);
-        sb.delete(0, sb.length());
+        this.message.delete(0, this.message.length());
         appendMessage(message);
     }
 
     @Override
     public final String getMessage() {
-        return sb.toString();
+        return message.toString();
     }
 
     @Override
@@ -122,21 +123,19 @@ public class PlainTextActionReporter extends ActionReporter {
             if (out.length() > 0) {
                 out.append('\n');
             }
-
             out.append(s);
         }
 
-        for (ActionReporter ar : aReport.subActions) {
+        for (ActionReporter ar : aReport.getSubActionsReport()) {
             getCombinedMessages(ar, out);
         }
     }
 
     private String getOutputData() {
-        if (superSimple(topMessage)) {
+        if (superSimple(getTopMessagePart())) {
             return simpleGetOutputData();
-        } else {
-            return notSoSimpleGetOutputData();
         }
+        return notSoSimpleGetOutputData();
     }
 
     private boolean superSimple(MessagePart part) {
@@ -153,8 +152,8 @@ public class PlainTextActionReporter extends ActionReporter {
 
     private String simpleGetOutputData() {
         StringBuilder out = new StringBuilder();
-        String tm = topMessage.getMessage();
-        String body = sb.toString();
+        String tm = getTopMessagePart().getMessage();
+        String body = message.toString();
 
         if (ok(tm) && !ok(body)) {
             body = tm;
@@ -170,11 +169,11 @@ public class PlainTextActionReporter extends ActionReporter {
     private String notSoSimpleGetOutputData() {
         StringBuilder out = new StringBuilder();
 
-        if (ok(actionDescription)) {
-            out.append("Description: ").append(actionDescription);
+        if (ok(getActionDescription())) {
+            out.append("Description: ").append(getActionDescription());
         }
 
-        write("", topMessage, out);
+        write("", getTopMessagePart(), out);
         return out.toString();
     }
 
@@ -200,7 +199,4 @@ public class PlainTextActionReporter extends ActionReporter {
             out.append(indent).append('[').append(key).append('=').append(val).append("\n");
         }
     }
-    private transient PrintWriter writer;
-    private static final String INDENT = "    ";
-    private final StringBuilder sb = new StringBuilder();
 }

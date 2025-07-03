@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.ManagedJobConfig;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
-import com.sun.enterprise.v3.server.ExecutorServiceFactory;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -41,12 +40,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.AdminCommandState.State;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobLocator;
@@ -103,9 +103,6 @@ public class JobManagerService implements JobManager, EventListener {
     private Domain domain;
 
     @Inject
-    private ExecutorServiceFactory executorFactory;
-
-    @Inject
     private ServiceLocator serviceLocator;
 
     @Inject
@@ -127,7 +124,13 @@ public class JobManagerService implements JobManager, EventListener {
 
     @PostConstruct
     public void postConstruct() {
-        pool = executorFactory.provide();
+        ThreadFactory threadFactory = r -> {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            t.setName("JobManagerService-" + t.getId());
+            return t;
+        };
+        pool = Executors.newCachedThreadPool(threadFactory);
         Set<File> persistedJobFiles = locateJobFiles(defaultJobsFile.getFile(), serviceLocator);
 
         // Check if there are jobs.xml files which have completed jobs so that
@@ -202,10 +205,6 @@ public class JobManagerService implements JobManager, EventListener {
 
         retryableJobsInfo.remove(job.getId());
         jobRegistry.put(job.getId(), job);
-
-        if (job.getState() == State.PREPARED && (job instanceof AdminCommandInstanceImpl)) {
-            ((AdminCommandInstanceImpl) job).setState(AdminCommandState.State.RUNNING);
-        }
     }
 
     /**
@@ -235,8 +234,7 @@ public class JobManagerService implements JobManager, EventListener {
         final long jobsRetentionPeriod = convert(managedJobConfig.getJobRetentionPeriod());
         for (JobInfo job : getCompletedJobs(jobsFile).getJobInfoList()) {
             if (currentTime - job.commandExecutionDate > jobsRetentionPeriod
-                && (job.state.equals(AdminCommandState.State.COMPLETED.name())
-                    || job.state.equals(AdminCommandState.State.REVERTED.name()))) {
+                && (job.state.equals(State.COMPLETED.name()) || job.state.equals(State.REVERTED.name()))) {
                 expiredJobs.add(job);
             }
         }
@@ -275,7 +273,12 @@ public class JobManagerService implements JobManager, EventListener {
         }
     }
 
-    public void startAsyncListener(RunnableAdminCommandListener listener) {
+    /**
+     * Starts the async command thread.
+     *
+     * @param listener
+     */
+    public void start(AsyncAdminCommandInvoker listener) {
         pool.execute(listener);
     }
 
@@ -324,9 +327,7 @@ public class JobManagerService implements JobManager, EventListener {
         Job job = get(context.getJobId());
         Checkpoint chkp = new Checkpoint(job, command, context);
         checkpointHelper.save(chkp);
-        if (job instanceof AdminCommandInstanceImpl) {
-            ((AdminCommandInstanceImpl) job).setState(AdminCommandState.State.RUNNING_RETRYABLE);
-        }
+        job.setState(State.RUNNING_RETRYABLE);
     }
 
     public void checkpointAttachement(String jobId, String attachId, Serializable data) throws IOException {

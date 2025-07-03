@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -49,6 +51,8 @@ import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.extras.ExtrasUtilities;
+import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
+import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.server.ServerEnvironmentImpl;
@@ -148,6 +152,10 @@ public class HK2JUnit5Extension
         final Set<Class<?>> excludedClasses = getExcludedClasses(testClass);
 
         config = locator.getService(DynamicConfigurationService.class).createDynamicConfiguration();
+        AbstractActiveDescriptor<ExecutorService> descriptor = BuilderHelper.createConstantDescriptor(Executors.newCachedThreadPool());
+        descriptor.addContractType(ExecutorService.class);
+        config.addActiveDescriptor(descriptor);
+
         addServicesFromLocatorFiles(loader, excludedClasses, getLocatorFilePaths(context));
         addServicesFromPackage(packages, excludedClasses);
         addServices(classes, excludedClasses);

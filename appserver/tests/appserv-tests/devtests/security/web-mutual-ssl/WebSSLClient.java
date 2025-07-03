@@ -112,15 +112,13 @@ public class WebSSLClient {
         SSLContext ctx = SSLContext.getInstance("TLS");
 
         // Keystore
-        KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = sslPassword.toCharArray();
-        ks.load(new FileInputStream(keyStorePath), passphrase);
+        KeyStore ks = KeyStore.getInstance(new File(keyStorePath), passphrase);
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         kmf.init(ks, passphrase);
 
         // Truststore
-        KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream(trustStorePath), null);
+        KeyStore trustStore = KeyStore.getInstance(new File(trustStorePath), passphrase);
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(trustStore);
 

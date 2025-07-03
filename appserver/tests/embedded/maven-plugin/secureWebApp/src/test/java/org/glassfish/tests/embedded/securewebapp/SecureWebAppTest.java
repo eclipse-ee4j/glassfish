@@ -18,11 +18,13 @@
 package org.glassfish.tests.embedded.securewebapp;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -33,8 +35,12 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.glassfish.main.jdke.security.KeyTool;
+import org.glassfish.tests.utils.junit.JUnitSystem;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SecureWebAppTest {
@@ -56,6 +62,14 @@ public class SecureWebAppTest {
             return;
         }
     }};
+
+    @BeforeAll
+    public static void createKeyStore() throws Exception {
+        // The file is set also in system.properties file
+        File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "testkeystore.p12")).toFile();
+        KeyTool keyTool = new KeyTool(keystore, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+    }
 
     @Test
     public void http() throws Exception {

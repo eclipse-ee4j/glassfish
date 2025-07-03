@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -194,25 +194,23 @@ public class CommandRunnerImpl implements CommandRunner {
      * Returns the command model for a command name.
      *
      * @param commandName command name
-     * @param logger logger to log any error messages
      * @return model for this command (list of parameters,etc...),
      *          or null if command is not found
      */
     @Override
-    public CommandModel getModel(String commandName, Logger logger) {
-        return getModel(null, commandName, logger);
+    public CommandModel getModel(String commandName) {
+        return getModel(null, commandName);
     }
 
     /**
      * Returns the command model for a command name.
      *
      * @param commandName command name
-     * @param logger logger to log any error messages
      * @return model for this command (list of parameters,etc...),
      *          or null if command is not found
      */
     @Override
-    public CommandModel getModel(String scope, String commandName, Logger logger) {
+    public CommandModel getModel(String scope, String commandName) {
         AdminCommand command;
         try {
             String commandServiceName = (scope != null) ? scope + commandName : commandName;
@@ -257,12 +255,11 @@ public class CommandRunnerImpl implements CommandRunner {
      *
      * @param commandName command name as typed by users
      * @param report report used to communicate command status back to the user
-     * @param logger logger to log
      * @return command registered under commandName or null if not found
      */
     @Override
-    public AdminCommand getCommand(String commandName, ActionReport report, Logger logger) {
-        return getCommand(null, commandName, report, logger);
+    public AdminCommand getCommand(String commandName, ActionReport report) {
+        return getCommand(null, commandName, report);
     }
 
 
@@ -282,11 +279,10 @@ public class CommandRunnerImpl implements CommandRunner {
      *
      * @param commandName command name as typed by users
      * @param report report used to communicate command status back to the user
-     * @param logger logger to log
      * @return command registered under commandName or null if not found
      */
     @Override
-    public AdminCommand getCommand(String scope, String commandName, ActionReport report, Logger logger) {
+    public AdminCommand getCommand(String scope, String commandName, ActionReport report) {
         AdminCommand command = null;
         String commandServiceName = scope == null ? commandName : scope + commandName;
         try {
@@ -1127,10 +1123,8 @@ public class CommandRunnerImpl implements CommandRunner {
     /**
      * Called from ExecutionContext.execute.
      */
-    void doCommand(CommandRunnerExecutionContext inv, AdminCommand command,
-            final Subject subject, final Job job) {
-
-        publishCommandInvokedEvent(inv, subject);
+    void doCommand(CommandRunnerExecutionContext ctx, AdminCommand command, final Subject subject, final Job job) {
+        publishCommandInvokedEvent(ctx, subject);
 
         boolean fromCheckpoint = job != null &&
                 (job.getState() == AdminCommandState.State.REVERTING ||
@@ -1143,14 +1137,14 @@ public class CommandRunnerImpl implements CommandRunner {
             model = new CommandModelImpl(command.getClass());
         }
         UploadedFilesManager ufm = null;
-        ActionReport report = inv.report();
+        ActionReport report = ctx.report();
         if (!fromCheckpoint) {
             report.setActionDescription(model.getCommandName() + " command");
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         }
         ParameterMap parameters;
         final AdminCommandContext context = new AdminCommandContextImpl(
-                logger, report, inv.inboundPayload(), inv.outboundPayload(),
+                logger, report, ctx.inboundPayload(), ctx.outboundPayload(),
                 job.getEventBroker(),
                 job.getId());
         context.setSubject(subject);
@@ -1160,7 +1154,7 @@ public class CommandRunnerImpl implements CommandRunner {
         ActionReport.ExitCode preSupplementalReturn = ActionReport.ExitCode.SUCCESS;
         ActionReport.ExitCode postSupplementalReturn = ActionReport.ExitCode.SUCCESS;
         CommandRunnerProgressHelper progressHelper =
-                new CommandRunnerProgressHelper(command, model.getCommandName(), job, inv.progressStatusChild);
+                new CommandRunnerProgressHelper(command, model.getCommandName(), job, ctx.progressStatus());
 
         // If this glassfish installation does not have stand alone instances / clusters at all, then
         // lets not even look Supplemental command and such. A small optimization
@@ -1173,29 +1167,28 @@ public class CommandRunnerImpl implements CommandRunner {
         }
         try {
             //Get list of suplemental commands
-            Collection<SupplementalCommand> suplementalCommands =
-                    supplementalExecutor.listSuplementalCommands(model.getCommandName());
+            Collection<SupplementalCommand> suplementalCommands = supplementalExecutor
+                .listSuplementalCommands(model.getCommandName());
             try {
                 /*
                  * Extract any uploaded files and build a map from parameter names
                  * to the corresponding extracted, uploaded file.
                  */
-                ufm = new UploadedFilesManager(inv.report, logger,
-                        inv.inboundPayload());
+                ufm = new UploadedFilesManager(ctx.report(), logger, ctx.inboundPayload());
 
-                if (inv.typedParams() != null) {
+                if (ctx.typedParams() != null) {
                     logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.delegatedcommand",
                             "This command is a delegated command. Dynamic reconfiguration will be bypassed"));
                     InjectionResolver<Param> injectionTarget =
-                            new DelegatedInjectionResolver(model, inv.typedParams(),
+                            new DelegatedInjectionResolver(model, ctx.typedParams(),
                             ufm.optionNameToFileMap());
                     if (injectParameters(model, command, injectionTarget, report)) {
-                        inv.setReport(doCommand(model, command, context, progressHelper));
+                        ctx.setReport(doCommand(model, command, context, progressHelper));
                     }
                     return;
                 }
 
-                parameters = inv.parameters();
+                parameters = ctx.parameters();
                 if (parameters == null) {
                     // no parameters, pass an empty collection
                     parameters = new ParameterMap();
@@ -1206,10 +1199,9 @@ public class CommandRunnerImpl implements CommandRunner {
                     String manPage = encodeManPage(in);
 
                     if (manPage != null && isSet(parameters, "help")) {
-                        inv.report().getTopMessagePart().addProperty("MANPAGE", manPage);
+                        ctx.report().getTopMessagePart().addProperty("MANPAGE", manPage);
                     } else {
-                        report.getTopMessagePart().addProperty(
-                                AdminCommandResponse.GENERATED_HELP, "true");
+                        report.getTopMessagePart().addProperty(AdminCommandResponse.GENERATED_HELP, "true");
                         getHelp(command, report);
                     }
                     return;
@@ -1238,16 +1230,14 @@ public class CommandRunnerImpl implements CommandRunner {
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setMessage(exception.getMessage());
                     report.setFailureCause(exception);
-                    ActionReport.MessagePart childPart =
-                            report.getTopMessagePart().addChild();
+                    ActionReport.MessagePart childPart = report.getTopMessagePart().addChild();
                     childPart.setMessage(getUsageText(model));
                     return;
                 }
 
                 // initialize the injector and inject
-                MapInjectionResolver injectionMgr =
-                        new MapInjectionResolver(model, parameters,
-                        ufm.optionNameToFileMap());
+                MapInjectionResolver injectionMgr = new MapInjectionResolver(model, parameters,
+                    ufm.optionNameToFileMap());
                 injectionMgr.setContext(context);
                 if (!injectParameters(model, command, injectionMgr, report)) {
                     return;
@@ -1264,7 +1254,7 @@ public class CommandRunnerImpl implements CommandRunner {
                  */
                 final Map<String,Object> env = buildEnvMap(parameters);
                 try {
-                    if ( ! commandSecurityChecker.authorize(context.getSubject(), env, command, context)) {
+                    if (!commandSecurityChecker.authorize(context.getSubject(), env, command, context)) {
                         /*
                          * If the command class tried to prepare itself but
                          * could not then the return is false and the command has
@@ -1276,14 +1266,14 @@ public class CommandRunnerImpl implements CommandRunner {
                 } catch (SecurityException ex) {
                     report.setFailureCause(ex);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    report.setMessage(adminStrings.getLocalString("commandrunner.noauth",
-                            "User is not authorized for this command"));
+                    report.setMessage(
+                        adminStrings.getLocalString("commandrunner.noauth", "User is not authorized for this command"));
                     return;
                 } catch (Exception ex) {
                     report.setFailureCause(ex);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    report.setMessage(adminStrings.getLocalString("commandrunner.errAuth",
-                            "Error during authorization"));
+                    report
+                        .setMessage(adminStrings.getLocalString("commandrunner.errAuth", "Error during authorization"));
                     return;
                 }
 
@@ -1441,7 +1431,7 @@ public class CommandRunnerImpl implements CommandRunner {
                     if (command instanceof UndoableCommand) {
                         UndoableCommand uCmd = (UndoableCommand) command;
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.prepareunodable",
-                                "Command execution stage 1 : Calling prepare for undoable command {0}", inv.name()));
+                                "Command execution stage 1 : Calling prepare for undoable command {0}", ctx.name()));
                         if (!uCmd.prepare(context, parameters).equals(ActionReport.ExitCode.SUCCESS)) {
                             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                             report.setMessage(adminStrings.getLocalString("commandrunner.executor.errorinprepare",
@@ -1456,7 +1446,7 @@ public class CommandRunnerImpl implements CommandRunner {
                     // Run Supplemental commands that have to run before this command on this instance type
                     if (!fromCheckpoint) {
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.presupplemental",
-                                "Command execution stage 2 : Call pre supplemental commands for {0}", inv.name()));
+                                "Command execution stage 2 : Call pre supplemental commands for {0}", ctx.name()));
                         preSupplementalReturn = supplementalExecutor.execute(suplementalCommands,
                                 Supplemental.Timing.Before, context, parameters, ufm.optionNameToFileMap());
                         if (preSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
@@ -1476,9 +1466,9 @@ public class CommandRunnerImpl implements CommandRunner {
                             || runtimeTypes.contains(RuntimeType.SINGLE_INSTANCE)
                             || (serverEnvironment.isInstance() && runtimeTypes.contains(RuntimeType.INSTANCE))) {
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.maincommand",
-                                "Command execution stage 3 : Calling main command implementation for {0}", inv.name()));
+                                "Command execution stage 3 : Calling main command implementation for {0}", ctx.name()));
                         report = doCommand(model, command, context, progressHelper);
-                        inv.setReport(report);
+                        ctx.setReport(report);
                     }
 
 
@@ -1487,7 +1477,7 @@ public class CommandRunnerImpl implements CommandRunner {
                             report.getActionExitCode()).equals(ActionReport.ExitCode.FAILURE)) {
                         //Run Supplemental commands that have to be run after this command on this instance type
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.postsupplemental",
-                                "Command execution stage 4 : Call post supplemental commands for {0}", inv.name()));
+                                "Command execution stage 4 : Call post supplemental commands for {0}", ctx.name()));
                         postSupplementalReturn = supplementalExecutor.execute(suplementalCommands,
                                 Supplemental.Timing.After, context, parameters, ufm.optionNameToFileMap());
                         if (postSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
@@ -1535,8 +1525,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(ex.getMessage());
                 report.setFailureCause(ex);
-                ActionReport.MessagePart childPart =
-                        report.getTopMessagePart().addChild();
+                ActionReport.MessagePart childPart = report.getTopMessagePart().addChild();
                 childPart.setMessage(getUsageText(model));
                 return;
             }
@@ -1582,7 +1571,7 @@ public class CommandRunnerImpl implements CommandRunner {
                         if (!FailurePolicy.applyFailurePolicy(fp,
                                 report.getActionExitCode()).equals(ActionReport.ExitCode.FAILURE)) {
                             logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.afterreplsupplemental",
-                                    "Command execution stage 5 : Call post-replication supplemental commands for {0}", inv.name()));
+                                    "Command execution stage 5 : Call post-replication supplemental commands for {0}", ctx.name()));
                             ActionReport.ExitCode afterReplicationSupplementalReturn = supplementalExecutor.execute(suplementalCommands,
                                     Supplemental.Timing.AfterReplication, context, parameters, ufm.optionNameToFileMap());
                             if (afterReplicationSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
@@ -1600,7 +1589,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 if (command instanceof UndoableCommand) {
                     UndoableCommand uCmd = (UndoableCommand) command;
                     logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.undo",
-                            "Command execution failed; calling undo() for command {0}", inv.name()));
+                            "Command execution failed; calling undo() for command {0}", ctx.name()));
                     uCmd.undo(context, parameters, ClusterOperationUtil.getCompletedInstances());
                 }
             } else {

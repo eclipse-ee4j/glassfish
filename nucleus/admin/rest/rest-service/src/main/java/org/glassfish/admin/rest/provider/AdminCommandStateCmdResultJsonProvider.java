@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,20 +44,17 @@ public class AdminCommandStateCmdResultJsonProvider extends AdminCommandStateJso
 
     @Override
     protected void addActionReporter(ActionReporter ar, JSONObject json) throws JSONException {
-        if (ar != null) {
-            CommandResult cr = CompositeUtil.instance().getModel(CommandResult.class);
-            cr.setMessage(ar.getMessage());
-            cr.setProperties(ar.getTopMessagePart().getProps());
-            Properties props = ar.getExtraProperties();
-            if (props != null) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                for (Map.Entry<Object, Object> entry : props.entrySet()) {
-                    map.put(entry.getKey().toString(), entry.getValue());
-                }
-                cr.setExtraProperties(map);
+        CommandResult cr = CompositeUtil.instance().getModel(CommandResult.class);
+        cr.setMessage(ar.getMessage());
+        cr.setProperties(ar.getTopMessagePart().getProps());
+        Properties props = ar.getExtraProperties();
+        if (props != null) {
+            Map<String, Object> map = new HashMap<>();
+            for (Map.Entry<Object, Object> entry : props.entrySet()) {
+                map.put(entry.getKey().toString(), entry.getValue());
             }
-            json.put("command-result", (JSONObject) JsonUtil.getJsonObject(cr));
+            cr.setExtraProperties(map);
         }
+        json.put("command-result", JsonUtil.getJsonObject(cr));
     }
-
 }

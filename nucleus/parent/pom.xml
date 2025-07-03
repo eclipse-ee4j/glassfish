@@ -1025,6 +1025,11 @@
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>3.1.3</version>
+                    <configuration>
+                        <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
+                        <skip>${deploy.skip}</skip>
+                        <deployAtEnd>true</deployAtEnd>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
@@ -2036,15 +2041,6 @@
                     <excludes>
                         <exclude>**/.ade_path/**</exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
-                    <skip>${deploy.skip}</skip>
                 </configuration>
             </plugin>
 

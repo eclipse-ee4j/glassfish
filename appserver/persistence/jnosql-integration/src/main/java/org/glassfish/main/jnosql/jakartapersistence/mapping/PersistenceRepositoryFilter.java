@@ -13,7 +13,7 @@
  *   Otavio Santana
  *   Ondro Mihalyi
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.reflection;
+package org.glassfish.main.jnosql.jakartapersistence.mapping;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -29,7 +29,7 @@ import static java.util.Optional.ofNullable;
  * check the first parameter on the repository, and if the entity has not had an unsupported annotation, it will return
  * false and true to supported Repository.
  */
-enum PersistenceRepositoryFilter implements Predicate<Class<?>> {
+public enum PersistenceRepositoryFilter implements Predicate<Class<?>> {
 
     INSTANCE;
 

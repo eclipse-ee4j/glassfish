@@ -39,9 +39,11 @@ import jakarta.servlet.ServletRequestListener;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.jsp.tagext.JspTag;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +53,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.StreamSupport;
 
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -66,8 +69,12 @@ import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.SimpleDeployer;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.internal.deployment.ServerModuleCdiRegistry;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
@@ -158,6 +165,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     @Inject
     private ArchiveFactory archiveFactory;
 
+    @Inject
+    private ServerContext serverContext;
+
     private final Map<Application, WeldBootstrap> appToBootstrap = new HashMap<>();
 
     private final Map<BundleDescriptor, BeanDeploymentArchive> bundleToBeanDeploymentArchive = new HashMap<>();
@@ -241,6 +251,32 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         DeploymentImpl deploymentImpl = context.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
         if (deploymentImpl == null) {
             deploymentImpl = new DeploymentImpl(archive, ejbs, context, archiveFactory);
+
+            final ServerModuleCdiRegistry serverModuleCdiRegistry = new ServerModuleCdiRegistry();
+            events.send(new Event<>(Deployment.CDI_REGISTER_SERVER_MODULES, serverModuleCdiRegistry), false);
+
+            final DeploymentImpl deploymentImplFinal = deploymentImpl;
+
+            record ModulePathPlusRegistry(Path modulePath, ServerModuleCdiRegistry.Registration registration) {
+            }
+            StreamSupport.stream(serverModuleCdiRegistry.spliterator(), false)
+                    .map(registration -> {
+                final Path modulePath = serverContext.getInstallRoot().toPath()
+                        .resolve("modules")
+                        .resolve(registration.moduleFileName());
+                        return new ModulePathPlusRegistry(modulePath, registration);
+                    }).forEach(ctx -> {
+                        ClassLoader previousClassLoader = context.getClassLoader();
+                        ExtendedDeploymentContext extendedContext = (ExtendedDeploymentContext)context;
+                        extendedContext.setClassLoader(ctx.registration().classLoader());
+                        try {
+                            deploymentImplFinal.addAsBeanDeploymentArchive(archiveFactory.openArchive(ctx.modulePath().toFile()));
+                        } catch (IOException ex) {
+                            throw new RuntimeException("Cannot scan module " + ctx.modulePath() + "for CDI classes", ex);
+                        } finally {
+                            extendedContext.setClassLoader(previousClassLoader);
+                        }
+                    });
 
             // Add services
             deploymentImpl.getServices().add(TransactionServices.class, new TransactionServicesImpl(services));
@@ -338,6 +374,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
         context.addTransientAppMetaData(WELD_DEPLOYMENT, deploymentImpl);
         appInfo.addTransientAppMetaData(WELD_DEPLOYMENT, deploymentImpl);
+        appInfo.addTransientAppMetaData(DeploymentContext.class.getName(), context);
 
         return new WeldApplicationContainer();
     }
@@ -469,6 +506,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             invocationManager.preInvoke(componentInvocation);
             Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
             LOG.log(FINE, () -> "Starting extensions: " + extensions);
+            if (events != null) {
+                events.send(new Event<>(Deployment.CDI_BEFORE_EXTENSIONS_STARTED, appInfo), false);
+            }
             bootstrap.startExtensions(extensions);
             bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
 

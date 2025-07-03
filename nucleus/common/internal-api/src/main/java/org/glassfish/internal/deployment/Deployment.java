@@ -134,6 +134,13 @@ public interface Deployment {
     EventTypes<ApplicationInfo> APPLICATION_DISABLED = EventTypes.create("Application_Disabled", ApplicationInfo.class);
 
     /**
+     * The following synchronous events are sent during CDI initialization during application deployment
+     */
+    // before extensions are started
+    EventTypes<ApplicationInfo> CDI_BEFORE_EXTENSIONS_STARTED = EventTypes.create("CDI_Extensions_Prepared", ApplicationInfo.class);
+    EventTypes<ServerModuleCdiRegistry> CDI_REGISTER_SERVER_MODULES = EventTypes.create("CDI_Server_Modules_Registration", ServerModuleCdiRegistry.class);
+
+    /**
      * The following synchronous event is sent before the application is undeployed so various listeners could validate the
      * undeploy operation and decide whether to abort undeployment
      */

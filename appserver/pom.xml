@@ -112,12 +112,13 @@
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
         <jakarta.nosql-api.version>1.0.0</jakarta.nosql-api.version>
+        <jnosql.version>1.1.8-SNAPSHOT</jnosql.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
         <eclipselink.version>5.0.0-B07</eclipselink.version>
         <eclipselink.asm.version>9.8.0</eclipselink.asm.version>
-
+        
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
 
@@ -159,7 +160,7 @@
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.0</jakarta.mvc-api.version>
         <krazo.version>4.0.0</krazo.version>
-
+        
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
         <helidon-config.version>4.2.2</helidon-config.version>
@@ -335,6 +336,16 @@
                 <groupId>jakarta.nosql</groupId>
                 <artifactId>jakarta.nosql-api</artifactId>
                 <version>${jakarta.nosql-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jnosql.mapping</groupId>
+                <artifactId>jnosql-jakarta-persistence</artifactId>
+                <version>${jnosql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jnosql.mapping</groupId>
+                <artifactId>jnosql-mapping-api-core</artifactId>
+                <version>${jnosql.version}</version>
             </dependency>
 
             <!-- Jakarta Persistence -->

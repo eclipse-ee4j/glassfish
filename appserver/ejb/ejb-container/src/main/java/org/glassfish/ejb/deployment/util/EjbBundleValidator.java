@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -494,13 +494,21 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                             throw new RuntimeException(
                                 "Invalid DependsOn dependency '" + next + "' for EJB " + ejb.getName());
                         }
-
                     } else {
-
-                        EjbBundleDescriptor bundle = ejb.getEjbBundleDescriptor();
-                        if (!bundle.hasEjbByName(next) ) {
-                            throw new RuntimeException("Invalid DependsOn dependency '" +
-                               next + "' for EJB " + ejb.getName());
+                        if (next.matches("^[^/]+/[^/]+$")) {
+                            int index = next.indexOf("/");
+                            String moduleName = next.substring(0, index);
+                            String ejbName = next.substring(index + 1);
+                            if (!app.hasEjbByName(moduleName, ejbName)) {
+                                throw new RuntimeException("Invalid DependsOn dependency '" +
+                                        next + "' for EJB " + ejb.getName());
+                            }
+                        } else {
+                            EjbBundleDescriptor bundle = ejb.getEjbBundleDescriptor();
+                            if (!bundle.hasEjbByName(next)) {
+                                throw new RuntimeException("Invalid DependsOn dependency '" +
+                                        next + "' for EJB " + ejb.getName());
+                            }
                         }
                     }
                 }

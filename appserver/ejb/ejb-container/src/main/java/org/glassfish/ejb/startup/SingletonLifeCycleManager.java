@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package org.glassfish.ejb.startup;
 import com.sun.ejb.containers.AbstractSingletonContainer;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -117,8 +119,31 @@ public class SingletonLifeCycleManager {
             }
             normalizedName = bundle.getModuleDescriptor().getArchiveUri() + "#" + ejbName;
         } else {
-            normalizedName = sessionDesc.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri() +
-                    "#" + origName;
+            if (origName.matches("^[^/]+/[^/]+$")) {
+                int index = origName.indexOf("/");
+                String moduleName = origName.substring(0, index);
+                String ejbName = origName.substring(index + 1);
+
+                EjbBundleDescriptor ejbBundle = null;
+                for (EjbBundleDescriptor bundle : app.getBundleDescriptors(EjbBundleDescriptor.class)) {
+                    if (Objects.equals(moduleName, bundle.getModuleDescriptor().getModuleName())) {
+                        if (bundle.hasEjbByName(ejbName)) {
+                            ejbBundle = bundle;
+                            break;
+                        }
+                    }
+                }
+
+                if (ejbBundle == null) {
+                    throw new IllegalStateException("Invalid @DependsOn value = " + origName +
+                            " for Singleton " + sessionDesc.getName());
+                }
+
+                normalizedName = ejbBundle.getModuleDescriptor().getArchiveUri() + "#" + ejbName;
+            } else {
+                normalizedName = sessionDesc.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri() +
+                        "#" + origName;
+            }
         }
 
         return normalizedName;

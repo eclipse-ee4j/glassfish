@@ -138,7 +138,6 @@ public interface Deployment {
      */
     // before extensions are started
     EventTypes<ApplicationInfo> CDI_BEFORE_EXTENSIONS_STARTED = EventTypes.create("CDI_Extensions_Prepared", ApplicationInfo.class);
-    EventTypes<ServerModuleCdiRegistry> CDI_REGISTER_SERVER_MODULES = EventTypes.create("CDI_Server_Modules_Registration", ServerModuleCdiRegistry.class);
 
     /**
      * The following synchronous event is sent before the application is undeployed so various listeners could validate the

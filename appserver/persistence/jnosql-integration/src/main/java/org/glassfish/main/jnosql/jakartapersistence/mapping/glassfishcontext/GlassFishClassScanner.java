@@ -37,13 +37,11 @@ import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.internal.deployment.ServerModuleCdiRegistry;
 import org.glassfish.weld.DeploymentImpl;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.util.logging.Level.FINEST;
 import static org.glassfish.internal.deployment.Deployment.CDI_BEFORE_EXTENSIONS_STARTED;
-import static org.glassfish.internal.deployment.Deployment.CDI_REGISTER_SERVER_MODULES;
 import static org.glassfish.weld.WeldDeployer.WELD_DEPLOYMENT;
 
 /**
@@ -68,7 +66,6 @@ public class GlassFishClassScanner implements PostConstruct, EventListener {
     public void event(Event<?> event) {
         LOG.log(FINEST, () -> "event(event.name=" + event.name() + ", event.hook=" + event.hook() + ")");
         ApplicationInfo appInfo;
-        ServerModuleCdiRegistry registry;
         if (null != (appInfo = CDI_BEFORE_EXTENSIONS_STARTED.getHook((Event<ApplicationInfo>) event))) {
             DeploymentImpl deploymentImpl = appInfo.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
             DeploymentContext deploymentContext = appInfo.getTransientAppMetaData(DeploymentContext.class.getName(), DeploymentContext.class);
@@ -80,9 +77,6 @@ public class GlassFishClassScanner implements PostConstruct, EventListener {
                     jnosqlExtension.setTypes(types);
                 }
             });
-        } else if (null != (registry = CDI_REGISTER_SERVER_MODULES.getHook((Event<ServerModuleCdiRegistry>) event))) {
-//            registry.registerModule("jnosql-jakarta-persistence-scanner.jar", JakartaPersistenceExtension.class.getClassLoader());
-//            registry.registerModule("jnosql-jakarta-persistence.jar", this.getClass().getClassLoader());
         }
     }
 

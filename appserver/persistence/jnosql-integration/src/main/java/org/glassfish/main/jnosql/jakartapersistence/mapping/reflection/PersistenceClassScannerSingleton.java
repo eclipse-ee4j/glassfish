@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.jnosql.mapping.NoSQLRepository;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.PersistenceRepositoryFilter;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;

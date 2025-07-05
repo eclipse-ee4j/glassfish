@@ -486,6 +486,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 appInfo = context.getModuleMetaData(ApplicationInfo.class);
                 if (appInfo == null) {
                     appInfo = new ApplicationInfo(events, context.getSource(), appName);
+                    context.addModuleMetaData(appInfo);
                     appInfo.addModule(moduleInfo);
 
                     for (Object m : context.getModuleMetadata()) {

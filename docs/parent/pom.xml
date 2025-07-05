@@ -30,7 +30,7 @@
 
     <properties>
         <maven.site.skip>true</maven.site.skip>
-        <asciidoctor.maven.plugin.version>3.1.1</asciidoctor.maven.plugin.version>
+        <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
         <asciidoctorj.pdf.version>2.3.19</asciidoctorj.pdf.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
@@ -107,6 +107,7 @@
                         <docinfo1>true</docinfo1>
                         <imagesDir>${basedir}/src/main/asciidoc</imagesDir>
                         <productName>${productName}</productName>
+
                     </attributes>
                 </configuration>
                 <executions>

@@ -19,24 +19,31 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.inject.Inject;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
+import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManager;
+import org.eclipse.jnosql.jakartapersistence.mapping.PersistenceDocumentTemplate;
+import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
+import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 import org.glassfish.hk2.classmodel.reflect.Types;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.DefaultEntitiesMetadata;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.ReflectionGroupEntityMetadata;
 
 /**
  *
@@ -50,33 +57,82 @@ public class JnosqlAnnotationsScannerExtension implements Extension {
         this.types = types;
     }
 
-    void afterBeanDiscovery(@Observes AfterBeanDiscovery event, BeanManager beanManager) {
+    void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
-        event.addBean()
-                .types(EntitiesMetadata.class, GlassFishEntitiesMetadata.class)
-                .qualifiers(Default.Literal.INSTANCE)
+        afterBeanDiscovery.<ReflectionGroupEntityMetadata>addBean()
+                .types(GroupEntityMetadata.class)
                 .scope(ApplicationScoped.class)
-                .produceWith(instance -> produceMetadataBean(instance, types, beanManager));
+                .createWith(createBeanProducer(ReflectionGroupEntityMetadata.class, beanManager))
+                .destroyWith(createBeanDestroyer(ReflectionGroupEntityMetadata.class, beanManager));
+
+        afterBeanDiscovery.<DefaultEntitiesMetadata>addBean()
+                .types(EntitiesMetadata.class)
+                .scope(ApplicationScoped.class)
+                .createWith(createBeanProducer(DefaultEntitiesMetadata.class, beanManager))
+                .destroyWith(createBeanDestroyer(DefaultEntitiesMetadata.class, beanManager));
+
+        defineJNoSqlBeans(afterBeanDiscovery, beanManager);
     }
 
-    private GlassFishEntitiesMetadata produceMetadataBean(Instance<Object> instance, Types types, BeanManager beanManager) {
-        final GlassFishEntitiesMetadata resultBean = new GlassFishEntitiesMetadata(types);
+    private <BEAN_TYPE> Function<CreationalContext<BEAN_TYPE>, BEAN_TYPE> createBeanProducer(Class<BEAN_TYPE> beanType, BeanManager beanManager) {
+        return ctx -> {
+            AnnotatedType<BEAN_TYPE> annotatedType = beanManager.createAnnotatedType(beanType);
+            InjectionTarget<BEAN_TYPE> injectionTarget = beanManager.getInjectionTargetFactory(annotatedType).createInjectionTarget(null);
 
-        AnnotatedType<GlassFishEntitiesMetadata> annotatedType = beanManager.createAnnotatedType(GlassFishEntitiesMetadata.class);
+            BEAN_TYPE instance = injectionTarget.produce(ctx);
+            injectionTarget.inject(instance, ctx);
+            injectionTarget.postConstruct(instance);
 
-        InjectionTargetFactory<GlassFishEntitiesMetadata> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+            return instance;
+        };
+    }
 
-        InjectionTarget<GlassFishEntitiesMetadata> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
+    private <BEAN_TYPE> BiConsumer<BEAN_TYPE, CreationalContext<BEAN_TYPE>> createBeanDestroyer(Class<BEAN_TYPE> beanType, BeanManager beanManager) {
+        return (instance, ctx) -> {
+            AnnotatedType<BEAN_TYPE> annotatedType = beanManager.createAnnotatedType(beanType);
+            InjectionTarget<BEAN_TYPE> injectionTarget = beanManager.getInjectionTargetFactory(annotatedType).createInjectionTarget(null);
 
-        CreationalContext<GlassFishEntitiesMetadata> creationalContext = beanManager.createCreationalContext(null);
+            injectionTarget.preDestroy(instance);
+            injectionTarget.dispose(instance);
+        };
+    }
 
-        injectionTarget.inject(resultBean, creationalContext);
-        injectionTarget.postConstruct(resultBean);
+    // exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
+    private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+        /* This is just to define beanManager for AbstractBean in an EE context, it shouldn't be injected
+           In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
+           only beans in the deployed app are added to a bean archive. Beans defined by an EE container
+           don't automatically have bean archive.
+         */
+        afterBeanDiscovery.addBean()
+                .types(AbstractBean.class)
+                .scope(ApplicationScoped.class)
+                .qualifiers(Default.Literal.INSTANCE)
+                .createWith(ctx -> {
+                    return null;
+                });
 
-        return resultBean;
+        afterBeanDiscovery.<PersistenceDocumentTemplate>addBean()
+                .types(DocumentTemplate.class, PersistenceDocumentTemplate.class)
+                .scope(ApplicationScoped.class)
+                .createWith(createBeanProducer(PersistenceDocumentTemplate.class, beanManager))
+                .destroyWith(createBeanDestroyer(PersistenceDocumentTemplate.class, beanManager));
+
+        afterBeanDiscovery.<Converters>addBean()
+                .types(Converters.class)
+                .scope(ApplicationScoped.class)
+                .createWith(createBeanProducer(Converters.class, beanManager))
+                .destroyWith(createBeanDestroyer(Converters.class, beanManager));
+
+        afterBeanDiscovery.<PersistenceDatabaseManager>addBean()
+                .types(PersistenceDatabaseManager.class)
+                .scope(ApplicationScoped.class)
+                .createWith(createBeanProducer(PersistenceDatabaseManager.class, beanManager))
+                .destroyWith(createBeanDestroyer(PersistenceDatabaseManager.class, beanManager));
 
     }
 
+    // this is meant to replace DefaultEntitiesMetadata with data from GlassFish's Types
     public static class GlassFishEntitiesMetadata implements EntitiesMetadata {
 
         private Types types;

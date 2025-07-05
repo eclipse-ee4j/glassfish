@@ -809,12 +809,4 @@ public class DeploymentImpl implements CDI11Deployment {
             createLibJarBda(libBeanDeploymentArchive);
         }
     }
-
-    void addAsBeanDeploymentArchive(ReadableArchive archive) {
-        createLibJarBda(new RootBeanDeploymentArchive(
-                                        archive,
-                                        emptyList(),
-                                        context,
-                                        archive.getName()));
-    }
 }

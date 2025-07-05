@@ -372,7 +372,7 @@ public class ApplicationInfo extends ModuleInfo {
                 module.stop(getSubContext(module, context), logger);
             }
 
-            sendEvent(new Event<>(APPLICATION_STOPPED, this), false);
+                sendEvent(new Event<>(APPLICATION_STOPPED, this), false);
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
         }

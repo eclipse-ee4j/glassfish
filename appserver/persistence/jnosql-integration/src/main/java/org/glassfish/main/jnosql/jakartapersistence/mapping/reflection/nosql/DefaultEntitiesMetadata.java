@@ -39,7 +39,7 @@ import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
  * It's storage the class information in a {@link ConcurrentHashMap}
  */
 @ApplicationScoped
-class DefaultEntitiesMetadata implements EntitiesMetadata {
+public class DefaultEntitiesMetadata implements EntitiesMetadata {
 
     private final Map<String, EntityMetadata> mappings;
 

@@ -107,7 +107,7 @@ spec:
     - name: "HOME"
       value: "/home/jenkins"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
+      value: "-Duser.home=/home/jenkins -Xmx2400m -Xss512k -XX:+UseShenandoahGC -XX:+UseStringDeduplication -XX:+UseLargePages -Xlog:gc+stats"
     volumeMounts:
     - name: "jenkins-home"
       mountPath: "/home/jenkins"

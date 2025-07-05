@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,21 +46,17 @@ import org.glassfish.admin.rest.RestResource;
 import org.glassfish.admin.rest.model.ResponseBody;
 import org.glassfish.admin.rest.model.RestCollectionResponseBody;
 import org.glassfish.admin.rest.model.RestModelResponseBody;
-import org.glassfish.admin.rest.model.SseResponseBody;
 import org.glassfish.admin.rest.resources.AbstractResource;
-import org.glassfish.admin.rest.utils.DetachedCommandHelper;
+import org.glassfish.admin.rest.utils.JobIdAsyncAdminCommandInvoker;
 import org.glassfish.admin.rest.utils.JsonFilter;
 import org.glassfish.admin.rest.utils.JsonUtil;
-import org.glassfish.admin.rest.utils.SseCommandHelper;
 import org.glassfish.admin.rest.utils.StringUtil;
 import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
-import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.internal.util.collection.Ref;
-import org.glassfish.jersey.media.sse.EventOutput;
 
 /**
  * This is the base class for all composite resources. It provides all of the basic configuration and utilities needed
@@ -309,44 +305,6 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     }
 
     /**
-     * Execute an <code>AdminCommand</code> via SSE, but provide an <code>ActionReportProcessor</code> that allows the
-     * calling resource, via an <code>EntityBuilder</code> instance, to return a <code>ResponseBody</code> that extra
-     * information such as the newly create entity, as well as any messages returned by the subsystem.
-     */
-    protected EventOutput executeSseCommand(final Subject subject, final String command, final ParameterMap parameters,
-            final ResponseBodyBuilder builder) {
-        return getCompositeUtil().executeSseCommand(subject, command, parameters, new SseCommandHelper.ActionReportProcessor() {
-            @Override
-            public ActionReport process(ActionReport report, EventOutput ec) {
-                if (report != null) {
-                    ResponseBody rb = builder.build(report);
-                    Properties props = new Properties();
-                    props.put("response", rb);
-                    report.setExtraProperties(props);
-                }
-
-                return report;
-            }
-
-        });
-    }
-
-    /**
-     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
-     */
-    protected EventOutput executeSseCommand(final Subject subject, final String command, final ParameterMap parameters,
-            final SseCommandHelper.ActionReportProcessor processor) {
-        return getCompositeUtil().executeSseCommand(subject, command, parameters, processor);
-    }
-
-    /**
-     * Execute an <code>AdminCommand</code> with the specified parameters and return EventOutput suitable for SSE.
-     */
-    protected EventOutput executeSseCommand(final Subject subject, final String command, final ParameterMap parameters) {
-        return getCompositeUtil().executeSseCommand(subject, command, parameters);
-    }
-
-    /**
      * TBD - Jason Lee wants to move this into the defaults generators.
      *
      * Finds an unused name given the list of currently used names and a name prefix.
@@ -455,7 +413,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         final RestActionReporter ar = new RestActionReporter();
         final CommandRunner.CommandInvocation commandInvocation = cr.getCommandInvocation(command, ar, getSubject()).parameters(parameters);
-        final String jobId = DetachedCommandHelper.invokeAsync(commandInvocation);
+        final String jobId = new JobIdAsyncAdminCommandInvoker(commandInvocation).start();
         return getUri("jobs/id/" + jobId);
     }
 
@@ -590,26 +548,6 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         }
     }
 
-    protected Response actSse(final CommandInvoker invoker) {
-        final boolean includeResourceLinks = includeResourceLinks();
-        EventOutput eo = executeSseCommand(getSubject(), invoker.getCommand(), invoker.getParams(), new ResponseBodyBuilderImpl() {
-            @Override
-            protected ResponseBody success(ActionReport report) {
-                invoker.setResult(report.getExtraProperties());
-                SseResponseBody responseBody = new SseResponseBody();
-                responseBody.addSuccess(invoker.getSuccessMessage());
-                return responseBody;
-            }
-
-            @Override
-            protected boolean includeResourceLinks() {
-                return includeResourceLinks;
-            }
-        });
-
-        return Response.status(Status.ACCEPTED).entity(eo).build();
-    }
-
     protected Response create(final CreateCommandInvoker invoker, boolean detached) throws Exception {
         if (detached) {
             final String newItemName = invoker.getNewItemName();
@@ -621,29 +559,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         }
     }
 
-    protected Response createSse(final CreateCommandInvoker invoker) throws Exception {
-        final String collectionUri = uriInfo.getAbsolutePathBuilder().build().toString();
-        final boolean includeResourceLinks = includeResourceLinks();
-        EventOutput eo = executeSseCommand(getSubject(), invoker.getCommand(), invoker.getParams(), new ResponseBodyBuilderImpl() {
-            @Override
-            protected ResponseBody success(ActionReport report) {
-                invoker.setResult(report.getExtraProperties());
-                SseResponseBody responseBody = new SseResponseBody();
-                responseBody.addHeader("Location", collectionUri + "/id/" + invoker.getNewItemName())
-                        .addSuccess(invoker.getSuccessMessage());
-                return responseBody;
-            }
-
-            @Override
-            protected boolean includeResourceLinks() {
-                return includeResourceLinks;
-            }
-        });
-
-        return Response.status(Status.ACCEPTED).entity(eo).build();
-    }
-
-    public class CommandInvoker {
+    private class CommandInvoker {
 
         public CommandInvoker() {
         }

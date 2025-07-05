@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -49,10 +49,14 @@ import org.glassfish.admin.rest.provider.MethodMetaData;
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.results.OptionsResult;
 import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.admin.rest.utils.SseAdminCommandInvoker;
 import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
 
 /**
@@ -120,8 +124,11 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
     }
 
     protected Response executeCommandAsSse(ParameterMap data) {
-        EventOutput ec = ResourceUtil.runCommandWithSse(commandName, data, null, null);
-        return Response.status(HttpURLConnection.HTTP_OK).entity(ec).build();
+        final CommandRunner commandRunner = Globals.getDefaultHabitat().getService(CommandRunner.class);
+        final CommandInvocation invocation = commandRunner
+            .getCommandInvocation(commandName, new RestActionReporter(), null).parameters(data);
+        final EventOutput output = new SseAdminCommandInvoker(invocation).start();
+        return Response.status(HttpURLConnection.HTTP_OK).entity(output).build();
     }
 
     protected Response executeCommandLegacyFormat(ParameterMap data) {

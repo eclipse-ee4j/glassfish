@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -51,13 +53,13 @@ public class JsonActionReporter extends ActionReporter {
     public void writeReport(OutputStream os) throws IOException {
         PrintWriter writer = new PrintWriter(os);
 
-        write(topMessage, writer);
-        if (exception != null) {
+        write(getTopMessagePart(), writer);
+        if (getFailureCause() != null) {
             writer.println("Exception raised during operation : <br>");
-            exception.printStackTrace(writer);
+            getFailureCause().printStackTrace(writer);
         }
-        if (subActions.size() > 0) {
-            writer.println(quote(", number_subactions") + ":" + quote("" + subActions.size()));
+        if (!getSubActionsReport().isEmpty()) {
+            writer.println(quote(", number_subactions") + ":" + quote(Integer.toString(getSubActionsReport().size())));
         }
         writer.flush();
     }
@@ -65,8 +67,8 @@ public class JsonActionReporter extends ActionReporter {
     private void write(MessagePart part, PrintWriter writer) {
         writer.println("{ " + quote("name") + ":" + quote(part.getMessage()));
         if (top) {
-            writer.println(", " + quote("command") + ":" + quote(actionDescription));
-            writer.println(", " + quote("exit_code") + ":" + quote("" + this.exitCode));
+            writer.println(", " + quote("command") + ":" + quote(getActionDescription()));
+            writer.println(", " + quote("exit_code") + ":" + quote(getActionExitCode().toString()));
             top = false;
         }
         writeProperties(part.getProps(), writer);
@@ -134,9 +136,9 @@ public class JsonActionReporter extends ActionReporter {
     }
 
     private String encodeMap (Map map) {
-        StringBuilder result = new StringBuilder("{");
+        StringBuilder result = new StringBuilder('{');
         String sep = "";
-        for (Map.Entry entry : (Set<Map.Entry>)map.entrySet()) {
+        for (Entry<?, ?> entry : (Set<Entry<?, ?>>)map.entrySet()) {
             String key = entry.getKey().toString();
             Object value = entry.getValue();
             result.append(sep).append(quote(key)).append(":");
@@ -151,7 +153,7 @@ public class JsonActionReporter extends ActionReporter {
             sep = ",";
         }
 
-        return result.append("}").toString();
+        return result.append('}').toString();
     }
 
     /**

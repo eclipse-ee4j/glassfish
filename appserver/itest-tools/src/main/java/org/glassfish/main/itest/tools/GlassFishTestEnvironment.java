@@ -86,7 +86,7 @@ public class GlassFishTestEnvironment {
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
-    private static final int ASADMIN_START_DOMAIN_TIMEOUT = 30_000;
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT = 60_000;
     /** 1 day. Useful for debugging */
     private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 1000 * 60 * 60 * 24;
 

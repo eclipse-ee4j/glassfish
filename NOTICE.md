@@ -28,7 +28,7 @@ SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 ## Source Code
 
-The project maintains the following source code repositories. An up to date list can be also found in the [Eclipse GlassFish project page]([url](https://projects.eclipse.org/projects/ee4j.glassfish/developer)).
+The project maintains the following source code repositories. An up to date list can be also found in the [Eclipse GlassFish project page](https://projects.eclipse.org/projects/ee4j.glassfish/developer).
 
 * https://github.com/eclipse-ee4j/bvtck-porting
 * https://github.com/eclipse-ee4j/cditck-porting
@@ -61,7 +61,7 @@ The project maintains the following source code repositories. An up to date list
 
 This project leverages the following third party content.
 
-The complete information is provided in the SBOM artifacts released in Maven Central as `cyclonedx.json` files, together with the main release artifact. For example, the [SBOM for GlassFish 7.0.25 Jakarta EE 10 Platform edition]([url](https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.25/glassfish-7.0.25-cyclonedx.json)).
+The complete information is provided in the SBOM artifacts released in Maven Central as `cyclonedx.json` files, together with the main release artifact. For example, the [SBOM for GlassFish 7.0.25 Jakarta EE 10 Platform edition](https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.25/glassfish-7.0.25-cyclonedx.json).
 
 Ant Contrib (1.0)
 

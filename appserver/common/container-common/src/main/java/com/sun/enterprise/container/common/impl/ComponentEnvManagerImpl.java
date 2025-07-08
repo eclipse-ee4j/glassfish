@@ -426,9 +426,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     private void unregisterAllEjbs(Application application) {
         application.getEjbDescriptors().stream()
                 .map(this::getComponentEnvId)
-                .forEach(componentEnvId -> {
-                    compId2Env.remove(componentEnvId);
-        });
+                .forEach(compId2Env::remove);
     }
 
     private void undeployAllDescriptors(JndiNameEnvironment env) {

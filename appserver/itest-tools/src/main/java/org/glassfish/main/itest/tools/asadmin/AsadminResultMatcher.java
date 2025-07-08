@@ -18,8 +18,7 @@ package org.glassfish.main.itest.tools.asadmin;
 import org.hamcrest.CustomTypeSafeMatcher;
 
 /**
- * Matcher checking that {@link Asadmin} command succeeded. Prints it's output
- * otherwise.
+ * Matcher checking that {@link Asadmin} command succeeded. Prints its output otherwise.
  *
  * @author David Matejcek
  */
@@ -35,8 +34,7 @@ public class AsadminResultMatcher extends CustomTypeSafeMatcher<AsadminResult> {
     }
 
     /**
-     * @return matcher checking that {@link Asadmin} command succeeded. Prints
-     * it's output otherwise.
+     * @return matcher checking that {@link Asadmin} command succeeded. Prints it's output otherwise.
      */
     public static CustomTypeSafeMatcher<AsadminResult> asadminOK() {
         return new AsadminResultMatcher();
@@ -56,7 +54,7 @@ public class AsadminResultMatcher extends CustomTypeSafeMatcher<AsadminResult> {
         private String expectedErrorMessage;
 
         private AsadminFailedMatcher(String expectedErrorMessage) {
-            super("asadmin succeeded");
+            super("asadmin failed in an expected way");
             this.expectedErrorMessage = expectedErrorMessage;
         }
 

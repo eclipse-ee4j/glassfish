@@ -118,7 +118,7 @@
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
         <eclipselink.version>5.0.0-B07</eclipselink.version>
         <eclipselink.asm.version>9.8.0</eclipselink.asm.version>
-        
+
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
 
@@ -340,6 +340,11 @@
             <dependency>
                 <groupId>org.eclipse.jnosql.mapping</groupId>
                 <artifactId>jnosql-jakarta-persistence</artifactId>
+                <version>${jnosql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jnosql.mapping</groupId>
+                <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
                 <version>${jnosql.version}</version>
             </dependency>
             <dependency>

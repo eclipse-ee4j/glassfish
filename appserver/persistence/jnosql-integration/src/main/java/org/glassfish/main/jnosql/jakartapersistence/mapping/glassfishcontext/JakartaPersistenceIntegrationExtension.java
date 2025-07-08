@@ -15,7 +15,9 @@
  */
 package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
@@ -24,11 +26,8 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptor;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -37,11 +36,13 @@ import org.eclipse.jnosql.jakartapersistence.mapping.PersistenceDocumentTemplate
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
+import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
-import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
+import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.DefaultEntitiesMetadata;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.ReflectionGroupEntityMetadata;
 
@@ -49,15 +50,25 @@ import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.Ref
  *
  * @author Ondro Mihalyi
  */
-public class JnosqlAnnotationsScannerExtension implements Extension {
+public class JakartaPersistenceIntegrationExtension implements Extension {
 
-    private Types types;
+    /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
+       before it's used there
+    */
+    void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
-    public void setTypes(Types types) {
-        this.types = types;
-    }
+        final Types types = getTypes();
 
-    void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+        afterBeanDiscovery.<ApplicationContext>addBean()
+                .types(ApplicationContext.class)
+                .scope(Dependent.class) // Dependent scope is OK because the state is provided via constructor
+                .createWith(ctx -> new ApplicationContext(types));
+
+        afterBeanDiscovery.<GlassFishClassScanner>addBean()
+                .types(ClassScanner.class, GlassFishClassScanner.class)
+                .scope(ApplicationScoped.class)
+                .createWith(createBeanProducer(GlassFishClassScanner.class, beanManager))
+                .destroyWith(createBeanDestroyer(GlassFishClassScanner.class, beanManager));
 
         afterBeanDiscovery.<ReflectionGroupEntityMetadata>addBean()
                 .types(GroupEntityMetadata.class)
@@ -72,6 +83,14 @@ public class JnosqlAnnotationsScannerExtension implements Extension {
                 .destroyWith(createBeanDestroyer(DefaultEntitiesMetadata.class, beanManager));
 
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
+    }
+
+    private static Types getTypes() {
+        DeploymentContext deploymentContext
+                = Globals.getDefaultHabitat()
+                        .getService(Deployment.class)
+                        .getCurrentDeploymentContext();
+        return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
     }
 
     private <BEAN_TYPE> Function<CreationalContext<BEAN_TYPE>, BEAN_TYPE> createBeanProducer(Class<BEAN_TYPE> beanType, BeanManager beanManager) {
@@ -132,51 +151,4 @@ public class JnosqlAnnotationsScannerExtension implements Extension {
 
     }
 
-    // this is meant to replace DefaultEntitiesMetadata with data from GlassFish's Types
-    public static class GlassFishEntitiesMetadata implements EntitiesMetadata {
-
-        private Types types;
-
-        private final Map<String, EntityMetadata> mappings;
-        private final Map<Class<?>, EntityMetadata> classes;
-        private final Map<String, EntityMetadata> findBySimpleName;
-        private final Map<String, EntityMetadata> findByClassName;
-
-        @Inject
-        private GroupEntityMetadata extension;
-
-        public GlassFishEntitiesMetadata(Types types) {
-            this.types = types;
-            this.mappings = new ConcurrentHashMap<>();
-            this.classes = new ConcurrentHashMap<>();
-            this.findBySimpleName = new ConcurrentHashMap<>();
-            this.findByClassName = new ConcurrentHashMap<>();
-        }
-
-        @Override
-        public EntityMetadata get(Class<?> entity) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        @Override
-        public Map<String, InheritanceMetadata> findByParentGroupByDiscriminatorValue(Class<?> parent) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        @Override
-        public EntityMetadata findByName(String name) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        @Override
-        public Optional<EntityMetadata> findBySimpleName(String name) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        @Override
-        public Optional<EntityMetadata> findByClassName(String name) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-    }
 }

@@ -339,8 +339,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
         context.addTransientAppMetaData(WELD_DEPLOYMENT, deploymentImpl);
         appInfo.addTransientAppMetaData(WELD_DEPLOYMENT, deploymentImpl);
-        
-        appInfo.addTransientAppMetaData(DeploymentContext.class.getName(), context);
 
         return new WeldApplicationContainer();
     }

@@ -25,24 +25,29 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>jnosql-jakarta-persistence-scanner</artifactId>
+    <artifactId>jnosql-jakarta-persistence-integration</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Eclipse JNoSQL Jakarta Persistence Annotations Scanner</name>
+    <name>Eclipse JNoSQL Jakarta Persistence Integration</name>
 
     <dependencies>
         <dependency>
-            <groupId>ee.omnifish</groupId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jnosql.mapping</groupId>
             <artifactId>jnosql-jakarta-persistence</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jnosql.mapping</groupId>
+                    <artifactId>jnosql-mapping-reflection</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jnosql.mapping</groupId>
             <artifactId>jnosql-mapping-api-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.179</version>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
@@ -56,11 +61,6 @@
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>internal-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.web</groupId>
-            <artifactId>weld-integration</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -79,13 +79,13 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>6.0.0</version>
                 <configuration>
                     <instructions>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-17</_runee>
                         
                         <Import-Package>
+                            org.eclipse.jnosql.communication,
                             *
                         </Import-Package>
                         <Export-Package>

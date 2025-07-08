@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +50,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -196,6 +197,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     private ExecutorService executorService;
     private Collection<ApplicationLifecycleInterceptor> alcInterceptors = emptyList();
 
+    private ThreadLocal<Deque<ExtendedDeploymentContext>> currentDeploymentContext;
+
     protected Deployer<?, ?> getDeployer(EngineInfo engineInfo) {
         return engineInfo.getDeployer();
     }
@@ -205,7 +208,34 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         executorService = createExecutorService();
         deploymentLifecycleProbeProvider = new DeploymentLifecycleProbeProvider();
         alcInterceptors = serviceLocator.getAllServices(ApplicationLifecycleInterceptor.class);
+        currentDeploymentContext = new ThreadLocal<>();
     }
+
+    @Override
+    public DeploymentContext getCurrentDeploymentContext() {
+        Deque<ExtendedDeploymentContext> current = currentDeploymentContext.get();
+        return current == null ? null : current.peek();
+    }
+
+    private void pushCurrentDeploymentContext(ExtendedDeploymentContext context) {
+        Deque<ExtendedDeploymentContext> current = currentDeploymentContext.get();
+        if (current == null) {
+            current = new LinkedList<>();
+            currentDeploymentContext.set(current);
+        }
+        current.push(context);
+    }
+
+    private ExtendedDeploymentContext popCurrentDeploymentContext() {
+        Deque<ExtendedDeploymentContext> current = currentDeploymentContext.get();
+        final ExtendedDeploymentContext context = current.pop();
+        if (current.isEmpty()) {
+            currentDeploymentContext.remove();
+        }
+        return context;
+    }
+
+
 
     /**
      * Returns the ArchiveHandler for the passed archive abstraction or null if there are none.
@@ -352,6 +382,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         context.setPhase(DeploymentContextImpl.Phase.PREPARE);
         ApplicationInfo appInfo = null;
 
+        pushCurrentDeploymentContext(context);
         try {
             ArchiveHandler handler = context.getArchiveHandler();
             if (handler == null) {
@@ -555,6 +586,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             tracker.actOn(LOG);
             return null;
         } finally {
+            popCurrentDeploymentContext();
             if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
                 events.send(new Event<>(Deployment.DEPLOYMENT_SUCCESS, appInfo));
                 long operationTime = Calendar.getInstance().getTimeInMillis() - operationStartTime;

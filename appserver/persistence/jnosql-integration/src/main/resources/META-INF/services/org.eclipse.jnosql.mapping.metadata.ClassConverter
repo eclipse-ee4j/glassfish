@@ -1,0 +1,2 @@
+# This is needed only for reflection classes. Should be removed once they are replaced by GlassFish-specific solution
+org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.ReflectionClassConverter

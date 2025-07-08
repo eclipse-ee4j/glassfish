@@ -29,6 +29,8 @@ import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
  * The default implementation of {@link GroupEntityMetadata}.
  * It will load all Classes and put in a {@link ConcurrentHashMap}.
  * Where the key is {@link Class#getName()} and the value is {@link EntityMetadata}
+ *
+ * TODO: Replace with an impl that queries an EntityManagerFactory directly
  */
 @ApplicationScoped
 public class ReflectionGroupEntityMetadata implements GroupEntityMetadata {

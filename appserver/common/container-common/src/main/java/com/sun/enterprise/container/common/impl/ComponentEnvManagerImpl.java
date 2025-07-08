@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -410,7 +410,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         if (JndiEnvironment instanceof Application) {
-            namingManager.unbindAppObjects(getApplicationName(JndiEnvironment));
+            Application application = (Application)JndiEnvironment;
+            final String applicationName = getApplicationName(application);
+            namingManager.unbindAppObjects(applicationName);
+            unregisterAllEjbs(application);
         } else {
             // Unbind anything in the component namespace
             String componentEnvId = getComponentEnvId(JndiEnvironment);
@@ -418,6 +421,14 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             this.unregister(componentEnvId);
         }
 
+    }
+
+    private void unregisterAllEjbs(Application application) {
+        application.getEjbDescriptors().stream()
+                .map(this::getComponentEnvId)
+                .forEach(componentEnvId -> {
+                    compId2Env.remove(componentEnvId);
+        });
     }
 
     private void undeployAllDescriptors(JndiNameEnvironment env) {

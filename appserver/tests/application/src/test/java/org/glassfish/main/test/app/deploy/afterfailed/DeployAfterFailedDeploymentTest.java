@@ -18,7 +18,9 @@ package org.glassfish.main.test.app.deploy.afterfailed;
 
 import java.io.File;
 
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.DomainPropertiesBackup;
 import org.glassfish.main.test.app.deploy.BeanFailingDeployment;
 import org.glassfish.main.test.app.deploy.BeanNotFailingDeployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -26,6 +28,7 @@ import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -45,6 +48,7 @@ public class DeployAfterFailedDeploymentTest {
     private static final String OK_APP_NAME = DeployAfterFailedDeploymentTest.class.getSimpleName() + "OKApp";
 
     private static final Asadmin ASADMIN = getAsadmin();
+    private static final DomainPropertiesBackup DERBYPOOL_BACKUP = DomainPropertiesBackup.backupDerbyPool();
 
     @TempDir
     private static File tempDir;
@@ -79,6 +83,12 @@ public class DeployAfterFailedDeploymentTest {
         return warFile;
     }
 
+    @AfterAll
+    static void cleanup() {
+        DERBYPOOL_BACKUP.restore();
+    }
+
+
     /**
      * This test verifies that the JNDI environment is cleaned up for the application context in case of failed deployment.
      * It used to happen that after a failed deployment, JNDI environment for the app name and context root stayed in memory,
@@ -88,6 +98,7 @@ public class DeployAfterFailedDeploymentTest {
      */
     @Test
     public void testDeployFailedAppAndThenFixedAppWithSameNameAndContextRoot() {
+        GlassFishTestEnvironment.switchDerbyPoolToEmbededded();
         assertThat(ASADMIN.exec("deploy", "--name", OK_APP_NAME, "--contextroot", "/", failingAppWarFile.getAbsolutePath()), asadminError("Initialization failed for Singleton BeanFailingDeployment"));
         assertThat(ASADMIN.exec("deploy", "--name", OK_APP_NAME, "--contextroot", "/", okAppWarFile.getAbsolutePath()), asadminOK());
         assertThat(ASADMIN.exec("undeploy", OK_APP_NAME), asadminOK());

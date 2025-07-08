@@ -35,7 +35,7 @@ public class BeanNotFailingDeployment {
     @PostConstruct
     public void startup() {
         if (!em.getEntityManagerFactory().isOpen()) {
-            throw new RuntimeException("EM should be open");
+            throw new RuntimeException("EntityManagerFactory should be open");
         }
     }
 }

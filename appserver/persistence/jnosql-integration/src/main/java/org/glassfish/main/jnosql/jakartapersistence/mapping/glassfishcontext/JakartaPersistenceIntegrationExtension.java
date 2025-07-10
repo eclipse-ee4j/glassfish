@@ -26,16 +26,18 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
+import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManager;
-import org.eclipse.jnosql.jakartapersistence.mapping.PersistenceDocumentTemplate;
+import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
-import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
@@ -47,14 +49,23 @@ import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.Def
 import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.ReflectionGroupEntityMetadata;
 
 /**
+ * TODO - consider moving to weld-integration module, following the existing
+ * pattern of defining GlassFish extensions there, for example
+ * PersistenceExtension. Or maybe CDI integration is better in this module, so
+ * that it can be disabled independent of other modules. Then it's probably also
+ * good to move CDI-JPA integration from weld-integration into the jpa-container
+ * TODO - rename to jakarta-data container, and implement a container, following
+ * the JPA container in the jpa-container module
  *
  * @author Ondro Mihalyi
  */
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
+    private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
+
     /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
        before it's used there
-    */
+     */
     void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
         final Types types = getTypes();
@@ -64,25 +75,48 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(Dependent.class) // Dependent scope is OK because the state is provided via constructor
                 .createWith(ctx -> new ApplicationContext(types));
 
-        afterBeanDiscovery.<GlassFishClassScanner>addBean()
+        addBean(GlassFishClassScanner.class, afterBeanDiscovery, beanManager)
                 .types(ClassScanner.class, GlassFishClassScanner.class)
-                .scope(ApplicationScoped.class)
-                .createWith(createBeanProducer(GlassFishClassScanner.class, beanManager))
-                .destroyWith(createBeanDestroyer(GlassFishClassScanner.class, beanManager));
+                .scope(ApplicationScoped.class);
 
-        afterBeanDiscovery.<ReflectionGroupEntityMetadata>addBean()
+        addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager)
                 .types(GroupEntityMetadata.class)
-                .scope(ApplicationScoped.class)
-                .createWith(createBeanProducer(ReflectionGroupEntityMetadata.class, beanManager))
-                .destroyWith(createBeanDestroyer(ReflectionGroupEntityMetadata.class, beanManager));
+                .scope(ApplicationScoped.class);
 
-        afterBeanDiscovery.<DefaultEntitiesMetadata>addBean()
+        addBean(DefaultEntitiesMetadata.class, afterBeanDiscovery, beanManager)
                 .types(EntitiesMetadata.class)
-                .scope(ApplicationScoped.class)
-                .createWith(createBeanProducer(DefaultEntitiesMetadata.class, beanManager))
-                .destroyWith(createBeanDestroyer(DefaultEntitiesMetadata.class, beanManager));
+                .scope(ApplicationScoped.class);
 
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
+    }
+
+    // exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
+    private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+        /* This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
+           In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
+           only beans in the deployed app are added to a bean archive. Beans defined by an EE container
+           don't automatically have bean archive.
+         */
+        Class<?>[] dummyBeansClasses = {AbstractBean.class, AbstractRepositoryPersistenceBean.class};
+        for (var dummyBeanClass : dummyBeansClasses) {
+            afterBeanDiscovery.addBean()
+                    .types(dummyBeanClass)
+                    .scope(ApplicationScoped.class)
+                    .qualifiers(Default.Literal.INSTANCE)
+                    .createWith(ctx -> null);
+        }
+
+        addBean(Converters.class, afterBeanDiscovery, beanManager)
+                .types(Converters.class)
+                .scope(ApplicationScoped.class);
+
+        addBean(PersistenceDatabaseManager.class, afterBeanDiscovery, beanManager)
+                .types(PersistenceDatabaseManager.class)
+                .scope(ApplicationScoped.class);
+
+        addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager)
+                .types(EntityManagerProvider.class)
+                .scope(ApplicationScoped.class);
     }
 
     private static Types getTypes() {
@@ -116,39 +150,10 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         };
     }
 
-    // exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
-    private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        /* This is just to define beanManager for AbstractBean in an EE context, it shouldn't be injected
-           In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
-           only beans in the deployed app are added to a bean archive. Beans defined by an EE container
-           don't automatically have bean archive.
-         */
-        afterBeanDiscovery.addBean()
-                .types(AbstractBean.class)
-                .scope(ApplicationScoped.class)
-                .qualifiers(Default.Literal.INSTANCE)
-                .createWith(ctx -> {
-                    return null;
-                });
-
-        afterBeanDiscovery.<PersistenceDocumentTemplate>addBean()
-                .types(DocumentTemplate.class, PersistenceDocumentTemplate.class)
-                .scope(ApplicationScoped.class)
-                .createWith(createBeanProducer(PersistenceDocumentTemplate.class, beanManager))
-                .destroyWith(createBeanDestroyer(PersistenceDocumentTemplate.class, beanManager));
-
-        afterBeanDiscovery.<Converters>addBean()
-                .types(Converters.class)
-                .scope(ApplicationScoped.class)
-                .createWith(createBeanProducer(Converters.class, beanManager))
-                .destroyWith(createBeanDestroyer(Converters.class, beanManager));
-
-        afterBeanDiscovery.<PersistenceDatabaseManager>addBean()
-                .types(PersistenceDatabaseManager.class)
-                .scope(ApplicationScoped.class)
-                .createWith(createBeanProducer(PersistenceDatabaseManager.class, beanManager))
-                .destroyWith(createBeanDestroyer(PersistenceDatabaseManager.class, beanManager));
-
+    private <T> BeanConfigurator<T> addBean(Class<T> beanClass, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+        return afterBeanDiscovery.<T>addBean()
+                .createWith(createBeanProducer(beanClass, beanManager))
+                .destroyWith(createBeanDestroyer(beanClass, beanManager));
     }
 
 }

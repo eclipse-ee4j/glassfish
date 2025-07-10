@@ -22,6 +22,8 @@ import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.literal.NamedLiteral;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.CDI;
@@ -137,6 +139,12 @@ public class PersistenceExtension implements Extension  {
 
         for (String qualifierClassName : descriptor.getQualifiers()) {
             bean.addQualifier(createAnnotationInstance(loadClass(qualifierClassName)));
+        }
+        if (descriptor.getQualifiers().isEmpty()) {
+            bean.addQualifier(createAnnotationInstance(Default.class));
+        }
+        if (descriptor.getName() != null && !descriptor.getName().isBlank()) {
+            bean.addQualifier(NamedLiteral.of(descriptor.getName()));
         }
 
         return bean;

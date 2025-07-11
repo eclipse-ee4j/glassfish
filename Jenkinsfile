@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+* Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
 * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
 *
 * This program and the accompanying materials are made available under the
@@ -107,7 +107,7 @@ spec:
     - name: "HOME"
       value: "/home/jenkins"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
+      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication -Xlog:gc"
     volumeMounts:
     - name: "jenkins-home"
       mountPath: "/home/jenkins"
@@ -133,7 +133,8 @@ spec:
         cpu: "6000m"
   volumes:
   - name: "jenkins-home"
-    emptyDir: {}
+    emptyDir:
+      sizeLimit: "2Gi"
   - name: maven-repo-shared-storage
     persistentVolumeClaim:
       claimName: glassfish-maven-repo-storage
@@ -150,7 +151,8 @@ spec:
       - key: settings-security.xml
         path: settings-security.xml
   - name: maven-repo-local-storage
-    emptyDir: {}
+    emptyDir:
+      sizeLimit: "1Gi"
 """
       }
    }
@@ -253,26 +255,23 @@ spec:
 
             stage('docs') {
                steps {
-                   dumpSysInfo()
-                   sh '''
-                   pwd
-                   ls -altrh
-
-                   mkdir foo
-
-                   '''
-
-                   dir ('foo') {
-                       checkout scm
-                       container('maven') {
-                       dumpSysInfo()
-
-                       timeout(time: 1, unit: 'HOURS') {
+                  dumpSysInfo()
+                  sh '''
+                  pwd
+                  ls -altrh
+                  mkdir foo
+                  '''
+                  dir ('foo') {
+                     checkout scm
+                     container('maven') {
+                        dumpSysInfo()
+                        timeout(time: 1, unit: 'HOURS') {
                            sh '''
-                           mvn -B -e clean install -Pstaging -f docs -amd -T4C
+                           export MAVEN_OPTS="-Duser.home=/home/jenkins -Xms4g -Xmx4g -Xss512k -XX:+UseG1GC -XX:MaxMetaspaceSize=512m -XX:+UseStringDeduplication -Xlog:gc"
+                           mvn -B -e clean install -Pstaging -f docs -amd -T2C
                            '''
-                       }
-                    }
+                        }
+                     }
                   }
                }
             }

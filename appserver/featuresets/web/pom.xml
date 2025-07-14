@@ -45,7 +45,7 @@
 
         <dependency>
             <groupId>ee.omnifish</groupId>
-             <artifactId>jnosql-jakarta-persistence</artifactId>
+             <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
             <version>1.1.8-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
@@ -1450,7 +1450,7 @@
       
         <dependency>
             <groupId>org.glassfish.main.persistence</groupId>
-            <artifactId>jnosql-jakarta-persistence-scanner</artifactId>
+            <artifactId>jnosql-jakarta-persistence-integration</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>

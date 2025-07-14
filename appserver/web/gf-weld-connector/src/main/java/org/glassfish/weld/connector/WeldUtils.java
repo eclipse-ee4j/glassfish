@@ -19,6 +19,7 @@ package org.glassfish.weld.connector;
 
 import com.sun.enterprise.config.serverbeans.Config;
 
+import jakarta.data.repository.Repository;
 import jakarta.decorator.Decorator;
 import jakarta.ejb.MessageDriven;
 import jakarta.ejb.Stateful;
@@ -140,6 +141,9 @@ public class WeldUtils {
         cdiEnablingAnnotations.add(Stateful.class.getName());
         cdiEnablingAnnotations.add(Stateless.class.getName());
         cdiEnablingAnnotations.add(jakarta.ejb.Singleton.class.getName());
+
+        // Jakarta Data
+        cdiEnablingAnnotations.add(Repository.class.getName());
     }
 
     /**

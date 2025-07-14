@@ -63,6 +63,7 @@ import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 import static java.util.stream.Collectors.toList;
 import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
 import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
@@ -790,7 +791,8 @@ public class DeploymentImpl implements CDI11Deployment {
                                 if (libArchive != null) {
                                     try {
                                         libArchive.close();
-                                    } catch (Exception ignore) {
+                                    } catch (Exception ex) {
+                                        LOG.log(WARNING, ex, () -> "Could not open " + rootArchiveAppLib + " as app lib and scan it for CDI beans.");
                                     }
                                 }
                             }

@@ -68,6 +68,7 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
@@ -469,6 +470,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             invocationManager.preInvoke(componentInvocation);
             Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
             LOG.log(FINE, () -> "Starting extensions: " + extensions);
+            if (events != null) {
+                events.send(new Event<>(Deployment.CDI_BEFORE_EXTENSIONS_STARTED, appInfo), false);
+            }
             bootstrap.startExtensions(extensions);
             bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
 

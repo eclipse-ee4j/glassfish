@@ -36,14 +36,8 @@
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jnosql.mapping</groupId>
-            <artifactId>jnosql-jakarta-persistence</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.jnosql.mapping</groupId>
-                    <artifactId>jnosql-mapping-reflection</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>ee.omnifish</groupId>
+            <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jnosql.mapping</groupId>
@@ -75,6 +69,43 @@
 
     <build>
         <plugins>
+            <!-- add JARs embedded in the OSGi bundle dependency to the compile classpath -->
+            <plugin>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>unpack-dependencies</id>
+                  <goals>
+                    <goal>unpack-dependencies</goal>
+                  </goals>
+                  <configuration>
+                    <includeGroupIds>ee.omnifish</includeGroupIds>
+                    <excludeTransitive>true</excludeTransitive>
+                    <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+                  </configuration>
+                </execution>
+                <execution>
+                    <id>classpath</id>
+                    <goals>
+                        <goal>build-classpath</goal>
+                    </goals>
+                  <configuration>
+                      <includeScope>compile</includeScope>
+                      <outputProperty>compile.classpath</outputProperty>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-cp</arg>
+                        <arg>${compile.classpath}${path.separator}${project.build.directory}/dependencies/jnosql-jakarta-persistence-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-core-${jnosql.version}.jar</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
             <!-- Creates the OSGi MANIFEST.MF file -->
             <plugin>
                 <groupId>org.apache.felix</groupId>

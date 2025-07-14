@@ -338,12 +338,7 @@
                 <version>${jakarta.nosql-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jnosql.mapping</groupId>
-                <artifactId>jnosql-jakarta-persistence</artifactId>
-                <version>${jnosql.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jnosql.mapping</groupId>
+                <groupId>ee.omnifish</groupId>
                 <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
                 <version>${jnosql.version}</version>
             </dependency>

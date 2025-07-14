@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~
-  ~  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
-  ~   All rights reserved. This program and the accompanying materials
-  ~   are made available under the terms of the Eclipse Public License v1.0
-  ~   and Apache License v2.0 which accompanies this distribution.
-  ~   The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
-  ~   and the Apache License v2.0 is available at http://www.opensource.org/licenses/apache2.0.php.
-  ~
-  ~   You may elect to redistribute this code under either of these licenses.
-  ~
-  ~   Contributors:
-  ~
-  ~   Ondro Mihalyi
-  ~   Arjan Tijms
-  ~
-  -->
+~
+~  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
+~   All rights reserved. This program and the accompanying materials
+~   are made available under the terms of the Eclipse Public License v1.0
+~   and Apache License v2.0 which accompanies this distribution.
+~   The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+~   and the Apache License v2.0 is available at http://www.opensource.org/licenses/apache2.0.php.
+~
+~   You may elect to redistribute this code under either of these licenses.
+~
+~   Contributors:
+~
+~   Ondro Mihalyi
+~   Arjan Tijms
+~
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -38,14 +38,24 @@
         <dependency>
             <groupId>ee.omnifish</groupId>
             <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jnosql.mapping</groupId>
-            <artifactId>jnosql-mapping-api-core</artifactId>
+            <groupId>jakarta.data</groupId>
+            <artifactId>jakarta.data-api</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.nosql</groupId>
+            <artifactId>jakarta.nosql-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -71,37 +81,37 @@
         <plugins>
             <!-- add JARs embedded in the OSGi bundle dependency to the compile classpath -->
             <plugin>
-              <artifactId>maven-dependency-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>unpack-dependencies</id>
-                  <goals>
-                    <goal>unpack-dependencies</goal>
-                  </goals>
-                  <configuration>
-                    <includeGroupIds>ee.omnifish</includeGroupIds>
-                    <excludeTransitive>true</excludeTransitive>
-                    <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
-                  </configuration>
-                </execution>
-                <execution>
-                    <id>classpath</id>
-                    <goals>
-                        <goal>build-classpath</goal>
-                    </goals>
-                  <configuration>
-                      <includeScope>compile</includeScope>
-                      <outputProperty>compile.classpath</outputProperty>
-                  </configuration>
-                </execution>
-              </executions>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>ee.omnifish</includeGroupIds>
+                            <excludeTransitive>true</excludeTransitive>
+                            <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>classpath</id>
+                        <goals>
+                            <goal>build-classpath</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>compile</includeScope>
+                            <outputProperty>compile.classpath</outputProperty>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerArgs>
                         <arg>-cp</arg>
-                        <arg>${compile.classpath}${path.separator}${project.build.directory}/dependencies/jnosql-jakarta-persistence-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-core-${jnosql.version}.jar</arg>
+                        <arg>${compile.classpath}${path.separator}${project.build.directory}/dependencies/jnosql-jakarta-persistence-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-core-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-api-core-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-communication-core-${jnosql.version}.jar</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>

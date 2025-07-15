@@ -31,6 +31,23 @@ def dumpSysInfo() {
    """
 }
 
+def startVmstatLogging(String stageName) {
+   sh """
+   mkdir -p ${WORKSPACE}/logs
+   vmstat -t -w -a -y 1 > ${WORKSPACE}/logs/vmstat-${stageName}.log 2>&1 & echo \$! > ${WORKSPACE}/vmstat.pid
+   """
+}
+
+def stopVmstatLogging(String stageName) {
+   sh """
+   if [ -f ${WORKSPACE}/vmstat.pid ]; then
+      pkill -F ${WORKSPACE}/vmstat.pid || true
+      rm -f ${WORKSPACE}/vmstat.pid
+   fi
+   """
+   archiveArtifacts artifacts: "logs/vmstat-${stageName}.log", allowEmptyArchive: true
+}
+
 def antjobs = [
     "cdi_all",
     "ql_gf_full_profile_all",
@@ -65,9 +82,10 @@ def generateAntPodTemplate(job) {
    return {
       node {
          stage("${job}") {
-            unstash 'build-bundles'
             try {
-               timeout(time: 1, unit: 'HOURS') {
+               startVmstatLogging("ant-${job}")
+               unstash 'build-bundles'
+               timeout(time: 2, unit: 'HOURS') {
                   withAnt(installation: 'apache-ant-latest') {
                      dumpSysInfo()
                      sh """
@@ -78,8 +96,8 @@ def generateAntPodTemplate(job) {
                      """
                   }
                }
-            }
-            finally {
+            } finally {
+               stopVmstatLogging("ant-${job}")
                archiveArtifacts artifacts: "${job}-results.tar.gz"
                junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
             }
@@ -134,7 +152,7 @@ spec:
   volumes:
   - name: "jenkins-home"
     emptyDir:
-      sizeLimit: "2Gi"
+      sizeLimit: "4Gi"
   - name: maven-repo-shared-storage
     persistentVolumeClaim:
       claimName: glassfish-maven-repo-storage
@@ -152,7 +170,7 @@ spec:
         path: settings-security.xml
   - name: maven-repo-local-storage
     emptyDir:
-      sizeLimit: "1Gi"
+      sizeLimit: "2Gi"
 """
       }
    }
@@ -169,6 +187,8 @@ spec:
 
    options {
       buildDiscarder(logRotator(numToKeepStr: '2'))
+
+      parallelsAlwaysFailFast()
 
       // to allow re-running a test stage
       preserveStashes()
@@ -192,21 +212,30 @@ spec:
          steps {
             checkout scm
             container('maven') {
-               dumpSysInfo()
-               sh '''
-               # Validate the structure in all submodules (especially version ids)
-               mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+               script {
+               try {
+                  startVmstatLogging('mvn-build')
+                  dumpSysInfo()
+                  timeout(time: 10, unit: 'MINUTES') {
+                     sh '''
+                     # Validate the structure in all submodules (especially version ids)
+                     mvn -B -e -fae clean validate -Ptck,set-version-id,staging
 
-               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-               mvn -B -e install -Pfastest,staging -T4C
-               ./gfbuild.sh archive_bundles
-               ./gfbuild.sh archive_embedded
+                     # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+                     mvn -B -e install -Pfastest,staging -T4C
+                     ./gfbuild.sh archive_bundles
+                     ./gfbuild.sh archive_embedded
 
-               mvn -B -e clean -Pstaging
-               tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-               ls -la ${WORKSPACE}/bundles
-               ls -la ${WORKSPACE}/embedded
-               '''
+                     mvn -B -e clean -Pstaging
+                     tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+                     ls -la ${WORKSPACE}/bundles
+                     ls -la ${WORKSPACE}/embedded
+                     '''
+                  }
+               } finally {
+                  stopVmstatLogging('mvn-build')
+               }
+               }
             }
             archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
             archiveArtifacts artifacts: 'embedded/*', onlyIfSuccessful: true
@@ -220,11 +249,18 @@ spec:
                steps {
                   checkout scm
                   container('maven') {
-                     dumpSysInfo()
-                     timeout(time: 1, unit: 'HOURS') {
-                        sh '''
-                        mvn -B -e clean install -Pstaging,qa
-                        '''
+                     script {
+                     try {
+                        startVmstatLogging('mvn-tests')
+                        dumpSysInfo()
+                        timeout(time: 2, unit: 'HOURS') {
+                           sh '''
+                           mvn -B -e clean install -Pstaging,qa
+                           '''
+                        }
+                     } finally {
+                        stopVmstatLogging('mvn-tests')
+                     }
                      }
                   }
                }
@@ -264,12 +300,18 @@ spec:
                   dir ('foo') {
                      checkout scm
                      container('maven') {
-                        dumpSysInfo()
-                        timeout(time: 1, unit: 'HOURS') {
+                        script {
+                        try {
+                           startVmstatLogging('mvn-docs')
+                           dumpSysInfo()
+                           timeout(time: 2, unit: 'HOURS') {
                            sh '''
-                           export MAVEN_OPTS="-Duser.home=/home/jenkins -Xms4g -Xmx4g -Xss512k -XX:+UseG1GC -XX:MaxMetaspaceSize=512m -XX:+UseStringDeduplication -Xlog:gc"
-                           mvn -B -e clean install -Pstaging -f docs -amd -T2C
+                           mvn -B -e clean install -Pstaging -f docs -amd -T4C
                            '''
+                           }
+                        } finally {
+                           stopVmstatLogging('mvn-docs')
+                        }
                         }
                      }
                   }

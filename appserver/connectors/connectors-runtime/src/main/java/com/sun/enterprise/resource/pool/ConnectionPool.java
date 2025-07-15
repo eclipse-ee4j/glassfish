@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -515,6 +515,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
                     } catch (InterruptedException ex) {
                         // Could be system shutdown.
+                        Thread.currentThread().interrupt();
                         break;
                     }
 
@@ -540,6 +541,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                         }
                     } catch (InterruptedException ex) {
                         // Could be system shutdown.
+                        Thread.currentThread().interrupt();
                         break;
                     }
 
@@ -1019,7 +1021,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 try {
                     Thread.sleep(conCreationRetryInterval_);
                 } catch (InterruptedException ie) {
-                    // ignore this exception
+                    // do not ignore this exception
+                    Thread.currentThread().interrupt();
                 }
             }
         }

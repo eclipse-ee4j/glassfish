@@ -41,7 +41,7 @@
     <module name="FileTabCharacter">
         <property name="eachLine" value="true" />
         <property name="fileExtensions"
-            value="java,jsp,jsf,css,html,htm,c,h,properties,txt,sh,sql" />
+            value="adoc,java,jsp,jsf,css,html,htm,c,h,properties,txt,sh,sql,xml" />
         <property name="severity" value="error" />
     </module>
 
@@ -71,7 +71,7 @@
             <property name="severity" value="warning" />
         </module>
         <module name="JavadocVariable">
-            <property name="scope" value="protected" />
+            <property name="accessModifiers" value="public,protected" />
             <property name="severity" value="warning" />
         </module>
 

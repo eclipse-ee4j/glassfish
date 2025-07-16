@@ -18,7 +18,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -947,8 +948,10 @@
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <skip>${checkstyle.skip}</skip>
+                        <consoleOutput>true</consoleOutput>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
+                        <includes>**/*admin,**/*.adoc,**/*.bat,**/*.java,**/*.sh,**/*.xml</includes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
                         adds all property files in the tree -->
                         <resourceExcludes>
@@ -956,6 +959,13 @@
                             **/deployment/**/src/main/resources/**/*,
                             **/target/**/*,
                         </resourceExcludes>
+                        <sourceDirectories>
+                            <sourceDirectory>src/main/asciidoc</sourceDirectory>
+                            <sourceDirectory>src/main/assembly</sourceDirectory>
+                            <sourceDirectory>src/main/java</sourceDirectory>
+                            <sourceDirectory>src/main/resources</sourceDirectory>
+                            <sourceDirectory>src/test/java</sourceDirectory>
+                        </sourceDirectories>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -967,12 +977,25 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.21.4</version>
+                            <version>10.26.1</version>
                         </dependency>
                     </dependencies>
                     <executions>
                         <execution>
-                            <id>${project.groupId}-${project.artifactId}-checkstyle</id>
+                            <id>checkstyle-poms</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                            <configuration>
+                                <sourceDirectories>
+                                    <sourceDirectory>${project.basedir}</sourceDirectory>
+                                </sourceDirectories>
+                                <includes>pom.xml</includes>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>checkstyle</id>
                             <goals>
                                 <goal>check</goal>
                             </goals>

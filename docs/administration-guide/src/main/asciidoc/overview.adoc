@@ -320,8 +320,8 @@ The following is a list of variables defined by {productName} that can be used i
 
 [width="100%",cols="30%,30%,40%",options="header",]
 |===
-|Variable | Description | Example value 
-| `com.sun.aas.agentRoot` | The root directory for (remote) nodes | `/path/to/glassfish_installation/glassfish/nodes` 
+|Variable | Description | Example value
+| `com.sun.aas.agentRoot` | The root directory for (remote) nodes | `/path/to/glassfish_installation/glassfish/nodes`
 | `com.sun.aas.configRoot` | The config directory in the domain | `/path/to/glassfish_installation/glassfish/config`
 | `com.sun.aas.derbyRoot` | The root directory for the Apache Derby database | `/path/to/glassfish_installation/javadb`
 | `com.sun.aas.domainsRoot` | The root directory for domains | `/path/to/glassfish_installation/glassfish/domains`

@@ -29,7 +29,7 @@
 
     <artifactId>application-tests</artifactId>
     <name>GlassFish Application Tests</name>
-    
+
     <properties>
         <glassfish.version>${project.version}</glassfish.version>
     </properties>
@@ -201,7 +201,6 @@
                             <includeArtifactIds>glassfish</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
                             <outputDirectory>${project.build.directory}</outputDirectory>
-                            <verbose>true</verbose>
                         </configuration>
                     </execution>
                 </executions>

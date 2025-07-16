@@ -104,6 +104,13 @@
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.4.0</version>
+                    <configuration>
+                        <!--
+                            If the war contains just REST services and no servlets,
+                            plugin default detection is incorrect
+                        -->
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

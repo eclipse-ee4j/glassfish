@@ -288,35 +288,6 @@ spec:
                   }
                }
             }
-
-            stage('docs') {
-               steps {
-                  dumpSysInfo()
-                  sh '''
-                  pwd
-                  ls -altrh
-                  mkdir foo
-                  '''
-                  dir ('foo') {
-                     checkout scm
-                     container('maven') {
-                        script {
-                        try {
-                           startVmstatLogging('mvn-docs')
-                           dumpSysInfo()
-                           timeout(time: 2, unit: 'HOURS') {
-                           sh '''
-                           mvn -B -e clean install -Pstaging -f docs -amd -T4C
-                           '''
-                           }
-                        } finally {
-                           stopVmstatLogging('mvn-docs')
-                        }
-                        }
-                     }
-                  }
-               }
-            }
          }
       }
    }

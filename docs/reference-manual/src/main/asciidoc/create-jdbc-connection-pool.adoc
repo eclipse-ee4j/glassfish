@@ -409,10 +409,10 @@ Possible values of `--wrapjdbcobjects` are as follows:
   `prefer-validate-over-recreate`;;
     Specifies whether pool resizer should validate idle connections
     before destroying and recreating them. The default value is false.
-    This property has no effect on non-idle connections. If set to `true`, 
+    This property has no effect on non-idle connections. If set to `true`,
     idle connections are validated during pool resizing, and only those
     found to be invalid are destroyed and recreated. If `false`, all idle
-    connections are destroyed and recreated during pool resizing. The 
+    connections are destroyed and recreated during pool resizing. The
     default is `false`.
   `time-to-keep-queries-in-minutes`;;
     Specifies the number of minutes that will be cached for use in

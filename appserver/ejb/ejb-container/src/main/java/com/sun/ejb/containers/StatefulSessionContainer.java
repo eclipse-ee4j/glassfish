@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1718,6 +1718,8 @@ public final class StatefulSessionContainer
                         + invInfo.method + " due to (retainIfException" + " == true) and exception " + inv.exception);
                 } else {
                     try {
+                        ejbProbeNotifier.ejbBeanDestroyedEvent(getContainerId(),
+                                containerInfo.appName, containerInfo.modName, containerInfo.ejbName);
                         destroyBean(inv, sc);
                     } catch (Throwable t) {
                         _logger.log(Level.FINE, "@Remove.preDestroy exception", t);

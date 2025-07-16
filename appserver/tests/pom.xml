@@ -119,11 +119,27 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <!-- Deploy this pom, but no children except ... -->
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>disabled</phase>
+                    </execution>
+                    <execution>
+                        <id>default-deploy-tests</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <!-- To keep consistency with nucleus-parent -->
+                            <skip>${deploy.skip}</skip>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

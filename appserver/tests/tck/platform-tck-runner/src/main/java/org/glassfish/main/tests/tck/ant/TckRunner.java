@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,8 +36,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-
 /**
  * TCK Runner prepares or resets the workspace, runs the test and stops all servers after
  * the test.
@@ -49,6 +47,15 @@ public class TckRunner {
     private static final Logger LOG = System.getLogger(TckRunner.class.getName());
     private static final int MAIL_SMTP_PORT = 3025;
     private static final int MAIL_IMAP_PORT = 3143;
+    private static final String JPMS_ADDITIONS = "--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke"
+        + " --add-opens=java.base/java.io=ALL-UNNAMED"
+        + " --add-opens=java.base/java.lang=ALL-UNNAMED"
+        + " --add-opens=java.base/java.util=ALL-UNNAMED"
+        + " --add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED"
+        + " --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED"
+        + " --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
+        + " --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED"
+        + " --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED";
 
     private final TckConfiguration cfg;
     private GenericContainer<?> mailServer;
@@ -81,6 +88,7 @@ public class TckRunner {
             } else {
                 throw new IllegalStateException("The TCK runnable doesn't exist: " + command);
             }
+            fixTsJteFiles();
         }
         glassfishZip = zipResolver.getZipFile("org.glassfish.main.distributions", "glassfish", cfg.getGlassFishVersion());
     }
@@ -135,36 +143,19 @@ public class TckRunner {
      * <p>
      * Also stops the mailserver if it was started by the {@link #startMailServer()} method.
      */
-    public void stopServers() throws InterruptedException, IOException {
+    public void stopServers() {
         if (mailServer != null) {
             mailServer.stop();
             mailServer.close();
             mailServer = null;
         }
-        // FIXME: The rest of the method can be removed after merging https://github.com/eclipse-ee4j/jakartaee-tck/pull/1118
-        Path riPath = cfg.getTargetDir().toPath().resolve("ri");
-        Path viPath = cfg.getTargetDir().toPath().resolve("vi");
-
-        // We don't care about the result here
-        startBash(viPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-database").waitFor(1, MINUTES);
-        startBash(viPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
-        startBash(riPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
-
-        Path derbyDir = viPath.resolve(Path.of("glassfish7", "javadb"));
-        startBash(cfg.getJdkDirectory().toPath().resolve(Path.of("bin", "java"))
-            + " -Dderby.system.home=" + derbyDir.resolve("databases")
-            + " -classpath " + derbyDir.resolve(Path.of("lib", "derbynet.jar"))
-            + ":" + derbyDir.resolve(Path.of("lib", "derby.jar"))
-            + ":" + derbyDir.resolve(Path.of("lib", "derbyshared.jar"))
-            + ":" + derbyDir.resolve(Path.of("lib", "derbytools.jar"))
-            + " org.apache.derby.drda.NetworkServerControl -h localhost -p 1527 shutdown")
-        .waitFor(1, MINUTES);
     }
 
 
     /**
      * Results are already gzipped and we need to run another module, so we remove generated files
      * from previous executions.
+     * @throws IOException on failure
      */
     public void deleteGeneratedWorkspaceDirs() throws IOException {
         deleteDirectory(cfg.getTargetDir().toPath().resolve("ri"));
@@ -173,6 +164,31 @@ public class TckRunner {
         deleteDirectory(new File(cfg.getTargetDir(), "jakartaeetck-work").toPath());
     }
 
+    private void fixTsJteFiles() {
+        try {
+            Files.walk(cfg.getJakartaeeDir().toPath())
+                .filter(path -> path.getFileName().toString().equals("ts.jte"))
+                .forEach(this::fixContent);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not fix ts.jte files!", e);
+        }
+    }
+
+    private void fixContent(Path file) {
+        try {
+            String content = Files.readString(file);
+            content = content.replace("s1as.truststore=${s1as.domain}/config/cacerts.jks",
+                "s1as.truststore=${s1as.domain}/config/cacerts.p12");
+            content = content.replace("ri.truststore=${ri.domain}/config/cacerts.jks",
+                "ri.truststore=${ri.domain}/config/cacerts.p12");
+
+            content = content.replace("${JVMOPTS_RUNTESTCOMMAND}", JPMS_ADDITIONS);
+            Files.writeString(file, content);
+            LOG.log(Level.INFO, "Fixed file: {0}", file);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not fix file: " + file, e);
+        }
+    }
 
     private void deleteDirectory(final Path directory) throws IOException {
         if (!directory.toFile().exists()) {
@@ -189,7 +205,7 @@ public class TckRunner {
     }
 
     private void configureEnvironment(Map<String, String> env) {
-        env.put("LC_ALL", "en_US.UTF-8");
+        env.put("LC_ALL", "C");
         env.put("LANG", "en");
         env.put("WORKSPACE", cfg.getTargetDir().getAbsolutePath());
         env.put("JAVA_HOME", cfg.getJdkDirectory().getAbsolutePath());

@@ -45,7 +45,7 @@ import static org.glassfish.config.support.CommandTarget.DOMAIN;
 import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
 
 /**
- * Create JDBC Resource Command
+ * Execute SQL against JDBC Resource Command
  *
  */
 @TargetType(value = { DAS, DOMAIN, CLUSTER, STANDALONE_INSTANCE })

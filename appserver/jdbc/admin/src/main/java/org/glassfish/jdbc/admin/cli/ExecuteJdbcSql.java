@@ -17,18 +17,12 @@
 
 package org.glassfish.jdbc.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
 
-import java.util.HashMap;
-import java.util.Properties;
-
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -41,7 +35,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
 import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
 import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 import static org.glassfish.api.admin.RestEndpoint.OpType.POST;
@@ -50,12 +43,9 @@ import static org.glassfish.config.support.CommandTarget.CLUSTER;
 import static org.glassfish.config.support.CommandTarget.DAS;
 import static org.glassfish.config.support.CommandTarget.DOMAIN;
 import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
-import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
 
 /**
- * Create JDBC Resource Command
+ * Execute SQL against JDBC Resource Command
  *
  */
 @TargetType(value = { DAS, DOMAIN, CLUSTER, STANDALONE_INSTANCE })
@@ -63,75 +53,39 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
     @RestEndpoint(
         configBean = Resources.class,
         opType = POST,
-        path = "create-jdbc-resource",
-        description = "create-jdbc-resource") })
+        path = "execute-jdbc-sql",
+        description = "execute-jdbc-sql") })
 @ExecuteOn(ALL)
-@Service(name = "create-jdbc-resource")
+@Service(name = "execute-jdbc-sql")
 @PerLookup
-@I18n("create.jdbc.resource")
-public class CreateJdbcResource implements AdminCommand {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJdbcResource.class);
-
-    @Param(name = "connectionpoolid", alias = "poolName")
-    private String connectionPoolId;
-
-    @Param(optional = true, defaultValue = "true")
-    private Boolean enabled;
-
-    @Param(optional = true)
-    private String description;
-
-    @Param(name = "property", optional = true, separator = ':')
-    private Properties properties;
+public class ExecuteJdbcSql implements AdminCommand {
 
     @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
-    @Param(optional = true)
+    @Param
     String sqlFileName;
 
     @Param(name = "jndi_name", primary = true)
     private String jndiName;
 
     @Inject
-    private Domain domain;
-
-    @Inject
     private JDBCResourceManager jdbcResourceManager;
 
     /**
-     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the
-     * values the parameter values
+     * Executes the command with the command parameters
      *
      * @param context information
      */
     @Override
     public void execute(AdminCommandContext context) {
-        final ActionReport report = context.getActionReport();
-
-        HashMap<String, String> attributes = new HashMap<>();
-        attributes.put(JNDI_NAME, jndiName);
-        attributes.put(POOL_NAME, connectionPoolId);
-        attributes.put(DESCRIPTION, description);
-        attributes.put(ENABLED, enabled.toString());
-        ResourceStatus resourceStatus;
+        ActionReport report = context.getActionReport();
+        ResourceStatus resourceStatus = null;
 
         try {
-            resourceStatus = jdbcResourceManager.create(domain.getResources(), attributes, properties, target);
-
-            if (sqlFileName != null && resourceStatus.getException() == null && resourceStatus.getStatus() != ResourceStatus.FAILURE) {
-                ResourceStatus executeStatus = jdbcResourceManager.executeSql(jndiName, sqlFileName);
-
-                resourceStatus =
-                    new ResourceStatus(
-                        executeStatus.getStatus(),
-                        (resourceStatus.getMessage() == null? "" : resourceStatus.getMessage()) + " " + executeStatus.getMessage(),
-                        resourceStatus.isAlreadyExists() || executeStatus.isAlreadyExists());
-            }
-
+            resourceStatus = jdbcResourceManager.executeSql(jndiName, sqlFileName);
         } catch (Exception e) {
-            report.setMessage(localStrings.getLocalString("create.jdbc.resource.failed", "JDBC resource {0} creation failed", jndiName));
+            report.setMessage("Failed to execute SQL against datasource " + jndiName);
             report.setActionExitCode(FAILURE);
             report.setFailureCause(e);
             return;

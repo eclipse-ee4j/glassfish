@@ -43,6 +43,8 @@ SYNOPSIS
            [--wrapjdbcobjects={false|true}]
            [--description description]
            [--property name=value)[:name=value]*]
+           [--resourceNames=resourceName*]
+           [--sqlFileName=sqlFileName]
            [--target=target]
            connectionpoolid
 
@@ -504,6 +506,15 @@ OPTIONS
                |asadmin(1M) man page.                   |
                +----------------------------------------+
 
+       --resourceNames
+           Creates one or more JDBC resources with the specified JNDI name(s) 
+           pointing to the same connection pool element specified by the
+           connectionpoolid.
+           
+       --sqlFileName
+           File with SQL statements (one per line, terminated by a ";") to be executed against
+           the JDBC resource specified as the first entry by the resourceNames option. 
+       
        --target
            Do not specify this option. This option is retained for
            compatibility with earlier releases. If you specify this option, a

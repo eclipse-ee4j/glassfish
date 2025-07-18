@@ -66,17 +66,26 @@
     <dependencies>
         <!-- The TCK -->
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-data-tck-tests</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
+            <groupId>jakarta.data</groupId>
+            <artifactId>jakarta.data-tck</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- The API -->
         <dependency>
-            <groupId>org.glassfish.data</groupId>
-            <artifactId>data-osgi-bundle</artifactId>
-            <version>${jakarta.data.version}</version>
+            <groupId>jakarta.data</groupId>
+            <artifactId>jakarta.data-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         
         <!-- Junit5 -->
@@ -124,7 +133,6 @@
                 </configuration>
             </plugin>
             
-            <!-- Copy hibernate ORM and H2 dependencies into GF domain lib dir -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.8.1</version>
@@ -158,7 +166,7 @@
                 <version>3.5.3</version>
                 <configuration>
                     <dependenciesToScan>
-                        <dependency>org.hibernate:hibernate-data-tck-tests</dependency>
+                        <dependency>jakarta.data:jakarta.data-tck</dependency>
                     </dependenciesToScan>
                     <groups><![CDATA[web & persistence]]></groups>
                     

@@ -404,8 +404,8 @@ JAAS is a set of APIs that enable services to authenticate and enforce
 access controls upon users. JAAS provides a pluggable and extensible
 framework for programmatic user authentication and authorization. JAAS
 is a core API and an underlying technology for Jakarta EE security
-mechanisms. For more information about JAAS, refer to the specification, 
-available at `https://jakarta.ee/specifications/authentication/` and 
+mechanisms. For more information about JAAS, refer to the specification,
+available at `https://jakarta.ee/specifications/authentication/` and
 `https://jakarta.ee/specifications/authorization/`.
 
 For general information about realms and login modules, see the section

@@ -510,6 +510,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
                     } catch (InterruptedException ex) {
                         // Could be system shutdown.
+                        Thread.currentThread().interrupt();
                         break;
                     }
 
@@ -535,6 +536,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                         }
                     } catch (InterruptedException ex) {
                         // Could be system shutdown.
+                        Thread.currentThread().interrupt();
                         break;
                     }
 
@@ -1127,7 +1129,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 try {
                     Thread.sleep(conCreationRetryInterval_);
                 } catch (InterruptedException ie) {
-                    // ignore this exception
+                    // do not ignore this exception
+                    Thread.currentThread().interrupt();
                 }
             }
         }

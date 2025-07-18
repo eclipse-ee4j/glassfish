@@ -51,7 +51,7 @@ reserved.
         <plugins>
 
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <!-- Download binary platform TCK - around 500MB -->

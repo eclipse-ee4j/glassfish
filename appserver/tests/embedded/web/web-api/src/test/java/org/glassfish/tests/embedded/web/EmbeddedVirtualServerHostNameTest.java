@@ -46,7 +46,6 @@ public class EmbeddedVirtualServerHostNameTest {
     static GlassFish glassfish;
     static WebContainer embedded;
     static String contextRoot = "host";
-    static int newPort = 9090;
 
     @BeforeAll
     public static void setupServer() throws GlassFishException {
@@ -54,7 +53,7 @@ public class EmbeddedVirtualServerHostNameTest {
         GlassFishRuntime runtime = GlassFishRuntime.bootstrap();
         GlassFishProperties props = new GlassFishProperties();
         props.setPort("http-listener", 8080);
-        GlassFish glassfish = runtime.newGlassFish(props);
+        glassfish = runtime.newGlassFish(props);
         glassfish.start();
         embedded = glassfish.getService(WebContainer.class);
 
@@ -75,7 +74,7 @@ public class EmbeddedVirtualServerHostNameTest {
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
         Assertions.assertEquals(virtualServerId,vs.getID());
 
-        Context context = (Context) embedded.createContext(root);
+        Context context = embedded.createContext(root);
         embedded.addContext(context, contextRoot);
 
         // curl -i -H 'Host: example.com' http://localhost:8080/

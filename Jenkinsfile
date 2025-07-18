@@ -28,6 +28,7 @@ def dumpSysInfo() {
    ps -e -o start,etime,pid,rss,drs,command || true
    lscpu || true
    cat /proc/meminfo || true
+   ulimit -a || true
    """
 }
 

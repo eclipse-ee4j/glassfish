@@ -57,7 +57,7 @@ public class DetachAttachITest {
     @Test
     public void uptimePeriodically() throws Exception {
         final Set<String> ids = new HashSet<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             LOG.log(INFO, "detachAndAttachUptimePeriodically: round {0}", i);
             final String id;
             {

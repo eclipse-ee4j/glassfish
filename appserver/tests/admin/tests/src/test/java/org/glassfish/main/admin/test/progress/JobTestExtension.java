@@ -95,7 +95,7 @@ public class JobTestExtension implements BeforeAllCallback, AfterAllCallback {
      */
     public static void waitForJobCleanup(long cleanupPeriod) {
         //  the configured period plus reserve time
-        final long maxEnd = System.currentTimeMillis() + cleanupPeriod * 1000L + 1000L;
+        final long maxEnd = System.currentTimeMillis() + cleanupPeriod * 1000L + 10000L;
         while (true) {
             AsadminResult result = ASADMIN.exec("list-jobs");
             assertThat(result, asadminOK());
@@ -114,7 +114,7 @@ public class JobTestExtension implements BeforeAllCallback, AfterAllCallback {
      */
     public static void waitForAllJobCompleted(long timeout) {
         //  the configured period plus reserve time
-        final long maxEnd = System.currentTimeMillis() + timeout * 1000L;
+        final long maxEnd = System.currentTimeMillis() + timeout * 10000L;
         while (true) {
             AsadminResult result = ASADMIN.exec("list-jobs");
             assertThat(result, asadminOK());

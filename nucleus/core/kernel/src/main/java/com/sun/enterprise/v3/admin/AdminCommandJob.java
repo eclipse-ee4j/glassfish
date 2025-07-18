@@ -23,7 +23,6 @@ import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.lang.System.Logger;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +52,7 @@ import static java.lang.System.Logger.Level.WARNING;
  * @author Martin Mares
  * @author Bhakti Mehta
  */
-public final class AdminCommandJob implements Job, Serializable {
+public final class AdminCommandJob implements Job {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = System.getLogger(AdminCommandJob.class.getName());

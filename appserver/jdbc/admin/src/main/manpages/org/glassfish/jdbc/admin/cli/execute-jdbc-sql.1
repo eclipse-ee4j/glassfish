@@ -1,0 +1,49 @@
+execute-jdbc-sql(1)   asadmin Utility Subcommands  execute-jdbc-sql(1)
+
+NAME
+       execute-jdbc-sql - Executes SQL stamenents against a JDBC resource with the specified JNDI
+       name
+
+SYNOPSIS
+           execute-jdbc-sql [--help]
+           --sqlFileName sqlFileName
+           jndi_name
+
+DESCRIPTION
+       The execute-jdbc-sql subcommand executes SQL statements against a JDBC resource.
+
+       This subcommand is supported in remote mode only.
+
+OPTIONS
+       --help, -?
+           Displays the help text for the subcommand.
+           
+       --sqlFileName
+           File with SQL statements (one per line, terminated by a ";") to be executed against
+           the JDBC resource specified by the jndi_name operand. 
+
+OPERANDS
+       jndi_name
+           The JNDI name of this JDBC resource.
+
+EXAMPLES
+       Example 1, Creating a JDBC Resource
+           This example executes SQL statements from the file derby.ddl.sql.
+
+               asadmin> execute-jdbc-sql
+               --sqlFileName derby.ddl.sql jdbc/DerbyPool
+               SQL file executed.
+
+EXIT STATUS
+       0
+           subcommand executed successfully
+
+       1
+           error in executing the subcommand
+
+SEE ALSO
+       create-jdbc-resource(1), delete-jdbc-resource(1), list-jdbc-resources(1), create-resource-ref(1)
+
+       asadmin(1M)
+
+Jakarta EE 10                         18 Jul 2025          execute-jdbc-sql(1)

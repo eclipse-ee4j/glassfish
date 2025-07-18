@@ -180,7 +180,6 @@ spec:
       S1AS_HOME = "${WORKSPACE}/glassfish7/glassfish"
       APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
       TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
-      GF_INTERNAL_ENV = credentials('gf-internal-env')
       PORT_ADMIN=4848
       PORT_HTTP=8080
       PORT_HTTPS=8181

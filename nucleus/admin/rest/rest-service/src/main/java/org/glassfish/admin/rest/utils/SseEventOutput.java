@@ -79,9 +79,6 @@ public class SseEventOutput extends EventOutput {
             // and usually does when he receives the COMPLETED state.
             // The close() call does flush and may fail then.
             LOG.log(TRACE, "Failed to close the event output.", ex);
-        } finally {
-            // When we close, we abandon the lock so other threads can continue
-            job.getActionReport().unlock();
         }
     }
 }

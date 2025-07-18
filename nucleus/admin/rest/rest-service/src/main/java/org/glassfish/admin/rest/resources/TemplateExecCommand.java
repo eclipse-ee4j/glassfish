@@ -28,11 +28,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +53,6 @@ import org.glassfish.admin.rest.results.OptionsResult;
 import org.glassfish.admin.rest.utils.DetachedSseAdminCommandInvoker;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.SseAdminCommandInvoker;
-import org.glassfish.admin.rest.utils.SseEventOutput;
 import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
@@ -61,6 +60,9 @@ import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.internal.api.Globals;
+
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
  * @author ludo
@@ -126,29 +128,23 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
         }
     }
 
-    protected final Response executeCommandAsSse(ParameterMap params) {
+    protected final Response executeSseCommand(ParameterMap params) {
         final boolean notify = params == null ? false : params.containsKey("notify");
         final boolean detach = params == null ? false : params.containsKey("detach");
         final CommandRunner<AdminCommandJob> commandRunner = Globals.getDefaultHabitat().getService(CommandRunner.class);
         final CommandInvocation<AdminCommandJob> invocation = commandRunner
             .getCommandInvocation(null, commandName, new RestActionReporter(), null, notify, detach).parameters(params);
-        final AsyncAdminCommandInvoker<SseEventOutput> invoker = detach
-            ? new DetachedSseAdminCommandInvoker(invocation)
-            : new SseAdminCommandInvoker(invocation);
-        final SseEventOutput output = invoker.start();
-        try {
-            return Response.status(HttpURLConnection.HTTP_OK).entity(output).build();
-        } finally {
-            if (detach) {
-                output.close();
-            }
-        }
+        final ResponseBuilder builder = Response.status(HTTP_OK);
+        final AsyncAdminCommandInvoker<Response> invoker = detach
+            ? new DetachedSseAdminCommandInvoker(new RestActionReporter(), invocation, builder)
+            : new SseAdminCommandInvoker(invocation, builder);
+        return invoker.start();
     }
 
     protected Response executeCommandLegacyFormat(ParameterMap data) {
         RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
         final ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
-        final int status = (exitCode == ActionReport.ExitCode.FAILURE) ? HttpURLConnection.HTTP_INTERNAL_ERROR : HttpURLConnection.HTTP_OK;
+        final int status = exitCode == ActionReport.ExitCode.FAILURE ? HTTP_INTERNAL_ERROR : HTTP_OK;
         ActionReportResult option = optionsLegacyFormat();
         ActionReportResult results = new ActionReportResult(commandName, actionReport, option.getMetaData());
         results.getActionReport().getExtraProperties().putAll(option.getActionReport().getExtraProperties());

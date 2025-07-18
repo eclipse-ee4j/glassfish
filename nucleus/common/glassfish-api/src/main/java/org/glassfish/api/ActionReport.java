@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jvnet.hk2.annotations.Contract;
 
@@ -48,9 +47,8 @@ public abstract class ActionReport implements Serializable {
     private static final Logger LOG = System.getLogger(ActionReport.class.getName());
     private static final long serialVersionUID = -238144192513668688L;
 
-    private final AtomicBoolean locked = new AtomicBoolean(false);
     private Properties extraProperties;
-    private MessagePart topMessage = new MessagePart(locked);
+    private MessagePart topMessage = new MessagePart();
 
     public abstract void setActionDescription(String message);
 
@@ -74,16 +72,6 @@ public abstract class ActionReport implements Serializable {
 
     public abstract List<? extends ActionReport> getSubActionsReport();
 
-
-    public final void lock() {
-        LOG.log(DEBUG, "lock()");
-        this.locked.set(true);
-    }
-
-    public final void unlock() {
-        LOG.log(DEBUG, "unlock()");
-        this.locked.set(false);
-    }
 
     public MessagePart getTopMessagePart() {
         return topMessage;
@@ -218,27 +206,21 @@ public abstract class ActionReport implements Serializable {
 
         List<MessagePart> children = new ArrayList<>();
 
-        private final AtomicBoolean locked;
-
-        private MessagePart(AtomicBoolean locked) {
+        private MessagePart() {
             this.childrenType = "default";
-            this.locked = locked;
         }
 
         public MessagePart addChild() {
-            waitForUnlock();
-            MessagePart newPart = new MessagePart(locked);
+            MessagePart newPart = new MessagePart();
             children.add(newPart);
             return newPart;
         }
 
         public void setChildrenType(String type) {
-            waitForUnlock();
             this.childrenType = type;
         }
 
         public void setMessage(String message) {
-            waitForUnlock();
             if (this.message != null) {
                 LOG.log(DEBUG, () -> "Overwriting message '" + this.message + "' with '" + message + "'",
                     new RuntimeException());
@@ -249,7 +231,6 @@ public abstract class ActionReport implements Serializable {
         }
 
         public synchronized void appendMessage(String message) {
-            waitForUnlock();
             if (this.message == null) {
                 this.message = new StringBuilder(message);
             } else {
@@ -258,7 +239,6 @@ public abstract class ActionReport implements Serializable {
         }
 
         public void addProperty(String key, String value) {
-            waitForUnlock();
             props.put(key, value);
         }
 
@@ -324,12 +304,6 @@ public abstract class ActionReport implements Serializable {
                 }
             }
             return result.toString();
-        }
-
-        private void waitForUnlock() {
-            while (locked.get()) {
-                Thread.onSpinWait();
-            }
         }
 
         @Override

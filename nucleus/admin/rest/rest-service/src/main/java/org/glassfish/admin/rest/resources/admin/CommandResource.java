@@ -28,6 +28,7 @@ import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.uuid.UuidGenerator;
 import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
 import com.sun.enterprise.v3.admin.AdminCommandJob;
+import com.sun.enterprise.v3.admin.AsyncAdminCommandInvoker;
 import com.sun.enterprise.v3.common.ActionReporter;
 import com.sun.enterprise.v3.common.PlainTextActionReporter;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
@@ -59,8 +60,8 @@ import java.util.logging.Level;
 import javax.security.auth.Subject;
 
 import org.glassfish.admin.rest.RestLogging;
+import org.glassfish.admin.rest.utils.DetachedSseAdminCommandInvoker;
 import org.glassfish.admin.rest.utils.SseAdminCommandInvoker;
-import org.glassfish.admin.rest.utils.SseEventOutput;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandModel;
@@ -73,6 +74,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.media.sse.SseFeature;
+
+import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
  *
@@ -310,32 +313,27 @@ public class CommandResource {
         }
     }
 
-    private Response executeSseCommand(CommandName commandName, Payload.Inbound inbound, ParameterMap params, String modelETag,
-            Cookie jSessionId) throws WebApplicationException {
+    private Response executeSseCommand(CommandName commandName, Payload.Inbound inbound, ParameterMap params,
+        String modelETag, Cookie jSessionId) throws WebApplicationException {
         RestLogging.restLogger.log(Level.FINEST, "executeSseCommand({0})", commandName);
         final CommandModel model = getCommandModel(commandName);
         checkCommandModelETag(model, modelETag);
         final boolean notify = params == null ? false : params.containsKey("notify");
         final boolean detach = params == null ? false : params.containsKey("detach");
-        final CommandInvocation<AdminCommandJob> commandInvocation = getCommandRunner().getCommandInvocation(
+        final CommandInvocation<AdminCommandJob> invocation = getCommandRunner().getCommandInvocation(
             commandName.getScope(), commandName.getName(), new PropsFileActionReporter(), getSubject(), notify, detach);
         if (inbound != null) {
-            commandInvocation.inbound(inbound);
+            invocation.inbound(inbound);
         }
-        commandInvocation.outbound(new RestPayloadImpl.Outbound(false)).parameters(params);
-        ResponseBuilder rb = Response.status(HttpURLConnection.HTTP_OK);
+        invocation.outbound(new RestPayloadImpl.Outbound(false)).parameters(params);
+        ResponseBuilder builder = Response.status(HTTP_OK);
         if (isSingleInstanceCommand(model)) {
-            rb.cookie(getJSessionCookie(jSessionId));
+            builder.cookie(getJSessionCookie(jSessionId));
         }
-        final SseAdminCommandInvoker invoker = new SseAdminCommandInvoker(commandInvocation);
-        final SseEventOutput output = invoker.start();
-        try {
-            return rb.entity(output).build();
-        } finally {
-            if (detach) {
-                output.close();
-            }
-        }
+        final AsyncAdminCommandInvoker<Response> invoker = detach
+            ? new DetachedSseAdminCommandInvoker(new PropsFileActionReporter(), invocation, builder)
+            : new SseAdminCommandInvoker(invocation, builder);
+        return invoker.start();
     }
 
     private Response executeCommand(CommandName commandName, Payload.Inbound inbound, ParameterMap params, boolean supportsMultiparResult,
@@ -357,7 +355,7 @@ public class CommandResource {
         commandInvocation.outbound(outbound).parameters(params).execute();
         fixActionReporterSpecialCases(actionReporter);
         ActionReport.ExitCode exitCode = actionReporter.getActionExitCode();
-        int status = HttpURLConnection.HTTP_OK;
+        int status = HTTP_OK;
         if (exitCode == ActionReport.ExitCode.FAILURE) {
             status = HttpURLConnection.HTTP_INTERNAL_ERROR;
         }

@@ -20,6 +20,9 @@ package org.glassfish.admin.rest.utils;
 import com.sun.enterprise.v3.admin.AdminCommandJob;
 import com.sun.enterprise.v3.admin.AsyncAdminCommandInvoker;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+
 import java.lang.System.Logger;
 
 import org.glassfish.api.admin.AdminCommandEventBroker;
@@ -36,15 +39,19 @@ import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
 /**
  * Provides bridge between CommandInvocation and ReST Response for Server-Sent-Events.
  */
-public final class SseAdminCommandInvoker extends AsyncAdminCommandInvoker<SseEventOutput> {
+public final class SseAdminCommandInvoker extends AsyncAdminCommandInvoker<Response> {
     private static final Logger LOG = System.getLogger(SseAdminCommandInvoker.class.getName());
+
+    private final ResponseBuilder builder;
     private SseEventOutput eventOutput;
 
     /**
      * @param commandInvocation must not be null
+     * @param builder
      */
-    public SseAdminCommandInvoker(final CommandInvocation<AdminCommandJob> commandInvocation) {
+    public SseAdminCommandInvoker(final CommandInvocation<AdminCommandJob> commandInvocation, ResponseBuilder builder) {
         super(commandInvocation);
+        this.builder = builder;
     }
 
     /**
@@ -54,7 +61,7 @@ public final class SseAdminCommandInvoker extends AsyncAdminCommandInvoker<SseEv
      * @return {@link EventOutput} to be used for the communication with the client.
      */
     @Override
-    public SseEventOutput start() {
+    public Response start() {
         final AdminCommandJob job = getJob();
         LOG.log(TRACE, "Job parameters: {0}, this: {1}", job.getParameters(), this);
         this.eventOutput = new SseEventOutput(job);
@@ -68,7 +75,7 @@ public final class SseAdminCommandInvoker extends AsyncAdminCommandInvoker<SseEv
 
         LOG.log(TRACE, "Writing the current report and leaving. {0}", this);
         this.eventOutput.write();
-        return this.eventOutput;
+        return builder.entity(eventOutput).build();
     }
 
     private class ProgressEventListener implements AdminCommandListener<ProgressEvent>  {

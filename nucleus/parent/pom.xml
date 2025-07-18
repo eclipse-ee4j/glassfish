@@ -81,14 +81,10 @@
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
 
-        <!-- Jakarta Web Services -->
-
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
 
-        <!-- Jakarta SOAP (with Attachments)
-       <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
-        -->
+        <!-- Jakarta SOAP (with Attachments) -->
         <webservices.version>4.0.4</webservices.version>
 
         <!-- Jakarta Inject -->
@@ -119,9 +115,7 @@
         <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
 
-
         <!-- GlassFish Components -->
-
         <grizzly.version>4.0.2</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
 
@@ -135,9 +129,7 @@
         <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
-
         <!-- 3rd party dependencies -->
-
         <commons-io.version>2.18.0</commons-io.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
@@ -167,8 +159,12 @@
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
+
         <!-- Overrides the value from parent and enables the one we generate. -->
         <project.build.outputTimestamp>2025-04-22T16:51:49Z</project.build.outputTimestamp>
+
+        <!-- Show to developers by default -->
+        <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>
@@ -948,7 +944,7 @@
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <skip>${checkstyle.skip}</skip>
-                        <consoleOutput>true</consoleOutput>
+                        <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
                         <includes>**/*admin,**/*.adoc,**/*.bat,**/*.java,**/*.sh,**/*.xml</includes>
@@ -2097,21 +2093,11 @@
 
     <profiles>
         <profile>
-            <id>mac</id>
-            <activation>
-                <file>
-                    <exists>${java.home}/../Classes/classes.jar</exists>
-                </file>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools-jar</artifactId>
-                    <version>1</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../Classes/classes.jar</systemPath>
-                </dependency>
-            </dependencies>
+            <id>ci</id>
+            <properties>
+                <!-- Limit unuseful noise on CI while developers should see it -->
+                <checkstyle.consoleOutput>false</checkstyle.consoleOutput>
+            </properties>
         </profile>
         <profile>
             <id>oss-release</id>
@@ -2271,6 +2257,23 @@
             </build>
         </profile>
 
+        <profile>
+            <id>mac</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../Classes/classes.jar</exists>
+                </file>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools-jar</artifactId>
+                    <version>1</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/../Classes/classes.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>windows</id>
             <activation>

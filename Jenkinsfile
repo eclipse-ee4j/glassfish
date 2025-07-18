@@ -26,26 +26,27 @@ def dumpSysInfo() {
    mvn -version || true
    ant -version || true
    ps -e -o start,etime,pid,rss,drs,command || true
-   cat /proc/cpuinfo || true
+   lscpu || true
    cat /proc/meminfo || true
    """
 }
 
 def startVmstatLogging(String stageName) {
    sh """
-   mkdir -p ${WORKSPACE}/logs
-   vmstat -t -w -a -y 1 > ${WORKSPACE}/logs/vmstat-${stageName}.log 2>&1 & echo \$! > ${WORKSPACE}/vmstat.pid
+   mkdir -p "${WORKSPACE}/logs"
+   vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
    """
 }
 
-def stopVmstatLogging(String stageName) {
+def stopVmstatLogging() {
    sh """
-   if [ -f ${WORKSPACE}/vmstat.pid ]; then
-      pkill -F ${WORKSPACE}/vmstat.pid || true
-      rm -f ${WORKSPACE}/vmstat.pid
+   if [ -f "${WORKSPACE}/vmstat.pid" ]; then
+      pkill -F "${WORKSPACE}/vmstat.pid" || true
+      rm -f "${WORKSPACE}/vmstat.pid"
    fi
+   df -h || true
    """
-   archiveArtifacts artifacts: "logs/vmstat-${stageName}.log", allowEmptyArchive: true
+   archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
 
 def antjobs = [
@@ -97,7 +98,7 @@ def generateAntPodTemplate(job) {
                   }
                }
             } finally {
-               stopVmstatLogging("ant-${job}")
+               stopVmstatLogging()
                archiveArtifacts artifacts: "${job}-results.tar.gz"
                junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
             }
@@ -222,7 +223,7 @@ spec:
                      mvn -B -e -fae clean validate -Ptck,set-version-id,staging
 
                      # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-                     mvn -B -e install -Pfastest,staging -T4C
+                     mvn -B -e install -Pfastest,staging,ci -T4C
                      ./gfbuild.sh archive_bundles
                      ./gfbuild.sh archive_embedded
 
@@ -233,7 +234,7 @@ spec:
                      '''
                   }
                } finally {
-                  stopVmstatLogging('mvn-build')
+                  stopVmstatLogging()
                }
                }
             }
@@ -255,11 +256,11 @@ spec:
                         dumpSysInfo()
                         timeout(time: 2, unit: 'HOURS') {
                            sh '''
-                           mvn -B -e clean install -Pstaging,qa
+                           mvn -B -e clean install -Pstaging,qa,ci
                            '''
                         }
                      } finally {
-                        stopVmstatLogging('mvn-tests')
+                        stopVmstatLogging()
                      }
                      }
                   }

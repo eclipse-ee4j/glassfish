@@ -44,9 +44,9 @@ public class JavaEEInterceptorBuilderFactoryImpl implements JavaEEInterceptorBui
         // in order to create a dynamic proxy
         String subClassInterfaceName = getGeneratedOptionalInterfaceName(targetObjectClass.getName());
 
-        EjbOptionalIntfGenerator interfaceGenerator = new EjbOptionalIntfGenerator(targetObjectClass.getClassLoader());
+        EjbOptionalIntfGenerator interfaceGenerator = new EjbOptionalIntfGenerator();
         interfaceGenerator.generateOptionalLocalInterface(targetObjectClass, subClassInterfaceName);
-        Class<?> subClassInterface = interfaceGenerator.loadClass(subClassInterfaceName);
+        Class<?> subClassInterface = interfaceGenerator.loadClass(subClassInterfaceName, targetObjectClass);
 
         String beanSubClassName = subClassInterfaceName + "__Bean__";
 
@@ -56,7 +56,7 @@ public class JavaEEInterceptorBuilderFactoryImpl implements JavaEEInterceptorBui
         // InvocationHandler.
         interfaceGenerator.generateOptionalLocalInterfaceSubClass(targetObjectClass, beanSubClassName, subClassInterface);
 
-        Class<?> subClass = interfaceGenerator.loadClass(beanSubClassName);
+        Class<?> subClass = interfaceGenerator.loadClass(beanSubClassName, targetObjectClass);
 
         // TODO do interceptor builder once per managed bean
         InterceptorManager interceptorManager =

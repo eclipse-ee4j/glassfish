@@ -147,10 +147,10 @@ spec:
     resources:
       limits:
         memory: "8Gi"
-        cpu: "6000m"
+        cpu: "5500m"
       requests:
         memory: "8Gi"
-        cpu: "6000m"
+        cpu: "5500m"
   volumes:
   - name: "jenkins-home"
     emptyDir:

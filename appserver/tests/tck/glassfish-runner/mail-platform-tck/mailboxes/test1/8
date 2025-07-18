@@ -1,0 +1,239 @@
+From mspivak@apilon Thu Dec 12 15:24:01 1996
+Return-Path: <mspivak@apilon>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id PAA14786; Thu, 12 Dec 1996 15:24:00 -0800
+Date: Thu, 12 Dec 1996 15:24:00 -0800 (PST)
+From: Max Spivak <mspivak@apilon>
+Reply-To: Max Spivak <mspivak@apilon>
+Subject: mailbox as an attachment
+To: maxs@apilon
+Message-ID: <libSDtMail.9612121524.18507.mspivak@apilon/apilon>
+MIME-Version: 1.0
+Content-Type: MULTIPART/mixed; BOUNDARY=Bouguet_of_Pheasants_890_000
+X-Mailer: dtmail 1.1.0 CDE Version 1.1_47 SunOS 5.5.1 sun4m sparc 
+Content-Length: 6434
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 121
+
+--Bouguet_of_Pheasants_890_000
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: g7i2pCU5RcUCf4SAdigBnA==
+
+main body
+
+--Bouguet_of_Pheasants_890_000
+Content-Type: MESSAGE/rfc822; name=Mailbox
+Content-Description: Mailbox
+
+
+From polina@hpclear3.cup.hp.com  Thu Dec 12 13:30:03 1996
+Return-Path: <polina@hpclear3.cup.hp.com>
+Received: from Eng.Sun.COM by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA14597; Thu, 12 Dec 1996 13:30:02 -0800
+Received: from venus.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id NAA01543; Thu, 12 Dec 1996 13:29:29 -0800
+Received: from palrel3.hp.com (palrel3.hp.com [15.253.88.10]) by venus.Sun.COM (SMI-8.6/mail.byaddr) with SMTP id NAA05618 for <max.spivak@Eng.Sun.COM>; Thu, 12 Dec 1996 13:29:28 -0800
+Received: from hpclear3.cup.hp.com (hpclear3.cup.hp.com [15.0.97.41]) by palrel3.hp.com with ESMTP (8.7.5/8.7.3) id NAA24936 for <max.spivak@Eng.Sun.COM>; Thu, 12 Dec 1996 13:28:12 -0800 (PST)
+Received: from scar (scar.cup.hp.com) by hpclear3.cup.hp.com with SMTP
+	(1.37.109.15/15.5+IOS 3.20+cup+OMrelay) id AA023496087; Thu, 12 Dec 1996 13:28:07 -0800
+Sender: polina@hpclear3.cup.hp.com
+Message-Id: <32B078EB.75AC@cup.hp.com>
+Date: Thu, 12 Dec 1996 13:28:11 -0800
+From: Polina Kuznetsov <polina@hpclear3.cup.hp.com>
+Organization: California Language Lab
+X-Mailer: Mozilla 3.0 (X11; I; HP-UX B.10.10 9000/829)
+Mime-Version: 1.0
+To: Max Spivak <max.spivak@Eng>
+Subject: Re: Joke:  The 12 Bugs of Christmas
+References: <libSDtMail.9612121238.32139.mspivak@apilon/apilon>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Content-Length: 171
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 122
+
+Xx xxx'x xxxx?  Xxxx xxx xxx xxx xx xxxxx xxxx xxxxx?
+Xx xxxx xx xxx xxxx xxxxxxx xxxxx xxxxxx xx xxx xxxx xxxxxxx.
+
+143!
+xx
+
+xx--xxxx xxxx xx xxx xxxxx xxx'xx xxxx xxxx?
+
+From mspivak@apilon  Thu Dec 12 13:34:21 1996
+Return-Path: <mspivak@apilon>
+Received: from Eng.Sun.COM by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA14605; Thu, 12 Dec 1996 13:34:20 -0800
+Received: from rita.Eng.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id NAA23695; Thu, 12 Dec 1996 13:33:46 -0800
+Received: from apilon.Eng.Sun.COM by rita.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA01051; Thu, 12 Dec 1996 13:33:54 -0800
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA14602; Thu, 12 Dec 1996 13:34:14 -0800
+Date: Thu, 12 Dec 1996 13:34:14 -0800 (PST)
+From: Max Spivak <mspivak@apilon>
+Reply-To: Max Spivak <mspivak@apilon>
+Subject: Envelope.hasAttachments() question
+To: shannon@apilon, jmk@apilon
+Cc: javamail@rita
+Message-ID: <libSDtMail.9612121334.23960.mspivak@apilon/apilon>
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: PaFfJ5SXkFM21OZM/jNsrw==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1_47 SunOS 5.5.1 sun4m sparc 
+Content-Length: 1044
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 123
+
+Xxxx, Xxxx,
+
+X'x xxxxxx xx xxxx xx (Xxxxxxxx)Xxxxxxxx.xxxXxxxxxxxxxx() xx xxxxx xxx 
+xxxxxxx xxx xxx xx xx xx xxxx xxxx xxxx xxxxxxxxxxx.  (Xx xxxxxxx xx 
+xxxxxx xxxxxxx xx xxx xxx_xxxxxxxxxxx xxxx xxxxx xxx xxx xx xxx.)
+
+Xxxxxxx: xx xxxxxxxx xxx xx xxxxxxxxx xx xxx xxxxxxx xx xxxxxxx xx.  
+Xxxx xxxxx xxxxxxx xxx xxxxxxx xxx xxxxxxxxxxx xxxxx xxxxxxxxx.  :-)
+
+Xxx xxxxxxxx xx xx xxxx x xxx XxxxxxxxXxxxxxxx(Xxxxxxx) xxxxxxxxxxx,
+xxxxx xx xxxx xxxx XxxxxxxxXxxxxxx.xxxXxxxxxxx() xxx xxxx xxxx xxx 
+xxxxxxx xx xxx xxxxxxxx. 
+
+Xx, xxxx:
+    
+    xxxxxx xxxxxxxxxxxx Xxxxxxxx xxxXxxxxxxx() 
+    xxxxxx XxxxxxxxxXxxxxxxxx {
+	xx (xxx == xxxx)
+	    xxx = xxx XxxxxxxxXxxxxxxx();
+	xxxxxx xxx;
+    }
+    
+       
+xx:
+
+    xxxxxx xxxxxxxxxxxx Xxxxxxxx xxxXxxxxxxx() 
+    xxxxxx XxxxxxxxxXxxxxxxxx {
+	xx (xxx == xxxx)
+	    xxx = xxx XxxxxxxxXxxxxxxx(xxxx);
+	xxxxxx xxx;
+    }
+    
+xxxxx:
+
+    xxxxxx XxxxxxxxXxxxxxxx(XxxxxxxxXxxxxxx x) {
+	xxxxxxXxxxx = xxx XxxxxxxxXxxxxxx();
+	xxxxxxx = x;
+    }
+    
+    
+Xxxxxxxx--xxxx xxxx xxxxx xxxxxxxx?
+
+Xxx,
+Xxx
+
+
+From test@javamail  Thu Dec 12 13:43:36 1996
+Return-Path: <test@javamail>
+Received: from javamail.Eng.Sun.COM by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA14619; Thu, 12 Dec 1996 13:43:35 -0800
+Received: from javamail by javamail.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id NAA03278; Thu, 12 Dec 1996 13:43:08 -0800
+Date: Thu, 12 Dec 1996 13:43:08 -0800 (PST)
+From: JavaMail Test User <test@javamail>
+Reply-To: JavaMail Test User <test@javamail>
+Subject: Re: Start: applet not initialized
+To: Max Spivak <mspivak@apilon>
+Message-ID: <libSDtMail.9612121343.14690.test@javamail/javamail>
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: yRCwkaTcAjVQ0KRPJ+ms4A==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1_42 SunOS 5.5.1 sun4u sparc 
+Content-Length: 1374
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 124
+
+
+> Xxxx: Xxx, 12 Xxx 1996 13:23:50 -0800 (XXX)
+> Xxxx: Xxx Xxxxxx <xxxxxxx@xxxxxx>
+> Xxxxxxx: Xx: Xxxxx: xxxxxx xxx xxxxxxxxxxx
+> Xx: xxxxxxxx@xxxx, xxxx@xxxxxxxx
+> XXXX-Xxxxxxx: 1.0
+> Xxxxxxx-XX5: xXXxXXxX4xXXxXXXXXXXXX==
+> 
+> Xxx xxxxx xxxxxxxxxx xxxx xxx xxx xx xxxxx xx xx?
+
+Xx. Xxxx. Xxxxx xxx xxxxxxx xxxxx xxxxx xx.
+
+Xxxx xxxxxxx xxx xxxxxxx xx xxx xxxx. Xx xxx xxxx xx xx xxxx xxx xxxxxx xxx
+xxxxx XXX xx xxx xxxxxx. Xxx xxxx xxx xxxxxx xxxx xxx xxxxxxxx xxx:
+
+Xxxxxxx xxxxxx xx: xxxx://xxxxxxxx/xxx/xxxx/xxxxxxx/xxxx/xxx/xxxx/Xxxxx.xxxxx xx xxx xxxx.xx
+xxxXxxxxxXxxx() xxxxxx "Xxxxx Xxxxxxx 3" (0xx0026xx0)
+[Xxxxxx: ./.xxxxxxx/xxxxxxx]
+[Xxxxxx xx xxxx: ./.xxxxxxx/xxxxxxx]
+
+
+-Xxxxxx
+
+XX	xxx XxxxXxx xxxxx'x xxxx "xxxx" xxxx xxxxxx xx xxx xxx xxxx xxxxx.
+
+> 
+> Xxx xxxxx xxxx xxx xx xxx--xx xxxxx xxx xxxx xx xxxxx xxxxxxx? 
+> 
+> Xxxx xxxxxxxx xxxxxxx xxxxx xxx xxx xxxx xxxxxxx xxxx?
+> 
+> Xxx
+> 
+> > Xxxx: Xxx, 12 Xxx 1996 12:54:56 -0800 (XXX)
+> > Xxxx: XxxxXxxx Xxxx Xxxx <xxxx@xxxxxxxx>
+> > Xxxxxxx: Xxxxx: xxxxxx xxx xxxxxxxxxxx
+> > Xx: xxxxxxxx@xxxx
+> > XXXX-Xxxxxxx: 1.0
+> > Xxxxxxx-XX5: xXX5xxxXxXxX+XxXxXxxXX==
+> > 
+> > 
+> > Xxxxxxxx xxx XxxxXxx xxxxxxx xxx xxxxx xxxxxxxxxxx xxxxxxxx, xxxx xxx xxx
+> > xxxxxxxx xx  xx xxx.
+> > 
+> > X xxx xxx xxxxx xxxx x xxxxxx xxxxx xxx.
+> > 
+> > -Xxxxxx
+> > 
+> > XX	Xxxxx xxxx xx xx xxxxxx xx xxx xxxxx xxxxxxx.
+> > 
+> 
+
+
+
+--Bouguet_of_Pheasants_890_000--
+
+From mspivak@apilon Thu Dec 12 16:43:18 1996
+Return-Path: <mspivak@apilon>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id QAA14972; Thu, 12 Dec 1996 16:43:17 -0800
+Date: Thu, 12 Dec 1996 16:43:16 -0800 (PST)
+From: Max Spivak <mspivak@apilon>
+Reply-To: Max Spivak <mspivak@apilon>
+Subject: GEN-OBIT Digest - 7 Dec 1996 to 8 Dec 1996 - Special issue
+To: maxs@apilon
+Message-ID: <libSDtMail.9612121643.19927.mspivak@apilon/apilon>
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: soaygIjv32GsscwKzdfFnw==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1_47 SunOS 5.5.1 sun4m sparc 
+Content-Length: 150804
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 125
+
+
+------------- Begin Forwarded Message -------------
+

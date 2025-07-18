@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<application-client xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metadata-complete="false" version="10" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/application-client_10.xsd">
+    <ejb-ref>
+        <ejb-ref-name>ejb/RemoteCalculatorBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</remote>
+        <ejb-link>RemoteCalculatorBean</ejb-link>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>ejb/RemoteCalculatorBean2</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</remote>
+        <ejb-link>RemoteCalculatorBean2</ejb-link>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>ejb/RemoteCalculatorBean3</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</remote>
+        <ejb-link>RemoteCalculatorBean3</ejb-link>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>ejb/RemoteCalculatorBean4</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</remote>
+        <ejb-link>RemoteCalculatorBean4</ejb-link>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>ejb/RemoteCalculatorBean5</ejb-ref-name>
+        <!-- ejb-ref-type is optional and can be omitted -->
+        <remote>com.sun.ts.tests.ejb30.common.calc.RemoteCalculator</remote>
+        <ejb-link>RemoteCalculatorBean5</ejb-link>
+    </ejb-ref>
+    <!--
+    post-construct method must be called even when there is no resource injection.
+    lifecycle-callback-class defaults to the enclosing component class Client.
+    Client.postConstruct() has been annotated @PostConstruct.
+
+    <post-construct>
+        <lifecycle-callback-class>com.sun.ts.tests.ejb30.bb.session.stateless.basic.Client</lifecycle-callback-class>
+        <lifecycle-callback-method>postConstruct</lifecycle-callback-method>
+    </post-construct>
+    -->
+</application-client>

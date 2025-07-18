@@ -1,0 +1,108 @@
+From jmk@cochin Thu Feb 12 14:06:33 1998 -0800
+Return-Path: <owner-java-internal@java-aces>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA25200; Wed, 6 Aug 1997 10:41:17 -0700
+Received: from java-aces.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA09134; Wed, 6 Aug 1997 10:41:09 -0700
+Received: by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20160; Wed, 6 Aug 1997 12:32:30 -0500
+Received: from Eng.Sun.COM by java-aces.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA20155; Wed, 6 Aug 1997 12:32:27 -0500
+Received: from shadows.eng.sun.com by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA08528; Wed, 6 Aug 1997 10:38:27 -0700
+Received: from Eng.Sun.COM by shadows.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA26525; Wed, 6 Aug 1997 10:38:24 -0700
+Received: from sunmail1.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA08319; Wed, 6 Aug 1997 10:38:24 -0700
+Received: from Corp.Sun.COM by sunmail1.Sun.COM (SMI-8.6/SMI-4.1)
+	id KAA27611; Wed, 6 Aug 1997 10:38:23 -0700
+Received: from chico.Corp.Sun.COM by Corp.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA00124; Wed, 6 Aug 1997 10:38:19 -0700
+Received: from fantazia by chico.Corp.Sun.COM (SMI-8.6/SMI-SVR4)
+	id KAA28008; Wed, 6 Aug 1997 10:38:20 -0700
+Date: Wed, 6 Aug 1997 10:33:04 -0700 (PDT)
+From: Minnie Tanglao <Minerva.Tanglao@Corp>
+Reply-To: Minnie Tanglao <Minerva.Tanglao@Corp>
+Subject: Re: HotJava & Threads
+To: java-internal@Sun.COM, Philip.Doyle@UK
+Message-ID: <libSDtMail.9708061033.9844.minniet@chico>
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: 3Jv6tO47lR4raAvjmNVaHA==
+X-Mailer: dtmail 1.1.0 CDE Version 1.1 SunOS 5.5.1 sun4u sparc 
+Sender: owner-java-internal@qwerty.eng.sun.com
+Precedence: bulk
+Content-Length: 1747
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 13
+
+
+If you haven't already done so, you might have to instantiate a Thread that
+would talk to the server. This way, the AWT thread will not control the entire applet.
+
+Something like this (JDK 1.0.2 since you mentioned using handleEvent):
+
+public class JustAnotherApplet extends Applet implements Runnable {
+
+	Button sendButton = new Button("Send");
+	
+	public void init() {
+		:
+		add(sendButton);
+		:
+	}
+	public boolean handleEvent(Event e) {
+		if (e.target.equals(sendButton) && e.id == Event.ACTION_EVENT) {
+			sendMessenger();
+			return(true);
+		}
+		:
+		:
+	}
+	private void sendMessenger() {
+		Thread messengerThread = new Thread(this);
+		messengerThread.start();
+	}
+	public void run() {
+		// talk to server
+	}
+}
+
+Just a thought,
+
+-Minnie
+
+> Date: Wed, 6 Aug 1997 11:12:12 +0100 (BST)
+> From: Philip Doyle - Sun UK - Flag IR <Philip.Doyle@UK>
+> Subject: HotJava & Threads
+> To: java-internal@Sun.COM
+> MIME-Version: 1.0
+> Content-MD5: Sm58PwedFjRS9MM2ch19nA==
+> 
+> Hi
+> 
+> I hava an applet which communicates with a server side application using
+> sockets.
+> 
+> It sends messages to the server side, triggered by button clicks in the 
+> applets handleEvent method. It receieves messages from the server side in 
+> the applets run method.
+> 
+> Occasionally, the applet sends a message, the server side app generates 
+> the response but the applet receieves nothing. Using jdb on appletviewer
+> It looks like an AWT-Input thread runs to pick up the button click.
+> This causes the applets run method to sleep. It looks like the applets run 
+> method never resumes. 
+> 
+> If the JVM is time-slicing, I have trouble understanding why the run method
+> never restarts. 
+> 
+> Any input into this (urgent) problem would be welcome.
+> 
+> regards
+> Phil
+> 
+
+

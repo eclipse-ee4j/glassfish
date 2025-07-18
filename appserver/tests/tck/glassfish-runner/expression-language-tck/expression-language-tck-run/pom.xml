@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /*
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Don't use a parent. This test is very sensitive to what's on the classpath -->
+
+    <groupId>org.glassfish</groupId>
+    <artifactId>expression-language-tck-run</artifactId>
+    <packaging>jar</packaging>
+    <version>6.0.0</version>
+
+    <name>expression-language-tck</name>
+    <description>Aggregates dependencies and runs the Expression Language TCK using jars from GlassFish</description>
+
+    <properties>
+        <!-- 
+            GlassFish properties 
+            
+        -->
+        <glassfish.version>8.0.0-JDK17-M7</glassfish.version>
+        <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.11.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- Jakarta Expression Language TCK -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>jakarta-expression-language-tck</artifactId>
+            <version>6.0.2-SNAPSHOT</version>
+            <!-- Specially exclude el-api. Otherwise the test will test that one instead of the GF provided one.  -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Dependency for the API signature test -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>${glassfish-artifact-id}</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <id>gf-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/jakarta.el-api.jar</additionalClasspathElement>
+                                <additionalClasspathElement>${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/expressly.jar</additionalClasspathElement>
+                            </additionalClasspathElements>
+
+                            <dependenciesToScan>jakarta.tck:jakarta-expression-language-tck</dependenciesToScan>
+
+                            <systemPropertyVariables>
+                                <el.classes>${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/jakarta.el-api.jar:${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/expressly.jar</el.classes>
+                                <variable.mapper>org.glassfish.expressly.lang.VariableMapperImpl</variable.mapper>
+                                <junit.log.traceflag>true</junit.log.traceflag>
+                                <harness.log.traceflag>true</harness.log.traceflag>
+                                <cts.harness.debug>true</cts.harness.debug>
+                                <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
+                                <sigTestClasspath>${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/jakarta.el-api.jar:${project.build.directory}/${glassfish.toplevel.dir}/glassfish/modules/expressly.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</sigTestClasspath>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+            </properties>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</project>

@@ -95,7 +95,7 @@ public class KeystoreManager {
             final String instanceCertDN = getInstanceCertDN(config);
             keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
         } catch (IOException e) {
-            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", keyStore), e);
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool"), e);
         }
     }
 
@@ -109,7 +109,7 @@ public class KeystoreManager {
             keyTool.copyCertificate(CERTIFICATE_ALIAS, trustStore);
             keyTool.copyCertificate(INSTANCE_SECURE_ADMIN_ALIAS, trustStore);
         } catch (IOException e) {
-            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", keyStore), e);
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool"), e);
         }
     }
 

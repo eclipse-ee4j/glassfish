@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.servermgmt.pe;
 
 import com.sun.enterprise.admin.servermgmt.RepositoryConfig;
 import com.sun.enterprise.admin.servermgmt.RepositoryException;
-import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
@@ -30,6 +29,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.text.MessageFormat.format;
 
 public class PEFileLayout {
@@ -534,56 +537,17 @@ public class PEFileLayout {
         return new File(getConfigRoot(), WSSSERVERCONFIG);
     }
 
-    public static final String KEYSTORE = "keystore.jks";
-
     public File getKeyStore() {
-        return new File(getConfigRoot(), KEYSTORE);
+        return new File(getConfigRoot(), KEYSTORE_FILENAME_DEFAULT);
     }
-
-    public static final String TRUSTSTORE_TEMPLATE = "cacerts.jks";
-
-    public File getTrustStoreTemplate() {
-        return new File(getTemplatesDir(), TRUSTSTORE_TEMPLATE);
-    }
-
-    /**
-     * Should be used only in the cases where the actual keystore creation fails. The idea is when we are unable to create
-     * the JKS-keystore, we should copy the keystore in templates folder into the domain's config folder. This keystore is
-     * by no means a keystore for public use. It's just a keystore with a primary key "changeit" and associated certificate
-     * with signature: -------------------------------------------------------------- Keystore type: jks Keystore provider:
-     * SUN
-     *
-     * Your keystore contains 1 entry
-     *
-     * Alias name: s1as Creation date: Sep 11, 2008 Entry type: keyEntry Certificate chain length: 1 Certificate[1]: Owner:
-     * CN=localhost, OU=GlassFish, O=Sun Microsystems, L=Santa Clara, ST=California, C=US Issuer: CN=localhost,
-     * OU=GlassFish, O=Sun Microsystems, L=Santa Clara, ST=California, C=US Serial number: 48c9e075 Valid from: Thu Sep 11
-     * 20:22:29 PDT 2008 until: Sun Sep 09 20:22:29 PDT 2018 Certificate fingerprints: MD5:
-     * 00:E5:5D:1F:07:CC:99:9F:CF:68:0E:AD:29:43:E0:48 SHA1: 1B:62:3E:B2:3D:D7:0B:63:80:92:EE:9A:59:F7:D5:9F:97:A3:FD:98
-     * --------------------------------------------------------------
-     *
-     * @return File representing the keystore path. Does not check if the path actually exists.
-     */
-    public File getKeyStoreTemplate() {
-        return new File(getTemplatesDir(), KEYSTORE);
-    }
-
-    public static final String TRUSTSTORE = "cacerts.jks";
 
     public File getTrustStore() {
-        return new File(getConfigRoot(), TRUSTSTORE);
+        return new File(getConfigRoot(), TRUSTSTORE_FILENAME_DEFAULT);
     }
 
-    public static final String MASTERPASSWORD_FILE = "master-password";
-
-    /**
-     * @return {@value #MASTERPASSWORD_FILE}
-     */
     public File getMasterPasswordFile() {
-        return new File(getRepositoryDir(), MASTERPASSWORD_FILE);
+        return new File(getRepositoryDir(), MASTER_PASSWORD_FILENAME);
     }
-
-    public static final String PASSWORD_ALIAS_KEYSTORE = PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
 
     public File getPasswordAliasKeystore() {
         return new File(getConfigRoot(), PASSWORD_ALIAS_KEYSTORE);

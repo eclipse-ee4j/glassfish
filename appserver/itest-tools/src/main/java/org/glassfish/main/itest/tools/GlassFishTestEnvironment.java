@@ -55,7 +55,11 @@ import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
+import org.glassfish.main.jdke.security.KeyTool;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
@@ -81,7 +85,6 @@ public class GlassFishTestEnvironment {
 
     private static final File ASADMIN = findAsadmin();
     private static final File STARTSERV = findStartServ();
-    private static final File KEYTOOL = findKeyTool();
     private static final File JARSIGNER = findJarSigner();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
@@ -150,11 +153,6 @@ public class GlassFishTestEnvironment {
     }
 
 
-    public static KeyTool getKeyTool() {
-        return new KeyTool(KEYTOOL);
-    }
-
-
     public static JarSigner getJarSigner() {
         return new JarSigner(JARSIGNER);
     }
@@ -176,14 +174,22 @@ public class GlassFishTestEnvironment {
 
 
     public static KeyStore getDomain1KeyStore() {
-        Path keystore = getDomain1Directory().resolve(Paths.get("config", "keystore.jks"));
-        return KeyTool.loadKeyStore(keystore.toFile(), "changeit".toCharArray());
+        Path keystore = getDomain1Directory().resolve(Paths.get("config", KEYSTORE_FILENAME_DEFAULT));
+        try {
+            return new KeyTool(keystore.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 
     public static KeyStore getDomain1TrustStore() {
-        Path cacerts = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"));
-        return KeyTool.loadKeyStore(cacerts.toFile(), "changeit".toCharArray());
+        Path cacerts = getDomain1Directory().resolve(Paths.get("config", TRUSTSTORE_FILENAME_DEFAULT));
+        try {
+            return new KeyTool(cacerts.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 
@@ -363,10 +369,6 @@ public class GlassFishTestEnvironment {
     private static File findStartServ(String... optionalPrefix) {
         String prefix = optionalPrefix.length > 0 ? optionalPrefix[0] : "";
         return new File(GF_ROOT, isWindows() ? prefix + "bin/startserv.bat" : prefix + "bin/startserv");
-    }
-
-    private static File findKeyTool() {
-        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/keytool.exe" : "bin/keytool");
     }
 
     private static File findJarSigner() {

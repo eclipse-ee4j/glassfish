@@ -38,10 +38,6 @@
         <tck.home>${project.build.directory}/websocket-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests/websocket</tck.tests.home>
 
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
 
         <port.admin>14848</port.admin>
@@ -60,9 +56,7 @@
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
@@ -84,14 +78,14 @@
                         <goals>
                             <goal>wget</goal>
                         </goals>
+                        <configuration>
+                            <skip>${skipITs}</skip>
+                            <url>${ant.zip.url}</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -157,34 +151,28 @@
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
 
-                               <macrodef name="tck-setting">
-                                    <attribute name="key" /> <attribute name="value" />
+                                <macrodef name="tck-property-update">
+                                    <attribute name="key" />
+                                    <attribute name="value" />
                                     <sequential>
-                                      <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                        match="@{key}=.*" replace="@{key}=@{value}" />
+                                      <replaceregexp byline="true"
+                                        file="${tck.home}/bin/ts.jte"
+                                        match="@{key}=.*"
+                                        replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
 
-                                <macrodef name="tck-add">
-                                    <attribute name="key" /> <attribute name="value" />
-                                    <sequential>
-                                        <concat append="true" destfile="${tck.home}/bin/ts.jte">@{key}=@{value}${line.separator}</concat>
-                                    </sequential>
-                                </macrodef>
+                                <tck-property-update key="web.home" value="${glassfish.home}/glassfish"/>
+                                <tck-property-update key="webServerPort" value="${port.http}"/>
+                                <tck-property-update key="webServerHost" value="localhost"/>
 
-                                <!-- Change configuration -->
+                                <tck-property-update key="impl.vi" value="glassfish"/>
+                                <tck-property-update key="websocket.api" value="${web.home}/modules/jakarta.websocket-api.jar${pathsep}${web.home}/modules/jakarta.websocket-client-api.jar${pathsep}${web.home}/modules/jakarta.servlet-api.jar${pathsep}${web.home}/modules/jakarta.enterprise.cdi-api.jar"/>
 
-                                <tck-setting key="web.home" value="${glassfish.home}/glassfish"/>
-                                <tck-setting key="webServerPort" value="${port.http}"/>
-                                <tck-setting key="webServerHost" value="localhost"/>
+                                <tck-property-update key="report.dir" value="${tck.home}/websocketreport/websocket"/>
+                                <tck-property-update key="work.dir" value="${tck.home}/websocketwork/websocket"/>
 
-                                <tck-setting key="impl.vi" value="glassfish"/>
-                                <tck-setting key="websocket.api" value="${web.home}/modules/jakarta.websocket-api.jar${pathsep}${web.home}/modules/jakarta.websocket-client-api.jar${pathsep}${web.home}/modules/jakarta.servlet-api.jar${pathsep}${web.home}/modules/jakarta.enterprise.cdi-api.jar"/>
-
-                                <tck-setting key="report.dir" value="${tck.home}/websocketreport/websocket"/>
-                                <tck-setting key="work.dir" value="${tck.home}/websocketwork/websocket"/>
-
-                                <tck-setting key="ws_wait" value="50000000" if:set="glassfish.suspend"/>
+                                <tck-property-update key="ws_wait" value="50000000" if:set="glassfish.suspend"/>
 
                                 <replace file="${tck.home}/bin/ts.jte">
                                   <replacetoken><![CDATA[-XX\\\:MaxPermSize=512m:]]></replacetoken>
@@ -260,8 +248,6 @@
                                 <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9010"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacevalue>
                                 </replace>
-
-
                             </target>
                         </configuration>
                         <goals>

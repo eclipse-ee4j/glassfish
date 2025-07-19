@@ -28,23 +28,39 @@
     </parent>
 
     <artifactId>glassfish-external-tck-faces</artifactId>
+    <packaging>pom</packaging>
     <name>TCK: Faces</name>
 
     <description>This verifies the compliance of Eclipse Glassfish using the Jakarta Faces standalone TCK</description>
 
     <properties>
-        <glassfish.version>${project.version}</glassfish.version>
+        <faces.version>4.0.1</faces.version>
         <tck.root>${project.build.directory}</tck.root>
+        <tck.parentPomFile>${tck.root}/faces-tck-4.0.3/tck/pom.xml</tck.parentPomFile>
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.main.tests.tck</groupId>
+                <artifactId>jakarta-faces-tck</artifactId>
+                <type>zip</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+                <version>3.3.4</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-faces-tck</artifactId>
-            <type>zip</type>
-            <version>${project.version}</version>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
 
@@ -52,6 +68,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
                         <id>unpack</id>
@@ -75,8 +92,91 @@
                 </executions>
             </plugin>
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <inherited>false</inherited>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-tck-and-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                     classpathref="maven.plugin.classpath" />
+
+                                <macrodef name="pom-replace">
+                                    <attribute name="file" />
+                                    <attribute name="element" />
+                                    <attribute name="value" />
+                                    <attribute name="replacement" />
+                                    <sequential>
+                                      <replace file="@{file}">
+                                          <replacetoken><![CDATA[<@{element}>@{value}</@{element}]]></replacetoken>
+                                          <replacevalue><![CDATA[<@{element}>@{replacement}</@{element}]]></replacevalue>
+                                      </replace>
+                                    </sequential>
+                                </macrodef>
+
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="groupId" value="org.eclipse.ee4j" replacement="${project.groupId}" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="artifactId" value="project" replacement="${project.artifactId}" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="version" value="1.0.7" replacement="${project.version}" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="version" value="1.4" replacement="2.0.0-SNAPSHOT" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="version" value="4.0.3" replacement="${project.parent.version}" />
+                                <replace file="${tck.parentPomFile}">
+                                    <replacetoken><![CDATA[<relativePath />]]></replacetoken>
+                                    <replacevalue><![CDATA[<relativePath>../../..</relativePath>]]></replacevalue>
+                                </replace>
+                                <replaceregexp
+                                    flags="gs"
+                                    file="${tck.parentPomFile}"
+                                    match="\s*&lt;dependencyManagement&gt;.*?&lt;/dependencyManagement&gt;"
+                                    replace="">
+                                </replaceregexp>
+
+                                <replace dir="${tck.root}/faces-tck-4.0.3/tck">
+                                    <include name="**/pom.xml"/>
+                                    <exclude name="pom.xml"/>
+                                    <replacetoken><![CDATA[<version>4.0.3</version>]]></replacetoken>
+                                    <replacevalue><![CDATA[<version>${project.version}</version>]]></replacevalue>
+                                </replace>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
@@ -93,7 +193,7 @@
                         <argument>-s</argument>
                         <argument>${maven.settings.xml}</argument>
                         <argument>-f</argument>
-                        <argument>${tck.root}/faces-tck-4.0.3/tck/pom.xml</argument>
+                        <argument>${tck.parentPomFile}</argument>
                         <argument>clean</argument>
                         <argument>install</argument>
                         <argument>-Dglassfish.version=${glassfish.version}</argument>
@@ -101,6 +201,7 @@
                     </arguments>
                     <environmentVariables>
                         <LC_ALL>C</LC_ALL>
+                        <LANGUAGE>en</LANGUAGE>
                     </environmentVariables>
                 </configuration>
             </plugin>

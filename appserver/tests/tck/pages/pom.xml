@@ -38,10 +38,6 @@
         <tck.home>${project.build.directory}/pages-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
 
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
 
         <port.admin>14848</port.admin>
@@ -60,7 +56,6 @@
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
             <scope>test</scope>
         </dependency>

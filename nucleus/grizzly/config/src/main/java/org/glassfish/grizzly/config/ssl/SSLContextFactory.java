@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -60,6 +60,8 @@ import javax.net.ssl.X509KeyManager;
 import org.glassfish.grizzly.config.GrizzlyConfig;
 import org.glassfish.grizzly.http.util.StringManager;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+
 /**
  * SSL server socket factory. It _requires_ a valid RSA key and JSSE.
  *
@@ -75,7 +77,7 @@ public class SSLContextFactory implements Cloneable {
             SSLContextFactory.class.getClassLoader());
     private static final String defaultProtocol = "TLS";
     private static final String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
-    private static final String defaultKeyPass = "changeit";
+    private static final String defaultKeyPass = KEYSTORE_PASSWORD_DEFAULT;
     private static final Logger logger = GrizzlyConfig.logger();
 
     private final Map<String, String> attributes = new HashMap<>();

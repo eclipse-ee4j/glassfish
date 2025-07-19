@@ -44,7 +44,7 @@ import org.jvnet.hk2.annotations.Service;
  * [--secure | -s] [--user admin_user] [--passwordfile file_name] aliasname
  *
  * Result of the command is that: the entry of the form: aliasname=<password-encrypted-with-masterpassword> in
- * <domain-dir>/<domain-name>/config/domain-passwords file gets updated with the new alias password
+ * <domain-dir>/<domain-name>/config/domain-passwords.p12 file gets updated with the new alias password
  *
  * domain.xml example entry is:
  * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type

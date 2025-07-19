@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,10 +60,13 @@ import org.glassfish.web.LogFacade;
 import org.glassfish.web.admin.monitor.RequestProbeProvider;
 import org.glassfish.web.util.IntrospectionUtils;
 
-public class PECoyoteConnector extends Connector {
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
-    private static final String DEFAULT_KEYSTORE_TYPE = "JKS";
-    private static final String DEFAULT_TRUSTSTORE_TYPE = "JKS";
+public class PECoyoteConnector extends Connector {
 
     private static final String DUMMY_CONNECTOR_LAUNCHER = DummyConnectorLauncher.class.getName();
 
@@ -1328,51 +1331,18 @@ public class PECoyoteConnector extends Connector {
      * Configures this connector with its keystore and truststore.
      */
     private void configureKeysAndCerts() {
-
-        /*
-         * Keystore
-         */
-        String prop = System.getProperty("javax.net.ssl.keyStore");
-        String keyStoreType = System.getProperty("javax.net.ssl.keyStoreType",DEFAULT_KEYSTORE_TYPE);
+        String prop = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
+        String keyStoreType = System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
         if (prop != null) {
-            // PE
             setKeystoreFile(prop);
             setKeystoreType(keyStoreType);
         }
 
-        /*
-         * Get keystore password from password.conf file.
-         * Notice that JSSE, the underlying SSL implementation in PE,
-         * currently does not support individual key entry passwords
-         * that are different from the keystore password.
-         *
-        String ksPasswd = null;
-        try {
-            ksPasswd = PasswordConfReader.getKeyStorePassword();
-        } catch (IOException ioe) {
-            // Ignore
-        }
-        if (ksPasswd == null) {
-            ksPasswd = System.getProperty("javax.net.ssl.keyStorePassword");
-        }
-        if (ksPasswd != null) {
-            try {
-                connector.setKeystorePass(ksPasswd);
-            } catch (Exception e) {
-                _logger.log(Level.SEVERE,
-                    "pewebcontainer.http_listener_keystore_password_exception",
-                    e);
-            }
-        }*/
-
-        /*
-         * Truststore
-         */
-        prop = System.getProperty("javax.net.ssl.trustStore");
+        prop = System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName());
+        keyStoreType = System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
         if (prop != null) {
-            // PE
             setTruststore(prop);
-            setTruststoreType(DEFAULT_TRUSTSTORE_TYPE);
+            setTruststoreType(keyStoreType);
         }
     }
 

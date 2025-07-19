@@ -18,6 +18,7 @@
 package org.glassfish.grizzly.config;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,8 +29,11 @@ import java.net.Socket;
 import javax.net.SocketFactory;
 
 import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
+import org.glassfish.main.jdke.security.KeyTool;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -37,6 +41,20 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class HttpRedirectTest {
     private static final GrizzlyConfigTestHelper helper = new GrizzlyConfigTestHelper(HttpRedirectTest.class);
+
+    /**
+     * Generates keystores and copies the certificate to the truststore.
+     * Files are defined in "redirect" xml configuration files in test resources
+     *
+     * @throws Exception
+     */
+    @BeforeAll
+    static void initKeyStores() throws Exception {
+        KeyTool keyTool = new KeyTool(new File("target/test-classes/keystore-redirect.p12"),
+            KEYSTORE_PASSWORD_DEFAULT.toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+        keyTool.copyCertificate("s1as", new File("target/test-classes/cacerts-redirect.p12"));
+    }
 
 
     @Test

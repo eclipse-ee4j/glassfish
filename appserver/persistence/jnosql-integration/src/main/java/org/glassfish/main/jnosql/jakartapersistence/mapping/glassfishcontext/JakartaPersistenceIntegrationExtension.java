@@ -35,7 +35,9 @@ import java.util.logging.Logger;
 
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManager;
+import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
+import org.eclipse.jnosql.jakartapersistence.mapping.spi.RepositoryMethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
@@ -107,15 +109,16 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         }
 
         addBean(Converters.class, afterBeanDiscovery, beanManager)
-                .types(Converters.class)
                 .scope(ApplicationScoped.class);
 
         addBean(PersistenceDatabaseManager.class, afterBeanDiscovery, beanManager)
-                .types(PersistenceDatabaseManager.class)
                 .scope(ApplicationScoped.class);
 
         addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager)
-                .types(EntityManagerProvider.class)
+                .scope(ApplicationScoped.class);
+
+        addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
+                .types(RepositoryMethodInterceptor.class)
                 .scope(ApplicationScoped.class);
     }
 
@@ -152,6 +155,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
 
     private <T> BeanConfigurator<T> addBean(Class<T> beanClass, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
         return afterBeanDiscovery.<T>addBean()
+                .types(beanClass)
                 .createWith(createBeanProducer(beanClass, beanManager))
                 .destroyWith(createBeanDestroyer(beanClass, beanManager));
     }

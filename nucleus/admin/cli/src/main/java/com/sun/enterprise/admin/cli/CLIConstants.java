@@ -35,7 +35,7 @@ public final class CLIConstants {
     public static final String DEFAULT_HOSTNAME = "localhost";
     public static final String EOL = System.lineSeparator();
 
-    public static final Duration WAIT_FOR_DAS_TIME_MS = getEnv(TIMEOUT_START_SERVER, 60L);
+    public static final Duration WAIT_FOR_DAS_TIME_MS = getEnv(TIMEOUT_START_SERVER);
     public static final int RESTART_NORMAL = 10;
     public static final int RESTART_DEBUG_ON = 11;
     public static final int RESTART_DEBUG_OFF = 12;
@@ -44,7 +44,7 @@ public final class CLIConstants {
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
     public static final int WARNING = 4;
-    public static final Duration DEATH_TIMEOUT_MS = getEnv(TIMEOUT_STOP_SERVER, 60L);
+    public static final Duration DEATH_TIMEOUT_MS = getEnv(TIMEOUT_STOP_SERVER);
 
     public static final String K_ADMIN_PORT = "agent.adminPort";
     public static final String K_ADMIN_HOST = "agent.adminHost";
@@ -74,11 +74,11 @@ public final class CLIConstants {
         // no instances allowed!
     }
 
-    private static Duration getEnv(GlassFishVariable variable, long defaultValue) {
+    private static Duration getEnv(GlassFishVariable variable) {
         String name = variable.getEnvName();
         String value = System.getenv(name);
         if (value == null) {
-            return Duration.ofSeconds(defaultValue);
+            return null;
         }
         try {
             int parsedValue = Integer.parseInt(value);
@@ -87,11 +87,11 @@ public final class CLIConstants {
             }
             System.getLogger(CLIConstants.class.getName()).log(Level.WARNING,
                 "The value of the environment property {0} must be positive.", name);
-            return Duration.ofSeconds(defaultValue);
+            return null;
         } catch (NumberFormatException e) {
             System.getLogger(CLIConstants.class.getName()).log(Level.WARNING,
                 "Environment property {0} is set to a value {1} which cannot be parsed to duration.", name, value);
-            return Duration.ofSeconds(defaultValue);
+            return null;
         }
     }
 }

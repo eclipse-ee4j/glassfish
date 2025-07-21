@@ -122,8 +122,11 @@ public class RestartDomainCommand extends StopDomainCommand {
             opts.add("--domaindir");
             opts.add(domainDirParam);
         }
-        opts.add("--timeout");
-        opts.add(Long.toString(getStartTimeout().toSeconds()));
+        final Duration startTimeout = getStartTimeout();
+        if (startTimeout != null) {
+            opts.add("--timeout");
+            opts.add(Long.toString(startTimeout.toSeconds()));
+        }
         if (getDomainName() != null) {
             opts.add(getDomainName());
         }
@@ -146,6 +149,16 @@ public class RestartDomainCommand extends StopDomainCommand {
         final Duration paramTimeout = getTimeout();
         if (paramTimeout != null) {
             return paramTimeout;
+        }
+        final Duration startTimeout = getStartTimeout();
+        if (startTimeout == null && DEATH_TIMEOUT_MS == null) {
+            return null;
+        }
+        if (startTimeout == null) {
+            return DEATH_TIMEOUT_MS.plusSeconds(5L);
+        }
+        if (DEATH_TIMEOUT_MS == null) {
+            return startTimeout.plusSeconds(5L);
         }
         return WAIT_FOR_DAS_TIME_MS.plus(DEATH_TIMEOUT_MS).plusSeconds(5);
     }

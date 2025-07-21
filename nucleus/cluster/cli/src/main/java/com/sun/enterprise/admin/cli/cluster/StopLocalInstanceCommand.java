@@ -24,6 +24,7 @@ import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
 import java.net.ConnectException;
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.logging.Level;
 
@@ -182,7 +183,8 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             }
             final boolean dead = pid == null || ProcessUtils.waitWhileIsAlive(pid, getStopTimeout(), printDots);
             if (!dead) {
-                throw new CommandException(Strings.get("StopInstance.instanceNotDead", getStopTimeout().toSeconds()));
+                throw new CommandException(MessageFormat
+                    .format("Timed out {0} seconds waiting for the instance to stop.", getStopTimeout().toSeconds()));
             }
         } catch (Exception e) {
             // The server may have died so fast we didn't have time to

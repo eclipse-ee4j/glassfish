@@ -14,14 +14,9 @@
  */
 package org.glassfish.tck.data;
 
-import org.glassfish.tck.data.junit5.TransactionExtension;
-
-
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import ee.jakarta.tck.data.web.validation.ValidationTests;
 
-@ExtendWith(value = TransactionExtension.class)
+// Tests here are not designed to run in a global transaction, we don't add the TransactionExtensions
 public class JNoSqlValidationTests extends ValidationTests {
 
 }

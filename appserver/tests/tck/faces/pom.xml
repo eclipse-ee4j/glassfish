@@ -35,8 +35,9 @@
 
     <properties>
         <faces.version>4.0.1</faces.version>
+        <faces.tck.version>4.0.3</faces.tck.version>
         <tck.root>${project.build.directory}</tck.root>
-        <tck.parentPomFile>${tck.root}/faces-tck-4.0.3/tck/pom.xml</tck.parentPomFile>
+        <tck.parentPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/pom.xml</tck.parentPomFile>
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
     </properties>
@@ -147,9 +148,9 @@
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="version" value="1.0.7" replacement="${project.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="1.4" replacement="2.0.0-M1" />
+                                    element="version" value="1.4" replacement="${omnifish.arquillian.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="4.0.3" replacement="${project.parent.version}" />
+                                    element="version" value="${faces.tck.version}" replacement="${project.parent.version}" />
                                 <replace file="${tck.parentPomFile}">
                                     <replacetoken><![CDATA[<relativePath />]]></replacetoken>
                                     <replacevalue><![CDATA[<relativePath>../../..</relativePath>]]></replacevalue>
@@ -161,13 +162,13 @@
                                     replace="">
                                 </replaceregexp>
 
-                                <replace dir="${tck.root}/faces-tck-4.0.3/tck">
+                                <replace dir="${tck.root}/faces-tck-${faces.tck.version}/tck">
                                     <include name="**/pom.xml"/>
                                     <exclude name="pom.xml"/>
-                                    <replacetoken><![CDATA[<version>4.0.3</version>]]></replacetoken>
+                                    <replacetoken><![CDATA[<version>${faces.tck.version}</version>]]></replacetoken>
                                     <replacevalue><![CDATA[<version>${project.version}</version>]]></replacevalue>
                                 </replace>
-                                <replace dir="${tck.root}/faces-tck-4.0.3/tck">
+                                <replace dir="${tck.root}/faces-tck-${faces.tck.version}/tck">
                                     <include name="**/pom.xml"/>
                                     <replacetoken><![CDATA[<groupId>org.omnifaces.arquillian</groupId>]]></replacetoken>
                                     <replacevalue><![CDATA[<groupId>ee.omnifish.arquillian</groupId>]]></replacevalue>

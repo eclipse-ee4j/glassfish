@@ -33,11 +33,11 @@
 
     <properties>
         <!-- Be patient, it is over 500 MB -->
-        <!-- TODO Wait for the release -->
+        <!-- TODO Wait for the release, temporarily you have to download one of "snapshots" opr build your own -->
 <!--        <tck.artifactFileName>jakarta-jakartaeetck-10.0.7.zip</tck.artifactFileName>-->
 <!--        <tck.artifactUrl>https://download.eclipse.org/jakartaee/platform/10/${tck.test.jee.file}</tck.artifactUrl>-->
         <tck.artifactFileName>jakartaeetck-10.0.7.zip</tck.artifactFileName>
-        <tck.artifactUrl>https://ci.eclipse.org/jakartaee-tck/job/jakartaee-tck/job/10.0.x/lastSuccessfulBuild/artifact/jakartaeetck-bundles/${tck.artifactFileName}</tck.artifactUrl>
+        <tck.artifactUrl>https://ci.eclipse.org/jakartaee-tck/job/jakartaee-tck/job/10.0.x/228/artifact/jakartaeetck-bundles/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>

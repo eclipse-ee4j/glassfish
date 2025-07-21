@@ -13,24 +13,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.tck.data;
+package org.glassfish.tck.data.junit5;
 
-import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
-import org.jboss.arquillian.test.spi.TestClass;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 
 /**
  *
  * @author Ondro Mihalyi
  */
-public class JakartaPersistenceProcessor implements ApplicationArchiveProcessor {
-
-    @Override
-    public void process(Archive<?> archive, TestClass testClass) {
-        if(archive instanceof WebArchive webArchive) {
-            webArchive.addAsWebInfResource(getClass().getClassLoader().getResource("persistence.xml"), "classes/META-INF/persistence.xml");
-        }
+@ApplicationScoped
+@Transactional
+public class TransactionalWrapper {
+    void proceed(InvocationInterceptor.Invocation<Void> invocation) throws Throwable {
+        invocation.proceed();
     }
-
 }

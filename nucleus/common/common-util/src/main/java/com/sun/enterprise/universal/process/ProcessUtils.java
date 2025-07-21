@@ -225,7 +225,7 @@ public final class ProcessUtils {
         // This is because File.exists() can cache file attributes
         if (!waitWhileIsAlive(pid, timeout, printDots)) {
             throw new KillTimeoutException(MessageFormat.format(
-                "The process {0} was killed, but it is still alive after timeout {1} s.", pid, timeout.getSeconds()));
+                "The process {0} was killed, but it is still alive after timeout {1} s.", pid, timeout.toSeconds()));
         }
     }
 

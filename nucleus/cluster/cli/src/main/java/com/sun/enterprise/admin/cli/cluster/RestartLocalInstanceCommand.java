@@ -109,9 +109,11 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         if (instanceName != null) {
             opts.add(instanceName);
         }
-        opts.add("--timeout");
-        opts.add(Long.toString(getStartTimeout().toSeconds()));
-
+        final Duration startTimeout = getStartTimeout();
+        if (startTimeout != null) {
+            opts.add("--timeout");
+            opts.add(Long.toString(startTimeout.toSeconds()));
+        }
         return cmd.execute(opts.toArray(String[]::new));
     }
 
@@ -130,6 +132,16 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         final Duration paramTimeout = getTimeout();
         if (paramTimeout != null) {
             return paramTimeout;
+        }
+        final Duration startTimeout = getStartTimeout();
+        if (startTimeout == null && DEATH_TIMEOUT_MS == null) {
+            return null;
+        }
+        if (startTimeout == null) {
+            return DEATH_TIMEOUT_MS.plusSeconds(5L);
+        }
+        if (DEATH_TIMEOUT_MS == null) {
+            return startTimeout.plusSeconds(5L);
         }
         return WAIT_FOR_DAS_TIME_MS.plus(DEATH_TIMEOUT_MS).plusSeconds(5);
     }

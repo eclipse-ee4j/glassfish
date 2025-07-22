@@ -37,7 +37,7 @@ import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManager;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
-import org.eclipse.jnosql.jakartapersistence.mapping.spi.RepositoryMethodInterceptor;
+import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
@@ -89,6 +89,13 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .types(EntitiesMetadata.class)
                 .scope(ApplicationScoped.class);
 
+        addBean(EntityValidator.class, afterBeanDiscovery, beanManager)
+                .types(MethodInterceptor.class)
+                .qualifiers(MethodInterceptor.SaveEntity.INSTANCE)
+                .alternative(true)
+                .priority(Interceptor.Priority.PLATFORM_BEFORE)
+                .scope(ApplicationScoped.class);
+
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
     }
 
@@ -118,7 +125,10 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(ApplicationScoped.class);
 
         addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
-                .types(RepositoryMethodInterceptor.class)
+                .types(MethodInterceptor.class)
+                .qualifiers(MethodInterceptor.Repository.INSTANCE)
+                .alternative(true)
+                .priority(Interceptor.Priority.PLATFORM_BEFORE)
                 .scope(ApplicationScoped.class);
     }
 

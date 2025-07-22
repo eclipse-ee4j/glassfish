@@ -15,14 +15,20 @@
  */
 package org.glassfish.tck.data.arquillian;
 
+import com.sun.tdk.signaturetest.SignatureTest;
+import com.sun.tdk.signaturetest.plugin.PluginAPI;
+import com.sun.tdk.signaturetest.util.CommandLineParserException;
+
 import org.glassfish.tck.data.junit5.TransactionExtension;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import ee.jakarta.tck.data.core.cdi.CDITests;
 import ee.jakarta.tck.data.framework.read.only.NaturalNumber;
+import ee.jakarta.tck.data.framework.signature.DataSignatureTestRunner;
 import ee.jakarta.tck.data.standalone.entity.EntityTests;
 import ee.jakarta.tck.data.standalone.persistence.PersistenceEntityTests;
 import ee.jakarta.tck.data.standalone.signature.SignatureTests;
@@ -45,7 +51,23 @@ public class JakartaPersistenceProcessor implements ApplicationArchiveProcessor 
                     PersistenceEntityTests.class.getPackage(),
                     CDITests.class.getPackage(),
                     EntityTests.class.getPackage(),
-                    SignatureTests.class.getPackage());
+                    SignatureTests.class.getPackage(),
+                    DataSignatureTestRunner.class.getPackage());
+            webArchive.addPackages(true,
+                    SignatureTest.class.getPackage(),
+                    PluginAPI.class.getPackage(),
+                    com.sun.tdk.signaturetest.core.Log.class.getPackage(),
+                    CommandLineParserException.class.getPackage());
+            String[] resourceFiles = {
+                "jakarta.data.sig_17",
+                "jakarta.data.sig_21",
+                "sig-test-pkg-list.txt",
+                "sig-test.map"
+            };
+            for (String resourceFile : resourceFiles) {
+                String directory = DataSignatureTestRunner.class.getPackageName().replace(".", "/");
+                webArchive.add(new ClassLoaderAsset(directory + "/" + resourceFile), "WEB-INF/classes/" + directory + "/" + resourceFile);
+            }
         }
     }
 

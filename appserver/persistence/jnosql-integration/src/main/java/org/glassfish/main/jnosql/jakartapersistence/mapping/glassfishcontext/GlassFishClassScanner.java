@@ -23,14 +23,13 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -38,6 +37,7 @@ import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.hk2.classmodel.reflect.ExtensibleType;
 import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
 import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
+import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
@@ -72,6 +72,10 @@ public class GlassFishClassScanner implements ClassScanner {
         }
     }
 
+    public GlassFishClassScanner(Types types) {
+        this.types = types;
+    }
+
     @Override
     public Set<Class<?>> entities() {
         return findClassesWithAnnotation(Entity.class);
@@ -83,19 +87,22 @@ public class GlassFishClassScanner implements ClassScanner {
                 .stream()
                 .filter(type -> type instanceof ClassModel)
                 .filter(type -> null != type.getAnnotation(annotationClassName))
-                .map(intfModel -> {
-                    try {
-                        return Thread.currentThread().getContextClassLoader().loadClass(intfModel.getName());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(ClassModel.class::cast)
+                .map(this::typeModelToClass)
                 .collect(Collectors.toSet());
     }
 
     @Override
     public Set<Class<?>> repositories() {
-        return repositoriesMatching(this::isSupportedBuiltInInterface);
+        return repositoriesStream()
+                .collect(toUnmodifiableSet());
+    }
+
+    private Stream<Class<?>> repositoriesStream() {
+        return repositoriesStreamMatching(intfModel ->
+                intfModel.getParameterizedInterfaces().stream()
+                .anyMatch(this::isSupportedBuiltInInterface)
+                || DataRepository.class.isAssignableFrom(typeModelToClass(intfModel)));
     }
 
     @Override
@@ -106,62 +113,91 @@ public class GlassFishClassScanner implements ClassScanner {
     @Override
     public <T extends DataRepository<?, ?>> Set<Class<?>> repositories(Class<T> filter) {
         Objects.requireNonNull(filter, "filter is required");
-        return repositories().stream().filter(filter::isAssignableFrom)
-                .filter(c -> Arrays.asList(c.getInterfaces()).contains(filter))
+        return repositoriesStream()
+                .filter(filter::isAssignableFrom)
                 .collect(toUnmodifiableSet());
     }
 
     @Override
     public Set<Class<?>> repositoriesStandard() {
-        return repositories().stream()
-                .filter(c -> {
-                    List<Class<?>> interfaces = Arrays.asList(c.getInterfaces());
-                    return interfaces.contains(CrudRepository.class)
-                            || interfaces.contains(BasicRepository.class)
-                            || interfaces.contains(DataRepository.class);
-                }).collect(toUnmodifiableSet());
+        Predicate<ParameterizedInterfaceModel> isSupportedBuiltInInterface = this::isSupportedBuiltInInterface;
+        Predicate<ParameterizedInterfaceModel> directlyImplementsStandardInterface = this::directlyImplementsStandardInterface;
+        return repositoriesStreamMatching(intfModel -> intfModel.getParameterizedInterfaces().stream()
+                .anyMatch(isSupportedBuiltInInterface.and(directlyImplementsStandardInterface)))
+                .collect(toUnmodifiableSet());
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
-        return repositoriesMatching(this::isCustomInterface);
+        return repositoriesStreamMatching(this::noneOfExtendedInterfacesIsStandard)
+                .collect(toUnmodifiableSet());
     }
 
-    private Set<Class<?>> repositoriesMatching(Predicate<ParameterizedInterfaceModel> predicate) {
+    private boolean noneOfExtendedInterfacesIsStandard(InterfaceModel intfModel) {
+        Predicate<ParameterizedInterfaceModel> directlyImplementsStandardInterface = this::directlyImplementsStandardInterface;
+        return intfModel.getParameterizedInterfaces().isEmpty()
+                || intfModel.getParameterizedInterfaces().stream()
+                        .allMatch(directlyImplementsStandardInterface
+                                .negate());
+    }
+
+    private Stream<Class<?>> repositoriesStreamMatching(Predicate<InterfaceModel> predicate) {
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
         return types.getAllTypes()
                 .stream()
                 .filter(type -> type instanceof InterfaceModel)
                 .filter(type -> null != type.getAnnotation(Repository.class.getName()))
                 .map(InterfaceModel.class::cast)
-                .filter(intfModel -> intfModel.getParameterizedInterfaces().stream()
-                        .anyMatch(predicate))
-                .map(intfModel -> {
-                    try {
-                        return Thread.currentThread().getContextClassLoader().loadClass(intfModel.getName());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toSet());
+                .filter(predicate)
+                .map(this::typeModelToClass);
+    }
+
+    private Class<?> typeModelToClass(ExtensibleType<?> type) throws RuntimeException {
+        return classForName(type.getName());
+    }
+
+    private Class<?> classForName(String name) {
+        try {
+            return Thread.currentThread().getContextClassLoader().loadClass(name);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean isSupportedBuiltInInterface(ParameterizedInterfaceModel interf) {
-        final Collection<ParameterizedInterfaceModel> parametizedTypes = interf.getParametizedTypes();
-        return !parametizedTypes.isEmpty()
-                && isDataRepositoryInterface(interf.getRawInterface())
-                && isSupportedEntityType(parametizedTypes.iterator().next());
+        final Collection<ParameterizedInterfaceModel> parameterizedTypes = interf.getParametizedTypes();
+        return !parameterizedTypes.isEmpty()
+                && isSupportedEntityType(parameterizedTypes.iterator().next())
+                && isDataRepositoryInterface(interf);
     }
 
-    private boolean isCustomInterface(ParameterizedInterfaceModel interf) {
-        return !isDataRepositoryInterface(interf.getRawInterface());
+    private boolean directlyImplementsStandardInterface(ParameterizedInterfaceModel interf) {
+        Type basicRepositoryType = types.getBy(BasicRepository.class.getName());
+        Type crudRepositoryType = types.getBy(CrudRepository.class.getName());
+        Type dataRepositoryType = types.getBy(DataRepository.class.getName());
+        final Collection implementedInterfaces = interf.getRawInterface().getInterfaces();
+        return implementedInterfaces.contains(basicRepositoryType)
+                || implementedInterfaces.contains(crudRepositoryType)
+                || implementedInterfaces.contains(dataRepositoryType)
+                || canBeAssignedToOneOf(classForName(interf.getRawInterfaceName()),
+                        BasicRepository.class, CrudRepository.class, DataRepository.class);
     }
 
-    private boolean isDataRepositoryInterface(ExtensibleType<?> interf) {
-        return interf.isInstanceOf(DataRepository.class.getName());
+    private boolean isDataRepositoryInterface(ParameterizedInterfaceModel interf) {
+        return interf.getRawInterfaceName().equals(DataRepository.class.getName())
+                || DataRepository.class.isAssignableFrom(classForName(interf.getRawInterfaceName()));
     }
 
     private boolean isSupportedEntityType(ParameterizedInterfaceModel entityType) {
         return null != entityType.getRawInterface().getAnnotation(Entity.class.getName());
+    }
+
+    private boolean canBeAssignedToOneOf(Class<?> clazz, Class<?>... assignables) {
+        for (Class<?> cls : assignables) {
+            if (cls.isAssignableFrom(clazz)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

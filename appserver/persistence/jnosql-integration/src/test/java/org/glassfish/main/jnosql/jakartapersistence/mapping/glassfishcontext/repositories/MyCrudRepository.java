@@ -13,24 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.tck.data;
+package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories;
 
-import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
-import org.jboss.arquillian.test.spi.TestClass;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Repository;
+
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.MyEntity;
 
 /**
  *
  * @author Ondro Mihalyi
  */
-public class JakartaPersistenceProcessor implements ApplicationArchiveProcessor {
-
-    @Override
-    public void process(Archive<?> archive, TestClass testClass) {
-        if(archive instanceof WebArchive webArchive) {
-            webArchive.addAsWebInfResource(getClass().getClassLoader().getResource("persistence.xml"), "classes/META-INF/persistence.xml");
-        }
-    }
+@Repository
+public interface MyCrudRepository extends CrudRepository<MyEntity, Long>{
 
 }

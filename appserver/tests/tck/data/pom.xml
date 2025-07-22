@@ -121,8 +121,8 @@
             <artifactId>arquillian-junit5-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -170,9 +170,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
                 <configuration>
-                    <dependenciesToScan>
-                        <dependency>jakarta.data:jakarta.data-tck</dependency>
-                    </dependenciesToScan>
                     <groups><![CDATA[web & persistence]]></groups>
                     
                     <!-- If running back-to-back tests at different levels
@@ -202,10 +199,24 @@
 
     <profiles>
         <profile>
-            <id>full</id>
+            <id>full-managed</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <groups>platform,tck-javatest</groups>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.omnifaces.arquillian</groupId>
+                    <artifactId>arquillian-glassfish-server-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>full</id>
             <properties>
                 <glassfish-artifact-id>glassfish</glassfish-artifact-id>
                 <groups>platform,tck-javatest</groups>
@@ -218,6 +229,26 @@
                 <groups>web,tck-javatest</groups>
             </properties>
         </profile>
-
+        <profile>
+            <id>arquillian-managed</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.omnifaces.arquillian</groupId>
+                    <artifactId>arquillian-glassfish-server-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>arquillian-remote</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.omnifaces.arquillian</groupId>
+                    <artifactId>arquillian-glassfish-server-remote</artifactId>
+                    <scope>test</scope>
+                    <version>1.8</version>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 </project>

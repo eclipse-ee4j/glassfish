@@ -148,7 +148,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
         return null; // not this provider
     }
 
-    private Locations createContainer(Map<?, ?> properties, Locations l) throws EJBException {
+    private void createContainer(Map<?, ?> properties, Locations l) throws EJBException {
         synchronized(lock) {
             // if (container == null || !container.isOpen()) {
             try {
@@ -232,8 +232,6 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             }
             // }
         }
-
-        return l;
     }
 
     /**

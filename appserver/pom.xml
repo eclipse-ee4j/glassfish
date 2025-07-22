@@ -102,7 +102,7 @@
         <exousia.version>3.0.0-M3</exousia.version>
         <epicyro.version>3.1.0</epicyro.version>
         <!-- Dependencies -->
-        <nimbus.version>10.3</nimbus.version>
+        <nimbus.version>10.4</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -111,7 +111,7 @@
         
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
-        <jakarta.nosql-api.version>1.0.0</jakarta.nosql-api.version>
+        <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
         <jnosql.version>1.1.8-SNAPSHOT</jnosql.version>
 
         <!-- Jakarta Persistence -->
@@ -146,7 +146,7 @@
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.4</xmlsec.version>
-        <woodstox.version>7.1.0</woodstox.version>
+        <woodstox.version>7.1.1</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->
@@ -159,11 +159,11 @@
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.0</jakarta.mvc-api.version>
-        <krazo.version>4.0.0</krazo.version>
+        <krazo.version>4.0.1</krazo.version>
         
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.2.2</helidon-config.version>
+        <helidon-config.version>4.2.4</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
@@ -517,7 +517,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.18.0</version>
+                <version>1.19.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

@@ -163,11 +163,6 @@
                                     basedir="${patches}/jakarta-data-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jakarta.data-api.jar"
                                 />
-                                <!-- To have a manifest at all -->
-                                <jarupdate
-                                    basedir="${patches}/jakarta-nosql-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.nosql-api.jar"
-                                />
                             </target>
                         </configuration>
                     </execution>

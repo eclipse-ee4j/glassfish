@@ -170,6 +170,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
                 <configuration>
+                    <dependenciesToScan>
+                        <dependency>jakarta.data:jakarta.data-tck</dependency>
+                    </dependenciesToScan>
                     <groups><![CDATA[web & persistence]]></groups>
                     
                     <!-- If running back-to-back tests at different levels

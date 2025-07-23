@@ -131,6 +131,7 @@
 
         <!-- 3rd party dependencies -->
         <commons-io.version>2.18.0</commons-io.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
@@ -746,7 +747,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.17.0</version>
+                <version>${commons-lang3.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

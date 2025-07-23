@@ -31,9 +31,9 @@
       <property name="eclipselink.target-database" value="Derby"/>
       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
 <!--      <property name="eclipselink.debug" value="ALL"/>
-      <property name="eclipselink.logging.level" value="FINEST"/>
+      <property name="eclipselink.logging.level" value="FINEST"/>-->
       <property name="eclipselink.logging.level.sql" value="FINEST"/>
-      <property name="eclipselink.logging.level.cache" value="FINEST"/>-->
+      <!--<property name="eclipselink.logging.level.cache" value="FINEST"/>-->
     </properties>
   </persistence-unit>
 </persistence>

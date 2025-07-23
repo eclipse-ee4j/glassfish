@@ -26,13 +26,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
-import ee.jakarta.tck.data.core.cdi.CDITests;
-import ee.jakarta.tck.data.framework.read.only.NaturalNumber;
-import ee.jakarta.tck.data.framework.signature.DataSignatureTestRunner;
 import ee.jakarta.tck.data.standalone.entity.EntityTests;
-import ee.jakarta.tck.data.standalone.persistence.PersistenceEntityTests;
-import ee.jakarta.tck.data.standalone.signature.SignatureTests;
-import ee.jakarta.tck.data.web.validation.ValidationTests;
+
 
 /**
  *
@@ -46,29 +41,21 @@ public class JakartaPersistenceProcessor implements ApplicationArchiveProcessor 
             webArchive.addAsWebInfResource(getClass().getClassLoader().getResource("persistence.xml"), "classes/META-INF/persistence.xml");
             webArchive.addPackages(false,
                     TransactionExtension.class.getPackage(),
-                    NaturalNumber.class.getPackage(),
-                    ValidationTests.class.getPackage(),
-                    PersistenceEntityTests.class.getPackage(),
-                    CDITests.class.getPackage(),
-                    EntityTests.class.getPackage(),
-                    SignatureTests.class.getPackage(),
-                    DataSignatureTestRunner.class.getPackage());
-            webArchive.addPackages(true,
-                    SignatureTest.class.getPackage(),
-                    PluginAPI.class.getPackage(),
-                    com.sun.tdk.signaturetest.core.Log.class.getPackage(),
-                    CommandLineParserException.class.getPackage());
-            String[] resourceFiles = {
-                "jakarta.data.sig_17",
-                "jakarta.data.sig_21",
-                "sig-test-pkg-list.txt",
-                "sig-test.map"
-            };
-            for (String resourceFile : resourceFiles) {
-                String directory = DataSignatureTestRunner.class.getPackageName().replace(".", "/");
-                webArchive.add(new ClassLoaderAsset(directory + "/" + resourceFile), "WEB-INF/classes/" + directory + "/" + resourceFile);
-            }
+                    EntityTests.class.getPackage()
+                    );
+            addSignatureTestsClasses(webArchive);
+            final String junitExtensionServiceFile = "META-INF/services/org.junit.jupiter.api.extension.Extension";
+
+            webArchive.add(new ClassLoaderAsset(junitExtensionServiceFile), "WEB-INF/classes/" + junitExtensionServiceFile);
         }
+    }
+
+    private void addSignatureTestsClasses(WebArchive webArchive) throws IllegalArgumentException {
+        webArchive.addPackages(true,
+                SignatureTest.class.getPackage(),
+                PluginAPI.class.getPackage(),
+                com.sun.tdk.signaturetest.core.Log.class.getPackage(),
+                CommandLineParserException.class.getPackage());
     }
 
 }

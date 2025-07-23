@@ -17,16 +17,41 @@ package org.glassfish.tck.data.junit5;
 import jakarta.enterprise.inject.spi.CDI;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
+
+
 public class TransactionExtension implements InvocationInterceptor {
+
+    Set<String> targetTestMethodNames = Set.of(
+            "testThirdAndFourthSlicesOf5",
+            "testFirstSliceOf5",
+            "testOrderByHasPrecedenceOverPageRequestSorts",
+            "testStaticMetamodelAscendingSortsPreGenerated",
+            "testFinalSliceOfUpTo5",
+            "testThirdAndFourthPagesOf10",
+            "testSliceOfNothing",
+            "testFindPage",
+            "testPageOfNothing",
+            "testFirstPageOf10",
+            "testBeyondFinalSlice",
+            "testLiteralTrue",
+            "testFinalPageOfUpTo10",
+            "testStaticMetamodelAscendingSorts",
+            "testBeyondFinalPage"
+            );
 
     @Override
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-        CDI.current().select(TransactionalWrapper.class).get().proceed(invocation);
+        if (targetTestMethodNames.contains(invocationContext.getExecutable().getName())) {
+            CDI.current().select(TransactionalWrapper.class).get().proceed(invocation);
+        } else {
+            invocation.proceed();
+        }
     }
 
 }

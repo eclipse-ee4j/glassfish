@@ -170,6 +170,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
                 <configuration>
+                    <dependenciesToScan>
+                        <dependency>jakarta.data:jakarta.data-tck</dependency>
+                    </dependenciesToScan>
                     <groups><![CDATA[web & persistence]]></groups>
                     
                     <!-- If running back-to-back tests at different levels
@@ -241,6 +244,9 @@
         </profile>
         <profile>
             <id>arquillian-remote</id>
+            <!-- For this profile, ensure that the server is running with the following system property:
+                    junit.jupiter.extensions.autodetection.enabled=true
+            -->
             <dependencies>
                 <dependency>
                     <groupId>org.omnifaces.arquillian</groupId>

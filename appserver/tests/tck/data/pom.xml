@@ -190,9 +190,10 @@
                             create-jdbc-resource --connectionpoolid DerbyPool jdbc/DataTCK
                             list resources.jdbc-connection-pool.*
                         </glassfish.postBootCommands>
+                        <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
                     
                         <jimage.dir>target/jimage</jimage.dir>
-                        <signature.sigTestClasspath>${project.build.directory}/glassfish8/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>
+                        <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>
                         <java.util.logging.config.file>target/test-classes/logging.properties</java.util.logging.config.file>
                     </systemPropertyVariables>
                 </configuration>
@@ -244,6 +245,9 @@
         </profile>
         <profile>
             <id>arquillian-remote</id>
+            <!-- For this profile, ensure that the server is running with the following system property:
+                    junit.jupiter.extensions.autodetection.enabled=true
+            -->
             <dependencies>
                 <dependency>
                     <groupId>org.omnifaces.arquillian</groupId>

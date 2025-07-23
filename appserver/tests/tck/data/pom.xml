@@ -190,6 +190,7 @@
                             create-jdbc-resource --connectionpoolid DerbyPool jdbc/DataTCK
                             list resources.jdbc-connection-pool.*
                         </glassfish.postBootCommands>
+                        <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
                     
                         <jimage.dir>target/jimage</jimage.dir>
                         <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>

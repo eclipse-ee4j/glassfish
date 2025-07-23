@@ -12,7 +12,6 @@
             <property name="httpsPortAsDefault">false</property>
 <!--                <property name="suspend">true</property>-->
             <property name="enableDerby">true</property>
-            <property name="glassfish.systemProperties">junit.jupiter.extensions.autodetection.enabled=true</property>
         </configuration>
     </container>
 

@@ -192,7 +192,7 @@
                         </glassfish.postBootCommands>
                     
                         <jimage.dir>target/jimage</jimage.dir>
-                        <signature.sigTestClasspath>${project.build.directory}/glassfish8/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>
+                        <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>
                         <java.util.logging.config.file>target/test-classes/logging.properties</java.util.logging.config.file>
                     </systemPropertyVariables>
                 </configuration>

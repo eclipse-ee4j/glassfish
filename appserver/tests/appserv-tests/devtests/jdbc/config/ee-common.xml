@@ -111,7 +111,7 @@
     <mkdir dir="${build.classes.dir}"/>
     <echo message="sqe-common.xml: Compiling test source files"/>
     <javac srcdir="${src}"
-        source="1.4"
+        source="17"
         destdir="${build.classes.dir}"
         classpath="${s1astest.classpath}"
         debug="on"
@@ -122,7 +122,7 @@
     <mkdir dir="${build.classes.dir}"/>
     <echo message="sqe-common.xml: Compiling test source files with 8.0 PE"/>
     <javac srcdir="${src}"
-        source="1.4"
+        source="17"
         destdir="${build.classes.dir}"
         classpath="${s1as80test.classpath}"
         debug="on"

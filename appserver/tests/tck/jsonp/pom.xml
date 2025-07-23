@@ -147,15 +147,5 @@
                 <glassfish.artifact.id>web</glassfish.artifact.id>
             </properties>
         </profile>
-        <profile>
-            <id>report</id>
-            <activation>
-                <jdk>[11,18)</jdk>
-            </activation>
-            <properties>
-                <skip.surefire.report>false</skip.surefire.report>
-            </properties>
-        </profile>
     </profiles>
-
 </project>

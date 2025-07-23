@@ -82,8 +82,8 @@ public class GlassFishMain {
 
     private static void checkJdkVersion() {
         int version = Runtime.version().feature();
-        if (version < 11) {
-            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {11, version});
+        if (version < 17) {
+            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {17, version});
             System.exit(1);
         }
     }

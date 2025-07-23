@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.util.TypeUtil;
-import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
@@ -230,11 +229,6 @@ public class StaticRmiStubGenerator {
 
         if( stubClasses.size() == 0 ) {
             _logger.log(Level.INFO,  "[RMIC] No code generation required");
-            return;
-        }
-
-        if( toolsJarPath == null && !OS.isDarwin() && Runtime.version().feature() < 11) {
-            _logger.log(Level.INFO,  "[RMIC] tools.jar location was not found");
             return;
         }
 

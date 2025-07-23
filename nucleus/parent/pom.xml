@@ -814,7 +814,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.13.0</version>
                     <configuration>
-                        <release>11</release>
+                        <release>17</release>
                         <excludes>
                             <exclude>**/.ade_path/**</exclude>
                         </excludes>
@@ -2022,7 +2022,7 @@
                     <instructions>
                         <_include>-osgi.bundle</_include>
                         <_noimportjava>true</_noimportjava>
-                        <_runee>JavaSE-11</_runee>
+                        <_runee>JavaSE-17</_runee>
                     </instructions>
                 </configuration>
             </plugin>

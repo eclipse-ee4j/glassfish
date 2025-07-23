@@ -113,14 +113,14 @@
         <echo message="Listing of source files: ${source.file.list}" />
 
         <mkdir dir="${test.class.output}" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="${basedir}/src/test" sourcepath="" destdir="${test.class.output}">
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="${basedir}/src/test" sourcepath="" destdir="${test.class.output}">
             <include name="**/*.java" />
         </javac>
     </target>
 
     <target name="compile-util" description="compile the test ng util">
         <mkdir dir="${test.class.output}" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="${ws.root}/admincli/src/test/admincli/util:${ws.root}/utils" destdir="${test.class.output}">
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="${ws.root}/admincli/src/test/admincli/util:${ws.root}/utils" destdir="${test.class.output}">
         </javac>
     </target>
 
@@ -163,7 +163,7 @@
     <target name="compile-single">
         <delete dir="$class.output}" />
         <mkdir dir="${class.output}" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src" destdir="${class.output}" />
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="src" destdir="${class.output}" />
     </target>
 
 
@@ -177,7 +177,7 @@
         <mkdir dir="web/html" />
         <mkdir dir="web/jsp" />
         <mkdir dir="src/java" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
 
         <mkdir dir="${class.output}/META-INF" />
         <copy file="metadata/persistence.xml" todir="${class.output}/META-INF" failonerror="false" />
@@ -213,7 +213,7 @@
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
         <echo message="Now compiling" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/java" destdir="${class.output}" />
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="src/java" destdir="${class.output}" />
         <echo message="Now creating a war file ${dist.dir}/${app.file.ext}" />
         <jar destfile="${dist.dir}/${app.file.ext}" update="true" basedir="${class.output}" />
     </target>
@@ -224,7 +224,7 @@
         <delete file="${app.file.ext}" />
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
         <echo message="war.classes ============== : ${war.classes}" />
         <war destfile="${dist.dir}/${app.file}Web.war" webxml="metadata/web.xml">
             <fileset dir="web/html" />
@@ -252,7 +252,7 @@
         <delete file="${app.file.ext}" />
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
-        <javac debug="true" source="11" target="11" classpathref="class.path" srcdir="src/com" failonerror="false" destdir="${class.output}" />
+        <javac debug="true" source="17" target="17" classpathref="class.path" srcdir="src/com" failonerror="false" destdir="${class.output}" />
         <mkdir dir="${class.output}/META-INF" />
         <copy file="metadata/sun-application-client.xml" tofile="${class.output}/META-INF/sun-application-client.xml" failonerror="false" />
         <jar destfile="${dist.dir}/${app.file}-client.jar" basedir="${class.output}" includes="**/Client.class" manifest="./metadata/MANIFEST.MF">

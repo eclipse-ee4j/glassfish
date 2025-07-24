@@ -38,6 +38,10 @@
             <artifactId>helidon-microprofile-config</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.helidon</groupId>
+            <artifactId>helidon</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.helidon.common</groupId>
             <artifactId>helidon-common-types</artifactId>
         </dependency>
@@ -95,6 +99,7 @@
                             <!--
                                 The helidon MP config dependency tree, illustrating what we actually output to the GF bundle
                             -->
+                            groupId=io.helidon;artifactId=helidon,
                             groupId=io.helidon.common;artifactId=helidon-common,
                             groupId=io.helidon.common;artifactId=helidon-common-buffers,
                             groupId=io.helidon.common;artifactId=helidon-common-config,

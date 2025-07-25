@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +34,7 @@ import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V11;
+import static org.objectweb.asm.Opcodes.V17;
 
 public class AsmSerializableBeanGenerator extends BeanGeneratorBase {
 
@@ -70,7 +70,7 @@ public class AsmSerializableBeanGenerator extends BeanGeneratorBase {
 
         ClassWriter cw = new ClassWriter(0);
 
-        cw.visit(V11, ACC_PUBLIC, subClassInternalName, null, Type.getInternalName(superClass), new String[] {"java/io/Serializable"});
+        cw.visit(V17, ACC_PUBLIC, subClassInternalName, null, Type.getInternalName(superClass), new String[] {"java/io/Serializable"});
 
         generateConstructor(cw, superClass, false);
 

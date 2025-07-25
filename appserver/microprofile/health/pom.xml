@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2024 Contributors to Eclipse Foundation.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.microprofile</groupId>
+        <artifactId>microprofile-parent</artifactId>
+        <version>7.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>microprofile-health</artifactId>
+    <packaging>glassfish-jar</packaging>
+
+    <name>GlassFish MicroProfile Health</name>
+
+    <dependencies>
+        <!-- APIs -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.microprofile</groupId>
+            <artifactId>microprofile-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <supportedProjectTypes>
+                        <supportedProjectType>glassfish-jar</supportedProjectType>
+                    </supportedProjectTypes>
+                    <instructions>
+                        <!-- A list of packages that are exposed to classes outside the bundle -->
+                        <Export-Package>
+                            org.glassfish.microprofile.health;
+                        </Export-Package>
+                        <Import-Package>
+                            org.eclipse.microprofile.config;
+                            org.eclipse.microprofile.health.spi;
+                            org.eclipse.microprofile.health;
+                            jakarta.inject;
+                            jakarta.enterprise.context;
+                            jakarta.enterprise.inject;
+                            jakarta.enterprise.inject.spi;
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>osgi-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

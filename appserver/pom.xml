@@ -155,6 +155,10 @@
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
         <helidon-config.version>3.2.12</helidon-config.version>
 
+
+        <!-- MicroProfile Health -->
+        <microprofile.health-api.version>4.0.1</microprofile.health-api.version>
+
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
         <omnifaces-jwt-auth.version>2.0.2</omnifaces-jwt-auth.version>
@@ -654,6 +658,14 @@
                 <artifactId>helidon-microprofile-config</artifactId>
                 <version>${helidon-config.version}</version>
             </dependency>
+
+            <!-- MicroProfile Health -->
+            <dependency>
+                <groupId>org.eclipse.microprofile.health</groupId>
+                <artifactId>microprofile-health-api</artifactId>
+                <version>${microprofile.health-api.version}</version>
+            </dependency>
+
 
             <!-- MicroProfile JWT -->
             <dependency>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- We don't use the root module as a parent because it brings unnecessary dependencies, which we can't exclude from the sigtest classpath -->
+
+    <parent> <!-- We clearly do use the root module as a parent even though it brings unnecessary dependencies (???) -->
+        <groupId>org.glassfish</groupId> 
+        <artifactId>glassfish.batch-tck</artifactId>
+        <version>2.1.5</version>
+    </parent>
+
+    <artifactId>glassfish.batch-tck.sigtests</artifactId>
+    
+    <properties>
+        <glassfish.toplevel.dir>glassfish8</glassfish.toplevel.dir>
+        <glassfish.version>8.0.0-M9</glassfish.version>
+        <glassfish.home>${project.build.directory}/${glassfish.toplevel.dir}</glassfish.home>
+        <jakarta.batch.version>2.1.5</jakarta.batch.version>
+    </properties>
+    
+    <repositories>
+        <repository>
+            <id>jakarta-snapshots</id>
+            <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jboss</id>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <id>unpack-classes</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-sigfiles</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>jakarta.batch</groupId>
+                                    <artifactId>com.ibm.jbatch.tck</artifactId>
+                                    <version>${jakarta.batch.version}</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <includes>sigtest/*</includes>
+                            <outputDirectory>${project.build.directory}/sigtest-copy</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <target>
+                                <unzip dest="${project.build.directory}/classes">
+                                    <fileset dir="${glassfish.home}/glassfish/modules">
+                                        <include name="*.jar"></include>
+                                    </fileset>
+                                </unzip>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>jakarta.tck</groupId>
+                <artifactId>sigtest-maven-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <action>strictcheck</action>
+                    <failOnError>true</failOnError>
+                    <packages>jakarta.batch.**</packages>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>jdk21</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <jdk>21</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>jakarta.tck</groupId>
+                        <artifactId>sigtest-maven-plugin</artifactId>
+                        <configuration>
+                            <sigfile>${project.build.directory}/sigtest-copy/sigtest/jakarta.sigtest-2.2-batch.standalone.tck.sig-2.1-se21-Temurin</sigfile>
+                            <release>21</release>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk17</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <jdk>17</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>jakarta.tck</groupId>
+                        <artifactId>sigtest-maven-plugin</artifactId>
+                        <configuration>
+                            <sigfile>${project.build.directory}/sigtest-copy/sigtest/sigtest-1.6-batch.standalone.tck.sig-2.1-se17-TemurinHotSpot</sigfile>
+                            <release>17</release>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

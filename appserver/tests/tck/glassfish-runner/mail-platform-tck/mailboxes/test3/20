@@ -1,0 +1,67 @@
+From jmk@cochin Thu Feb 12 14:06:34 1998 -0800
+Return-Path: <martyg@basilisk-153>
+Received: from krakatoa.Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA01211; Wed, 6 Aug 1997 12:05:31 -0700
+Received: from antipathy.Eng.Sun.COM by krakatoa.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id MAA26668; Wed, 6 Aug 1997 12:05:22 -0700
+Received: from antipathy by antipathy.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id MAA00965; Wed, 6 Aug 1997 12:05:15 -0700
+Message-Id: <199708061905.MAA00965@antipathy.Eng.Sun.COM>
+Date: Wed, 6 Aug 1997 12:05:15 -0700 (PDT)
+From: "Martin Gruschow [TEMP]" <martyg@basilisk-153>
+Reply-To: "Martin Gruschow [TEMP]" <martyg@basilisk-153>
+Subject: CDE 1.2.1 (TAP_PATCHES)
+To: df-ops@gramps, dt-iteam@mteverest, cdefound-c@xsun1, mail-eng@krakatoa,
+        mtchan@basilisk-153
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: QO4Epcr3dioW4SjPJjht7w==
+X-Mailer: dtmail 1.2.0 CDE Version 1.2 SunOS 5.6 sun4m sparc 
+Content-Length: 1469
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 19
+
+Hi Team,
+
+I created the 1.2.1 mws for TAP patches, called TAP_PATCHES.
+
+This workspace is for *PATCHES ONLY*.  This means putbacks should be
+done only for official CTE patches.
+
+Bug fixes which are not official CTE patches *SHOULD NOT* be putback
+here.
+
+For those who didn't see this before: This workspace 
+includes the last 2 patches which didn't get included in 2.6 Solaris.
+So they correspond to 1.2_fcs_i rather than 1.2_fcs_g.  This is to
+save people the trouble of putting back what has already been putback.
+Actually the 1.2_fcs_i patch (dtterm fo Japan) has already been made
+into an official patch, and John McKernan assures me that any patch
+made with the 1.2_fcs_h patch (Motif - XmGetPostedFromWidget() returns
+wrong widget) could only be better for it, if it's not the next.
+
+It's going to be a while before I have new automount maps created,
+tested, and pushed by ENS.   So for a while you won't be able to use
+the familiar /scde/mws directory.  It's in:
+
+/net/meatball/cde_stuff/TAP_PATCHES
+
+It's better to use /net addresses for your parent directory, rather
+than /scde/mws anyway.  That way if there's net problems with /scde
+as we had a couple months ago, you won't be stuck.
+
+Please let me know if you have any problems/questions.
+
+Marty
+
+
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+Marty Gruschow
+
+CDE - SunSoft                        Phone  : (415) 336-2894
+Mountain View, CA                    E-mail : martyg@Eng.Sun.COM
+
+
+

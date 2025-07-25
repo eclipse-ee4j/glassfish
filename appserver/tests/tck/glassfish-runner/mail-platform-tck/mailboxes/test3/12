@@ -1,0 +1,120 @@
+From jmk@cochin Thu Feb 12 14:06:32 1998 -0800
+Return-Path: <bugmail@ssattachments.Ebay.Sun.COM>
+Received: from krakatoa.Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA24579; Wed, 6 Aug 1997 10:31:14 -0700
+Received: from Eng.Sun.COM by krakatoa.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id KAA26630; Wed, 6 Aug 1997 10:31:07 -0700
+Received: from Ebay.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA06193; Wed, 6 Aug 1997 10:31:06 -0700
+Received: from ssattachments.EBay.Sun.COM by Ebay.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA27475; Wed, 6 Aug 1997 10:31:06 -0700
+Received: by ssattachments.EBay.Sun.COM (SMI-8.6/SMI-SVR4)
+	id KAA06185; Wed, 6 Aug 1997 10:30:54 -0700
+Date: Wed, 6 Aug 1997 10:30:54 -0700
+Message-Id: <199708061730.KAA06185@ssattachments.EBay.Sun.COM>
+From: mitch.silverstein@East
+To: mail-eng@krakatoa.eng.sun.com, mitch.silverstein@East, vivian.wong@Eng
+Precedence: junk
+Reply-To: mitch.silverstein@East
+Subject: BugId 4070025 : (P4/S4) New Bug Created, Please Evaluate
+Content-Length: 2361
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 11
+
+ Bug Id: 4070025
+ Product: cde
+ Category: cde
+ Subcategory: mail
+ Release summary: cde1.2_37
+ Bug/Rfe/EOU: rfe
+ State: dispatched
+ Development Status: 
+ Synopsis: Allow separate, persistent message view window.
+ Keywords: dtmail, separate, view, window
+ Severity: 4
+ Severity Impact: Limited
+ Severity Functionality: Secondary
+ Priority: 4
+ Responsible Manager: vivianw
+ Responsible Engineer: 
+ Description:
+Rather than have the message displayed in a pane below the headers,
+customer would like the option to have a separate window where the
+message contents could be viewed.  This window would be re-used for
+the next message, so that only one view window would ever need to
+be active.  Current functionality of double-clicking on a header
+to bring up a separate window would not be affected.
+
+
+ Justification:
+
+ Work around:
+
+ Suggested fix:
+One way to implement this option would be to set the message pane height to
+zero as a flag to maintain this separate view window.  This would allow users
+to continue to use the current interface unchanged.
+
+ State triggers:
+	Accepted: no
+	Evaluation complete: no
+	Evaluation: 
+
+	Commit to fix in releases: 
+	Fixed in releases: 
+	Integrated in releases: 
+	Verified in releases: 
+	Closed because: 
+	Incomplete because: 
+ Duplicate of: 
+ Introduced in Release: 
+ Root cause: 
+ Program management: 
+ Fix affects documentation: no
+ Exempt from dev rel: no
+ Fix affects L10N: 
+ Interest list: 
+ Patch id: 
+ Comments:
+
+ See also: 
+ Hooks:
+	Hook 1(hook1): 
+	Hook 2(hook2): 
+	Hook 3(hook3): 
+	Hook 4(hook4): 
+	Hook 5(hook5): 
+	Hook 6(hook6): 
+ History:
+	Submitter:            mitch@east	Date: Aug  6 1997 10:26AM
+	Dispatch Operator:    bugtraq	Date: Aug  6 1997 10:26AM
+	Acceptor:             	Date: 
+	Evaluator:            	Date: 
+	Commit operator:      	Date: 
+	Fix operator:         	Date: 
+	Integrating operator: 	Date: 
+	Verify operator:      	Date: 
+	Closeout operator:    	Date: 
+ Called in by:
+    Customer:
+	Company: AMP
+	Employee: Greg Kranz
+	User Role: B
+	User Type: E
+	Release: cde1.2_37
+	Hardware version: generic
+	O/S version (unbundled products): s297_37c
+	SO Number: 
+	Sun Contact: mitch@east
+	Contact Name: Mitchell Silverstein
+	Contact Mailaddr: mitch.silverstein@East
+ Escalation(s):
+ Public Summary:
+
+ Old Name: 
+ Bug End:
+--------------------------------------------------------------------------------
+
+

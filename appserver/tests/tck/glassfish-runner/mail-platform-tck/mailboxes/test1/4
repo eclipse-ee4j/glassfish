@@ -1,0 +1,22 @@
+From mspivak Fri Nov 22 11:45:30 1996
+Return-Path: <mspivak@localhost>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id LAA06520; Fri, 22 Nov 1996 11:45:28 -0800
+Date: Fri, 22 Nov 1996 11:45:28 -0800
+From: mspivak@localhost (Max Spivak)
+Message-Id: <199611221945.LAA06520@apilon.Eng.Sun.COM>
+Subject: Pre-composed Singlepart Message
+To: test1@localhost, maxs@apilon, mspivak@localhost, max.spivak@eng, maxims@eeeyore.com, test2@localhost
+X-Mailer: HotJava Views MailView V1.0
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0
+Content-Length: 18
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 55
+
+Line1
+Line2
+Line3
+

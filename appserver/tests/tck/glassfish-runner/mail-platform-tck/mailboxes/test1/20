@@ -1,0 +1,127 @@
+From demo@labyrinth.Eng.Sun.COM Wed Oct 16 15:18:27 1996
+Return-Path: <demo@labyrinth.Eng.Sun.COM>
+Received: from makai.Eng.Sun.COM by homey.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id PAA03166; Wed, 16 Oct 1996 15:18:25 -0700
+Received: from makai (localhost) by makai.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA17101; Wed, 16 Oct 1996 15:17:12 -0700
+Sender: tester@labyrinth.Eng.Sun.COM
+Message-Id: <32655EE7.76D8@labyrinth.eng.sun.com>
+Date: Wed, 16 Oct 1996 15:17:11 -0700
+From: Demo Account <demo@labyrinth.Eng.Sun.COM>
+Organization: Sun Microsystems
+X-Mailer: Mozilla 3.0b6Gold (X11; I; SunOS 5.4 sun4m)
+Mime-Version: 1.0
+To: tester@homey
+Subject: status
+Content-Type: multipart/mixed; boundary="------------65083D975A6E"
+X-Lines: 106
+Content-Length: 2853
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 139
+
+--------------65083D975A6E
+Content-Type: text/plain; charset="us-ascii"
+X-Sun-Content-Length: 157
+
+Attached you'll find my plans for next week, as well as a list of
+issues I discovered while porting my application.  I'll send more
+information later today.
+
+--------------65083D975A6E
+Content-Type: text/plain; charset="us-ascii"; name="ISSUES3"
+Content-Disposition: inline; filename="ISSUES3"
+X-Sun-Content-Length: 620
+
+Xxxxxxx xxxxxx xxxxxxxxxx xxxxx xxxxxxx:
+
+1.  Xxx Xxxxxxxx/Xxxxxxx xxxx xxx xxxxxx xxxxxxxxx, xxx
+    xxxxxxxxx xx xxxx xxxx xxxxx xxxxxxxxx xxx xxxxxxxxx
+    xx xxxx xxxxxxx xxxxxxxxx.  Xxxx xx xxxxx xxxxxxxxxx
+    xxxx xx xxxxxxxxx, xxx xx xx xxxx xxxxx xxx xxxx xxxx
+    xx?  Xx xx xxx'x xxxx x xxxxxxxxxxxxx xxxxxxx xxxxxxxx,
+    xx xxx'x xx xxxx xx xxxxx xxxx xxx -X xxxx.  Xx'xx
+    xxxx xx xxx xx XX_XXXXXXX_XXXX.  Xxxx xxxx xxx xxxxxxxxxxxx
+    xxx xxxxxx xxxxxx xxxxxxxxx, xxxxx xxxx xxxx xx xx
+    xxxxxxxxx xxxxxxxxx xx xxxx.  Xxxx, xxxx xx xxxx xx xx
+    xxx xxxxx xxxx xxxx xxx XXX_XXXXXXX_XXXX xxx xxxxxx.
+
+--------------65083D975A6E
+Content-Type: text/plain; charset="us-ascii"; name="TODO"
+Content-Disposition: inline; filename="TODO"
+X-Sun-Content-Length: 1624
+
+Xxxxxx xxxxxx Xxxxx
+_________________________________________________________________________
+- Xxxx xx Xxxxx Xxxxxx (2 xxxx)
+   [ xxxxxxxx ]
+
+- Xxxx Xxxxx xxx xxxxx (2-3 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxxxxx xxxxx / xxxxxxxx xx xxxxxxxxx (2 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxx xxxxx xxxxxxxxxxxxx & xxxxx xxxxx xxxxxxxx (4 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxx xxxxx (1 xxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxx xx xxxxx xxxx (1 xxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxxxx xxxx (1 xxx)
+   [ xxxxxxxx ]
+
+- Xxxxxxxx xxxxxxx, xxxx xx & xxx (1 xxx)
+   [ xxxxxxxx ]
+
+- Xxxxxxxx xx xxxxxxx. Xxxxxxxx 1 xxxxxx xxx xxxx XX (2 xxxx)
+   [ xxxxxxx ]
+
+- XXX XX xxxxxxx (1 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxx & Xxxxxxxxxx (2 xxxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxxxxxxx xx xxxxxx (3 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxx xxxxxx xxxxxx & xxxxxx xxxxxxxxx (3-4 xxxx)
+   [ xxxxxxx ]
+
+- Xxxxxxxx xxxx xxxxxx xxxxxx (3 xxxx)
+   [ xxxxxxxx ]
+
+- Xxxxxxx xxxx xx xxx xxxxxxx xxxxxxx, xxxxxxx xx xxxxxx xxxxxxxxx,
+	xxxxxxxx xxx xxxxx xxxx xx xxxxx/Xx (xxxxxxxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+
+Xxxxxx xxxxxx xxxx
+_________________________________________________________________________
+
+- Xxxxxxx xxx xxxxxxxx xxxx xx xxxxx xxxxxxx (xxxxxx, XXX, xxx.)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxx xxxxxxxxx (2 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxxxx xxxxxx (1 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxxx xxxxxxxx (1 xxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- XXX xxxxx, xxx-xxxxxxxx, xxxxx xxxxx, xxx xxxxx (2 xxxx)
+   [ xxxxxxx/xxxxxxxx ]
+
+- Xxxxxxx xxxxxxxxxx xxxxxxxxxxxxx xxxxxx (3-5 xxxx)
+
+- Xxxx xxxxxx xxxxxx xxxxxxxx xxxxxxxxxx xxxx xxx-Xxxxx xxxxxxx (1 xxxx)
+
+--------------65083D975A6E--
+

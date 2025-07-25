@@ -1,0 +1,35 @@
+From mime-test-reply@relay.surfnet.nl Fri Feb 17 14:44 PST 1995
+Return-Path: <mime-test-reply@relay.surfnet.nl>
+Received: from Eng.Sun.COM (engmail1) by basilisk.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA17399; Fri, 17 Feb 1995 14:43:57 -0800
+Received: from Sun.COM (sun-barr.EBay.Sun.COM) by Eng.Sun.COM (5.x/SMI-5.3)
+	id AA03132; Fri, 17 Feb 1995 14:43:54 -0800
+Received: from  by Sun.COM (sun-barr.Sun.COM)
+	id AB17736; Fri, 17 Feb 95 14:43:54 PST
+Received: from relay.surfnet.nl by relay.surfnet.nl 
+          id <08383-0@relay.surfnet.nl>; Fri, 17 Feb 1995 23:43:30 +0100
+Message-Id: <9502172243.AB17736@Sun.COM>
+From: pp owner <mime-test-reply@relay.surfnet.nl>
+To: Gary.Gere@Eng
+In-Reply-To: <9502172241.AA06014@skyhawk.Eng.Sun.COM>
+Subject: Mime test X-local
+Mime-Version: 1.0
+Content-Id: <28699.790355807.1@SURFnet.nl>
+Content-Description: This is really a text-file
+Content-Transfer-Encoding: base64
+Date: Fri, 17 Feb 1995 23:43:30 +0100
+Sender: mime-test-reply@relay.surfnet.nl
+Content-Type: X-local/X-test
+Content-Length: 402
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 11
+
+QSBsb2NhbGx5IGRlZmluZWQgY29udGVudCB0eXBlIChyZWNvZ25pc2libGUgYXMgaXQgc3RhcnRz
+IHdpdGggJ3gtJykgaXMKb2YgY291cnNlIGxvY2FsbHkgZGVmaW5lZCBhbmQgdGh1cyB5b3VyIFVB
+IHdpbGwgbm90IGtub3cgaG93IHRvIGRpc3BsYXkKaXQuIFRoaXMgdGVzdCBpcyBtZWFudCB0byBm
+aW5kIG91dCB3aGF0IGl0IGRvZXMgd2l0aCBzdWNoIGFuIHVua25vd24KY29udGVudC10eXBlLgoK
+U1VSRm5ldCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIEVIJzk1
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ Copyright 2023 Red Hat, Inc.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~   http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <engine>
+        <property name="deploymentExportPath">target/deployments</property>
+    </engine>
+    <extension qualifier="jboss-descriptors">
+        <property name="descriptorDir">${tck.descriptor.path}</property>
+    </extension>
+
+    <container qualifier="tck-appclient" default="true">
+        <configuration>
+            <property name="jbossHome">${jboss.home}</property>
+            <property name="jbossArguments">-y=${project.build.testOutputDirectory}/wildfly-tck-min.yml -y=${project.build.testOutputDirectory}/derby.yml</property>
+            <property name="javaVmArguments"><!-- -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=y --></property>
+            <property name="serverConfig">${wildfly.standalone.config}</property>
+            <property name="allowConnectingToRunningServer">true</property>
+        </configuration>
+        <protocol type="appclient">
+            <property name="runClient">true</property>
+            <property name="runAsVehicle">true</property>
+            <property name="clientEarDir">target/appclient</property>
+            <property name="clientCmdLineString">${jboss.home}/bin/appclient.sh;-y=${project.build.testOutputDirectory}/appclient.yml:${project.build.testOutputDirectory}/derby.yml;${clientEarDir}/${vehicleArchiveName}.ear#${vehicleArchiveName}_client.jar</property>
+            <property name="clientEnvString">MY_EN=my-env-stting</property>
+            <property name="clientDir">${project.basedir}</property>
+            <property name="workDir">${ts.home}/tmp</property>
+            <property name="tsJteFile">${ts.home}/bin/ts.jte</property>
+            <property name="tsSqlStmtFile">${ts.home}/bin/tssql.stmt</property>
+            <property name="trace">true</property>
+            <property name="clientTimeout">20000</property>
+        </protocol>
+    </container>
+</arquillian>

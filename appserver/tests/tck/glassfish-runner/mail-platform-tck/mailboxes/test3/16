@@ -1,0 +1,69 @@
+From jmk@cochin Thu Feb 12 14:06:33 1998 -0800
+Return-Path: <owner-beans-users@JAVASOFT.COM>
+Received: from cochin.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA23398; Wed, 6 Aug 1997 10:15:07 -0700
+Received: from Eng.Sun.COM by cochin.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id KAA21066; Wed, 6 Aug 1997 10:15:05 -0700
+Received: from saturn.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id KAA01874; Wed, 6 Aug 1997 10:15:02 -0700
+Received: from java1.javasoft.com (java0.javasoft.com [204.160.241.100]) by saturn.Sun.COM (SMI-8.6/mail.byaddr) with ESMTP id KAA16368; Wed, 6 Aug 1997 10:14:54 -0700
+Received: from java1 (java1.javasoft.com [204.160.241.101])
+          by java1.javasoft.com (8.8.4/8.8.4) with SMTP
+	  id JAA05880; Wed, 6 Aug 1997 09:56:51 -0700 (PDT)
+Received: from JAVASOFT.COM by JAVASOFT.COM (LISTSERV-TCP/IP release 1.8b) with
+          spool id 516062 for BEANS-USERS@JAVASOFT.COM; Wed, 6 Aug 1997
+          09:56:43 -0700
+Received: from eserver.paradigm.bc.ca (smtpgate.paradigmdev.com [207.107.56.5])
+          by java1.javasoft.com (8.8.4/8.8.4) with ESMTP id JAA04541 for
+          <BEANS-USERS@javasoft.com>; Wed, 6 Aug 1997 09:53:41 -0700 (PDT)
+Received: by smtpgate.paradigmdev.com with Internet Mail Service (5.0.1458.49)
+          id <PWZD7JM8>; Wed, 6 Aug 1997 10:06:02 -0700
+X-Priority: 3
+MIME-Version: 1.0
+X-Mailer: Internet Mail Service (5.0.1458.49)
+Content-Type: text/plain
+Message-ID:  <57B675B21506D1118BAB0060081C295D525B@VSERVER>
+Date:         Wed, 6 Aug 1997 10:02:35 -0700
+Reply-To: A public mailing list for the discussion of JavaBeans
+              <BEANS-USERS@javasoft.com>
+Sender: A public mailing list for the discussion of JavaBeans
+              <BEANS-USERS@javasoft.com>
+From: Howard Katz <howardk@PARADIGMDEV.COM>
+Subject:      Re: a BeanBox question
+To: Multiple recipients of list BEANS-USERS <BEANS-USERS@JAVASOFT.COM>
+Content-Length: 1212
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 15
+
+The list contains public no-arg methods whose return type is void PLUS
+one-arg methods whose single arg is the event type emitted by the source
+bean.
+
+Howard
+
+> -----Original Message-----
+> From: JWLI.US.ORACLE.COM [SMTP:JWLI@US.ORACLE.COM]
+> Sent: Tuesday, August 05, 1997 3:25 PM
+> To:   Multiple recipients of list BEANS-USERS
+> Subject:      a BeanBox question
+>
+> In BeanBox, when you wire an event source to an destination bean,
+> a list of the bean's public methods is brought up. However, looks
+> like the list only gives public methods whose return type is void.
+> Is this a limitation of current BDK verion, or any other IDE could
+> have similar limitations(which I think is unacceptable for a
+> commercial
+> IDE, if it supports wiring)? Anyone know this about VisualAge for
+> Java?
+>
+> Thanks!
+> -Jerry
+> ====================================================================
+>  Jerry Jingwei Li                        Voice : (415)506-5932
+>  Java & Object Services Group            Fax   : (415)506-7303
+>  Application Server Division             Email : jwli@us.oracle.com
+>          Oracle Corporation, Redwood Shores, CA 94065
+> ====================================================================
+

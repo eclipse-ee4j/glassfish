@@ -1,0 +1,41 @@
+From jmk@cochin Thu Feb 12 14:06:35 1998 -0800
+Return-Path: <juliem@shorter>
+Received: from rita.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id QAA12456; Thu, 7 Aug 1997 16:17:05 -0700
+Received: from shorter.eng.sun.com by rita.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id QAA06121; Thu, 7 Aug 1997 16:17:04 -0700
+Received: from lajka.eng.sun.com by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id QAA12453; Thu, 7 Aug 1997 16:17:03 -0700
+Received: by lajka.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id QAA09916; Thu, 7 Aug 1997 16:16:07 -0700
+Date: Thu, 7 Aug 1997 16:16:07 -0700
+From: juliem@shorter (Julie Mehta)
+Message-Id: <199708072316.QAA09916@lajka.eng.sun.com>
+To: javamail@rita
+Subject: Code Manager notification
+Precedence: bulk
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Length: 566
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 23
+
+Event:            putback-to
+Parent workspace: /net/icdev/export1/ic/krakatoa/javamail/WS
+                  (icdev:/export1/ic/krakatoa/javamail/WS)
+Child workspace:  /home/juliem/ws/final
+                  (shorter:/export/home7/juliem/ws/final)
+User:             juliem
+
+Comment:
+fixed the problem of messages less than buffer size not getting written
+in plain/text datatype
+forgotten to set the mimebody charset parameter to us-ascii - fixed
+
+Files:
+update: src/share/sunw/sunw/jdt/mail/MessageEdit.java
+update: src/share/sunw/sunw/jdt/datatypes/text/plain.java
+
+

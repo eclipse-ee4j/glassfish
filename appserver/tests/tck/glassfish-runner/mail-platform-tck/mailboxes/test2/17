@@ -1,0 +1,34 @@
+From ggere Thu Jan 11 12:19:49 1996
+Return-Path: <ggere>
+Received: by skyhawk.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id MAA07573; Thu, 11 Jan 1996 12:19:48 -0800
+Date: Thu, 11 Jan 1996 12:19:48 -0800
+From: ggere (Gary M.Gere)
+Message-Id: <199601112019.MAA07573@skyhawk.Eng.Sun.COM>
+To: ggere@skyhawk
+Subject: dtmail test
+Mime-Version: 1.0
+Content-Type: multipart/mixed;boundary=553e_46b8-22c8_770a-b4a_3a27
+Content-Length: 375
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 16
+
+
+--553e_46b8-22c8_770a-b4a_3a27
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==
+X-Sun-Data-Type: text
+
+
+--553e_46b8-22c8_770a-b4a_3a27
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: 7bit
+Content-MD5: 2Oj8otwPiW/Xy0ywAxuiSQ==
+Content-Description: gmg00
+
+test
+--553e_46b8-22c8_770a-b4a_3a27--
+

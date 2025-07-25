@@ -77,13 +77,16 @@ copy_test_artifacts() {
   sleep 1; # imq sometimes stops after the domain
   printf "\n%s \n\n" "===== COPY TEST ARTIFACTS ====="
   mkdir -p ${WORKSPACE}/results/junitreports
+  
   tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains
+  
   cp ${S1AS_HOME}/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
-  cp ${TEST_RUN_LOG} ${WORKSPACE}/results/
+  cp ${TEST_RUN_LOG} ${WORKSPACE}/results/ || true
   cp ${APS_HOME}/test_results*.* ${WORKSPACE}/results/ || true
   cp `pwd`/*/*logs.zip ${WORKSPACE}/results/ || true
   cp `pwd`/*/*/*logs.zip ${WORKSPACE}/results/ || true
-  tar -caf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
+  
+  tar -caf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results || true
 }
 
 generate_junit_report(){
@@ -154,8 +157,13 @@ generate_junit_report(){
 }
 
 change_junit_report_class_names(){
-  ${SED} -i 's/\([a-zA-Z-]\w*\)\./\1-/g' ${WORKSPACE}/results/junitreports/*.xml
-  ${SED} -i "s/\bclassname=\"/classname=\"${TEST_ID}./g" ${WORKSPACE}/results/junitreports/*.xml
+  if sed --version >/dev/null 2>&1; then
+      ${SED} -i 's/\([a-zA-Z-]\w*\)\./\1-/g' ${WORKSPACE}/results/junitreports/*.xml
+      ${SED} -i "s/\bclassname=\"/classname=\"${TEST_ID}./g" ${WORKSPACE}/results/junitreports/*.xml
+  else 
+      ${SED} -i '' 's/\([a-zA-Z-]\w*\)\./\1-/g' ${WORKSPACE}/results/junitreports/*.xml
+      ${SED} -i '' "s/\bclassname=\"/classname=\"${TEST_ID}./g" ${WORKSPACE}/results/junitreports/*.xml
+  fi
 }
 
 check_successful_run(){

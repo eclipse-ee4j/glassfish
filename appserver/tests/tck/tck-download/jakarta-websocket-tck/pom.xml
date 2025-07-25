@@ -24,59 +24,40 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta-websocket-tck</artifactId>
     <packaging>pom</packaging>
-    <name>TCK: Install Jakarta websocket TCK</name>
+    <name>TCK: Install Jakarta Websocket TCK</name>
 
     <properties>
-        <tck.test.websocket.file>jakarta-websocket-tck-2.1.0.zip</tck.test.websocket.file>
-        <tck.test.websocket.url>https://download.eclipse.org/jakartaee/websocket/2.1/${tck.test.websocket.file}</tck.test.websocket.url>
+        <tck.artifactFileName>jakarta-websocket-tck-2.1.0.zip</tck.artifactFileName>
+        <tck.artifactUrl>https://download.eclipse.org/jakartaee/websocket/2.1/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>download-websocket-tck</id>
+                        <id>download-tck</id>
                         <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <url>${tck.test.websocket.url}</url>
-                    <unpack>false</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-websocket-tck</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.build.directory}/${tck.test.websocket.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
+                        <id>attach-tck</id>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

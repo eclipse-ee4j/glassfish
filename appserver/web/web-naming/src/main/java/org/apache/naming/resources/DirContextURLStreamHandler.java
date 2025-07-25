@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -24,6 +25,8 @@ import java.net.URLStreamHandler;
 import java.util.Hashtable;
 
 import javax.naming.directory.DirContext;
+
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Stream handler to a JNDI directory context.
@@ -83,11 +86,13 @@ public class DirContextURLStreamHandler
      * Opens a connection to the object referenced by the <code>URL</code>
      * argument.
      */
+    @Override
     protected URLConnection openConnection(URL u)
         throws IOException {
         DirContext currentContext = this.context;
-        if (currentContext == null)
+        if (currentContext == null) {
             currentContext = get();
+        }
         return new DirContextURLConnection(currentContext, u);
     }
 
@@ -102,10 +107,10 @@ public class DirContextURLStreamHandler
         String value = System.getProperty(Constants.PROTOCOL_HANDLER_VARIABLE);
         if (value == null) {
             value = Constants.Package;
-            System.setProperty(Constants.PROTOCOL_HANDLER_VARIABLE, value);
+            setProperty(Constants.PROTOCOL_HANDLER_VARIABLE, value, true);
         } else if (value.indexOf(Constants.Package) == -1) {
             value += "|" + Constants.Package;
-            System.setProperty(Constants.PROTOCOL_HANDLER_VARIABLE, value);
+            setProperty(Constants.PROTOCOL_HANDLER_VARIABLE, value, true);
         }
     }
 
@@ -125,10 +130,10 @@ public class DirContextURLStreamHandler
      * Binds a directory context to a class loader.
      */
     public static void bind(DirContext dirContext) {
-        ClassLoader currentCL =
-            Thread.currentThread().getContextClassLoader();
-        if (currentCL != null)
+        ClassLoader currentCL = Thread.currentThread().getContextClassLoader();
+        if (currentCL != null) {
             clBindings.put(currentCL, dirContext);
+        }
     }
 
 
@@ -138,8 +143,9 @@ public class DirContextURLStreamHandler
     public static void unbind() {
         ClassLoader currentCL =
             Thread.currentThread().getContextClassLoader();
-        if (currentCL != null)
+        if (currentCL != null) {
             clBindings.remove(currentCL);
+        }
     }
 
 
@@ -171,8 +177,9 @@ public class DirContextURLStreamHandler
 
         // Checking CL binding
         result = clBindings.get(currentCL);
-        if (result != null)
+        if (result != null) {
             return result;
+        }
 
         // Checking thread biding
         result = threadBindings.get(currentThread);
@@ -181,13 +188,15 @@ public class DirContextURLStreamHandler
         currentCL = currentCL.getParent();
         while (currentCL != null) {
             result = clBindings.get(currentCL);
-            if (result != null)
+            if (result != null) {
                 return result;
+            }
             currentCL = currentCL.getParent();
         }
 
-        if (result == null)
+        if (result == null) {
             throw new IllegalStateException("Illegal class loader binding");
+        }
 
         return result;
 
@@ -238,6 +247,7 @@ public class DirContextURLStreamHandler
      * @param   u   the URL.
      * @return  a string representation of the <code>URL</code> argument.
      */
+    @Override
     protected String toExternalForm(URL u) {
 
         // pre-compute length of StringBuilder
@@ -248,8 +258,9 @@ public class DirContextURLStreamHandler
         if (u.getQuery() != null) {
             len += 1 + u.getQuery().length();
         }
-        if (u.getRef() != null)
+        if (u.getRef() != null) {
             len += 1 + u.getRef().length();
+        }
 
         StringBuilder result = new StringBuilder(len);
         result.append(u.getProtocol());

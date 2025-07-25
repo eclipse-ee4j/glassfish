@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,7 +53,9 @@ public interface DataStructure {
     int addResource(ResourceAllocator allocator, int count) throws PoolingException;
 
     /**
-     * get a resource from the datastructure
+     * get a 'free' resource from the datastructure<br>
+     * Note: the 'free' state of the ResourceHandle is not handled by the DataStructure implementation.
+     * Calling code needs to update the ResourceHandle.ResourceState.
      *
      * @return ResourceHandle
      */
@@ -67,7 +69,9 @@ public interface DataStructure {
     void removeResource(ResourceHandle resource);
 
     /**
-     * returns the resource to the datastructure
+     * returns the resource to the datastructure<br>
+     * Note: the 'free' state of the ResourceHandle is not handled by the DataStructure implementation.
+     * Calling code needs to update the ResourceHandle.ResourceState.
      *
      * @param resource ResourceHandle
      */

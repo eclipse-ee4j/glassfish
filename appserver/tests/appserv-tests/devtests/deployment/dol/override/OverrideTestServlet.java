@@ -25,39 +25,42 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-public class OverrideTestServlet extends HttpServlet
-{
+public class OverrideTestServlet extends HttpServlet {
 
-    @Resource(name="myDS5and6", mappedName="jdbc/__default")
+    @Resource(
+        name = "myDS5and6", 
+        mappedName = "jdbc/__default")
     private DataSource myDS5;
 
     private DataSource myDS6;
 
-    @Resource(name="myDS7", lookup="jdbc/noexist", description="original", shareable=true, authenticationType=Resource.AuthenticationType.CONTAINER)
+    @Resource(
+        name = "myDS7", 
+        lookup = "jdbc/noexist", 
+        description = "original", 
+        shareable = true, 
+        authenticationType = Resource.AuthenticationType.CONTAINER)
     private DataSource myDS7;
 
-    @Resource(name="myDS8", mappedName="jdbc/noexist2")
+    @Resource(
+        name = "myDS8", 
+        mappedName = "jdbc/noexist2")
     private DataSource myDS8;
 
-    public void
-    init () throws ServletException
-    {
+    public void init() throws ServletException {
         super.init();
         System.out.println("init()...");
     }
 
-    public void
-    service (HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             InitialContext ic = new InitialContext();
 
-            DataSource myDS3 = (DataSource)ic.lookup("java:comp/env/myDS3");
+            DataSource myDS3 = (DataSource) ic.lookup("java:comp/env/myDS3");
             int loginTimeout3 = myDS3.getLoginTimeout();
             System.out.println("myDS3 login timeout = " + loginTimeout3);
 
-            DataSource myDS4 = (DataSource)ic.lookup("java:comp/env/myDS4");
+            DataSource myDS4 = (DataSource) ic.lookup("java:comp/env/myDS4");
             int loginTimeout4 = myDS4.getLoginTimeout();
             System.out.println("myDS4 login timeout = " + loginTimeout4);
 
@@ -73,7 +76,7 @@ public class OverrideTestServlet extends HttpServlet
             int loginTimeout8 = myDS8.getLoginTimeout();
             System.out.println("myDS8 login timeout = " + loginTimeout8);
 
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new IllegalStateException("Cannot get login timeout: " + ex);
         }
     }

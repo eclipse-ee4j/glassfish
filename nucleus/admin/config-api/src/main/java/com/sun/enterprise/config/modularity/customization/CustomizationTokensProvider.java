@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import com.sun.enterprise.config.modularity.annotation.HasCustomizationTokens;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +36,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * @author Masoud Kalali
@@ -114,13 +115,13 @@ public class CustomizationTokensProvider {
     }
 
     protected void initializeLocator() {
-        File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        File inst = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
         final File ext = new File(inst, "modules");
         LOG.log(Level.FINE, "asadmin modules directory: {0}", ext);
         if (ext.isDirectory()) {
             PrivilegedAction<Void> action = () -> {
                 try {
-                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader(getJars(ext));
+                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader("HK2Modules", getJars(ext));
                     ModulesRegistry registry = new StaticModulesRegistry(classLoader);
                     locator = registry.createServiceLocator("default");
                 } catch (IOException ex) {

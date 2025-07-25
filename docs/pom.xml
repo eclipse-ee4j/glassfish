@@ -18,12 +18,13 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
         <relativePath>../appserver</relativePath>
     </parent>
     <groupId>org.glassfish.main.docs</groupId>
@@ -35,7 +36,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <glassfish.version.5x>5.1.0</glassfish.version.5x>
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
-        <glassfish.version.7x>7.0.22</glassfish.version.7x>
+        <glassfish.version.7x>7.0.25</glassfish.version.7x>
         <glassfish.version.latest>${glassfish.version.7x}</glassfish.version.latest>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
     </properties>
@@ -62,4 +63,39 @@
         <module>distribution</module>
         <module>sample-app</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-hk2-config</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>process-annotations</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-resource</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

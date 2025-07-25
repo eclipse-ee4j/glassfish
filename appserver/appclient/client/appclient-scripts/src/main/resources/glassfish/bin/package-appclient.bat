@@ -1,5 +1,6 @@
 @echo off
 REM
+REM  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -15,17 +16,17 @@ REM
 REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
-setlocal
-set _AS_INSTALL=%~dp0..
-call "%_AS_INSTALL%\config\asenv.bat"
-REM
-REM  Run with the user-specified Java, if any.
-REM
-if "%AS_JAVA%x" == "x" goto UsePath
-set JAVA="%AS_JAVA%\bin\java"
-goto run
-:UsePath
-set JAVA=java
-:run
-set _AS_INSTALL_LIB=%_AS_INSTALL%\lib
-%JAVA% -classpath "%_AS_INSTALL_LIB%\gf-client.jar" org.glassfish.appclient.client.packageappclient.PackageAppClient %*
+VERIFY OTHER 2>nul
+setlocal EnableExtensions EnableDelayedExpansion
+if ERRORLEVEL 0 goto ok
+echo "Unable to enable extensions"
+exit /B 1
+
+:ok
+set "AS_CONFIG=%~dp0..\config"
+set "AS_CONFIG_BAT=%AS_CONFIG%\config.bat"
+call "%AS_CONFIG_BAT%" || (
+    echo Error: Cannot load config file
+    exit /B 1
+)
+"%JAVA%" --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.packageappclient.PackageAppClient %*

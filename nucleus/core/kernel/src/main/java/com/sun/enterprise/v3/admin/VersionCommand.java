@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,7 +58,7 @@ public class VersionCommand implements AdminCommand {
         String msg;
         if (verbose) {
             msg = I18N.getLocalString("version.verbose", "{0}, JRE version {1}", Version.getProductIdInfo(),
-                    System.getProperty("java.version"));
+                Runtime.version());
         } else {
             msg = I18N.getLocalString("version", "{0}", Version.getProductIdInfo());
         }

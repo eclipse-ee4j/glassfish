@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.deployment</groupId>
         <artifactId>nucleus-deployment</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>deployment-common</artifactId>
@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.gmbal</groupId>
-            <artifactId>gmbal</artifactId>
+            <artifactId>gmbal-api-only</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>

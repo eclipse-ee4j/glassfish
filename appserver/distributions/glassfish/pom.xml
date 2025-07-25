@@ -18,13 +18,14 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -109,7 +110,7 @@
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                
+
                                 <if>
                                     <bool>
                                         <isgreaterthan arg1="${ant.java.version}" arg2="16"/>
@@ -118,7 +119,7 @@
                                         <property name="java17orGreater" value="true"/>
                                     </then>
                                 </if>
-                                
+
                                 <macrodef name="jarupdate">
                                     <attribute name="basedir"/>
                                     <attribute name="includes"/>
@@ -132,7 +133,7 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                                
+
                                 <jarupdate if:set="java17orGreater"
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"

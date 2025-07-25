@@ -1,5 +1,5 @@
 REM
-REM  Copyright (c) 2024 Contributors to the Eclipse Foundation.
+REM  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -38,10 +38,15 @@ REM  directory.
 REM
 REM  This file uses UTF-8 character encoding.
 
-set AS_IMQ_LIB=..\..\mq\lib
-set AS_IMQ_BIN=..\..\mq\bin
-set AS_CONFIG=..\config
-set AS_INSTALL=..
-set AS_DEF_DOMAINS_PATH=..\domains
-set AS_DEF_NODES_PATH=..\nodes
-set AS_DERBY_INSTALL=..\..\javadb
+endlocal
+set "AS_DERBY_INSTALL=%AS_INSTALL%\..\javadb"
+set "AS_IMQ_BIN=%AS_INSTALL%\..\mq\bin"
+set "AS_IMQ_LIB=%AS_INSTALL%\..\mq\lib"
+
+set "AS_CONFIG=%AS_INSTALL%\config"
+set "AS_DEF_DOMAINS_PATH=%AS_INSTALL%\domains"
+set "AS_DEF_NODES_PATH=%AS_INSTALL%\nodes"
+
+set "ASADMIN_MODULEPATH=%AS_INSTALL%\lib\bootstrap"
+set "ASADMIN_JVM_OPTIONS=-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager"
+set "ASADMIN_CLASSPATH=%AS_INSTALL%\admin-cli.jar;%AS_INSTALL%\lib\asadmin\*;%AS_INSTALL%\modules\admin-util.jar;%AS_INSTALL%\modules\backup.jar;%AS_INSTALL%\modules\cluster-common.jar;%AS_INSTALL%\modules\cluster-ssh.jar;%AS_INSTALL%\modules\config-api.jar;%AS_INSTALL%\modules\config-types.jar;%AS_INSTALL%\modules\common-util.jar;%AS_INSTALL%\modules\glassfish-api.jar;%AS_INSTALL%\modules\hk2.jar;%AS_INSTALL%\modules\hk2-config-generator.jar;%AS_INSTALL%\modules\internal-api.jar;%AS_INSTALL%\modules\jackson-core.jar;%AS_INSTALL%\modules\jakarta.activation-api.jar;%AS_INSTALL%\modules\jakarta.validation-api.jar;%AS_INSTALL%\modules\jakarta.xml.bind-api.jar;%AS_INSTALL%\modules\jaxb-osgi.jar;%AS_INSTALL%\modules\jettison.jar;%AS_INSTALL%\modules\jsch.jar;%AS_INSTALL%\modules\launcher.jar;%AS_INSTALL%\modules\mimepull.jar"

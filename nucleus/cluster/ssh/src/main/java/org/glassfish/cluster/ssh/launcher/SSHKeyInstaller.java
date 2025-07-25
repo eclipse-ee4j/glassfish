@@ -141,7 +141,7 @@ public class SSHKeyInstaller {
 
             // append the public key file contents to authorized_keys file on remote host
             final SFTPPath authKeyFile = remoteSshDir.resolve(AUTH_KEY_FILE);
-            String mergeCommand = "cat " + remoteKeyTmp + " >> " + authKeyFile;
+            String mergeCommand = "cat \"" + remoteKeyTmp + "\" >> \"" + authKeyFile + "\"";
             LOG.log(DEBUG, () -> "mergeCommand = " + mergeCommand);
             if (session.exec(mergeCommand) != 0) {
                 throw new IOException("Failed to propogate the public key " + pubKey + " to " + ssh.getHost());
@@ -209,7 +209,7 @@ public class SSHKeyInstaller {
         ProcessManager pm = new ProcessManager(cmdLine);
 
         LOG.log(DEBUG, () -> "Command = " + log);
-        pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
+        pm.setTimeout(DEFAULT_TIMEOUT_MSEC);
 
         if (LOG.isLoggable(DEBUG)) {
             pm.setEcho(true);

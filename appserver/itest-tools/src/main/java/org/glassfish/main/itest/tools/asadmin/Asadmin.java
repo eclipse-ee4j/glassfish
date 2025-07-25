@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -33,10 +34,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -47,9 +51,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class Asadmin {
 
-    private static final Logger LOG = Logger.getLogger(Asadmin.class.getName());
+    private static final Logger LOG = System.getLogger(Asadmin.class.getName());
 
-    private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
     private static final Function<String, KeyAndValue<String>> KEYVAL_SPLITTER = s -> {
         int equalSignPos = s.indexOf('=');
         if (equalSignPos <= 0 || equalSignPos == s.length() - 1) {
@@ -134,6 +137,15 @@ public class Asadmin {
         return asadmin.getName();
     }
 
+    /**
+     * Gets the value for a given key from the asadmin get command.
+     *
+     * @param <T> expected result type
+     * @param key the key to get the value for
+     * @param transformer a function to transform the string value to the expected type
+     * @return a single KeyAndValue instance if the key is concrete enough to get a single value,
+     * @throws IllegalArgumentException if the get command returns more than one value
+     */
     public <T> KeyAndValue<T> getValue(final String key, final Function<String, T> transformer) {
         List<KeyAndValue<T>> result = get(key, transformer);
         if (result.isEmpty()) {
@@ -145,6 +157,14 @@ public class Asadmin {
         return result.get(0);
     }
 
+    /**
+     * Gets values for a given key from the asadmin get command.
+     *
+     * @param <T> expected result type
+     * @param key the key to get the values for
+     * @param transformer a function to transform the string value to the expected type
+     * @return a list of KeyAndValue instances, never null, but can be empty
+     */
     public <T> List<KeyAndValue<T>> get(final String key, final Function<String, T> transformer) {
         AsadminResult result = exec("get", key);
         assertThat(result, asadminOK());
@@ -153,33 +173,32 @@ public class Asadmin {
                 .collect(Collectors.toList());
     }
 
+
     /**
-     * Executes the command with arguments asynchronously with
-     * {@value #DEFAULT_TIMEOUT_MSEC} ms timeout. The command can be attached by
-     * the attach command. You should find the job id in the
-     * {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
+     * Executes the command with arguments asynchronously without timeout.
+     * The command can be attached by the attach command. You should find the job id in
+     * the {@link AsadminResult#getStdOut()} as <code>Job ID: [0-9]+</code>
      *
      * @param args
      * @return {@link AsadminResult} never null.
      */
     public DetachedTerseAsadminResult execDetached(final String... args) {
-        return (DetachedTerseAsadminResult) exec(DEFAULT_TIMEOUT_MSEC, true, args);
+        return (DetachedTerseAsadminResult) exec(null, true, args);
     }
 
+
     /**
-     * Executes the command with arguments synchronously with
-     * {@value #DEFAULT_TIMEOUT_MSEC} ms timeout.
+     * Executes the command with arguments synchronously without timeout.
      *
      * @param args
      * @return {@link AsadminResult} never null.
      */
     public AsadminResult exec(final String... args) {
-        return exec(DEFAULT_TIMEOUT_MSEC, false, args);
+        return exec(null, false, args);
     }
 
     /**
-     * Executes the command with arguments synchronously with given timeout in
-     * millis.
+     * Executes the command with arguments synchronously with given timeout in millis.
      *
      * @param timeout timeout in millis
      * @param args command and arguments.
@@ -190,21 +209,20 @@ public class Asadmin {
     }
 
     private File getPasswordFile() {
-        try {
-            if (!additionalPasswords.isEmpty()) {
+        if (!additionalPasswords.isEmpty()) {
+            Objects.requireNonNull(adminPasswordFile, "The admin password file is not set.");
+            try {
                 final Path tempPasswordFile = Files.createTempFile("pwd", "txt");
                 Files.copy(adminPasswordFile.toPath(), tempPasswordFile, StandardCopyOption.REPLACE_EXISTING);
                 String additionalContent = additionalPasswords.entrySet().stream()
-                        .map(entry -> entry.getKey() + "=" + entry.getValue())
-                        .collect(Collectors.joining("\n"));
+                    .map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.joining("\n"));
                 Files.writeString(tempPasswordFile, "\n" + additionalContent, StandardOpenOption.APPEND);
                 return tempPasswordFile.toFile();
+            } catch (IOException e) {
+                throw new IllegalStateException("Could not create the temporary password file.", e);
             }
-            return adminPasswordFile;
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not create the temporary password file.", e);
         }
-
+        return adminPasswordFile;
     }
 
     /**
@@ -216,16 +234,17 @@ public class Asadmin {
      * @param args command and arguments.
      * @return {@link AsadminResult} never null.
      */
-    private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
+    private AsadminResult exec(final Integer timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = Arrays.asList(args);
-        LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})",
-                new Object[]{timeout, detachedAndTerse, parameters});
+        LOG.log(TRACE, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
         command.add(adminUser);
-        command.add("--passwordfile");
-        command.add(getPasswordFile().getAbsolutePath());
+        if (getPasswordFile() != null) {
+            command.add("--passwordfile");
+            command.add(getPasswordFile().getAbsolutePath());
+        }
         if (detachedAndTerse) {
             command.add("--terse=true");
             command.add("--detach");
@@ -235,17 +254,20 @@ public class Asadmin {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeoutMsec(timeout);
+        if (timeout != null) {
+            processManager.setTimeout(timeout);
+        }
         processManager.setEcho(false);
+        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(TRACE)) {
+            processManager.setEnvironment("AS_TRACE", "true");
+        }
         for (Entry<String, String> env : this.environment.entrySet()) {
             processManager.setEnvironment(env.getKey(), env.getValue());
         }
-        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(Level.FINEST)) {
-            processManager.setEnvironment("AS_TRACE", "true");
-        }
+
         // override any env property to what is used by tests
-        processManager.setEnvironment("JAVA_HOME", System.getProperty("java.home"));
-        processManager.setEnvironment("AS_JAVA", System.getProperty("java.home"));
+        processManager.setEnvironment(JAVA_HOME.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
+        processManager.setEnvironment(JAVA_ROOT.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
 
         int exitCode;
         String asadminErrorMessage = "";
@@ -253,27 +275,24 @@ public class Asadmin {
             exitCode = processManager.execute();
         } catch (final ProcessManagerTimeoutException e) {
             asadminErrorMessage = e.getMessage();
-            exitCode = 1;
+            exitCode = 2;
         } catch (final ProcessManagerException e) {
-            LOG.log(Level.SEVERE, "The execution failed.", e);
+            LOG.log(ERROR, "The execution failed.", e);
             asadminErrorMessage = e.getMessage();
             exitCode = 1;
         }
 
-        final String stdErr = processManager.getStderr() + '\n' + asadminErrorMessage;
-        final AsadminResult result;
+        final String stdOut = processManager.getStdout().strip();
+        final String stdErr = (processManager.getStderr() + '\n' + asadminErrorMessage).strip();
+        if (!stdOut.isEmpty()) {
+            LOG.log(INFO, () -> "STDOUT: \n" + stdOut);
+        }
+        if (!stdErr.isEmpty()) {
+            LOG.log(INFO, () -> "STDERR: \n" + stdErr);
+        }
         if (detachedAndTerse) {
-            result = new DetachedTerseAsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
-        } else {
-            result = new AsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
+            return new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
         }
-        if (!result.getStdOut().isEmpty()) {
-            System.out.println(result.getStdOut());
-        }
-        if (!result.getStdErr().isEmpty()) {
-            System.err.println(result.getStdErr());
-        }
-        return result;
+        return new AsadminResult(args[0], exitCode, stdOut, stdErr);
     }
-
 }

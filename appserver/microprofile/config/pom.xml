@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.microprofile</groupId>
         <artifactId>microprofile-parent</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>microprofile-config</artifactId>
@@ -63,12 +63,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -122,4 +116,12 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

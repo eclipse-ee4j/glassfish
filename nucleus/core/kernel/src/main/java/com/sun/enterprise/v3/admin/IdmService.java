@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.security.store.IdentityManagement;
 
@@ -27,8 +27,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.PasswordAliasStore;
@@ -37,6 +40,12 @@ import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.security.services.impl.JCEKSPasswordAliasStore;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ARG_SEP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_ARGS;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 
 /**
  * An implementation of the @link {IdentityManagement} that manages the password needs of the server. This
@@ -47,21 +56,20 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "jks-based")
 public class IdmService implements PostConstruct, IdentityManagement {
 
-    private final Logger logger = Logger.getAnonymousLogger();
-
-    @Inject
-    private volatile StartupContext sc = null;
-
-    @Inject
-    private volatile ServerEnvironmentImpl env = null;
-
-    private char[] masterPassword;
-
-    private static final String FIXED_KEY = "master-password"; // the fixed key for master-password file
     private static final String PASSWORDFILE_OPTION_TO_ASMAIN = "-passwordfile"; // note single hyphen, in line with other args to ASMain!
     private static final String STDIN_OPTION_TO_ASMAIN = "-read-stdin"; // note single hyphen, in line with other args to ASMain!
 
     private static final String MP_PROPERTY = "AS_ADMIN_MASTERPASSWORD";
+
+    private final Logger logger = Logger.getAnonymousLogger();
+
+    @Inject
+    private volatile StartupContext sc;
+
+    @Inject
+    private volatile ServerEnvironmentImpl env;
+
+    private char[] masterPassword;
 
     @Override
     public void postConstruct() {
@@ -76,7 +84,7 @@ public class IdmService implements PostConstruct, IdentityManagement {
             }
         }
         if (!success) {
-            masterPassword = "changeit".toCharArray(); // the default;
+            masterPassword = KEYSTORE_PASSWORD_DEFAULT.toCharArray();
         }
     }
 
@@ -91,13 +99,13 @@ public class IdmService implements PostConstruct, IdentityManagement {
         try {
             File mp = env.getMasterPasswordFile();
             if (!mp.isFile()) {
-                logger.fine("The JCEKS file: " + mp.getAbsolutePath()
+                logger.fine("The keystore file: " + mp.getAbsolutePath()
                         + " does not exist, master password was not saved on disk during domain creation");
                 return false;
             }
             final PasswordAliasStore masterPasswordAliasStore = JCEKSPasswordAliasStore.newInstance(mp.getAbsolutePath(),
-                    FIXED_KEY.toCharArray());
-            char[] mpChars = masterPasswordAliasStore.get(FIXED_KEY);
+                MASTER_PASSWORD_PASSWORD.toCharArray());
+            char[] mpChars = masterPasswordAliasStore.get(MASTER_PASSWORD_ALIAS);
             if (mpChars == null) {
                 return false;
             }
@@ -113,7 +121,7 @@ public class IdmService implements PostConstruct, IdentityManagement {
     private boolean setFromAsMainArguments() {
         File pwf = null;
         try {
-            String[] args = StartupContextUtil.getOriginalArguments(sc);
+            String[] args = getOriginalArguments(sc);
             int index = 0;
             for (String arg : args) {
                 if (PASSWORDFILE_OPTION_TO_ASMAIN.equals(arg)) {
@@ -164,9 +172,10 @@ public class IdmService implements PostConstruct, IdentityManagement {
 
     private boolean setFromStdin() {
         logger.fine("Reading the master password from stdin> ");
-        String s;
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // We will close the standard input as we don't use it any more.
+        // On windows it would block deletion of the temporary file otherwise.
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            String s;
             while ((s = br.readLine()) != null) {
                 int ind = s.indexOf(MP_PROPERTY);
                 if (ind == -1) {
@@ -184,7 +193,32 @@ public class IdmService implements PostConstruct, IdentityManagement {
         } catch (Exception e) {
             logger.fine("Stdin isn't behaving, ignoring it ..." + e.getMessage());
             return false;
+        } finally {
+            try {
+                System.in.close();
+            } catch (IOException e) {
+                logger.fine("Error closing stdin: " + e.getMessage());
+            } finally {
+                System.setIn(null);
+            }
         }
     }
 
+    /**
+     * @param context
+     * @return parsed array of arguments saved as {@link #ORIGINAL_ARGS}
+     */
+    private static String[] getOriginalArguments(StartupContext context) {
+        Properties args = context.getArguments();
+        String s = args.getProperty(ORIGINAL_ARGS);
+        if (s == null) {
+            return new String[0];
+        }
+        StringTokenizer st = new StringTokenizer(s, ARG_SEP, false);
+        List<String> result = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            result.add(st.nextToken());
+        }
+        return result.toArray(new String[result.size()]);
+    }
 }

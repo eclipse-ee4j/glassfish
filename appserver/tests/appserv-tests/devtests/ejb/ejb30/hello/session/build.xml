@@ -31,73 +31,67 @@
 
     <target name="all" depends="build,deploy,run,undeploy"/>
 
-  <target name="clean" depends="init-common">
-    <antcall  target="clean-common"/>
-    <delete file="client/Client.java"/>
-  </target>
+    <target name="clean" depends="init-common">
+        <antcall  target="clean-common"/>
+        <delete file="client/Client.java"/>
+    </target>
 
-  <target name="compile" depends="clean">
-    <copy file="client/Client.java.token" tofile="client/Client.java"/>
-    <replace file="client/Client.java"
+    <target name="compile" depends="clean">
+        <copy file="client/Client.java.token" tofile="client/Client.java"/>
+        <replace file="client/Client.java"
           token="@ORB_PORT@" value="${orb.port}"/>
 
-    <antcall target="compile-common">
-      <param name="src" value="ejb"/>
-    </antcall>
-    <antcall target="compile-common">
-      <param name="src" value="client"/>
-    </antcall>
-  </target>
+        <antcall target="compile-common">
+            <param name="src" value="ejb"/>
+        </antcall>
+        <antcall target="compile-common">
+            <param name="src" value="client"/>
+        </antcall>
+    </target>
 
-  <target name="build" depends="compile">
-    <antcall target="build-ear-common">
-      <param name="ejbjar.classes"
+    <target name="build" depends="compile">
+        <antcall target="build-ear-common">
+            <param name="ejbjar.classes"
               value="**/Sful*.class,**/Sless*.class"/>
-      <param name="appclientjar.classes"
+            <param name="appclientjar.classes"
               value="**/Client.class,**/Sful.class,**/Sless.class"/>
-    </antcall>
-  </target>
+        </antcall>
+    </target>
 
-  <target name="deploy"
+    <target name="deploy"
             depends="init-common">
-    <antcall target="deploy-common"/>
-  </target>
+        <antcall target="deploy-common"/>
+    </target>
 
-  <target name="run" depends="init-common">
-    <antcall target="runclient-common"/>
-    <antcall target="run_standaloneclient"/>
-    <antcall target="run_standaloneclient2"/>
-  </target>
+    <target name="run" depends="init-common">
+        <antcall target="runclient-common"/>
+        <antcall target="run_standaloneclient"/>
+        <antcall target="run_standaloneclient2"/>
+    </target>
 
 
-  <target name="run_standaloneclient" depends="init-common">
-    <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
-              classname="${simple.client}">
-      <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
-      <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-    </java>
-  </target>
+    <target name="run_standaloneclient" depends="init-common">
+        <antcall target="runclient-own">
+            <param name="mainClass" value="${simple.client}" />
+            <param name="args" value="" />
+        </antcall>
+    </target>
 
-  <target name="run_standaloneclient2" depends="init-common">
-    <java fork="on"
-          failonerror="true"
-          classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
-          classname="${simple.client2}"
-    >
-      <jvmarg value="-Djava.naming.factory.initial=org.glassfish.jndi.cosnaming.CNCtxFactory" />
-      <jvmarg value="-Djava.naming.provider.url=iiop://localhost:${orb.port}" />
-      <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}" />
-      <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-    </java>
-  </target>
+    <target name="run_standaloneclient2" depends="init-common">
+        <antcall target="runclient-own">
+            <param name="appclient.standalone.classpath.ext" value="${assemble.dir}/ejb-stubs-ejbappAppClient.jar" />
+            <param name="appclient.standalone.jvmargs.ext"
+                value="-Djava.naming.factory.initial=org.glassfish.jndi.cosnaming.CNCtxFactory -Djava.naming.provider.url=iiop://localhost:${orb.port}" />
+            <param name="mainClass" value="${simple.client2}" />
+            <param name="args" value="" />
+        </antcall>
+    </target>
 
-  <target name="undeploy" depends="init-common">
-    <antcall target="undeploy-common" />
-  </target>
+    <target name="undeploy" depends="init-common">
+        <antcall target="undeploy-common" />
+    </target>
 
-  <target name="usage">
-    <antcall target="usage-common" />
-  </target>
+    <target name="usage">
+        <antcall target="usage-common" />
+    </target>
 </project>

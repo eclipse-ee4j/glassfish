@@ -45,6 +45,7 @@ test_run(){
 
   time ant ${antTarget} | tee ${TEST_RUN_LOG}
   antStatus=${?}
+
   # Copy the report to $APS_HOME
   cp tests-results.xml ${APS_HOME}/tests-results.xml
   cp results.html ${APS_HOME}/test_results.html
@@ -53,7 +54,8 @@ test_run(){
   then
       ${S1AS_HOME}/bin/asadmin stop-domain
   fi
-   if [[ ${1} = "deployment_cluster_all" ]]; then
+  
+  if [[ ${1} = "deployment_cluster_all" ]]; then
       cp -r ${APS_HOME}/devtests/deployment/server-logs/ ${WORKSPACE}/results/
   fi
   echo DEPL_TARGET is ${DEPL_TARGET}

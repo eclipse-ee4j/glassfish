@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,7 +43,7 @@ class JWSACCMaskingClassLoader extends MaskingClassLoader {
     private final Collection<String> endorsedPackagesToMask;
 
     JWSACCMaskingClassLoader(ClassLoader parent, Collection<String> endorsedPackagesToMask) {
-        super(parent, Collections.EMPTY_SET /* punchins */, Collections.EMPTY_SET /* multiples */,
+        super(parent, Collections.emptySet() /* punchins */, Collections.emptySet() /* multiples */,
                 false /* useExplicitCallsToFindSystemClass */);
         this.endorsedPackagesToMask = endorsedPackagesToMask;
     }

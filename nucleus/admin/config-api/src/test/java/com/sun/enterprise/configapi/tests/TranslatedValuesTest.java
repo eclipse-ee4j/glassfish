@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -33,6 +32,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,15 +53,15 @@ public class TranslatedValuesTest {
     @BeforeAll
     public static void initSysProps() throws Exception {
         javaRoot = Files.createTempDirectory(TranslatedValuesTest.class.getSimpleName()).toString();
-        System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, "cafebabe");
-        System.setProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY, javaRoot);
+        System.setProperty(INSTANCE_ROOT.getSystemPropertyName(), "cafebabe");
+        System.setProperty(JAVA_ROOT.getSystemPropertyName(), javaRoot);
     }
 
 
     @AfterAll
     public static void reset() {
-        System.clearProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY);
-        System.clearProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+        System.clearProperty(JAVA_ROOT.getSystemPropertyName());
+        System.clearProperty(INSTANCE_ROOT.getSystemPropertyName());
         new File(javaRoot).delete();
     }
 

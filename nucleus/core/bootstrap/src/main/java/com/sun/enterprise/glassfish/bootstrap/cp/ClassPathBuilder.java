@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,40 +26,42 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * Builds up a {@link ClassLoader}.
  *
  * @author Kohsuke Kawaguchi
  */
-public final class ClassPathBuilder {
+final class ClassPathBuilder {
     private final List<File> files = new ArrayList<>();
 
     /**
      * Adds a single jar.
      *
      * @param jar
+     * @return this
      * @throws IOException if the file doesn't exist.
      */
-    public void addJar(File jar) throws IOException {
+    ClassPathBuilder addJar(File jar) throws IOException {
         if (!jar.exists()) {
             throw new IOException("No such file: " + jar);
         }
         files.add(jar);
+        return this;
     }
+
 
     /**
      * Adds all jars in the given folder.
      *
-     * @param folder
-     *      A directory that contains a bunch of jar files.
-     * @param excludes
-     *      List of jars to be excluded
+     * @param folder A directory that contains a bunch of jar files.
+     * @param excludes List of jars to be excluded
+     * @return this
+     * @throws IOException
      */
-    public void addJarFolder(File folder, final String... excludes) throws IOException {
+    ClassPathBuilder addJarFolder(File folder, final String... excludes) throws IOException {
         if (!folder.isDirectory()) {
             throw new IOException("Not a directory " + folder);
         }
@@ -77,45 +79,20 @@ public final class ClassPathBuilder {
 
         if (children == null) {
             // in a very rare race condition, the directory can disappear after we checked.
-            return;
+            return this;
         }
 
         for (File child : children) {
             addJar(child);
         }
+        return this;
     }
 
 
-    /**
-     * Looks for the child files/directories in the given folder that matches the specified GLOB patterns
-     * (like "foo-*.jar") and adds them to the classpath.
-     */
-    public void addGlob(File folder, String... masks) throws IOException {
-        StringBuilder regexp = new StringBuilder();
-        for (String mask : masks) {
-            if (regexp.length() > 0) {
-                regexp.append('|');
-            }
-            regexp.append("(\\Q");
-            regexp.append(mask.replace("?","\\E.\\Q").replace("*","\\E.*\\Q"));
-            regexp.append("\\E)");
-        }
-        Pattern p = Pattern.compile(regexp.toString());
-        File[] children = folder.listFiles();
-        if (children == null) {
-            return;
-        }
-        for (File child : children) {
-            if (p.matcher(child.getName()).matches()) {
-                addJar(child);
-            }
-        }
-    }
-
-    public ClassLoader build(final ClassLoader parent) {
+    ClassLoader build(final ClassLoader parent) {
         PrivilegedAction<GlassfishUrlClassLoader> action = () -> {
             URL[] urls = files.stream().map(ClassPathBuilder::toURL).toArray(URL[]::new);
-            return new GlassfishUrlClassLoader(urls, parent);
+            return new GlassfishUrlClassLoader("OSGi", urls, parent);
         };
         return AccessController.doPrivileged(action);
     }
@@ -128,5 +105,4 @@ public final class ClassPathBuilder {
             throw new IllegalArgumentException("File cannot be converted to URL: " + file.getAbsolutePath(), e);
         }
     }
-
 }

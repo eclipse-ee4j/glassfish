@@ -85,10 +85,13 @@
     <target name="run_war" depends="init-common">
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke" />
            <arg line="${appname}"/>
         </java>
     </target>
@@ -97,10 +100,13 @@
        <antcall  target="start-database"/>
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke" />
            <arg line="${jndiroot}"/>
            <arg line="installed_instance"/>
         </java>
@@ -110,10 +116,13 @@
     <target name="run_war_servlet" depends="init-common">
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke" />
            <arg line="${appname}"/>
            <arg line="servlet"/>
         </java>
@@ -122,10 +131,13 @@
     <target name="run_dir" depends="init-common">
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/tmp:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke" />
            <arg line="${jndiroot}"/>
         </java>
     </target>

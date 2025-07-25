@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,17 +19,19 @@ package com.sun.enterprise.connectors.util;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.logging.LogDomains;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Singleton;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -40,13 +42,17 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
 
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * Driver Loader to load the jdbc drivers and get driver/datasource classnames
@@ -55,12 +61,12 @@ import org.jvnet.hk2.annotations.Service;
  * @author Shalini M
  */
 @Service
+@Singleton
 public class DriverLoader implements ConnectorConstants {
 
-    private static Logger logger =
-    LogDomains.getLogger(DriverLoader.class, LogDomains.RSR_LOGGER);
+    private static Logger logger = LogDomains.getLogger(DriverLoader.class, LogDomains.RSR_LOGGER);
 
-    private static final String DRIVER_INTERFACE_NAME="java.sql.Driver";
+    private static final String DRIVER_INTERFACE_NAME = "java.sql.Driver";
     private static final String SERVICES_DRIVER_IMPL_NAME = "META-INF/services/java.sql.Driver";
     private static final String DATABASE_VENDOR_DERBY = "DERBY";
     private static final String DATABASE_VENDOR_JAVADB = "JAVADB";
@@ -81,66 +87,119 @@ public class DriverLoader implements ConnectorConstants {
     private static final String DATABASE_VENDOR_40 = "40";
 
     private static final String DATABASE_VENDOR_SQLSERVER = "SQLSERVER";
-    private static final String DBVENDOR_MAPPINGS_ROOT =
-            System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
-            "lib" + File.separator + "install" + File.separator + "databases" +
-            File.separator + "dbvendormapping" + File.separator;
-    private final static String DS_PROPERTIES = "ds.properties";
-    private final static String CPDS_PROPERTIES = "cpds.properties";
-    private final static String XADS_PROPERTIES = "xads.properties";
-    private final static String DRIVER_PROPERTIES = "driver.properties";
-    private final String VENDOR_PROPERTIES = "dbvendor.properties";
+    private static final String DS_PROPERTIES = "ds.properties";
+    private static final String CPDS_PROPERTIES = "cpds.properties";
+    private static final String XADS_PROPERTIES = "xads.properties";
+    private static final String DRIVER_PROPERTIES = "driver.properties";
+    private static final String VENDOR_PROPERTIES = "dbvendor.properties";
+    private static final String VALIDATIONCLASSNAMES_PROPERTIES = "validationclassnames.properties";
+
+
+    private File mappingsRoot;
+
+    @PostConstruct
+    private void initPaths() {
+        this.mappingsRoot = resolveDbVendorMappingRoot();
+    }
+
+
+    private static File resolveDbVendorMappingRoot() {
+        File connDbVendorMappingRoot = getSystemPropertyAsFile(DB_VENDOR_MAPPING_ROOT);
+        if (connDbVendorMappingRoot != null) {
+            return connDbVendorMappingRoot;
+        }
+        File installRoot = getSystemPropertyAsFile(INSTALL_ROOT.getSystemPropertyName());
+        if (installRoot == null) {
+            return null;
+        }
+        File defaultRoot = installRoot.toPath().normalize()
+            .resolve(Path.of("lib", "install", "databases", "dbvendormapping")).toFile();
+        if (defaultRoot.exists()) {
+            return defaultRoot;
+        }
+        return null;
+    }
 
     /**
      * Get a set of common database vendor names supported in glassfish.
      * @return database vendor names set.
      */
     public Set<String> getDatabaseVendorNames() {
-        File dbVendorFile = new File(DBVENDOR_MAPPINGS_ROOT + VENDOR_PROPERTIES);
+        if (mappingsRoot == null) {
+            return Set.of();
+        }
+        File dbVendorFile = new File(mappingsRoot, VENDOR_PROPERTIES);
         Properties fileProperties = loadFile(dbVendorFile);
         Set<String> dbvendorNames = new TreeSet<>();
-
-        Enumeration e = fileProperties.propertyNames();
-        while(e.hasMoreElements()) {
-            String vendor = (String) e.nextElement();
+        for (String vendor : fileProperties.stringPropertyNames()) {
             dbvendorNames.add(vendor);
         }
         return dbvendorNames;
     }
 
-    public static File getResourceTypeFile(String resType) {
-        File mappingFile = null;
-        if(ConnectorConstants.JAVAX_SQL_DATASOURCE.equals(resType)) {
-            mappingFile = new File(DBVENDOR_MAPPINGS_ROOT + DS_PROPERTIES);
-        } else if(ConnectorConstants.JAVAX_SQL_XA_DATASOURCE.equals(resType)) {
-            mappingFile = new File(DBVENDOR_MAPPINGS_ROOT + XADS_PROPERTIES);
-        } else if(ConnectorConstants.JAVAX_SQL_CONNECTION_POOL_DATASOURCE.equals(resType)) {
-            mappingFile = new File(DBVENDOR_MAPPINGS_ROOT + CPDS_PROPERTIES);
-        } else if(ConnectorConstants.JAVA_SQL_DRIVER.equals(resType)) {
-            mappingFile = new File(DBVENDOR_MAPPINGS_ROOT + DRIVER_PROPERTIES);
+
+    public Properties getValidationClassMappingFile() {
+        if (mappingsRoot == null) {
+            return loadFile(null);
         }
-        return mappingFile;
+        return loadFile(new File(this.mappingsRoot, VALIDATIONCLASSNAMES_PROPERTIES));
+    }
+
+    public String getDatabaseVendorName(String className) {
+        if (mappingsRoot == null) {
+            return null;
+        }
+        String dbVendor = getDatabaseVendorName(loadFile(new File(mappingsRoot, DS_PROPERTIES)), className);
+        if (dbVendor == null) {
+            dbVendor = getDatabaseVendorName(loadFile(new File(mappingsRoot, CPDS_PROPERTIES)), className);
+        }
+        if (dbVendor == null) {
+            dbVendor = getDatabaseVendorName(loadFile(new File(mappingsRoot, XADS_PROPERTIES)), className);
+        }
+        if (dbVendor == null) {
+            dbVendor = getDatabaseVendorName(loadFile(new File(mappingsRoot, DRIVER_PROPERTIES)), className);
+        }
+        return dbVendor;
+    }
+
+    private File getResourceTypeFile(String resType) {
+        if (mappingsRoot == null) {
+            return null;
+        }
+        if (ConnectorConstants.JAVAX_SQL_DATASOURCE.equals(resType)) {
+            return new File(mappingsRoot, DS_PROPERTIES);
+        } else if (ConnectorConstants.JAVAX_SQL_XA_DATASOURCE.equals(resType)) {
+            return new File(mappingsRoot, XADS_PROPERTIES);
+        } else if (ConnectorConstants.JAVAX_SQL_CONNECTION_POOL_DATASOURCE.equals(resType)) {
+            return new File(mappingsRoot, CPDS_PROPERTIES);
+        } else if (ConnectorConstants.JAVA_SQL_DRIVER.equals(resType)) {
+            return new File(mappingsRoot, DRIVER_PROPERTIES);
+        } else {
+            return null;
+        }
+    }
+
+    private String getDatabaseVendorName(Properties classNameProperties, String className) {
+        Set<String> vendors = classNameProperties.stringPropertyNames();
+        for (String vendor : vendors) {
+            String value = classNameProperties.getProperty(vendor);
+            if (className.equalsIgnoreCase(value)) {
+                return vendor;
+            }
+        }
+        return null;
     }
 
     public static Properties loadFile(File mappingFile) {
         Properties fileProperties = new Properties();
-        if (mappingFile != null && mappingFile.exists()) {
-            try {
-
-                FileInputStream fis = new FileInputStream(mappingFile);
-                try {
-                    fileProperties.load(fis);
-                } finally {
-                    fis.close();
-                }
-            } catch (IOException ioe) {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("IO Exception during properties load : "
-                            + mappingFile.getAbsolutePath());
-                }
-            }
-        } else if (logger.isLoggable(Level.FINE)) {
-            logger.fine("File not found : " + mappingFile.getAbsolutePath());
+        if (mappingFile == null || !mappingFile.exists()) {
+            logger.fine(() -> "File not found: " + mappingFile);
+            return fileProperties;
+        }
+        try (FileInputStream fis = new FileInputStream(mappingFile)) {
+            fileProperties.load(fis);
+        } catch (IOException ioe) {
+            logger.log(Level.WARNING, "IO Exception during properties load: " + mappingFile);
         }
         return fileProperties;
     }
@@ -223,7 +282,7 @@ public class DriverLoader implements ConnectorConstants {
         Set<File> allJars = new HashSet<>();
         for(File lib : jarFileLocations) {
             if (lib.isDirectory()) {
-                File[] files = lib.listFiles(new JarFileFilter());
+                File[] files = lib.listFiles((dir, name) -> name.endsWith(".jar"));
                 if (files != null) {
                     for (File file : files) {
                         allJars.add(file);
@@ -257,18 +316,18 @@ public class DriverLoader implements ConnectorConstants {
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(f);
-            Enumeration e = jarFile.entries();
+            Enumeration<JarEntry> e = jarFile.entries();
             while(e.hasMoreElements()) {
 
-                ZipEntry zipEntry = (ZipEntry) e.nextElement();
+                JarEntry jarEntry = e.nextElement();
 
-                if (zipEntry != null) {
+                if (jarEntry != null) {
 
-                    String entry = zipEntry.getName();
+                    String entry = jarEntry.getName();
                     if (DRIVER_INTERFACE_NAME.equals(resType)) {
                         if (SERVICES_DRIVER_IMPL_NAME.equals(entry)) {
 
-                            InputStream metaInf = jarFile.getInputStream(zipEntry);
+                            InputStream metaInf = jarFile.getInputStream(jarEntry);
                             implClass = processMetaInf(metaInf);
                             if (implClass != null) {
                                 if (isLoaded(implClass, resType)) {
@@ -448,8 +507,8 @@ public class DriverLoader implements ConnectorConstants {
         return classname;
     }
 
-    private boolean isVendorSpecific(File f, String dbVendor, String className,
-            String origDbVendor) {
+
+    private boolean isVendorSpecific(File f, String dbVendor, String className, String origDbVendor) {
         //File could be a jdbc jar file or a normal jar file
         boolean isVendorSpecific = false;
 
@@ -491,26 +550,43 @@ public class DriverLoader implements ConnectorConstants {
     }
 
     private List<File> getJdbcDriverLocations() {
-    List<File> jarFileLocations = new ArrayList<>();
-        jarFileLocations.add(getLocation(SystemPropertyConstants.DERBY_ROOT_PROPERTY));
-        jarFileLocations.add(getLocation(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-        jarFileLocations.add(getLocation(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
+        List<File> jarFileLocations = new ArrayList<>();
+        File derby = getLocation(DERBY_ROOT.getSystemPropertyName());
+        if (derby != null) {
+            jarFileLocations.add(derby);
+        }
+        File installRoot = getLocation(INSTALL_ROOT.getSystemPropertyName());
+        if (installRoot != null) {
+            jarFileLocations.add(installRoot);
+        }
+        File instanceRoot = getLocation(INSTANCE_ROOT.getSystemPropertyName());
+        if (instanceRoot != null) {
+            jarFileLocations.add(instanceRoot);
+        }
         return jarFileLocations;
     }
 
     private File getLocation(String property) {
-        return new File(System.getProperty(property) + File.separator + "lib");
-    }
-
-    private static class JarFileFilter implements FilenameFilter {
-
-        private static final String JAR_EXT = ".jar";
-
-        @Override
-        public boolean accept(File dir, String name) {
-            return name.endsWith(JAR_EXT);
+        File directory = getSystemPropertyAsFile(property);
+        if (directory == null) {
+            return null;
         }
+        return new File(directory, "lib");
     }
+
+
+    /**
+     * @return null if the file does not exist or the property is not set
+     */
+    private static File getSystemPropertyAsFile(String property) {
+        String propertyValue = System.getProperty(property);
+        if (propertyValue == null || propertyValue.isBlank()) {
+            return null;
+        }
+        File file = new File(propertyValue);
+        return file.exists() ? file : null;
+    }
+
 
     /**
      * Utility method that checks if a classname is vendor specific.
@@ -531,34 +607,19 @@ public class DriverLoader implements ConnectorConstants {
      * @return null if no manifest entry found.
      */
     private String getVendorFromManifest(File f) {
-        String vendor = null;
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(f);
-            Manifest manifest = jarFile.getManifest();
-            if(manifest != null) {
-                Attributes mainAttributes = manifest.getMainAttributes();
-                if(mainAttributes != null) {
-                    vendor = mainAttributes.getValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString());
-                    if (vendor == null) {
-                        vendor = mainAttributes.getValue(Attributes.Name.IMPLEMENTATION_VENDOR_ID.toString());
-                    }
-                }
+        try (JarFile jarFile = new JarFile(f)) {
+            final Manifest manifest = jarFile.getManifest();
+            if (manifest == null) {
+                return null;
             }
+            final Attributes mainAttributes = manifest.getMainAttributes();
+            if (mainAttributes == null) {
+                return null;
+            }
+            return mainAttributes.getValue(Attributes.Name.IMPLEMENTATION_VENDOR);
         } catch (IOException ex) {
             logger.log(Level.WARNING, "Exception while reading manifest file : ", ex);
-        } finally {
-            if (jarFile != null) {
-                try {
-                    jarFile.close();
-                } catch (IOException ex) {
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE, "Exception while closing JarFile '"
-                                + jarFile.getName() + "' :", ex);
-                    }
-                }
-            }
+            return null;
         }
-        return vendor;
     }
 }

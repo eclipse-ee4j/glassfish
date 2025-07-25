@@ -248,11 +248,14 @@ public class SecurityAccessValidator implements Validator {
 
 
         try {
-            if (caller != null) {
-                ProtectionDomain pd = this.getCallerProtDomain(caller);
-                pd.implies(p);
-            } else
-                AccessController.checkPermission(p);
+            if (System.getProperty("java.vm.specification.version").compareTo("24") < 0) {
+                if (caller != null) {
+                    ProtectionDomain pd = this.getCallerProtDomain(caller);
+                    pd.implies(p);
+                } else {
+                    AccessController.checkPermission(p);
+                }
+            }
 
         } catch (SecurityException e) {
 
@@ -275,6 +278,10 @@ public class SecurityAccessValidator implements Validator {
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Injectee =" + injectee + ", permission= " + p);
+        }
+
+        if (System.getProperty("java.vm.specification.version").compareTo("24") >= 0) {
+            return true;
         }
 
         // If this is an Inject, get the protection domain of the injectee

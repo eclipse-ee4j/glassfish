@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,11 +18,11 @@
 package org.glassfish.appclient.client.acc;
 
 import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
@@ -39,6 +39,7 @@ import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.xml.sax.SAXException;
 
@@ -46,6 +47,7 @@ import static java.util.logging.Level.CONFIG;
 import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
 import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
 import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Implements a builder for accumulating configuration information for the app client container and then starting the
@@ -69,12 +71,13 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
     private static final LocalStringManager localStrings = new LocalStringManagerImpl(AppClientContainerBuilder.class);
 
+    private final URLClassLoader classLoader;
+
     /** caller-specified target servers */
     private TargetServer[] targetServers;
 
     private AuthRealm authRealm;
 
-    private final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
     /**
      * The caller can pre-set the client credentials using the <code>clientCredentials</code> method. The ACC will use the
@@ -95,10 +98,6 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
      */
     private Properties containerProperties;
 
-    AppClientContainerBuilder() {
-
-    }
-
     /**
      * Creates a new builder with the specified target servers and client URI.
      *
@@ -107,6 +106,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
      */
     AppClientContainerBuilder(final TargetServer[] targetServers) {
         this.targetServers = targetServers;
+        this.classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
     }
 
     public AppClientContainer newContainer(final Class mainClass, final CallbackHandler callerSpecifiedCallbackHandler) throws Exception {
@@ -155,27 +155,27 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
     private AppClientContainer createContainer(final Launchable client, final CallbackHandler callerSuppliedCallbackHandler,
             final boolean isTextAuth)
-            throws BootException, URISyntaxException, ReflectiveOperationException, InjectionException, IOException, SAXException {
+            throws ReflectiveOperationException, InjectionException, IOException, SAXException {
 
         AppClientContainer container = ACCModulesManager.getService(AppClientContainer.class);
 
         // process the packaged permissions.xml
         container.processPermissions();
         container.setClient(client);
-        container.setBuilder(this);
-        CallbackHandler callbackHandler = (callerSuppliedCallbackHandler != null ? callerSuppliedCallbackHandler
-                : getCallbackHandlerFromDescriptor(client.getDescriptor(classLoader).getCallbackHandler()));
-        container.prepareSecurity(targetServers, messageSecurityConfigs, containerProperties, clientCredential, callbackHandler,
-                classLoader, isTextAuth);
+        CallbackHandler callbackHandler = callerSuppliedCallbackHandler == null
+            ? getCallbackHandlerFromDescriptor(client.getDescriptor(classLoader).getCallbackHandler())
+            : callerSuppliedCallbackHandler;
+        container.prepareSecurity(targetServers, messageSecurityConfigs, containerProperties, clientCredential,
+            callbackHandler, isTextAuth);
 
         return container;
     }
 
     private CallbackHandler getCallbackHandlerFromDescriptor(final String callbackHandlerName)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException {
         if (callbackHandlerName != null && !callbackHandlerName.equals("")) {
             Class<CallbackHandler> callbackHandlerClass = (Class<CallbackHandler>) Class.forName(callbackHandlerName, true, classLoader);
-            return callbackHandlerClass.newInstance();
+            return callbackHandlerClass.getDeclaredConstructor().newInstance();
         }
 
         return null;
@@ -240,7 +240,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
                         "Value for {0} expected but was not configured or assigned", new Object[] { propName }));
 
             }
-            System.setProperty(propName, newPropValue);
+            setProperty(propName, newPropValue, true);
         }
     }
 

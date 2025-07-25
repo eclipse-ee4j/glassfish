@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,17 +18,10 @@
 package org.glassfish.appclient.client.acc.agent;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLStreamHandlerFactory;
-import java.security.PrivilegedAction;
-import java.util.Enumeration;
-
-import org.glassfish.appclient.common.ClassPathUtils;
-
-import static java.security.AccessController.doPrivileged;
+import java.util.Arrays;
 
 /**
  * Used as the system class loader during app client launch.
@@ -40,75 +33,51 @@ import static java.security.AccessController.doPrivileged;
  * <p>
  * This class and it's dependencies must not use logging, which could cause recursion in class
  * loading. So don't extend GlassfishUrlClassLoader. Reproducer: TCK tests use this classloader.
+ * <p>
+ * The name of this class must not be changed - it is explicitly used in the TCK Platform Test
+ * package.
  *
  * @author tjquinn
+ * @author David Matejcek
  */
 public class ACCAgentClassLoader extends URLClassLoader {
 
-    private boolean isActive = true;
+    static {
+        registerAsParallelCapable();
+    }
 
     /**
-     * This constructor is used by the VM to create a system class loader (as specified by -Djava.system.class.loader on the
-     * java command created from the appclient script).
+     * This constructor is used by the VM to create a system class loader (as specified by
+     * -Djava.system.class.loader on the java command created from the appclient script).
+     * <p>
+     * This class loader ignores the parent and uses {@link GFDependenciesClassLoader}
+     * with the {@link ClassLoader#getPlatformClassLoader()} as its parent instead.
      */
     public ACCAgentClassLoader(ClassLoader parent) {
-        super(new URL[] {}, prepareLoader(parent));
+        super("Agent", new URL[0], new UserClassLoader());
     }
 
-
-    private static URLClassLoader prepareLoader(ClassLoader parent) {
-        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader(
-            new URL[] {ClassPathUtils.getGFClientJarURL()}, new ClassLoaderWrapper(parent));
-        return doPrivileged(action);
-    }
-
-
-    public ACCAgentClassLoader(URL[] urls) {
-        super(urls);
-    }
-
-    public ACCAgentClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, new ClassLoaderWrapper(parent));
-    }
-
-    public ACCAgentClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
-        super(urls, parent, factory);
-    }
-
-    // a custom system class loader need to define this method in order to load the java agent.
+    /**
+     * A custom system class loader need to define this method in order to load the java agent.
+     *
+     * @param path
+     * @throws MalformedURLException
+     */
     public void appendToClassPathForInstrumentation(String path) throws MalformedURLException {
         addURL(new File(path).toURI().toURL());
     }
 
+    /**
+     * Returns class name, hash code and list of managed urls and info about parent.
+     */
     @Override
-    public synchronized Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (isActive && isStillActive()) {
-            return super.loadClass(name);
-        }
-        return getParent().loadClass(name);
-    }
-
-    @Override
-    public URL getResource(String name) {
-        if (isActive && isStillActive()) {
-            return super.getResource(name);
-        }
-        return getParent().getResource(name);
-    }
-
-    @Override
-    public Enumeration<URL> getResources(String name) throws IOException {
-        if (isActive && isStillActive()) {
-            return super.getResources(name);
-        }
-        return getParent().getResources(name);
-    }
-
-    private boolean isStillActive() {
-        if (isActive) {
-            String propValue = System.getProperty("org.glassfish.appclient.acc.agentLoaderDone");
-            isActive = (propValue != null);
-        }
-        return isActive;
+    public String toString() {
+        final StringBuilder text = new StringBuilder(1024);
+        text.append(getClass().getName()).append('@').append(Integer.toHexString(hashCode()));
+        text.append("[name=").append(getName()).append("], urls=[\n");
+        Arrays.stream(getURLs()).forEach(u -> text.append(u).append('\n'));
+        text.append(']');
+        text.append(", parent=").append(getParent());
+        return text.toString();
     }
 }

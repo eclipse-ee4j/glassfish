@@ -17,11 +17,14 @@ Restarts the DAS of the specified domain
 
 [source]
 ----
-asadmin [asadmin-options] restart-domain [--help]
-[--debug ={true|false}]
-[--domaindir domaindir]
-[--force={true|false}] [--kill={false|true}]
-[domain-name]
+asadmin restart-domain
+[--debug[=<debug(default:false)>]]
+[--domaindir <domaindir>]
+[--force[=<force(default:true)>]]
+[--help|-?]
+[--kill[=<kill(default:false)>]]
+[--timeout <timeout>]
+[domain_name]
 ----
 
 === Description
@@ -93,6 +96,12 @@ The default is the current setting of this option for the domain that
   `true`;;
     The domain is killed. The subcommand uses functionality of the
     operating system to terminate the domain process.
+
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The domain status is unknown
+  in such case.
 
 === Operands
 

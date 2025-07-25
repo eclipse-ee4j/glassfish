@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,8 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -42,16 +44,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class MasterPasswordFileManager extends KeystoreManager {
 
-    private static final String MASTER_PASSWORD_ALIAS = "master-password";
-
     private static final StringManager _strMgr = StringManager.getManager(MasterPasswordFileManager.class);
 
     /**
      * @return The password protecting the master password keywtore
      */
     private char[] getMasterPasswordPassword() throws RepositoryException {
-        //XXX fixed String
-        return MASTER_PASSWORD_ALIAS.toCharArray();
+        return MASTER_PASSWORD_PASSWORD.toCharArray();
     }
 
     protected void deleteMasterPasswordFile(RepositoryConfig config) {

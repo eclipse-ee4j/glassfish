@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Strings -- Get your Strings here.

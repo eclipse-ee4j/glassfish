@@ -24,18 +24,22 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>application-tests</artifactId>
     <name>GlassFish Application Tests</name>
+
+    <properties>
+        <glassfish.version>${project.version}</glassfish.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
             <type>zip</type>
-            <version>${project.version}</version>
+            <version>${glassfish.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

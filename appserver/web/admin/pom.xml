@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.web</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -117,7 +117,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.gmbal</groupId>
-            <artifactId>gmbal</artifactId>
+            <artifactId>gmbal-api-only</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>

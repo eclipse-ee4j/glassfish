@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.microprofile</groupId>
         <artifactId>microprofile-parent</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>microprofile-connectors</artifactId>
@@ -34,8 +34,12 @@
     <dependencies>
         <!-- APIs -->
         <dependency>
-            <groupId>io.helidon.microprofile.config</groupId>
-            <artifactId>helidon-microprofile-config</artifactId>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-api</artifactId>
         </dependency>
 
         <!-- Internal Dependencies -->
@@ -51,4 +55,12 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

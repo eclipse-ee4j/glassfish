@@ -1,5 +1,6 @@
 @echo off
 REM
+REM  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -15,68 +16,25 @@ REM
 REM  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 REM
 
+VERIFY OTHER 2>nul
+setlocal EnableExtensions EnableDelayedExpansion
+if ERRORLEVEL 0 goto ok
+echo "Unable to enable extensions"
+exit /B 1
 
-setlocal
-goto :main
+:ok
+set "AS_CONFIG=%~dp0..\config"
+set "AS_CONFIG_BAT=%AS_CONFIG%\config.bat"
+call "%AS_CONFIG_BAT%" || (
+    echo Error: Cannot load config file
+    exit /B 1
+)
+set ARGS=%*
 
-:seekJavaOnPath
-for /f %%J in ("java.exe") do set JAVA=%%~$PATH:J
-goto :EOF
-
-:chooseJava
-rem
-rem Looks for Java at AS_JAVA, JAVA_HOME or in the path.
-rem Sets javaSearchType to tell which was used to look for java,
-rem javaSearchTarget to the location (or path), and
-rem JAVA to the found java executable.
-
-    if "%AS_JAVA%x" == "x" goto :checkJAVA_HOME
-       set javaSearchType=AS_JAVA
-       set javaSearchTarget="%AS_JAVA%"
-       set JAVA=%AS_JAVA%\bin\java.exe
-       for %%a in ("%AS_JAVA%") do set ACCJavaHome=%%~sa
-       goto :verifyJava
-
-:checkJAVA_HOME
-    if "%JAVA_HOME%x" == "x" goto :checkPATH
-       set javaSearchType=JAVA_HOME
-       set javaSearchTarget="%JAVA_HOME%"
-       set JAVA=%JAVA_HOME%\bin\java.exe
-       for %%a in ("%JAVA_HOME%") do set ACCJavaHome=%%~sa
-       goto :verifyJava
-
-:checkPATH
-    set JAVA=java
-    call :seekJavaOnPath
-    set javaSearchType=PATH
-    set javaSearchTarget="%PATH%"
-
-:verifyJava
-rem
-rem Make sure java really exists where we were told to look.  If not
-rem display how we tried to find it and then try to run it, letting the shell
-rem issue the error so we don't have to do i18n of our own message from the script.
-    if EXIST "%JAVA%" goto :EOF
-    echo
-    echo %javaSearchType%=%javaSearchTarget%
-    echo
-    "%JAVA%"
-    exit/b %ERRORLEVEL%
-goto :EOF
-
-:main
-set _AS_INSTALL=%~dp0..
-call "%_AS_INSTALL%\config\asenv.bat"
-call :chooseJava
-
-set inputArgs=%*
-rem
-rem Convert the java.exe path and the classpath path to
-rem Windows "short" versions - with no spaces - so the
-rem for /F statement below will work correctly.  Spaces cause
-rem it great troubles.
-rem
-for %%a in ("%JAVA%") do set ACCJava=%%~sa%
-for %%a in ("%_AS_INSTALL%/lib/gf-client.jar") do set XCLASSPATH=%%~sa
-for /F "usebackq tokens=*" %%a in (`%ACCJava% -classpath %XCLASSPATH% org.glassfish.appclient.client.CLIBootstrap`) do set javaCmd=%%a
-%javaCmd%
+REM Execute CLIBootstrap with the arguments passed to this script
+REM to retrieve the command to execute.
+REM FOR /F - processes command output line by line
+REM "delims=" - treats each line as a whole (no delimiter)
+REM %%i - loop variable for batch files, would be %i on command line
+FOR /F "delims=" %%i IN ("%JAVA%" --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.acc.agent.CLIBootstrap %*) DO set CMD=%%i
+%CMD% %ARGS%

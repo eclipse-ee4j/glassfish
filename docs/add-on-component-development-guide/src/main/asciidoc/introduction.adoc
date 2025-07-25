@@ -123,8 +123,8 @@ To develop add-on components that meet these requirements, follow the
 development process that is described in the following sections:
 
 * <<Writing HK2 Components>>
-* <<Extending the Administration Console]
-* <<Extending the `asadmin` Utility]
+* <<Extending the Administration Console>>
+* <<Extending the `asadmin` Utility>>
 * <<Adding Monitoring Capabilities>>
 * <<Adding Configuration Data for a Component>>
 * <<Adding Container Capabilities>>

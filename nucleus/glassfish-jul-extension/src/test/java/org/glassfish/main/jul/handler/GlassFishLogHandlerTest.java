@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
 
 import static org.glassfish.main.jul.env.LoggingSystemEnvironment.getOriginalStdErr;
 import static org.glassfish.main.jul.env.LoggingSystemEnvironment.getOriginalStdOut;
@@ -53,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author David Matejcek
  */
 @TestMethodOrder(OrderAnnotation.class)
+@Timeout(value = 5, unit = TimeUnit.SECONDS)
 public class GlassFishLogHandlerTest {
 
     private static GlassFishLogHandler handler;
@@ -110,7 +113,8 @@ public class GlassFishLogHandlerTest {
         );
 
         System.out.println("Tommy, can you hear me?");
-        // output stream is pumped in parallel to the error stream, order is not guaranteed between streams
+        // Now the new log record was added to the LoggingOutputStream's logRecordBuffer.
+        // We have to wait until the pump will process it.
         waitForSize(logFile, 1);
         Logger.getLogger("some.usual.logger").info("Some info message");
         waitForSize(logFile, 2);
@@ -211,8 +215,14 @@ public class GlassFishLogHandlerTest {
 
     private static void waitForSize(File file, long minLineCount) throws IOException {
         long start = System.currentTimeMillis();
+        long lastLength = 0;
         do {
             Thread.onSpinWait();
+            long newLength = file.length();
+            if (newLength == lastLength) {
+                continue;
+            }
+            lastLength = newLength;
             final long lineCount;
             try (Stream<String> stream = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
                 lineCount = stream.count();
@@ -220,7 +230,7 @@ public class GlassFishLogHandlerTest {
             if (lineCount >= minLineCount) {
                 return;
             }
-        } while (System.currentTimeMillis() - start < 2000L);
+        } while (System.currentTimeMillis() - start < 10000L);
         fail("Timeout waiting until the file " + file + " grows to " + minLineCount + " lines. File content: \n"
             + Files.readString(file.toPath(), handler.getConfiguration().getEncoding()));
     }

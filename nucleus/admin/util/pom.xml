@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>nucleus-admin</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>admin-util</artifactId>
@@ -48,6 +48,7 @@
 
     <properties>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
     </properties>
 
     <dependencies>

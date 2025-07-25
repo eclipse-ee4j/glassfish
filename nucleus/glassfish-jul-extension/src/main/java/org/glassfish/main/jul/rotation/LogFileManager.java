@@ -185,7 +185,9 @@ public class LogFileManager {
         lock.lock();
         try (AsyncLogger logger = new AsyncLogger()) {
             final boolean wasOutputEnabled = isOutputEnabled();
-            logger.logInfo("Rolling the file " + this.logFile + "; output was originally enabled: " + wasOutputEnabled);
+            final String logMsg = "Rolling the file " + this.logFile + "; output was originally enabled: " + wasOutputEnabled;
+            trace(LogFileManager.class, logMsg);
+            logger.logInfo(logMsg);
             disableOutput();
             File archivedFile = null;
             try {
@@ -195,8 +197,9 @@ public class LogFileManager {
                 archivedFile = prepareAchivedLogFileTarget();
                 trace(LogFileManager.class, "Archived file: " + archivedFile);
                 moveFile(logFile, archivedFile, logger);
-                forceOSFilesync(logFile);
-                return;
+                if (!logFile.createNewFile()) {
+                    logger.logError("Error, could not create a new log file " + logFile + "!", null);
+                }
             } catch (Exception e) {
                 logger.logError("Error, could not rotate log file " + logFile, e);
             } finally {
@@ -308,18 +311,6 @@ public class LogFileManager {
             counter++;
             archivedFileName = archivedFileNameBase + "_" + counter;
         }
-    }
-
-
-    /**
-     * Make sure that server.log contents are flushed out to start from a clean file again after
-     * the rename...
-     *
-     * @param file
-     * @throws IOException
-     */
-    private void forceOSFilesync(final File file) throws IOException {
-        new FileOutputStream(file).close();
     }
 
 

@@ -39,7 +39,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
@@ -182,7 +182,8 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                         urls[i] = uris[i].toURL();
                     }
                     ResourceBundle rb;
-                    try (GlassfishUrlClassLoader loader = new GlassfishUrlClassLoader(urls, new NullClassLoader())) {
+                    try (GlassfishUrlClassLoader loader = new GlassfishUrlClassLoader("LoggerInfoMetadata", urls,
+                        new NullClassLoader())) {
                         rb = ResourceBundle.getBundle(RBNAME, locale, loader);
                     }
                     for (String key : rb.keySet()) {

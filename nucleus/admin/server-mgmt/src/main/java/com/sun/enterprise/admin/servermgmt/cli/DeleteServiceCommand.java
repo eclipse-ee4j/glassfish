@@ -22,7 +22,6 @@ import com.sun.enterprise.admin.servermgmt.services.PlatformServicesInfo;
 import com.sun.enterprise.admin.servermgmt.services.Service;
 import com.sun.enterprise.admin.servermgmt.services.ServiceFactory;
 import com.sun.enterprise.admin.util.ServerDirsSelector;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.io.FileUtils;
@@ -34,6 +33,7 @@ import java.util.logging.Level;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Delete a "service" in the operating system.

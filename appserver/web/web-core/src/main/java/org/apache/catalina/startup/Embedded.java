@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -52,6 +53,10 @@ import org.apache.catalina.util.LifecycleSupport;
 import org.apache.catalina.util.ServerInfo;
 import org.glassfish.web.util.IntrospectionUtils;
 import org.glassfish.web.valve.GlassFishValve;
+
+import static javax.naming.Context.INITIAL_CONTEXT_FACTORY;
+import static javax.naming.Context.URL_PKG_PREFIXES;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Convenience class to embed a Catalina servlet container environment
@@ -316,11 +321,11 @@ public class Embedded  extends StandardService {
     }
 
     public void setCatalinaHome( String s ) {
-        System.setProperty( "catalina.home", s);
+        setProperty( "catalina.home", s, true);
     }
 
     public void setCatalinaBase( String s ) {
-        System.setProperty( "catalina.base", s);
+        setProperty( "catalina.base", s, true);
     }
 
     public String getCatalinaHome() {
@@ -349,6 +354,7 @@ public class Embedded  extends StandardService {
      *
      * @exception IllegalStateException if no engines have been added yet
      */
+    @Override
     public synchronized void addConnector(Connector connector) {
 
         if (log.isLoggable(Level.FINE)) {
@@ -356,9 +362,10 @@ public class Embedded  extends StandardService {
         }
 
         // Make sure we have a Container to send requests to
-        if (engines.length < 1)
+        if (engines.length < 1) {
             throw new IllegalStateException
                 (rb.getString(LogFacade.NO_ENGINES_DEFINED));
+        }
 
         /*
          * Add the connector. This will set the connector's container to the
@@ -375,13 +382,15 @@ public class Embedded  extends StandardService {
      */
     public synchronized void addEngine(Engine engine) {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Adding engine (" + engine.getInfo() + ")");
+        }
 
         // Add this Engine to our set of defined Engines
         Engine results[] = new Engine[engines.length + 1];
-        for (int i = 0; i < engines.length; i++)
+        for (int i = 0; i < engines.length; i++) {
             results[i] = engines[i];
+        }
         results[engines.length] = engine;
         engines = results;
 
@@ -524,9 +533,10 @@ public class Embedded  extends StandardService {
      */
     public Context createContext(String path, String docBase) {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Creating context '" + path + "' with docBase '" +
                     docBase + "'");
+        }
 
         StandardContext context = new StandardContext();
 
@@ -537,7 +547,7 @@ public class Embedded  extends StandardService {
         ContextConfig config = new ContextConfig();
         config.setCustomAuthenticators(authenticators);
         config.setDebug(debug);
-        ((Lifecycle) context).addLifecycleListener(config);
+        context.addLifecycleListener(config);
 
         return (context);
 
@@ -551,8 +561,9 @@ public class Embedded  extends StandardService {
      */
     public Engine createEngine() {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Creating engine");
+        }
 
         StandardEngine engine = new StandardEngine();
 
@@ -594,9 +605,10 @@ public class Embedded  extends StandardService {
      */
     public Host createHost(String name, String appBase) {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Creating host '" + name + "' with appBase '" +
                     appBase + "'");
+        }
 
         StandardHost host = new StandardHost();
 
@@ -618,9 +630,10 @@ public class Embedded  extends StandardService {
      */
     public Loader createLoader(ClassLoader parent) {
 
-        if (log.isLoggable(Level.FINEST))
+        if (log.isLoggable(Level.FINEST)) {
             log.log(Level.FINEST, "Creating Loader with parent class loader '" +
                     parent + "'");
+        }
 
         WebappLoader loader = new WebappLoader(parent);
         return (loader);
@@ -633,6 +646,7 @@ public class Embedded  extends StandardService {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
 
         return (this.info);
@@ -649,8 +663,9 @@ public class Embedded  extends StandardService {
      */
     public synchronized void removeContext(Context context) {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Removing context[" + context.getPath() + "]");
+        }
 
         // Is this Context actually among those that are defined?
         boolean found = false;
@@ -664,18 +679,22 @@ public class Embedded  extends StandardService {
                         break;
                     }
                 }
-                if (found)
+                if (found) {
                     break;
+                }
             }
-            if (found)
+            if (found) {
                 break;
+            }
         }
-        if (!found)
+        if (!found) {
             return;
+        }
 
         // Remove this Context from the associated Host
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, " Removing this Context");
+        }
         context.getParent().removeChild(context);
 
     }
@@ -690,8 +709,9 @@ public class Embedded  extends StandardService {
      */
     public synchronized void removeEngine(Engine engine) {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Removing engine (" + engine.getInfo() + ")");
+        }
 
         // Is the specified Engine actually defined?
         int j = -1;
@@ -701,22 +721,25 @@ public class Embedded  extends StandardService {
                 break;
             }
         }
-        if (j < 0)
+        if (j < 0) {
             return;
+        }
 
         // Remove any Connector that is using this Engine
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, " Removing related Containers");
+        }
         while (true) {
             int n = -1;
             for (int i = 0; i < connectors.length; i++) {
-                if (connectors[i].getContainer() == (Container) engine) {
+                if (connectors[i].getContainer() == engine) {
                     n = i;
                     break;
                 }
             }
-            if (n < 0)
+            if (n < 0) {
                 break;
+            }
             // START SJSAS 6231069
             //removeConnector(connectors[n]);
             try{
@@ -729,8 +752,9 @@ public class Embedded  extends StandardService {
 
         // Stop this Engine if necessary
         if (engine instanceof Lifecycle) {
-            if (log.isLoggable(Level.FINE))
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, " Stopping this Engine");
+            }
             try {
                 ((Lifecycle) engine).stop();
             } catch (LifecycleException e) {
@@ -739,13 +763,15 @@ public class Embedded  extends StandardService {
         }
 
         // Remove this Engine from our set of defined Engines
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, " Removing this Engine");
+        }
         int k = 0;
         Engine results[] = new Engine[engines.length - 1];
         for (int i = 0; i < engines.length; i++) {
-            if (i != j)
+            if (i != j) {
                 results[k++] = engines[i];
+            }
         }
         engines = results;
 
@@ -761,8 +787,9 @@ public class Embedded  extends StandardService {
      */
     public synchronized void removeHost(Host host) {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Removing host[" + host.getName() + "]");
+        }
 
         // Is this Host actually among those that are defined?
         boolean found = false;
@@ -775,15 +802,18 @@ public class Embedded  extends StandardService {
 
                 }
             }
-            if (found)
+            if (found) {
                 break;
+            }
         }
-        if (!found)
+        if (!found) {
             return;
+        }
 
         // Remove this Host from the associated Engine
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, " Removing this Host");
+        }
         host.getParent().removeChild(host);
 
     }
@@ -827,6 +857,7 @@ public class Embedded  extends StandardService {
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
 
         lifecycle.addLifecycleListener(listener);
@@ -838,6 +869,7 @@ public class Embedded  extends StandardService {
      * Gets the (possibly empty) list of lifecycle listeners associated
      * with this Embedded instance.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
@@ -848,6 +880,7 @@ public class Embedded  extends StandardService {
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
         lifecycle.removeLifecycleListener(listener);
     }
@@ -882,9 +915,10 @@ public class Embedded  extends StandardService {
         initNaming();
 
         // Validate and update our current component state
-        if (started)
+        if (started) {
             throw new LifecycleException
                 (rb.getString(LogFacade.SERVICE_BEEN_STARTED_EXCEPTION));
+        }
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
         initialized = true;
@@ -892,14 +926,16 @@ public class Embedded  extends StandardService {
         // Start our defined Connectors first
         for (int i = 0; i < connectors.length; i++) {
             connectors[i].initialize();
-            if (connectors[i] instanceof Lifecycle)
+            if (connectors[i] instanceof Lifecycle) {
                 ((Lifecycle) connectors[i]).start();
+            }
         }
 
         // Start our defined Engines second
         for (int i = 0; i < engines.length; i++) {
-            if (engines[i] instanceof Lifecycle)
+            if (engines[i] instanceof Lifecycle) {
                 ((Lifecycle) engines[i]).start();
+            }
         }
     }
 
@@ -915,33 +951,39 @@ public class Embedded  extends StandardService {
     @Override
     public void stop() throws LifecycleException {
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Stopping embedded server");
+        }
 
         // Validate and update our current component state
-        if (!started)
+        if (!started) {
             throw new LifecycleException
                 (rb.getString(LogFacade.SERVICE_NOT_BEEN_STARTED_EXCEPTION));
+        }
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
 
         // Stop our defined Connectors first
         for (int i = 0; i < connectors.length; i++) {
-            if (connectors[i] instanceof Lifecycle)
+            if (connectors[i] instanceof Lifecycle) {
                 ((Lifecycle) connectors[i]).stop();
+            }
         }
 
         // Stop our defined Engines second
         for (int i = 0; i < engines.length; i++) {
-            if (engines[i] instanceof Lifecycle)
+            if (engines[i] instanceof Lifecycle) {
                 ((Lifecycle) engines[i]).stop();
+            }
         }
 
     }
 
     @Override
     public void destroy() throws LifecycleException {
-        if( started ) stop();
+        if( started ) {
+            stop();
+        }
         if (initialized) {
             initialized = false;
         }
@@ -965,35 +1007,18 @@ public class Embedded  extends StandardService {
     protected void initNaming() {
         // Setting additional variables
         if (!useNaming) {
-            // START SJSAS 5031700
-            //log.info( "Catalina naming disabled");
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Catalina naming disabled");
-            }
-            // END SJSAS 5031700
-            System.setProperty("catalina.useNaming", "false");
+            log.log(Level.FINE, "Catalina naming disabled");
+            setProperty("catalina.useNaming", "false", true);
         } else {
-            System.setProperty("catalina.useNaming", "true");
+            setProperty("catalina.useNaming", "true", true);
             String value = "org.apache.naming";
-            String oldValue =
-                System.getProperty(javax.naming.Context.URL_PKG_PREFIXES);
+            String oldValue = System.getProperty(URL_PKG_PREFIXES);
             if (oldValue != null) {
                 value = value + ":" + oldValue;
             }
-            System.setProperty(javax.naming.Context.URL_PKG_PREFIXES, value);
-            if (log.isLoggable(Level.FINE))
-                log.log(Level.FINE, "Setting naming prefix=" + value);
-            value = System.getProperty
-                (javax.naming.Context.INITIAL_CONTEXT_FACTORY);
-            if (value == null) {
-                System.setProperty
-                    (javax.naming.Context.INITIAL_CONTEXT_FACTORY,
-                     "org.apache.naming.java.javaURLContextFactory");
-            } else {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "INITIAL_CONTEXT_FACTORY alread set " + value);
-                }
-            }
+            setProperty(URL_PKG_PREFIXES, value, true);
+            log.log(Level.FINE, "Setting naming prefix={0}", value);
+            setProperty(INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory", false);
         }
     }
 
@@ -1031,12 +1056,11 @@ public class Embedded  extends StandardService {
                     catalinaHome = home.getAbsolutePath();
                 }
             }
-            System.setProperty("catalina.home", catalinaHome);
+            setProperty("catalina.home", catalinaHome, true);
         }
 
         if (System.getProperty("catalina.base") == null) {
-            System.setProperty("catalina.base",
-                               catalinaHome);
+            setProperty("catalina.base", catalinaHome, true);
         } else {
             String catalinaBase = System.getProperty("catalina.base");
             File base = new File(catalinaBase);
@@ -1047,7 +1071,7 @@ public class Embedded  extends StandardService {
                     catalinaBase = base.getAbsolutePath();
                 }
             }
-            System.setProperty("catalina.base", catalinaBase);
+            setProperty("catalina.base", catalinaBase, true);
         }
 
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextUtil;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -34,8 +33,9 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.config.UnprocessedConfigListener;
-import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
@@ -58,7 +58,10 @@ import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 public class LocationsCommand implements AdminCommand {
 
     @Inject
-    ServerEnvironmentImpl serverEnvironment;
+    private ServerEnvironment serverEnvironment;
+
+    @Inject
+    private ServerContext server;
 
     @Inject
     private UnprocessedConfigListener ucl;
@@ -70,13 +73,13 @@ public class LocationsCommand implements AdminCommand {
         report.setMessage(serverEnvironment.getInstanceRoot().getAbsolutePath().replace('\\', '/'));
 
         MessagePart messagePart = report.getTopMessagePart();
-        messagePart.addProperty("Base-Root", StartupContextUtil.getInstallRoot(serverEnvironment.getStartupContext()).getAbsolutePath());
+        messagePart.addProperty("Base-Root", server.getInstallRoot().getAbsolutePath());
         messagePart.addProperty("Domain-Root", serverEnvironment.getInstanceRoot().getAbsolutePath());
         messagePart.addProperty("Instance-Root", serverEnvironment.getInstanceRoot().getAbsolutePath());
         messagePart.addProperty("Config-Dir", serverEnvironment.getConfigDirPath().getAbsolutePath());
-        messagePart.addProperty("Uptime", "" + getUptime());
+        messagePart.addProperty("Uptime", Long.toString(getUptime()));
         messagePart.addProperty("Pid", Long.toString(ProcessHandle.current().pid()));
-        messagePart.addProperty("Restart-Required", "" + ucl.serverRequiresRestart());
+        messagePart.addProperty("Restart-Required", Boolean.toString(ucl.serverRequiresRestart()));
     }
 
     private long getUptime() {

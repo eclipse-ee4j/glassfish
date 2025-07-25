@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.distributions</groupId>
@@ -65,7 +65,6 @@
         <temp.dir>${project.build.directory}/dependency</temp.dir>
         <include.group.ids>org.glassfish.main.packager,org.glassfish.main.registration</include.group.ids>
         <template.jar>${stage.dir}/${install.dir.name}/glassfish/common/templates/gf/appserver-domain.jar</template.jar>
-        <create-domain.args>--user admin create-domain --template=${template.jar} --nopassword --savelogin=true --checkports=false --adminport 4848 --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
         <asadmin.executable>${stage.dir}/${install.dir.name}/bin/asadmin${file.executable.suffix}</asadmin.executable>
     </properties>
@@ -134,7 +133,22 @@
                             </goals>
                             <configuration>
                                 <executable>${asadmin.executable}</executable>
-                                <commandlineArgs>${create-domain.args}</commandlineArgs>
+                                <inheritIo>true</inheritIo>
+                                <arguments>
+                                    <argument>--user</argument>
+                                    <argument>admin</argument>
+                                    <argument>create-domain</argument>
+                                    <argument>--template</argument>
+                                    <argument>${template.jar}</argument>
+                                    <argument>--nopassword</argument>
+                                    <argument>--savelogin=true</argument>
+                                    <argument>--checkports=false</argument>
+                                    <argument>--adminport=4848</argument>
+                                    <argument>--instanceport=8080</argument>
+                                    <argument>--keytooloptions</argument>
+                                    <argument>CN=localhost</argument>
+                                    <argument>domain1</argument>
+                                </arguments>
                             </configuration>
                         </execution>
                     </executions>
@@ -161,4 +175,20 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <!--
+                Workaround for incorrect behavior of Windows Server 2025 + exec plugin when the path contains spaces
+                -->
+                <asadmin.executable>"${stage.dir}/${install.dir.name}/bin/asadmin${file.executable.suffix}"</asadmin.executable>
+            </properties>
+        </profile>
+    </profiles>
 </project>

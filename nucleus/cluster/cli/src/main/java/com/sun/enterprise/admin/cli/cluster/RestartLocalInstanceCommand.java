@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +23,7 @@ import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,9 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
+import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 
 /**
  * @author Byron Nevins
@@ -47,7 +51,6 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
 
     @Override
     protected final void doCommand() throws CommandException {
-        // see StopLocalInstance for comments.  These 2 lines can be refactored.
         setLocalPassword();
         programOpts.setInteractive(false);
 
@@ -56,7 +59,7 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         }
 
         // Save old values before executing restart
-        final int oldPid = getServerPid();
+        final Long oldPid = getServerPid();
         final HostAndPort adminAddress = getAdminAddress(getServerDirs().getServerName());
         // run the remote restart-instance command and throw away the output
         RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
@@ -66,7 +69,8 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
             cmd.executeAndReturnOutput("_restart-instance", "--debug", debug.toString());
         }
 
-        waitForRestart(oldPid, adminAddress, adminAddress);
+        // Timeouts are set in commands we use, so we will wait for the result without timeout.
+        waitForRestart(oldPid, adminAddress, adminAddress, getRestartTimeout());
         logger.info("Successfully restarted the instance.");
     }
 
@@ -105,7 +109,40 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         if (instanceName != null) {
             opts.add(instanceName);
         }
+        final Duration startTimeout = getStartTimeout();
+        if (startTimeout != null) {
+            opts.add("--timeout");
+            opts.add(Long.toString(startTimeout.toSeconds()));
+        }
+        return cmd.execute(opts.toArray(String[]::new));
+    }
 
-        return cmd.execute(opts.toArray(new String[opts.size()]));
+    /**
+     * @return timeout for the start-local-instance command.
+     */
+    private Duration getStartTimeout() {
+        final Duration parameter = getTimeout();
+        return parameter == null ? WAIT_FOR_DAS_TIME_MS : parameter;
+    }
+
+    /**
+     * @return timeout set as a parameter
+     */
+    private Duration getRestartTimeout() {
+        final Duration paramTimeout = getTimeout();
+        if (paramTimeout != null) {
+            return paramTimeout;
+        }
+        final Duration startTimeout = getStartTimeout();
+        if (startTimeout == null && DEATH_TIMEOUT_MS == null) {
+            return null;
+        }
+        if (startTimeout == null) {
+            return DEATH_TIMEOUT_MS.plusSeconds(5L);
+        }
+        if (DEATH_TIMEOUT_MS == null) {
+            return startTimeout.plusSeconds(5L);
+        }
+        return WAIT_FOR_DAS_TIME_MS.plus(DEATH_TIMEOUT_MS).plusSeconds(5);
     }
 }

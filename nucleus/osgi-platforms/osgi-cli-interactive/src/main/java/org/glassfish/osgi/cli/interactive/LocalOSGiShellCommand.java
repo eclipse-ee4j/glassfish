@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,6 @@ import com.sun.enterprise.admin.cli.MultimodeCommand;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import jakarta.inject.Inject;
 
@@ -54,6 +53,8 @@ import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
@@ -166,7 +167,7 @@ public class LocalOSGiShellCommand extends CLICommand {
         // restore echo flag, saved in validate
         if (encoding != null) {
             // see Configuration.getEncoding()...
-            System.setProperty("input.encoding", encoding);
+            SystemProperties.setProperty("input.encoding", encoding, true);
         }
         final String[] args = enhanceForTarget(new String[] {REMOTE_COMMAND, "asadmin-osgi-shell"});
         logger.log(Level.FINEST, "executeCommand: args {0}", Arrays.toString(args));
@@ -357,6 +358,7 @@ public class LocalOSGiShellCommand extends CLICommand {
                      */
                     final ProgramOptions programOptions = new ProgramOptions(env);
                     // copy over AsadminMain info
+                    programOptions.setModulePath(programOpts.getModulePath());
                     programOptions.setClassPath(programOpts.getClassPath());
                     programOptions.setClassName(programOpts.getClassName());
                     // remove the old one and replace it

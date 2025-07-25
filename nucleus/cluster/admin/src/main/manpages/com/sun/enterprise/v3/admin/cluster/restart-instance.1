@@ -4,8 +4,10 @@ NAME
        restart-instance - restarts a running GlassFish Server instance
 
 SYNOPSIS
-           restart-instance [--help]
-           [--debug={false|true}] instance-name
+        restart-instance
+        [--debug <debug>]
+        [--timeout <timeout>]
+        instancename
 
 DESCRIPTION
        The restart-instance subcommand restarts a running GlassFish Server
@@ -58,9 +60,6 @@ DESCRIPTION
        This subcommand is supported in remote mode only.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
        --debug
            Specifies whether the instance is restarted with Java Platform
            Debugger Architecture (JPDA)
@@ -80,6 +79,15 @@ OPTIONS
 
            The default is the current setting of this option for the instance
            that is being restarted.
+
+       --help, -?
+           Displays the help text for the subcommand.
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The instance status is unknown
+            in such case.
 
 OPERANDS
        instance-name
@@ -114,4 +122,4 @@ SEE ALSO
        Java Platform Debugger Architecture (JPDA)
        (https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
 
-Jakarta EE 10                         21 Aug 2017              restart-instance(1)
+Jakarta EE 10                         26 Jun 2025              restart-instance(1)

@@ -40,7 +40,7 @@
 
     <target name="sign.jar" depends="build.lib">
         <signjar verbose="true" jar="${assemble.dir}/lib/lib.jar" alias="s1as" storepass="changeit"
-                 keypass="changeit" keystore="${env.S1AS_HOME}/domains/domain1/config/keystore.jks"
+                 keypass="changeit" keystore="${env.S1AS_HOME}/domains/domain1/config/keystore.p12"
                  signedjar="${assemble.dir}/lib/${lib.jar.path}"/>
     </target>
 

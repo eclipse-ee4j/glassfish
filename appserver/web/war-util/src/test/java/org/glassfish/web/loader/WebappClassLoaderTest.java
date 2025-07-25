@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.naming.resources.WebDirContext;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -66,7 +66,7 @@ class WebappClassLoaderTest {
     public void isParallel() {
         assertAll(
             () -> assertTrue(new URLClassLoader(new URL[0]).isRegisteredAsParallelCapable()),
-            () -> assertTrue(new GlassfishUrlClassLoader(new URL[0]).isRegisteredAsParallelCapable()),
+            () -> assertTrue(new GlassfishUrlClassLoader("WebappClassLoaderTest", new URL[0]).isRegisteredAsParallelCapable()),
             () -> assertTrue(new WebappClassLoader(null).isRegisteredAsParallelCapable())
         );
     }

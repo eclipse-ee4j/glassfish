@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admingui</groupId>
         <artifactId>admingui</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,6 +32,10 @@
 
     <name>Admin Console Connectors Plugin</name>
     <description>Connectors plugin bundle for GlassFish Admin Console</description>
+
+    <properties>
+        <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+    </properties>
 
     <dependencies>
         <dependency>

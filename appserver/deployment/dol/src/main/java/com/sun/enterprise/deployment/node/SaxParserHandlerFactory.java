@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,7 @@ import java.io.File;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  *Provides the appropriate implementation depending on the current
@@ -56,10 +57,11 @@ public class SaxParserHandlerFactory {
 
         final ServiceLocator habitat = Globals.getDefaultHabitat();
 
-        if(installRootIsValid())
+        if(installRootIsValid()) {
             result = habitat.getService(SaxParserHandler.class);
-        else
+        } else {
             result = habitat.getService(SaxParserHandlerBundled.class);
+        }
 
         return result;
     }
@@ -68,15 +70,17 @@ public class SaxParserHandlerFactory {
         // In the context of this class, we need to make sure that we know if we
         //have a route to local DTDs.  Period.
 
-        String ir = System.getProperty(INSTALL_ROOT_PROPERTY);
+        String ir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
 
-        if(!ok(ir))
+        if (!ok(ir)) {
             return false;
+        }
 
         File dtds = new File(new File(ir), "lib/dtds");
 
-        if(!dtds.isDirectory())
+        if (!dtds.isDirectory()) {
             return false;
+        }
 
         return true;
     }

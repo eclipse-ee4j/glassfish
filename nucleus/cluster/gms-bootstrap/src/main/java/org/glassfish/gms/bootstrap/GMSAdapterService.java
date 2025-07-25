@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.logging.LogLevel;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.runlevel.RunLevel;
@@ -88,32 +87,31 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
                     action="Check that shoal-gms-impl.jar file is present.")
     private static final String GMSBS_GMSADAPTER_NOT_AVAILABLE="NCLS-CLSTR-10001";
 
-    private static final StringManager strings =
-        StringManager.getManager(GMSAdapterService.class);
+    private static final StringManager strings = StringManager.getManager(GMSAdapterService.class);
+    private static final Object LOCK = new Object();
 
     @Inject
-    Clusters clusters;
+    private Clusters clusters;
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    Server server;
+    private Server server;
 
     @Inject
-    ServerEnvironment env;
+    private ServerEnvironment env;
 
     @Inject
     private ServiceLocator habitat;
 
     @Inject
-    StartupContext startupContext;
+    private StartupContext startupContext;
 
     @Inject
     private Provider<GMSAdapter> gmsAdapterProvider;
 
-    static private final Object lock = new Object();
 
     List<GMSAdapter> gmsAdapters = new LinkedList<>();
 
-    final static private Level TRACE_LEVEL = LogLevel.FINE;
+    final static private Level TRACE_LEVEL = Level.FINE;
 
     /**
      * Starts the application loader service.
@@ -146,7 +144,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
     /*
      */
     public GMSAdapter getGMSAdapter() {
-        synchronized(lock) {
+        synchronized(LOCK) {
             if (gmsAdapters.size() > 1) {
                 throw new IllegalStateException(
                     strings.getString("use.getByName"));
@@ -163,7 +161,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
     }
 
     public GMSAdapter getGMSAdapterByName(String clusterName) {
-        synchronized(lock) {
+        synchronized(LOCK) {
             return habitat.getService(GMSAdapter.class, clusterName);
         }
     }
@@ -198,7 +196,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
      */
     private GMSAdapter loadModule(Cluster cluster) {
         GMSAdapter result = null;
-        synchronized(lock) {
+        synchronized(LOCK) {
             result = getGMSAdapterByName(cluster.getName());
             if (GMSBS_LOGGER.isLoggable(TRACE_LEVEL)) {
                 GMSBS_LOGGER.log(TRACE_LEVEL, "lookup GMSAdapter by clusterName=" + cluster.getName() + " returned " + result);
@@ -233,7 +231,6 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
      * On create-cluster event, DAS joins a gms-enabled cluster.
      * On delete-cluster event, DAS leaves a gms-enabled cluster.
      */
-
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         if (env.isDas()) {
@@ -261,7 +258,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
                         if (GMSBS_LOGGER.isLoggable(TRACE_LEVEL)) {
                             GMSBS_LOGGER.log(TRACE_LEVEL, "ClusterChangeEvent remove cluster " + cluster.getName());
                         }
-                        synchronized(lock) {
+                        synchronized(LOCK) {
                             GMSAdapter localGmsAdapter = getGMSAdapterByName(cluster.getName());
                             if (localGmsAdapter != null) {
                                 gmsAdapters.remove(localGmsAdapter);

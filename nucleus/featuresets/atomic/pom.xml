@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>nucleus-featuresets</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>atomic</artifactId>
@@ -466,6 +466,17 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
+            <artifactId>glassfish-osgi-bootstrap</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.core</groupId>
             <artifactId>kernel</artifactId>
             <version>${project.version}</version>
             <exclusions>
@@ -507,6 +518,11 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -566,6 +582,16 @@
         <dependency>
             <groupId>org.glassfish.gmbal</groupId>
             <artifactId>gmbal</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal-api-only</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

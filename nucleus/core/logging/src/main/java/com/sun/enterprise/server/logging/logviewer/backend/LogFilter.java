@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.server.logging.LogFacade;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -52,6 +51,8 @@ import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * <p/>
  * LogFilter will be used by Admin Too Log Viewer Front End to filter the
@@ -72,8 +73,8 @@ public class LogFilter {
 
     static final String[] LOG_LEVELS = {"SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST"};
 
-    private static String[] serverLogElements = {System.getProperty("com.sun.aas.instanceRoot"), "logs", "server.log"};
-
+    private static String[] serverLogElements = {System.getProperty(INSTANCE_ROOT.getSystemPropertyName()), "logs",
+        "server.log"};
     private static String pL = System.getProperty("com.sun.aas.processLauncher");
     private static String verboseMode = System.getProperty("com.sun.aas.verboseMode", "false");
     private static String defaultLogFile = System.getProperty("com.sun.aas.defaultLogFile");
@@ -256,7 +257,7 @@ public class LogFilter {
         return loggingConfig.getLoggingFileDetails(targetConfigName);
     }
 
-    /*
+    /**
      * This method is used by LogViewerResource which is used to display raw log data like 'tail -f server.log'.
      */
     public String getLogFileForGivenTarget(String targetServerName) throws IOException {
@@ -273,19 +274,19 @@ public class LogFilter {
         // getting log file for instance from logging.properties
         String logFileDetailsForInstance = getInstanceLogFileDetails(targetServer);
         Node node = domain.getNodes().getNode(serverNode);
-        String loggingDir = "";
-        String loggingFile = "";
 
+        final String loggingFile;
         // replacing instanceRoot value if it's there
-        if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getNodeDir() != null) {
+        if (logFileDetailsForInstance.contains(INSTANCE_ROOT.toExpression() + "/logs") && node.getNodeDir() != null) {
             // this code is used if no changes made in logging.properties file
-            loggingDir = node.getNodeDir() + File.separator + serverNode
+            String loggingDir = node.getNodeDir() + File.separator + serverNode
                 + File.separator + targetServerName;
-            loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
-        } else if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getInstallDir() != null) {
-            loggingDir = node.getInstallDir() + File.separator + "glassfish" + File.separator + "nodes"
+            loggingFile = logFileDetailsForInstance.replace(INSTANCE_ROOT.toExpression(), loggingDir);
+        } else if (logFileDetailsForInstance.contains(INSTANCE_ROOT.toExpression() + "/logs")
+            && node.getInstallDir() != null) {
+            String loggingDir = node.getInstallDir() + File.separator + "glassfish" + File.separator + "nodes"
                 + File.separator + serverNode + File.separator + targetServerName;
-            loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
+            loggingFile = logFileDetailsForInstance.replace(INSTANCE_ROOT.toExpression(), loggingDir);
         } else {
             loggingFile = logFileDetailsForInstance;
         }
@@ -622,8 +623,7 @@ public class LogFilter {
                 // using the default parent path used for the current LogFile.
                 // assume the user specified the path from the instance root and that is the parent
 
-                parent = System.getProperty(
-                    SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+                parent = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
 
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);

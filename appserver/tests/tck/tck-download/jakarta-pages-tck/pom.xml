@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta-pages-tck</artifactId>
@@ -32,53 +32,32 @@
     <name>TCK: Install Jakarta Pages TCK</name>
 
     <properties>
-        <tck.test.pages.file>jakarta-pages-tck-3.1.0.zip</tck.test.pages.file>
-        <tck.test.pages.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.pages.file}</tck.test.pages.url>
+        <tck.artifactFileName>jakarta-pages-tck-3.1.0.zip</tck.artifactFileName>
+        <tck.artifactUrl>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>download-pages-tck</id>
+                        <id>download-tck</id>
                         <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <skipCache>true</skipCache>
-                    <overwrite>true</overwrite>
-                    <url>${tck.test.pages.url}</url>
-                    <unpack>false</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-pages-tck</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.build.directory}/${tck.test.pages.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
+                        <id>attach-tck</id>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

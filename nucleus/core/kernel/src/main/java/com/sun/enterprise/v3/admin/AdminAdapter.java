@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.common_impl.LogHelper;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.uuid.UuidGenerator;
 import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
 import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
@@ -58,8 +57,8 @@ import javax.security.auth.login.LoginException;
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandModel;
-import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
@@ -94,20 +93,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public abstract class AdminAdapter extends StaticHttpHandler implements Adapter, PostConstruct, EventListener {
 
-    public final static String VS_NAME="__asadmin";
-    public final static String PREFIX_URI = "/" + VS_NAME;
-    private final static LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(AdminAdapter.class);
-    private final static Logger aalogger = KernelLoggerInfo.getLogger();
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(AdminAdapter.class);
+    private static final Logger LOG = KernelLoggerInfo.getLogger();
+
     private static final String BASIC = "Basic ";
-
     private static final String SET_COOKIE_HEADER = "Set-Cookie";
-
-    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
-
-    public static final int MAX_AGE = 86400 ;
-
-    public static final String ASADMIN_PATH="/__asadmin";
-
+    private static final String SESSION_COOKIE_NAME = "JSESSIONID";
+    private static final int MAX_AGE = 86400 ;
+    private static final String ASADMIN_PATH="/__asadmin";
     private static final String QUERY_STRING_SEPARATOR = "&";
 
     @Inject
@@ -133,13 +126,15 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     @Inject
     ServiceLocator habitat;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     volatile AdminService as;
 
     @Inject
     volatile Domain domain;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private volatile Server server;
 
     @Inject
@@ -151,9 +146,8 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
     CountDownLatch latch = new CountDownLatch(1);
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected AdminAdapter(Class<? extends Privacy> privacyClass) {
-        super((Set) null);
+        super((Set<String>) null);
         this.privacyClass = privacyClass;
     }
 
@@ -167,7 +161,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         events.register(this);
 
         epd = new AdminEndpointDecider(config);
-        addDocRoot(env.getProps().get(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY) + "/asadmindocroot/");
+        addDocRoot(env.getInstanceRoot().getAbsolutePath() + "/asadmindocroot/");
     }
 
     /**
@@ -188,16 +182,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     @Override
     public void onMissingResource(Request req, Response res) {
 
-        LogHelper.getDefaultLogger().log(Level.FINER, "Received something on {0}", req.getRequestURI());
-        LogHelper.getDefaultLogger().log(Level.FINER, "QueryString = {0}", req.getQueryString());
+        LOG.log(Level.FINER, "Received something on {0}", req.getRequestURI());
+        LOG.log(Level.FINER, "QueryString = {0}", req.getQueryString());
 
         HttpStatus statusCode = HttpStatus.OK_200;
 
         String requestURI = req.getRequestURI();
-    /*    if (requestURI.startsWith("/__asadmin/ADMINGUI")) {
-            super.service(req, res);
-
-        }*/
         ActionReport report = getClientActionReport(requestURI, req);
         // remove the qualifier if necessary
         if (requestURI.indexOf('.')!=-1) {
@@ -319,7 +309,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      */
     public boolean isSingleInstanceCommand(String commandName) {
 
-        CommandModel model = commandRunner.getModel(getScope(commandName),getCommandAfterScope(commandName),aalogger) ;
+        CommandModel model = commandRunner.getModel(getScope(commandName), getCommandAfterScope(commandName));
         if (model != null ) {
             ExecuteOn executeOn = model.getClusteringAttributes();
             if ((executeOn != null) && (executeOn.value().length ==1) &&
@@ -363,7 +353,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
     public String createSessionId(){
         UuidGenerator uuidGenerator = new UuidGeneratorImpl();
-        StringBuffer sessionBuf = new StringBuffer();
+        StringBuilder sessionBuf = new StringBuilder();
         String sessionId = uuidGenerator.generateUuid();
         sessionBuf.append(sessionId).append('.').append(server.getName());
         return sessionBuf.toString();
@@ -422,7 +412,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             final String headerName,
             final String headerValue) throws IOException {
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-        final String messageForResponse = adminStrings.getLocalString(msgKey, msg);
+        final String messageForResponse = I18N.getLocalString(msgKey, msg);
         report.setMessage(messageForResponse);
         report.setActionDescription("Authentication error");
         res.setStatus(httpStatus, messageForResponse);
@@ -473,7 +463,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             Payload.Outbound outboundPayload, Subject subject) throws ProcessHttpCommandRequestException {
 
         if (!requestURI.startsWith(getContextRoot())) {
-            String msg = adminStrings.getLocalString("adapter.panic",
+            String msg = I18N.getLocalString("adapter.panic",
                     "Wrong request landed in AdminAdapter {0}", requestURI);
             report.setMessage(msg);
             LogHelper.getDefaultLogger().info(msg);
@@ -499,20 +489,16 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         try {
             Payload.Inbound inboundPayload = PayloadImpl.Inbound
                 .newInstance(req.getContentType(), req.getInputStream());
-            if (aalogger.isLoggable(Level.FINE)) {
-                aalogger.log(Level.FINE, "***** AdminAdapter {0}  *****", req.getMethod());
-            }
-            AdminCommand adminCommand = commandRunner.getCommand(scope, command, report, aalogger);
+            LOG.log(Level.FINE, "***** AdminAdapter {0}  *****", req.getMethod());
+            AdminCommand adminCommand = commandRunner.getCommand(scope, command, report);
             if (adminCommand==null) {
                 // maybe commandRunner already reported the failure?
                 if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE) {
                     return report;
                 }
-                String message =
-                    adminStrings.getLocalString("adapter.command.notfound",
-                        "Command {0} not found", command);
+                String message = I18N.getLocalString("adapter.command.notfound", "Command {0} not found", command);
                 // cound't find command, not a big deal
-                aalogger.log(Level.FINE, message);
+                LOG.log(Level.FINE, message);
                 report.setMessage(message);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return report;
@@ -521,29 +507,32 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             String modelETag = req.getHeader(RemoteRestAdminCommand.COMMAND_MODEL_MATCH_HEADER);
             if (modelETag != null && !commandRunner.validateCommandModelETag(adminCommand, modelETag)) {
                 String message =
-                    adminStrings.getLocalString("commandmodel.etag.invalid",
+                    I18N.getLocalString("commandmodel.etag.invalid",
                         "Cached command model for command {0} is invalid.", command);
-                aalogger.log(Level.FINE, message);
+                LOG.log(Level.FINE, message);
                 report.setMessage(message);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 throw new ProcessHttpCommandRequestException(report, HttpStatus.PRECONDITION_FAILED_412);
             }
             //Execute
             if (validatePrivacy(adminCommand)) {
-            //if (adminCommand.getClass().getAnnotation(Visibility.class).privacy().equals(visibility.privacy())) {
-                // todo : needs to be changed, we should reuse adminCommand
-                CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation(scope, command, report, subject,parameters.containsKey("notify"));
+                CommandInvocation<AdminCommandJob> inv = commandRunner.getCommandInvocation(scope, command, report,
+                    subject, parameters.containsKey("notify"), parameters.containsKey("detach"));
+                LOG.log(Level.INFO, "Executing command {0} with parameters {1}, outboundPayload: {2}",
+                    new Object[] {command, parameters, outboundPayload});
                 inv.parameters(parameters).inbound(inboundPayload).outbound(outboundPayload).execute();
+                LOG.log(Level.INFO, "Command {0} executed, outboundPayload: {1}",
+                    new Object[] {command, outboundPayload});
                 try {
                     // note it has become extraordinarily difficult to change the reporter!
                     CommandRunnerExecutionContext inv2 = (CommandRunnerExecutionContext) inv;
                     report = inv2.report();
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
+                    LOG.log(Level.WARNING, "Exception while executing command " + command, e);
                 }
             } else {
-                report.failure( aalogger,
-                                adminStrings.getLocalString("adapter.wrongprivacy",
+                report.failure( LOG,
+                                I18N.getLocalString("adapter.wrongprivacy",
                                     "Command {0} does not have {1} visibility",
                                     command, privacyClass.getSimpleName().toLowerCase(Locale.ENGLISH)),
                                 null);
@@ -601,7 +590,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             try {
                 value = new String(Base64.getUrlDecoder().decode(value), UTF_8);
             } catch (IllegalArgumentException e) {
-                aalogger.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
+                LOG.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
                         new Object[] { paramName, value });
                 continue;
             }
@@ -631,7 +620,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             try {
                 value = URLDecoder.decode(value, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                aalogger.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
+                LOG.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
                         new Object[] {paramName, value});
             }
 
@@ -639,10 +628,10 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         }
 
         // Dump parameters...
-        if (aalogger.isLoggable(Level.FINER)) {
+        if (LOG.isLoggable(Level.FINER)) {
             for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
                 for (String v : entry.getValue()) {
-                    aalogger.log(Level.FINER, "Key {0} = {1}", new Object[]{entry.getKey(), v});
+                    LOG.log(Level.FINER, "Key {0} = {1}", new Object[]{entry.getKey(), v});
                 }
             }
         }
@@ -653,7 +642,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
         if (event.is(EventTypes.SERVER_READY)) {
             latch.countDown();
-            aalogger.fine("Ready to receive administrative commands");
+            LOG.fine("Ready to receive administrative commands");
         }
         //the count-down does not start if any other event is received
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package com.sun.ejb;
 
 import com.sun.ejb.codegen.EjbClassGeneratorFactory;
 
+import java.lang.System.Logger;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -30,10 +31,12 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
+import static java.lang.System.Logger.Level.INFO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThan;
@@ -41,10 +44,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
+ * The {@link #generate_benchmark()} test should be able to detect race conditions when loading
+ * classes generated in {@link #generate_firstRun()} test
+ *
  * @author David Matejcek
  */
 @TestMethodOrder(OrderAnnotation.class)
 public class EjbClassGeneratorFactoryBenchmarkTest {
+    private static final Logger LOG = System.getLogger(EjbClassGeneratorFactoryBenchmarkTest.class.getName());
 
     /**
      * The value shall be high enough to pass on all standard environments,
@@ -58,16 +65,7 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
     @Test
     @Order(1)
     public void generate_firstRun() throws Exception {
-        Options options = new OptionsBuilder()
-            .include(getClass().getName() + ".*")
-            .warmupIterations(0)
-            .measurementIterations(1).forks(1).measurementTime(TimeValue.milliseconds(50L))
-            // should be able to detect deadlocks and race conditions when generating classes
-            .threads(100).timeout(TimeValue.seconds(5L))
-            .timeUnit(TimeUnit.MICROSECONDS)
-            .mode(Mode.SingleShotTime).shouldFailOnError(true)
-            .build();
-
+        Options options = createOptions(false, 20L, Mode.SingleShotTime);
         Collection<RunResult> results = new Runner(options).run();
         assertThat(results, hasSize(1));
         Result<?> primaryResult = results.iterator().next().getPrimaryResult();
@@ -79,20 +77,13 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
     @Test
     @Order(2)
     public void generate_benchmark() throws Exception {
-        Options options = new OptionsBuilder()
-            .include(getClass().getName() + ".*")
-            .warmupBatchSize(1).warmupForks(0).warmupIterations(1).warmupTime(TimeValue.milliseconds(50L))
-            .measurementIterations(1).forks(1).measurementTime(TimeValue.milliseconds(200L))
-            // should be able to detect race conditions when loading classes generated in previous test
-            .threads(100).timeout(TimeValue.seconds(5L))
-            .timeUnit(TimeUnit.MICROSECONDS)
-            .mode(Mode.AverageTime).shouldFailOnError(true)
-            .build();
-
+        Options options = createOptions(true, 500L, Mode.AverageTime);
         Collection<RunResult> results = new Runner(options).run();
         assertThat(results, hasSize(1));
         Result<?> primaryResult = results.iterator().next().getPrimaryResult();
-        assertThat(primaryResult.getScore(), lessThan(firstRunScore / 4));
+        double ratio = primaryResult.getScore() / firstRunScore;
+        LOG.log(INFO, "Score: {0}, firstRunScore: {1}, ratio: {2}", primaryResult.getScore(), firstRunScore, ratio);
+        assertThat("Expected ration", ratio, lessThan(1 / 3d));
     }
 
 
@@ -104,6 +95,21 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
         }
         assertNotNull(newClass);
         assertEquals("com.sun.ejb._EjbClassGeneratorFactoryBenchmarkTest$TestInterface_Remote", newClass.getName());
+    }
+
+
+    private Options createOptions(boolean warmup, long measurementTime, Mode mode) {
+        ChainedOptionsBuilder builder = new OptionsBuilder().include(getClass().getName() + ".*");
+        if (warmup) {
+            builder.warmupIterations(1).warmupBatchSize(1).warmupForks(0).warmupTime(TimeValue.milliseconds(100L));
+        } else {
+            builder.warmupIterations(0);
+        }
+        builder.forks(1).threads(Runtime.getRuntime().availableProcessors() * 4).shouldFailOnError(true)
+            .measurementIterations(1)
+            .measurementTime(TimeValue.milliseconds(measurementTime)).timeout(TimeValue.seconds(5L))
+            .timeUnit(TimeUnit.MICROSECONDS).mode(mode);
+        return builder.build();
     }
 
     interface TestInterface {

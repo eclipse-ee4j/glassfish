@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.glassfish.appclient.client.CLIBootstrap;
+import org.glassfish.embeddable.client.ApplicationClientCLIEncoding;
 
 import static java.util.Collections.emptyList;
 import static java.util.regex.Pattern.DOTALL;
@@ -103,10 +104,10 @@ public class AgentArguments {
         Matcher agentArgMatcher = agentArgPattern.matcher(args);
         while (agentArgMatcher.find()) {
             String keyword = agentArgMatcher.group(KEYWORD);
-            /*
-             * Either the quoted string group or the unquoted string group from the matcher will be valid.
-             */
-            String value = CLIBootstrap.decodeArg(agentArgMatcher.group(QUOTED) != null ? agentArgMatcher.group(QUOTED) : agentArgMatcher.group(UNQUOTED));
+            // Either the quoted string group or the unquoted string group from the matcher will be valid.
+            String value = ApplicationClientCLIEncoding.decodeArg(agentArgMatcher.group(QUOTED) == null
+                ? agentArgMatcher.group(UNQUOTED)
+                : agentArgMatcher.group(QUOTED));
 
             values.computeIfAbsent(keyword, e -> new ArrayList<>()).add(value);
         }

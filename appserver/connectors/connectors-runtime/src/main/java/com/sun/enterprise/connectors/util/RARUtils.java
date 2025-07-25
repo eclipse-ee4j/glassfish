@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * This is a utility class to obtain the properties of a
@@ -168,15 +168,14 @@ public class RARUtils {
         File f = new File(file);
         validateRARLocation(f);
         try {
-            ClassLoader commonClassLoader =
-                    ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
+            ClassLoader commonCL = ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
             if (f.isDirectory()) {
                 List<URL> urls = new ArrayList<>();
                 urls.add(f.toURI().toURL());
                 appendURLs(urls, f);
-                return new GlassfishUrlClassLoader(urls.toArray(URL[]::new), commonClassLoader);
+                return new GlassfishUrlClassLoader("ResourceAdapterDir(" + f.getName() + ")", urls.toArray(URL[]::new), commonCL);
             }
-            return new ConnectorRARClassLoader(file, commonClassLoader);
+            return new ConnectorRARClassLoader(file, commonCL);
         } catch (IOException ioe) {
             throw new ConnectorRuntimeException("unable to read connector descriptor from " + file, ioe);
         }

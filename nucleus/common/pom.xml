@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.common</groupId>
@@ -33,6 +33,7 @@
     <name>GlassFish Nucleus Common modules</name>
 
     <modules>
+        <module>glassfish-jdk-extensions</module>
         <module>simple-glassfish-api</module>
         <module>internal-api</module>
         <module>common-util</module>

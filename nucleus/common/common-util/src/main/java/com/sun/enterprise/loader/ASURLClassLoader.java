@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,8 +68,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.util.logging.Level.INFO;
 
@@ -85,6 +85,10 @@ import static java.util.logging.Level.INFO;
  */
 public class ASURLClassLoader extends GlassfishUrlClassLoader
     implements JasperAdapter, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader {
+
+    static {
+        registerAsParallelCapable();
+    }
 
     /** logger for this class */
     private static final Logger _logger = CULoggerInfo.getLogger();
@@ -124,22 +128,14 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     /**
      * Constructor.
-     */
-    public ASURLClassLoader() {
-        super(new URL[0]);
-        permissionsHolder = new PermsHolder();
-        _logger.log(Level.FINE, "ClassLoader: {0} is getting created.", this);
-    }
-
-
-    /**
-     * Constructor.
      *
+     * @param name
      * @param parent parent class loader
      */
-    public ASURLClassLoader(ClassLoader parent) {
-        super(new URL[0], parent);
+    public ASURLClassLoader(String name, ClassLoader parent) {
+        super(name, new URL[0], parent);
         permissionsHolder = new PermsHolder();
+        _logger.log(Level.FINE, "ClassLoader: {0} is getting created.", this);
     }
 
 
@@ -717,7 +713,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             return defineClass(name, bytes, 0, bytes.length, classData.pd);
         } catch (UnsupportedClassVersionError ucve) {
             throw new UnsupportedClassVersionError(
-                sm.getString("ejbClassLoader.unsupportedVersion", name, System.getProperty("java.version")));
+                sm.getString("ejbClassLoader.unsupportedVersion", name, Runtime.version()));
         }
     }
 
@@ -791,18 +787,13 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    protected String getClassLoaderName() {
-        return "ASURLClassLoader";
-    }
-
-
     /**
      * Returns a string representation of this class loader
      */
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
-        buffer.append(getClassLoaderName()).append(" :\n");
+        buffer.append(getName()).append(" :\n");
         if (doneCalled) {
             buffer.append("doneCalled = true").append('\n');
             buffer.append("doneSnapshot = ").append(doneSnapshot);
@@ -1344,7 +1335,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                 return clazz;
             } catch (UnsupportedClassVersionError ucve) {
                 throw new UnsupportedClassVersionError(
-                    sm.getString("ejbClassLoader.unsupportedVersion", name, System.getProperty("java.version")));
+                    sm.getString("ejbClassLoader.unsupportedVersion", name, Runtime.version()));
             }
         }
 

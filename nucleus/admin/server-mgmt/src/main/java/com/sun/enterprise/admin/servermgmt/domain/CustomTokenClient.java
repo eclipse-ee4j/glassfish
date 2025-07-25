@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,6 @@ import com.sun.enterprise.config.modularity.customization.ConfigCustomizationTok
 import com.sun.enterprise.config.modularity.customization.CustomizationTokensProvider;
 import com.sun.enterprise.config.modularity.customization.FileTypeDetails;
 import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
@@ -36,23 +35,23 @@ import java.util.Properties;
 import java.util.Set;
 
 import static java.text.MessageFormat.format;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * Client class to retrieve customize tokens.
  */
 public class CustomTokenClient {
 
-    /** Place holder for the PORT BASE value in domain.xml */
-    public static final String PORTBASE_PLACE_HOLDER = "PORT_BASE";
-
     /** Place holder for the custom tokens in domain.xml */
-    public static final String CUSTOM_TOKEN_PLACE_HOLDER = "TOKENS_HERE";
-    public static final String DEFAULT_TOKEN_PLACE_HOLDER = "DEFAULT_TOKENS_HERE";
+    private static final String CUSTOM_TOKEN_PLACE_HOLDER = "TOKENS_HERE";
+    private static final String DEFAULT_TOKEN_PLACE_HOLDER = "DEFAULT_TOKENS_HERE";
 
-    private final DomainConfig _domainConfig;
+    private final DomainConfig domainConfig;
 
     public CustomTokenClient(DomainConfig domainConfig) {
-        _domainConfig = domainConfig;
+        this.domainConfig = domainConfig;
     }
 
     /**
@@ -64,101 +63,48 @@ public class CustomTokenClient {
     public Map<String, String> getSubstitutableTokens() throws DomainException {
         CustomizationTokensProvider provider = CustomizationTokensProviderFactory.createCustomizationTokensProvider();
         Map<String, String> generatedTokens = new HashMap<>();
-        String lineSeparator = System.lineSeparator();
         int noOfTokens = 0;
         try {
             List<ConfigCustomizationToken> customTokens = provider.getPresentConfigCustomizationTokens();
             if (!customTokens.isEmpty()) {
-                StringBuffer generatedSysTags = new StringBuffer();
-
-                // Check presence of token place-holder
+                StringBuilder generatedSysTags = new StringBuilder();
                 Set<Integer> usedPorts = new HashSet<>();
-                Properties domainProps = _domainConfig.getDomainProperties();
-                String portBase = (String) _domainConfig.get(DomainConfig.K_PORTBASE);
+                Properties domainProps = domainConfig.getDomainProperties();
+                Integer portBase = getPortBase(domainConfig);
 
                 Map<String, String> filePaths = new HashMap<>(3, 1);
-                filePaths.put(SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
-                    System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-                filePaths.put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
-                    System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
-                filePaths.put(SystemPropertyConstants.JAVA_ROOT_PROPERTY,
-                    System.getProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY));
+                filePaths.put(INSTALL_ROOT.getPropertyName(),
+                    System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
+                filePaths.put(INSTANCE_ROOT.getPropertyName(),
+                    System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
+                filePaths.put(JAVA_ROOT.getPropertyName(),
+                    System.getProperty(JAVA_ROOT.getSystemPropertyName()));
                 noOfTokens = customTokens.size();
                 for (ConfigCustomizationToken token : customTokens) {
                     String name = token.getName();
                     // Check for valid custom token parameters.
                     if (isNullOrEmpty(name) || isNullOrEmpty(token.getValue()) || isNullOrEmpty(token.getDescription())) {
-                        throw new IllegalArgumentException(format(
-                            "Invalid token, Empty/null values are not allowed for token name/value/description: {0}/{1}/{2}",
-                            name, token.getValue(), token.getDescription()));
+                        throw new DomainException(format(
+                            "Invalid token, Empty/null values are not allowed for token name, value and description: {0}",
+                            token));
                     }
                     switch (token.getCustomizationType()) {
-                    case PORT:
-                        Integer port = null;
-                        if (domainProps.containsKey(name)) {
-                            port = Integer.valueOf(domainProps.getProperty(token.getName()));
-                            if (!NetUtils.isPortFree(port)) {
-                                throw new DomainException(format("Given port {0} is not free.", port));
-                            }
-                        } else {
-                            Integer firstPortTried = port;
-                            if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
-                                PortTypeDetails portTypeDetails = (PortTypeDetails) token.getTokenTypeDetails();
-                                port = Integer.parseInt(portBase) + Integer.parseInt(portTypeDetails.getBaseOffset());
-                                if (!generatedTokens.containsKey(PORTBASE_PLACE_HOLDER)) {
-                                    // Adding a token to persist port base value as a system tag
-                                    generatedTokens.put(PORTBASE_PLACE_HOLDER,
-                                            SystemPropertyTagBuilder.buildSystemTag(PORTBASE_PLACE_HOLDER, portBase));
-                                }
-                            } else {
-                                port = Integer.valueOf(token.getValue());
-                            }
-                            // Find next available unused port by incrementing the port value by 1
-                            while (!NetUtils.isPortFree(port) && !usedPorts.contains(port)) {
-                                if (port > NetUtils.MAX_PORT) {
-                                    throw new DomainException(format("No free port available in range {0} - {1} or it is prohibited.", firstPortTried, NetUtils.MAX_PORT));
-                                }
-                                port++;
-                            }
-                        }
-                        usedPorts.add(port);
-                        generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, port.toString()));
-                        break;
-                    case FILE:
-                        String path = token.getValue();
-                        for (Map.Entry<String, String> entry : filePaths.entrySet()) {
-                            if (path.contains(entry.getKey())) {
-                                path = path.replace(entry.getKey(), entry.getValue());
-                                break;
-                            }
-                        }
-                        if (token.getTokenTypeDetails() instanceof FileTypeDetails) {
-                            FileTypeDetails details = (FileTypeDetails) token.getTokenTypeDetails();
-                            File file = new File(path);
-                            switch (details.getExistCondition()) {
-                            case MUST_EXIST:
-                                if (!file.exists()) {
-                                    throw new DomainException(format("Missing file : {0}", file));
-                                }
-                                break;
-                            case MUST_NOT_EXIST:
-                                if (file.exists()) {
-                                    throw new DomainException(format(
-                                        "File {0} must not exist for the domain creation process to succeed", file));
-                                }
-                                break;
-                            case NO_OP:
-                                break;
-                            }
-                        }
-                        generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, path));
-                        break;
-                    case STRING:
-                        generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token));
-                        break;
+                        case PORT:
+                            Integer port = resolvePort(token, portBase, generatedTokens, usedPorts, domainProps);
+                            generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, port.toString()));
+                            break;
+                        case FILE:
+                            String path = resolvePath(token, filePaths);
+                            generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token, path));
+                            break;
+                        case STRING:
+                            generatedSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token));
+                            break;
+                        default:
+                            throw new DomainException(format("Unknown token type: {0}", token.getCustomizationType()));
                     }
                     if (--noOfTokens > 0) {
-                        generatedSysTags.append(lineSeparator);
+                        generatedSysTags.append(System.lineSeparator());
                     }
                 }
                 String tags = generatedSysTags.toString();
@@ -173,7 +119,7 @@ public class CustomTokenClient {
                 for (ConfigCustomizationToken token : defaultTokens) {
                     defaultSysTags.append(SystemPropertyTagBuilder.buildSystemTag(token));
                     if (--noOfTokens > 0) {
-                        defaultSysTags.append(lineSeparator);
+                        defaultSysTags.append(System.lineSeparator());
                     }
                 }
                 generatedTokens.put(DEFAULT_TOKEN_PLACE_HOLDER, defaultSysTags.toString());
@@ -184,6 +130,90 @@ public class CustomTokenClient {
             throw new DomainException(ex);
         }
         return generatedTokens;
+    }
+
+    private String resolvePath(ConfigCustomizationToken token, Map<String, String> filePaths) throws DomainException {
+        String path = token.getValue();
+        for (Map.Entry<String, String> entry : filePaths.entrySet()) {
+            if (path.contains(entry.getKey())) {
+                path = path.replace(entry.getKey(), entry.getValue());
+                break;
+            }
+        }
+        if (token.getTokenTypeDetails() instanceof FileTypeDetails) {
+            FileTypeDetails details = (FileTypeDetails) token.getTokenTypeDetails();
+            File file = new File(path);
+            switch (details.getExistCondition()) {
+                case MUST_EXIST:
+                    if (!file.exists()) {
+                        throw new DomainException(format("Missing file: {0}, token: {1}", file, token));
+                    }
+                    break;
+                case MUST_NOT_EXIST:
+                    if (file.exists()) {
+                        throw new DomainException(format(
+                            "File {0} must not exist for the domain creation process to succeed, token: {1}",
+                            file, token));
+                    }
+                    break;
+                case NO_OP:
+                    break;
+                default:
+                    throw new DomainException(format("Unknown file existence condition: {0} for token: {1}",
+                        details.getExistCondition(), token));
+            }
+        }
+        return path;
+    }
+
+
+    private Integer getPortBase(DomainConfig domainConfig2) {
+        String portBase = (String) domainConfig.get(DomainConfig.K_PORTBASE);
+        return portBase == null ? null : Integer.valueOf(portBase);
+    }
+
+
+    /**
+     * Limitations of this implementation:
+     * <ul>
+     * <li>When using the portBase (not null), all ports have to be generated. Otherwise, preset
+     * port values would have to be put to usedPorts before generating the ports.
+     * </ul>
+     * @param checkPorts
+     */
+    private Integer resolvePort(ConfigCustomizationToken token, Integer portBase, Map<String, String> generatedTokens,
+        Set<Integer> usedPorts, Properties domainProps) throws DomainException {
+        Integer port = null;
+        String name = token.getName();
+        if (domainProps.containsKey(name)) {
+            port = Integer.valueOf(domainProps.getProperty(name));
+        } else {
+            if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
+                PortTypeDetails portTypeDetails = (PortTypeDetails) token.getTokenTypeDetails();
+                int firstPortTried = portBase + Integer.parseInt(portTypeDetails.getBaseOffset());
+                generatedTokens.computeIfAbsent(name, k -> SystemPropertyTagBuilder.buildSystemTag(name, portBase));
+                port = generateFreePort(usedPorts, token, firstPortTried);
+            } else {
+                port = Integer.valueOf(token.getValue());
+            }
+        }
+        usedPorts.add(port);
+        return port;
+    }
+
+    /** Find next available unused port by incrementing the port value by 1 */
+    private int generateFreePort(Set<Integer> usedPorts, ConfigCustomizationToken token, Integer firstPortTried)
+        throws DomainException {
+        int port = firstPortTried;
+        while (usedPorts.contains(port) || !NetUtils.isPortFree(port)) {
+            if (port > NetUtils.MAX_PORT) {
+                throw new DomainException(format(
+                    "No free port is available in range {0} - {1} or it is prohibited. Token: {2}",
+                    firstPortTried, NetUtils.MAX_PORT, token));
+            }
+            port++;
+        }
+        return port;
     }
 
     /**
@@ -223,8 +253,8 @@ public class CustomTokenClient {
         /**
          * Build the System tag for the given name & value.
          */
-        private static String buildSystemTag(String name, String value) {
-            String builtTag = placeHolderTagWithoutDesc.replace(valuePlaceHolder, value);
+        private static String buildSystemTag(String name, Integer value) {
+            String builtTag = placeHolderTagWithoutDesc.replace(valuePlaceHolder, value.toString());
             builtTag = builtTag.replace(namePlaceHolder, name);
             return builtTag;
         }

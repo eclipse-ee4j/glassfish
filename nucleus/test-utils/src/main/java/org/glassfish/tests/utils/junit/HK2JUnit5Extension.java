@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +18,7 @@ package org.glassfish.tests.utils.junit;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,21 +38,27 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.extras.ExtrasUtilities;
+import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
+import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.glassfish.tests.utils.mock.MockGenerator;
 import org.glassfish.tests.utils.mock.TestDocument;
+import org.glassfish.tests.utils.mock.TestServerEnvironment;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -67,10 +73,10 @@ import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
 import org.objectweb.asm.ClassReader;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
@@ -146,6 +152,10 @@ public class HK2JUnit5Extension
         final Set<Class<?>> excludedClasses = getExcludedClasses(testClass);
 
         config = locator.getService(DynamicConfigurationService.class).createDynamicConfiguration();
+        AbstractActiveDescriptor<ExecutorService> descriptor = BuilderHelper.createConstantDescriptor(Executors.newCachedThreadPool());
+        descriptor.addContractType(ExecutorService.class);
+        config.addActiveDescriptor(descriptor);
+
         addServicesFromLocatorFiles(loader, excludedClasses, getLocatorFilePaths(context));
         addServicesFromPackage(packages, excludedClasses);
         addServices(classes, excludedClasses);
@@ -240,9 +250,9 @@ public class HK2JUnit5Extension
      */
     protected Properties getStartupContextProperties(final ExtensionContext context) {
         final Properties startupContextProperties = new Properties();
-        final String rootPath = context.getRequiredTestClass().getResource("/").getPath();
-        startupContextProperties.put(INSTALL_ROOT_PROP_NAME, rootPath);
-        startupContextProperties.put(INSTANCE_ROOT_PROP_NAME, rootPath);
+        final String rootPath = FileUtils.toFile(context.getRequiredTestClass().getResource("/")).getPath();
+        startupContextProperties.put(INSTALL_ROOT.getPropertyName(), rootPath);
+        startupContextProperties.put(INSTANCE_ROOT.getPropertyName(), rootPath);
         return startupContextProperties;
     }
 
@@ -262,12 +272,8 @@ public class HK2JUnit5Extension
         addOneConstant(locator, mockGenerator);
         addOneConstant(locator, startupContext);
         addOneConstant(locator, modulesRegistry);
-        String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT_PROP_NAME);
-        if (installRoot == null) {
-            addOneConstant(locator, new ServerEnvironmentImpl());
-        } else {
-            addOneConstant(locator, new ServerEnvironmentImpl(new File(installRoot)));
-        }
+        addOneConstant(locator, new TestServerEnvironment(startupContext), "TestServerEnvironment",
+            ServerEnvironment.class, ServerEnvironmentImpl.class);
     }
 
 

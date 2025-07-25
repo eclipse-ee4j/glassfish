@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Runtime.Version;
 import java.lang.System.Logger;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -47,10 +48,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
@@ -73,8 +77,8 @@ import org.apache.naming.resources.Resource;
 import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
 
 import static java.lang.System.Logger.Level.DEBUG;
@@ -170,6 +174,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     /** Associated directory context giving access to the resources in this webapp. */
     private DirContext jndiResources;
+
+    /** Maps package name to the corresponding lock object. */
+    private final Map<String, Lock> packageLocks = new ConcurrentHashMap<>();
 
     /**
      * Should this class loader delegate to the parent class loader
@@ -268,7 +275,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * but no defined repositories.
      */
     public WebappClassLoader(ClassLoader parent) {
-        super(new URL[0], parent);
+        // We overload getName(), however we don't know the name at this moment.
+        super("WebappClassLoader", new URL[0], parent);
         this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
         if (SECURITY_MANAGER != null) {
@@ -1125,7 +1133,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public ClassLoader copy() {
         LOG.log(DEBUG, "copy()");
         // set getParent() as the parent of the cloned class loader
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getName(), getURLs(), getParent());
         return AccessController.doPrivileged(action);
     }
 
@@ -1145,6 +1153,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         } catch (Exception e) {
             LOG.log(WARNING, "Parent close method failed.", e);
         }
+
+        packageLocks.clear();
 
         notFoundResources.clear();
         resourceEntryCache.clear();
@@ -1190,6 +1200,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
+    @Override
     public void preDestroy() {
         LOG.log(TRACE, "preDestroy()");
         try {
@@ -1242,7 +1253,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             // Looking up the package
             final int pos = name.lastIndexOf('.');
             final String packageName = pos == -1 ? null : name.substring(0, pos);
-            final Package pkg;
+            Package pkg;
             if (packageName == null) {
                 pkg = null;
             } else {
@@ -1250,10 +1261,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
                 // Define the package (if null)
                 if (pkg == null) {
-                    if (entry.manifest == null) {
-                        definePackage(packageName, null, null, null, null, null, null, null);
-                    } else {
-                        definePackage(packageName, entry.manifest, entry.codeBase);
+                    Lock packageLock = getPackageDefinigLock(packageName);
+                    packageLock.lock();
+                    try {
+                        pkg = getDefinedPackage(packageName);
+                        if (pkg == null) {
+                            definePackage(packageName, entry);
+                        }
+                    } finally {
+                        packageLock.unlock();
                     }
                 }
             }
@@ -1275,6 +1291,30 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             }
             return entry;
         }
+    }
+
+    /**
+     * Defines a Package of the given name.
+     *
+     * @param packageName the name of the to-be-defined package
+     * @param resourceEntry the resource entry
+     */
+    private void definePackage(String packageName, ResourceEntry resourceEntry) {
+        if (resourceEntry.manifest == null) {
+            definePackage(packageName, null, null, null, null, null, null, null);
+        } else {
+            definePackage(packageName, resourceEntry.manifest, resourceEntry.codeBase);
+        }
+    }
+
+    /**
+     * Returns the lock object for package defining operations.
+     *
+     * @param packageName the name of the to-be-defined package
+     * @return the lock for package defining operations
+     */
+    private Lock getPackageDefinigLock(String packageName) {
+        return packageLocks.computeIfAbsent(packageName, key -> new ReentrantLock());
     }
 
 
@@ -1520,11 +1560,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    private String getJavaVersion() {
+    private Version getJavaVersion() {
         if (SECURITY_MANAGER == null) {
-            return System.getProperty("java.version");
+            return Runtime.version();
         }
-        PrivilegedAction<String> action = () -> System.getProperty("java.version");
+        PrivilegedAction<Version> action = Runtime::version;
         return AccessController.doPrivileged(action);
     }
 

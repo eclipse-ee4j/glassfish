@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.cli;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,12 +29,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * A class loader that loads classes from all jar files in a specified directory.
  */
 public class DirectoryClassLoader extends GlassfishUrlClassLoader {
+
+    static {
+        registerAsParallelCapable();
+    }
 
     private static final LocalStringsImpl STRINGS = new LocalStringsImpl(DirectoryClassLoader.class);
     private static final int MAX_DEPTH = 5;
@@ -57,7 +60,7 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
      * @param parent - parent has higher priority.
      */
     public DirectoryClassLoader(final Set<File> jarsAndDirs, final ClassLoader parent) {
-        super(getJars(jarsAndDirs), parent);
+        super("AdminCli", getJars(jarsAndDirs), parent);
     }
 
 
@@ -69,7 +72,7 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
      * @param parent the parent class loader
      */
     public DirectoryClassLoader(final File dir, final ClassLoader parent) {
-        super(getJars(dir), parent);
+        super("AdminCli(" + dir.getName() + ")", getJars(dir), parent);
     }
 
 
@@ -84,12 +87,15 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
     }
 
 
-    private static Set<Path> getJarPaths(final File dir) {
-        try (Stream<Path> stream = Files.walk(dir.toPath(), MAX_DEPTH)) {
+    private static Set<Path> getJarPaths(final File jarOrDir) {
+        if (jarOrDir.isFile()) {
+            return Set.of(jarOrDir.toPath());
+        }
+        try (Stream<Path> stream = Files.walk(jarOrDir.toPath(), MAX_DEPTH)) {
             return stream.filter(path -> !Files.isDirectory(path))
                 .filter(path -> path.getFileName().toString().endsWith(".jar")).collect(Collectors.toSet());
         } catch (final IOException e) {
-            throw new IllegalStateException(STRINGS.get("DirError", dir), e);
+            throw new IllegalStateException(STRINGS.get("DirError", jarOrDir), e);
         }
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -81,13 +82,15 @@ public class InstanceCommandExecutor extends ServerRemoteAdminCommand implements
         try {
             executeCommand(params);
             aReport.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-            if (StringUtils.ok(getCommandOutput()))
+            if (StringUtils.ok(getCommandOutput())) {
                 aReport.setMessage(strings.getLocalString("ice.successmessage", "{0}:\n{1}\n", getServer().getName(), getCommandOutput()));
+            }
             Map<String, String> attributes = this.getAttributes();
             for (Map.Entry<String, String> ae : attributes.entrySet()) {
                 String key = ae.getKey();
-                if (key.endsWith("_value"))
+                if (key.endsWith("_value")) {
                     continue;
+                }
                 if (!key.endsWith("_name")) {
                     if (ae.getValue() != null) {
                         aReport.getTopMessagePart().addProperty(key, ae.getValue());
@@ -97,33 +100,30 @@ public class InstanceCommandExecutor extends ServerRemoteAdminCommand implements
                 String keyWithoutSuffix = key.substring(0, key.lastIndexOf("_name"));
                 aReport.getTopMessagePart().addProperty(keyWithoutSuffix, attributes.get(keyWithoutSuffix + "_value"));
             }
-            /*
-            else
-                aReport.setMessage(strings.getLocalString("glassfish.clusterexecutor.commandSuccessful",
-                    "Command {0} executed successfully on server instance {1}", commandName, getServer().getName()));
-                    */
         } catch (CommandException cmdEx) {
             ActionReport.ExitCode finalResult;
             if (cmdEx.getCause() instanceof java.net.ConnectException) {
                 finalResult = FailurePolicy.applyFailurePolicy(offlinePolicy, ActionReport.ExitCode.FAILURE);
-                if (!finalResult.equals(ActionReport.ExitCode.FAILURE))
+                if (!finalResult.equals(ActionReport.ExitCode.FAILURE)) {
                     aReport.setMessage(strings.getLocalString("clusterutil.warnoffline",
                             "WARNING: Instance {0} seems to be offline; command {1} was not replicated to that instance",
                             getServer().getName(), commandName));
-                else
+                } else {
                     aReport.setMessage(strings.getLocalString("clusterutil.failoffline",
                             "FAILURE: Instance {0} seems to be offline; command {1} was not replicated to that instance",
                             getServer().getName(), commandName));
+                }
             } else {
                 finalResult = FailurePolicy.applyFailurePolicy(failPolicy, ActionReport.ExitCode.FAILURE);
-                if (finalResult.equals(ActionReport.ExitCode.FAILURE))
+                if (finalResult.equals(ActionReport.ExitCode.FAILURE)) {
                     aReport.setMessage(
                             strings.getLocalString("clusterutil.commandFailed", "FAILURE: Command {0} failed on server instance {1}: {2}",
                                     commandName, getServer().getName(), cmdEx.getMessage()));
-                else
+                } else {
                     aReport.setMessage(strings.getLocalString("clusterutil.commandWarning",
                             "WARNING: Command {0} did not complete successfully on server instance {1}: {2}", commandName,
                             getServer().getName(), cmdEx.getMessage()));
+                }
             }
             aReport.setActionExitCode(finalResult);
         }

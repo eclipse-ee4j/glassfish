@@ -25,7 +25,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -141,54 +143,68 @@ public class SnifferManagerImpl implements SnifferManager {
         List<T> applicableSniffers = new ArrayList<>();
 
         for (T sniffer : sniffers) {
-            if (archiveType != null && !sniffer.supportsArchiveType(archiveType)) {
-                continue;
-            }
-
-            String[] annotationNames = sniffer.getAnnotationNames(context);
-            if (annotationNames == null) {
-                continue;
-            }
-
-            for (String annotationName : annotationNames) {
-                Type type = types.getBy(annotationName);
-                if (type instanceof AnnotationType) {
-                    Collection<AnnotatedElement> elements = ((AnnotationType) type).allAnnotatedTypes();
-                    for (AnnotatedElement element : elements) {
-                        if (checkPath) {
-                            final Type t = getDeclaringType(element);
-                            if (t != null && t.wasDefinedIn(uris)) {
-                                applicableSniffers.add(sniffer);
-                                break;
-                            }
-                        } else {
-                            applicableSniffers.add(sniffer);
-                            break;
-                        }
-                    }
-                }
+            if (isSnifferApplicable(sniffer, archiveType, context, uris, types, checkPath)) {
+                applicableSniffers.add(sniffer);
             }
         }
 
         return applicableSniffers;
     }
 
-    public void validateSniffers(Collection<? extends Sniffer> sniffers, DeploymentContext context) {
-        for (Sniffer sniffer : sniffers) {
-            String[] incompatibleTypes = sniffer.getIncompatibleSnifferTypes();
-            if (incompatibleTypes == null) {
-                return;
-            }
-
-            for (String type : incompatibleTypes) {
-                for (Sniffer sniffer2 : sniffers) {
-                    if (sniffer2.getModuleType().equals(type)) {
-                        throw new IllegalArgumentException(localStrings.getLocalString("invalidarchivepackaging",
-                                "Invalid archive packaging {2}", sniffer.getModuleType(), type, context.getSourceDir().getPath()));
+    private <T extends Sniffer> boolean isSnifferApplicable(T sniffer, ArchiveType archiveType, DeploymentContext context, List<URI> uris, Types types, boolean checkPath) {
+        if (archiveType != null && !sniffer.supportsArchiveType(archiveType)) {
+            return false;
+        }
+        String[] annotationNames = sniffer.getAnnotationNames(context);
+        if (annotationNames == null) {
+            return false;
+        }
+        for (String annotationName : annotationNames) {
+            Type type = types.getBy(annotationName);
+            if (type instanceof AnnotationType) {
+                Collection<AnnotatedElement> elements = ((AnnotationType) type).allAnnotatedTypes();
+                for (AnnotatedElement element : elements) {
+                    if (checkPath) {
+                        final Type t = getDeclaringType(element);
+                        if (t != null && t.wasDefinedIn(uris)) {
+                            return true;
+                        }
+                    } else {
+                        return true;
                     }
                 }
             }
         }
+        return false;
+    }
+
+    public void validateSniffers(Collection<? extends Sniffer> sniffers, DeploymentContext context) {
+        Map<String, Sniffer> sniffersByModuleType = null;
+        for (Sniffer sniffer : sniffers) {
+            String[] incompatibleTypes = sniffer.getIncompatibleSnifferTypes();
+            if (incompatibleTypes == null || incompatibleTypes.length == 0) {
+                continue;
+            }
+
+            if (sniffersByModuleType == null) {
+                sniffersByModuleType = createMapOfSniffersByModuleType(sniffers);
+            }
+
+            for (String type : incompatibleTypes) {
+                if (sniffersByModuleType.containsKey(type)) {
+                    throw new IllegalArgumentException(localStrings.getLocalString("invalidarchivepackaging",
+                            "Invalid archive packaging {2}", sniffer.getModuleType(), type, context.getSourceDir().getPath()));
+                }
+            }
+        }
+    }
+
+    private static HashMap createMapOfSniffersByModuleType(Collection<? extends Sniffer> sniffers) {
+        HashMap sniffersByModuleType = new HashMap();
+        for (Sniffer sniffer : sniffers) {
+            sniffersByModuleType.put(sniffer.getModuleType(), sniffer);
+        }
+        return sniffersByModuleType;
     }
 
     /**

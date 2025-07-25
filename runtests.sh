@@ -99,6 +99,7 @@ export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export GLASSFISH_HOME="${WORKSPACE}/glassfish7"
 export CLASSPATH="${GLASSFISH_HOME}/javadb"
 export S1AS_HOME="${GLASSFISH_HOME}/glassfish"
+export ANT_OPTS="${ANT_OPTS} -Djdk.xml.totalEntitySizeLimit=50000000"
 
 # These values can be preset by the caller
 export PORT_ADMIN="${PORT_ADMIN=4848}"
@@ -112,5 +113,6 @@ install_jacoco;
 rm -rf "${GLASSFISH_HOME}"
 rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
 rm -f ./appserver/tests/appserv-tests/test_results.xml
+
 ./appserver/tests/gftest.sh run_test "${test}"
 

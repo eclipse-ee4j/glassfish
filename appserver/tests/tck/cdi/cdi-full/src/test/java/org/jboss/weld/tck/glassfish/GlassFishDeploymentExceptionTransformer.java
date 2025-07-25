@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,16 +35,18 @@ import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTr
 public class GlassFishDeploymentExceptionTransformer implements DeploymentExceptionTransformer {
 
     private static final String[] DEPLOYMENT_EXCEPTION_FRAGMENTS = new String[] {
-            "Only normal scopes can be passivating",
-            "org.jboss.weld.exceptions.DeploymentException",
-            "org.jboss.weld.exceptions.UnserializableDependencyException",
-            "org.jboss.weld.exceptions.InconsistentSpecializationException",
-            "CDI deployment failure:",
-            "org.jboss.weld.exceptions.NullableDependencyException" };
+        "Only normal scopes can be passivating",
+        "org.jboss.weld.exceptions.DeploymentException",
+        "org.jboss.weld.exceptions.UnserializableDependencyException",
+        "org.jboss.weld.exceptions.InconsistentSpecializationException",
+        "CDI deployment failure:",
+        "org.jboss.weld.exceptions.NullableDependencyException"
+    };
 
-    private static final String[] DEFINITION_EXCEPTION_FRAGMENTS = new String[]
-            { "CDI definition failure:",
-              "org.jboss.weld.exceptions.DefinitionException" };
+    private static final String[] DEFINITION_EXCEPTION_FRAGMENTS = new String[] {
+        "CDI definition failure:",
+        "org.jboss.weld.exceptions.DefinitionException"
+    };
 
     @Override
     public Throwable transform(Throwable throwable) {
@@ -53,11 +55,11 @@ public class GlassFishDeploymentExceptionTransformer implements DeploymentExcept
         // exception and sometimes AS7 exception itself
         @SuppressWarnings("unchecked")
         List<Throwable> throwableList = ExceptionUtils.getThrowableList(throwable);
-        if (throwableList.size() < 1)
+        if (throwableList.isEmpty()) {
             return throwable;
+        }
 
-        Throwable root = null;
-
+        final Throwable root;
         if (throwableList.size() == 1) {
             root = throwable;
         } else {
@@ -84,5 +86,4 @@ public class GlassFishDeploymentExceptionTransformer implements DeploymentExcept
         }
         return false;
     }
-
 }

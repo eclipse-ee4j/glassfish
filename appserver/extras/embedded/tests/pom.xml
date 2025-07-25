@@ -24,12 +24,16 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>embedded</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>tests-embedded</artifactId>
 
     <name>GlassFish Embedded Modules - Tests</name>
+
+    <properties>
+        <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
+    </properties>
 
     <dependencies>
         <dependency>

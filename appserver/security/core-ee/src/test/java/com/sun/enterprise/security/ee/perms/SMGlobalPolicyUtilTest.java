@@ -34,11 +34,13 @@ import java.util.Enumeration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.condition.JRE.JAVA_23;
 
 public class SMGlobalPolicyUtilTest {
 
@@ -94,8 +96,8 @@ public class SMGlobalPolicyUtilTest {
         assertThrows(NullPointerException.class, () -> SMGlobalPolicyUtil.convertComponentType(null));
     }
 
-
     @Test
+    @EnabledForJreRange(max = JAVA_23)
     public void testPolicyLoading() throws NoSuchAlgorithmException, MalformedURLException, URISyntaxException {
         System.out.println("Starting testDefPolicy loading - ee");
 
@@ -148,7 +150,6 @@ public class SMGlobalPolicyUtilTest {
         assertEquals(2, count - defaultCount);
 
     }
-
 
     @Test
     public void testFilePermission() {

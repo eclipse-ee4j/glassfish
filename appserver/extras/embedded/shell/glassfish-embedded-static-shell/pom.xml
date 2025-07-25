@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -35,8 +35,6 @@
     <properties>
         <path.derby>../../../javadb/lib</path.derby>
         <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
-        <path.bootstrap>../bootstrap</path.bootstrap>
-        <classpath.bootstrap>${path.bootstrap}/glassfish-jul-extension.jar</classpath.bootstrap>
     </properties>
 
     <dependencies>
@@ -806,6 +804,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal-api-only</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>internal-api</artifactId>
             <version>${project.version}</version>
@@ -832,12 +835,6 @@
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>scattered-archive-api</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -873,12 +870,6 @@
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>kernel</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.core</groupId>
-            <artifactId>glassfish</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -1363,6 +1354,31 @@
             <artifactId>woodstox-core</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- Modulepath does not belong to classpath -->
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>simple-glassfish-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.core</groupId>
+            <artifactId>glassfish</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -1379,7 +1395,7 @@
                         </manifest>
                         <manifestEntries>
                             <Bundle-SymbolicName>org.glassfish.embedded.static-shell</Bundle-SymbolicName>
-                            <Class-Path>${classpath.derby} ${classpath.bootstrap}</Class-Path>
+                            <Class-Path>${classpath.derby} ../asadmin/server-mgmt.jar ../../admin-cli.jar</Class-Path>
                             <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
                             <Add-Opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</Add-Opens>
                             <Add-Exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation</Add-Exports>

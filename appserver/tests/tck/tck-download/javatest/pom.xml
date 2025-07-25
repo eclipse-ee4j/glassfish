@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>javatest</artifactId>
@@ -31,8 +31,9 @@
     <name>TCK: Install Jakarta Authorization`s javatest</name>
 
     <properties>
+        <tck.artifactFileNameBase>javatest</tck.artifactFileNameBase>
         <project.build.downloadedSources>${project.build.directory}/downloaded-sources</project.build.downloadedSources>
-        <javatest.source.url>https://github.com/openjdk/jtharness/archive/refs/tags/jt5.0.zip</javatest.source.url>
+        <tck.artifactUrl>https://github.com/openjdk/jtharness/archive/refs/tags/jt5.0.zip</tck.artifactUrl>
     </properties>
 
     <dependencies>
@@ -48,6 +49,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.github.download-maven-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-tck</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.downloadedSources}</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -70,24 +88,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>download-javatest-src</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                        <configuration>
-                            <url>${javatest.source.url}</url>
-                            <outputDirectory>${project.build.downloadedSources}</outputDirectory>
-                            <unpack>true</unpack>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
@@ -105,22 +105,24 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-javatest</id>
+                        <id>attach-tck</id>
                         <phase>package</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
                         <configuration>
-                            <file>${project.build.directory}/javatest.jar</file>
-                            <sources>${project.build.directory}/javatest-sources.jar</sources>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${tck.artifactFileNameBase}.jar</file>
+                                    <type>jar</type>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/${tck.artifactFileNameBase}-sources.jar</file>
+                                    <type>jar</type>
+                                    <classifier>sources</classifier>
+                                </artifact>
+                            </artifacts>
                         </configuration>
                     </execution>
                 </executions>

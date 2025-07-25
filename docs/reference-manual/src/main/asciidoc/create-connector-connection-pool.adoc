@@ -39,7 +39,7 @@ asadmin [asadmin-options] create-connector-connection-pool [--help]
 [--maxconnectionusagecount=count]
 [--validateatmostonceperiod=interval]
 [--transactionsupport transactionsupport]
-[--descrip[tion description]
+[--description description]
 [--ping {false|true}]
 [--pooling {true|false}]
 [--property (name=value)[:name=value]*]
@@ -185,15 +185,6 @@ asadmin-options::
   from 0 to `MAX_INTEGER`. Default value is 2.
 `--property`::
   Optional attribute name/value pairs for configuring the pool.
-+
-  `LazyConnectionEnlistment`;;
-    Deprecated. Use the equivalent option. Default value is false.
-  `LazyConnectionAssociation`;;
-    Deprecated. Use the equivalent option. Default value is false.
-  `AssociateWithThread`;;
-    Deprecated. Use the equivalent option. Default value is false.
-  `MatchConnections`;;
-    Deprecated. Use the equivalent option. Default value is false.
 `--raname`::
   The name of the resource adapter.
 `--steadypoolsize`::

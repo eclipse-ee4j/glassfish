@@ -1188,8 +1188,8 @@ Configure the connection pool using the following settings:
 +
 [source]
 ----
-org.apache.derby.jdbc.ClientDataSource40
-org.apache.derby.jdbc.ClientXADataSource40
+org.apache.derby.jdbc.ClientDataSource
+org.apache.derby.jdbc.ClientXADataSource
 ----
 * Properties:
 

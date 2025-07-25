@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -257,11 +257,13 @@ public class SMGlobalPolicyUtil {
             logger.fine("policyFilename= " + policyFilename);
         }
 
-        if (!new File(policyFilename).exists()) {
+
+        File file = new File(policyFilename);
+        if (!file.exists()) {
             return;
         }
 
-        URL furl = new URL("file:" + policyFilename);
+        URL furl = file.toURI().toURL();
 
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Loading policy from " + furl);

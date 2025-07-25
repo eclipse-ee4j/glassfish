@@ -22,56 +22,37 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta-authorization-tck</artifactId>
     <packaging>pom</packaging>
-
     <name>TCK: Install Jakarta Authorization TCK</name>
 
     <properties>
-        <tck.test.authorization.file>jakarta-authorization-tck-2.1.0.zip</tck.test.authorization.file>
-        <tck.tests.authorization.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.authorization.file}</tck.tests.authorization.url>
+        <tck.artifactFileName>jakarta-authorization-tck-2.1.0.zip</tck.artifactFileName>
+        <tck.artifactUrl>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>download-authorization-tck</id>
+                        <id>download-tck</id>
                         <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <url>${tck.tests.authorization.url}</url>
-                    <unpack>false</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-authorization-tck</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.build.directory}/${tck.test.authorization.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
+                        <id>attach-tck</id>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>

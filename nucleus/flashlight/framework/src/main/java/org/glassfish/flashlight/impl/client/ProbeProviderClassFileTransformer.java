@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 
 package org.glassfish.flashlight.impl.client;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.Utility;
 
 import java.io.File;
@@ -47,6 +46,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_ATTACH_API;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_ATTACH_GET;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.REGISTRATION_ERROR;
@@ -69,7 +69,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     // Don't hold a strong ref to the class, it will prevent entries in the weak map from being reclaimed
     private final WeakReference<Class> providerClassRef;
     private String providerClassName = null;
-    private Map<String, FlashlightProbe> probes = new HashMap<String, FlashlightProbe>();
+    private final Map<String, FlashlightProbe> probes = new HashMap<>();
     private ClassWriter cw;
     private volatile boolean enabled = false;
     private boolean allProbesTransformed = true;
@@ -78,7 +78,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     ///////////////  static variables  //////////////////
     // weak map here so the classes don't prevent app classloaders from being reclaimed
     private static Map<Class, ProbeProviderClassFileTransformer> instances =
-        new WeakHashMap<Class, ProbeProviderClassFileTransformer>();
+        new WeakHashMap<>();
     private static final Instrumentation instrumentation;
     private static boolean _debug = Boolean.parseBoolean(Utility.getEnvOrProp("AS_DEBUG"));
     private static boolean emittedAttachUnavailableMessageAlready = false;
@@ -86,7 +86,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
     private ProbeProviderClassFileTransformer(Class providerClass) {
-        providerClassRef = new WeakReference<Class>(providerClass);
+        providerClassRef = new WeakReference<>(providerClass);
         providerClassName = providerClass.getName(); // For debug purposes only in case the original class has been reclaimed
     }
 
@@ -132,37 +132,43 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
 
     synchronized void addProbe(FlashlightProbe probe) throws NoSuchMethodException {
         Method m = getMethod(probe);
-        probes.put(probe.getProviderJavaMethodName() + "::" + Type.getMethodDescriptor(m), probe);
+        FlashlightProbe existingProbe = probes.put(probe.getProviderJavaMethodName() + "::" + Type.getMethodDescriptor(m), probe);
 
         // probes can be added piecemeal after the initial transformation is done, flagging when probes are added to detect that
-        allProbesTransformed = false;
+        if (existingProbe == null || existingProbe != probe) {
+            allProbesTransformed = false;
+        }
     }
 
     final synchronized void transform() {
 
         Class providerClass = providerClassRef.get();
         if (providerClass == null) {
-            if (Log.getLogger().isLoggable(Level.FINER))
+            if (Log.getLogger().isLoggable(Level.FINER)) {
                 Log.finer("provider class was reclaimed, not.transformed", providerClassName);
+            }
             return; // Nothing to do!
         }
 
         if (enabled)  {
             if (allProbesTransformed) {
-                if (Log.getLogger().isLoggable(Level.FINER))
+                if (Log.getLogger().isLoggable(Level.FINER)) {
                     Log.finer("all probes already.transformed", providerClass);
+                }
                 return; // Nothing to do!
             }
-            if (Log.getLogger().isLoggable(Level.FINER))
+            if (Log.getLogger().isLoggable(Level.FINER)) {
                 Log.finer("some probes need to be.transformed", providerClass);
+            }
         }
         allProbesTransformed = true;
 
         //important!  The transform(...) callback method in this class uses this boolean!
         enabled = true;
 
-        if (instrumentation == null)
+        if (instrumentation == null) {
             return;
+        }
 
         try {
             addTransformer();
@@ -176,8 +182,9 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     final synchronized void untransform() {
         Class providerClass = providerClassRef.get();
         if (providerClass == null) {
-            if (Log.getLogger().isLoggable(Level.FINER))
+            if (Log.getLogger().isLoggable(Level.FINER)) {
                 Log.finer("provider class was reclaimed, not.untransformed", providerClassName);
+            }
             return; // Nothing to do!
         }
 
@@ -185,16 +192,18 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         allProbesTransformed = false;
 
         if (!enabled) {
-            if (Log.getLogger().isLoggable(Level.FINER))
+            if (Log.getLogger().isLoggable(Level.FINER)) {
                 Log.finer("already.not.transformed", providerClass);
+            }
             return; // Nothing to do!
         }
 
         //important!  The transform(...) callback method in this class uses this boolean!
         enabled = false;
 
-        if (instrumentation == null)
+        if (instrumentation == null) {
             return;
+        }
 
         try {
             instrumentation.retransformClasses(providerClass);
@@ -215,8 +224,9 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
 
         Class providerClass = providerClassRef.get();
         if (providerClass == null) {
-            if (Log.getLogger().isLoggable(Level.FINER))
+            if (Log.getLogger().isLoggable(Level.FINER)) {
                 Log.finer("provider class was reclaimed, not.transformed", providerClassName);
+            }
             return null; // Nothing to do!
         }
 
@@ -269,14 +279,15 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         return name + "::" + desc;
     }
 
-    private static final void writeFile(String name, byte[] data) {
+    private static void writeFile(String name, byte[] data) {
         FileOutputStream fos = null;
         try {
-            File installRoot = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+            File installRoot = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
             File dir = new File(installRoot, "flashlight-generated");
 
-            if (!dir.isDirectory() && !dir.mkdirs())
+            if (!dir.isDirectory() && !dir.mkdirs()) {
                 throw new RuntimeException("Can't create directory: " + dir);
+            }
             fos = new FileOutputStream(new File(dir, name + ".class"));
             fos.write(data);
         }
@@ -285,8 +296,9 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         }
         finally {
             try {
-                if (fos != null)
+                if (fos != null) {
                     fos.close();
+                }
             }
             catch (Exception ex) {
                 // nothing can be done...
@@ -322,7 +334,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     private static class ProbeProviderMethodVisitor
             extends AdviceAdapter {
 
-        private FlashlightProbe probe;
+        private final FlashlightProbe probe;
         private int stateLocal;
         private Label startFinally;
 
@@ -389,8 +401,9 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
 
         private void onFinally(int opcode)  {
             // If this is a stateful probe, we don't add anything on exit
-            if (!probe.getStateful())
+            if (!probe.getStateful()) {
                 return;
+            }
 
             // For the exception handling path:
             //      ProbeRegistry.invokeProbeOnException(exceptionValue, probeid, localState);
@@ -482,7 +495,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
             canAttach = true;
 
             try {
-                ClassLoader classLoader = ProbeProviderClassFileTransformer.class.getClassLoader().getSystemClassLoader();
+                ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 
                 try {
                     agentMainClass = classLoader.loadClass(AGENT_CLASSNAME);
@@ -507,11 +520,12 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         // set the final
         instrumentation = nonFinalInstrumentation;
 
-        if (!canAttach)
+        if (!canAttach) {
             logger.log(Level.WARNING, NO_ATTACH_API);
-        else if (instrumentation != null)
+        } else if (instrumentation != null) {
             Log.info("yes.attach.api", instrumentation);
-        else
+        } else {
             logger.log(Level.WARNING, NO_ATTACH_GET, throwable);
+        }
     }
 }

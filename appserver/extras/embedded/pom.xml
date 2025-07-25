@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>embedded</artifactId>
@@ -34,7 +34,6 @@
     <modules>
         <module>common</module>
         <module>all</module>
-        <module>nucleus</module>
         <module>web</module>
         <module>tests</module>
     </modules>

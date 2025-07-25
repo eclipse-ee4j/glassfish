@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,8 +61,6 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     private static final String DIR_CONFIG = "config";
     private static final String JKS = ".jks";
     private static final String NSS = ".db";
-    //  private static final String KEYSTORE = "keystore.jks";
-    //  private static final String TRUSTSTORE = "cacerts.jks";
 
     private static final String JDBC_REALM_CLASSNAME = "com.sun.enterprise.security.ee.auth.realm.jdbc.JDBCRealm";
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";

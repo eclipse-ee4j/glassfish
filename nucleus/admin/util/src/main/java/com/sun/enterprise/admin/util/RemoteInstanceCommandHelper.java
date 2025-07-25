@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +39,9 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public final class RemoteInstanceCommandHelper {
 
+    private final List<Server> servers;
+    private final ServiceLocator habitat;
+
     public RemoteInstanceCommandHelper(ServiceLocator habitatIn) {
 
         try {
@@ -60,28 +64,23 @@ public final class RemoteInstanceCommandHelper {
     public final Server getServer(final String serverName) {
         for (Server server : servers) {
             final String name = server.getName();
-
-            // ??? TODO is this crazy?
             if (serverName == null) {
-                if (name == null) // they match!!
+                if (name == null) { // they match!!
                     return server;
-            } else if (serverName.equals(name))
+                }
+            } else if (serverName.equals(name)) {
                 return server;
+            }
         }
         return null;
     }
 
     public final String getNode(final Server server) {
-
-        if (server == null)
+        if (server == null) {
             return null;
-
+        }
         String node = server.getNodeRef();
-
-        if (StringUtils.ok(node))
-            return node;
-        else
-            return "no node";
+        return StringUtils.ok(node) ? node : "no node";
     }
 
     public final int getAdminPort(final String serverName) {
@@ -91,13 +90,4 @@ public final class RemoteInstanceCommandHelper {
     public final int getAdminPort(Server server) {
         return server.getAdminPort();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    //  All private below.  If you need something below in a derived class then
-    // upgrade to pkg-private and move it above this line.  Change the keyword
-    // private to final on the method
-    ///////////////////////////////////////////////////////////////////////////
-
-    final private List<Server> servers;
-    final private ServiceLocator habitat;
 }

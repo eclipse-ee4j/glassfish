@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,7 +60,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-authorization</artifactId>
@@ -71,12 +71,12 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
+
         <tck.home>${project.build.directory}/authorization-tck</tck.home>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+
         <port.admin>14848</port.admin>
         <port.derby>11527</port.derby>
         <port.http>18080</port.http>
@@ -93,9 +93,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
@@ -108,7 +106,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
@@ -117,14 +115,14 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                         <goals>
                             <goal>wget</goal>
                         </goals>
+                        <configuration>
+                            <skip>${skipITs}</skip>
+                            <url>${ant.zip.url}</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -185,47 +183,74 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                     <execution>
                         <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
+                                     classpathref="maven.plugin.classpath" />
 
-                                <!-- Change configuration -->
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="s1as\.admin\.port=.*"
-                                    replace="s1as\.admin\.port=${port.admin}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="orb\.port=.*"
-                                    replace="orb\.port=${port.orb}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="database\.port=.*"
-                                    replace="database\.port=${port.derby}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="webServerPort=.*"
-                                    replace="webServerPort=${port.http}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="securedWebServicePort=.*"
-                                    replace="securedWebServicePort=${port.https}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="harness\.log\.port=.*"
-                                    replace="harness\.log\.port=${port.harness.log}" />
+                                <macrodef name="tck-property-update">
+                                    <attribute name="key" />
+                                    <attribute name="value" />
+                                    <sequential>
+                                      <replaceregexp byline="true"
+                                        file="${tck.home}/bin/ts.jte"
+                                        match="@{key}=.*"
+                                        replace="@{key}=@{value}" />
+                                    </sequential>
+                                </macrodef>
+                                <macrodef name="tck-property-add">
+                                    <attribute name="key" />
+                                    <attribute name="value" />
+                                    <sequential>
+                                        <concat append="true" destfile="${tck.home}/bin/ts.jte"
+                                          >@{key}=@{value}${line.separator}</concat>
+                                    </sequential>
+                                </macrodef>
+                                <macrodef name="tck-keystore-suffix">
+                                    <attribute name="file" />
+                                    <sequential>
+                                        <replaceregexp flags="g"
+                                          file="@{file}"
+                                          match="/cacerts\.jks"
+                                          replace="/cacerts.p12" />
+                                        <replaceregexp flags="g"
+                                          file="@{file}"
+                                          match="/keystore\.jks"
+                                          replace="/keystore.p12" />
+                                    </sequential>
+                                </macrodef>
 
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="javaee\.level=.*"
-                                    replace="javaee\.level=full" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="jacc\.home=.*"
-                                    replace="jacc\.home=${glassfish.home}/glassfish" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="report\.dir=.*"
-                                    replace="report\.dir=${tck.home}/jacctckreport/jacctck" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="work\.dir=.*"
-                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
+                                <property name="jacc.truststore" value="${project.build.directory}/cacerts.p12"/>
+                                <property name="jacc.truststore.password" value="changeit"/>
+                                <property name="s1as.truststore" value="${glassfish.home}/glassfish/domains/domain1/config/cacerts.p12"/>
+                                <property name="s1as.truststore.password" value="changeit"/>
 
+                                <!-- Customizing the client test parameters -->
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="work\.dir=.*"
-                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
+                                    match="\s+-Djavax\.net\.ssl\.trustStore=\$\{jacc\.home\}/domains/domain1/config/cacerts\.jks"
+                                    replace="-Djavax.net.ssl.trustStore=${jacc.truststore} -Djavax.net.ssl.trustStorePassword=${jacc.truststore.password}" />
+
+                                <tck-property-update key="s1as.admin.port" value="${port.admin}" />
+                                <tck-property-update key="database.port" value="${port.derby}" />
+                                <tck-property-update key="orb.port" value="${port.orb}" />
+                                <tck-property-update key="webServerPort" value="${port.http}" />
+                                <tck-property-update key="securedWebServicePort" value="${port.https}" />
+                                <tck-property-update key="harness.log.port" value="${port.harness.log}" />
+                                <tck-property-update key="javaee.level" value="full" />
+
+                                <tck-property-update key="jacc.home" value="${glassfish.home}/glassfish" />
+                                <tck-property-update key="report.dir" value="${tck.home}/jacctckreport/jacctck" />
+                                <tck-property-update key="work.dir" value="${tck.home}/jacctckwork/jacctck" />
+
+                                <tck-property-add key="jacc.truststore" value="${jacc.truststore}" />
+                                <tck-property-add key="s1as.truststore" value="${s1as.truststore}" />
+
+                                <tck-keystore-suffix file="${tck.home}/bin/xml/impl/glassfish/common.xml" />
+                                <tck-keystore-suffix file="${tck.home}/bin/xml/impl/glassfish/s1as.xml" />
+                                <tck-keystore-suffix file="${tck.home}/bin/xml/vi.xml" />
 
                                 <!-- Run just selected subset tests -->
                                 <replaceregexp file="${tck.home}/bin/build.xml" byline="true"
@@ -246,6 +271,19 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                                         <arg value="domain1" />
                                         <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
+                                    <exec executable="${java.home}/bin/keytool" >
+                                        <env key="JAVA_HOME" value="${java.home}" />
+                                        <arg line=" -importkeystore"/>
+                                        <arg line=" -srcalias s1as"/>
+                                        <arg line=" -destalias s1as"/>
+                                        <arg line=" -srckeystore ${s1as.truststore}"/>
+                                        <arg line=" -noprompt"/>
+                                        <arg line=" -trustcacerts"/>
+                                        <arg line=" -destkeystore ${jacc.truststore}"/>
+                                        <arg line=" -srcstorepass ${s1as.truststore.password}"/>
+                                        <arg line=" -deststorepass ${jacc.truststore.password}"/>
+                                    </exec>
+
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <arg value="start-domain"/>
                                         <env key="AS_JAVA" value="${java.home}"/>
@@ -291,9 +329,6 @@ mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.ja
                                 </replace>
                             </target>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
 
                     <execution>

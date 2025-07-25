@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,9 +33,9 @@ import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -157,11 +157,10 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
 
     @Override
     public ClassLoader getClassLoader() {
-        /*
-         * This cannot be null or it prevents the framework from invoking unload
-         * on the deployer for this app.
-         */
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(new URL[0]);
+        // This cannot be null or it prevents the framework from invoking unload
+        // on the deployer for this app.
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
+            "AppClientServer(" + deployedAppName + ")", new URL[0]);
         return AccessController.doPrivileged(action);
     }
 

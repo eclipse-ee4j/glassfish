@@ -59,11 +59,11 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.event.RestrictTo;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.api.DelegatingClassLoader.ClassFinder;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.System.Logger.Level.DEBUG;
@@ -219,12 +219,16 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      */
     private static class URLClassFinder extends GlassfishUrlClassLoader implements ClassFinder {
 
+        static {
+            registerAsParallelCapable();
+        }
+
         private static final URLStreamHandler urlStreamHandler = new NonCachingURLStreamHandler();
 
         private final Set<String> notFoundResources = ConcurrentHashMap.newKeySet();
 
         URLClassFinder(URL url, ClassLoader parent) {
-            super(new URL[] {url}, parent);
+            super("AppLib(" + url.getFile() + ")", new URL[] {url}, parent);
         }
 
         /**
@@ -316,7 +320,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
 
         private JarURLConnection jarURLConnection;
 
-        public NonCachedURLConnection(URL url) throws MalformedURLException {
+        private NonCachedURLConnection(URL url) throws MalformedURLException {
             super(url);
         }
 
@@ -352,6 +356,10 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
      * that it uses to find resources and classes.
      */
     private static class DelegatingClassFinder extends DelegatingClassLoader implements ClassFinder {
+
+        static {
+            registerAsParallelCapable();
+        }
 
         DelegatingClassFinder(ClassLoader parent) {
             super(parent);

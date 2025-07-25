@@ -47,7 +47,7 @@
         <!-- create WEB-INF/lib/alpha.jar -->
         <mkdir dir="${build.classes.dir}" />
         <mkdir dir="${build.classes.dir}/META-INF" />
-        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11" />
+        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="17" />
         <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml" />
         <jar destfile="lib/alpha.jar">
             <fileset dir="${build.classes.dir}" />
@@ -57,8 +57,8 @@
         <!-- create WEB-INF/lib/bravo.jar -->
         <mkdir dir="${build.classes.dir}" />
         <mkdir dir="${build.classes.dir}/META-INF" />
-        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11" />
-        <javac srcdir="util2" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11" />
+        <javac srcdir="util1" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="17" />
+        <javac srcdir="util2" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="17" />
         <delete file="${build.classes.dir}/test1/Foo.class" />
         <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml" />
         <jar destfile="lib/bravo.jar">

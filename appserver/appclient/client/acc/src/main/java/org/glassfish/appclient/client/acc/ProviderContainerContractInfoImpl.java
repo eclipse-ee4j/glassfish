@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,8 +36,8 @@ import java.util.HashSet;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
 
 /**
@@ -48,7 +48,7 @@ import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
  */
 public class ProviderContainerContractInfoImpl extends ProviderContainerContractInfoBase {
 
-    private final ACCClassLoader classLoader;
+    private final TransformingClassLoader classLoader;
     private final Instrumentation inst;
     private final String applicationLocation;
 
@@ -63,7 +63,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
      * @param inst VM's instrumentation object
      */
     public ProviderContainerContractInfoImpl(
-            final ACCClassLoader classLoader,
+            final TransformingClassLoader classLoader,
             final Instrumentation inst,
             final String applicationLocation,
             final ConnectorRuntime connectorRuntime) {
@@ -80,7 +80,8 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
 
     @Override
     public ClassLoader getTempClassloader() {
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(classLoader.getURLs());
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader("PersistenceTmp",
+            classLoader.getURLs());
         return AccessController.doPrivileged(action);
     }
 

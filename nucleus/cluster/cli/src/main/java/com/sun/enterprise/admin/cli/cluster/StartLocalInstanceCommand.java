@@ -28,6 +28,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.ObjectAnalyzer;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +44,8 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Start a local server instance.
@@ -64,12 +67,11 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
     @Param(name = "dry-run", shortName = "n", optional = true, defaultValue = "false")
     private boolean dry_run;
 
+    @Param(optional = true)
+    private Integer timeout;
+
     private GFLauncherInfo info;
     private GFLauncher launcher;
-
-    // handled by superclass
-    //@Param(name = "instance_name", primary = true, optional = false)
-    //private String instanceName0;
 
     private StartServerHelper helper;
 
@@ -83,6 +85,14 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
         // we definitely do NOT want dirs created for this instance if
         // they don't exist!
         return false;
+    }
+
+    /**
+     * @return timeout for the command
+     */
+    @Override
+    public Duration getTimeout() {
+        return timeout == null ? WAIT_FOR_DAS_TIME_MS : Duration.ofSeconds(timeout);
     }
 
 
@@ -107,8 +117,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
             logger.info(Strings.get("Instance.nosync"));
         } else {
             if (!synchronizeInstance()) {
-                File domainXml =
-                    new File(new File(instanceDir, "config"), "domain.xml");
+                File domainXml = new File(new File(instanceDir, "config"), "domain.xml");
                 if (!domainXml.exists()) {
                     logger.info(Strings.get("Instance.nodomainxml"));
                     return ERROR;
@@ -118,21 +127,19 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
         }
 
         try {
-                 // createLauncher needs to go before the helper is created!!
+            // createLauncher needs to go before the helper is created!!
             createLauncher();
             final String mpv = getMasterPassword();
 
-            helper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), launcher, mpv, debug);
+            helper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), launcher, mpv, getTimeout());
 
             if (!helper.prepareForLaunch()) {
                 return ERROR;
             }
 
             if (dry_run) {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine(Strings.get("dry_run_msg"));
-                }
-                logger.info(getLauncher().getCommandLine().toString("\n"));
+                logger.log(Level.FINE, Strings.get("dry_run_msg"));
+                logger.log(Level.INFO, getLauncher().getCommandLine().toString("\n"));
                 return SUCCESS;
             }
 
@@ -164,8 +171,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
                 }
 
                 if (env.debug()) {
-                    System.setProperty(CLIConstants.WALL_CLOCK_START_PROP,
-                                        "" + System.currentTimeMillis());
+                    setProperty(CLIConstants.WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
                 }
                 getLauncher().relaunch();
             }
@@ -182,20 +188,18 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
      * Sets the launcher and info fields.
      */
     @Override
-    public void createLauncher()
-                        throws GFLauncherException, MiniXmlParserException {
-            setLauncher(GFLauncherFactory.getInstance(getType()));
-            setInfo(getLauncher().getInfo());
-            getInfo().setInstanceName(instanceName);
-            getInfo().setInstanceRootDir(instanceDir);
-            getInfo().setVerbose(verbose);
-            getInfo().setWatchdog(watchdog);
-            getInfo().setDebug(debug);
-            getInfo().setRespawnInfo(programOpts.getClassName(),
-                            programOpts.getClassPath(),
-                            respawnArgs());
+    public void createLauncher() throws GFLauncherException, MiniXmlParserException {
+        setLauncher(GFLauncherFactory.getInstance(getType()));
+        setInfo(getLauncher().getInfo());
+        getInfo().setInstanceName(instanceName);
+        getInfo().setInstanceRootDir(instanceDir);
+        getInfo().setVerbose(verbose);
+        getInfo().setWatchdog(watchdog);
+        getInfo().setDebug(debug);
+        getInfo().setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(), programOpts.getClassPath(),
+            respawnArgs());
 
-            getLauncher().setup();
+        getLauncher().setup();
     }
 
     /**
@@ -207,7 +211,8 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
         args.addAll(Arrays.asList(programOpts.getProgramArguments()));
 
         // now the start-local-instance specific arguments
-        args.add(getName());    // the command name
+        // the command name
+        args.add(getName());
         args.add("--verbose=" + String.valueOf(verbose));
         args.add("--watchdog=" + String.valueOf(watchdog));
         args.add("--debug=" + String.valueOf(debug));
@@ -229,12 +234,8 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
             args.add(instanceName); // the operand
         }
 
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Respawn args: " + args.toString());
-        }
-        String[] a = new String[args.size()];
-        args.toArray(a);
-        return a;
+        logger.log(Level.FINER, "Respawn args: {0}", args);
+        return args.toArray(String[]::new);
     }
 
     private GFLauncher getLauncher() {
@@ -249,15 +250,15 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
     }
 
     private GFLauncherInfo getInfo() {
-        if(info == null) {
+        if (info == null) {
             throw new RuntimeException(Strings.get("internal.error", "GFLauncherInfo was not initialized"));
         }
-
-            return info;
+        return info;
     }
 
+
     private void setInfo(GFLauncherInfo inf) {
-            info = inf;
+        info = inf;
     }
 
     @Override

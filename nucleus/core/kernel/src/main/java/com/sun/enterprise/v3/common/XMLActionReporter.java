@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,14 +92,14 @@ public class XMLActionReporter extends ActionReporter {
      */
     private Element writeActionReport(Document owningDocument, ActionReporter report) {
         Element result = owningDocument.createElement("action-report");
-        result.setAttribute("description", report.actionDescription);
+        result.setAttribute("description", report.getActionDescription());
         result.setAttribute("exit-code", report.getActionExitCode().name());
-        if (exception != null) {
-            result.setAttribute("failure-cause", exception.getLocalizedMessage());
+        if (getFailureCause() != null) {
+            result.setAttribute("failure-cause", getFailureCause().getLocalizedMessage());
         }
 
         writePart(result, report.getTopMessagePart(), null);
-        for (ActionReporter subReport : report.subActions) {
+        for (ActionReporter subReport : report.getSubActionsReport()) {
             result.appendChild(writeActionReport(owningDocument, subReport));
         }
         return result;

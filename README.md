@@ -7,8 +7,10 @@ sponsored by the Eclipse Foundation.
 
 ### Compatibility
 
-* Eclipse GlassFish 7.0.0 is Jakarta EE 10 compatible, requires Java 11, supports Java 17 and Java 21, experimentally also higher versions.
-* Eclipse GlassFish 6.2.0 is Jakarta EE 9.1 compatible, requires Java 11, supports Java 17
+* Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21, experimentally also higher versions.
+* Eclipse GlassFish 7.1.0 is Jakarta EE 10 compatible, requires Java 17 or 21, experimentally also higher versions.
+* Eclipse GlassFish 7.0.25 is Jakarta EE 10 compatible, requires Java 11, 17 or 21, experimentally also higher versions.
+* Eclipse GlassFish 6.2.5 is Jakarta EE 9.1 compatible, requires Java 11 or 17
 * Eclipse GlassFish 6.1.0 is Jakarta EE 9.1 compatible, requires Java 11
 * Eclipse GlassFish 6.0.0 is Jakarta EE 9 compatible, requires Java 8
 * Eclipse GlassFish 5.1.0 is Java EE 8 and Jakarta EE 8 compatible, requires Java 8
@@ -32,6 +34,11 @@ The Zip distributions can be found on following paths:
 * `mvn clean install -Pqa` - Building all distribution artifacts, running QA, checkstyle and all maven managed tests. Excludes Ant, TCK and documentation. Typical time: 10 minutes.
 * `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests. Excludes QA, checkstyle, integration tests, Ant, TCK and documentation. Typical time: 7 minutes.
 * `mvn clean install -Pfastest -T4C` - Building all distribution artifacts as fast as possible. Excludes everything not serving this purpose. Typical time: 1.5 minutes.
+
+After the build, you can run GlassFish in the following ways:
+* Run GlassFish server directly: Navigate to `appserver/distributions/glassfish/target/stage/glassfish7` - it's an unpacked version of GlassFish Full. Then you can run it as usual, e.g. with `bin/startserv`
+* Run GlassFish server from a ZIP: A zip file is generated either at `appserver/distributions/glassfish/target/glassfish.zip` or in your local maven repository, e.g. at `<HOME>/.m2/repository/org/glassfish/main/distributions/glassfish/<VERSION>/glassfish-<VERSION>.zip`. Unpack it and run as usual
+* Run Embedded GlassFish: Find the JAR file at `appserver/extras/embedded/all/target/glassfish-embedded-all.jar` or in your local maven repository, e.g. at `<HOME>/.m2/repository/org/glassfish/main/extras/glassfish-embedded-all/<VERSION>/glassfish-embedded-all-<VERSION>.jar. Then run it with `java -jar glassfish-embedded-all.jar`
 
 You can use also some maven optimizations, see [Maven documentation](https://maven.apache.org/ref/3.9.5/maven-embedder/cli.html).
 Especially `-am`, `-amd`, `-f`, `-pl`, `-rf` and their combinations are useful.

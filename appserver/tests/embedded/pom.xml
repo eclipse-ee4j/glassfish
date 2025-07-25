@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -18,22 +18,24 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests</groupId>
     <artifactId>embedded</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Tests</name>
-    
+
     <properties>
+        <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <surefire.workdir>${project.build.directory}/surefire-workdir</surefire.workdir>
         <failsafe.workdir>${project.build.directory}/failsafe-workdir</failsafe.workdir>
     </properties>
@@ -42,12 +44,13 @@
         <module>basic</module>
         <module>cdi_basic</module>
         <module>cdi_ejb_jpa</module>
-        <module>glassfish_resources_xml</module>
         <module>ejb</module>
-        <module>scatteredarchive</module>
+        <module>glassfish_resources_xml</module>
         <module>maven-plugin</module>
-        <module>web</module>
+        <module>runnable</module>
+        <module>scatteredarchive</module>
         <module>utils</module>
+        <module>web</module>
     </modules>
 
     <dependencyManagement>

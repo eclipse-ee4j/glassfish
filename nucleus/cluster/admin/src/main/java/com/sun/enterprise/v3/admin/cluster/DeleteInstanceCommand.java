@@ -33,8 +33,8 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestEndpoint;
@@ -113,7 +113,7 @@ public class DeleteInstanceCommand implements AdminCommand {
         instanceHost = instance.getAdminHost();
 
         // make sure instance is not running.
-        if (instance.isRunning()){
+        if (instance.isListeningOnAdminPort()){
             msg = Strings.get("instance.shutdown", instanceName);
             logger.warning(msg);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -235,7 +235,7 @@ public class DeleteInstanceCommand implements AdminCommand {
         StringBuilder fullCommand = new StringBuilder();
 
         fullCommand.append("lib");
-        fullCommand.append(System.getProperty("file.separator"));
+        fullCommand.append(System.lineSeparator());
         fullCommand.append("nadmin ");
 
         for (String s : command) {

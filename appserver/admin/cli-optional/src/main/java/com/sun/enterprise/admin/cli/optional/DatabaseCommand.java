@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.optional;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.ClassPathBuilder;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.OS;
 
 import java.io.File;
@@ -27,10 +26,11 @@ import java.io.File;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.DERBY_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * This is an abstract class to be inherited by StartDatabaseCommand and StopDatabaseCommand. This classes prepares the
@@ -55,6 +55,7 @@ public abstract class DatabaseCommand extends CLICommand {
     @Param(name = "dbport", optional = true, defaultValue = DB_PORT_DEFAULT)
     protected String dbPort;
 
+    protected final ClassPathBuilder modulepath = new ClassPathBuilder();
     protected final ClassPathBuilder sClasspath = new ClassPathBuilder();
     protected final ClassPathBuilder sDatabaseClasspath = new ClassPathBuilder();
 
@@ -66,7 +67,7 @@ public abstract class DatabaseCommand extends CLICommand {
      * Prepare variables to invoke start/ping database command.
      */
     protected void prepareProcessExecutor() throws Exception {
-        installRoot = new File(getSystemProperty(INSTALL_ROOT_PROPERTY));
+        installRoot = new File(getSystemProperty(INSTALL_ROOT.getSystemPropertyName()));
         if (dbHost == null) {
             dbHost = DB_HOST_DEFAULT;
         }
@@ -76,11 +77,12 @@ public abstract class DatabaseCommand extends CLICommand {
             checkIfPortIsValid(dbPort);
         }
 
-        javaHome = new File(getSystemProperty(JAVA_ROOT_PROPERTY));
-        dbLocation = new File(getSystemProperty(DERBY_ROOT_PROPERTY));
+        javaHome = new File(getSystemProperty(JAVA_ROOT.getSystemPropertyName()));
+        dbLocation = new File(getSystemProperty(DERBY_ROOT.getSystemPropertyName()));
         checkIfDbInstalled(dbLocation);
 
-        sClasspath.add(new File(installRoot, "lib/asadmin/cli-optional.jar"));
+        modulepath.addAll(new File(installRoot, "lib/bootstrap"), f -> f.isFile());
+        sClasspath.add(new File(installRoot, System.getProperty("java.class.path")));
         sDatabaseClasspath.add(dbLocation, "lib", "derby.jar")
                           .add(dbLocation, "lib", "derbyshared.jar")
                           .add(dbLocation, "lib", "derbytools.jar")
@@ -133,22 +135,28 @@ public abstract class DatabaseCommand extends CLICommand {
                 getJavaExe().toString(),
                 "-Djava.library.path=" + installRoot + File.separator + "lib",
                 "-Dderby.storage.fileSyncTransactionLog=True",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + File.pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "ping",
-                dbHost, dbPort, Boolean.valueOf(bRedirect).toString() };
+                dbHost, dbPort, Boolean.toString(bRedirect) };
 
         }
 
         return new String[] {
                 getJavaExe().toString(),
                 "-Djava.library.path=" + installRoot + File.separator + "lib",
+                "--module-path",
+                modulepath.toString(),
+                "--add-modules",
+                "ALL-MODULE-PATH",
                 "-cp", sClasspath + File.pathSeparator + sDatabaseClasspath,
-
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "ping",
-                dbHost, dbPort, Boolean.valueOf(bRedirect).toString() };
+                dbHost, dbPort, Boolean.toString(bRedirect) };
     }
 
     /**

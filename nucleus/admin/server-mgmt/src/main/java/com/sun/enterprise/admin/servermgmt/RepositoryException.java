@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,19 +15,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * RepositoryException.java
- *
- * Created on August 22, 2003, 11:21 AM
- */
-
 package com.sun.enterprise.admin.servermgmt;
 
 /**
  *
  * @author kebbs
  */
-public class RepositoryException extends java.lang.Exception {
+public class RepositoryException extends Exception {
+
+    private static final long serialVersionUID = 6453511878361248508L;
 
     /**
      * Constructs a new InstanceException object.
@@ -63,15 +60,11 @@ public class RepositoryException extends java.lang.Exception {
     private String format(String msg, String causeMsg, Throwable cause) {
         if (cause != null) {
             if (msg == null) {
-                if (causeMsg != null) {
-                    msg = causeMsg;
-                } else {
-                    msg = cause.toString();
-                }
+                msg = causeMsg == null ? cause.toString() : causeMsg;
             } else if (causeMsg != null && !causeMsg.equals(msg)) {
                 msg += PREFIX + causeMsg + POSTFIX;
             } else {
-                msg += PREFIX + cause.toString() + POSTFIX;
+                msg += PREFIX + cause + POSTFIX;
             }
         }
         return msg;

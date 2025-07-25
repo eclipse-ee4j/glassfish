@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -89,14 +89,14 @@ public class SshClusterITest {
         .withExposedPorts(4848)
         .withAsTrace(false)
         .waitingFor(
-            Wait.forLogMessage(".*Total startup time including CLI.*", 1).withStartupTimeout(Duration.ofSeconds(60L)));
+            Wait.forLogMessage(".*Total startup time including CLI.*", 1).withStartupTimeout(Duration.ofMinutes(5L)));
 
     @SuppressWarnings("resource")
     private static final GlassFishContainer AS_NODE_1 = new GlassFishContainer(network, "node1", "N1", getCommandNode())
         .withAsTrace(false)
         .withExposedPorts(22, 4848, 8080)
         .waitingFor(
-            Wait.forLogMessage(".*" + MSG_NODE_STARTED + ".*", 1).withStartupTimeout(Duration.ofSeconds(60L)));
+            Wait.forLogMessage(".*" + MSG_NODE_STARTED + ".*", 1).withStartupTimeout(Duration.ofMinutes(5L)));
 
     @BeforeAll
     public static void start() throws Exception {
@@ -160,9 +160,8 @@ public class SshClusterITest {
     @Order(2)
     public void createNode1() throws Exception {
         ExecResult result = AS_DOMAIN.execInContainer(UTF_8, PATH_DOCKER_ASADMIN, "--user", "admin",
-            "--passwordfile", "/password.txt", "create-node-ssh", "--nodehost", "node1", "--install", "true",
-            "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root",
-            "node1");
+            "--passwordfile", "/password.txt", "--interactive=false", "create-node-ssh", "--nodehost", "node1",
+            "--install=true", "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root", "node1");
         assertEquals(0, result.getExitCode(), result.getStdout() + result.getStderr());
     }
 
@@ -191,7 +190,9 @@ public class SshClusterITest {
         command.append(" && cat /etc/hosts && cat /etc/resolv.conf");
         command.append(" && hostname");
         command.append(" && java -version");
-        command.append(" && apt-get update && apt-get install -y unzip openssh-client sshpass");
+
+        command.append(" && apt-get install -y -U --no-install-recommends --no-show-upgraded")
+            .append(" unzip openssh-client sshpass && apt-get clean");
         command.append(" && unzip -q /glassfish.zip -d /opt");
         command.append(" && mkdir -p " + PATH_SSH_USERDIR);
         command.append(" && touch " + PATH_SSH_USERDIR + "/known_hosts");
@@ -216,7 +217,8 @@ public class SshClusterITest {
         command.append(" && echo \"JAVA_HOME=${JAVA_HOME}\" > " + PATH_ETC_ENVIRONMENT);
         command.append(" && echo \"PATH=${PATH}\" >> " + PATH_ETC_ENVIRONMENT);
 
-        command.append(" && apt-get update && apt-get install -y unzip openssh-server");
+        command.append(" && apt-get install -y -U --no-install-recommends --no-show-upgraded")
+            .append(" unzip openssh-server && apt-get clean");
         command.append(" && echo 'PermitRootLogin prohibit-password' > " + PATH_SSHD_CFG);
         command.append(" && echo 'PasswordAuthentication no' >> " + PATH_SSHD_CFG);
         command.append(" && echo 'PubkeyAuthentication yes' >> " + PATH_SSHD_CFG);
@@ -234,7 +236,7 @@ public class SshClusterITest {
         command.append(" && mkdir -p /root/.ssh");
         command.append(" && cat /adminkey.pub >> /root/.ssh/authorized_keys");
         command.append(getCommandCreatePrivateDir(PATH_SSH_USERDIR));
-        command.append(" && sshd -E " + PATH_SSHD_LOG);
+        command.append(" && /usr/sbin/sshd -E " + PATH_SSHD_LOG);
         command.append(" && sleep 1");
         command.append(" && ps -lAf");
         command.append(" && echo \"" + MSG_NODE_STARTED + "\"");

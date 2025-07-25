@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,8 +29,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+
 /**
- *
  * @author Byron Nevins
  */
 class GFEmbeddedLauncher extends GFLauncher {
@@ -47,13 +48,14 @@ class GFEmbeddedLauncher extends GFLauncher {
     private static final String GFE_RUNSERVER_CLASS = "GFE_RUNSERVER_CLASS";
     private static final String GFE_JAR = "GFE_JAR";
     private static final String INSTALL_HOME = "S1AS_HOME";
-    private static final String JAVA_HOME = "JAVA_HOME";
-    // private static final String DOMAIN_DIR = "GFE_DOMAIN";
     private static final String GENERAL_MESSAGE = " *********  GENERAL MESSAGE ********\n"
-            + "You must setup four different environmental variables to run embedded" + " with asadmin.  They are\n"
-            + "GFE_JAR - path to the embedded jar\n" + "S1AS_HOME - path to installation directory.  This can be empty or not exist yet.\n"
-            + "JAVA_HOME - path to a JDK installation.  JRE installation is generally not good enough\n"
-            + "GFE_DEBUG_PORT - optional debugging port.  It will start suspended.\n" + "\n*********  SPECIFIC MESSAGE ********\n";
+            + "You must setup four different environmental variables to run embedded with asadmin."
+            + " They are\n"
+            + "GFE_JAR - path to the embedded jar\n"
+            + "S1AS_HOME - path to installation directory. This can be empty or not exist yet.\n"
+            + JAVA_HOME.getEnvName() + " - path to a JDK installation. JRE installation is generally not good enough\n"
+            + "GFE_DEBUG_PORT - optional debugging port. It will start suspended.\n"
+            + "\n*********  SPECIFIC MESSAGE ********\n";
 
     private final String[] DERBY_FILES = { "derby.jar", "derbyclient.jar", };
 
@@ -72,8 +74,13 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     @Override
+    List<File> getMainModulepath() throws GFLauncherException {
+        return List.of();
+    }
+
+    @Override
     List<File> getMainClasspath() throws GFLauncherException {
-        throw new GFLauncherException("not needed?!?");
+        return List.of();
     }
 
     @Override
@@ -174,7 +181,12 @@ class GFEmbeddedLauncher extends GFLauncher {
         CommandLine cmdLine = new CommandLine(CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe.toPath());
         addThreadDump(cmdLine);
-        cmdLine.appendClassPath(getClasspath());
+        if (getModulepath().length > 0) {
+            cmdLine.appendModulePath(getModulepath());
+        }
+        if (getClasspath().length > 0) {
+            cmdLine.appendClassPath(getClasspath());
+        }
         addDebug(cmdLine);
         cmdLine.append(getMainClass());
         cmdLine.append("--installdir");
@@ -218,6 +230,7 @@ class GFEmbeddedLauncher extends GFLauncher {
         setupDomainDir();
         setupJavaDB();
         setClasspath();
+        setModulepath();
     }
 
     private void setupDomainDir() throws GFLauncherException {
@@ -233,10 +246,10 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     private void setupJDK() throws GFLauncherException {
-        String err = "You must set the environmental variable JAVA_HOME to point"
-            + " at a valid JDK. <jdk>/bin/javac[.exe] must exist.";
+        String err = "You must set the environmental variable " + JAVA_HOME.getEnvName() + " to point"
+            + " at a valid JDK.  <jdk>/bin/javac[.exe] must exist.";
 
-        String jdkDirName = System.getenv(JAVA_HOME);
+        String jdkDirName = System.getenv(JAVA_HOME.getEnvName());
         if (!ok(jdkDirName)) {
             throw new GFLauncherException(err);
         }
@@ -261,8 +274,8 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     private void setupInstallationDir() throws GFLauncherException {
-        String err = "You must set the environmental variable S1AS_HOME to point "
-                + "at a GlassFish installation or at an empty directory or at a " + "location where an empty directory can be created.";
+        String err = "You must set the environmental variable S1AS_HOME to point at a GlassFish installation"
+            + " or at an empty directory or at a location where an empty directory can be created.";
         String installDirName = System.getenv(INSTALL_HOME);
 
         if (!ok(installDirName)) {
@@ -279,7 +292,7 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     private void setupEmbeddedJars() throws GFLauncherException {
-        String err = "You must set the environmental variable GFE_JAR to point " + "at the Embedded jarfile.";
+        String err = "You must set the environmental variable GFE_JAR to point at the Embedded jarfile.";
 
         String gfeJarName = System.getenv(GFE_JAR);
 
@@ -295,7 +308,7 @@ class GFEmbeddedLauncher extends GFLauncher {
 
         gfeJar = SmartFile.sanitize(gfeJar);
 
-        err = "You must set the environmental variable GFE_RUNSERVER_JAR to point " + "at the server startup jar.";
+        err = "You must set the environmental variable GFE_RUNSERVER_JAR to point at the server startup jar.";
 
         String runServerJarName = System.getenv(GFE_RUNSERVER_JAR);
 

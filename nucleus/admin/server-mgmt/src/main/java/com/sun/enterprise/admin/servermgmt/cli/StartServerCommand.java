@@ -19,6 +19,8 @@ package com.sun.enterprise.admin.servermgmt.cli;
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 
+import java.time.Duration;
+
 import org.glassfish.api.admin.RuntimeType;
 
 /**
@@ -36,4 +38,11 @@ public interface StartServerCommand {
      */
     void createLauncher() throws GFLauncherException, MiniXmlParserException;
 
+    /**
+     * Timeout for the individual command.
+     * For example when is executed stop and start, both will have the same timeout.
+     *
+     * @return timeout for the command
+     */
+    Duration getTimeout();
 }

@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.cli;
 
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +32,7 @@ import java.util.Objects;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * The <code>Parser</code> object is used to parse the command line and verify that the command line is CLIP compliant.

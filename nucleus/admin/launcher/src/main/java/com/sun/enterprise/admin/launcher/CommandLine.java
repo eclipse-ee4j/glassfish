@@ -31,8 +31,8 @@ import java.util.stream.Stream;
  */
 public final class CommandLine implements Iterable<String> {
 
-    private final List<String> command = new ArrayList<>();
     private final CommandFormat format;
+    private final List<String> command = new ArrayList<>();
 
     /**
      * @param format BAT files use specific format compared to command line.
@@ -54,20 +54,36 @@ public final class CommandLine implements Iterable<String> {
      * @param item
      */
     public void append(String item) {
-        command.add(item);
+        command.add(toQuotedIfNeeded(item));
     }
 
 
     /**
-     * Appends classpath argument (whole <code>-cp [paths]</code>)
+     * Appends paths argument (whole <code>-cp [paths]</code>)
      *
      * @param paths
      */
     public void appendClassPath(File... paths) {
-        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toJavaPath)
+        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toAbsoluteStringPath)
             .collect(Collectors.joining(File.pathSeparator));
         command.add("-cp");
         command.add(toQuotedIfNeeded(value));
+    }
+
+
+    /**
+     * Appends paths argument (whole
+     * <code>--module-path [paths] --add-modules ALL-MODULE-PATH</code>)
+     *
+     * @param paths
+     */
+    public void appendModulePath(File... paths) {
+        command.add("--module-path");
+        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toAbsoluteStringPath)
+            .collect(Collectors.joining(File.pathSeparator));
+        command.add(toQuotedIfNeeded(value));
+        command.add("--add-modules");
+        command.add("ALL-MODULE-PATH");
     }
 
 
@@ -78,7 +94,7 @@ public final class CommandLine implements Iterable<String> {
      * @param paths
      */
     public void appendNativeLibraryPath(File... paths) {
-        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toJavaPath)
+        String value = Stream.of(paths).map(File::toPath).map(CommandLine::toAbsoluteStringPath)
             .collect(Collectors.joining(File.pathSeparator));
         command.add("-D" + GFLauncherConstants.JAVA_NATIVE_SYSPROP_NAME + '=' + toQuotedIfNeeded(value));
     }
@@ -90,7 +106,7 @@ public final class CommandLine implements Iterable<String> {
      * @param path
      */
     public void append(Path path) {
-        command.add(toQuotedIfNeeded(toJavaPath(path)));
+        command.add(toQuotedIfNeeded(toAbsoluteStringPath(path)));
     }
 
 
@@ -100,7 +116,7 @@ public final class CommandLine implements Iterable<String> {
      * @param item
      */
     public void appendJavaOption(String item) {
-        command.add(item);
+        command.add(toQuotedIfNeeded(item));
     }
 
 
@@ -111,7 +127,7 @@ public final class CommandLine implements Iterable<String> {
      * @param path
      */
     public void appendJavaOption(String itemKey, Path path) {
-        command.add(itemKey + '=' + toQuotedIfNeeded(toJavaPath(path)));
+        command.add(itemKey + '=' + toQuotedIfNeeded(toAbsoluteStringPath(path)));
     }
 
 
@@ -145,7 +161,7 @@ public final class CommandLine implements Iterable<String> {
      */
     @Override
     public String toString() {
-        return command.stream().collect(Collectors.joining(" "));
+        return toString(" ");
     }
 
 
@@ -171,10 +187,11 @@ public final class CommandLine implements Iterable<String> {
 
 
     private String toQuotedIfNeeded(String value) {
-        // BAT files have issues when then string doesn't contain a space
-        // and we would use quotation marks.
-        if (format == CommandFormat.BatFile && value.indexOf(' ') >= 0) {
-            return toQuoted(value);
+        if (format == CommandFormat.Script) {
+            if (value.indexOf(' ') >= 0) {
+                return toQuoted(value);
+            }
+            return value;
         }
         // ProcessBuilder resolves it on its own.
         return value;
@@ -186,14 +203,8 @@ public final class CommandLine implements Iterable<String> {
     }
 
 
-    private static String toJavaPath(Path path) {
-        // Even windows can work with /, however it has some rules.
-        // ProcessBuilder escapes what is needed automatically - but that is not a case of
-        // a bat file content.
-        // Paths with backslash can be used without quotation marks - not in bat,
-        // because space is a separator.
-        // Strings with backspaces quoted are taken as strings -> backslash means escaping.
-        return path.normalize().toAbsolutePath().toString().replace('\\', '/');
+    private static String toAbsoluteStringPath(Path path) {
+        return path.normalize().toAbsolutePath().toString();
     }
 
     static enum CommandFormat {
@@ -203,9 +214,9 @@ public final class CommandLine implements Iterable<String> {
          */
         ProcessBuilder,
         /**
-         * To be written into a bat file which will be executed.
-         * We need to ensure the proper formatting for the Windows BAT file.
+         * To be written into a script file which will be executed.
+         * We need to ensure the proper formatting with respect to quotation rules..
          */
-        BatFile,;
+        Script,;
     }
 }

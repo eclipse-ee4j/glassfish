@@ -56,13 +56,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.jaxb.runtime.api.JAXBRIContext;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.WebServiceContractImpl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.common.util.HttpParser.getCharsetFromHeader;
+
 /**
  * This servlet is responsible for testing web-services.
  *
@@ -525,7 +527,8 @@ public class WebServiceTesterServlet extends HttpServlet {
         // classes clashes.
         // the immediate classloader is the WebApp classloader, its parent is the
         // application classloader, we want the parent of that one
-        try (GlassfishUrlClassLoader testerCL = new GlassfishUrlClassLoader(urls, currentLoader.getParent())) {
+        try (GlassfishUrlClassLoader testerCL = new GlassfishUrlClassLoader("SoapWsTester(" + serviceName + ")", urls,
+            currentLoader.getParent())) {
             Thread.currentThread().setContextClassLoader(testerCL);
             String serviceClassName = getServiceClass(
                     JAXBRIContext.mangleNameToClassName(serviceName.getLocalPart()),
@@ -595,7 +598,7 @@ public class WebServiceTesterServlet extends HttpServlet {
         }
 
         // Metro uses the System.getProperty(java.class.path) to pass on to javac during wsimport
-        String oldCP = System.getProperty("java.class.path");
+        final String oldCP = System.getProperty("java.class.path");
         try {
             WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
             ModulesRegistry modulesRegistry = wscImpl.getModulesRegistry();
@@ -605,7 +608,7 @@ public class WebServiceTesterServlet extends HttpServlet {
                 ModuleDefinition md = m.getModuleDefinition();
                 classpath1+=(File.pathSeparator + new File(md.getLocations()[0]).getAbsolutePath());
             }
-            System.setProperty("java.class.path", classpath1);
+            SystemProperties.setProperty("java.class.path", classpath1, true);
 
             String[] wsimportArgs = new String[7];
             wsimportArgs[0] = "-d";
@@ -627,12 +630,7 @@ public class WebServiceTesterServlet extends HttpServlet {
             }
 
         } finally {
-            //reset property value
-            if (oldCP == null) {
-                System.clearProperty("java.class.path");
-            } else {
-                System.setProperty("java.class.path", oldCP);
-            }
+            SystemProperties.setProperty("java.class.path", oldCP, true);
         }
         return classesDir.getAbsolutePath();
     }

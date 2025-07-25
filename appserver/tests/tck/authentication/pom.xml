@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.23-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-authentication</artifactId>
@@ -37,32 +37,13 @@
 
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home>
-
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-
-        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
-
-        <port.admin>14848</port.admin>
-        <port.derby>11527</port.derby>
-        <port.http>18080</port.http>
-        <port.https>18181</port.https>
-        <port.jms>17676</port.jms>
-        <port.jmx>18686</port.jmx>
-        <port.orb>13700</port.orb>
-        <port.orb.mutual>13920</port.orb.mutual>
-        <port.orb.ssl>13820</port.orb.ssl>
-        <port.harness.log>12000</port.harness.log>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
@@ -75,7 +56,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
@@ -84,14 +65,14 @@
                         <goals>
                             <goal>wget</goal>
                         </goals>
+                        <configuration>
+                            <skip>${skipITs}</skip>
+                            <url>${ant.zip.url}</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -152,60 +133,114 @@
                     <execution>
                         <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
+                                     classpathref="maven.plugin.classpath" />
 
-                               <macrodef name="tck-setting">
-                                    <attribute name="key" /> <attribute name="value" />
+                                <macrodef name="tck-property-update">
+                                    <attribute name="key" />
+                                    <attribute name="value" />
                                     <sequential>
-                                      <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                        match="@{key}=.*" replace="@{key}=@{value}" />
+                                      <replaceregexp byline="true"
+                                        file="${tck.home}/bin/ts.jte"
+                                        match="@{key}=.*"
+                                        replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
-
-                                <macrodef name="tck-add">
-                                    <attribute name="key" /> <attribute name="value" />
+                                <macrodef name="tck-property-add">
+                                    <attribute name="key" />
+                                    <attribute name="value" />
                                     <sequential>
                                         <concat append="true" destfile="${tck.home}/bin/ts.jte">@{key}=@{value}${line.separator}</concat>
                                     </sequential>
                                 </macrodef>
+                                <macrodef name="tck-line-update">
+                                    <attribute name="pattern" />
+                                    <attribute name="replacement" />
+                                    <sequential>
+                                      <replaceregexp byline="true"
+                                        file="${tck.home}/bin/ts.jte"
+                                        match="@{pattern}"
+                                        replace="@{replacement}" />
+                                    </sequential>
+                                </macrodef>
+                                <macrodef name="tck-keystore-suffix">
+                                    <attribute name="file" />
+                                    <sequential>
+                                        <replaceregexp flags="g"
+                                          file="@{file}"
+                                          match="/cacerts\.jks"
+                                          replace="/cacerts.p12" />
+                                        <replaceregexp flags="g"
+                                          file="@{file}"
+                                          match="/keystore\.jks"
+                                          replace="/keystore.p12" />
+                                    </sequential>
+                                </macrodef>
 
+                                <property name="jacc.truststore" value="${project.build.directory}/cacerts.p12"/>
+                                <property name="jacc.truststore.password" value="changeit"/>
+                                <property name="s1as.truststore" value="${glassfish.home}/glassfish/domains/domain1/config/cacerts.p12"/>
+                                <property name="s1as.truststore.password" value="changeit"/>
 
-                                <!-- Change configuration -->
-                                <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
-                                <tck-setting key="harness.log.traceflag" value="true"/>
-                                <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
+                                <tck-line-update
+                                    pattern="^(\s+)-Djavax.net.ssl.trustStore=\$\{s1as.domain\}/\$\{sjsas.instance.config.dir\}/cacerts.jks"
+                                    replacement="\1-Djavax.net.ssl.trustStore=${jacc.truststore} -Djavax.net.ssl.trustStorePassword=${jacc.truststore.password}" />
+                                <tck-line-update
+                                    pattern="^(\s+)-Djavax.net.ssl.trustStore=\$\{ri.domain\}/\$\{ri.instance.config.dir\}/cacerts.jks"
+                                    replacement="\1-Djavax.net.ssl.trustStore=${jacc.truststore} -Djavax.net.ssl.trustStorePassword=${jacc.truststore.password}" />
+                                <tck-line-update
+                                    pattern="^(.*/)admin-cli.jar(.*)"
+                                    replacement="\1hk2.jar:${jaspic.home}/modules/jakarta.activation-api.jar\2" />
+                                <tck-line-update
+                                    pattern="^(.*\$\{JAVA_HOME\}/bin/java)(.*)"
+                                    replacement="\1 --module-path ${jaspic.home}/lib/bootstrap --add-modules ALL-MODULE-PATH \2" />
+                                <!-- Caused StackOverflow in JDK 11+21 -->
+                                <tck-line-update
+                                    pattern="^.*-Djava.protocol.handler.pkgs=javax.net.ssl.*"
+                                    replacement="\\\\" />
 
-                                <tck-setting key="vendor.authconfig.factory" value="org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory"/>
+                                <tck-property-update key="jaspic.home" value="${glassfish.home}/glassfish"/>
+                                <tck-property-update key="harness.log.traceflag" value="true"/>
+                                <tck-property-update key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
 
-                                <tck-setting key="webServerHost" value="localhost"/>
-                                <tck-setting key="webServerPort" value="${port.http}"/>
-                                <tck-setting key="securedWebServicePort" value="${port.https}"/>
-                                <tck-setting key="s1as.admin.port" value="${port.admin}"/>
-                                <tck-setting key="glassfish.admin.port" value="${port.admin}"/>
-                                <tck-setting key="orb.port" value="${port.orb}"/>
-                                <tck-setting key="database.port" value="${port.derby}"/>
-                                <tck-setting key="harness.log.port" value="${port.harness.log}"/>
+                                <tck-property-update key="vendor.authconfig.factory" value="org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory"/>
 
-                                <tck-setting key="report.dir" value="${tck.home}/authenticationtckreport/authentication"/>
-                                <tck-setting key="work.dir" value="${tck.home}/authenticationwork/authentication"/>
+                                <tck-property-update key="glassfish.admin.port" value="${port.admin}"/>
+                                <tck-property-update key="s1as.admin.port" value="${port.admin}"/>
+                                <tck-property-update key="database.port" value="${port.derby}"/>
+                                <tck-property-update key="orb.port" value="${port.orb}"/>
+                                <tck-property-update key="webServerHost" value="localhost"/>
+                                <tck-property-update key="webServerPort" value="${port.http}"/>
+                                <tck-property-update key="securedWebServicePort" value="${port.https}"/>
+                                <tck-property-update key="harness.log.port" value="${port.harness.log}"/>
+
+                                <tck-property-update key="report.dir" value="${tck.home}/authenticationtckreport/authentication"/>
+                                <tck-property-update key="work.dir" value="${tck.home}/authenticationwork/authentication"/>
 
                                 <!--
                                     # It's an open question why these settings are not just part of ts.jte to begin with.
                                     # It's also an open question why the Authentication TCK insists on these being defined
                                 -->
+                                <tck-property-add key="persistence.unit.name.2" value="JPATCK2"/>
+                                <tck-property-add key="persistence.unit.name" value="CTS-EM"/>
+                                <tck-property-add key="jakarta.persistence.provider" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
+                                <tck-property-add key="jakarta.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+                                <tck-property-add key="jakarta.persistence.jdbc.url" value="jdbc:derby://localhost:${port.derby}/derbyDB;create=true"/>
+                                <tck-property-add key="jakarta.persistence.jdbc.user" value="cts1"/>
+                                <tck-property-add key="jakarta.persistence.jdbc.password" value="cts1"/>
+                                <tck-property-add key="jpa.provider.implementation.specific.properties" value="eclipselink.logging.level=OFF"/>
+                                <tck-property-add key="persistence.second.level.caching.supported" value="true"/>
 
-                                <tck-add key="persistence.unit.name.2" value="JPATCK2"/>
-                                <tck-add key="persistence.unit.name" value="CTS-EM"/>
-                                <tck-add key="jakarta.persistence.provider" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
-                                <tck-add key="jakarta.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
-                                <tck-add key="jakarta.persistence.jdbc.url" value="jdbc:derby://localhost:${port.derby}/derbyDB;create=true"/>
-                                <tck-add key="jakarta.persistence.jdbc.user" value="cts1"/>
-                                <tck-add key="jakarta.persistence.jdbc.password" value="cts1"/>
-                                <tck-add key="jpa.provider.implementation.specific.properties" value="eclipselink.logging.level=OFF"/>
-                                <tck-add key="persistence.second.level.caching.supported" value="true"/>
+                                <tck-property-add key="jacc.truststore" value="${jacc.truststore}" />
+                                <tck-property-add key="s1as.truststore" value="${s1as.truststore}" />
+
+                                <tck-keystore-suffix file="${tck.home}/bin/xml/impl/glassfish/common.xml" />
+                                <tck-keystore-suffix file="${tck.home}/bin/xml/impl/glassfish/s1as.xml" />
 
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
@@ -225,6 +260,18 @@
                                         <env key="AS_JAVA" value="${java.home}"/>
                                         <arg value="start-domain"/>
                                     </exec>
+                                    <exec executable="${java.home}/bin/keytool" >
+                                        <env key="JAVA_HOME" value="${java.home}" />
+                                        <arg line=" -importkeystore"/>
+                                        <arg line=" -srcalias s1as"/>
+                                        <arg line=" -destalias s1as"/>
+                                        <arg line=" -srckeystore ${s1as.truststore}"/>
+                                        <arg line=" -noprompt"/>
+                                        <arg line=" -trustcacerts"/>
+                                        <arg line=" -destkeystore ${jacc.truststore}"/>
+                                        <arg line=" -srcstorepass ${s1as.truststore.password}"/>
+                                        <arg line=" -deststorepass ${jacc.truststore.password}"/>
+                                    </exec>
 
                                     <if>
                                         <isset property="jacoco.version" />
@@ -243,6 +290,7 @@
                                         <arg value="domain1"/>
                                     </exec>
                                 </limit>
+
                                 <mkdir dir="${tck.home}/authenticationtckreport"/>
                                 <mkdir dir="${tck.home}/authenticationtckreport/authenticationtck"/>
 
@@ -252,16 +300,13 @@
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
 
-                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="tck.suspend" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008"/>]]></replacevalue>
                                 </replace>
                             </target>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
 
                     <execution>
@@ -271,7 +316,6 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
@@ -310,7 +354,6 @@
                         </configuration>
                     </execution>
 
-
                      <execution>
                         <id>run-tck-tests</id>
                         <phase>integration-test</phase>
@@ -321,14 +364,15 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
+
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
                                     <env key="AS_JAVA" value="${java.home}"/>
                                     <env key="JAVA_HOME" value="${java.home}"/>
+                                    <env key="LC_ALL" value="C" />
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
                                     <arg value="runclient.nobinaryfinder" if:set="run.test" />
                                     <arg value="run.all" unless:set="run.test" />
-                                    <env key="LC_ALL" value="C" />
                                 </exec>
 
                                 <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">

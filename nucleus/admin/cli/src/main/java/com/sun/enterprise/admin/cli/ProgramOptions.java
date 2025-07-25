@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.cli;
 
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.HostAndPort;
 
@@ -40,6 +39,7 @@ import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Representation of the options known to the asadmin program. These options control the overall behavior of asadmin,
@@ -83,15 +83,15 @@ public class ProgramOptions {
     private PasswordLocation location;
     private String commandName;
 
-    /*
+
+    private String modulePath;
+    /**
      * Information passed in from AsadminMain and used by start-domain.
-     * XXX - this is somewhat of a kludge but this seems the best place
-     * to put it for now
      */
     private String classPath;
     private String className;
 
-    /*
+    /**
      * Define the meta-options known by the asadmin command.
      */
     static {
@@ -153,6 +153,7 @@ public class ProgramOptions {
         this.options = new ParameterMap(other.options);
         this.env = other.env;
         this.password = other.password;
+        this.modulePath = other.modulePath;
         this.classPath = other.classPath;
         this.className = other.className;
     }
@@ -248,6 +249,7 @@ public class ProgramOptions {
         putEnv(env, PASSWORDFILE);
         putEnv(env, AUTHTOKEN);
         putEnv(env, AUXINPUT);
+        putEnv(env, DETACH);
         // XXX - HELP?
     }
 
@@ -638,6 +640,20 @@ public class ProgramOptions {
      */
     public String getPlainOption(String name) {
         return options.getOne(name);
+    }
+
+    /**
+     * @return the modulePath
+     */
+    public String getModulePath() {
+        return modulePath;
+    }
+
+    /**
+     * @param modulePath the modulePath to set
+     */
+    public void setModulePath(String modulePath) {
+        this.modulePath = modulePath;
     }
 
     /**

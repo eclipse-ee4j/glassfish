@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,9 @@ package org.glassfish.embeddable;
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
+import java.util.Set;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * Encapsulates the set of properties required to create a new GlassFish instance.
@@ -36,8 +39,6 @@ import java.util.Properties;
  */
 public class GlassFishProperties {
 
-    /** Key for specifying which instance root (aka domain dir) GlassFish should run with. */
-    public static final String INSTANCE_ROOT_PROP_NAME = "com.sun.aas.instanceRoot";
     /** Key for specifying absolute URI which configuration file (domain.xml) GlassFish should run with. */
     public static final String CONFIG_FILE_URI_PROP_NAME = "org.glassfish.embeddable.configFileURI";
     /**
@@ -88,6 +89,24 @@ public class GlassFishProperties {
         return gfProperties;
     }
 
+
+    /**
+     * @return set of configured property names
+     */
+    public Set<String> getPropertyNames() {
+        return gfProperties.stringPropertyNames();
+    }
+
+
+    /**
+     * @param name
+     * @return value for the given property or null if not set
+     */
+    public String getProperty(String name) {
+        return gfProperties.getProperty(name);
+    }
+
+
     /**
      * Set any custom glassfish property. May be required for the plugged in
      * {@link GlassFishRuntime} (if any)
@@ -118,7 +137,7 @@ public class GlassFishProperties {
      * @param instanceRoot Location of the instance root.
      */
     public void setInstanceRoot(String instanceRoot) {
-        gfProperties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
+        gfProperties.setProperty(INSTANCE_ROOT.getPropertyName(), instanceRoot);
     }
 
     /**
@@ -127,7 +146,7 @@ public class GlassFishProperties {
      * @return Location of instance root set using {@link #setInstanceRoot(String)}
      */
     public String getInstanceRoot() {
-        return gfProperties.getProperty(INSTANCE_ROOT_PROP_NAME);
+        return gfProperties.getProperty(INSTANCE_ROOT.getPropertyName());
     }
 
 

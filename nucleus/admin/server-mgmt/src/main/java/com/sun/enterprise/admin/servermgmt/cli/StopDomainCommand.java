@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,8 +53,17 @@ public class StopDomainCommand extends LocalDomainCommand {
     private Boolean force;
     @Param(optional = true, defaultValue = "false")
     private Boolean kill;
+    @Param(optional = true)
+    private Integer timeout;
 
     private HostAndPort addr;
+
+    /**
+     * @return timeout set as a parameter
+     */
+    protected Duration getTimeout() {
+        return timeout == null ?  null : Duration.ofSeconds(timeout);
+    }
 
     @Override
     protected void validate() throws CommandException {
@@ -142,7 +151,7 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    ProcessUtils.kill(prevPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
+                    ProcessUtils.kill(prevPid, getStopTimeout(), !programOpts.isTerse());
                 } catch (KillNotPossibleException e) {
                     throw new CommandException(e.getMessage(), e);
                 }
@@ -168,10 +177,9 @@ public class StopDomainCommand extends LocalDomainCommand {
     protected void doCommand() throws CommandException {
         // run the remote stop-domain command and throw away the output
         final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
-        final File watchedPid = isLocal() ? getServerDirs().getPidFile() : null;
-        final Long oldPid = ProcessUtils.loadPid(watchedPid);
-        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
+        final Long oldPid = getServerPid();
         final boolean printDots = !programOpts.isTerse();
+        final Duration stopTimeout = getStopTimeout();
         try {
             cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
             if (printDots) {
@@ -180,12 +188,12 @@ public class StopDomainCommand extends LocalDomainCommand {
             }
             final boolean dead;
             if (isLocal()) {
-                dead = ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
+                dead = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, stopTimeout, printDots);
             } else {
-                dead = ProcessUtils.waitWhileListening(addr, timeout, printDots);
+                dead = ProcessUtils.waitWhileListening(addr, stopTimeout, printDots);
             }
             if (!dead) {
-                throw new CommandException(Strings.get("StopDomain.DASNotDead", timeout.toSeconds()));
+                throw new CommandException(Strings.get("StopDomain.DASNotDead", stopTimeout.toSeconds()));
             }
         } catch (Exception e) {
             // The domain server may have died so fast we didn't have time to
@@ -194,7 +202,7 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (kill && isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    ProcessUtils.kill(prevPid, timeout, printDots);
+                    ProcessUtils.kill(prevPid, stopTimeout, printDots);
                     return;
                 } catch (Exception ex) {
                     e.addSuppressed(ex);
@@ -202,5 +210,10 @@ public class StopDomainCommand extends LocalDomainCommand {
             }
             throw e;
         }
+    }
+
+    private Duration getStopTimeout() {
+        final Duration parameter = getTimeout();
+        return parameter == null ? DEATH_TIMEOUT_MS : parameter;
     }
 }

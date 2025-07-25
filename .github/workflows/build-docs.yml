@@ -1,0 +1,20 @@
+
+name: Build of AsciiDoc Documentation
+on:
+  pull_request:
+    branches: [ "master", "7.0", "8.0" ]
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build Docs
+      run: |
+        mvn -B -e -ntp install -pl :glassfish-qa-config -am
+        mvn -B -e -ntp clean install -f docs

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024,2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@ package org.glassfish.runnablejar;
 
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.glassfish.bootstrap.embedded.EmbeddedGlassFishRuntimeBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +35,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.main.boot.embedded.EmbeddedGlassFishRuntimeBuilder;
 import org.glassfish.runnablejar.commandline.Arguments;
 import org.glassfish.runnablejar.commandline.CommandLineParser;
 
@@ -43,7 +43,6 @@ import static java.lang.System.exit;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
-import static org.glassfish.embeddable.CommandResult.ExitStatus.SUCCESS;
 
 /**
  * This is main class for the uber jars viz., glassfish-embedded-all.jar and
@@ -133,7 +132,7 @@ public class UberMain {
                     printInfoAfterStartup();
                 }
 
-                if (glassFish.getDeployer().getDeployedApplications().isEmpty()) {
+                if (arguments.prompt) {
                     runCommandPromptLoop();
                     exit(0);
                 }

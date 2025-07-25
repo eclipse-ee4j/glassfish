@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.flashlight.FlashlightLoggerInfo;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.ATTACH_AGENT_EXCEPTION;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.INVALID_PID;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.MISSING_AGENT_JAR;
@@ -38,7 +38,7 @@ import static org.glassfish.flashlight.FlashlightLoggerInfo.MISSING_AGENT_JAR_DI
  */
 final class AgentAttacherInternal {
     private static final Logger LOG = FlashlightLoggerInfo.getLogger();
-    private static boolean isAttached = false;
+    private static boolean isAttached;
 
     static boolean isAttached() {
         return isAttached;
@@ -64,7 +64,7 @@ final class AgentAttacherInternal {
             }
 
             VirtualMachine vm = VirtualMachine.attach(String.valueOf(pid));
-            String ir = System.getProperty(INSTALL_ROOT_PROPERTY);
+            String ir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
             File dir = new File(ir, "lib" + File.separator + "monitor");
 
             if (!dir.isDirectory()) {

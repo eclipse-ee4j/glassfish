@@ -22,8 +22,6 @@ import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 
-import jakarta.transaction.Transaction;
-
 import java.util.Hashtable;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -59,7 +57,7 @@ public class UnpooledResource extends ConnectionPool {
     }
 
     @Override
-    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc, Transaction tran) {
+    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc) {
         return null;
     }
 
@@ -70,7 +68,7 @@ public class UnpooledResource extends ConnectionPool {
     }
 
     @Override
-    protected ResourceHandle getUnenlistedResource(ResourceSpec spec, ResourceAllocator alloc, Transaction tran) throws PoolingException {
+    protected ResourceHandle getUnenlistedResource(ResourceSpec spec, ResourceAllocator alloc) throws PoolingException {
 
         this.poolSize.increment();
         final ResourceHandle handle;
@@ -90,11 +88,11 @@ public class UnpooledResource extends ConnectionPool {
 
     @Override
     public void resourceErrorOccurred(ResourceHandle resourceHandle) throws IllegalStateException {
-        freeResource(resourceHandle);
+        freeUnenlistedResource(resourceHandle);
     }
 
     @Override
-    protected void freeResource(ResourceHandle resourceHandle) {
+    protected void freeUnenlistedResource(ResourceHandle resourceHandle) {
         this.poolSize.decrement();
         deleteResource(resourceHandle);
     }

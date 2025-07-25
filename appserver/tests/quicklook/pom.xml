@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -18,20 +18,22 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.9</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>quicklook</artifactId>
-    <version>7.0.23-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <version>7.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <name>Glassfish Quicklook Bundle</name>
     <description>This pom describes how to run QuickLook tests on the Glassfish Bundle</description>
@@ -40,45 +42,47 @@
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>default-test</id>
                         <phase>test</phase>
                         <configuration>
                             <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                <property name="compile_classpath" refid="maven.compile.classpath"/>
-                                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                                <taskdef
+                                    resource="net/sf/antcontrib/antcontrib.properties"
+                                    classpathref="maven.plugin.classpath" />
+                                <property name="compile_classpath" refid="maven.compile.classpath" />
+                                <property name="plugin_classpath" refid="maven.plugin.classpath" />
 
-                                <echo message="compile classpath: ${compile_classpath}"/>
-                                <echo message="plugin classpath:  ${plugin_classpath}"/>
-                                
+                                <echo message="compile classpath: ${compile_classpath}" />
+                                <echo message="plugin classpath:  ${plugin_classpath}" />
+
                                 <!-- Full Profile -->
                                 <if>
                                     <equals arg1="${test.gd}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
-                                
-                                 <if>
+
+                                <if>
                                     <equals arg1="${test.gd.security}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all_gd_security">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
-                                
+
                                 <!-- Web Profile -->
                                 <if>
                                     <equals arg1="${test.web.profile}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all_wd">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
@@ -86,7 +90,7 @@
                                     <equals arg1="${test.web.profile.security}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all_wd_security">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
@@ -94,7 +98,7 @@
                                     <equals arg1="${start.wd.security}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="start_server_with_security_manager_enabled">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
@@ -102,40 +106,40 @@
                                     <equals arg1="${stop.wd.security}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="stop_server_with_security_manager_enabled">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
-                               
+
                                 <!-- Other -->
                                 <if>
                                     <equals arg1="${test.em}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all_embedded">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
-                                
+
                                 <if>
                                     <equals arg1="${test.ri}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all_ri">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
                                 <if>
                                     <isset property="test.report" />
                                     <then>
-                                        <ant dir="." antfile="build.xml" target="report"/>
+                                        <ant dir="." antfile="build.xml" target="report" />
                                     </then>
                                 </if>
                                 <if>
                                     <equals arg1="${test.debug}" arg2="true" />
                                     <then>
                                         <ant dir="." antfile="build.xml" target="dev_debug">
-                                            <property name="glassfish.home" value="${glassfish.home}"/>
+                                            <property name="glassfish.home" value="${glassfish.home}" />
                                         </ant>
                                     </then>
                                 </if>
@@ -199,12 +203,11 @@
                             </exclusion>
                         </exclusions>
                     </dependency>
-
-            <dependency>
-            <groupId>com.beust</groupId>
-            <artifactId>jcommander</artifactId>
-            <version>1.72</version>
-            </dependency>
+                    <dependency>
+                        <groupId>com.beust</groupId>
+                        <artifactId>jcommander</artifactId>
+                        <version>1.72</version>
+                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>
@@ -217,7 +220,7 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties> 
+            <properties>
                 <test.gd>true</test.gd>
             </properties>
         </profile>
@@ -227,7 +230,7 @@
                 <test.gd.security>true</test.gd.security>
             </properties>
         </profile>
-        
+
         <!-- Web Profile -->
         <profile>
             <id>test_wd</id>
@@ -253,7 +256,7 @@
                 <stop.wd.security>true</stop.wd.security>
             </properties>
         </profile>
-        
+
         <!-- Other -->
         <profile>
             <id>test_em</id>
@@ -267,7 +270,7 @@
                 <test.ri>true</test.ri>
             </properties>
         </profile>
-        
+
         <profile>
             <id>dev_debug</id>
             <properties>

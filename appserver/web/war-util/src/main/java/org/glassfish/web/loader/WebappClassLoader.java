@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Runtime.Version;
 import java.lang.System.Logger;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -1559,11 +1560,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    private String getJavaVersion() {
+    private Version getJavaVersion() {
         if (SECURITY_MANAGER == null) {
-            return System.getProperty("java.version");
+            return Runtime.version();
         }
-        PrivilegedAction<String> action = () -> System.getProperty("java.version");
+        PrivilegedAction<Version> action = Runtime::version;
         return AccessController.doPrivileged(action);
     }
 

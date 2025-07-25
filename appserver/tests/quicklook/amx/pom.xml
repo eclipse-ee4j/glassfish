@@ -38,7 +38,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <encoding>iso-8859-1</encoding>
-                    <release>11</release>
+                    <release>17</release>
                 </configuration>
             </plugin>
         </plugins>

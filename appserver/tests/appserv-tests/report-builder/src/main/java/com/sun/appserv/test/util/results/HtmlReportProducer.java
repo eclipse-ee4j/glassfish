@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -324,8 +324,8 @@ public class HtmlReportProducer implements Closeable {
                     + "<machineName>%s</machineName>"
                     + "</configuration>"
                     + "<testsuites>",
-                    new Date(), System.getProperty("os.name"), System.getProperty("os.version"),
-                    System.getProperty("java.version"), machineName);
+                    new Date(), System.getProperty("os.name"), System.getProperty("os.version"), Runtime.version(),
+                    machineName);
                 fout.write(extraXML.getBytes());
                 fin.transferTo(fout);
                 fout.write("</testsuites>\n</report>\n".getBytes());

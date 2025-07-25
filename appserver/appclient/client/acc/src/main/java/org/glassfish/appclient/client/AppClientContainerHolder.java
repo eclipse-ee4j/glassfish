@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -124,9 +124,9 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
      */
     public static synchronized void init(String agentArgsText, Instrumentation inst) throws UserError, Exception {
         int version = Runtime.version().feature();
-        if (version < 11) {
-            throw new UserError(MessageFormat.format("Current Java version {0} is too low; {1} or later required",
-                System.getProperty("java.version"), "11"));
+        if (version < 17) {
+            throw new UserError(
+                MessageFormat.format("Current Java version {0} is too low; {1} or later required", version, "17"));
         }
 
         // Analyze the agent argument string.

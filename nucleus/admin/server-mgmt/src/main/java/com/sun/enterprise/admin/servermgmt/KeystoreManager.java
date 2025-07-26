@@ -100,7 +100,7 @@ public class KeystoreManager {
     }
 
 
-    protected final void copyCertificatesToTrustStore(File configRoot, DomainConfig config, String masterPassword)
+    protected final void copyCertificatesToTrustStore(File configRoot, String masterPassword)
         throws DomainException {
         final File keyStore = new File(configRoot, KEYSTORE_FILENAME_DEFAULT);
         final File trustStore = new File(configRoot, TRUSTSTORE_FILENAME_DEFAULT);

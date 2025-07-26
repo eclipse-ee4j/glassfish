@@ -40,7 +40,6 @@ import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAM
  */
 public class KeystoreManager {
 
-    private static final Logger LOG = System.getLogger(KeystoreManager.class.getName());
     private static final String CERTIFICATE_DN_PREFIX = "CN=";
     private static final String CERTIFICATE_DN_SUFFIX = ",OU=GlassFish,O=Eclipse Foundation";
     public static final String CERTIFICATE_ALIAS = "s1as";

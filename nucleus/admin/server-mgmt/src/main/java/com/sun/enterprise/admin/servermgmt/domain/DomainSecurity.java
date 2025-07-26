@@ -77,7 +77,7 @@ public class DomainSecurity extends MasterPasswordFileManager {
     void createSSLCertificateDatabase(File configDir, DomainConfig config, String masterPassword) throws RepositoryException {
         createKeyStore(new File(configDir, KEYSTORE_FILENAME_DEFAULT), config, masterPassword);
         changeKeystorePassword(KEYSTORE_PASSWORD_DEFAULT, masterPassword, new File(configDir, TRUSTSTORE_FILENAME_DEFAULT));
-        copyCertificatesToTrustStore(configDir, config, masterPassword);
+        copyCertificatesToTrustStore(configDir, masterPassword);
     }
 
     /**

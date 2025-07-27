@@ -28,7 +28,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import ee.jakarta.tck.data.standalone.entity.EntityTests;
 
-
 /**
  *
  * @author Ondro Mihalyi
@@ -37,25 +36,24 @@ public class JakartaPersistenceProcessor implements ApplicationArchiveProcessor 
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {
-        if(archive instanceof WebArchive webArchive) {
-            webArchive.addAsWebInfResource(getClass().getClassLoader().getResource("persistence.xml"), "classes/META-INF/persistence.xml");
-            webArchive.addPackages(false,
-                    TransactionExtension.class.getPackage(),
-                    EntityTests.class.getPackage()
-                    );
-            addSignatureTestsClasses(webArchive);
-            final String junitExtensionServiceFile = "META-INF/services/org.junit.jupiter.api.extension.Extension";
-
-            webArchive.add(new ClassLoaderAsset(junitExtensionServiceFile), "WEB-INF/classes/" + junitExtensionServiceFile);
+        if (archive instanceof WebArchive webArchive) {
+            webArchive.addAsWebInfResource(
+                          getClass().getClassLoader()
+                                    .getResource("persistence.xml"),
+                          "classes/META-INF/persistence.xml")
+                      .addPackages(false,
+                          TransactionExtension.class.getPackage(),
+                          EntityTests.class.getPackage())
+                      .addPackages(true,
+                          SignatureTest.class.getPackage(),
+                          PluginAPI.class.getPackage(),
+                          com.sun.tdk.signaturetest.core.Log.class.getPackage(),
+                          CommandLineParserException.class.getPackage())
+                      .add(
+                          new ClassLoaderAsset("META-INF/services/org.junit.jupiter.api.extension.Extension"),
+                          "WEB-INF/classes/" + "META-INF/services/org.junit.jupiter.api.extension.Extension");
         }
     }
 
-    private void addSignatureTestsClasses(WebArchive webArchive) throws IllegalArgumentException {
-        webArchive.addPackages(true,
-                SignatureTest.class.getPackage(),
-                PluginAPI.class.getPackage(),
-                com.sun.tdk.signaturetest.core.Log.class.getPackage(),
-                CommandLineParserException.class.getPackage());
-    }
 
 }

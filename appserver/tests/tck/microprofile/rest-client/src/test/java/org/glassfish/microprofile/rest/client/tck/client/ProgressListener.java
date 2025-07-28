@@ -24,26 +24,35 @@ import org.testng.ITestClass;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import org.testng.SkipException;
 
 public class ProgressListener implements ITestListener, IClassListener {
 
+    private boolean failFast = Boolean.getBoolean("failFast");
+    private boolean failed = false;
     private int totalTests = 0;
     private final AtomicInteger executedTests = new AtomicInteger(0);
     private final Set<ITestResult> seen = Collections.synchronizedSet(new HashSet<>());
 
     @Override
     public void onBeforeClass(ITestClass testClass) {
+        if (failFast && failed) {
+            throw new SkipException("Skipping class: " + testClass.getName() + " due to previous failures.\u001B[0m\n");
+        }
         System.out.println("\n\n\u001B[34m\u001B[1m>>> Starting class: " + testClass.getName() + "\u001B[0m\n");
     }
 
     @Override
     public void onStart(ITestContext context) {
-        totalTests = context.getAllTestMethods().length;
+        totalTests += context.getAllTestMethods().length;
         System.out.println("Starting test run with " + totalTests + " tests.");
     }
 
     @Override
     public void onTestStart(ITestResult result) {
+        if (failFast && failed) {
+            throw new SkipException("Skipping method: " + result.getMethod() + " due to previous failures.\u001B[0m\n");
+        }
         String className = result.getMethod().getTestClass().getName();
 
         int runSoFar = executedTests.get();
@@ -61,6 +70,7 @@ public class ProgressListener implements ITestListener, IClassListener {
     @Override
     public void onTestFailure(ITestResult result) {
         markTestComplete(result);
+        failed = true;
     }
 
     @Override

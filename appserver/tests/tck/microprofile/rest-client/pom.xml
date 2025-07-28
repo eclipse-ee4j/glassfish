@@ -33,18 +33,17 @@
 
     <name>TCK: MicroProfile Rest Client</name>
 
+    <properties>
+        <failFast>false</failFast>
+        <failsafe.argLine>
+            ${maven.test.jvmoptions}
+            -Dglassfish.maxHeapSize=2g
+            -Dee.omnifish.arquillian.prependDeploySequence=true
+            -DfailFast=${failFast}
+        </failsafe.argLine>
+    </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>org.eclipse.microprofile.rest.client</groupId>
-            <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>3.0.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.ext.microprofile</groupId>
-            <artifactId>jersey-mp-rest-client</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
@@ -61,13 +60,6 @@
             <groupId>org.glassfish.main</groupId>
             <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>2.27.2</version>
-            <!-- Requirement of the wiremock plugin -->
-            <scope>compile</scope>
-        </dependency>
 
         <dependency>
             <groupId>jakarta.activation</groupId>
@@ -80,6 +72,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-api</artifactId>
             <scope>provided</scope>
@@ -89,18 +86,147 @@
             <artifactId>helidon-microprofile-config</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+            <artifactId>jersey-mp-rest-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-tck</artifactId>
+            <version>${microprofile.rest-client.version}</version>
+            <scope>test</scope>
+            <!-- Brings older version of wiremock -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.tomakehurst</groupId>
+                    <artifactId>wiremock</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- WireMock is not ready for wars, so we use WireMockLibraryIncluder to add it, including transitive dependencies. -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>2.0.17</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>2.0.17</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <!-- We use SLF4J redirected to JUL -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.2.30.v20200428</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.2.30.v20200428</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+            <version>9.2.30.v20200428</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- The TCK 3.0.1 cannot use newer version -->
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>2.27.2</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <!-- We use hamcrest 3.0 instead of hamcrest-core 2.2 -->
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+                <!-- We override older versions with 2.0-->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <!-- We have newer version -->
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <!-- We have newer version -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <!-- Not needed -->
+                <exclusion>
+                    <groupId>com.jayway.jsonpath</groupId>
+                    <artifactId>json-path</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.flipkart.zjsonpatch</groupId>
+                    <artifactId>zjsonpatch</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--
+            FIXME: Putting it in the end is a workaround for a bug in this package
+            - org.eclipse.parsson packages were not remapped to ee.omnifish.arquillian...
+        -->
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>glassfish-container-common</artifactId>
+            <version>2.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>uk.co.automatictester</groupId>
+                <groupId>io.buildlogic</groupId>
                 <artifactId>wiremock-maven-plugin</artifactId>
-                <version>7.3.0</version>
+                <version>8.1.0</version>
                 <configuration>
                     <dir>${project.build.directory}/classes</dir>
                     <params>--port=8765 --verbose</params>
@@ -121,17 +247,9 @@
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-lang3</artifactId>
-                        <version>${commons-lang3.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -140,17 +258,11 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <systemPropertyVariables>
-                        <glassfish.maxHeapSize>4096m</glassfish.maxHeapSize>
-                        <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
-                        <ee.omnifish.arquillian.prependDeploySequence>true</ee.omnifish.arquillian.prependDeploySequence>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,13 +35,21 @@
     <description>This verifies the compliance of Eclipse Glassfish using the Jakarta Authentication standalone TCK</description>
 
     <properties>
-        <glassfish.version>${project.version}</glassfish.version>
-        <tck.root>${project.build.directory}</tck.root>
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
+        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
+        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
+
+        <tck.home>${project.build.directory}/authentication-tck</tck.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>jakarta-authentication-tck</artifactId>
@@ -52,6 +60,26 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.github.download-maven-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-ant</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipITs}</skip>
+                            <url>${ant.zip.url}</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -80,31 +108,32 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
-                    <execution>
+                     <execution>
+                        <id>run-tck-tests</id>
                         <phase>integration-test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>${maven.executable}</executable>
+                            <environmentVariables>
+                                <LC_ALL>C</LC_ALL>
+                            </environmentVariables>
+                            <arguments>
+                                <argument>-B</argument>
+                                <argument>-e</argument>
+                                <argument>-s</argument>
+                                <argument>${maven.settings.xml}</argument>
+                                <argument>-f</argument>
+                                <argument>${tck.root}/authentication-tck-3.1.0/tck/pom.xml</argument>
+                                <argument>clean</argument>
+                                <argument>install</argument>
+                                <argument>-Dglassfish.version=${glassfish.version}</argument>
+                                <argument>-Dmaven.multiModuleProjectDirectory=${tck.home}/tck</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>${maven.executable}</executable>
-                    <arguments>
-                        <argument>-B</argument>
-                        <argument>-e</argument>
-                        <argument>-s</argument>
-                        <argument>${maven.settings.xml}</argument>
-                        <argument>-f</argument>
-                        <argument>${tck.root}/authentication-tck-3.1.0/tck/pom.xml</argument>
-                        <argument>clean</argument>
-                        <argument>install</argument>
-                        <argument>-Dglassfish.version=${glassfish.version}</argument>
-                        <argument>-Dmaven.multiModuleProjectDirectory=${tck.root}/authentication-tck-3.1.0/tck</argument>
-                    </arguments>
-                    <environmentVariables>
-                        <LC_ALL>C</LC_ALL>
-                    </environmentVariables>
-                </configuration>
             </plugin>
         </plugins>
     </build>

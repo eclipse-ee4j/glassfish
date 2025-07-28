@@ -34,7 +34,6 @@
     <modules>
         <module>common</module>
         <module>all</module>
-        <module>nucleus</module>
         <module>web</module>
         <module>tests</module>
     </modules>

@@ -18,7 +18,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -110,7 +111,6 @@
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                
                                 <macrodef name="jarupdate">
                                     <attribute name="basedir"/>
                                     <attribute name="includes"/>
@@ -121,15 +121,14 @@
                                             <zipfileset src="@{destfile}" excludes="@{includes}"/>
                                         </zip>
                                         <move file="@{destfile}.tmp" tofile="@{destfile}" />
-                                        
+
                                         <loadfile property="message" srcFile="@{basedir}/@{includes}"/>
-                                        
+
                                         <echo>${message}</echo>
-                                        
+
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                                
                                 <jarupdate
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
@@ -139,25 +138,27 @@
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
-                                
-                                <!-- Fixes missing osgi import-->
+                                <jarupdate
+                                           basedir="${patches}/microprofile-health-api" includes="META-INF/MANIFEST.MF"
+                                           destfile="${glassfish.modules}/microprofile-health-api.jar"
+                                />
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
-                                
+
                                 <!-- To support Annnotations 4 -->
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
-                                
+
                                 <!-- Path for OSGI locator osgiresourcelocator -->
                                 <jarupdate
                                     basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-common.jar"
                                 />
-                                
+
                                 <!-- To have a manifest at all -->
                                 <jarupdate
                                     basedir="${patches}/jakarta-data-api" includes="META-INF/MANIFEST.MF"

@@ -24,12 +24,12 @@
         <artifactId>persistence</artifactId>
         <version>8.0.0-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>jnosql-jakarta-persistence-integration</artifactId>
     <packaging>glassfish-jar</packaging>
 
     <name>Eclipse JNoSQL Jakarta Persistence Integration</name>
-    
+
     <properties>
         <persistence.osgi.bundle.classpath>${project.build.directory}/dependencies/jnosql-jakarta-persistence-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-core-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-api-core-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-communication-core-${jnosql.version}.jar</persistence.osgi.bundle.classpath>
     </properties>
@@ -187,7 +187,7 @@
                     <instructions>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-17</_runee>
-                        
+
                         <Import-Package>
                             org.eclipse.jnosql.communication,
                             *

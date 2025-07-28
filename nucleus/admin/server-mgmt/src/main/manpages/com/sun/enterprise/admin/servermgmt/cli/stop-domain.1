@@ -5,9 +5,13 @@ NAME
        domain
 
 SYNOPSIS
-           stop-domain [--help] [--domaindir domaindir]
-           [--force={true|false}] [--kill={false|true}]
-           [domain-name]
+        stop-domain
+        [--domaindir <domaindir>]
+        [--force[=<force(default:true)>]]
+        [--help|-?]
+        [--kill[=<kill(default:false)>]]
+        [--timeout <timeout>]
+        [domain_name]
 
 DESCRIPTION
        The stop-domain subcommand stops the Domain Administration Server (DAS)
@@ -24,9 +28,6 @@ DESCRIPTION
        server.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
        --domaindir
            Specifies the directory of the domain that is to be stopped. If
            specified, the path must be accessible in the file system. If not
@@ -45,6 +46,9 @@ OPTIONS
                The subcommand waits until all threads that are associated with
                the domain are exited before stopping the domain.
 
+       --help, -?
+           Displays the help text for the subcommand.
+
        --kill
            Specifies whether the domain is killed by using functionality of
            the operating system to terminate the domain process.
@@ -58,6 +62,12 @@ OPTIONS
            true
                The domain is killed. The subcommand uses functionality of the
                operating system to terminate the domain process.
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The domain status is unknown
+            in such case.
 
 OPERANDS
        domain-name
@@ -85,4 +95,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         20 Dec 2010                   stop-domain(1)
+Jakarta EE 10                         26 Jun 2025                   stop-domain(1)

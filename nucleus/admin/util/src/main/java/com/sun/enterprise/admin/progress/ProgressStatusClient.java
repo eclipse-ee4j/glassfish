@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.progress;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.StringUtils;
 
 import java.util.HashMap;
@@ -28,6 +27,7 @@ import org.glassfish.api.admin.progress.ProgressStatusBase;
 import org.glassfish.api.admin.progress.ProgressStatusDTO;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusEventCreateChild;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Provides mirroring of events into given ProgressStatus substructure. Never rewrites name in base ProgressStatus (i.e.

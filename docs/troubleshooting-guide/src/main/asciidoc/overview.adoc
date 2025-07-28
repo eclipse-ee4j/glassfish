@@ -54,7 +54,7 @@ is not supported or on a system that in some other way does not meet release req
 Also see "xref:release-notes.adoc#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to installation.
 
-{productName} requires JDK release 11 or newer.
+{productName} requires JDK release 17 or newer.
 If necessary, download and install the required JDK software.
 
 On Solaris, Linux, and Windows systems, JDK software is available from the

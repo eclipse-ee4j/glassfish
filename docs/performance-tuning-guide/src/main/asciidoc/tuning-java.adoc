@@ -115,7 +115,7 @@ which the surviving objects are moved to the old generation. When the
 old generation fills up, it triggers a major collection which involves
 the entire object heap.
 
-Both HotSpot and Solaris JDK use thread local object allocation pools
+HotSpot JDK uses thread local object allocation pools
 for lock-free, fast, and scalable object allocation. So, custom object
 pooling is not often required. Consider pooling only if object
 construction cost is high and significantly affects execution profiles.

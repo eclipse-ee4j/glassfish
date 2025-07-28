@@ -150,15 +150,17 @@ class LogRecordBuffer {
      * @return {@link GlassFishLogRecord} or null if interrupted.
      */
     public GlassFishLogRecord pollOrWait() {
+        final GlassFishLogRecord logRecord;
         try {
-            GlassFishLogRecord logRecord = pendingRecords.take();
-            if (availableCapacity.availablePermits() < this.capacity) {
-                availableCapacity.release();
-            }
-            return logRecord;
+            logRecord = pendingRecords.take();
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return null;
         }
+        if (availableCapacity.availablePermits() < this.capacity) {
+            availableCapacity.release();
+        }
+        return logRecord;
     }
 
     /**
@@ -202,6 +204,8 @@ class LogRecordBuffer {
             GlassFishLoggingTracer.stacktrace(getClass(),
                 "addWithTimeout - interrupted, adding waiting records before shutdown.");
             pendingRecords.add(record);
+            availableCapacity.release();
+            Thread.currentThread().interrupt();
             return;
         }
 
@@ -225,13 +229,13 @@ class LogRecordBuffer {
     private void addWithUnlimitedWaiting(final GlassFishLogRecord record) {
         try {
             availableCapacity.acquire();
-            pendingRecords.add(record);
-            availableCapacity.release();
         } catch (final InterruptedException e) {
             GlassFishLoggingTracer.stacktrace(getClass(),
                 "addWithUnlimitedWaiting - interrupted, adding waiting records before shutdown.");
-            pendingRecords.add(record);
+            Thread.currentThread().interrupt();
         }
+        pendingRecords.add(record);
+        availableCapacity.release();
     }
 
 

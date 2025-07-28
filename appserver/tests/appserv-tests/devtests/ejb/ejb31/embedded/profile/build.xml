@@ -65,9 +65,12 @@
        <echo message="Running with ${embedded.classpath} in classpath"/>
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-ejb.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <arg line="${jndiroot}"/>
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="-Dxuse.hash.for.appid=true"/>
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />

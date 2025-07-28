@@ -34,20 +34,14 @@
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-
         <tck.home>${project.build.directory}/activation-tck</tck.home>
-
-        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
@@ -61,7 +55,7 @@
         <plugins>
             <!-- Download Ant -->
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>

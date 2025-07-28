@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,11 +27,9 @@ import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainException;
 import com.sun.enterprise.admin.servermgmt.DomainsManager;
 import com.sun.enterprise.admin.servermgmt.KeystoreManager;
-import com.sun.enterprise.admin.servermgmt.RepositoryManager;
 import com.sun.enterprise.admin.servermgmt.domain.DomainBuilder;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
@@ -50,6 +48,7 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
 
@@ -65,6 +64,9 @@ import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMS_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMX_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORTBASE_OSGI_SUFFIX;
 import static com.sun.enterprise.config.util.PortConstants.PORT_MAX_VAL;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 
 /**
  * This is a local command that creates a domain.
@@ -76,12 +78,14 @@ public final class CreateDomainCommand extends CLICommand {
     private static final String ADMIN_PORT = "adminport";
     private static final String ADMIN_PASSWORD = "password";
     private static final String MASTER_PASSWORD = "masterpassword";
-    private static final String DEFAULT_MASTER_PASSWORD = RepositoryManager.DEFAULT_MASTER_PASSWORD;
     private static final String SAVE_MASTER_PASSWORD = "savemasterpassword";
     private static final String INSTANCE_PORT = "instanceport";
     private static final String DOMAIN_PROPERTIES = "domainproperties";
     private static final String PORTBASE_OPTION = "portbase";
-    private String adminUser = null;
+    private static final LocalStringsImpl strings = new LocalStringsImpl(CreateDomainCommand.class);
+
+    private String adminUser;
+
     @Param(name = ADMIN_PORT, optional = true)
     private String adminPort;
     @Param(name = PORTBASE_OPTION, optional = true)
@@ -114,7 +118,6 @@ public final class CreateDomainCommand extends CLICommand {
     private boolean checkPorts = true;
     @Param(name = "domain_name", primary = true)
     private String domainName;
-    private static final LocalStringsImpl strings = new LocalStringsImpl(CreateDomainCommand.class);
 
     public CreateDomainCommand() {
     }
@@ -146,7 +149,7 @@ public final class CreateDomainCommand extends CLICommand {
     @Override
     protected void validate() throws CommandException, CommandValidationException {
         if (domainDir == null) {
-            domainDir = getSystemProperty(SystemPropertyConstants.DOMAINS_ROOT_PROPERTY);
+            domainDir = getSystemProperty(DOMAINS_ROOT.getPropertyName());
         }
         if (domainDir == null) {
             throw new CommandValidationException(strings.get("InvalidDomainPath", domainDir));
@@ -255,9 +258,9 @@ public final class CreateDomainCommand extends CLICommand {
         adminUser = programOpts.getUser();
         if (!ok(adminUser)) {
             adminUser = SystemPropertyConstants.DEFAULT_ADMIN_USER;
-            adminPassword = SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD;
+            adminPassword = DEFAULT_ADMIN_PASSWORD;
         } else if (noPassword) {
-            adminPassword = SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD;
+            adminPassword = DEFAULT_ADMIN_PASSWORD;
         } else {
             char[] pwdArr = getAdminPassword();
             adminPassword = pwdArr != null ? new String(pwdArr) : null;
@@ -271,9 +274,9 @@ public final class CreateDomainCommand extends CLICommand {
         if (masterPassword == null) {
             if (useMasterPassword) {
                 char[] mpArr = getMasterPassword();
-                masterPassword = mpArr != null ? new String(mpArr) : null;
+                masterPassword = mpArr == null ? null : new String(mpArr);
             } else {
-                masterPassword = DEFAULT_MASTER_PASSWORD;
+                masterPassword = KEYSTORE_PASSWORD_DEFAULT;
             }
         }
 
@@ -289,6 +292,7 @@ public final class CreateDomainCommand extends CLICommand {
 
             // saving the login information happens inside this method
             createTheDomain(domainDir, domainProperties);
+            return 0;
         } catch (CommandException ce) {
             logger.info(ce.getLocalizedMessage());
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), ce);
@@ -296,7 +300,6 @@ public final class CreateDomainCommand extends CLICommand {
             logger.fine(e.getLocalizedMessage());
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), e);
         }
-        return 0;
     }
 
     /**
@@ -308,7 +311,7 @@ public final class CreateDomainCommand extends CLICommand {
         po.prompt = strings.get("AdminPassword");
         po.promptAgain = strings.get("AdminPasswordAgain");
         po.param._password = true;
-        return getPassword(po, SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD, true);
+        return getPassword(po, DEFAULT_ADMIN_PASSWORD, true);
     }
 
     /**
@@ -320,7 +323,7 @@ public final class CreateDomainCommand extends CLICommand {
         po.prompt = strings.get("MasterPassword");
         po.promptAgain = strings.get("MasterPasswordAgain");
         po.param._password = true;
-        return getPassword(po, DEFAULT_MASTER_PASSWORD, true);
+        return getPassword(po, KEYSTORE_PASSWORD_DEFAULT, true);
     }
 
     /**
@@ -436,7 +439,7 @@ public final class CreateDomainCommand extends CLICommand {
         logger.info(strings.get("DomainCreated", domainName));
         Integer aPort = (Integer) domainConfig.get(DomainConfig.K_ADMIN_PORT);
         logger.info(strings.get("DomainPort", domainName, Integer.toString(aPort)));
-        if (adminPassword != null && adminPassword.equals(SystemPropertyConstants.DEFAULT_ADMIN_PASSWORD)) {
+        if (adminPassword != null && adminPassword.equals(DEFAULT_ADMIN_PASSWORD)) {
             logger.info(strings.get("DomainAllowsUnauth", domainName, adminUser));
         } else {
             logger.info(strings.get("DomainAdminUser", domainName, adminUser));

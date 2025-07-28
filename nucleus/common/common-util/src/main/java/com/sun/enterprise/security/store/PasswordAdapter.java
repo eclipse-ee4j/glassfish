@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.security.store;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.Key;
@@ -32,16 +31,19 @@ import java.util.Enumeration;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
+import org.glassfish.main.jdke.security.KeyTool;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
- * This class implements an adapter for password manipulation a JCEKS. Note that although it uses locks ('synchronized'), it
+ * This class implements an adapter for password manipulation. Note that although it uses locks ('synchronized'), it
  * tends to be created anew with each use, an inefficient and potentially problematic use that could create more than one
  * instance accessing the same keystore at a time.
  */
 public final class PasswordAdapter {
-    public static final String PASSWORD_ALIAS_KEYSTORE = "domain-passwords";
+    public static final String PASSWORD_ALIAS_KEYSTORE = "domain-passwords.p12";
 
     private KeyStore _pwdStore;
     private final File _keyFile;
@@ -52,7 +54,7 @@ public final class PasswordAdapter {
     }
 
     private static String getDefaultKeyFileName() {
-        return System.getProperty(INSTANCE_ROOT_PROPERTY) + File.separator + "config" + File.separator + PASSWORD_ALIAS_KEYSTORE;
+        return System.getProperty(INSTANCE_ROOT.getSystemPropertyName()) + File.separator + "config" + File.separator + PASSWORD_ALIAS_KEYSTORE;
     }
 
     /**
@@ -71,7 +73,7 @@ public final class PasswordAdapter {
     /**
      * Construct a PasswordAdapter with given Shared Master Password, SMP.
      *
-     * @param keyfileName the jceks key file name
+     * @param keyfileName the key file name
      * @param smp master password
      * @throws CertificateException
      * @throws IOException
@@ -94,7 +96,7 @@ public final class PasswordAdapter {
     /**
      * Construct a PasswordAdapter with given Shared Master Password, SMP.
      *
-     * @param keyfileName the jceks key file name
+     * @param keyfileName the key file name
      * @param smp the master password
      * @exception CertificateException
      * @exception IOException
@@ -103,18 +105,11 @@ public final class PasswordAdapter {
      */
     private static KeyStore loadKeyStore(final File keyStoreFile, final char[] masterPassword)
         throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        final KeyStore keyStore = KeyStore.getInstance("JCEKS");
-
         if (keyStoreFile.exists()) {
-            // don't buffer keystore; it's tiny anyway
-            final FileInputStream input = new FileInputStream(keyStoreFile);
-            try (input) {
-                keyStore.load(input, masterPassword);
-            }
-        } else {
-            keyStore.load(null, masterPassword);
+            return new KeyTool(keyStoreFile, masterPassword).loadKeyStore();
         }
-
+        KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE_DEFAULT);
+        keyStore.load(null, masterPassword);
         return keyStore;
     }
 
@@ -226,7 +221,7 @@ public final class PasswordAdapter {
         final char[] oldMasterPassword = getMasterPassword();
 
         final KeyStore oldStore = _pwdStore;
-        final KeyStore newKeyStore = KeyStore.getInstance("JCEKS", _pwdStore.getProvider());
+        final KeyStore newKeyStore = KeyStore.getInstance(KEYSTORE_TYPE_DEFAULT, _pwdStore.getProvider());
         newKeyStore.load(null, newMasterPassword);
 
         final Enumeration<String> aliasesEnum = oldStore.aliases();

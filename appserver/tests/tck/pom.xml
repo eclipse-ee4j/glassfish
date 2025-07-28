@@ -17,7 +17,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -33,18 +34,15 @@
     <name>TCK: Parent</name>
 
     <modules>
-        <module>embedded_ejb_smoke</module>
-
         <module>tck-download</module>
         <module>platform-tck-runner</module>
-        
+
         <module>activation</module>
         <module>expression_language</module>
         <module>rest</module>
         <module>rest_cdi</module>
         <module>faces</module>
         <module>connectors</module>
-        <module>connectors-full</module>
         <module>pages</module>
         <module>pages_tags</module>
         <module>pages_debugging</module>
@@ -60,8 +58,110 @@
         <module>jsonp_pluggability</module>
     </modules>
 
+    <properties>
+        <glassfish.version>${project.version}</glassfish.version>
+        <glassfish.root>${project.build.directory}</glassfish.root>
+        <glassfish.directoryName>glassfish8</glassfish.directoryName>
+        <glassfish.home>${glassfish.root}/${glassfish.directoryName}</glassfish.home>
+        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
+
+        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+
+        <port.admin>14848</port.admin>
+        <port.derby>11527</port.derby>
+        <port.http>18080</port.http>
+        <port.https>18181</port.https>
+        <port.jms>17676</port.jms>
+        <port.jmx>18686</port.jmx>
+        <port.orb>13700</port.orb>
+        <port.orb.mutual>13920</port.orb.mutual>
+        <port.orb.ssl>13820</port.orb.ssl>
+        <port.harness.log>12000</port.harness.log>
+
+        <omnifish.arquillian.version>2.0.0</omnifish.arquillian.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.main.distributions</groupId>
+                <artifactId>glassfish</artifactId>
+                <version>${glassfish.version}</version>
+                <type>zip</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+                <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+                <version>2.0.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+                <version>3.3.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+                <version>3.3.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>ee.omnifish.arquillian</groupId>
+               <artifactId>glassfish-client-ee11</artifactId>
+               <version>${omnifish.arquillian.version}</version>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ee.omnifish.arquillian</groupId>
+                <artifactId>arquillian-glassfish-server-managed</artifactId>
+                <version>${omnifish.arquillian.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- See defaultProtocol type in arquillian.xml in microprofile module -->
+            <dependency>
+                <groupId>org.jboss.arquillian.protocol</groupId>
+                <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+                <version>10.0.0.Final</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.junit5</groupId>
+                <artifactId>arquillian-junit5-container</artifactId>
+                <version>1.10.0.Final</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-core-impl</artifactId>
+                <version>${weld.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>7.7.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>1.10.0.Final</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <!-- To disable usage of our default MANIFEST.MF -->
+                <configuration combine.self="override" />
+            </plugin>
+            <!-- Deploy this pom, but no children except ... -->
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <executions>
@@ -69,7 +169,25 @@
                         <id>default-deploy</id>
                         <phase>disabled</phase>
                     </execution>
+                    <execution>
+                        <id>default-deploy-tck</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <!-- To keep consistency with nucleus-parent -->
+                            <skip>${deploy.skip}</skip>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

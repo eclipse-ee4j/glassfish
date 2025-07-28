@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+* Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
 * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
 *
 * This program and the accompanying materials are made available under the
@@ -26,9 +26,28 @@ def dumpSysInfo() {
    mvn -version || true
    ant -version || true
    ps -e -o start,etime,pid,rss,drs,command || true
-   cat /proc/cpuinfo || true
+   lscpu || true
    cat /proc/meminfo || true
+   ulimit -a || true
    """
+}
+
+def startVmstatLogging(String stageName) {
+   sh """
+   mkdir -p "${WORKSPACE}/logs"
+   vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
+   """
+}
+
+def stopVmstatLogging() {
+   sh """
+   if [ -f "${WORKSPACE}/vmstat.pid" ]; then
+      pkill -F "${WORKSPACE}/vmstat.pid" || true
+      rm -f "${WORKSPACE}/vmstat.pid"
+   fi
+   df -h || true
+   """
+   archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
 
 def antjobs = [
@@ -65,9 +84,10 @@ def generateAntPodTemplate(job) {
    return {
       node {
          stage("${job}") {
-            unstash 'build-bundles'
             try {
-               timeout(time: 1, unit: 'HOURS') {
+               startVmstatLogging("ant-${job}")
+               unstash 'build-bundles'
+               timeout(time: 2, unit: 'HOURS') {
                   withAnt(installation: 'apache-ant-latest') {
                      dumpSysInfo()
                      sh """
@@ -78,8 +98,8 @@ def generateAntPodTemplate(job) {
                      """
                   }
                }
-            }
-            finally {
+            } finally {
+               stopVmstatLogging()
                archiveArtifacts artifacts: "${job}-results.tar.gz"
                junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
             }
@@ -89,7 +109,7 @@ def generateAntPodTemplate(job) {
 }
 
 pipeline {
-   
+
    agent {
       kubernetes {
          inheritFrom "basic"
@@ -107,7 +127,7 @@ spec:
     - name: "HOME"
       value: "/home/jenkins"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
+      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication -Xlog:gc"
     volumeMounts:
     - name: "jenkins-home"
       mountPath: "/home/jenkins"
@@ -127,13 +147,14 @@ spec:
     resources:
       limits:
         memory: "8Gi"
-        cpu: "6000m"
+        cpu: "5500m"
       requests:
         memory: "8Gi"
-        cpu: "6000m"
+        cpu: "5500m"
   volumes:
   - name: "jenkins-home"
-    emptyDir: {}
+    emptyDir:
+      sizeLimit: "4Gi"
   - name: maven-repo-shared-storage
     persistentVolumeClaim:
       claimName: glassfish-maven-repo-storage
@@ -150,79 +171,97 @@ spec:
       - key: settings-security.xml
         path: settings-security.xml
   - name: maven-repo-local-storage
-    emptyDir: {}
+    emptyDir:
+      sizeLimit: "2Gi"
 """
       }
    }
-   
+
    environment {
       S1AS_HOME = "${WORKSPACE}/glassfish8/glassfish"
       APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
       TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
-      GF_INTERNAL_ENV = credentials('gf-internal-env')
       PORT_ADMIN=4848
       PORT_HTTP=8080
       PORT_HTTPS=8181
    }
-   
+
    options {
       buildDiscarder(logRotator(numToKeepStr: '2'))
-      
+
+      parallelsAlwaysFailFast()
+
       // to allow re-running a test stage
       preserveStashes()
-      
+
       // issue related to default 'implicit' checkout, disable it
       skipDefaultCheckout()
-      
+
       // abort pipeline if previous stage is unstable
       skipStagesAfterUnstable()
-      
+
       // show timestamps in logs
       timestamps()
-      
+
       // global timeout, abort after 6 hours
       timeout(time: 6, unit: 'HOURS')
    }
-   
+
    stages {
-      
+
       stage('build') {
          steps {
             checkout scm
             container('maven') {
-               dumpSysInfo()
-               sh '''
-               # Validate the structure in all submodules (especially version ids)
-               mvn -B -e -fae clean validate -Ptck,set-version-id,staging
-               
-               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-               mvn -B -e install -Pfastest,staging -T4C
-               ./gfbuild.sh archive_bundles
-               ./gfbuild.sh archive_embedded
-               
-               mvn -B -e clean -Pstaging
-               tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-               ls -la ${WORKSPACE}/bundles
-               ls -la ${WORKSPACE}/embedded
-               '''
+               script {
+               try {
+                  startVmstatLogging('mvn-build')
+                  dumpSysInfo()
+                  timeout(time: 10, unit: 'MINUTES') {
+                     sh '''
+                     # Validate the structure in all submodules (especially version ids)
+                     mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+
+                     # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+                     mvn -B -e install -Pfastest,staging,ci -T4C
+                     ./gfbuild.sh archive_bundles
+                     ./gfbuild.sh archive_embedded
+
+                     mvn -B -e clean -Pstaging
+                     tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+                     ls -la ${WORKSPACE}/bundles
+                     ls -la ${WORKSPACE}/embedded
+                     '''
+                  }
+               } finally {
+                  stopVmstatLogging()
+               }
+               }
             }
             archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
             archiveArtifacts artifacts: 'embedded/*', onlyIfSuccessful: true
             stash includes: 'bundles/*', name: 'build-bundles'
          }
       }
-      
+
       stage('Test') {
          parallel {
             stage('mvn-tests') {
                steps {
                   checkout scm
                   container('maven') {
-                     dumpSysInfo()
-                     timeout(time: 1, unit: 'HOURS') {
-                        sh '''
-                        mvn -B -e clean install -Pstaging,qa
-                        '''
+                     script {
+                     try {
+                        startVmstatLogging('mvn-tests')
+                        dumpSysInfo()
+                        timeout(time: 2, unit: 'HOURS') {
+                           sh '''
+                           mvn -B -e clean install -Pstaging,qa,ci
+                           '''
+                        }
+                     } finally {
+                        stopVmstatLogging()
+                     }
                      }
                   }
                }
@@ -233,7 +272,7 @@ spec:
                   }
                }
             }
-            
+
             stage('ant-tests') {
                agent {
                   kubernetes {
@@ -247,32 +286,6 @@ spec:
                steps {
                   script {
                      parallel parallelStagesMap
-                  }
-               }
-            }
-            
-            stage('docs') {
-               steps {
-                   dumpSysInfo()
-                   sh '''
-                   pwd
-                   ls -altrh
-                   
-                   mkdir foo
-                   
-                   '''
-                   
-                   dir ('foo') {
-                       checkout scm
-                       container('maven') {
-                       dumpSysInfo()
-                     
-                       timeout(time: 1, unit: 'HOURS') {
-                           sh '''
-                           mvn -B -e clean install -Pstaging -f docs -amd -T4C
-                           '''
-                       }
-                    }
                   }
                }
             }

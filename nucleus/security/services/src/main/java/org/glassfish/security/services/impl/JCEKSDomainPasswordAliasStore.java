@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package org.glassfish.security.services.impl;
 
 import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
 import com.sun.enterprise.security.store.IdentityManagement;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -31,17 +30,21 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
- * Exposes as a service the JCEKS implementation of the
- * domain-scoped password alias store.
+ * Exposes as a service the PKCS12 implementation of the domain-scoped password alias store.
+ *
+ * @deprecated JCEKS is obsoleted, so internally we use PKCS12.
+ *
  * @author tjquinn
  */
 @Service
 @Named("JCEKS")
 @PerLookup
+@Deprecated
 public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore implements DomainScopedPasswordAliasStore  {
-
-    private static final String PASSWORD_ALIAS_KEYSTORE = "domain-passwords";
 
     @Inject @Optional
     private IdentityManagement idm;
@@ -60,7 +63,7 @@ public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore imple
     }
 
     private static String pathToDomainAliasStore() {
-        return System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY) +
-                File.separator + "config" + File.separator + PASSWORD_ALIAS_KEYSTORE;
+        return System.getProperty(INSTANCE_ROOT.getSystemPropertyName()) + File.separator + "config" + File.separator
+            + PASSWORD_ALIAS_KEYSTORE;
     }
 }

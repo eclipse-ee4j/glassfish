@@ -18,7 +18,7 @@
 
 startAsMainProcess() {
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
-      exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --help
+      exec "$JAVA" ${ASADMIN_JVM_OPTIONS} --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$ASADMIN_CLASSPATH" org.glassfish.admin.cli.AsadminMain start-domain --help
     fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
@@ -38,7 +38,7 @@ startAsMainProcess() {
       else
         DRY_RUN_OUTPUT+=("$COM");
       fi
-    done < <("$JAVA" -jar "$ASADMIN_JAR" start-domain --dry-run "$@" || echo "FAILED" )
+    done < <("$JAVA" ${ASADMIN_JVM_OPTIONS} --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$ASADMIN_CLASSPATH" org.glassfish.admin.cli.AsadminMain start-domain --dry-run "$@" || echo "FAILED")
     if [[ x"$DRY_RUN_OUTPUT" == x ]]
       then
         echo -n -e "${DRY_RUN_OUTPUT_BEFORE_DUMP}" >&2
@@ -56,8 +56,7 @@ startAsMainProcess() {
 AS_CONFIG="$(dirname "$(realpath "$0")")/../glassfish/config"
 AS_CONFIG_SH="${AS_CONFIG}/config.sh"
 source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
-
-ASADMIN_JAR="$AS_INSTALL/modules/admin-cli.jar"
+export ASADMIN_CLASSPATH="$AS_INSTALL/appserver-cli.jar:${ASADMIN_CLASSPATH}"
 startAsMainProcess "$@"
 
 # Alternatively, run the following:

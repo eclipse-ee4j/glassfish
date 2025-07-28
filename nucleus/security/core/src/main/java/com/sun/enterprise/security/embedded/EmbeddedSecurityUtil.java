@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,6 +45,8 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -88,8 +90,8 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
             // For the embedded server case, will the system properties be set in case of multiple embedded instances?
             //Not sure - so obtain the other files from the usual locations instead of from the System properties
 
-            String keyStoreFileName = fromInstanceDir + File.separator + "config" + File.separator + "keystore.jks";
-            String trustStoreFileName = fromInstanceDir + File.separator + "config" + File.separator + "cacerts.jks";
+            String keyStoreFileName = fromInstanceDir + File.separator + "config" + File.separator + KEYSTORE_FILENAME_DEFAULT;
+            String trustStoreFileName = fromInstanceDir + File.separator + "config" + File.separator + TRUSTSTORE_FILENAME_DEFAULT;
 
             fileNames.add(keyStoreFileName);
             fileNames.add(trustStoreFileName);

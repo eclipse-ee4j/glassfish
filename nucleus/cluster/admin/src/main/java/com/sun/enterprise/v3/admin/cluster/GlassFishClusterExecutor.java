@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.util.ClusterOperationUtil;
 import com.sun.enterprise.admin.util.InstanceStateService;
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
@@ -43,7 +42,6 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.common.util.admin.CommandModelImpl;
 import org.glassfish.config.support.CommandTarget;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
@@ -55,14 +53,9 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author Vijay Ramachandran
  */
-@Service(name="GlassFishClusterExecutor")
-public class GlassFishClusterExecutor implements ClusterExecutor, PostConstruct {
-
-    @Inject
-    private Domain domain;
-
-    @Inject
-    private ExecutorService threadExecutor;
+@Service(name = "GlassFishClusterExecutor")
+public class GlassFishClusterExecutor implements ClusterExecutor {
+    private static final LocalStringManagerImpl strings = new LocalStringManagerImpl(GlassFishClusterExecutor.class);
 
     @Inject
     private InstanceStateService instanceState;
@@ -72,13 +65,6 @@ public class GlassFishClusterExecutor implements ClusterExecutor, PostConstruct 
 
     @Inject
     private ServiceLocator habitat;
-
-    private static final LocalStringManagerImpl strings =
-                        new LocalStringManagerImpl(GlassFishClusterExecutor.class);
-
-    @Override
-    public void postConstruct() {
-    }
 
     /**
      * <p>Execute the passed command on targeted remote instances. The list of remote
@@ -116,8 +102,9 @@ public class GlassFishClusterExecutor implements ClusterExecutor, PostConstruct 
         }
 
         String targetName = parameters.getOne("target");
-        if(targetName == null)
-                targetName = "server";
+        if(targetName == null) {
+            targetName = "server";
+        }
         //Do replication only if the RuntimeType specified is ALL or
         //only if the target is not "server" or "domain"
         if( (runtimeTypes.contains(RuntimeType.ALL)) ||

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +18,15 @@
 package com.sun.enterprise.util.io;
 
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Map;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static org.glassfish.embeddable.GlassFishVariable.DOMAINS_ROOT;
 
 /**
  * A class for keeping track of the directories that a domain lives in and under.
@@ -33,6 +36,10 @@ import java.util.Map;
  * Created: April 19, 2010
  */
 public final class DomainDirs {
+
+    private static final LocalStringsImpl I18N = new LocalStringsImpl(DomainDirs.class);
+    private final ServerDirs dirs;
+
     /**
      * This convenience constructor is used when nothing is known about the
      * domain-dir
@@ -52,7 +59,7 @@ public final class DomainDirs {
         }
 
         if (!domainsDir.isDirectory()) {
-            throw new IOException(strings.get("Domain.badDomainsDir", domainsDir));
+            throw new IOException(I18N.get("Domain.badDomainsDir", domainsDir));
         }
 
         File domainDir;
@@ -65,7 +72,7 @@ public final class DomainDirs {
         }
 
         if (!domainDir.isDirectory()) {
-            throw new IOException(strings.get("Domain.badDomainDir", domainDir));
+            throw new IOException(I18N.get("Domain.badDomainDir", domainDir));
         }
 
         dirs = new ServerDirs(domainDir);
@@ -96,23 +103,23 @@ public final class DomainDirs {
         return dirs.toString();
     }
 
-    public final String getDomainName() {
+    public String getDomainName() {
         return dirs.getServerName();
     }
 
-    public final File getDomainDir() {
+    public File getDomainDir() {
         return dirs.getServerDir();
     }
 
-    public final File getDomainsDir() {
+    public File getDomainsDir() {
         return dirs.getServerParentDir();
     }
 
-    public final ServerDirs getServerDirs() {
+    public ServerDirs getServerDirs() {
         return dirs;
     }
 
-    public final boolean isValid() {
+    public boolean isValid() {
         try {
             return dirs.isValid();
         }
@@ -123,12 +130,10 @@ public final class DomainDirs {
 
     public static File getDefaultDomainsDir() throws IOException {
         Map<String, String> systemProps = new ASenvPropertyReader().getProps();
-        String defDomains =
-                systemProps.get(SystemPropertyConstants.DOMAINS_ROOT_PROPERTY);
-
-        if (defDomains == null)
-            throw new IOException(strings.get("Domain.noDomainsDir",
-                    SystemPropertyConstants.DOMAINS_ROOT_PROPERTY));
+        String defDomains = systemProps.get(DOMAINS_ROOT.getPropertyName());
+        if (defDomains == null) {
+            throw new IOException(I18N.get("Domain.noDomainsDir", DOMAINS_ROOT.getPropertyName()));
+        }
 
         return new File(defDomains);
 
@@ -141,6 +146,7 @@ public final class DomainDirs {
         // look for subdirs in the parent dir -- there must be one and only one
 
         File[] files = parent.listFiles(new FileFilter() {
+            @Override
             public boolean accept(File f) {
                 File config = new File(f, "config");
                 File dxml = new File(config, "domain.xml");
@@ -149,24 +155,23 @@ public final class DomainDirs {
             }
         });
 
-        if (files == null || files.length == 0)
-            throw new IOException(strings.get("Domain.noDomainDirs", parent));
+        if (files == null || files.length == 0) {
+            throw new IOException(I18N.get("Domain.noDomainDirs", parent));
+        }
 
         if(files.length > 1) {
             StringBuilder names = new StringBuilder();
 
             for(int i = 0 ; i < files.length; i++) {
-                if(i > 0)
+                if(i > 0) {
                     names.append(", ");
+                }
                 names.append(files[i].getName());
             }
 
-            throw new IOException(strings.get("Domain.tooManyDomainDirs", parent, names.toString()));
+            throw new IOException(I18N.get("Domain.tooManyDomainDirs", parent, names.toString()));
         }
 
         return files[0];
     }
-
-    private final ServerDirs dirs;
-    private final static LocalStringsImpl strings = new LocalStringsImpl(DomainDirs.class);
 }

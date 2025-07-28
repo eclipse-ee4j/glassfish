@@ -4,9 +4,13 @@ NAME
        start-instance - starts a GlassFish Server instance
 
 SYNOPSIS
-           start-instance [--help]
-           [--debug={false|true}] [--sync={normal|full|none}]
-           instance-name
+        start-instance
+        [--debug[=<debug(default:false)>]]
+        [--help|-?]
+        [--sync <sync(default:normal)>]
+        [--timeout <timeout>]
+        instance_name
+
 
 DESCRIPTION
        The start-instance subcommand starts a GlassFish Server instance. This
@@ -35,9 +39,6 @@ DESCRIPTION
        This command is supported in remote mode only.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
        --debug
            Specifies whether the instance is started with Java Platform
            Debugger Architecture (JPDA)
@@ -54,6 +55,9 @@ OPTIONS
 
            false
                The instance is started with JPDA debugging disabled (default).
+
+       --help, -?
+           Displays the help text for the subcommand.
 
        --sync
            The type of synchronization between the DAS and the instance's
@@ -93,6 +97,12 @@ OPTIONS
                last synchronization. This type of synchronization might delay
                the startup of the instance while the DAS updates all files in
                the instance's directories.
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The instance status is unknown
+            in such case.
 
 OPERANDS
        instance-name
@@ -148,4 +158,4 @@ SEE ALSO
        Java Platform Debugger Architecture (JPDA)
        (https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
 
-Jakarta EE 10                         21 Aug 2017                 start-instance(1)
+Jakarta EE 10                         26 Jun 2025                 start-instance(1)

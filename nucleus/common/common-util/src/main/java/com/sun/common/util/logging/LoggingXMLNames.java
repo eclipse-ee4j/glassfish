@@ -72,7 +72,6 @@ public class LoggingXMLNames {
     public static final String cmp = "cmp";
     public static final String util = "util";
     public static final String resourceadapter = "resource-adapter";
-    public static final String selfmanagement = "self-management";
 
     private static final String LEVEL = ".level";
 
@@ -110,8 +109,7 @@ public class LoggingXMLNames {
         entry(jdo, LogDomains.JDO_LOGGER + LEVEL),
         entry(cmp, LogDomains.CMP_LOGGER + LEVEL),
         entry(util, LogDomains.UTIL_LOGGER + LEVEL),
-        entry(resourceadapter, LogDomains.RSR_LOGGER + LEVEL),
-        entry(selfmanagement, LogDomains.SELF_MANAGEMENT_LOGGER + LEVEL)
+        entry(resourceadapter, LogDomains.RSR_LOGGER + LEVEL)
     );
 }
 

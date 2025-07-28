@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,13 +19,17 @@
 
 package com.sun.enterprise.deployment.xml;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 public final class DTDRegistry {
 
      public static final String Package = "com.sun.enterprise.deployment.xml";
 
-     public static final String DTD_LOCATION= System.getProperty("com.sun.aas.installRoot") + java.io.File.separator + "lib" + java.io.File.separator + "dtds";
+     public static final String DTD_LOCATION = System.getProperty(INSTALL_ROOT.getSystemPropertyName())
+         + java.io.File.separator + "lib" + java.io.File.separator + "dtds";
 
-     public static final String SCHEMA_LOCATION=System.getProperty("com.sun.aas.installRoot") + java.io.File.separator + "lib" + java.io.File.separator + "schemas";
+     public static final String SCHEMA_LOCATION = System.getProperty(INSTALL_ROOT.getSystemPropertyName())
+         + java.io.File.separator + "lib" + java.io.File.separator + "schemas";
 
      // Standard DTDs
 

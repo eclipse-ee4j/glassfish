@@ -32,7 +32,7 @@
     <target name="all" depends="build,deploy,run_se,undeploy"/>
 
     <target name="clean" depends="init-common">
-      <antcall  target="clean-common"/>
+        <antcall  target="clean-common"/>
     </target>
 
     <target name="compile" depends="clean">
@@ -63,13 +63,10 @@
     </target>
 
     <target name="run_se" depends="init-common">
-       <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
-              classname="${se.client}">
-        <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
-        <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-        </java>
+        <antcall target="runclient-own">
+            <param name="mainClass" value="${se.client}" />
+            <param name="args" value="" />
+        </antcall>
     </target>
 
 

@@ -42,7 +42,7 @@
                     <caller-propagation>supported</caller-propagation>
                 </sas-context>
             </ior-security-config>
-            
+
             <gen-classes />
         </ejb>
     </enterprise-beans>

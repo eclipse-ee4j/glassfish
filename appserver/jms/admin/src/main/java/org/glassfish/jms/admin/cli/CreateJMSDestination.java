@@ -175,7 +175,8 @@ public class CreateJMSDestination extends JMSDestination implements AdminCommand
                     parameters.set("DEFAULT", destName);
                     parameters.set("destType", destType);
                     parameters.set("target", target);
-                    commandRunner.getCommandInvocation("delete-jmsdest", deleteReport, subject).parameters(parameters).execute();
+                    commandRunner.getCommandInvocation("delete-jmsdest", deleteReport, subject).parameters(parameters)
+                        .execute();
                     if (ActionReport.ExitCode.FAILURE.equals(deleteReport.getActionExitCode())) {
                         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                         return;

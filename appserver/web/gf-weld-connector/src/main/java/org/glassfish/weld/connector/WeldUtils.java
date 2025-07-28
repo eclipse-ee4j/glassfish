@@ -199,25 +199,49 @@ public class WeldUtils {
      * @return true, if there is at least one bean annotated with a qualified annotation in the specified paths
      */
     public static boolean hasCDIEnablingAnnotations(DeploymentContext context, Collection<URI> paths) {
-        List<String> result = new ArrayList<String>();
+        final String METADATA_KEY = "implicitBeanPaths";
+        Set<URI> implicitBeanArchivePaths = (Set<URI>)context.getTransientAppMetadata().get(METADATA_KEY);
 
+        if (implicitBeanArchivePaths == null) {
+            implicitBeanArchivePaths = findImplicitBeanArchivePaths(context);
+            context.addTransientAppMetaData(METADATA_KEY, implicitBeanArchivePaths);
+        }
+
+        for (URI path : paths) {
+            if (implicitBeanArchivePaths.contains(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Set<URI> findImplicitBeanArchivePaths(DeploymentContext context) {
+        Set<URI> pathsWithImplicitCDIBeans = new HashSet<>();
         Types types = getTypes(context);
         if (types != null) {
             for (Type type : types.getAllTypes()) {
                 if (!(type instanceof AnnotationType)) {
-                    for (AnnotationModel annotationModel : type.getAnnotations()) {
-                        AnnotationType annotationType = annotationModel.getType();
-                        if (isCDIEnablingAnnotation(annotationType) && type.wasDefinedIn(paths)) {
-                            if (!result.contains(annotationType.getName())) {
-                                result.add(annotationType.getName());
+                    if (!allDefiningUrisKnown(type, pathsWithImplicitCDIBeans)) {
+                        for (AnnotationModel annotationModel : type.getAnnotations()) {
+                            AnnotationType annotationType = annotationModel.getType();
+                            if (isCDIEnablingAnnotation(annotationType)) {
+                                pathsWithImplicitCDIBeans.addAll(type.getDefiningURIs());
                             }
                         }
                     }
                 }
             }
         }
+        return pathsWithImplicitCDIBeans;
+    }
 
-        return !result.isEmpty();
+    private static boolean allDefiningUrisKnown(Type type, Set<URI> pathsWithImplicitCDIBeans) {
+        for (URI definingUri : type.getDefiningURIs()) {
+            if (!pathsWithImplicitCDIBeans.contains(definingUri)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

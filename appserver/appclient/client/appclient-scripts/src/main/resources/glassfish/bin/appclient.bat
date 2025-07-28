@@ -36,5 +36,5 @@ REM to retrieve the command to execute.
 REM FOR /F - processes command output line by line
 REM "delims=" - treats each line as a whole (no delimiter)
 REM %%i - loop variable for batch files, would be %i on command line
-FOR /F "delims=" %%i IN ("%JAVA%" -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.CLIBootstrap %*) DO set CMD=%%i
+FOR /F "delims=" %%i IN ("%JAVA%" --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.acc.agent.CLIBootstrap %*) DO set CMD=%%i
 %CMD% %ARGS%

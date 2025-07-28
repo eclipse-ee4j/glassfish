@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +55,7 @@ public class ListCustomResourcesTest {
     @Inject
     private ServiceLocator locator;
     @Inject
-    private CommandRunner cr;
+    private CommandRunner<?> cr;
     @Inject
     private MockGenerator mockGenerator;
     private AdminCommandContext context;
@@ -126,7 +126,7 @@ public class ListCustomResourcesTest {
 
     private void deleteCustomResource() {
         org.glassfish.resources.admin.cli.DeleteCustomResource deleteCommand = locator.getService(org.glassfish.resources.admin.cli.DeleteCustomResource.class);
-        assertTrue(deleteCommand != null);
+        assertNotNull(deleteCommand);
         ParameterMap  parameters = new ParameterMap();
         parameters.set("jndi_name", "custom_resource1");
         cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
@@ -135,12 +135,13 @@ public class ListCustomResourcesTest {
 
     private void createCustomResource() {
         org.glassfish.resources.admin.cli.CreateCustomResource createCommand = locator.getService(org.glassfish.resources.admin.cli.CreateCustomResource.class);
-        assertTrue(createCommand != null);
+        assertNotNull(createCommand);
         ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "custom_resource1");
-        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
+        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
 

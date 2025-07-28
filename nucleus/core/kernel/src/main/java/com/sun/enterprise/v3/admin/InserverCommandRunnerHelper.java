@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +29,7 @@ import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
@@ -47,15 +48,15 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class InserverCommandRunnerHelper {
 
-    public final static Logger logger = KernelLoggerInfo.getLogger();
-    public final static LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(InserverCommandRunnerHelper.class);
+    private final static Logger logger = KernelLoggerInfo.getLogger();
+    private final static LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(InserverCommandRunnerHelper.class);
 
     @Inject
     private CommandRunnerImpl commandRunner;
 
     public ActionReport runCommand(final String command, final ParameterMap parameters, final ActionReport report, final Subject subject) {
         try {
-            final AdminCommand adminCommand = commandRunner.getCommand(command, report, logger);
+            final AdminCommand adminCommand = commandRunner.getCommand(command, report);
             if (adminCommand == null) {
                 // maybe commandRunner already reported the failure?
                 if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE) {
@@ -68,7 +69,7 @@ public class InserverCommandRunnerHelper {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return report;
             }
-            CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation(command, report, subject);
+            CommandInvocation<AdminCommandJob> inv = commandRunner.getCommandInvocation(command, report, subject);
             inv.parameters(parameters).execute();
         } catch (Throwable t) {
             /*

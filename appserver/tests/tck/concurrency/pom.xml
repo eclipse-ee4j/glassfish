@@ -33,24 +33,12 @@
     <description>Aggregates dependencies and runs the Concurrency TCK on GlassFish</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <concurrency.tck-3-0.version>3.0.4</concurrency.tck-3-0.version>
+        <jcommander.version>1.82</jcommander.version>
+        <slf4j.version>1.7.29</slf4j.version>
+        <sigtest.version>2.6</sigtest.version>
+        <testng.version>7.7.0</testng.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>1.8.0.Final</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!-- Jakarta EE APIs -->
@@ -76,55 +64,59 @@
             <scope>test</scope>
         </dependency>
 
-
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
+        <!-- Utility classes for TestNG and Arquillian, used in suite.xml -->
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>cdi-tck-core-impl</artifactId>
+            <version>4.0.13</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.test-audit</groupId>
+                    <artifactId>jboss-test-audit-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.test-audit</groupId>
+                    <artifactId>jboss-test-audit-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.faces</groupId>
+                    <artifactId>jakarta.faces-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>container-se-api</artifactId>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
 
-        <!--  Signature Test Plugin  -->
         <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -156,29 +148,40 @@
 
                 <configuration>
                     <argLine>-Xmx768m</argLine>
-
+                    <!-- Surefire / TestNG Properties -->
+                    <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
                     </dependenciesToScan>
-
+                    <properties>
+                        <property>
+                            <name>surefire.testng.verbose</name>
+                            <value>1</value>
+                        </property>
+                    </properties>
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
 
-                        <glassfish.systemProperties>
-                            jimage.dir=${project.build.directory}/jimage
-                        </glassfish.systemProperties>
+                        <!-- Remove comments for logging to file. Following logging with e.g. tail -f ConcurrentTCK00.log -->
+                        <!--
+                        <java.util.logging.config.file>${project.build.directory}/test-classes/logging.properties</java.util.logging.config.file>
+                        -->
+                        <glassfish.systemProperties>jimage.dir=${project.build.directory}/jimage</glassfish.systemProperties>
 
                         <glassfish.postBootCommands>
-                            create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
-                            create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
+                             --passwordfile ${project.build.directory}/test-classes/j2ee.pass create-file-user --groups staff:mgr j2ee
+                             --passwordfile ${project.build.directory}/test-classes/javajoe.pass create-file-user --groups Manager javajoe
                         </glassfish.postBootCommands>
-                        
-                             
+
+
                         <jimage.dir>${project.build.directory}/jimage</jimage.dir>
                     </systemPropertyVariables>
-               
+
                     <!-- Groups to include i.e. web/platform -->
                     <groups>${jakarta.tck.platform}</groups>
                     <reportNameSuffix>${jakarta.tck.platform}</reportNameSuffix>

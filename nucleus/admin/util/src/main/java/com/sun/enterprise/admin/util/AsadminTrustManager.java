@@ -17,7 +17,6 @@
 package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.security.store.AsadminTruststore;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.Console;
 import java.io.IOException;
@@ -28,6 +27,8 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.net.ssl.X509TrustManager;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * An implementation of {@link X509TrustManager} that provides basic support for Trust Management. It checks if the

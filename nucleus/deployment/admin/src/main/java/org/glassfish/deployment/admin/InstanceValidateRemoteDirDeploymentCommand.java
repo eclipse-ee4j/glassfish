@@ -17,7 +17,6 @@
 package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -33,6 +32,7 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**

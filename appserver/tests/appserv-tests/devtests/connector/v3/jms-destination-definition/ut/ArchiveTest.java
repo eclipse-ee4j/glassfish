@@ -116,7 +116,7 @@ public class ArchiveTest extends TestCase {
         File archive = new File(archiveDir, appArchiveName);
         assertTrue("Do not find the archive: " + archive.getAbsolutePath(), archive.exists());
 
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
 
         AppClientArchivist reader = (AppClientArchivist)TestUtil.getByType(AppClientArchivist.class);
@@ -222,7 +222,7 @@ public class ArchiveTest extends TestCase {
         File archive = new File(archiveDir, appArchiveName);
         assertTrue("Do not find the archive: " + archive.getAbsolutePath(), archive.exists());
 
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
 
         WebArchivist reader = (WebArchivist) TestUtil.getByType(WebArchivist.class);
@@ -328,7 +328,7 @@ public class ArchiveTest extends TestCase {
         File archive = new File(archiveDir, appArchiveName);
         assertTrue("Do not find the archive: " + archive.getAbsolutePath(), archive.exists());
 
-        ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
+        ASURLClassLoader classLoader = new ASURLClassLoader(appArchiveName, this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
 
         EjbArchivist reader = (EjbArchivist) TestUtil.getByType(EjbArchivist.class);

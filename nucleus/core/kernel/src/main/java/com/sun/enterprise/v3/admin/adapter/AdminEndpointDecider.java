@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.v3.admin.adapter;
 import com.sun.enterprise.config.serverbeans.AdminService;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.v3.admin.AdminAdapter;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -44,10 +43,11 @@ public final class AdminEndpointDecider {
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
 
-    public static final int ADMIN_PORT = 4848;
+    public static final int DEFAULT_ADMIN_PORT = 4848;
+    private static final String CONTEXT_ROOT = "/__asadmin";
 
     private final Config config;
-    private String asadminContextRoot;
+
     private String guiContextRoot;
     private List<String> asadminHosts; // List of virtual servers for asadmin
     private List<String> guiHosts;     // List of virtual servers for admin GUI
@@ -84,7 +84,7 @@ public final class AdminEndpointDecider {
     }
 
     public String getAsadminContextRoot() {
-        return asadminContextRoot;
+        return CONTEXT_ROOT;
     }
 
     public String getGuiContextRoot() {
@@ -92,8 +92,6 @@ public final class AdminEndpointDecider {
     }
 
     private void setValues() {
-        asadminContextRoot = AdminAdapter.PREFIX_URI;  // Can't change
-
         NetworkListener adminListener = config.getAdminListener();
         ThreadPool threadPool = adminListener.findThreadPool();
         if (threadPool != null) {
@@ -119,7 +117,7 @@ public final class AdminEndpointDecider {
                 port = Integer.parseInt(adminListener.getPort());
             } catch(NumberFormatException e) {
                 logger.log(Level.WARNING, "Invalid admin port: {0}", adminListener.getPort());
-                port = ADMIN_PORT;
+                port = DEFAULT_ADMIN_PORT;
             }
         } else {
             try {

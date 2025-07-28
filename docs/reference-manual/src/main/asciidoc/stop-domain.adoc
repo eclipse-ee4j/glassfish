@@ -17,10 +17,13 @@ Stops the Domain Administration Server of the specified domain
 
 [source]
 ----
-asadmin [asadmin-options] stop-domain [--help]
-[--domaindir domaindir]
-[--force={true|false}] [--kill={false|true}]
-[domain-name]
+asadmin stop-domain
+[--domaindir <domaindir>]
+[--force[=<force(default:true)>]]
+[--help|-?]
+[--kill[=<kill(default:false)>]]
+[--timeout <timeout>]
+[domain_name]
 ----
 
 === Description
@@ -45,11 +48,13 @@ asadmin-options::
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
+
 `--domaindir`::
   Specifies the directory of the domain that is to be stopped. If
   specified, the path must be accessible in the file system. If not
   specified, the domain in the default as-install``/domains`` directory is
   stopped.
+
 `--force`::
   Specifies whether the domain is forcibly stopped immediately. +
   Possible values are as follows:
@@ -71,6 +76,13 @@ asadmin-options::
   `true`;;
     The domain is killed. The subcommand uses functionality of the
     operating system to terminate the domain process.
+
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The domain status is unknown
+  in such case.
+
 
 === Operands
 

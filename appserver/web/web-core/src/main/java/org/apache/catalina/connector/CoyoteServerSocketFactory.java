@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -22,6 +22,9 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+
 
 /**
  * This socket factory holds secure socket factory parameters. Besides the usual
@@ -41,7 +44,7 @@ import java.net.ServerSocket;
  * <li><strong>keystorePass</strong> - Password for the Key Store file to be
  *     loaded. ["changeit"]</li>
  * <li><strong>keystoreType</strong> - Type of the Key Store file to be
- *     loaded. ["JKS"]</li>
+ *     loaded.</li>
  * <li><strong>protocol</strong> - SSL protocol to use. [TLS]</li>
  * </ul>
  *
@@ -58,8 +61,8 @@ public class CoyoteServerSocketFactory
     private String keystoreFile;
     private String randomFile;
     private String rootFile;
-    private String keystorePass = "changeit";
-    private String keystoreType = "JKS";
+    private String keystorePass = KEYSTORE_PASSWORD_DEFAULT;
+    private String keystoreType = KEYSTORE_TYPE_DEFAULT;
     private String protocol = "TLS";
     private String protocols;
     private String sslImplementation;

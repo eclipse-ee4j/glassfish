@@ -30,54 +30,34 @@
     <artifactId>jakarta-faces-tck</artifactId>
     <packaging>pom</packaging>
     <name>TCK: Install Jakarta Faces TCK</name>
-    
+
     <properties>
-        <tck.test.faces.file>jakarta-faces-tck-4.1.0.zip</tck.test.faces.file>
-        <tck.test.faces.url>https://download.eclipse.org/jakartaee/faces/4.1/${tck.test.faces.file}</tck.test.faces.url>
+        <tck.artifactFileName>jakarta-faces-tck-4.1.0.zip</tck.artifactFileName>
+        <tck.artifactUrl>https://download.eclipse.org/jakartaee/faces/4.1/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>download-faces-tck</id>
+                        <id>download-tck</id>
                         <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <url>${tck.test.faces.url}</url>
-                    <unpack>false</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                    <outputFileName>${tck.test.faces.file}</outputFileName>
-                </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-authorization-tck</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.build.directory}/${tck.test.faces.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
+                        <id>attach-tck</id>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

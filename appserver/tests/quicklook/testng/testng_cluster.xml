@@ -18,7 +18,7 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="QuickLookClusterTests" verbose="2" >
+<suite name="QuickLookClusterTests" verbose="-1" >
   <test name="cluster_setup">
     <classes>
         <class name="test.clustersetup.ClusterSetupTest"/>

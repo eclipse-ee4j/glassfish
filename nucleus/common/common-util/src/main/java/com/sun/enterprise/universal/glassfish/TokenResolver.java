@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,15 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * TokenResolver.java
- *
- * Created on April 20, 2007, 11:59 AM
- * Updated for V3 on March 4, 2008
- */
 package com.sun.enterprise.universal.glassfish;
-
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +33,8 @@ import java.util.Set;
  * If the token has no such property -- then I leave the token as is.
  * It purposely does not handle nested tokens.  E.g. if the "foo" property has another
  * token embedded in the value -- it will not be further resolved.
- * This is the KISS principle in action...
- * @author bnevins
+ *
+ * @author bnevins 2007
  */
 public class TokenResolver {
 
@@ -50,7 +43,7 @@ public class TokenResolver {
      *
      */
     public TokenResolver() {
-        this(new HashMap<String, String>((Map) (System.getProperties())));
+        this(new HashMap<>((Map) (System.getProperties())));
     }
 
     public TokenResolver(Map<String, String> map) {
@@ -67,7 +60,7 @@ public class TokenResolver {
         // can't add to "map" arg while we are in the loop -- add all new
         // entries AFTER the loop.
 
-        Map<String, String> newEntries = new HashMap<String,String>();
+        Map<String, String> newEntries = new HashMap<>();
 
         Set<Map.Entry<String,String>> set = map.entrySet();
         Iterator<Map.Entry<String,String>> it = set.iterator();
@@ -120,8 +113,9 @@ public class TokenResolver {
      */
     public String resolve(String s)
     {
-        if(s == null || s.length() <= 0)
+        if(s == null || s.length() <= 0) {
             return s;
+        }
 
         if (hasWindowsToken(s)) {
             s = windowsToUnixTokens(s);
@@ -175,7 +169,7 @@ public class TokenResolver {
     ///////////////////////////////////////////////////////////////////////////
     private List<Token> getTokens(String s) {
         int index = 0;
-        List<Token> tokens = new ArrayList<Token>();
+        List<Token> tokens = new ArrayList<>();
 
         while (true) {
             Token token = getToken(s, index);
@@ -237,14 +231,14 @@ public class TokenResolver {
     private final Map<String, String> props;
 
     private static class Token {
+        static final String TOKEN_START = "${";
+        static final String TOKEN_END = "}";
 
         int start;
         int end;
         String token;
         String name;
         String value;
-        final static String TOKEN_START = SystemPropertyConstants.OPEN;
-        final static String TOKEN_END = SystemPropertyConstants.CLOSE;
 
         @Override
         public String toString() {

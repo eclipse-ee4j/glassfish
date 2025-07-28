@@ -121,7 +121,7 @@
                             groupId=io.helidon.service;artifactId=helidon-service-registry,
                             groupId=io.helidon.service;artifactId=helidon-service-metadata,
                             groupId=io.helidon.metadata;artifactId=helidon-metadata-hson,
-                            
+
                             artifactId=snakeyaml,
                         </Embed-Dependency>
 

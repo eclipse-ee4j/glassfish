@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,8 +48,8 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestEndpoint;
@@ -61,6 +61,8 @@ import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 
 /**
  * Remote AdminCommand to create an instance.  This command is run only on DAS.
@@ -83,7 +85,7 @@ import org.jvnet.hk2.annotations.Service;
 public class CreateInstanceCommand implements AdminCommand {
     private static final String NL = System.getProperty("line.separator");
     @Inject
-    private CommandRunner cr;
+    private CommandRunner<?> cr;
     @Inject
     ServiceLocator habitat;
     @Inject
@@ -113,13 +115,13 @@ public class CreateInstanceCommand implements AdminCommand {
     private String systemProperties;
     @Param(name = "instance_name", primary = true)
     private String instance;
-    private Logger logger = null; // set in execute and all references occur after that assignment
+    private Logger logger;
     private AdminCommandContext ctx;
-    private Node theNode = null;
-    private String nodeHost = null;
-    private String nodeDir = null;
-    private String installDir = null;
-    private String registerInstanceMessage = null;
+    private Node theNode;
+    private String nodeHost;
+    private String nodeDir;
+    private String installDir;
+    private String registerInstanceMessage;
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -167,7 +169,7 @@ public class CreateInstanceCommand implements AdminCommand {
         }
 
         // First, update domain.xml by calling _register-instance
-        CommandInvocation ci = cr.getCommandInvocation("_register-instance", report, context.getSubject());
+        CommandInvocation<?> ci = cr.getCommandInvocation("_register-instance", report, context.getSubject());
         ParameterMap map = new ParameterMap();
         map.add("node", node);
         map.add("config", configRef);
@@ -224,7 +226,7 @@ public class CreateInstanceCommand implements AdminCommand {
     }
 
     private void validateInstanceDirUnique(ActionReport report, AdminCommandContext context) {
-        CommandInvocation listInstances = cr.getCommandInvocation("list-instances", report, context.getSubject());
+        CommandInvocation<?> listInstances = cr.getCommandInvocation("list-instances", report, context.getSubject());
         ParameterMap map = new ParameterMap();
         map.add("whichTarget", theNode.getName());
         listInstances.parameters(map);
@@ -254,13 +256,9 @@ public class CreateInstanceCommand implements AdminCommand {
     private File defaultLocalNodeDirFile() {
         final Map<String,String> systemProps =
             Collections.unmodifiableMap(new ASenvPropertyReader().getProps());
-        /*
-         * The default "nodes" directory we want to use
-         * has been set in asenv.conf named as
-         * AS_DEF_NODES_PATH
-         */
-        String nodeDirDefault = systemProps.get(
-                SystemPropertyConstants.AGENT_ROOT_PROPERTY);
+        // The default "nodes" directory we want to use has been set in asenv.conf named as
+        // AS_DEF_NODES_PATH
+        String nodeDirDefault = systemProps.get(NODES_ROOT.getPropertyName());
         return new File(nodeDirDefault);
 
     }
@@ -383,7 +381,7 @@ public class CreateInstanceCommand implements AdminCommand {
             String dasHost = dasServer.getAdminHost();
             String dasPort = Integer.toString(dasServer.getAdminPort());
 
-            ArrayList<String> command = new ArrayList<String>();
+            ArrayList<String> command = new ArrayList<>();
 
             if (!theNode.isLocal()) {
                 // Only specify the DAS host if the node is remote. See issue 13993

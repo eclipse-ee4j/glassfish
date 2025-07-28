@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.cli;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +29,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * A class loader that loads classes from all jar files in a specified directory.
@@ -88,12 +87,15 @@ public class DirectoryClassLoader extends GlassfishUrlClassLoader {
     }
 
 
-    private static Set<Path> getJarPaths(final File dir) {
-        try (Stream<Path> stream = Files.walk(dir.toPath(), MAX_DEPTH)) {
+    private static Set<Path> getJarPaths(final File jarOrDir) {
+        if (jarOrDir.isFile()) {
+            return Set.of(jarOrDir.toPath());
+        }
+        try (Stream<Path> stream = Files.walk(jarOrDir.toPath(), MAX_DEPTH)) {
             return stream.filter(path -> !Files.isDirectory(path))
                 .filter(path -> path.getFileName().toString().endsWith(".jar")).collect(Collectors.toSet());
         } catch (final IOException e) {
-            throw new IllegalStateException(STRINGS.get("DirError", dir), e);
+            throw new IllegalStateException(STRINGS.get("DirError", jarOrDir), e);
         }
     }
 }

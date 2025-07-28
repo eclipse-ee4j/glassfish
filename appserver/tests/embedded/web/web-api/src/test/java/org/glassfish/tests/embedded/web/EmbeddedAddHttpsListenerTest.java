@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package org.glassfish.tests.embedded.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -38,10 +39,15 @@ import org.glassfish.embeddable.web.HttpsListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.config.SslConfig;
 import org.glassfish.embeddable.web.config.WebContainerConfig;
+import org.glassfish.main.jdke.security.KeyTool;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Tests WebContainer#addWebListener(HttpsListener)
@@ -50,13 +56,21 @@ import org.junit.jupiter.api.Test;
  */
 public class EmbeddedAddHttpsListenerTest {
 
-    static GlassFish glassfish;
-    static WebContainer embedded;
-    static File root;
-    static String contextRoot = "test";
+    @TempDir
+    private static File tempDir;
+    private static GlassFish glassfish;
+    private static WebContainer embedded;
+    private static File root;
+    private static File keystore;
 
     @BeforeAll
-    public static void setupServer() throws GlassFishException {
+    public static void setupServer() throws Exception {
+
+        keystore = new File(tempDir, "test_keystore.p12");
+        setProperty(KEYSTORE_FILE.getSystemPropertyName(), keystore.getAbsolutePath(), true);
+        KeyTool keyTool = new KeyTool(keystore, "changeit".toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
         embedded = glassfish.getService(WebContainer.class);
@@ -74,7 +88,6 @@ public class EmbeddedAddHttpsListenerTest {
 
     private void createHttpsListener(int port,
                                      String name,
-                                     String keystore,
                                      String password,
                                      String certname) throws Exception {
 
@@ -83,11 +96,8 @@ public class EmbeddedAddHttpsListenerTest {
         listener.setId(name);
 
         String keyStorePath = root.getAbsolutePath() + keystore;
-        String trustStorePath = root.getAbsolutePath() + "/cacerts.jks";
-        SslConfig sslConfig = new SslConfig(keyStorePath, trustStorePath);
+        SslConfig sslConfig = new SslConfig(keyStorePath, null);
         sslConfig.setKeyPassword(password.toCharArray());
-        String trustPassword = "changeit";
-        sslConfig.setTrustPassword(trustPassword.toCharArray());
         if (certname != null) {
             sslConfig.setCertNickname(certname);
         }
@@ -97,16 +107,15 @@ public class EmbeddedAddHttpsListenerTest {
     }
 
     private void verify(int port) throws Exception {
-
-        URL servlet = new URL("https://localhost:"+port+"/classes/hello");
+        URL servlet = new URI("https://localhost:" + port + "/classes/hello").toURL();
         HttpsURLConnection uc = (HttpsURLConnection) servlet.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
         StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
         System.out.println(sb);
         Assertions.assertEquals("Hello World!", sb.toString());
     }
@@ -114,9 +123,7 @@ public class EmbeddedAddHttpsListenerTest {
     @Test
     public void test() throws Exception {
 
-        createHttpsListener(9191, "default-ssl-listener", "/keystore.jks", "changeit", "s1as");
-        //createHttpsListener(9292, "ssl-listener0", "/keystore0", "password0", "keystore0");
-        //createHttpsListener(9393, "ssl-listener1", "/keystore1", "password1", null);
+        createHttpsListener(9191, "default-ssl-listener", "changeit", "s1as");
 
         Deployer deployer = glassfish.getDeployer();
 
@@ -143,22 +150,26 @@ public class EmbeddedAddHttpsListenerTest {
         //verify(9292);
         //verify(9393);
 
-        if (appName!=null)
+        if (appName!=null) {
             deployer.undeploy(appName);
+        }
 
     }
 
     public static void disableCertValidation() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
 
+            @Override
             public void checkClientTrusted(X509Certificate[] certs, String authType) {
                 return;
             }
 
+            @Override
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 return;
             }

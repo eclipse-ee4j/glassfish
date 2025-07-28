@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -574,7 +574,7 @@ ong with expected and actual result. This is optional as in some case
 
         String extraXML = "<report> <date> " + currentDate + "</date><configuration>";
         extraXML += "<os>" + osName + osVersion + "</os>";
-        extraXML += "<jdkVersion>" + System.getProperty("java.version") + "</jdkVersion>";
+        extraXML += "<jdkVersion>" + Runtime.version() + "</jdkVersion>";
 
         String machineName = "unavailable";
         InputStream in = null;
@@ -893,6 +893,7 @@ ong with expected and actual result. This is optional as in some case
         return true;
     }
 
+    @Override
     public void run(){
         //System.out.println("REPORTER\t Inside run");
         generateValidReport();

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,15 @@
 package org.glassfish.admin.mbeanserver.ssl;
 
 import java.io.File;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
 /**
  * This class is a config holder for configuring SSL Sockets.
@@ -39,11 +48,11 @@ import java.io.File;
 public class SSLParams {
     private File trustStore;
     private String trustStorePwd;
-    private String trustStoreType = "JKS";
+    private String trustStoreType;
     private String trustAlgorithm = "SunX509";
 
     private String keyAlgorithm;
-    private String keyStoreType = "JKS";
+    private String keyStoreType;
     private String keyStorePassword;
     private File keyStore;
 
@@ -61,12 +70,11 @@ public class SSLParams {
     private Boolean ssl2Enabled = false;
     private Boolean ssl3Enabled = true;
     private String ssl3TlsCiphers;
-    private Boolean tlsEnabled=true;
-    private Boolean tls11Enabled=true;
-    private Boolean tls12Enabled=true;
-    private Boolean tls13Enabled=true;
-    private Boolean tlsRollBackEnabled=false;
-
+    private Boolean tlsEnabled = true;
+    private Boolean tls11Enabled = true;
+    private Boolean tls12Enabled = true;
+    private Boolean tls13Enabled = true;
+    private Boolean tlsRollBackEnabled = false;
 
 
 
@@ -81,37 +89,34 @@ public class SSLParams {
     }
 
     public File getTrustStore() {
-        if(trustStore != null ) {
+        if (trustStore != null) {
             return trustStore;
-        } else if(System.getProperty("javax.net.ssl.trustStore") != null) {
-            return new File(System.getProperty("javax.net.ssl.trustStore"));
-        } else {
-            return null;
         }
+        String path = System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName());
+        trustStore = path == null ? null : new File(path);
+        return trustStore;
     }
 
     public String getTrustStorePassword() {
-        if(trustStorePwd != null ) {
+        if (trustStorePwd != null) {
             return trustStorePwd;
-        } else if(System.getProperty("javax.net.ssl.trustStorePassword") != null) {
-            return System.getProperty("javax.net.ssl.trustStorePassword");
-        } else {
-            return null;
         }
+        trustStorePwd = System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
+        return trustStorePwd;
     }
 
     public String getTrustStoreType() {
-        if(trustStoreType != null ) {
+        if (trustStoreType != null) {
             return trustStoreType;
-        } else if(System.getProperty("javax.net.ssl.trustStoreType") != null) {
-            return System.getProperty("javax.net.ssl.trustStoreType");
-        } else {
-            return "JKS";
         }
+        trustStoreType = System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
+        return trustStoreType;
     }
 
     String getTrustMaxCertLength() {
-        if( trustMaxCertLength == null) return "5";
+        if( trustMaxCertLength == null) {
+            return "5";
+        }
         return trustMaxCertLength;
     }
 
@@ -208,11 +213,11 @@ public class SSLParams {
     /**
      * type of the keystore file
      */
-
     public String getKeyStoreType() {
-        if(keyStoreType == null) {
-            keyStoreType = System.getProperty("javax.net.ssl.keyStoreType", "JKS");
+        if (keyStoreType != null) {
+            return keyStoreType;
         }
+        keyStoreType = System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
         return keyStoreType;
     }
 
@@ -222,7 +227,11 @@ public class SSLParams {
 
 
     public String getKeyStorePassword() {
-        return keyStorePassword == null? System.getProperty("javax.net.ssl.keyStorePassword"):keyStorePassword;
+        if (keyStorePassword != null) {
+            return keyStorePassword;
+        }
+        keyStorePassword = System.getProperty(KEYSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
+        return keyStorePassword;
     }
 
     public void setKeyStorePassword(String password) {
@@ -230,7 +239,12 @@ public class SSLParams {
     }
 
     public File getKeyStore() {
-        return keyStore == null ? new File(System.getProperty("javax.net.ssl.keyStore")) : keyStore ;
+        if (keyStore != null) {
+            return keyStore;
+        }
+        String path = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
+        keyStore = path == null ? null : new File(path);
+        return keyStore;
     }
 
     public void setKeyStore(String location) {

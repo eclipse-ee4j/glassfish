@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,6 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -41,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.hasSize;
@@ -76,7 +76,7 @@ public class UpgradeTest {
      */
     @BeforeEach
     public void setup() {
-        System.clearProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        System.clearProperty(INSTALL_ROOT.getSystemPropertyName());
         startupContext.getArguments().clear();
 
         Domain domain = locator.getService(Domain.class);
@@ -92,9 +92,9 @@ public class UpgradeTest {
     @AfterEach
     public void checkStateOfEnvironment() {
         // DefaultConfigUpgrade uses this property.
-        assertNull(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY), "Install root in system props");
+        assertNull(System.getProperty(INSTALL_ROOT.getSystemPropertyName()), "Install root in system props");
         assertNotNull(environment.getInstanceRoot(), "Instance root in ServerEnvironment");
-        assertNull(startupContext.getArguments().get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY),
+        assertNull(startupContext.getArguments().get(INSTALL_ROOT.getPropertyName()),
             "Install root in startup context");
     }
 

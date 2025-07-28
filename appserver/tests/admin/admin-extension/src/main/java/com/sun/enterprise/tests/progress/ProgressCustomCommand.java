@@ -171,6 +171,7 @@ public class ProgressCustomCommand implements AdminCommand {
                         try {
                             Thread.sleep(interval.getMilis());
                         } catch (Exception ex) {
+                            Thread.currentThread().interrupt();
                         }
                         if (i == (multip - 1)) {
                             ps.progress(1, "Finished block [" +blockId + "] " + interval);

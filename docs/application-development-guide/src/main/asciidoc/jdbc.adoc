@@ -349,7 +349,7 @@ environment:
 * `connection-validation`
 * `validate-atmost-once-period`
 * `match-connections`
-* `max-connection-usage`
+* `max-connection-usage-count`
 * `idle-timeout`
 
 [[associating-connections-with-threads]]

@@ -205,7 +205,7 @@
             <version>${htmlunit.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-lite-extension-translator</artifactId>
@@ -215,8 +215,6 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.9.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
@@ -228,14 +226,13 @@
             <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
 
@@ -290,7 +287,7 @@
                                     <version>${cdi.tck-4-1.version}</version>
                                     <type>xml</type>
                                     <classifier>suite</classifier>
-                                    <overWrite>false</overWrite> 
+                                    <overWrite>false</overWrite>
                                     <destFileName>tck-core-suite.xml</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -380,9 +377,9 @@
                             create-jms-resource --restype jakarta.jms.Queue --property Name=queue_test queue_test
                             create-jms-resource --restype jakarta.jms.Topic --property Name=topic_test topic_test
                             set configs.config.server-config.cdi-service.enable-implicit-cdi=true
-                            create-file-user --groups student --passwordfile ${project.build.directory}/test-classes/password.txt student
-                            create-file-user --groups printer --passwordfile ${project.build.directory}/test-classes/password.txt printer
-                            create-file-user --groups student:alarm --passwordfile ${project.build.directory}/test-classes/password.txt alarm
+                            --passwordfile ${project.build.directory}/test-classes/password.txt create-file-user --groups student student
+                            --passwordfile ${project.build.directory}/test-classes/password.txt create-file-user --groups printer printer
+                            --passwordfile ${project.build.directory}/test-classes/password.txt create-file-user --groups student:alarm alarm
                         </glassfish.postBootCommands>
                         <libPath>${project.build.outputDirectory}</libPath>
                         <org.jboss.cdi.tck.libraryDirectory>${project.build.directory}/dependency/lib</org.jboss.cdi.tck.libraryDirectory>

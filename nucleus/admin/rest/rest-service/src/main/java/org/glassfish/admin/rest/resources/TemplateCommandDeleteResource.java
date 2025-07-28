@@ -88,7 +88,7 @@ public class TemplateCommandDeleteResource extends TemplateExecCommand {
                     "Unable to parse the input entity. Please check the syntax.");
             throw new WebApplicationException(ResourceUtil.getResponse(400, /*parsing error*/ errorMessage, requestHeaders, uriInfo));
         }
-        return executeCommandAsSse(preprocessData(data));
+        return executeSseCommand(preprocessData(data));
     }
 
     //    //Handle POST request without any entity(input).

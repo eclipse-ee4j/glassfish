@@ -78,7 +78,7 @@ public class NodeUtils {
     static final String PARAM_TYPE = "type";
     static final String PARAM_INSTALL = "install";
     public static final String PARAM_WINDOWS_DOMAIN = "windowsdomain";
-    static final Path LANDMARK_FILE = Path.of("glassfish", "modules", "admin-cli.jar");
+    static final Path LANDMARK_FILE = Path.of("glassfish", "admin-cli.jar");
     private static final String NL = System.lineSeparator();
     private TokenResolver resolver = null;
     private ServiceLocator locator = null;
@@ -411,7 +411,7 @@ public class NodeUtils {
             int status = nr.runAdminCommandOnNode(node, output, command, context);
             if (status == 0) {
                 failure = false;
-                LOG.log(INFO, output.toString().trim());
+                LOG.log(INFO, "Output from the command execution on the node {0}:\n{1}", node.getName(), output);
             } else {
                 // Command ran, but didn't succeed. Log full information
                 msg2 = Strings.get("node.command.failed", nodeName, nodeHost, output.toString().trim(),

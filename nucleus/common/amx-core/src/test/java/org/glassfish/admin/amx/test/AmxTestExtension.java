@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,19 +21,22 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
+
 public final class AmxTestExtension implements BeforeAllCallback, AfterAllCallback {
 
 
     @Override
     public void beforeAll(ExtensionContext context) {
         checkAssertsOn();
-        System.setProperty("com.sun.aas.instanceRoot", "/tmp/amx-test");
+        setProperty(INSTANCE_ROOT.getSystemPropertyName(), "/tmp/amx-test", true);
     }
 
 
     @Override
     public void afterAll(ExtensionContext context) {
-        System.clearProperty("com.sun.aas.instanceRoot");
+        setProperty(INSTANCE_ROOT.getSystemPropertyName(), null, true);
     }
 
 

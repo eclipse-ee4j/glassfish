@@ -197,8 +197,8 @@
         <jvm-options>-Dcom.sun.enterprise.taglibs=appserv-jstl.jar,jsf-impl.jar</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.taglisteners=jsf-impl.jar</jvm-options>
         <jvm-options>-XX:NewRatio=2</jvm-options>
-        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
-        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
+        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
+        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12</jvm-options>
       </java-config>
       <thread-pools>
         <thread-pool idle-thread-timeout-in-seconds="120" max-thread-pool-size="200" min-thread-pool-size="0" num-work-queues="1" thread-pool-id="thread-pool-1"/>
@@ -343,8 +343,8 @@
         <jvm-options>-Dcom.sun.enterprise.taglibs=appserv-jstl.jar,jsf-impl.jar</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.taglisteners=jsf-impl.jar</jvm-options>
         <jvm-options>-XX:NewRatio=2</jvm-options>
-        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
-        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
+        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
+        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12</jvm-options>
       </java-config>
       <availability-service auto-manage-ha-store="false" availability-enabled="true" ha-store-healthcheck-enabled="false" ha-store-healthcheck-interval-in-seconds="5">
         <web-container-availability availability-enabled="true" http-session-store-pool-name="jdbc/hastore" persistence-frequency="web-method" persistence-scope="session" persistence-store-health-check-enabled="false" persistence-type="replicated" sso-failover-enabled="false"/>
@@ -494,8 +494,8 @@
         <jvm-options>-Dcom.sun.enterprise.taglibs=appserv-jstl.jar,jsf-impl.jar</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.taglisteners=jsf-impl.jar</jvm-options>
         <jvm-options>-XX:NewRatio=2</jvm-options>
-        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
-        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
+        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
+        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12</jvm-options>
       </java-config>
       <availability-service auto-manage-ha-store="false" availability-enabled="true" ha-store-healthcheck-enabled="false" ha-store-healthcheck-interval-in-seconds="5">
         <web-container-availability availability-enabled="true" http-session-store-pool-name="jdbc/hastore" persistence-frequency="web-method" persistence-scope="session" persistence-store-health-check-enabled="false" persistence-type="replicated" sso-failover-enabled="false"/>
@@ -645,8 +645,8 @@
         <jvm-options>-Dcom.sun.enterprise.taglibs=appserv-jstl.jar,jsf-impl.jar</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.taglisteners=jsf-impl.jar</jvm-options>
         <jvm-options>-XX:NewRatio=2</jvm-options>
-        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
-        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
+        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
+        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12</jvm-options>
       </java-config>
       <availability-service auto-manage-ha-store="false" availability-enabled="true" ha-store-healthcheck-enabled="false" ha-store-healthcheck-interval-in-seconds="5">
         <web-container-availability availability-enabled="true" http-session-store-pool-name="jdbc/hastore" persistence-frequency="web-method" persistence-scope="session" persistence-store-health-check-enabled="false" persistence-type="replicated" sso-failover-enabled="false"/>

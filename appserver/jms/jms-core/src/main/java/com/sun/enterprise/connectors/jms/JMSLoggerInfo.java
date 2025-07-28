@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -183,25 +184,10 @@ public class JMSLoggerInfo {
     )
     public static final String MDB_CONFIG_EXCEPTION = LOGMSG_PREFIX + "-00023";
 
-    @LogMessageInfo(message = "MQ Resource adapter upgrade started.")
+    @LogMessageInfo(message = "MQ Resource adapter upgrade from {0} to {1} started.")
     public static final String JMSRA_UPGRADE_STARTED = LOGMSG_PREFIX + "-00024";
 
     @LogMessageInfo(message = "MQ Resource adapter upgrade completed.")
     public static final String JMSRA_UPGRADE_COMPLETED = LOGMSG_PREFIX + "-00025";
 
-    @LogMessageInfo(
-            message = "Upgrading a MQ resource adapter failed : {0}",
-            level = "WARNING",
-            cause = "unknown",
-            action = "unknown"
-    )
-    public static final String JMSRA_UPGRADE_FAILED = LOGMSG_PREFIX + "-00026";
-
-    @LogMessageInfo(
-            message = "Check for a new version of MQ installation failed : {0}",
-            level = "WARNING",
-            cause = "unknown",
-            action = "unknown"
-    )
-    public static final String JMSRA_UPGRADE_CHECK_FAILED = LOGMSG_PREFIX + "-00027";
 }

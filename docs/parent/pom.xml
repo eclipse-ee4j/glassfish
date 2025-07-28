@@ -108,6 +108,7 @@
                         <docinfo1>true</docinfo1>
                         <imagesDir>${basedir}/src/main/asciidoc</imagesDir>
                         <productName>${productName}</productName>
+
                     </attributes>
                 </configuration>
                 <executions>

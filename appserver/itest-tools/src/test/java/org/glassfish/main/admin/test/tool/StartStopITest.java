@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,12 +17,12 @@
 package org.glassfish.main.admin.test.tool;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
-import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -34,18 +34,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 class StartStopITest {
 
-    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
-
     @Test
     @DisabledOnOs(OS.WINDOWS)
     void asadminGet_Linux() {
-        assertThat(ASADMIN.exec("get", "*"), asadminOK());
+        assertThat(getAsadmin().exec("get", "*"), asadminOK());
     }
 
 
     @Test
     @EnabledOnOs(OS.WINDOWS)
     void asadminGet_Windows() {
-        assertThat(ASADMIN.exec("get", "\"*\""), asadminOK());
+        assertThat(getAsadmin().exec("get", "\"*\""), asadminOK());
     }
 }

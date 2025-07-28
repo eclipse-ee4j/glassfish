@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +33,6 @@ import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.HttpConnectorAddress;
 import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
@@ -79,6 +78,7 @@ import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
@@ -144,6 +144,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     private String canonicalHostCache; //Used by getCanonicalHost() to cache resolved value
     protected int port;
     protected boolean secure;
+    protected boolean detach;
     protected boolean notify;
     protected String user;
     protected char[] password;
@@ -232,27 +233,24 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
     }
 
-    public RemoteRestAdminCommand(String name, String host, int port) throws CommandException {
-
-        this(name, host, port, false, "admin", null, Logger.getAnonymousLogger(), false);
-    }
-
-    public RemoteRestAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
-            boolean notify) throws CommandException {
-        this(name, host, port, secure, user, password, logger, null, null, false, notify);
+    public RemoteRestAdminCommand(String name, String host, int port, boolean secure, String user, char[] password,
+        Logger logger, boolean notify, boolean detach) throws CommandException {
+        this(name, host, port, secure, user, password, logger, null, null, false, notify, detach);
     }
 
     /**
      * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
      * superclass.
      */
-    public RemoteRestAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
-            final String scope, final String authToken, final boolean prohibitDirectoryUploads, boolean notify) throws CommandException {
+    public RemoteRestAdminCommand(String name, String host, int port, boolean secure, String user, char[] password,
+        Logger logger, final String scope, final String authToken, final boolean prohibitDirectoryUploads,
+        boolean notify, boolean detach) throws CommandException {
         this.name = name;
         this.host = host;
         this.port = port;
         this.secure = secure;
         this.notify = notify;
+        this.detach = detach;
         this.user = user;
         this.password = password;
         this.logger = logger;
@@ -268,7 +266,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     private void checkName() throws CommandException {
         if (!name.matches(COMMAND_NAME_REGEXP)) {
             throw new CommandException("Illegal command name: " + name);
-            //todo: XXX - I18N
         }
     }
 
@@ -469,6 +466,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             if (notify) {
                 cm.add(new ParamModelData("notify", Boolean.class, false, "false"));
             }
+            if (detach) {
+                cm.add(new ParamModelData("detach", Boolean.class, false, "false"));
+            }
             this.usage = cm.getUsage();
             return cm;
         } catch (JSONException ex) {
@@ -506,14 +506,13 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * Run the command using the specified arguments. Return the output of the command.
      */
     public String executeCommand(ParameterMap opts) throws CommandException {
-        if (logger.isLoggable(FINER)) {
-            logger.log(FINER, "RemoteRestAdminCommand.executeCommand() - name: {0}", this.name);
-        }
+        logger.log(FINER, "RemoteRestAdminCommand.executeCommand() - name: {0}", this.name);
         //Just to be sure. Cover get help
         if (opts != null && opts.size() == 1 && opts.containsKey("help")) {
             return getManPage();
         }
         ParameterMap params = processParams(opts);
+        logger.log(FINEST, "Processed parameters: {0}", params);
         boolean retry;
         do { //Cache update cycle
             retry = false;
@@ -717,9 +716,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                     pwp = new ParamsWithPayload(null, params);
                 }
                 ProprietaryWriter writer = ProprietaryWriterFactory.getWriter(pwp);
-                if (logger.isLoggable(FINER)) {
-                    logger.log(FINER, "Writer to use {0}", writer.getClass().getName());
-                }
+                logger.log(FINER, () -> "Writer to use " + writer.getClass().getName());
                 writer.writeTo(pwp, urlConnection);
             }
 
@@ -823,7 +820,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                                 }
                                 logger.log(FINER, "---- END PAYLOAD ----");
                             }
-                            PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, logger, null);
+                            PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null,  null);
                             try {
                                 downloadedFilesMgr.processParts(inbound);
                             } catch (CommandException cex) {
@@ -851,7 +848,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         }
         try {
             RemoteRestAdminCommand command = new RemoteRestAdminCommand("_get-payload", this.host, this.port, this.secure, this.user,
-                    this.password, this.logger, this.scope, this.authToken, this.prohibitDirectoryUploads, notify);
+                    this.password, this.logger, this.scope, this.authToken, this.prohibitDirectoryUploads, this.notify, false);
             ParameterMap params = new ParameterMap();
             params.add("DEFAULT", jobId);
             command.executeCommand(params);

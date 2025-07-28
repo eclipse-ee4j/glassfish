@@ -228,7 +228,7 @@
         <echo message="Verifying results"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify_default"/>
            <arg line="${appname}-web"/>
@@ -290,7 +290,7 @@
         <echo message="Verifying xa results"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify_xa"/>
            <arg line="${appname}-web"/>

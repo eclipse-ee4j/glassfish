@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -348,18 +348,10 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
     }
 
     /**
-     * This is NOT a reliable test. It just checks if ANYTHING has setup shop on the host and port.
-     * I wanted to run RemoteAdminCommand but that is (inexplicably) in admin/util -- and we would
-     * have a circular dependency.
+     * @return true if this server instance is listening on the admin port, false otherwise.
      */
-    default boolean isRunning() {
-        try {
-            ServerHelper helper = new ServerHelper(this, getConfig());
-            return helper.isRunning();
-        } catch (Exception e) {
-            // drop through...
-        }
-        return false;
+    default boolean isListeningOnAdminPort() {
+        return new ServerHelper(this, getConfig()).isListeningOnAdminPort();
     }
 
     @Service
@@ -553,7 +545,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 }
                 final String configName = instance.getName() + "-config";
                 instance.setConfigRef(configName);
-                final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport(), context.getLogger());
+                final CopyConfig command = (CopyConfig) runner.getCommand("copy-config", context.getActionReport());
 
                 Configs configs = domain.getConfigs();
                 Configs writableConfigs = tx.enroll(configs);

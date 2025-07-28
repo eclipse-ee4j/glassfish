@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,11 +35,13 @@ public class InstanceRootBuilder implements BundleActivator {
     private static final Logger logger = Logger.getLogger("embedded-glassfish");
     private static String resourceroot = "glassfish8/glassfish/domains/domain1/";
 
+    @Override
     public void start(BundleContext context) throws Exception {
         String instanceRoot = context.getProperty("com.sun.aas.instanceRoot");
         buildInstanceRoot(context.getBundle(), instanceRoot);
     }
 
+    @Override
     public void stop(BundleContext context) throws Exception {
         logger.fine("InstanceRootBuilder stopped");
     }

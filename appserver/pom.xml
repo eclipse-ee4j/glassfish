@@ -18,7 +18,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -108,7 +109,7 @@
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
         <openmq.version>6.6.0</openmq.version>
-        
+
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
         <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
@@ -153,17 +154,21 @@
         <jakarta.cdi-api.version>4.1.0</jakarta.cdi-api.version>
         <weld.version>6.0.3.Final</weld.version>
         <jboss.classfilewriter.version>1.3.1.Final</jboss.classfilewriter.version>
-        
+
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.0</jakarta.mvc-api.version>
         <krazo.version>4.0.1</krazo.version>
-        
+
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
         <helidon-config.version>4.2.4</helidon-config.version>
+
+
+        <!-- MicroProfile Health -->
+        <microprofile.health-api.version>4.0.1</microprofile.health-api.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
@@ -323,14 +328,14 @@
                 <artifactId>imqjmx</artifactId>
                 <version>4.6-b01</version>
             </dependency>
-            
+
             <!-- Jakarta Data-->
             <dependency>
                 <groupId>jakarta.data</groupId>
                 <artifactId>jakarta.data-api</artifactId>
                 <version>${jakarta.data-api.version}</version>
             </dependency>
-            
+
             <!-- Jakarta NoSQL-->
             <dependency>
                 <groupId>jakarta.nosql</groupId>
@@ -485,7 +490,7 @@
                 <artifactId>jakarta.servlet.jsp-api</artifactId>
                 <version>${jakarta.pages-api.version}</version>
             </dependency>
-             <!-- Jakarta Standard Tag Library -->
+            <!-- Jakarta Standard Tag Library -->
             <dependency>
                 <groupId>jakarta.servlet.jsp.jstl</groupId>
                 <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -597,7 +602,7 @@
                 <artifactId>jboss-classfilewriter</artifactId>
                 <version>${jboss.classfilewriter.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Interceptors -->
             <dependency>
                 <groupId>jakarta.interceptor</groupId>
@@ -724,6 +729,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- MicroProfile Health -->
+            <dependency>
+                <groupId>org.eclipse.microprofile.health</groupId>
+                <artifactId>microprofile-health-api</artifactId>
+                <version>${microprofile.health-api.version}</version>
+            </dependency>
+
+
             <!-- MicroProfile JWT -->
             <dependency>
                 <groupId>org.eclipse.microprofile.jwt</groupId>
@@ -735,7 +748,7 @@
                 <artifactId>microprofile-jwt-auth</artifactId>
                 <version>${omnifaces-jwt-auth.version}</version>
             </dependency>
-            
+
             <!-- MicroProfile REST Client -->
             <dependency>
                 <groupId>org.eclipse.microprofile.rest.client</groupId>

@@ -22,7 +22,6 @@ import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
@@ -31,9 +30,7 @@ import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.KeyStore;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Supplier;
@@ -42,20 +39,23 @@ import java.util.logging.Level;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 
 /**
- * A class that's supposed to capture all the behavior common to operation on a "local" server. It's getting fairly
- * complicated thus the "section headers" comments. This class plays two roles,
- * <UL>
- * <LI>a place for putting common code - which are final methods. A parent class that is communicating with its own
- * unknown sub-classes. These are non-final methods
+ * A class that's supposed to capture all the behavior common to operation on a "local" server.
  *
  * @author Byron Nevins
  */
@@ -193,80 +193,66 @@ public abstract class LocalServerCommand extends CLICommand {
      * Checks if the create-domain was created using --savemasterpassword flag which obtains security by obfuscation!
      * Returns null in case of failure of any kind.
      *
-     * @return String representing the password from the JCEKS store named master-password in domain folder
+     * @return String representing the password from the key store
      */
     protected final String readFromMasterPasswordFile() {
         File mpf = getMasterPasswordFile();
-        if (mpf == null)
-         {
-            return null; // no master password  saved
+        if (mpf == null) {
+            return null; // no master password saved
         }
         try {
-            PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), "master-password".toCharArray()); // fixed key
-            return pw.getPasswordForAlias("master-password");
+            PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), MASTER_PASSWORD_PASSWORD.toCharArray());
+            return pw.getPasswordForAlias(MASTER_PASSWORD_ALIAS);
         } catch (Exception e) {
-            logger.log(FINER, "master password file reading error: {0}", e.getMessage());
+            logger.log(Level.WARNING, "A master password file reading error: " + e.toString(), e);
             return null;
         }
     }
 
     protected final boolean verifyMasterPassword(String mpv) {
-        //issue : 14971, should ideally use javax.net.ssl.keyStore and
-        //javax.net.ssl.keyStoreType system props here but they are
-        //unavailable to asadmin start-domain hence falling back to
-        //cacerts.jks instead of keystore.jks. Since the truststore
-        //is less-likely to be Non-JKS
-
         return loadAndVerifyKeystore(getJKS(), mpv);
     }
 
     protected boolean loadAndVerifyKeystore(File jks, String mpv) {
-        FileInputStream fis = null;
+        logger.log(FINEST, "loading keystore: " + jks);
+        if (jks == null || mpv == null) {
+            return false;
+        }
         try {
-            fis = new FileInputStream(jks);
-            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            ks.load(fis, mpv.toCharArray());
+            new KeyTool(jks, mpv.toCharArray()).loadKeyStore();
             return true;
         } catch (Exception e) {
-            if (logger.isLoggable(FINER)) {
-                logger.finer(e.getMessage());
-            }
+            logger.log(FINER, e.getMessage(), e);
             return false;
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ioe) {
-                // ignore, I know ...
-            }
         }
     }
 
     /**
-     * Get the master password, either from a password file or by asking the user.
+     * @return the master password, either from a password file or by asking the user.
      */
     protected final String getMasterPassword() throws CommandException {
         // Sets the password into the launcher info.
         // Yes, returning master password as a string is not right ...
-        final int RETRIES = 3;
-        long t0 = now();
+        final int countOfRetries = 3;
+        final long start = System.currentTimeMillis();
         String mpv = passwords.get(CLIConstants.MASTER_PASSWORD);
-        if (mpv == null) { //not specified in the password file
-            mpv = "changeit"; //optimization for the default case -- see 9592
+        if (mpv == null) {
+            // not specified in the password file
+            // optimization for the default case
+            mpv = KEYSTORE_PASSWORD_DEFAULT;
             if (!verifyMasterPassword(mpv)) {
                 mpv = readFromMasterPasswordFile();
                 if (!verifyMasterPassword(mpv)) {
-                    mpv = retry(RETRIES);
+                    mpv = retry(countOfRetries);
                 }
             }
-        } else { // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
+        } else {
+            // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
             if (!verifyMasterPassword(mpv)) {
-                mpv = retry(RETRIES);
+                mpv = retry(countOfRetries);
             }
         }
-        long t1 = now();
-        logger.log(FINER, "Time spent in master password extraction: {0} msec", (t1 - t0)); //TODO
+        logger.log(FINER, "Time spent in master password extraction: {0} ms", (System.currentTimeMillis() - start));
         return mpv;
     }
 
@@ -332,14 +318,14 @@ public abstract class LocalServerCommand extends CLICommand {
      * @param oldPid
      * @param oldAdminAddress
      * @param newAdminAddress new admin endpoint - usually same as old, but it could change with restart.
+     * @param timeout can be null
      * @throws CommandException if we time out.
      */
     protected final void waitForRestart(final Long oldPid, final HostAndPort oldAdminAddress,
-        final HostAndPort newAdminAddress) throws CommandException {
-        logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2})",
-            new Object[] {oldPid, oldAdminAddress, newAdminAddress});
+        final HostAndPort newAdminAddress, final Duration timeout) throws CommandException {
+        logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2}, timeout={3})",
+            new Object[] {oldPid, oldAdminAddress, newAdminAddress, timeout});
 
-        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final boolean printDots = !programOpts.isTerse();
         final boolean stopped = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
         if (!stopped) {
@@ -357,17 +343,17 @@ public abstract class LocalServerCommand extends CLICommand {
                 resetServerDirs();
                 setLocalPassword();
             } catch (Exception e) {
-                logger.log(Level.FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
+                logger.log(FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
                 return false;
             }
             Long newPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
             if (newPid == null) {
                 return false;
             }
-            logger.log(Level.FINEST, "The server pid is {0}", newPid);
+            logger.log(FINEST, "The server pid is {0}", newPid);
             return ProcessUtils.isAlive(newPid);
         };
-        if (!ProcessUtils.waitFor(signStart, Duration.ofMillis(CLIConstants.WAIT_FOR_DAS_TIME_MS), printDots)) {
+        if (!ProcessUtils.waitFor(signStart, timeout, printDots)) {
             throw new CommandException(I18N.get("restartDomain.noGFStart"));
         }
     }
@@ -428,12 +414,12 @@ public abstract class LocalServerCommand extends CLICommand {
         if (serverDirs == null) {
             return null;
         }
-
-        File mp = new File(new File(serverDirs.getServerDir(), "config"), "cacerts.jks");
-        if (!mp.canRead()) {
-            return null;
+        File mp = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
+        if (mp.canRead()) {
+            return mp;
         }
-        return mp;
+        logger.log(FINEST, "File does not exist or is not readable: {0}", mp);
+        return null;
     }
 
     protected File getMasterPasswordFile() {
@@ -442,7 +428,7 @@ public abstract class LocalServerCommand extends CLICommand {
             return null;
         }
 
-        File mp = new File(serverDirs.getServerDir(), "master-password");
+        File mp = new File(serverDirs.getServerDir(), MASTER_PASSWORD_FILENAME);
         if (!mp.canRead()) {
             return null;
         }
@@ -481,10 +467,5 @@ public abstract class LocalServerCommand extends CLICommand {
             f = SmartFile.sanitize(f);
         }
         return f;
-    }
-
-    private long now() {
-        // it's just *so* ugly to call this directly!
-        return System.currentTimeMillis();
     }
 }

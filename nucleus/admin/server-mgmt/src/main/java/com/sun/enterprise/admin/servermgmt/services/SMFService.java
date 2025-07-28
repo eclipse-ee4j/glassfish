@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.servermgmt.services;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
@@ -39,6 +38,7 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.CREDENTIALS
 import static com.sun.enterprise.admin.servermgmt.services.Constants.PRIVILEGES_TN;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.README;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.TIMEOUT_SECONDS_TN;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Represents the SMF Service. Holds the tokens and their values that are consumed by the SMF templates. The recommended
@@ -285,9 +285,10 @@ public final class SMFService extends ServiceAdapter {
      */
     @Override
     public File getManifestTemplateFile() {
-        String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String ir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         if (!ok(ir)) {
-            throw new RuntimeException("Internal Error - System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            throw new RuntimeException(
+                "Internal Error - System Property not set: " + INSTALL_ROOT.getSystemPropertyName());
         }
 
         File rootDir = SmartFile.sanitize(new File(ir));
@@ -398,7 +399,7 @@ public final class SMFService extends ServiceAdapter {
         try {
             final String[] cmd = new String[] { path2Auths, user };
             ProcessManager pm = new ProcessManager(cmd);
-            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+            pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
             pm.execute();
             auths.append(pm.getStdout());
             final StringTokenizer st = new StringTokenizer(pm.getStdout(), at);
@@ -421,7 +422,7 @@ public final class SMFService extends ServiceAdapter {
         try {
             final String[] cmd = new String[] {"/usr/bin/svcs", sn};
             ProcessManager pm = new ProcessManager(cmd);
-            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+            pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
             int exitCode = pm.execute();
             if (exitCode == 0) {
                 exists = true;
@@ -461,7 +462,7 @@ public final class SMFService extends ServiceAdapter {
     private void validateService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFile().getAbsolutePath() };
         final ProcessManager pm = new ProcessManager(cmda);
-        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+        pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
         pm.execute();
         if (info.trace) {
             printOut("Validated the SMF Service: " + info.fqsn + " using: " + SMFService.SVCCFG);
@@ -471,7 +472,7 @@ public final class SMFService extends ServiceAdapter {
     private boolean importService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFile().getAbsolutePath() };
         final ProcessManager pm = new ProcessManager(cmda);
-        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+        pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
         if (info.dryRun) {
             cleanupManifest();
         }

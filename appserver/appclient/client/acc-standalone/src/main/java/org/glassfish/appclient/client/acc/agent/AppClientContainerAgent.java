@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,17 +19,16 @@ package org.glassfish.appclient.client.acc.agent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 
-import org.glassfish.appclient.client.AppClientFacade;
-import org.glassfish.appclient.client.acc.UserError;
-
 import static java.util.logging.Level.FINE;
-import static org.glassfish.appclient.client.CLIBootstrap.FILE_OPTIONS_INTRODUCER;
+import static org.glassfish.appclient.client.acc.agent.CLIBootstrap.FILE_OPTIONS_INTRODUCER;
 
 /**
  * Agent which prepares the ACC before the VM launches the selected main program.
@@ -48,26 +48,29 @@ import static org.glassfish.appclient.client.CLIBootstrap.FILE_OPTIONS_INTRODUCE
  */
 public class AppClientContainerAgent {
 
-    private static Logger logger = Logger.getLogger(AppClientContainerAgent.class.getName());
+    private static final Logger LOG = Logger.getLogger(AppClientContainerAgent.class.getName());
 
     public static void premain(String agentArgsText, Instrumentation instrumentation) {
+        ClassLoader loader = ClassLoader.getSystemClassLoader().getParent();
         try {
             long now = System.currentTimeMillis();
 
-            /*
-             * The agent prepares the ACC but does not launch the client.
-             */
-            AppClientFacade.prepareACC(optionsValue(agentArgsText), instrumentation);
+            // The agent prepares the ACC but does not launch the client.
+            // The thread class loader is used in init method.
+            Thread.currentThread().setContextClassLoader(loader);
+            Class<?> containerInitClass = loader.loadClass("org.glassfish.appclient.client.AppClientContainerHolder");
+            Method initContainer = containerInitClass.getMethod("init", String.class, Instrumentation.class);
+            try {
+                initContainer.invoke(null, optionsValue(agentArgsText), instrumentation);
+            } catch (InvocationTargetException e) {
+                throw e.getCause();
+            }
 
-            logger.fine("AppClientContainerAgent finished after " + (System.currentTimeMillis() - now) + " ms");
-
-        } catch (UserError ue) {
-            ue.displayAndExit();
-        } catch (Exception e) {
+            LOG.fine("AppClientContainerAgent finished after " + (System.currentTimeMillis() - now) + " ms");
+        } catch (Throwable e) {
             e.printStackTrace();
             System.exit(1);
         }
-
     }
 
     private static String optionsValue(final String agentArgsText) throws FileNotFoundException, IOException {
@@ -79,19 +82,14 @@ public class AppClientContainerAgent {
             return agentArgsText;
         }
 
-        File argsFile = new File(agentArgsText.substring(FILE_OPTIONS_INTRODUCER.length()));
-        String result;
-
-        try (LineNumberReader reader = new LineNumberReader(new FileReader(argsFile))) {
-            result = reader.readLine();
-        }
+        final Path argsFile = new File(agentArgsText.substring(FILE_OPTIONS_INTRODUCER.length())).toPath();
+        final String result = Files.readString(argsFile).trim();
 
         if (Boolean.getBoolean("keep.argsfile")) {
-            System.err.println("Agent arguments file retained: " + argsFile.getAbsolutePath());
-        } else if (!argsFile.delete()) {
-            logger.log(FINE, "Unable to delete temporary args file {0}; continuing", argsFile.getAbsolutePath());
+            System.err.println("Agent arguments file retained: " + argsFile);
+        } else if (!Files.deleteIfExists(argsFile)) {
+            LOG.log(FINE, "Unable to delete temporary args file {0}; continuing", argsFile);
         }
-
         return result;
     }
 }

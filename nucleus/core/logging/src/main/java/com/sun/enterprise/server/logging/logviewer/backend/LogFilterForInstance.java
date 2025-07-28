@@ -38,6 +38,8 @@ import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * @author Naman Mehta
  * Date: 6 Aug, 2010
@@ -263,7 +265,7 @@ public class LogFilterForInstance {
         if (instanceLogFileDirectory.contains("${com.sun.aas.instanceRoot}/logs") && node.getNodeDir() != null) {
             // this code is used if no changes made in logging.properties file
             return new File(node.getNodeDir()).toPath().resolve(Path.of(sNode, instanceName, "logs"));
-        } else if (instanceLogFileDirectory.contains("${com.sun.aas.instanceRoot}/logs")
+        } else if (instanceLogFileDirectory.contains(INSTANCE_ROOT.toExpression() + "/logs")
             && node.getInstallDir() != null) {
             return new File(node.getInstallDir()).toPath()
                 .resolve(Path.of("glassfish", "nodes", sNode, instanceName, "logs"));

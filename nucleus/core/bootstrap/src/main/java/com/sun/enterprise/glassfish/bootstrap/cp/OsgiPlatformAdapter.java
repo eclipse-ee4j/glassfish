@@ -22,7 +22,9 @@ interface OsgiPlatformAdapter {
 
     /**
      * Adds the jar files of the OSGi platform to the given {@link ClassPathBuilder}
+     *
+     * @return the parameter to allow fluent api call
      */
-    void addFrameworkJars(ClassPathBuilder builder) throws IOException;
+    ClassPathBuilder addFrameworkJars(ClassPathBuilder builder) throws IOException;
 
 }

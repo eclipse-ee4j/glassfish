@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.universal;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * Convert a msec duration into weeks, hours, minutes, seconds

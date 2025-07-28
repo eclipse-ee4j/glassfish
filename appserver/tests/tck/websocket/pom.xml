@@ -64,9 +64,18 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
 
         <tck.version>2.2.0</tck.version>
 
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+
+        <port.admin>14848</port.admin>
+        <port.derby>11527</port.derby>
+        <port.http>18080</port.http>
+        <port.https>18181</port.https>
+        <port.jms>17676</port.jms>
+        <port.jmx>18686</port.jmx>
+        <port.orb>13700</port.orb>
+        <port.orb.mutual>13920</port.orb.mutual>
+        <port.orb.ssl>13820</port.orb.ssl>
+        <port.harness.log>12000</port.harness.log>
     </properties>
 
     <dependencies>
@@ -81,26 +90,18 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
             <version>${tck.version}</version>
         </dependency>
 
-        <!-- The Arquillian connector that starts GlassFish and deploys archives to it. -->
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.6</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
-            <version>1.8.0.Final</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Client libs for doing HTTP requests, specifically done via the REST Client -->
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>glassfish-client-ee11</artifactId>
-            <version>1.6.1</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -118,7 +119,6 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
 
     <build>
         <plugins>
-            <!-- Download and installation of the GlassFish server used for testing  -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -149,7 +149,7 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>gf-tests</id>
+                        <id>run-tck</id>
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>

@@ -30,5 +30,5 @@ call "%AS_CONFIG_BAT%" || (
     exit /B 1
 )
 set "AS_MODULES=%AS_INSTALL%\modules"
-set "WS_CLASSPATH=%AS_MODULES%\webservices-api-osgi.jar;%AS_MODULES%\webservices-osgi.jar:%AS_MODULES%\jakarta.xml.bind-api.jar:%AS_MODULES%\jaxb-osgi.jar:%AS_MODULES%\jakarta.activation-api.jar:%AS_MODULES%\angus-activation.jar"
-"%JAVA%" %WSGEN_OPTS% -cp "%WS_CLASSPATH%" com.sun.tools.ws.WsGen %*
+set "WS_CLASSPATH=%AS_MODULES%\webservices-api-osgi.jar;%AS_MODULES%\webservices-osgi.jar;%AS_MODULES%\jakarta.xml.bind-api.jar;%AS_MODULES%\jaxb-osgi.jar;%AS_MODULES%\jakarta.activation-api.jar;%AS_MODULES%\angus-activation.jar"
+"%JAVA%" %WSGEN_OPTS% --module-path "%ASADMIN_MODULEPATH%" --add-modules ALL-MODULE-PATH -cp "%WS_CLASSPATH%" com.sun.tools.ws.WsGen %*

@@ -33,8 +33,8 @@ import java.util.HashSet;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
 
 /**
@@ -45,7 +45,7 @@ import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
  */
 public class ProviderContainerContractInfoImpl extends ProviderContainerContractInfoBase {
 
-    private final ACCClassLoader classLoader;
+    private final TransformingClassLoader classLoader;
     private final Instrumentation inst;
     private final String applicationLocation;
 
@@ -60,7 +60,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
      * @param inst VM's instrumentation object
      */
     public ProviderContainerContractInfoImpl(
-            final ACCClassLoader classLoader,
+            final TransformingClassLoader classLoader,
             final Instrumentation inst,
             final String applicationLocation,
             final ConnectorRuntime connectorRuntime) {

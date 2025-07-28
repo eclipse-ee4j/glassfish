@@ -24,6 +24,7 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.Result;
+import com.sun.enterprise.v3.admin.AdminCommandJob;
 import com.sun.enterprise.v3.common.DoNothingActionReporter;
 
 import jakarta.inject.Inject;
@@ -85,6 +86,7 @@ import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Server;
 import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
 import static org.glassfish.api.admin.ServerEnvironment.Status.stopping;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
  * Main class for Glassfish startup This class spawns a non-daemon Thread when the start() is called. Having a
@@ -133,7 +135,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     RunLevelController runLevelController;
 
     @Inject
-    Provider<CommandRunner> commandRunnerProvider;
+    Provider<CommandRunner<AdminCommandJob>> commandRunnerProvider;
 
     @Inject
     private AppInstanceListener appInstanceListener;
@@ -142,13 +144,13 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
     private long platformInitTime;
 
-    private String platform = System.getProperty("GlassFish_Platform");
+    private String platform = System.getProperty(OSGI_PLATFORM.getSystemPropertyName());
 
     /**
      * A keep alive thread that keeps the server JVM from going down as long as GlassFish kernel is up.
      */
     private Thread serverThread;
-    private boolean shutdownSignal = false;
+    private boolean shutdownSignal;
 
     private final static String THREAD_POLICY_PROPERTY = "org.glassfish.startupThreadPolicy";
     private final static String MAX_STARTUP_THREAD_PROPERTY = "org.glassfish.maxStartupThreads";
@@ -405,7 +407,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
     // TODO(Sahoo): Revisit this method after discussing with Jerome.
     private void shutdown() {
-        CommandRunner runner = commandRunnerProvider.get();
+        CommandRunner<AdminCommandJob> runner = commandRunnerProvider.get();
 
         if (runner != null) {
             final ParameterMap params = new ParameterMap();
@@ -431,7 +433,6 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public synchronized void stop() {
         if (serverEnvironment.getStatus() == stopped) {
             // During shutdown because of shutdown hooks, we can be stopped multiple times.

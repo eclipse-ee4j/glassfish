@@ -31,7 +31,6 @@ import com.sun.enterprise.admin.servermgmt.template.TemplateInfoHolder;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Property;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.PropertyType;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedOutputStream;
@@ -49,10 +48,12 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.DOMAIN_XML_FILE;
+import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static java.text.MessageFormat.format;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Domain builder class.
@@ -99,8 +100,8 @@ public class DomainBuilder {
                 throw new DomainException("Missing default template information in branding file.");
             }
             Map<String, String> envProperties = new ASenvPropertyReader().getProps();
-            templateJarPath = envProperties.get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY) + File.separator
-                    + DEFUALT_TEMPLATE_RELATIVE_PATH + File.separator + defaultTemplateName;
+            templateJarPath = envProperties.get(INSTALL_ROOT.getPropertyName()) + File.separator
+                + DEFUALT_TEMPLATE_RELATIVE_PATH + File.separator + defaultTemplateName;
         }
         File template = new File(templateJarPath);
         if (!template.exists() || !template.getName().endsWith(".jar")) {
@@ -139,7 +140,7 @@ public class DomainBuilder {
             _domainTempalte = new DomainTemplate(templateInfoHolder, stringSubstitutor, templateJarPath);
 
             // Loads default self signed certificate.
-            je = _templateJar.getJarEntry("config/" + DomainConstants.KEYSTORE_FILE);
+            je = _templateJar.getJarEntry("config/" + KEYSTORE_FILENAME_DEFAULT);
             if (je != null) {
                 _keystoreBytes = new byte[(int) je.getSize()];
                 InputStream in = null;
@@ -261,25 +262,17 @@ public class DomainBuilder {
             domainSecurity.processAdminKeyFile(adminKeyFile, user, password, adminUserGroups);
             try {
                 domainSecurity.createSSLCertificateDatabase(configDir, _domainConfig, masterPassword);
-            } catch (Exception e) {
+            } catch (RepositoryException e) {
                 System.err.println("Domain creation process involves a step that creates primary key and"
                     + "\n self-signed server certificate. This step failed for the reason shown below."
                     + "\n This could be because JDK provided keytool program could not be found (e.g."
                     + "\n you are running with JRE) or for some other reason. No need to panic, as you"
-                    + "\n can always use JDK-keytool program to do the needful. A temporary JKS-keystore"
-                    + "\n will be created. You should replace it with proper keystore before using it for SSL."
-                    + "\n Refer to documentation for details. Actual error is:\n" + e.getMessage());
-                File keystoreFile = new File(configDir, DomainConstants.KEYSTORE_FILE);
-                try (FileOutputStream fos = new FileOutputStream(keystoreFile)) {
-                    fos.write(_keystoreBytes);
-                } catch (Exception ex) {
-                    getLogger().log(Level.SEVERE, UNHANDLED_EXCEPTION, ex);
-                }
+                    + "\n can always use JDK-keytool program to do the needful.");
+                throw e;
             }
             domainSecurity.changeMasterPasswordInMasterPasswordFile(
-                new File(domainDir, DomainConstants.MASTERPASSWORD_FILE), masterPassword, saveMasterPassword);
-            domainSecurity.createPasswordAliasKeystore(new File(configDir, DomainConstants.DOMAIN_PASSWORD_FILE),
-                masterPassword);
+                new File(domainDir, MASTER_PASSWORD_FILENAME), masterPassword, saveMasterPassword);
+            domainSecurity.createPasswordAliasKeystore(new File(configDir, PASSWORD_ALIAS_KEYSTORE), masterPassword);
 
             // Add customized tokens in domain.xml.
             CustomTokenClient tokenClient = new CustomTokenClient(_domainConfig);

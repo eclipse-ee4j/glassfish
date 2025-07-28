@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +33,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "job-locator")
 public class JobLocatorService implements JobLocator {
 
-    protected Set<File> jobFiles = Collections.synchronizedSet(new HashSet<File>());
+    private final Set<File> jobFiles = Collections.synchronizedSet(new HashSet<>());
 
     @Override
     public Set<File> locateJobXmlFiles() {

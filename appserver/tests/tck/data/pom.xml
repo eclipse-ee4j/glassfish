@@ -18,7 +18,7 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
@@ -29,9 +29,9 @@
     <groupId>jakarta.tck</groupId>
     <artifactId>glassfish-data-tck-web-glassfish-runner</artifactId>
     <version>1.0</version>
-    
+
     <name>Jakarta Data TCK Web Runner for GlassFish</name>
-    
+
     <properties>
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
         <glassfish.root>${project.build.directory}</glassfish.root>
@@ -44,7 +44,7 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <jakarta.data.version>1.0.0</jakarta.data.version>
-        
+
         <sigtest.version>2.3</sigtest.version>
         <weld.version>6.0.3.Final</weld.version>
     </properties>
@@ -82,17 +82,17 @@
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
-        
+
         <!-- Junit5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -102,14 +102,14 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
-        
+
         <!-- Signature Test Plugin -->
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <version>2.6</version>
         </dependency>
-        
+
         <!-- APIs referenced by TCK that do not require implementations for standalone
          tests -->
         <dependency>
@@ -137,7 +137,7 @@
                     <release>17</release>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.8.1</version>
@@ -164,7 +164,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Surefire plugin - Entrypoint for Junit5 -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -174,24 +174,24 @@
                         <dependency>jakarta.data:jakarta.data-tck</dependency>
                     </dependenciesToScan>
                     <groups><![CDATA[web & persistence]]></groups>
-                    
+
                     <!-- If running back-to-back tests at different levels
                      use this to distinguish the results -->
                     <reportNameSuffix>core</reportNameSuffix>
-                    
+
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.home}</glassfish.home>
-                    
+
                         <jakarta.tck.profile>core</jakarta.tck.profile>
                         <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
-                        
+
                         <glassfish.postBootCommands>
                             create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --property databaseName=${glassfish.home}/glassfish/domains/domain1/config/derbyDB:serverName=localhost:portNumber=1527 DerbyPool
                             create-jdbc-resource --connectionpoolid DerbyPool jdbc/DataTCK
                             list resources.jdbc-connection-pool.*
                         </glassfish.postBootCommands>
                         <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
-                    
+
                         <jimage.dir>target/jimage</jimage.dir>
                         <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>
                         <java.util.logging.config.file>target/test-classes/logging.properties</java.util.logging.config.file>
@@ -213,7 +213,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>org.omnifaces.arquillian</groupId>
+                    <groupId>ee.omnifish.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-managed</artifactId>
                     <scope>test</scope>
                 </dependency>
@@ -237,7 +237,7 @@
             <id>arquillian-managed</id>
             <dependencies>
                 <dependency>
-                    <groupId>org.omnifaces.arquillian</groupId>
+                    <groupId>ee.omnifish.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-managed</artifactId>
                     <scope>test</scope>
                 </dependency>
@@ -250,10 +250,8 @@
             -->
             <dependencies>
                 <dependency>
-                    <groupId>org.omnifaces.arquillian</groupId>
+                    <groupId>ee.omnifish.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-remote</artifactId>
-                    <scope>test</scope>
-                    <version>1.8</version>
                 </dependency>
             </dependencies>
         </profile>

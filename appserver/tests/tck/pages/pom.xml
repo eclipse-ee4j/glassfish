@@ -128,8 +128,6 @@ mvn clean install -Ptck -pl :jakarta-pages-tck,:javatest,:glassfish-external-tck
                         <configuration>
                             <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
                             <artifactItems>
-
-                                <!-- Extract GlassFish -->
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>${glassfish-artifact-id}</artifactId>

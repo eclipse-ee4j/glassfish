@@ -89,9 +89,9 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .types(EntitiesMetadata.class)
                 .scope(ApplicationScoped.class);
 
-        addBean(EntityValidator.class, afterBeanDiscovery, beanManager)
+        addBean(GlassFishRepositoryInterceptor.class, afterBeanDiscovery, beanManager)
                 .types(MethodInterceptor.class)
-                .qualifiers(MethodInterceptor.SaveEntity.INSTANCE)
+                .qualifiers(MethodInterceptor.Repository.INSTANCE)
                 .alternative(true)
                 .priority(Interceptor.Priority.PLATFORM_BEFORE)
                 .scope(ApplicationScoped.class);
@@ -125,8 +125,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(ApplicationScoped.class);
 
         addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
-                .types(MethodInterceptor.class)
-                .qualifiers(MethodInterceptor.Repository.INSTANCE)
+                .types(EnsureTransactionInterceptor.class)
                 .alternative(true)
                 .priority(Interceptor.Priority.PLATFORM_BEFORE)
                 .scope(ApplicationScoped.class);

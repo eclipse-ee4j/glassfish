@@ -9,7 +9,7 @@ prev=connectors.adoc
 == 13 Administering Internet Connectivity
 
 This chapter provides procedures for performing internet connectivity
-tasks in the {productName} 7 environment by
+tasks in the {productName} {productMajorVersion} environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:

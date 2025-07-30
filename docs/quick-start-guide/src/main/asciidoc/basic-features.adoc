@@ -12,7 +12,7 @@ prev=preface.html
 {productName} provides a server for the
 development and deployment of Java Platform, Enterprise Edition (Jakarta EE
 platform) applications and web technologies based on Java technology.
-{productName} 7 provides the following:
+{productName} {productMajorVersion} provides the following:
 
 * A lightweight and extensible core based on OSGi Alliance standards
 * A web container
@@ -36,14 +36,14 @@ The following topics are addressed here:
 
 === About This Quick Start Guide
 
-{productName} 7 Quick Start Guide demonstrates
+{productName} {productMajorVersion} Quick Start Guide demonstrates
 key features of the {productName} product and enables you to quickly
 learn the basics. Step-by-step procedures introduce you to product
 features and enable you to use them immediately.
 
 This guide assumes that you have already obtained and installed the
-{productName} 7 software. For more information about installing
-{productName} 7, see the
+{productName} {productMajorVersion} software. For more information about installing
+{productName} {productMajorVersion}, see the
 https://github.com/eclipse-ee4j/glassfishdocumentation[{productName} Installation Guide].
 
 Instructions and examples in this guide that apply to all supported
@@ -62,9 +62,9 @@ guide, see xref:#for-more-information[For More Information].
 To review additional details about this release before you begin using
 the software, see the xref:release-notes.adoc#GSRLN[{productName}
 Release Notes]. The Release Notes provide important information about
-the {productName} 7 release, including details about new features,
+the {productName} {productMajorVersion} release, including details about new features,
 information about known issues and possible workarounds, and tips for
-installing and working with {productName} 7 software.
+installing and working with {productName} {productMajorVersion} software.
 
 [[default-paths-and-file-names]]
 
@@ -706,7 +706,7 @@ RMI-IIOP Load Balancing and Failover]" in
 === For More Information
 
 Additional resources are available to help you learn more about
-{productName} 7 and related technologies.
+{productName} {productMajorVersion} and related technologies.
 
 The following resources are described here:
 

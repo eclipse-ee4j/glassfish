@@ -1,31 +1,31 @@
 type=page
 status=published
-title={productName} Release Notes, Release 7
+title={productName} Release Notes, Release {productMajorVersion}
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= {productName} Release Notes, Release 7
+= {productName} Release Notes, Release {productMajorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Release Notes
 
-Release 7
+Release {productMajorVersion}
 
 Contributed 2018 - 2024
 
-These Release Notes provide late-breaking information about {productName} 7
+These Release Notes provide late-breaking information about {productName} {productMajorVersion}
 software and documentation. Also included are a summary of
-new product features in the 7 release, and descriptions and
+new product features in the {productMajorVersion} release, and descriptions and
 workarounds for known issues and limitations.
 
 [[sthref1]]
 
 '''''
 
-{productName} Release Notes, Release 7
+{productName} Release Notes, Release {productMajorVersion}
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

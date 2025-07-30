@@ -1248,7 +1248,7 @@ typing `asadmin help uptime` at the command line.
 
 ==== To Switch a Domain to Another Supported Java Version
 
-{productName} 7 requires Java SE 11 as the underlying virtual
+{productName} {productMajorVersion} requires Java SE 11 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
 
 [NOTE]

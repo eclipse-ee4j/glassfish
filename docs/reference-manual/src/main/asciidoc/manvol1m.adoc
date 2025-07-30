@@ -1,17 +1,17 @@
 type=page
 status=published
-title={productName} 7 Utility Commands
+title={productName} {productMajorVersion} Utility Commands
 next=appclient.html
 prev=version.html
 ~~~~~~
 
-= {productName} 7 Utility Commands
+= {productName} {productMajorVersion} Utility Commands
 
 [[sthref2356]]
 
 
 [[glassfish-server-open-source-edition-5.0-utility-commands]]
-== 2 {productName} 7 Utility Commands
+== 2 {productName} {productMajorVersion} Utility Commands
 
 This section describes {productName} utility commands.
 

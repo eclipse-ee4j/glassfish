@@ -11,7 +11,7 @@ prev=jvm.html
 == 5 Administering Thread Pools
 
 This chapter provides procedures for administering thread pools in the
-{productName} 7 environment by using the
+{productName} {productMajorVersion} environment by using the
 `asadmin` command-line utility.
 
 The following topics are addressed here:

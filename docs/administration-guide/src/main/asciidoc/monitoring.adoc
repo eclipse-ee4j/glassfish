@@ -8,7 +8,7 @@ prev=logging.adoc
 [[administering-the-monitoring-service]]
 == 8 Administering the Monitoring Service
 
-This chapter explains how to monitor the {productName} 7 components and services by using the `asadmin` command-line
+This chapter explains how to monitor the {productName} {productMajorVersion} components and services by using the `asadmin` command-line
 utility. Instructions for configuring JConsole to monitor {productName} resources are also provided.
 
 The following topics are addressed here:

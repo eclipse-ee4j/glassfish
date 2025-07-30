@@ -1,15 +1,15 @@
 type=page
 status=published
-title={productName} 7 asadmin Utility Subcommands
+title={productName} {productMajorVersion} asadmin Utility Subcommands
 next=add-library.html
 prev=preface.html
 ~~~~~~
 
-= {productName} 7 asadmin Utility Subcommands
+= {productName} {productMajorVersion} asadmin Utility Subcommands
 
 
 [[glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands]]
-== 1 {productName} 7 asadmin Utility Subcommands
+== 1 {productName} {productMajorVersion} asadmin Utility Subcommands
 
 This section describes, in alphabetical order, the subcommands of the
 xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility.

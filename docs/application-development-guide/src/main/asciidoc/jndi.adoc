@@ -79,7 +79,7 @@ have the same name.
 
 If an EJB component is a kind of session bean and it is deployed to any
 implementation supporting the EJB 3.1specification (for example,
-{productName} 7), it automatically has one or more portable JNDI
+{productName} {productMajorVersion}), it automatically has one or more portable JNDI
 names defined based on the syntax in the specification. Note that this
 is true of existing EJB 3.0 and 2.x applications that are deployed to an
 implementation supporting EJB 3.1. No code changes are required to the
@@ -147,18 +147,18 @@ name is `jdbc/Foo`.
 
 ==== Disabling {productName} V2 JNDI Names
 
-The EJB 3.1 specification supported by {productName} 7 defines
+The EJB 3.1 specification supported by {productName} {productMajorVersion} defines
 portable EJB JNDI names for session beans. Because of this, there is
 less need to continue to use older vendor-specific JNDI names.
 
 By default, {productName} V2-specific JNDI names are applied
-automatically by {productName} 7 for backward compatibility.
+automatically by {productName} {productMajorVersion} for backward compatibility.
 However, this can lead to some ease-of-use issues. For example,
 deploying two different applications containing a remote EJB component
 that exposes the same remote interface causes a conflict between the
 default JNDI names.
 
-The default handling of V2-specific JNDI names in {productName} 7
+The default handling of V2-specific JNDI names in {productName} {productMajorVersion}
 can be managed by using the `asadmin` command:
 
 [source]

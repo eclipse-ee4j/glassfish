@@ -565,29 +565,29 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 |===
 |Feature |Full Platform |Web Profile
 
-|Jakarta EE ${jakartaee} Platform |X |X
+|Jakarta EE 10 Platform |X |X
 
-|Jakarta Security ${jakartaSecurityApiVersion} supporting OpenID Connect |X |X
+|Jakarta Security 3.0 supporting OpenID Connect |X |X
 
-|Jakarta JSON Processing ${jakartaJsonpApiVersion} |X |X
+|Jakarta JSON Processing 2.1 |X |X
 
-|Jakarta JSON Binding (JSON-B) ${jakartaJsonBindApiVersion} |X |X
+|Jakarta JSON Binding (JSON-B) 3.0.1 |X |X
 
-|EJB ${jakartaEjbApiVersion} Lite (Support for Local Container only) |X |X
+|EJB 4.0.1 Lite (Support for Local Container only) |X |X
 
-|JTA ${jakartaTransactionApiVersion} |X |X
+|JTA 1.2 |X |X
 
 |OSGi-based microkernel |X |X
 
-|Java Web Technologies (Servlet ${jakartaServletApiVersion}, JSP ${jakartaPagesApiVersion}, JSF ${jsftemplatingVersion}, JSTL ${jstlApiVersion}, EL ${jakartaElApiVersion}) |X |X
+|Java Web Technologies (Servlet 6.0, JSP 3.1.1, JSF 4.0.4, JSTL 3.0.2, EL 5.0) |X |X
 
 |Grizzly/Comet |X |X
 
-|JPA ${eclipselinkVersion}, (EclipseLink), JDBC Connection Pooling |X |X
+|JPA 4.0.5, (EclipseLink), JDBC Connection Pooling |X |X
 
 |JDBC 4.0 |X |X
 
-|Apache Derby ${derbyVersion} |X |X
+|Apache Derby |X |X
 
 |Web Administration Console and CLI |X |X
 
@@ -597,19 +597,19 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Debugging Support for Other Languages 2.0 |X |X
 
-|Common Annotations for Java ${jakartaAnnotationApiVersion} |X |X
+|Common Annotations for Java 2.1.1 |X |X
 
 |Dependency Injection for Java 2.0 |X |X
 
 |Managed Beans 2.1 |X |X
 
-|Interceptors ${jakartaInterceptorApiVersion} |X |X
+|Interceptors 2.1 |X |X
 
-|Jakarta Contexts and Dependency Injection (CDI) ${jakartaCdiApiVersion} |X |X
+|Jakarta Contexts and Dependency Injection (CDI) 4.0 |X |X
 
-|Bean Validation ${jakartaValidationApiVersion} |X |X
+|Bean Validation 3.0 |X |X
 
-|Jakarta RESTful Web Services  ${jakartaRestApiVersion} (Jersey) |X |X
+|Jakarta RESTful Web Services  3.1 (Jersey) |X |X
 
 |EJB 3.2 Full API (Support for Remote Container) |X |-
 
@@ -617,19 +617,19 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |JAX-WS 2.3 |X |-
 
-|JAXB ${jakartaJaxbImplVersion} |X |-
+|JAXB 4.0.5 |X |-
 
 |Implementing Java Web Services 1.4 |X |-
 
 |Web Services Metadata for the Java Platform 2.1 |X |-
 
-|JMS ${jakartaMessagingApiVersion} |X |-
+|JMS 3.1.0 |X |-
 
-|Jakarta Mail ${jakartaMailApiVersion} |X |-
+|Jakarta Mail 2.1.3 |X |-
 
 |JACC 2.1 |X |-
 
-|Java Authentication Service Provider Interface for Containers ${jakartaAuthenticationApiVersion} |X |-
+|Java Authentication Service Provider Interface for Containers 1.1 |X |-
 
 |Jakarta EE Application Deployment 1.2 |X |-
 

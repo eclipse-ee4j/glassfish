@@ -40,7 +40,7 @@
 
     <modules>
         <module>jakarta-platform-tck</module>
-        <module>jakarta-activation-tck</module>
+        <module>activation</module>
         <module>jakarta-rest-tck</module>
         <module>jakarta-faces-tck</module>
         <module>jakarta-connectors-tck</module>

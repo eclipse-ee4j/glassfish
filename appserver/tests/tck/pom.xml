@@ -155,10 +155,52 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- To disable checking extracted sources -->
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>checkstyle</id>
+                            <phase>disabled</phase>
+                        </execution>
+                        <execution>
+                            <id>checkstyle-poms</id>
+                            <phase>disabled</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
+             <!-- To disable bringing license files -->
+            <plugin>
+                 <artifactId>maven-dependency-plugin</artifactId>
+                 <executions>
+                     <execution>
+                        <id>unpack-resource</id>
+                        <phase>disable</phase>
+                     </execution>
+                 </executions>
+            </plugin>
+            <!-- Block our annotation processing to be inherited -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-hk2-config</id>
+                        <phase>disable</phase>
+                    </execution>
+                    <execution>
+                        <id>process-annotations</id>
+                        <phase>disable</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- To disable usage of our default MANIFEST.MF -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <!-- To disable usage of our default MANIFEST.MF -->
                 <configuration combine.self="override" />
             </plugin>
             <!-- Deploy this pom, but no children except ... -->
@@ -182,12 +224,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -125,11 +125,19 @@ public class PolicyLoader {
 
                 boolean usePolicyProxy = Boolean.parseBoolean(System.getProperty(POLICY_PROXY, "true"));
 
-                Policy policy = null;
+                Policy policy;
                 if (usePolicyProxy && System.getSecurityManager() != null) {
                     policy = loadPolicyAsProxy(javaPolicyClassName);
                 } else {
                     policy = loadPolicy(javaPolicyClassName);
+                }
+
+                // TODO: causing ClassCircularity error when SM ON and
+                // deployment use library feature and ApplibClassLoader
+                // it is likely a problem caused by the way classloading is done
+                // in this case.
+                if (System.getSecurityManager() == null) {
+                    policy.refresh();
                 }
 
                 try {
@@ -139,14 +147,6 @@ public class PolicyLoader {
 
                     Method setPolicyMethod = authorizationServiceClass.getMethod("setPolicy", Policy.class);
                     setPolicyMethod.invoke(null, policy);
-                }
-
-                // TODO: causing ClassCircularity error when SM ON and
-                // deployment use library feature and ApplibClassLoader
-                // it is likely a problem caused by the way classloading is done
-                // in this case.
-                if (System.getSecurityManager() == null) {
-                    policy.refresh();
                 }
 
             } catch (Exception e) {

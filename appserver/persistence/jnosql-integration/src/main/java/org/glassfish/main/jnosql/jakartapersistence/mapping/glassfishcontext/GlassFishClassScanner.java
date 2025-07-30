@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.hk2.classmodel.reflect.ExtensibleType;
 import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
@@ -43,6 +44,8 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
+
+import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 
 /**
  *
@@ -146,7 +149,17 @@ public class GlassFishClassScanner implements ClassScanner {
         return types.getAllTypes()
                 .stream()
                 .filter(type -> type instanceof InterfaceModel)
-                .filter(type -> null != type.getAnnotation(Repository.class.getName()))
+                .filter(type -> {
+                    final AnnotationModel repositoryAnnotation = type.getAnnotation(Repository.class.getName());
+                    if (repositoryAnnotation != null) {
+                        String provider = repositoryAnnotation.getValue("provider", String.class);
+                        if (Objects.equals(Repository.ANY_PROVIDER, provider)
+                                || JNoSQLJakartaPersistence.PROVIDER.equals(provider)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                        })
                 .map(InterfaceModel.class::cast)
                 .filter(predicate)
                 .map(this::typeModelToClass);

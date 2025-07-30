@@ -565,29 +565,29 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 |===
 |Feature |Full Platform |Web Profile
 
-|Jakarta EE ${jakartaee} Platform |X |X
+|Jakarta EE {jakartaee} Platform |X |X
 
-|Jakarta Security ${jakarta-security-api-version} supporting OpenID Connect |X |X
+|Jakarta Security {jakarta-security-api-version} supporting OpenID Connect |X |X
 
-|Jakarta JSON Processing ${jakarta-jsonp-api-version} |X |X
+|Jakarta JSON Processing {jakarta-jsonp-api-version} |X |X
 
-|Jakarta JSON Binding (JSON-B) ${jakarta-json-bind-api-version} |X |X
+|Jakarta JSON Binding (JSON-B) {jakarta-json-bind-api-version} |X |X
 
-|EJB ${jakarta-ejb-api-version} Lite (Support for Local Container only) |X |X
+|EJB {jakarta-ejb-api-version} Lite (Support for Local Container only) |X |X
 
-|JTA ${jakarta-transaction-api-version} |X |X
+|JTA {jakarta-transaction-api-version} |X |X
 
 |OSGi-based microkernel |X |X
 
-|Java Web Technologies (Servlet ${jakarta-servlet-api-version}, JSP ${jakarta-pages-api-version}, JSF ${jsf-templating-version}, JSTL ${jstl-api-version}, EL ${jakarta-el-api-version}) |X |X
+|Java Web Technologies (Servlet {jakarta-servlet-api-version}, JSP {jakarta-pages-api-version}, JSF {jakarta-faces-api-version}, JSTL {jstl-api-version}, EL {jakarta-el-api-version}) |X |X
 
 |Grizzly/Comet |X |X
 
-|JPA ${eclipselink-version}, (EclipseLink), JDBC Connection Pooling |X |X
+|JPA {eclipselink-version}, (EclipseLink), JDBC Connection Pooling |X |X
 
 |JDBC 4.0 |X |X
 
-|Apache Derby ${derby-version} |X |X
+|Apache Derby {derby-version} |X |X
 
 |Web Administration Console and CLI |X |X
 
@@ -597,19 +597,19 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Debugging Support for Other Languages 2.0 |X |X
 
-|Common Annotations for Java  ${jakarta-annotation-api-version} |X |X
+|Common Annotations for Java  {jakarta-annotation-api-version} |X |X
 
 |Dependency Injection for Java 2.0 |X |X
 
 |Managed Beans 2.1 |X |X
 
-|Interceptors ${jakarta-interceptor-api-version} |X |X
+|Interceptors {jakarta-interceptor-api-version} |X |X
 
-|Jakarta Contexts and Dependency Injection (CDI) ${jakarta-cdi-api-version} |X |X
+|Jakarta Contexts and Dependency Injection (CDI) {jakarta-cdi-api-version} |X |X
 
-|Bean Validation ${jakarta-validation-api-version} |X |X
+|Bean Validation {jakarta-validation-api-version} |X |X
 
-|Jakarta RESTful Web Services  ${jakarta-rest-api-version} (Jersey) |X |X
+|Jakarta RESTful Web Services  {jakarta-rest-api-version} (Jersey) |X |X
 
 |EJB 3.2 Full API (Support for Remote Container) |X |-
 
@@ -617,19 +617,19 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |JAX-WS 2.3 |X |-
 
-|JAXB ${jakarta-jaxb-impl-version} |X |-
+|JAXB {jakarta-jaxb-impl-version} |X |-
 
 |Implementing Java Web Services 1.4 |X |-
 
 |Web Services Metadata for the Java Platform 2.1 |X |-
 
-|JMS ${jakarta-messaging-api-version} |X |-
+|JMS {jakarta-messaging-api-version} |X |-
 
-|Jakarta Mail ${jakarta-mail-api-version} |X |-
+|Jakarta Mail {jakarta-mail-api-version} |X |-
 
 |JACC 2.1 |X |-
 
-|Java Authentication Service Provider Interface for Containers ${jakarta-authentication-api-version} |X |-
+|Java Authentication Service Provider Interface for Containers {jakarta-authentication-api-version} |X |-
 
 |Jakarta EE Application Deployment 1.2 |X |-
 

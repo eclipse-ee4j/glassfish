@@ -1600,19 +1600,19 @@
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
+            <version>${derbyVersion}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derbytools</artifactId>
-            <version>${derby.version}</version>
+            <version>${derbyVersion}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derbyshared</artifactId>
-            <version>${derby.version}</version>
+            <version>${derbyVersion}</version>
             <optional>true</optional>
         </dependency>
 

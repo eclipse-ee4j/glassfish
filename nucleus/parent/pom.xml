@@ -71,14 +71,14 @@
     </issueManagement>
     <properties>
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
+        <jakartaElApiVersion>5.0.1</jakartaElApiVersion>
         <expressly.version>5.0.0</expressly.version>
 
         <!-- Jakarta Servlet -->
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jakartaServletApiVersion>6.0.0</jakartaServletApiVersion>
 
         <!-- Jakarta Validation -->
-        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
+        <jakartaValidationApiVersion>3.0.2</jakartaValidationApiVersion>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
@@ -94,14 +94,14 @@
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.5</jakarta.jaxb-impl.version>
+        <jakartaJaxbImplVersion>4.0.5</jakartaJaxbImplVersion>
 
         <!-- Jakarta REST -->
-        <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
+        <jakartaRestApiVersion>3.1.0</jakartaRestApiVersion>
         <jersey.version>3.1.10</jersey.version>
 
         <!-- Jakarta Mail -->
-        <jakarta.mail-api.version>2.1.3</jakarta.mail-api.version>
+        <jakartaMailApiVersion>2.1.3</jakartaMailApiVersion>
         <angus.mail.version>2.0.3</angus.mail.version>
 
         <!-- Jakarta Activation -->
@@ -109,11 +109,11 @@
         <angus.activation.version>2.0.2</angus.activation.version>
 
         <!-- Jakarta Annotations -->
-        <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
+        <jakartaAnnotationApiVersion>2.1.1</jakartaAnnotationApiVersion>
 
-        <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
+        <jakartaSecurityApiVersion>3.0.0</jakartaSecurityApiVersion>
         <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
+        <jakartaAuthenticationApiVersion>3.0.0</jakartaAuthenticationApiVersion>
 
         <!-- GlassFish Components -->
         <grizzly.version>4.0.2</grizzly.version>
@@ -204,7 +204,7 @@
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
-                <version>${jakarta.el-api.version}</version>
+                <version>${jakartaElApiVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.expressly</groupId>
@@ -216,14 +216,14 @@
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
-                <version>${jakarta.servlet-api.version}</version>
+                <version>${jakartaServletApiVersion}</version>
             </dependency>
 
             <!-- Jakarta Validation -->
             <dependency>
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>
-                <version>${jakarta.validation-api.version}</version>
+                <version>${jakartaValidationApiVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.validator</groupId>
@@ -287,14 +287,14 @@
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-osgi</artifactId>
-                <version>${jakarta.jaxb-impl.version}</version>
+                <version>${jakartaJaxbImplVersion}</version>
             </dependency>
 
             <!-- Jakarta REST -->
             <dependency>
                 <groupId>jakarta.ws.rs</groupId>
                 <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${jakarta.rest-api.version}</version>
+                <version>${jakartaRestApiVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey</groupId>
@@ -308,7 +308,7 @@
             <dependency>
                 <groupId>jakarta.mail</groupId>
                 <artifactId>jakarta.mail-api</artifactId>
-                <version>${jakarta.mail-api.version}</version>
+                <version>${jakartaMailApiVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.angus</groupId>
@@ -332,19 +332,19 @@
             <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
-                <version>${jakarta.annotation-api.version}</version>
+                <version>${jakartaAnnotationApiVersion}</version>
             </dependency>
 
             <!-- Jakarta EE Security + Authentication/Authorization -->
             <dependency>
                 <groupId>jakarta.security.enterprise</groupId>
                 <artifactId>jakarta.security.enterprise-api</artifactId>
-                <version>${jakarta.security-api.version}</version>
+                <version>${jakartaSecurityApiVersion}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.authentication</groupId>
                 <artifactId>jakarta.authentication-api</artifactId>
-                <version>${jakarta.authentication-api.version}</version>
+                <version>${jakartaAuthenticationApiVersion}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.authorization</groupId>

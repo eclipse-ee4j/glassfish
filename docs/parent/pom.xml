@@ -41,7 +41,7 @@
         <html.rel.file.prefix></html.rel.file.prefix>
         <mq.docs.url>https://eclipse-ee4j.github.io/openmq/guides/</mq.docs.url>
         <bookDirectory>${project.build.directory}/book</bookDirectory>
-        <productMajorVersion>7</productMajorVersion>
+        <productMajorVersion>${parsedVersion.majorVersion}</productMajorVersion>
         <productCurrentVersion>${project.version}</productCurrentVersion>
     </properties>
 
@@ -172,6 +172,24 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <executions>
+                        <execution>
+                            <id>parse-version</id>
+                            <goals>
+                                <goal>parse-version</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <propertyPrefix>parsedVersion</propertyPrefix>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

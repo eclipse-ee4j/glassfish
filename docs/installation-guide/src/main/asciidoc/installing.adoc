@@ -45,12 +45,12 @@ https://adoptium.net/temurin/releases[Eclipse Temurin JDK downloads page].
 
 You are receiving a copy of the Javassist (Java Programming Assistant)
 Library in source form at
-`https://github.com/jboss-javassist/javassist/archive/rel_3_22_0_cr2.zip`
+`https://github.com/jboss-javassist/javassist/raw/refs/heads/master/javassist.jar`
 and in object code form in the jar file
-`glassfish7/glassfish/modules/javassist.jar` included with the
-distribution. The terms of the Oracle license do NOT apply to the
+`glassfish/modules/javassist.jar` included with the
+distribution. The terms of the Eclipse Foundation license do NOT apply to the
 Javassist (Java Programming Assistant) program; it is licensed under the
-following license, separately from the Oracle programs you receive. If
+following license, separately from the Eclipse Foundation programs you receive. If
 you do not wish to install this program, you may choose to not proceed
 with the installation of {productName}.
 
@@ -569,7 +569,7 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Jakarta Security 3.0 supporting OpenID Connect |X |X
 
-|Jakarta JSON Processing 2.1.3 |X |X
+|Jakarta JSON Processing 2.1 |X |X
 
 |Jakarta JSON Binding (JSON-B) 3.0.1 |X |X
 
@@ -587,13 +587,13 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |JDBC 4.0 |X |X
 
-|Apache Derby 10.15.2.0 |X |X
+|Apache Derby |X |X
 
 |Web Administration Console and CLI |X |X
 
 |Rapid Redeployment (Maintain session state on application redeploy) |X |X
 
-|OMG CORBA APIs 3.0 |X |X
+|OMG CORBA APIs |X |X
 
 |Debugging Support for Other Languages 2.0 |X |X
 
@@ -609,7 +609,7 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Bean Validation 3.0 |X |X
 
-|JAX-RS 2.1 (Jersey) |X |X
+|Jakarta RESTful Web Services  3.1 (Jersey) |X |X
 
 |EJB 3.2 Full API (Support for Remote Container) |X |-
 
@@ -633,7 +633,7 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Jakarta EE Application Deployment 1.2 |X |-
 
-|CORBA 3.0.0 |X a|*
+|CORBA |X a|*
 
 |Metro |X |-
 |===

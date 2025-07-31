@@ -1,6 +1,6 @@
 type=page
 status=published
-title=Uninstalling {productName} 7
+title=Uninstalling {productName} {product-majorVersion}
 prev=installing.html
 ~~~~~~
 

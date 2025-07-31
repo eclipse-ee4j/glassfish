@@ -124,7 +124,7 @@ Start].
 
 ==== Application Client JAR File
 
-In {productName} 7, the downloaded appclient JAR file is smaller
+In {productName} {product-majorVersion}, the downloaded appclient JAR file is smaller
 than in previous releases, with dependent classes in separate JAR files.
 When copying the downloaded appclient to another location, make sure to
 include the JAR files containing the dependent classes as well. You can

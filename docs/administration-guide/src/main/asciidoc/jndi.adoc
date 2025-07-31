@@ -479,18 +479,18 @@ typing `asadmin help delete-jndi-resource` at the command line.
 
 ===== To Disable {productName} v2 Vendor-Specific JNDI Names
 
-The EJB 3.1 specification supported by {productName} 7 defines
+The EJB 3.1 specification supported by {productName} {product-majorVersion} defines
 portable EJB JNDI names. Because of this, there is less need to continue
 to use older vendor-specific JNDI names.
 
 By default, {productName} v2-specific JNDI names are applied
-automatically by {productName} 7 for backward compatibility.
+automatically by {productName} {product-majorVersion} for backward compatibility.
 However, this can lead to some ease-of-use issues. For example,
 deploying two different applications containing a Remote EJB component
 that exposes the same remote interface causes a conflict between the
 default JNDI names.
 
-The default handling of v2-specific JNDI names in {productName} 7
+The default handling of v2-specific JNDI names in {productName} {product-majorVersion}
 can be managed with the `asadmin` command or with the
 `disable-nonportable-jndi-names` boolean property for the
 `ejb-container` element in `glassfish-ejb-jar.xml`.

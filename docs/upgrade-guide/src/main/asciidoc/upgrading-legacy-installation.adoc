@@ -14,14 +14,14 @@ prev=upgrade-compatibility-issues.html
 This chapter is obsoleted and must be revided.
 ====
 
-The Upgrade Tool that is bundled with {productName} 7 replicates
+The Upgrade Tool that is bundled with {productName} {product-majorVersion} replicates
 the configuration of a previously installed server in the target
 installation. The Upgrade Tool assists in upgrading the configuration
 and applications from an earlier version of the Application Server or
-{productName} to {productName} 7.
+{productName} to {productName} {product-majorVersion}.
 
 In addition to Upgrade Tool, there are three Update Center tools that
-can be used to perform an in-place upgrade to {productName} 7 from
+can be used to perform an in-place upgrade to {productName} {product-majorVersion} from
 {productName} 3.1.1, 3.1, 3.0.1, and Enterprise Server v3. These
 three Update Center tools are:
 
@@ -33,7 +33,7 @@ Upgrade Tool and the three Update Center tools are explained later in
 this chapter.
 
 To view a list of the older versions from which you can upgrade, see
-xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} 7].
+xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}].
 
 The following topics are addressed here:
 
@@ -57,7 +57,7 @@ The following topics are addressed here:
 * xref:#upgrade-paths[Upgrade Paths]
 * xref:#upgrade-terminology[Upgrade Terminology]
 * xref:#summary-of-upgrade-tools-and-procedures[Summary of Upgrade Tools and Procedures]
-* xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} 7]
+* xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}]
 * xref:#GSUPG00063[Upgrading From Version 8.x or Older Product Releases]
 * xref:#upgrading-glassfish-server-inside-a-closed-network[Upgrading {productName} Inside a Closed Network]
 
@@ -65,7 +65,7 @@ The following topics are addressed here:
 
 ==== Upgrade Paths
 
-There are two general paths you can use when upgrading to {productName} 7:
+There are two general paths you can use when upgrading to {productName} {product-majorVersion}:
 
 Side-by-Side::
   A side-by-side upgrade means that the new {productName} release is
@@ -73,10 +73,10 @@ Side-by-Side::
   upgrading. +
   In this scenario, you perform the following steps:
 
-  1.  Perform a basic installation of {productName} 7 in a location
+  1.  Perform a basic installation of {productName} {product-majorVersion} in a location
   other than the one being used for the older product.
   2.  Use Upgrade Tool to migrate the old configurations and
-  applications to the new {productName} 7 directories.
+  applications to the new {productName} {product-majorVersion} directories.
   3.  Test the new {productName} installation to make sure everything
   is working properly.
   4.  When you are satisfied that the new installation works properly,
@@ -94,7 +94,7 @@ In-Place::
   installation. +
 In this scenario, you simply use Update Tool, the `pkg` utility, or
   the Update Notifier in your old installation to overwrite the old
-  installation with the new {productName} 7 product. +
+  installation with the new {productName} {product-majorVersion} product. +
   Performing an in-place upgrade is easier than performing a
   side-by-side upgrade, but you lose the ability to switch back and
   forth between the old and new installations. There is also no way to
@@ -133,8 +133,8 @@ Master Password::
 
 ==== Summary of Upgrade Tools and Procedures
 
-There are several tools you can use to upgrade from an earlier {productName} or Enterprise Server installation to {productName} 7. The
-general procedures for upgrading to {productName} 7 vary depending
+There are several tools you can use to upgrade from an earlier {productName} or Enterprise Server installation to {productName} {product-majorVersion}. The
+general procedures for upgrading to {productName} {product-majorVersion} vary depending
 on which tool you use and the product version from which you are upgrading.
 
 The following topics are addressed here:
@@ -149,7 +149,7 @@ The following topics are addressed here:
 
 ===== Summary of Tools for Performing an Upgrade
 
-There are several tools you can use to perform an upgrade to {productName} 7 are described below.
+There are several tools you can use to perform an upgrade to {productName} {product-majorVersion} are described below.
 
 * xref:#upgrade-tool[Upgrade Tool]
 * xref:#update-tool-and-the-pkg-utility[Update Tool and the `pkg` Utility]
@@ -161,19 +161,19 @@ Upgrade Tool
 
 The {productName} Upgrade Tool is tended solely for performing
 side-by-side upgrades from any compatible older product version to
-{productName} 7.
+{productName} {product-majorVersion}.
 
 Upgrade Tool provides a number of features that aid in the migration of
-older configurations and applications to a new {productName} 7
+older configurations and applications to a new {productName} {product-majorVersion}
 installation. These features are described in more detail in
 xref:#upgrade-tool-functionality[Upgrade Tool Functionality].
 
-In {productName} 7 Upgrade Tool is installed in the
+In {productName} {product-majorVersion} Upgrade Tool is installed in the
 as-install``/bin`` directory.
 
 [NOTE]
 ====
-Upgrade Tool is the only tool you can use when upgrading to {productName} 7 from product versions prior to {productName} 3.0.1 or
+Upgrade Tool is the only tool you can use when upgrading to {productName} {product-majorVersion} from product versions prior to {productName} 3.0.1 or
 Enterprise Server v3.
 ====
 
@@ -193,15 +193,15 @@ such as OSGi Admin Console.
 
 The command-line counterpart to Update Tool is the `pkg` utility. While
 the `pkg` utility does not provide exactly the same set of features as
-Update Tool, for the purposes of upgrading to {productName} 7, the
+Update Tool, for the purposes of upgrading to {productName} {product-majorVersion}, the
 `pkg` utility and Update Tool feature sets are almost identical.
 
 In addition to day-to-day maintenance tasks, Update Tool and the `pkg`
 utility can be used to perform an in-place upgrade of an entire
 {productName} 3.0.1 or Enterprise Server v3 installation to the
-{productName} 7 or later release.
+{productName} {product-majorVersion} or later release.
 
-In {productName} 7 Update Tool is installed in the
+In {productName} {product-majorVersion} Update Tool is installed in the
 as-install-parent``/bin`` directory.
 
 [NOTE]
@@ -229,7 +229,7 @@ Software Update tool to upgrade from product releases prior 3.0.1 and
 v3.
 
 The Software Update Notifier is distributed as a configuration option
-during {productName} 7, 3.0.1, and Enterprise Server v3
+during {productName} {product-majorVersion}, 3.0.1, and Enterprise Server v3
 installation. If installed and enabled, the Software Update Notifier
 monitors your installation and pops up a notification balloon when
 updates or upgrades are available for your product.
@@ -244,20 +244,20 @@ the Update Notifier, refer to the Update Tool online help.
 ===== Summary of Procedure for Upgrading With Upgrade Tool
 
 The general procedure for using Upgrade Tool to perform an upgrade to
-{productName} 7 from any compatible older version of {productName} or Enterprise Server comprises the following steps:
+{productName} {product-majorVersion} from any compatible older version of {productName} or Enterprise Server comprises the following steps:
 
-1. Download {productName} 7 and perform a Standard Installation,
+1. Download {productName} {product-majorVersion} and perform a Standard Installation,
 as described in "xref:installation-guide.adoc#GSING00007[
 To Install {productName} Using the Self-Extracting File]"
 in {productName} Installation Guide.
 2. Copy any custom or third-party libraries from the older installation
-to their corresponding locations in the new {productName} 7
+to their corresponding locations in the new {productName} {product-majorVersion}
 installation directories. Note that you should only copy custom or
 third-party libraries here. Do not copy an libraries from the actual
 domain that will be upgraded.
-3. Run the `asupgrade` command from the new {productName} 7
+3. Run the `asupgrade` command from the new {productName} {product-majorVersion}
 as-install``/bin`` directory.
-4. Start the new {productName} 7 DAS with the
+4. Start the new {productName} {product-majorVersion} DAS with the
 `asadmin start-domain` subcommand.
 
 This procedure is described in more detail in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a
@@ -268,14 +268,14 @@ Side-By-Side Upgrade With Upgrade Tool].
 ===== Summary of Procedure for Upgrading With Update Tool
 
 The general procedure for using Update Tool to perform an upgrade to
-{productName} 7 from {productName} 3.0.1 or Enterprise Server v3
+{productName} {product-majorVersion} from {productName} 3.0.1 or Enterprise Server v3
 comprises the following steps:
 
 1. Manually stop all server instances and the domain.
 2. Launch Update Tool by using the as-install-parent`/bin/updatetool`
 command in the older product directory.
 3. In Update Tool, select and install the latest {productName}
-product release. This updates your server to the 7 release.
+product release. This updates your server to the {product-majorVersion} release.
 4. Upgrade the domain by running the `asadmin start-domain --upgrade`
 subcommand. This performs the upgrade and then shuts down the DAS.
 5. Restart the DAS normally with the with the `asadmin start-domain`
@@ -289,7 +289,7 @@ Using the Update Tool GUI].
 ===== Summary of Procedure for Upgrading With the Software Update Notifier
 
 The general procedure for using the Software Update Notifier to perform
-an upgrade to {productName} 7 from {productName}3.0.1 or
+an upgrade to {productName} {product-majorVersion} from {productName}3.0.1 or
 Enterprise Server v3 comprises the following steps:
 
 1. Wait for the Software Update Notifier to pop up a notification
@@ -297,7 +297,7 @@ balloon informing you that updates are available.
 2. Click the balloon prompt to launch the Software Update GUI.
 3. Manually stop all server instances and the domain.
 4. Use the Software Update GUI to perform the upgrade. This updates
-your server to the 7 release.
+your server to the {product-majorVersion} release.
 5. Upgrade the domain by running the `asadmin start-domain --upgrade`
 subcommand. This performs the upgrade and then shuts down the DAS.
 6. Restart the upgraded DAS normally with the with the
@@ -311,12 +311,12 @@ Using the Software Update Notifier].
 ===== Summary of Procedure for Upgrading With the `pkg` Utility
 
 The general procedure for using the `pkg` utility to perform an upgrade
-to {productName} 7 from {productName}3.0.1 or Enterprise Server
+to {productName} {product-majorVersion} from {productName}3.0.1 or Enterprise Server
 v3 comprises the following steps:
 
 1. Manually stop all server instances and the domain.
 2. Run the as-install-parent`/bin/pkg` command with the desired options
-in the older product directory. This updates your server to the 7
+in the older product directory. This updates your server to the {product-majorVersion}
 release.
 3. Upgrade the domain by running the `asadmin start-domain --upgrade`
 subcommand. This performs the upgrade and then shuts down the DAS.
@@ -328,9 +328,9 @@ From the Command Line Using the `pkg` Utility].
 
 [[supported-releases-for-upgrade-to-glassfish-server-7]]
 
-==== Supported Releases for Upgrade to {productName} 7
+==== Supported Releases for Upgrade to {productName} {product-majorVersion}
 
-Upgrades to {productName} 7 are supported from the following
+Upgrades to {productName} {product-majorVersion} are supported from the following
 earlier {productName} product releases:
 
 * Sun GlassFish Enterprise Server v2.1.1
@@ -343,19 +343,19 @@ earlier {productName} product releases:
 
 ==== Upgrading From Version 8.x or Older Product Releases
 
-It is not possible to upgrade to {productName} 7 directly from Sun
+It is not possible to upgrade to {productName} {product-majorVersion} directly from Sun
 GlassFish Enterprise Server 8.x or older product releases.
 
 To upgrade from a product release that is older than any of those listed
-in xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} 7],
+in xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}],
 you must first upgrade your older product release to one of the releases
-that are supported for upgrade to {productName} 7.
+that are supported for upgrade to {productName} {product-majorVersion}.
 
 For example, to upgrade from any Enterprise Server 8.x release, you
 first need to upgrade that older release to Enterprise Server 2.1.1.
 That is, your upgrade path would be as follows:
 
-Enterprise Server 8.x⇒Enterprise Server 2.1.1⇒{productName} 7
+Enterprise Server 8.x⇒Enterprise Server 2.1.1⇒{productName} {product-majorVersion}
 
 Sun GlassFish Enterprise Server 2.1.1 is available for download from the
 http://glassfish.java.net/public/downloadsindex.html[GlassFish Community
@@ -367,7 +367,7 @@ GlassFish Enterprise Server 2.1.1 Upgrade Guide]
 
 After upgrading your older Enterprise Server installation to Enterprise
 Server 2.1.1, you can proceed normally with the instructions in this
-guide to complete the upgrade to {productName} 7.
+guide to complete the upgrade to {productName} {product-majorVersion}.
 
 [[upgrading-glassfish-server-inside-a-closed-network]]
 
@@ -384,7 +384,7 @@ in {productName} Administration Guide.
 === Performing a Side-By-Side Upgrade With Upgrade Tool
 
 This section explains how to use Upgrade Tool to perform a side-by-side
-upgrade to {productName} 7 from any compatible older product release.
+upgrade to {productName} {product-majorVersion} from any compatible older product release.
 
 The following topics are addressed here:
 
@@ -441,9 +441,9 @@ Additional Upgrade Tool functions are explained in the following sections:
 
 Application archives (EAR files) and component archives (JAR, WAR, and
 RAR files) that are deployed in the source server do not require any
-modification to run on {productName} 7.
-Components that may have incompatibilities are deployed on {productName} 7 with the `compatibility` property set to `v2` and will run
-without change on {productName} 7. You may, however, want to
+modification to run on {productName} {product-majorVersion}.
+Components that may have incompatibilities are deployed on {productName} {product-majorVersion} with the `compatibility` property set to `v2` and will run
+without change on {productName} {product-majorVersion}. You may, however, want to
 consider modifying the applications to conform to Jakarta EE 6 requirements.
 
 The Jakarta EE 6 platform specification imposes stricter requirements than
@@ -470,7 +470,7 @@ attempt to reconfigure the incorrect configurations.
 ===== Upgrade of Clusters
 
 When upgrading from a clustered configuration, the older cluster
-information is retained in a new `domain.xml` file in the {productName} 7 installation directories. However, it is still necessary to
+information is retained in a new `domain.xml` file in the {productName} {product-majorVersion} installation directories. However, it is still necessary to
 manually re-create the server instances that are contained in the
 clusters. This procedure is explained in xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters
 and Node Agent Configurations].
@@ -499,15 +499,15 @@ Command version executed successfully.
 ==== To Upgrade From the Command Line Using Upgrade Tool
 
 This procedure explains how to use the Upgrade Tool command line to
-upgrade to {productName} 7 from any supported older product release.
-See xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
+upgrade to {productName} {product-majorVersion} from any supported older product release.
+See xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}] for a list of supported releases.
 
 Before You Begin
 
 Ensure that the domains on the source server from which you are
 upgrading are stopped before proceeding.
 
-1. Download and install {productName} 7 using the Typical
+1. Download and install {productName} {product-majorVersion} using the Typical
 Installation path. +
 See "xref:installation-guide.adoc#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
@@ -525,7 +525,7 @@ as-install``/lib`` directory.
 +
 [NOTE]
 ====
-Use the Upgrade Tool that is located in the target {productName} 7
+Use the Upgrade Tool that is located in the target {productName} {product-majorVersion}
 installation, not the older source installation.
 ====
 +
@@ -585,7 +585,7 @@ If there are any `SEVERE` or `WARNING` messages in the `server.log`
 file, the upgrade output will say
 `"Possible error encountered during upgrade. See server log after upgrade process completes."`
 
-6. Start the upgraded {productName} 7 domain.
+6. Start the upgraded {productName} {product-majorVersion} domain.
 +
 [source]
 ----
@@ -596,7 +596,7 @@ used in the older server.
 +
 [NOTE]
 ====
-{productName} 7 does not support NSS authentication. If you are
+{productName} {product-majorVersion} does not support NSS authentication. If you are
 upgrading from a Enterprise Profile configuration that uses NSS
 authentication, follow the procedure in xref:#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading
 Installations That Use NSS Cryptographic Tokens].
@@ -611,7 +611,7 @@ Example 2-1 Using the `asupgrade` Command Line
 
 The following example shows how to use the `asupgrade` command-line
 utility in non-interactive mode to upgrade an existing Sun GlassFish
-Enterprise Server v2.1 installation to {productName} 7. The
+Enterprise Server v2.1 installation to {productName} {product-majorVersion}. The
 following command should be entered on a single line.
 
 [source]
@@ -647,7 +647,7 @@ short form, the long form, and a description of each option.
 
 |`-t` target-domains-directory
 |`--target` target-domains-directory
-|The desired domain-root-dir directory in the {productName} 7 target
+|The desired domain-root-dir directory in the {productName} {product-majorVersion} target
 installation; default is as-install``/domains``
 
 |`-f` password-file
@@ -659,9 +659,9 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir``/docroot/index.html`` file. This file is brought over during
-the upgrade. You may want to copy the default {productName} 7 file
+the upgrade. You may want to copy the default {productName} {product-majorVersion} file
 from the `domain1.original/docroot` directory and customize it for your
-{productName} 7 installation.
+{productName} {product-majorVersion} installation.
 * To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
@@ -672,15 +672,15 @@ click the Help button on the Administration Console.
 ==== To Upgrade Using the Upgrade Tool Wizard
 
 This procedure explains how to use the graphical Upgrade Tool Wizard to
-upgrade to {productName} 7 from any supported older product release.
-See xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
+upgrade to {productName} {product-majorVersion} from any supported older product release.
+See xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}] for a list of supported releases.
 
 Before You Begin
 
 Ensure that the source domains from which you are upgrading are stopped
 before proceeding.
 
-1. Download and install {productName} 7 using the Typical Installation path. +
+1. Download and install {productName} {product-majorVersion} using the Typical Installation path. +
 See "xref:installation-guide.adoc#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
@@ -697,7 +697,7 @@ operating environment.
 +
 [NOTE]
 ====
-Use the Upgrade Tool that is located in the target {productName} 7
+Use the Upgrade Tool that is located in the target {productName} {product-majorVersion}
 installation, not the older source installation.
 ====
 +
@@ -728,11 +728,11 @@ click Browse. +
 For example, you might type `c:\glassfish\domains\domain1`.
 
 5. In the Target Domains Root Directory field, type the location of the
-{productName} 7 installation to which to transfer the
+{productName} {product-majorVersion} installation to which to transfer the
 configuration, or click Browse. +
 The default is the full path name of the `domains` directory of your
-{productName} 7 installation (for example,
-`c:\glassfish7\glassfish\domains`).
+{productName} {product-majorVersion} installation (for example,
+`c:\glassfish{product-majorVersion}\glassfish\domains`).
 
 6. Provide the master password of the source application server. +
 The domain will be upgraded using these credentials. If you do not
@@ -740,7 +740,7 @@ specify a password here, the default master password is used.
 +
 [NOTE]
 ====
-{productName} 7 does not support NSS authentication. If you are
+{productName} {product-majorVersion} does not support NSS authentication. If you are
 upgrading from a Enterprise Profile configuration that uses NSS
 authentication, follow the procedure in xref:#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading
 Installations That Use NSS Cryptographic Tokens].
@@ -771,7 +771,7 @@ file, the upgrade output will say
 9. Click Finish to exit the Upgrade Tool when the upgrade process is
 complete.
 
-10. Start the upgraded {productName} 7 domain.
+10. Start the upgraded {productName} {product-majorVersion} domain.
 +
 [source]
 ----
@@ -788,9 +788,9 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default {productName} 7 file
+the upgrade. You may want to copy the default {productName} {product-majorVersion} file
 from the `domain1.original/docroot` directory and customize it for your
-{productName} 7 installation.
+{productName} {product-majorVersion} installation.
 * To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
@@ -801,7 +801,7 @@ click the Help button on the Administration Console.
 === Performing an In-Place Upgrade With the Update Center Tools
 
 This section explains how to use the three Update Center tools to
-perform an in-place upgrade to {productName} 7 from {productName} 3.0.1 or Enterprise Server v3. Specifically, the three tools
+perform an in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1 or Enterprise Server v3. Specifically, the three tools
 explained in this section are:
 
 * Update Tool
@@ -829,7 +829,7 @@ The following topics are addressed here:
 ==== Update Center Tool Procedures
 
 Unlike when using Upgrade Tool, when you use the Update Tool, the
-Software Update Notifier, or the `pkg` utility to perform a {productName} 7 upgrade, the older source server directories are overwritten
+Software Update Notifier, or the `pkg` utility to perform a {productName} {product-majorVersion} upgrade, the older source server directories are overwritten
 with the new target server directories, and the existing configuration
 and deployed applications are reused in the updated installation.
 
@@ -848,7 +848,7 @@ following ways:
 ==== To Upgrade Using the Update Tool GUI
 
 This procedure explains how to use the graphical Update Tool to perform
-an in-place upgrade to {productName} 7 from {productName} 3.0.1
+an in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1
 or Enterprise Server v3. Note that it is not possible to use this
 procedure with any other product releases.
 
@@ -888,9 +888,9 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir``/docroot/index.html`` file. This file is brought over during
-the upgrade. You may want to copy the default {productName} 7 file
+the upgrade. You may want to copy the default {productName} {product-majorVersion} file
 from the `domain1.original/docroot` directory and customize it for your
-{productName} 7 installation.
+{productName} {product-majorVersion} installation.
 * To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
@@ -901,7 +901,7 @@ click the Help button on the Administration Console.
 ==== To Upgrade Using the Software Update Notifier
 
 This procedure explains how to use the Software Update Notifier to
-perform an in-place upgrade to {productName} 7 from {productName} 3.0.1 or Enterprise Server v3. Note that it is not possible to
+perform an in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1 or Enterprise Server v3. Note that it is not possible to
 use this procedure with any other product releases.
 
 Before You Begin
@@ -923,7 +923,7 @@ balloon informing you that updates are available.
 
 4. Using the Software Update GUI, select the items you want to upgrade
 and start the installation. +
-Ensure that {productName} 7 is one of the items you select for
+Ensure that {productName} {product-majorVersion} is one of the items you select for
 upgrade. This upgrades the server and selected components to the latest
 available versions.
 
@@ -948,9 +948,9 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default {productName} 7 file
+the upgrade. You may want to copy the default {productName} {product-majorVersion} file
 from the `domain1.original/docroot` directory and customize it for your
-{productName} 7 installation.
+{productName} {product-majorVersion} installation.
 * To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
@@ -961,7 +961,7 @@ click the Help button on the Administration Console.
 ==== To Upgrade From the Command Line Using the `pkg` Utility
 
 This procedure explains how to use the `pkg` utility to perform an
-in-place upgrade to {productName} 7 from {productName} 3.0.1 or
+in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1 or
 Enterprise Server v3. Note that it is not possible to use this procedure
 with any other product releases.
 
@@ -971,7 +971,7 @@ upgrading are stopped before proceeding.
 2. In a command shell for your operating environment, navigate to the
 as-install-parent``/bin`` directory.
 
-3. Use the `pkg image-update` command to update your entire {productName} 3.0.1 or Enterprise Server v3 installation to {productName} 7.
+3. Use the `pkg image-update` command to update your entire {productName} 3.0.1 or Enterprise Server v3 installation to {productName} {product-majorVersion}.
 +
 [source]
 ----
@@ -998,9 +998,9 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default {productName} 7 file
+the upgrade. You may want to copy the default {productName} {product-majorVersion} file
 from the `domain1.original/docroot` directory and customize it for your
-{productName} 7 installation.
+{productName} {product-majorVersion} installation.
 * To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
@@ -1011,7 +1011,7 @@ click the Help button on the Administration Console.
 === Upgrading Installations That Use NSS Cryptographic Tokens
 
 {productName} v2.x EE (Enterprise Edition) uses Network Security
-Services (NSS) for cryptographic software tokens. {productName} 7
+Services (NSS) for cryptographic software tokens. {productName} {product-majorVersion}
 does not support NSS, so when performing an upgrade from v2.x EE to 7
 additional manual configuration steps must be performed.
 
@@ -1026,30 +1026,30 @@ The following topics are addressed here:
 ==== To Prepare for the Upgrade
 
 This procedure explains how to prepare for modifying an NSS-based
-{productName} 2.x installation when upgrading to {productName} 7.
+{productName} 2.x installation when upgrading to {productName} {product-majorVersion}.
 
-1. Download and install {productName} 7 using the Typical Installation path. +
-Ensure that you install the new {productName} 7 product in a
+1. Download and install {productName} {product-majorVersion} using the Typical Installation path. +
+Ensure that you install the new {productName} {product-majorVersion} product in a
 directory that is different than the one used for the older installation
 from which you are upgrading. +
 See "xref:installation-guide.adoc#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
-2. Rename the new {productName} 7 domain-dir (the default is
+2. Rename the new {productName} {product-majorVersion} domain-dir (the default is
 as-install``/domains/domain1``) to a name of your choice. +
-In this procedure, `31domain` is used for the renamed {productName} 7 domain.
+In this procedure, `31domain` is used for the renamed {productName} {product-majorVersion} domain.
 
-3. Copy the older source domain to be upgraded to the new {productName} 7 as-install``/domains`` directory. +
+3. Copy the older source domain to be upgraded to the new {productName} {product-majorVersion} as-install``/domains`` directory. +
 In this procedure, `domain1` is used for the older source domain that is
-copied to the new {productName} 7 installation.
+copied to the new {productName} {product-majorVersion} installation.
 +
 [NOTE]
 ====
 The remaining steps in this procedure are performed on the copy of your
 source domain that you created in this step, rather than on your
 original source domain. It is strongly recommended that you perform the
-{productName} 7 upgrade on a copy of your old domain rather than on
+{productName} {product-majorVersion} upgrade on a copy of your old domain rather than on
 the original.
 ====
 
@@ -1085,7 +1085,7 @@ password used in the `./31domain`.
 -Dcom.sun.appserv.nss.db=${com.sun.aas.instanceRoot}/config
 ----
 
-6. Upgrade `./domain1` by starting the DAS in the new {productName} 7
+6. Upgrade `./domain1` by starting the DAS in the new {productName} {product-majorVersion}
 installation with the `--upgrade` option.
 +
 [source]
@@ -1106,14 +1106,14 @@ as-install/bin/asadmin start-domain domain1
 
 These instructions explain the post-upgrade configuration steps that
 must be performed when upgrading from an NSS-based installation to
-{productName} 7.
+{productName} {product-majorVersion}.
 
 Before You Begin
 
 Before proceeding with this procedure, complete the procedure explained
 in xref:#to-prepare-for-the-upgrade[To Prepare for the Upgrade].
 
-1. Start the {productName} 7 domain, if it is not already running,
+1. Start the {productName} {product-majorVersion} domain, if it is not already running,
 and open the {productName} Admin Console in a browser window. +
 The default URL is `https://localhost:4848` +
 As part of the xref:#to-prepare-for-the-upgrade[To Prepare for the Upgrade] procedure, the
@@ -1144,7 +1144,7 @@ keytool -storepasswd -new v2-master-password \
 
 4. Take note of all the `KeyEntries` that exist in your NSS database.
 +
-These entries must be migrated to the `keystore.jks` in the {productName} 7 domain. The following command can be used to list all the
+These entries must be migrated to the `keystore.jks` in the {productName} {product-majorVersion} domain. The following command can be used to list all the
 `KeyEntries` in the NSS database:
 +
 [source]
@@ -1259,7 +1259,7 @@ NSS-PKCS11, then the v2.x EE-to-7 upgrade solution is to directly
 configure the Hardware Token as a PKCS11 token using the JDK-JSSE
 supported mechanisms for configuring PKCS#11 tokens.
 
-1. Set the `javax.net.ssl.keyStoreType` `jvm-options` in {productName} 7 to PKCS11.
+1. Set the `javax.net.ssl.keyStoreType` `jvm-options` in {productName} {product-majorVersion} to PKCS11.
 +
 [source,xml]
 ----
@@ -1302,18 +1302,18 @@ Ensure that the following two `jvm-options` are set in the `domain.xml` file:
 
 This section explains additional steps you need to perform when
 upgrading cluster and node agent configurations from Application Server
-or Enterprise Server to {productName} 7.
+or Enterprise Server to {productName} {product-majorVersion}.
 
-{productName} 7 does not support node agents. As part of the
+{productName} {product-majorVersion} does not support node agents. As part of the
 upgrade process, any node agent elements in the older source
 configuration are transformed into `CONFIG` node elements in the
 `domain.xml` file for the upgraded DAS. If the source node agent
-configuration is incompatible with your {productName} 7
+configuration is incompatible with your {productName} {product-majorVersion}
 installation, you must correct the node configuration on the upgraded DAS.
 
 In addition, although the source cluster configuration is retained in
 the `domain.xml` file for the upgraded DAS, it is still necessary to
-install {productName} 7 on each node host and manually re-create
+install {productName} {product-majorVersion} on each node host and manually re-create
 the server instances that are contained in the clusters.
 
 The following topics are addressed here:
@@ -1327,13 +1327,13 @@ The following topics are addressed here:
 ==== Overview of Cluster and Node Agent Upgrade Procedures
 
 The general steps for upgrading a cluster and node agent configuration
-so it will work in {productName} 7 are as follows:
+so it will work in {productName} {product-majorVersion} are as follows:
 
 1. Perform a side-by-side upgrade of the DAS. This procedure is
 described in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
-2. Perform new (not upgrade) {productName} 7 installations on each
-node host. {productName} 7 installation instructions are provided
+2. Perform new (not upgrade) {productName} {product-majorVersion} installations on each
+node host. {productName} {product-majorVersion} installation instructions are provided
 in the xref:installation-guide.adoc#GSING[
 {productName} Installation Guide].
 
@@ -1341,7 +1341,7 @@ in the xref:installation-guide.adoc#GSING[
 This procedure is described in xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Configuration
 of a Node After an Upgrade].
 
-4. Re-create the clusters and server instances on each {productName} 7 node host.
+4. Re-create the clusters and server instances on each {productName} {product-majorVersion} node host.
 This procedure is described in xref:#to-re-create-a-cluster[To Re-Create a Cluster].
 
 [[to-correct-the-configuration-of-a-node-after-an-upgrade]]
@@ -1372,7 +1372,7 @@ might not meet your requirements for the upgraded installation of {productName}:
 * The parent of the base installation directory of the {productName}
 software on the host, for example, `/export/glassfish7`. +
 The default is the parent of the default base installation directory of
-the {productName} 7 software on the DAS host. If the {productName} software is installed under a different directory on the node
+the {productName} {product-majorVersion} software on the DAS host. If the {productName} software is installed under a different directory on the node
 host, you must update the node's configuration to specify the correct directory.
 
 * The directory that will contain the {productName} instances that
@@ -1406,7 +1406,7 @@ Setting Up SSH for Centralized Administration]" in
 * If you are upgrading from an Enterprise Profile configuration that
 uses NSS authentication, ensure that the procedure in
 xref:#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading Installations That Use NSS Cryptographic Tokens]
-has been performed. {productName} 7 does not support NSS authentication.
+has been performed. {productName} {product-majorVersion} does not support NSS authentication.
 
 1. Ensure that the DAS is running. +
 Remote subcommands require a running server.
@@ -1467,7 +1467,7 @@ Command update-node-config executed successfully.
 Next Steps
 
 Re-create the cluster configuration from the older source installation
-in the new {productName} 7 installation in as explained in
+in the new {productName} {product-majorVersion} installation in as explained in
 xref:#to-re-create-a-cluster[To Re-Create a Cluster].
 
 See Also
@@ -1485,15 +1485,15 @@ in {productName} High Availability Administration Guide
 ==== To Re-Create a Cluster
 
 This procedure explains how to re-create a clustered {productName} or
-Enterprise Server configuration for {productName} 7.
+Enterprise Server configuration for {productName} {product-majorVersion}.
 
 Before proceeding with these instructions, ensure that you have
 completed the following procedures:
 --
-* Perform the standard upgrade to {productName} 7 on the DAS, as
+* Perform the standard upgrade to {productName} {product-majorVersion} on the DAS, as
 described in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
-* Perform a new (not upgrade) installation of {productName} 7 on
+* Perform a new (not upgrade) installation of {productName} {product-majorVersion} on
 each node host. See the xref:installation-guide.adoc#GSING[
 {productName} Installation Guide] for instructions.
 
@@ -1554,7 +1554,7 @@ xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Con
 
 4. After creating the instances, manually copy the instance-dir``/imq``
 directory for each instance from the older source installation to the
-target {productName} 7 installation.
+target {productName} {product-majorVersion} installation.
 
 5. If necessary, start the cluster. +
 For example:
@@ -1592,7 +1592,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 === Correcting Potential Upgrade Problems
 
 This section addresses issues that can occur during an upgrade to
-{productName} 7.
+{productName} {product-majorVersion}.
 
 The following topics are addressed here:
 
@@ -1605,7 +1605,7 @@ The following topics are addressed here:
 ==== Cluster Profile Security Setting
 
 When upgrading a clustered domain configuration from Application Server
-9.1 or Enterprise Server v2 to {productName} 7, you may encounter
+9.1 or Enterprise Server v2 to {productName} {product-majorVersion}, you may encounter
 problems if the `admin-service` element in the DAS `domain.xml` file
 sets both of the following attributes:
 

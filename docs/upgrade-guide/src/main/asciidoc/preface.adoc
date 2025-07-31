@@ -20,7 +20,7 @@ and applications that are to be migrated.
 
 [NOTE]
 ====
-The main thrust of the {productName} 7 release
+The main thrust of the {productName} {product-majorVersion} release
 is to provide an application server for developers to explore and begin
 exploiting the new and updated technologies in the Jakarta EE 10 platform.
 Thus, the upgrade feature of {productName} was not a focus of this
@@ -31,7 +31,7 @@ properly with some of the new features added in support of the Jakarta EE 10 pla
 This preface contains information about and conventions for the entire
 {productName} ({productName}) documentation set.
 
-{productName} 7 is developed through the GlassFish project
+{productName} {product-majorVersion} is developed through the GlassFish project
 open-source community at https://github.com/eclipse-ee4j/glassfish.
 The GlassFish project provides a structured process for developing the
 {productName} platform that makes the new features of the Jakarta EE
@@ -176,7 +176,7 @@ Javadoc tool reference documentation for packages that are provided with
 * The Jakarta EE specifications and API specification is
 located at https://jakarta.ee/specifications/.
 
-* The API specification for {productName} 7, including Jakarta EE
+* The API specification for {productName} {product-majorVersion}, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 {productName} product, is located at
 https://glassfish.org/docs/.

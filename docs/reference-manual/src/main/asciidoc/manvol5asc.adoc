@@ -1,17 +1,17 @@
 type=page
 status=published
-title={productName} 7 {productName} Concepts
+title={productName} {product-majorVersion} {productName} Concepts
 next=application.html
 prev=package-appclient.html
 ~~~~~~
 
-= {productName} 7 {productName} Concepts
+= {productName} {product-majorVersion} {productName} Concepts
 
 [[sthref2391]]
 
 
 [[glassfish-server-open-source-edition-5.0-glassfish-server-concepts]]
-== 3 {productName} 7 {productName} Concepts
+== 3 {productName} {product-majorVersion} {productName} Concepts
 
 This section describes concepts that are related to {productName}
 administration.

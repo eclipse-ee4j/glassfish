@@ -10,7 +10,7 @@ prev=overview.html
 [[specific-issues]]
 == 2 Specific Issues
 
-This chapter lists problems that you might encounter when using {productName} 7. The following topics are addressed:
+This chapter lists problems that you might encounter when using {productName} {product-majorVersion}. The following topics are addressed:
 
 * xref:#cannot-access-local-server-httplocalhost8080[Cannot Access Local Server (`http://localhost:8080`)]
 * xref:#cannot-access-remote-server[Cannot Access Remote Server]

@@ -873,7 +873,7 @@ environment.
 
 ===== Custom Authentication of Client Certificate in SSL Mutual Authentication
 
-Release 7 of {productName} extends the Certificate realm to allow
+Release {product-majorVersion} of {productName} extends the Certificate realm to allow
 custom authentication and group assignment based on the client
 certificate received as part of SSL mutual (two-way) authentication.
 
@@ -1268,7 +1268,7 @@ passwords are not echoed to the display.
 
 [NOTE]
 ====
-For the zip bundle of {productName} 7, the default administrator
+For the zip bundle of {productName} {product-majorVersion}, the default administrator
 login is `admin`, with no password, which means that no login is
 required. For {productName}, you are prompted to provide a
 password for the `admin` user when you start the domain for the first
@@ -1672,7 +1672,7 @@ Command delete-audit-module executed successfully.
 
 === Administering JSSE Certificates
 
-In the developer profile, the {productName} 7 uses the JSSE format
+In the developer profile, the {productName} {product-majorVersion} uses the JSSE format
 on the server side to manage certificates and key stores. In all
 profiles, the client side (appclient or stand-alone) uses the JSSE
 format.

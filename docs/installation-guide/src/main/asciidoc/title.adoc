@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Installation Guide, Release 7
+title={productName} Installation Guide, Release {product-majorVersion}
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Installation Guide, Release 7
+= {productName} Installation Guide, Release {product-majorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Installation Guide
 
-Release 7
+Release {product-majorVersion}
 
 Contributed 2018 - 2024
 
@@ -23,7 +23,7 @@ This book contains instructions for installing and uninstalling
 
 '''''
 
-{productName} Installation Guide, Release 7
+{productName} Installation Guide, Release {product-majorVersion}
 
 Copyright © 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 

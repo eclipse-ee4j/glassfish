@@ -627,13 +627,13 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Jakarta Mail {jakarta-mail-api-version} |X |-
 
-|JACC 2.1 |X |-
+|JACC {jakarta-authorization-api-version} |X |-
 
 |Java Authentication Service Provider Interface for Containers {jakarta-authentication-api-version} |X |-
 
 |Jakarta EE Application Deployment 1.2 |X |-
 
-|CORBA |X a|*
+|CORBA {glassfish-corba-version} |X a|*
 
 |Metro |X |-
 |===

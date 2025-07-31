@@ -573,17 +573,17 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Jakarta JSON Binding (JSON-B) {jakarta-json-bind-api-version} |X |X
 
-|EJB {jakarta-ejb-api-version} Lite (Support for Local Container only) |X |X
+|Jakarta Enterprise Beans (EJB) {jakarta-ejb-api-version} Lite (Support for Local Container only) |X |X
 
-|JTA {jakarta-transaction-api-version} |X |X
+|Transactions (JTA) {jakarta-transaction-api-version} |X |X
 
 |OSGi-based microkernel |X |X
 
 |Java Web Technologies (Servlet {jakarta-servlet-api-version}, JSP {jakarta-pages-api-version}, JSF {jakarta-faces-api-version}, JSTL {jstl-api-version}, EL {jakarta-el-api-version}) |X |X
 
-|Grizzly/Comet |X |X
+|Grizzly {grizzly-version}|X |X
 
-|JPA {eclipselink-version}, (EclipseLink), JDBC Connection Pooling |X |X
+|Persistence {jakarta.persistence-api.version}, (EclipseLink {eclipselink-version}), JDBC Connection Pooling |X |X
 
 |JDBC 4.0 |X |X
 
@@ -597,9 +597,9 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Debugging Support for Other Languages 2.0 |X |X
 
-|Common Annotations for Java  {jakarta-annotation-api-version} |X |X
+|Jakarta Annotations  {jakarta-annotation-api-version} |X |X
 
-|Dependency Injection for Java 2.0 |X |X
+|Jakarta Dependency Injection {jakarta-inject-api-version} |X |X
 
 |Managed Beans 2.1 |X |X
 
@@ -607,23 +607,23 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |Jakarta Contexts and Dependency Injection (CDI) {jakarta-cdi-api-version} |X |X
 
-|Bean Validation {jakarta-validation-api-version} |X |X
+|Jakarta Validation {jakarta-validation-api-version} |X |X
 
 |Jakarta RESTful Web Services  {jakarta-rest-api-version} (Jersey) |X |X
 
-|EJB 3.2 Full API (Support for Remote Container) |X |-
+|Jakarta Enterprise Beans (EJB) {jakarta-ejb-api-version} Full API (Support for Remote Container) |X |-
 
-|Jakarta EE Connector Architecture 1.7 |X |-
+|Jakarta Connectors {jakarta.resource-api.version} |X |-
 
-|JAX-WS 2.3 |X |-
+|Jakarta XML Web Services (JAX-WS) {jakarta.xml.ws-api.version} |X |-
 
-|JAXB {jakarta-jaxb-impl-version} |X |-
+|Jakarta XML Binding (JAXB) {jakarta-jaxb-impl-version} |X |-
 
-|Implementing Java Web Services 1.4 |X |-
+|Jakarta Enterprise Web Services 2.0 |X |-
 
-|Web Services Metadata for the Java Platform 2.1 |X |-
+|Jakarta Web Services Metadata 3.0 |X |-
 
-|JMS {jakarta-messaging-api-version} |X |-
+|Jakarta Messaging (JMS) {jakarta-messaging-api-version} |X |-
 
 |Jakarta Mail {jakarta-mail-api-version} |X |-
 

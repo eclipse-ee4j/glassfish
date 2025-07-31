@@ -26,13 +26,11 @@ import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.ee.SecurityUtil;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCache;
 import com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFactory;
 import com.sun.logging.LogDomains;
 
 import jakarta.security.jacc.EJBMethodPermission;
-import jakarta.security.jacc.PolicyContext;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -90,8 +88,6 @@ import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.cr
 public final class EJBSecurityManager implements SecurityManager {
 
     private static final Logger _logger = LogDomains.getLogger(EJBSecurityManager.class, LogDomains.EJB_LOGGER);
-
-    private static final PolicyContextHandlerImpl pcHandlerImpl = PolicyContextHandlerImpl.getInstance();
 
     // We use two protection domain caches until we decide how to
     // set the applicationCodeSource in the protection domain of system apps.
@@ -200,7 +196,6 @@ public final class EJBSecurityManager implements SecurityManager {
             return ejbInvocation.getAuth().booleanValue();
         }
 
-        pcHandlerImpl.getHandlerData().setInvocation(ejbInvocation);
 
         SecurityContext securityContext = SecurityContext.getCurrent();
 
@@ -293,7 +288,7 @@ public final class EJBSecurityManager implements SecurityManager {
         // System Security Manager is disabled.
         // Still need to execute it within the target bean's policy context.
         // see CR 6331550
-        if ((isLocal && getUsesCallerIdentity()) || getSecurityManager() == null) {
+        if ((isLocal && getUsesCallerIdentity())) {
             return authorizationService.invokeBeanMethod(bean, beanClassMethod, methodParameters);
         }
 
@@ -550,25 +545,7 @@ public final class EJBSecurityManager implements SecurityManager {
 
     @Override
     public void resetPolicyContext() {
-        if (System.getSecurityManager() == null) {
-            PolicyContextHandlerImpl.getInstance().reset();
-            PolicyContext.setContextID(null);
-            return;
-        }
 
-        try {
-            AppservAccessController.doPrivileged(new PrivilegedExceptionAction<>() {
-                @Override
-                public Object run() throws Exception {
-                    PolicyContextHandlerImpl.getInstance().reset();
-                    PolicyContext.setContextID(null);
-                    return null;
-                }
-            });
-        } catch (PrivilegedActionException pae) {
-            _logger.log(SEVERE, "Unexpected exception manipulating policy context", pae);
-            throw new RuntimeException(pae);
-        }
     }
 
     private SecurityContext getSecurityContext() {

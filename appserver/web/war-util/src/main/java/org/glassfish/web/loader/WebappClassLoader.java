@@ -41,7 +41,6 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -280,7 +279,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
         if (SECURITY_MANAGER != null) {
-            refreshPolicy();
         }
         this.permissionsHolder = new PermsHolder();
     }
@@ -1477,23 +1475,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         return null;
     }
 
-
-    /**
-     * Refresh the system policy file, to pick up eventual changes.
-     */
-    private void refreshPolicy() {
-        try {
-            // The policy file may have been modified to adjust
-            // permissions, so we're reloading it when loading or
-            // reloading a Context
-            Policy policy = Policy.getPolicy();
-            policy.refresh();
-        } catch (AccessControlException e) {
-            // Some policy files may restrict this, even for the core,
-            // so this exception is ignored
-            LOG.log(TRACE, "The policy refresh failed.", e);
-        }
-    }
 
 
     /**

@@ -27,7 +27,6 @@ import org.glassfish.hk2.api.Filter;
 
 public class SecurityAccessFilter implements Filter {
 
-    private static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
     private static final Logger LOG = SecurityAccessValidationService._theLog;
 
     private static boolean javaPolicySet =
@@ -35,14 +34,7 @@ public class SecurityAccessFilter implements Filter {
 
             @Override
             public Boolean run() {
-                Boolean rtn = Boolean.FALSE;
-
-                String wlsName = System.getProperty(SYS_PROP_JAVA_SEC_POLICY);
-
-                if ( wlsName != null && !wlsName.isEmpty() )
-                        rtn = Boolean.TRUE;
-
-                return rtn;
+                return false;
             }
         });
 

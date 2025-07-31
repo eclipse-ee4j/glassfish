@@ -32,7 +32,6 @@ import java.security.AccessControlException;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
-import java.security.Policy;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -901,8 +900,6 @@ public class StandardClassLoader
     protected final PermissionCollection getPermissions(CodeSource codeSource) {
         if (!policy_refresh) {
             // Refresh the security policies
-            Policy policy = Policy.getPolicy();
-            policy.refresh();
             policy_refresh = true;
         }
         String codeUrl = codeSource.getLocation().toString();

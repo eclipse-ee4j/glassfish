@@ -57,7 +57,6 @@
   <property name="appClientStubsFile" value="${build}/${untaggedName}Client.jar"/>
 
   <!-- the jvm args used in the runclient target -->
-  <property name="jvm.arg1" value="-Djava.security.policy=${inst}/lib/appclient/client.policy"/>
   <property name="jvm.arg2" value="-Djava.system.class.loader=org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader"/>
   <property name="jvm.arg3" value="-javaagent:${gfClientJar}=mode=ascript,arg=-configxml,arg=${sunAccXml},client=jar=${appClientStubsFile}"/>
   <property name="jvm.arguments" value="${jvm.arg1} ${jvm.arg2} ${jvm.arg3}"/>

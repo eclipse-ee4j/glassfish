@@ -27,7 +27,6 @@ import java.security.AccessController;
 import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.security.Permission;
-import java.security.Policy;
 import java.security.Principal;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -204,10 +203,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
         Set<Principal> principalset = subject.getPrincipals();
         Principal[] principalAr = (principalset.size() == 0) ? null : principalset.toArray(new Principal[principalset.size()]);
         ProtectionDomain pd = new ProtectionDomain(NULL_CODESOURCE, null, null, principalAr);
-        Policy policy = Policy.getPolicy();
-        boolean result = policy.implies(pd, permission);
-
-        return result;
+        return false;
     }
 
 

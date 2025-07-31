@@ -48,7 +48,7 @@ example, restart is not required for the following Java system property:
 ** Java system properties whose names start with `-Djava.` or `-Djavax.`
 (including the trailing period). For example:
 +
-`-Djava.security.manager`
+`-Djava.security.manager
 
 ** Startup parameters for the Java application launcher. For example:
 +

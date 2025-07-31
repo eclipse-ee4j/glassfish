@@ -26,9 +26,6 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 import java.lang.reflect.Method;
-import java.security.Permission;
-import java.security.Policy;
-import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -38,8 +35,6 @@ import org.glassfish.hk2.api.IterableProvider;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
-import javassist.ClassPool;
-import javassist.CtClass;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
@@ -55,7 +50,6 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import static javassist.Modifier.PUBLIC;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
@@ -125,30 +119,6 @@ public class PolicyLoader {
 
                 boolean usePolicyProxy = Boolean.parseBoolean(System.getProperty(POLICY_PROXY, "true"));
 
-                Policy policy = null;
-                if (usePolicyProxy && System.getSecurityManager() != null) {
-                    policy = loadPolicyAsProxy(javaPolicyClassName);
-                } else {
-                    policy = loadPolicy(javaPolicyClassName);
-                }
-
-                try {
-                    Policy.setPolicy(policy);
-                } catch (UnsupportedOperationException e) {
-                    Class<?> authorizationServiceClass = Class.forName("org.glassfish.exousia.AuthorizationService");
-
-                    Method setPolicyMethod = authorizationServiceClass.getMethod("setPolicy", Policy.class);
-                    setPolicyMethod.invoke(null, policy);
-                }
-
-                // TODO: causing ClassCircularity error when SM ON and
-                // deployment use library feature and ApplibClassLoader
-                // it is likely a problem caused by the way classloading is done
-                // in this case.
-                if (System.getSecurityManager() == null) {
-                    policy.refresh();
-                }
-
             } catch (Exception e) {
                 LOGGER.log(SEVERE, policyInstallError, e.getLocalizedMessage());
                 throw new RuntimeException(e);
@@ -170,32 +140,16 @@ public class PolicyLoader {
         factory.setSuperclass(targetClass);
 
         ProxyObject instance = (ProxyObject) factory.createClass().getDeclaredConstructor().newInstance();
-        instance.setHandler(new JakartaAuthenticationGuardHandler(Policy.getPolicy()));
 
         return (T) instance;
     }
 
     private static class JakartaAuthenticationGuardHandler implements MethodHandler {
 
-        public final static Method impliesMethod = getMethod(
-            Policy.class, "implies", ProtectionDomain.class, Permission.class);
-
-        private final Policy javaSePolicy;
-
-        public JakartaAuthenticationGuardHandler(Policy javaSePolicy) {
-            this.javaSePolicy = javaSePolicy;
-        }
 
         @Override
         public Object invoke(Object self, Method overridden, Method forwarder, Object[] args) throws Throwable {
-            if (isImplementationOf(overridden, impliesMethod)) {
-                Permission permission = (Permission) args[1];
-                if (!permission.getClass().getName().startsWith("jakarta.")) {
-                    return javaSePolicy.implies((ProtectionDomain)args[0], permission);
-                }
-            }
-
-            return forwarder.invoke(self, args);
+            return null;
         }
 
         public static boolean isImplementationOf(Method implementationMethod, Method interfaceMethod) {
@@ -214,43 +168,6 @@ public class PolicyLoader {
             }
         }
 
-    }
-
-    private Policy loadPolicy(String javaPolicyClassName) throws ReflectiveOperationException, SecurityException {
-        Object javaPolicyInstance =
-                Thread.currentThread()
-                      .getContextClassLoader()
-                      .loadClass(javaPolicyClassName)
-                      .getDeclaredConstructor()
-                      .newInstance();
-
-        if (!(javaPolicyInstance instanceof Policy)) {
-            throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
-        }
-
-        return (Policy) javaPolicyInstance;
-    }
-
-    private Policy loadPolicyAsProxy(String javaPolicyClassName) throws Exception {
-        ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(javaPolicyClassName);
-        clazz.defrost();
-        clazz.setModifiers(PUBLIC);
-
-        Object javaPolicyInstance =
-            createPolicyProxy(
-                clazz.toClass(
-                    Thread.currentThread()
-                          .getContextClassLoader()
-                          .loadClass(System.getProperty(POLICY_CONF_FACTORY))));
-
-        if (!(javaPolicyInstance instanceof Policy)) {
-            throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
-        }
-
-        javaPolicyInstance.toString();
-
-        return (Policy) javaPolicyInstance;
     }
 
     /**

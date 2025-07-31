@@ -129,6 +129,9 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .alternative(true)
                 .priority(Interceptor.Priority.PLATFORM_BEFORE)
                 .scope(ApplicationScoped.class);
+
+        addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager)
+                .scope(ApplicationScoped.class);
     }
 
     private static Types getTypes() {

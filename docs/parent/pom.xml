@@ -174,24 +174,6 @@
             </plugin>
 
             <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.6.1</version>
-                    <executions>
-                        <execution>
-                            <id>parse-version</id>
-                            <goals>
-                                <goal>parse-version</goal>
-                            </goals>
-                            <phase>validate</phase>
-                            <configuration>
-                                <propertyPrefix>parsedVersion</propertyPrefix>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
@@ -210,6 +192,16 @@
                             </artifacts>
                         </configuration>
                     </execution>
+                        <execution>
+                            <id>parse-version</id>
+                            <goals>
+                                <goal>parse-version</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <propertyPrefix>parsedVersion</propertyPrefix>
+                            </configuration>
+                        </execution>
                 </executions>
             </plugin>
             <plugin>

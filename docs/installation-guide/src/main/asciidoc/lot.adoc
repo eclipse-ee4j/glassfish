@@ -10,7 +10,7 @@ prev=toc.html
 [[list-of-tables]]
 == List of Tables
 
-* xref:installing.adoc#ghtqe[1-1 {productName} {productMajorVersion} Installation
+* xref:installing.adoc#ghtqe[1-1 {productName} {product-majorVersion} Installation
 Methods]
 * xref:installing.adoc#gkuap[1-2 {productName} Full Profile and Web
 Profile Features]

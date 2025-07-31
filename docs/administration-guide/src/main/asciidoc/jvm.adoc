@@ -10,7 +10,7 @@ prev=domains.adoc
 
 This chapter provides procedures for administering the Virtual Machine
 for the Java platform (Java Virtual Machine) or JVM machine) in the
-{productName} {productMajorVersion} environment by using the
+{productName} {product-majorVersion} environment by using the
 `asadmin` command-line utility.
 
 The following topics are addressed here:

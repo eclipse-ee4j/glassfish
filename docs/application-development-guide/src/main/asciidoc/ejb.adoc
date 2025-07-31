@@ -330,7 +330,7 @@ xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 This procedure explains how to deploy an EJB timer to a cluster.
 
-By default, the {productName} {productMajorVersion} timer service points to the
+By default, the {productName} {product-majorVersion} timer service points to the
 preconfigured `jdbc/__TimerPool` resource, which uses an embedded Apache
 Derby database configuration that will not work in clustered
 environments.

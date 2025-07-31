@@ -9,7 +9,7 @@ prev=monitoring.adoc
 == 9 Administering Life Cycle Modules
 
 This chapter provides procedures for administering life cycle modules in
-the {productName} {productMajorVersion} environment.
+the {productName} {product-majorVersion} environment.
 
 The following topics are addressed here:
 

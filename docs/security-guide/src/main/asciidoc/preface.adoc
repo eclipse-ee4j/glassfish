@@ -30,7 +30,7 @@ instructions for configuring and administering {productName} security.
 This preface contains information about and conventions for the entire
 {productName} ({productName}) documentation set.
 
-{productName} {productMajorVersion} is developed through the GlassFish project
+{productName} {product-majorVersion} is developed through the GlassFish project
 open-source community at https://github.com/eclipse-ee4j/glassfish.
 The GlassFish project provides a structured process for developing the
 {productName} platform that makes the new features of the Jakarta EE
@@ -176,7 +176,7 @@ Javadoc tool reference documentation for packages that are provided with
 * The Jakarta EE specifications and API specification is
 located at https://jakarta.ee/specifications/.
 
-* The API specification for {productName} {productMajorVersion}, including Jakarta EE
+* The API specification for {productName} {product-majorVersion}, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 {productName} product, is located at
 https://glassfish.org/docs/.

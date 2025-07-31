@@ -9,7 +9,7 @@ prev=part-runtime-admin.adoc
 == 2 General Administration
 
 This chapter provides instructions for performing general administration
-tasks in the {productName} {productMajorVersion} environment by
+tasks in the {productName} {product-majorVersion} environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:

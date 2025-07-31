@@ -10,7 +10,7 @@ prev=preface.html
 [[high-availability-in-glassfish-server]]
 == 1 High Availability in {productName}
 
-This chapter describes the high availability features in {productName} {productMajorVersion}.
+This chapter describes the high availability features in {productName} {product-majorVersion}.
 
 The following topics are addressed here:
 
@@ -44,7 +44,7 @@ minimum application downtime and enhanced transactional security.
 
 ==== Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
 
-A common load balancing configuration for {productName} {productMajorVersion} is to use
+A common load balancing configuration for {productName} {product-majorVersion} is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 `mod_jk` or `mod_proxy_ajp` module as the connector between the web
 server and {productName}. See
@@ -168,7 +168,7 @@ information. {productName} supports in-memory session replication on
 other servers in the cluster for maintaining HTTP session and stateful
 session bean data.
 
-In-memory session replication is implemented in {productName} {productMajorVersion} as
+In-memory session replication is implemented in {productName} {product-majorVersion} as
 an OSGi module. Internally, the replication module uses a consistent
 hash algorithm to pick a replica server instance within a cluster of
 instances. This allows the replication module to easily locate the

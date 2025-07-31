@@ -1,23 +1,23 @@
 type=page
 status=published
-title={productName} Reference Manual, Release {productMajorVersion}
+title={productName} Reference Manual, Release {product-majorVersion}
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= {productName} Reference Manual, Release {productMajorVersion}
+= {productName} Reference Manual, Release {product-majorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Reference Manual
 
-Release {productMajorVersion}
+Release {product-majorVersion}
 
 Contributed 2018 - 2024
 
 This reference manual describes administration commands and utility
-commands that are available with {productName} {productMajorVersion}.
+commands that are available with {productName} {product-majorVersion}.
 This reference manual also describes concepts that are related to
 {productName} administration.
 
@@ -32,7 +32,7 @@ This reference manual is for all users of {productName}.
 
 '''''
 
-{productName} Reference Manual, Release {productMajorVersion}
+{productName} Reference Manual, Release {product-majorVersion}
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

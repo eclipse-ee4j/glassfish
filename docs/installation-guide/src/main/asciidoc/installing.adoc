@@ -1,32 +1,32 @@
 type=page
 status=published
-title=Installing {productName} {productMajorVersion}
+title=Installing {productName} {product-majorVersion}
 next=uninstalling.html
 prev=preface.html
 ~~~~~~
 
-= Installing {productName} {productMajorVersion}
+= Installing {productName} {product-majorVersion}
 
 [[ggssq]]
 
 
 [[installing-glassfish-server-5.0]]
-== 1 Installing {productName} {productMajorVersion}
+== 1 Installing {productName} {product-majorVersion}
 
-This chapter provides instructions for installing {productName} {productMajorVersion}
+This chapter provides instructions for installing {productName} {product-majorVersion}
 software on Linux, Mac OS X, and Windows systems.
 
 The following topics are addressed here:
 
 * xref:#installation-requirements[Installation Requirements]
-* xref:#GSING00023[Installation Files for {productName} {productMajorVersion}]
+* xref:#GSING00023[Installation Files for {productName} {product-majorVersion}]
 * xref:#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File]
 
 [[installation-requirements]]
 
 === Installation Requirements
 
-Before installing {productName} {productMajorVersion}, ensure that
+Before installing {productName} {product-majorVersion}, ensure that
 your system meets the requirements listed in "xref:release-notes.adoc#hardware-and-software-requirements[Hardware
 and Software Requirements]" in {productName}
 Release Notes. If necessary, download and install the required JDK
@@ -563,7 +563,7 @@ either the MPL or the LGPL.
 
 [[GSING00023]][[installation-files-for-glassfish-server-5.0]]
 
-=== Installation Files for {productName} {productMajorVersion}
+=== Installation Files for {productName} {product-majorVersion}
 
 The following topics are addressed here:
 
@@ -576,7 +576,7 @@ The following topics are addressed here:
 
 ==== {productName} Download Locations
 
-Installation files for {productName} {productMajorVersion} are
+Installation files for {productName} {product-majorVersion} are
 available by download from the
 https://glassfish.org/download.html[{productName} Downloads]
 page.
@@ -605,7 +605,7 @@ in {productName} Release Notes.
 [[ghtqe]]
 
 
-Table 1-1 {productName} {productMajorVersion} Installation Methods
+Table 1-1 {productName} {product-majorVersion} Installation Methods
 
 [width="100%",cols="39%,61%",options="header",]
 |===
@@ -623,7 +623,7 @@ These two distributions are explained in the next section.
 ==== Choosing an Installation Method
 
 There are two general sets of questions you should consider when
-deciding which {productName} {productMajorVersion} installation method to use.
+deciding which {productName} {product-majorVersion} installation method to use.
 
 * xref:#zip-package[ZIP Package]
 * xref:#full-platform-or-web-profile-distribution[Full Platform or Web Profile Distribution]
@@ -749,7 +749,7 @@ CORBA v3.0 APIs are available in the Jakarta EE Web Profile.
 
 ==== {productName} ZIP Files
 
-The {productName} {productMajorVersion} multi-platform ZIP files
+The {productName} {product-majorVersion} multi-platform ZIP files
 are compatible with Solaris, Linux, Mac OS, UNIX, and Windows operating
 systems. See xref:#glassfish-server-download-locations[{productName} Download Locations] for a list
 of download locations.
@@ -784,7 +784,7 @@ glassfish-7.0.0-web.zip
 
 === Installing {productName} From a ZIP File
 
-This section describes how to install {productName} {productMajorVersion} using the multi-platform ZIP file. {productName} is
+This section describes how to install {productName} {product-majorVersion} using the multi-platform ZIP file. {productName} is
 installed by unzipping the file in the installation directory of your
 choice.
 
@@ -810,7 +810,7 @@ in {productName} Release Notes.
 
 Also see "xref:release-notes.adoc#GSRLN00253[Known Issues]" in {productName} Release Notes for known issues related to installation.
 
-1. Download the desired {productName} {productMajorVersion} ZIP file. +
+1. Download the desired {productName} {product-majorVersion} ZIP file. +
 See xref:#glassfish-server-download-locations[{productName} Download Locations] for a list of
 download locations. See xref:#gkbac[Table 1-3] for a list of available ZIP files.
 
@@ -835,8 +835,8 @@ glassfish-5.0.zip
 +
 Unzip using your favorite file compression utility.
 +
-{productName} {productMajorVersion} is extracted into a new `glassfish{productMajorVersion}` directory
-under your current directory. This `glassfish{productMajorVersion}` directory is referred to
+{productName} {product-majorVersion} is extracted into a new `glassfish{product-majorVersion}` directory
+under your current directory. This `glassfish{product-majorVersion}` directory is referred to
 throughout the {productName} documentation set as as-install-parent.
 
 4. Start {productName} using the instructions in the

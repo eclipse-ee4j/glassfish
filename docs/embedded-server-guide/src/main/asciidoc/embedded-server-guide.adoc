@@ -1,11 +1,11 @@
 type=page
 status=published
-title={productName} {productMajorVersion} Embedded Server Guide
+title={productName} {product-majorVersion} Embedded Server Guide
 prev=preface.html
 ~~~~~~
 
 [[GSESG]]
-== {productName} {productMajorVersion} Embedded Server Guide
+== {productName} {product-majorVersion} Embedded Server Guide
 
 This document explains how to run applications with embedded {productName} and to develop applications in which
 {productName} is embedded. This document is for software developers

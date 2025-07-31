@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Embedded Server Guide, Release {productMajorVersion}
+title={productName} Embedded Server Guide, Release {product-majorVersion}
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Embedded Server Guide, Release {productMajorVersion}
+= {productName} Embedded Server Guide, Release {product-majorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Embedded Server Guide
 
-Release {productMajorVersion}
+Release {product-majorVersion}
 
 Contributed 2018 - 2024
 
@@ -21,7 +21,7 @@ This document explains how to run applications in embedded {productName} and to 
 who are developing applications to run in embedded {productName}. The
 ability to program in the Java language is assumed.
 
-Note: The main thrust of the {productName} {productMajorVersion}
+Note: The main thrust of the {productName} {product-majorVersion}
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Jakarta EE 10
 platform. Thus, the embedded server feature of {productName} was not
@@ -33,7 +33,7 @@ of the Jakarta EE 10 platform.
 
 '''''
 
-{productName} Embedded Server Guide, Release {productMajorVersion}
+{productName} Embedded Server Guide, Release {product-majorVersion}
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

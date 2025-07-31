@@ -1,19 +1,19 @@
 type=page
 status=published
-title=Overview of {productName} {productMajorVersion} Application Deployment
+title=Overview of {productName} {product-majorVersion} Application Deployment
 next=deploying-applications.html
 prev=preface.html
 ~~~~~~
 
-= Overview of {productName} {productMajorVersion} Application Deployment
+= Overview of {productName} {product-majorVersion} Application Deployment
 
 [[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
-== 1 Overview of {productName} {productMajorVersion} Application Deployment
+== 1 Overview of {productName} {product-majorVersion} Application Deployment
 
-{productName} {productMajorVersion} provides an environment for
+{productName} {product-majorVersion} provides an environment for
 developing and deploying Java applications and web services. {productName} applications include Java Platform, Enterprise Edition (Jakarta EE
 platform) standard features as well as features specific to {productName}. This guide explains the tools and processes used for deploying
 applications and modules in the {productName} environment. Only

@@ -1,31 +1,31 @@
 type=page
 status=published
-title={productName} Upgrade Guide, Release {productMajorVersion}
+title={productName} Upgrade Guide, Release {product-majorVersion}
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Upgrade Guide, Release {productMajorVersion}
+= {productName} Upgrade Guide, Release {product-majorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Upgrade Guide
 
-Release {productMajorVersion}
+Release {product-majorVersion}
 
 Contributed 2018 - 2024
 
-This guide explains how to upgrade to {productName} {productMajorVersion}
+This guide explains how to upgrade to {productName} {product-majorVersion}
 from previous {productName} and Sun GlassFish Enterprise
 Server product releases. Also included in this guide are instructions
 for upgrading configuration data and Jakarta EE applications from
 binary-compatible earlier versions of this software to work with
-{productName} {productMajorVersion}. Finally, this guide describes
+{productName} {product-majorVersion}. Finally, this guide describes
 compatibility issues that affect data and applications that are to be
 migrated.
 
-Note: The main thrust of the {productName} {productMajorVersion}
+Note: The main thrust of the {productName} {product-majorVersion}
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Jakarta EE 10
 platform. Thus, the upgrade feature of {productName} was not a focus
@@ -37,7 +37,7 @@ Jakarta EE 10 platform.
 
 '''''
 
-{productName} Upgrade Guide, Release {productMajorVersion}
+{productName} Upgrade Guide, Release {product-majorVersion}
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

@@ -75,7 +75,7 @@ possible.
 +
 [NOTE]
 ====
-{productName} {productMajorVersion} does not support High Availability Database (HADB)
+{productName} {product-majorVersion} does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
 xref:overview.adoc#high-availability-session-persistence[High Availability Session Persistence].
 ====
@@ -113,12 +113,12 @@ For information about how to disable these features, see the
 xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide].
 
-* {productName} {productMajorVersion} does not support High Availability Database
+* {productName} {product-majorVersion} does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
 in xref:overview.adoc#high-availability-session-persistence[High Availability Session Persistence].
 
 * You can only bind certain objects to distributed sessions that support
-failover. Contrary to the Servlet 2.4 specification, {productName} {productMajorVersion} does not throw an `IllegalArgumentException` if an object type not
+failover. Contrary to the Servlet 2.4 specification, {productName} {product-majorVersion} does not throw an `IllegalArgumentException` if an object type not
 supported for failover is bound into a distributed session.
 +
 You can bind the following objects into a distributed session that
@@ -346,7 +346,7 @@ the type of session persistence an application uses. It must be set to
 If you are using Memory Replication and your web application involves
 multiple client threads concurrently accessing the same session ID, then
 you may experience session loss even without any instance failure. The
-problem is that the {productName} {productMajorVersion} memory replication framework
+problem is that the {productName} {product-majorVersion} memory replication framework
 makes use of session versioning. This feature was designed with the more
 traditional HTTP request/response communication model in mind.
 
@@ -471,7 +471,7 @@ accessing the application.
 
 Built on top of Oracle Coherence, Coherence*Web is an HTTP session
 management module dedicated to managing session state in clustered
-environments. Starting with Coherence 3.7 and {productName} {productMajorVersion},
+environments. Starting with Coherence 3.7 and {productName} {product-majorVersion},
 there is a new feature of Coherence*Web called ActiveCache for
 GlassFish. ActiveCache for GlassFish provides Coherence*Web
 functionality in web applications deployed on {productName}s. Within

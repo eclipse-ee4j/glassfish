@@ -9,7 +9,7 @@ prev=webapps.html
 == 7 Administering the Logging Service
 
 This chapter provides instructions on how to configure logging and how
-to view log information in the {productName} {productMajorVersion} environment.
+to view log information in the {productName} {product-majorVersion} environment.
 
 The following topics are addressed here:
 

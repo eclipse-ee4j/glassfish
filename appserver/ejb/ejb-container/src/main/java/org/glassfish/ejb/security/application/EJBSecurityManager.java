@@ -66,7 +66,6 @@ import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.security.common.Role;
 
-import static java.lang.System.getSecurityManager;
 import static java.util.Collections.synchronizedMap;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;

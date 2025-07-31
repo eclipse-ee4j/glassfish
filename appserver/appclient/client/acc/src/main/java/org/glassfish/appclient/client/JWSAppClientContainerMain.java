@@ -93,8 +93,6 @@ public class JWSAppClientContainerMain {
             processJWSArgs();
 
             final String agentArgsText = System.getProperty("agent.args");
-            LaunchSecurityHelper.setPermissions();
-
             // Prevent the Java Web Start class loader from delegating to its parent when resolving
             // classes and resources that should come from the GlassFish-provided endorsed JARs.
             insertMaskingLoader();

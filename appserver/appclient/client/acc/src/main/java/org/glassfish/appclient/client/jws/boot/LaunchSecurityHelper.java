@@ -35,24 +35,6 @@ public class LaunchSecurityHelper {
     private static final String SYSTEM_CODEBASE_PROPERTY = "appclient.system.codebase";
     private static final int BUFFER_SIZE = 1024;
 
-    public static void setPermissions() {
-        try {
-            /*
-             * Get the permissions template and write it to a temporary file.
-             */
-            final String permissionsTemplate = loadResource(LaunchSecurityHelper.class, PERMISSIONS_TEMPLATE_NAME);
-
-            /*
-             * The Java security logic will process property references in
-             * the policy file template automatically.
-             */
-            boolean retainTempFiles = Boolean.getBoolean(AppClientContainer.APPCLIENT_RETAIN_TEMP_FILES_PROPERTYNAME);
-            File policyFile = Util.writeTextToTempFile(permissionsTemplate, "jwsacc", ".policy", retainTempFiles);
-
-        } catch (IOException ioe) {
-            throw new RuntimeException("Error loading permissions template", ioe);
-        }
-    }
 
     /**
      * Retrieves a resource as a String.

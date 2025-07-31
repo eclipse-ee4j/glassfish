@@ -68,48 +68,6 @@
         </exec>
     </target>
 
-    <target name="enable-security-manager" depends="setOSConditions" unless="jdk24.or.higher">
-        <antcall target="enable-security-manager-unix"/>
-        <antcall target="enable-security-manager-windows"/>
-    </target>
-
-    <target name="enable-security-manager-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c"/>
-            <arg value="${glassfish.home}\bin\asadmin.bat"/>
-            <arg line="create-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="enable-security-manager-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <arg line="create-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="disable-security-manager" depends="setOSConditions">
-        <antcall target="disable-security-manager-unix"/>
-        <antcall target="disable-security-manager-windows"/>
-    </target>
-
-    <target name="disable-security-manager-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c"/>
-            <arg value="${glassfish.home}\bin\asadmin.bat"/>
-            <arg line="delete-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="disable-security-manager-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <arg line="delete-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
     <target name="add-quicklook-policy-grants">
         <move file="${glassfish.home}/domains/domain1/config/server.policy"
         tofile="${glassfish.home}/domains/domain1/config/server_policy.orig"/>

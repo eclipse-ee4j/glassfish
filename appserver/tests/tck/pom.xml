@@ -35,9 +35,10 @@
 
     <modules>
         <module>tck-download</module>
+        <module>activation</module>
+        <module>authentication</module>
         <module>platform-tck-runner</module>
 
-        <module>activation</module>
         <module>expression_language</module>
         <module>rest</module>
         <module>rest_cdi</module>
@@ -47,7 +48,6 @@
         <module>pages_tags</module>
         <module>pages_debugging</module>
         <module>servlet</module>
-        <module>authentication</module>
         <module>authorization</module>
         <module>cdi</module>
         <module>microprofile</module>
@@ -78,7 +78,7 @@
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
 
-        <omnifish.arquillian.version>2.0.0</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.0.1</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>

@@ -79,6 +79,9 @@
     </scm>
 
     <properties>
+        <!-- Jakarta EE platform -->
+        <jakartaee>10</jakartaee>
+
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
